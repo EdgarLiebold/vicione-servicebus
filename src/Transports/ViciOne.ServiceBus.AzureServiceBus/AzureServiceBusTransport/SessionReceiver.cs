@@ -5,20 +5,16 @@ using Azure.Messaging.ServiceBus;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a session receiver implementation.
-/// </summary>
+/// <summary>Runs a session-aware Azure Service Bus processor and dispatches its deliveries.</summary>
 public class SessionReceiver :
     Receiver
 {
     readonly ClientContext _clientContext;
     readonly ServiceBusReceiveEndpointContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="clientContext">The client context value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Creates a session receiver for a processor client and receive endpoint.</summary>
+    /// <param name="clientContext">The session processor client context.</param>
+    /// <param name="context">The receive endpoint context that owns dispatch.</param>
     public SessionReceiver(ClientContext clientContext, ServiceBusReceiveEndpointContext context)
         : base(clientContext, context)
     {
@@ -26,9 +22,7 @@ public class SessionReceiver :
         _context = context;
     }
 
-    /// <summary>
-    /// Starts the configured component.
-    /// </summary>
+    /// <summary>Registers session callbacks and starts the Azure Service Bus session processor.</summary>
     public override void Start()
     {
         _clientContext.OnSessionAsync(OnSessionAsync, ExceptionHandlerAsync);
@@ -70,7 +64,7 @@ public class SessionReceiver :
         }
         catch (Exception)
         {
-            // do NOT let exceptions propagate to the Azure SDK
+            // The receiver callback owns dispatch failures so they cannot escape into the Azure SDK pump.
         }
         finally
         {

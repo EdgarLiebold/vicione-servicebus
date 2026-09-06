@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.Courier;
 
-/// <summary>
-/// Provides an execute activity host implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Represents the host for execute activity.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class ExecuteActivityHost<TActivity, TArguments> :
     IFilter<ConsumeContext<RoutingSlip>>
     where TActivity : class, IExecuteActivity<TArguments>
@@ -18,23 +16,19 @@ public class ExecuteActivityHost<TActivity, TArguments> :
     readonly Uri _compensateAddress;
     readonly IPipe<ExecuteContext<TArguments>> _executePipe;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="executePipe">The execute pipe value.</param>
-    /// <param name="compensateAddress">The compensate address value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="executePipe">The execute pipe.</param>
+    /// <param name="compensateAddress">The compensate address.</param>
     public ExecuteActivityHost(IPipe<ExecuteContext<TArguments>> executePipe, Uri compensateAddress)
     {
         _executePipe = executePipe;
         _compensateAddress = compensateAddress;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ConsumeContext<RoutingSlip> context, IPipe<ConsumeContext<RoutingSlip>> next)
     {
         TimeProvider timeProvider = context.GetTimeProvider();
@@ -104,10 +98,8 @@ public class ExecuteActivityHost<TActivity, TArguments> :
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("executeActivity");

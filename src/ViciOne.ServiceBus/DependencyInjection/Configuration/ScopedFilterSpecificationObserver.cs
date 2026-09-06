@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a scoped filter specification observer implementation.
-/// </summary>
+/// <summary>Observes scoped filter specification events.</summary>
 public class ScopedFilterSpecificationObserver :
     ISendPipeSpecificationObserver,
     IPublishPipeSpecificationObserver
@@ -17,12 +15,10 @@ public class ScopedFilterSpecificationObserver :
     readonly CompositeFilter<Type> _messageTypeFilter;
     readonly IServiceProvider _provider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="filterType">The filter type value.</param>
-    /// <param name="provider">The service provider.</param>
-    /// <param name="messageTypeFilter">The message type filter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="filterType">The runtime filter type used by the operation.</param>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="messageTypeFilter">The message type filter.</param>
     public ScopedFilterSpecificationObserver(Type filterType, IServiceProvider provider, CompositeFilter<Type> messageTypeFilter)
     {
         _filterType = filterType;
@@ -30,26 +26,22 @@ public class ScopedFilterSpecificationObserver :
         _messageTypeFilter = messageTypeFilter;
         _messageTypeFilter.Excludes.Add(type => type.ImplementsInterface<Fault>());
         _messageTypeFilter.Excludes.Add(type => type.ImplementsInterface<ReceiveFault>());
-        // do not create filters for scheduled/outbox messages
+        // Serialized scheduler and outbox envelopes bypass application message filters.
         _messageTypeFilter.Excludes.Add(type => type == typeof(SerializedMessageBody));
     }
 
-    /// <summary>
-    /// Performs the message specification created operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Reports that message specification has been created.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="specification">The specification.</param>
     public void MessageSpecificationCreated<T>(IMessagePublishPipeSpecification<T> specification)
         where T : class
     {
         AddScopedFilter<PublishContext<T>, T>(specification);
     }
 
-    /// <summary>
-    /// Performs the message specification created operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Reports that message specification has been created.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="specification">The specification.</param>
     public void MessageSpecificationCreated<T>(IMessageSendPipeSpecification<T> specification)
         where T : class
     {

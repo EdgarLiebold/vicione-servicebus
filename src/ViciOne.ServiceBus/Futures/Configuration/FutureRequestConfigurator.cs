@@ -8,14 +8,12 @@ using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a future request configurator implementation.
-/// </summary>
-/// <typeparam name="TCommand">The t command type.</typeparam>
-/// <typeparam name="TResult">The t result type.</typeparam>
-/// <typeparam name="TFault">The t fault type.</typeparam>
-/// <typeparam name="TInput">The t input type.</typeparam>
-/// <typeparam name="TRequest">The t request type.</typeparam>
+/// <summary>Configures future request.</summary>
+/// <typeparam name="TCommand">The command type.</typeparam>
+/// <typeparam name="TResult">The result produced by the operation.</typeparam>
+/// <typeparam name="TFault">The fault type.</typeparam>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TRequest">The request type.</typeparam>
 public class FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TRequest> :
     FutureRequestHandle<TCommand, TResult, TFault, TRequest>,
     IFutureRequestConfigurator<TFault, TInput, TRequest>,
@@ -30,11 +28,9 @@ public class FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TReque
     readonly FutureFault<TCommand, TFault, Fault<TRequest>> _fault;
     readonly FutureRequest<TInput, TRequest> _request;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="faulted">The faulted value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="faulted">The faulted.</param>
     public FutureRequestConfigurator(IFutureStateMachineConfigurator configurator, Event<Fault<TRequest>> faulted)
     {
         _configurator = configurator;
@@ -45,26 +41,20 @@ public class FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TReque
         _fault = new FutureFault<TCommand, TFault, Fault<TRequest>>();
     }
 
-    /// <summary>
-    /// Gets or sets the pending request id provider value.
-    /// </summary>
+    /// <summary>Gets or sets the pending request id provider.</summary>
     public PendingFutureIdProvider<TRequest> PendingRequestIdProvider
     {
         get => _request.PendingRequestIdProvider;
         private set => _request.PendingRequestIdProvider = value;
     }
 
-    /// <summary>
-    /// Gets the faulted value.
-    /// </summary>
+    /// <summary>Gets the faulted.</summary>
     public Event<Fault<TRequest>> Faulted { get; }
 
-    /// <summary>
-    /// Performs the on response received operation.
-    /// </summary>
-    /// <typeparam name="TResponse">The t response type.</typeparam>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Handles the notification for response received.</summary>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The future response handle produced by the operation.</returns>
     public FutureResponseHandle<TCommand, TResult, TFault, TRequest, TResponse>
         OnResponseReceived<TResponse>(Action<IFutureResponseConfigurator<TResult, TResponse>>? configure)
         where TResponse : class
@@ -83,45 +73,35 @@ public class FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TReque
         return response;
     }
 
-    /// <summary>
-    /// Gets or sets the request address value.
-    /// </summary>
+    /// <summary>Gets or sets the request address.</summary>
     public Uri RequestAddress
     {
         set { _request.AddressProvider = context => value; }
     }
 
-    /// <summary>
-    /// Sets request address provider.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
+    /// <summary>Sets request address provider.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
     public void SetRequestAddressProvider(RequestAddressProvider<TInput> provider)
     {
         _request.AddressProvider = provider;
     }
 
-    /// <summary>
-    /// Performs the using request factory operation.
-    /// </summary>
-    /// <param name="factoryMethod">The factory method value.</param>
+    /// <summary>Configures the request factory.</summary>
+    /// <param name="factoryMethod">The factory method.</param>
     public void UsingRequestFactory(EventMessageFactory<FutureState, TInput, TRequest> factoryMethod)
     {
         _request.Factory = MessageFactory<TRequest>.Create(factoryMethod);
     }
 
-    /// <summary>
-    /// Performs the using request factory operation.
-    /// </summary>
-    /// <param name="factoryMethod">The factory method value.</param>
+    /// <summary>Configures the request factory.</summary>
+    /// <param name="factoryMethod">The factory method.</param>
     public void UsingRequestFactory(AsyncEventMessageFactory<FutureState, TInput, TRequest> factoryMethod)
     {
         _request.Factory = MessageFactory<TRequest>.Create(factoryMethod);
     }
 
-    /// <summary>
-    /// Performs the using request initializer operation.
-    /// </summary>
-    /// <param name="valueProvider">The value provider value.</param>
+    /// <summary>Configures the request initializer.</summary>
+    /// <param name="valueProvider">The value provider.</param>
     public void UsingRequestInitializer(InitializerValueProvider<TInput> valueProvider)
     {
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>> FactoryAsync(BehaviorContext<FutureState, TInput> context)
@@ -132,19 +112,15 @@ public class FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TReque
         _request.Factory = MessageFactory<TRequest>.Create((Func<BehaviorContext<FutureState, TInput>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>>)FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the track pending request operation.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
+    /// <summary>Tracks pending request.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
     public void TrackPendingRequest(PendingFutureIdProvider<TRequest> provider)
     {
         PendingRequestIdProvider = provider;
     }
 
-    /// <summary>
-    /// Performs the on request faulted operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Reports that on request has faulted.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void OnRequestFaulted(Action<IFutureFaultConfigurator<TFault, Fault<TRequest>>> configure)
     {
         var configurator = new FutureFaultConfigurator<TCommand, TFault, Fault<TRequest>>(_fault);
@@ -152,30 +128,24 @@ public class FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TReque
         configure?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Performs the when faulted operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Reports that when has faulted.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void WhenFaulted(Func<EventActivityBinder<FutureState, Fault<TRequest>>, EventActivityBinder<FutureState, Fault<TRequest>>> configure)
     {
         _configurator.DuringAnyWhen(Faulted, configure);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return _request.Validate();
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         return context.Message != null
@@ -183,13 +153,11 @@ public class FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TReque
             : Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="data">The data value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="data">The data.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(BehaviorContext<FutureState, TCommand> context, TInput data, CancellationToken cancellationToken = default)
     {
         return data != null
@@ -197,13 +165,11 @@ public class FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TReque
             : Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Sends range.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="inputs">The inputs value.</param>
+    /// <summary>Sends range.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="inputs">The inputs.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendRangeAsync(BehaviorContext<FutureState, TCommand> context, IEnumerable<TInput> inputs, CancellationToken cancellationToken = default)
     {
         return inputs != null
@@ -211,12 +177,10 @@ public class FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TReque
             : Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Sets faulted.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Sets faulted.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SetFaultedAsync(BehaviorContext<FutureState, Fault<TRequest>> context, CancellationToken cancellationToken = default)
     {
         return _fault.SetFaultedAsync(context, cancellationToken: cancellationToken);

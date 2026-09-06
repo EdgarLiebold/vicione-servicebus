@@ -10,10 +10,8 @@ using ViciOne.ServiceBus.Transformation;
 
 namespace ViciOne.ServiceBus.MessageData.Configuration;
 
-/// <summary>
-/// Provides a get message data transform specification implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Describes requirements for get message data transform.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class GetMessageDataTransformSpecification<TMessage> :
     TransformSpecification<TMessage>,
     IConsumeTransformSpecification<TMessage>,
@@ -21,11 +19,9 @@ public class GetMessageDataTransformSpecification<TMessage> :
     ICompensateTransformSpecification<TMessage>
     where TMessage : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="knownTypes">The known types value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="repository">The repository.</param>
+    /// <param name="knownTypes">The known types.</param>
     public GetMessageDataTransformSpecification(IMessageDataRepository repository, IEnumerable<Type>? knownTypes = null)
     {
         if (repository == null)
@@ -68,10 +64,8 @@ public class GetMessageDataTransformSpecification<TMessage> :
         }
     }
 
-    /// <summary>
-    /// Attempts to get consume topology.
-    /// </summary>
-    /// <param name="topology">The topology value.</param>
+    /// <summary>Attempts to get consume topology.</summary>
+    /// <param name="topology">Receives the topology produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetConsumeTopology([NotNullWhen(true)] out IMessageConsumeTopology<TMessage>? topology)
     {
@@ -87,10 +81,8 @@ public class GetMessageDataTransformSpecification<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get converter.
-    /// </summary>
-    /// <param name="converter">The converter value.</param>
+    /// <summary>Attempts to get converter.</summary>
+    /// <param name="converter">Receives the converter produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetConverter([NotNullWhen(true)] out IPropertyConverter<TMessage, TMessage>? converter)
     {

@@ -1,14 +1,10 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for dead letter queue name formatter.
-/// </summary>
+/// <summary>Formats dead letter queue name values.</summary>
 public interface IDeadLetterQueueNameFormatter
 {
-    /// <summary>
-    /// Performs the format dead letter queue name operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats dead letter queue name.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <returns>The formatted dead letter queue name.</returns>
     string FormatDeadLetterQueueName(string queueName);
 }

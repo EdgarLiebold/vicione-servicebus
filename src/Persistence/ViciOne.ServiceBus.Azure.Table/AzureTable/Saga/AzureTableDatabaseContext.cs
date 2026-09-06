@@ -3,19 +3,15 @@ using Azure.Data.Tables;
 
 namespace ViciOne.ServiceBus.AzureTable.Saga;
 
-/// <summary>
-/// Provides an azure table database context implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Provides the validated Azure Table access components used by a saga repository operation.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class AzureTableDatabaseContext<TSaga> :
     DatabaseContext<TSaga>
     where TSaga : class, ISaga
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="table">The table value.</param>
-    /// <param name="keyFormatter">The key formatter value.</param>
+    /// <summary>Creates a saga database context and derives the entity converter for <typeparamref name="TSaga"/>.</summary>
+    /// <param name="table">The Azure Table client used for saga persistence.</param>
+    /// <param name="keyFormatter">The strategy that maps saga identifiers to partition and row keys.</param>
     public AzureTableDatabaseContext(TableClient table, ISagaKeyFormatter<TSaga> keyFormatter)
     {
         ArgumentNullException.ThrowIfNull(table);
@@ -27,24 +23,16 @@ public class AzureTableDatabaseContext<TSaga> :
         Converter = EntityConverterFactory.CreateConverter<TSaga>();
     }
 
-    /// <summary>
-    /// Gets the formatter value.
-    /// </summary>
+    /// <summary>Gets the saga-key formatting strategy.</summary>
     public ISagaKeyFormatter<TSaga> Formatter { get; }
-    /// <summary>
-    /// Gets the table value.
-    /// </summary>
+    /// <summary>Gets the Azure Table client used by the repository.</summary>
     public TableClient Table { get; }
-    /// <summary>
-    /// Gets the converter value.
-    /// </summary>
+    /// <summary>Gets the converter between saga instances and Azure Table properties.</summary>
     public IEntityConverter<TSaga> Converter { get; }
 
-    /// <summary>
-    /// Performs the format operation.
-    /// </summary>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats and validates the Azure Table keys for a saga correlation identifier.</summary>
+    /// <param name="correlationId">The non-empty saga correlation identifier.</param>
+    /// <returns>The validated partition key and row key.</returns>
     public (string partitionKey, string rowKey) Format(Guid correlationId)
     {
         AzureTableKeyValidator.ValidateCorrelationId(correlationId, nameof(correlationId));

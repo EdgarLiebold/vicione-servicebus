@@ -4,9 +4,7 @@ using Azure;
 using Azure.Messaging.ServiceBus;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
-/// <summary>
-/// Classifies Azure Service Bus send failures from typed SDK failure reasons and HTTP status codes.
-/// </summary>
+/// <summary>Classifies Azure Service Bus send failures from typed SDK failure reasons and HTTP status codes.</summary>
 public sealed class ServiceBusSendFailureClassifier : ITransportSendFailureClassifier
 {
     /// <inheritdoc />

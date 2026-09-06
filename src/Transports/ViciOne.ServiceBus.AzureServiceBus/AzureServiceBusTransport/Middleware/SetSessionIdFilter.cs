@@ -2,31 +2,25 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Middleware;
 
-/// <summary>
-/// Provides a set session id filter implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Assigns a formatted Azure Service Bus session identifier before continuing the send pipeline.</summary>
+/// <typeparam name="T">The message type being formatted.</typeparam>
 public class SetSessionIdFilter<T> :
     IFilter<ServiceBusSendContext<T>>
     where T : class
 {
     readonly IMessageSessionIdFormatter<T> _sessionIdFormatter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="sessionIdFormatter">The session id formatter value.</param>
+    /// <summary>Initializes the filter with a message-specific session-id formatter.</summary>
+    /// <param name="sessionIdFormatter">The formatter invoked for each send context.</param>
     public SetSessionIdFilter(IMessageSessionIdFormatter<T> sessionIdFormatter)
     {
         _sessionIdFormatter = sessionIdFormatter;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets a non-empty formatted session identifier and continues the pipeline.</summary>
+    /// <param name="context">The Azure Service Bus send context to update.</param>
+    /// <param name="next">The remaining provider-specific pipeline.</param>
+    /// <returns>The continuation task after any non-empty formatted session identifier has been applied.</returns>
     public Task SendAsync(ServiceBusSendContext<T> context, IPipe<ServiceBusSendContext<T>> next)
     {
         var sessionId = _sessionIdFormatter.FormatSessionId(context);
@@ -37,10 +31,8 @@ public class SetSessionIdFilter<T> :
         return next.SendAsync(context);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The probe context that receives the filter scope.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateFilterScope("setSessionId");

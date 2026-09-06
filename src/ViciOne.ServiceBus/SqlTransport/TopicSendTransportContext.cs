@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>
-/// Provides a topic send transport context implementation.
-/// </summary>
+/// <summary>Carries state for topic send transport operations.</summary>
 public class TopicSendTransportContext :
     BaseSendTransportContext,
     SendTransportContext<ClientContext>
@@ -19,14 +17,12 @@ public class TopicSendTransportContext :
     readonly ISqlHostConfiguration _hostConfiguration;
     readonly IClientContextSupervisor _supervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="configureTopologyPipe">The configure topology pipe value.</param>
-    /// <param name="entityName">The entity name value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="receiveEndpointContext">The receive endpoint context.</param>
+    /// <param name="supervisor">The supervisor.</param>
+    /// <param name="configureTopologyPipe">The configure topology pipe.</param>
+    /// <param name="entityName">The entity name.</param>
     public TopicSendTransportContext(ISqlHostConfiguration hostConfiguration, ReceiveEndpointContext receiveEndpointContext,
         IClientContextSupervisor supervisor, IPipe<ClientContext> configureTopologyPipe, string entityName)
         : base(hostConfiguration, receiveEndpointContext.Serialization)
@@ -38,31 +34,23 @@ public class TopicSendTransportContext :
         EntityName = entityName;
     }
 
-    /// <summary>
-    /// Gets the entity name value.
-    /// </summary>
+    /// <summary>Gets the entity name.</summary>
     public override string EntityName { get; }
-    /// <summary>
-    /// Gets the activity system value.
-    /// </summary>
+    /// <summary>Gets the activity system.</summary>
     public override string ActivitySystem => "db";
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
     }
 
-    /// <summary>
-    /// Creates send context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Creates send context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the created value.</returns>
     public override async Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
     {
         var sendContext = new SqlMessageSendContext<T>(message, cancellationToken);
@@ -72,36 +60,30 @@ public class TopicSendTransportContext :
         return sendContext;
     }
 
-    /// <summary>
-    /// Gets agent handles.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets agent handles.</summary>
+    /// <returns>The agent handles.</returns>
     public override IEnumerable<IAgent> GetAgentHandles()
     {
         return [];
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(IPipe<ClientContext> pipe, CancellationToken cancellationToken = default)
     {
         return _hostConfiguration.RetryAsync(() => _supervisor.SendAsync(pipe, cancellationToken),
             stoppingToken: _supervisor.SendStopping, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Creates send context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Creates send context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the created value.</returns>
     public Task<SendContext<T>> CreateSendContextAsync<T>(ClientContext context, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
@@ -109,14 +91,12 @@ public class TopicSendTransportContext :
         return CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="clientContext">The client context value.</param>
-    /// <param name="sendContext">The send context value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="clientContext">The client context.</param>
+    /// <param name="sendContext">The send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync<T>(ClientContext clientContext, SendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class
     {

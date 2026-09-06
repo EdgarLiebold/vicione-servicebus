@@ -2,25 +2,19 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus publish topology configurator.
-/// </summary>
+/// <summary>Configures Azure Service Bus publish topics for a bus.</summary>
 public interface IServiceBusPublishTopologyConfigurator :
     IPublishTopologyConfigurator,
     IServiceBusPublishTopology
 {
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the publish topology for a message contract.</summary>
+    /// <typeparam name="T">The published message contract.</typeparam>
+    /// <returns>The message-specific publish topology.</returns>
     new IServiceBusMessagePublishTopologyConfigurator<T> GetMessageTopology<T>()
         where T : class;
 
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the publish topology for a runtime message type.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <returns>The runtime-typed publish topology.</returns>
     new IServiceBusMessagePublishTopologyConfigurator GetMessageTopology(Type messageType);
 }

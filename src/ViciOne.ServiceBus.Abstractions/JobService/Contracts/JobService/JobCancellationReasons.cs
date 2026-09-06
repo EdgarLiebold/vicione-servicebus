@@ -1,20 +1,12 @@
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
-/// <summary>
-/// Provides a job cancellation reasons implementation.
-/// </summary>
+/// <summary>Defines the canonical reason strings used when jobs are cancelled.</summary>
 public static class JobCancellationReasons
 {
-    /// <summary>
-    /// Defines the shutdown value.
-    /// </summary>
+    /// <summary>Exposes the shutdown used by the containing type.</summary>
     public static readonly string Shutdown = "Job Service Shutdown";
-    /// <summary>
-    /// Defines the cancellation requested value.
-    /// </summary>
+    /// <summary>Exposes the cancellation requested used by the containing type.</summary>
     public static readonly string CancellationRequested = "Cancellation Requested";
-    /// <summary>
-    /// Defines the consumer initiated value.
-    /// </summary>
+    /// <summary>Exposes the consumer initiated used by the containing type.</summary>
     public static readonly string ConsumerInitiated = "Consumer Initiated";
 }

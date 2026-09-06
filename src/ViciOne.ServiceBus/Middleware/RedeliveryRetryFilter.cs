@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Uses the message redelivery mechanism, if available, to delay a retry without blocking message delivery
-/// </summary>
-/// <typeparam name="TContext">The context type</typeparam>
-/// <typeparam name="TMessage">The message type</typeparam>
+/// <summary>Uses the message redelivery mechanism, if available, to delay a retry without blocking message delivery.</summary>
+/// <typeparam name="TContext">The context type.</typeparam>
+/// <typeparam name="TMessage">The message type.</typeparam>
 public class RedeliveryRetryFilter<TContext, TMessage> :
     IFilter<TContext>
     where TContext : class, ConsumeContext<TMessage>
@@ -18,11 +16,9 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
     readonly RetryObservable _observers;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="observers">The observers value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="observers">The observers.</param>
     public RedeliveryRetryFilter(IRetryPolicy retryPolicy, RetryObservable observers)
     {
         _retryPolicy = retryPolicy;
@@ -37,12 +33,10 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
         _retryPolicy.Probe(scope);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [DebuggerNonUserCode]
     public async Task SendAsync(TContext context, IPipe<TContext> next)
     {

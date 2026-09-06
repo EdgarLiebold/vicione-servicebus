@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Classifies a failure for technical message retry.
-/// </summary>
+/// <summary>Classifies a failure for technical message retry.</summary>
 public enum RetryFailureKind
 {
     /// <summary>
@@ -11,13 +9,9 @@ public enum RetryFailureKind
     /// </summary>
     Unclassified = 0,
 
-    /// <summary>
-    /// The failure is explicitly recoverable and may use the bounded technical retry policy.
-    /// </summary>
+    /// <summary>The failure is explicitly recoverable and may use the bounded technical retry policy.</summary>
     Transient = 1,
 
-    /// <summary>
-    /// Retrying cannot correct the failure and must not consume the technical retry budget.
-    /// </summary>
+    /// <summary>Retrying cannot correct the failure and must not consume the technical retry budget.</summary>
     NonRetryable = 2,
 }

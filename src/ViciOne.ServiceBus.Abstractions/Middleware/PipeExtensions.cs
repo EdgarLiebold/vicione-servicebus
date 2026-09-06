@@ -4,17 +4,13 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Advanced.Middleware;
 
-/// <summary>
-/// Provides extension methods for pipe.
-/// </summary>
+/// <summary>Provides extension methods for pipe.</summary>
 public static class PipeExtensions
 {
-    /// <summary>
-    /// Returns true if the pipe is not empty
-    /// </summary>
-    /// <param name="pipe"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Returns true if the pipe is not empty.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsNotEmpty<T>(this IPipe<T>? pipe)
         where T : class, PipeContext
     {
@@ -26,12 +22,10 @@ public static class PipeExtensions
         };
     }
 
-    /// <summary>
-    /// Returns true if the pipe is empty
-    /// </summary>
-    /// <param name="pipe"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Returns true if the pipe is empty.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsEmpty<T>(this IPipe<T>? pipe)
         where T : class, PipeContext
     {
@@ -43,12 +37,10 @@ public static class PipeExtensions
         };
     }
 
-    /// <summary>
-    /// Get a payload from the pipe context
-    /// </summary>
-    /// <typeparam name="TPayload">The payload type</typeparam>
-    /// <param name="context">The pipe context</param>
-    /// <returns>The payload, or throws a PayloadNotFoundException if the payload is not present</returns>
+    /// <summary>Get a payload from the pipe context.</summary>
+    /// <typeparam name="TPayload">The payload type.</typeparam>
+    /// <param name="context">The pipe context.</param>
+    /// <returns>The payload, or throws a PayloadNotFoundException if the payload is not present.</returns>
     public static TPayload GetPayload<TPayload>(this PipeContext context)
         where TPayload : class
     {
@@ -58,13 +50,11 @@ public static class PipeExtensions
         return payload!;
     }
 
-    /// <summary>
-    /// Get a payload from the pipe context
-    /// </summary>
-    /// <typeparam name="TPayload">The payload type</typeparam>
-    /// <param name="context">The pipe context</param>
-    /// <param name="defaultPayload"></param>
-    /// <returns>The payload, or the default Value</returns>
+    /// <summary>Get a payload from the pipe context.</summary>
+    /// <typeparam name="TPayload">The payload type.</typeparam>
+    /// <param name="context">The pipe context.</param>
+    /// <param name="defaultPayload">The default payload.</param>
+    /// <returns>The payload, or the default Value.</returns>
     public static TPayload GetPayload<TPayload>(this PipeContext context, TPayload defaultPayload)
         where TPayload : class
     {
@@ -75,11 +65,11 @@ public static class PipeExtensions
     /// Using a filter-supplied context type, block so that the one time code is only executed once regardless of how many
     /// threads are pushing through the pipe at the same time.
     /// </summary>
-    /// <typeparam name="T">The payload type, should be an interface</typeparam>
-    /// <param name="context">The pipe context</param>
-    /// <param name="setupMethod">The setup method, called once regardless of the thread count</param>
-    /// <returns></returns>
+    /// <typeparam name="T">The payload type, should be an interface.</typeparam>
+    /// <param name="context">The pipe context.</param>
+    /// <param name="setupMethod">The setup method, called once regardless of the thread count.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the one time setup outcome.</returns>
     public static async Task<OneTimeContext<T>> OneTimeSetupAsync<T>(this PipeContext context, OneTimeSetupCallback setupMethod, CancellationToken cancellationToken = default)
         where T : class
     {

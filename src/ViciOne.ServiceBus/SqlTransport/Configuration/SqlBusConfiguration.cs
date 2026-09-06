@@ -3,19 +3,15 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
-/// <summary>
-/// Provides a sql bus configuration implementation.
-/// </summary>
+/// <summary>Stores and validates sql bus configuration.</summary>
 public class SqlBusConfiguration :
     SqlEndpointConfiguration,
     ISqlBusConfiguration
 {
     readonly BusObservable _busObservers;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="topologyConfiguration">The topology configuration.</param>
     public SqlBusConfiguration(ISqlTopologyConfiguration topologyConfiguration)
         : base(topologyConfiguration)
     {
@@ -31,34 +27,24 @@ public class SqlBusConfiguration :
     IEndpointConfiguration IBusConfiguration.BusEndpointConfiguration => BusEndpointConfiguration;
     IBusObserver IBusConfiguration.BusObservers => _busObservers;
 
-    /// <summary>
-    /// Gets the bus endpoint configuration value.
-    /// </summary>
+    /// <summary>Gets the bus endpoint configuration.</summary>
     public ISqlEndpointConfiguration BusEndpointConfiguration { get; }
-    /// <summary>
-    /// Gets the host configuration value.
-    /// </summary>
+    /// <summary>Gets the host configuration.</summary>
     public ISqlHostConfiguration HostConfiguration { get; }
-    /// <summary>
-    /// Gets the message routes value.
-    /// </summary>
+    /// <summary>Gets the message routes.</summary>
     public MessageRouteTable MessageRoutes { get; }
 
-    /// <summary>
-    /// Connects bus observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects bus observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectBusObserver(IBusObserver observer)
     {
         return _busObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects endpoint configuration observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects endpoint configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectEndpointConfigurationObserver(IEndpointConfigurationObserver observer)
     {
         return HostConfiguration.ConnectEndpointConfigurationObserver(observer);

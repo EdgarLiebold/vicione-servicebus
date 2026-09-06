@@ -4,10 +4,8 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a delayed message redelivery context implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Carries state for delayed message redelivery operations.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class DelayedMessageRedeliveryContext<TMessage> :
     MessageRedeliveryContext
     where TMessage : class
@@ -15,24 +13,20 @@ public class DelayedMessageRedeliveryContext<TMessage> :
     readonly ConsumeContext<TMessage> _context;
     readonly RedeliveryOptions _options;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="options">The options that control the operation.</param>
     public DelayedMessageRedeliveryContext(ConsumeContext<TMessage> context, RedeliveryOptions options)
     {
         _context = context;
         _options = options;
     }
 
-    /// <summary>
-    /// Schedules redelivery.
-    /// </summary>
-    /// <param name="delay">The delay value.</param>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Schedules redelivery.</summary>
+    /// <param name="delay">The delay before the operation is attempted.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ScheduleRedeliveryAsync(TimeSpan delay, Action<ConsumeContext, SendContext>? callback, CancellationToken cancellationToken = default)
     {
         IPipe<SendContext<TMessage>> pipe = Pipe.Execute<SendContext<TMessage>>(sendContext =>

@@ -1,39 +1,42 @@
 using MessagePack;
 using MessagePack.Formatters;
+using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.MessageData.Values;
 using ViciOne.ServiceBus.Serialization.JsonConverters;
 
 namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
 
-/// <summary>
-/// Provides a message data formatter implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Serializes message-data references and inline values through the shared reference envelope.</summary>
+/// <typeparam name="T">The value exposed by the message-data handle.</typeparam>
 public class MessageDataFormatter<T> :
     IMessagePackFormatter<MessageData<T>?>
 {
-    /// <summary>
-    /// Performs the serialize operation.
-    /// </summary>
-    /// <param name="writer">The writer value.</param>
-    /// <param name="value">The value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Writes the external address and, when present, the inline text or bytes of a message-data handle.</summary>
+    /// <param name="writer">The MessagePack writer that receives the reference envelope.</param>
+    /// <param name="value">The message-data handle to serialize, or <see langword="null"/> for an empty envelope.</param>
+    /// <param name="options">The serializer options whose resolver supplies the envelope formatter.</param>
     public void Serialize(ref MessagePackWriter writer, MessageData<T>? value, MessagePackSerializerOptions options)
     {
-        var reference = new SystemTextMessageDataReference { Reference = value?.Address };
+        var reference = new SystemTextMessageDataReference();
 
-        // Borrows System.Text.Json's SystemTextMessageDataReference type.
+        if (value is IMessageData { HasValue: true } messageData)
+        {
+            reference.Reference = messageData.Address;
+
+            if (messageData is IInlineMessageData inlineMessageData)
+                inlineMessageData.Set(reference);
+        }
+
+        // Both serializers use the same reference envelope to preserve wire semantics.
         IMessagePackFormatter<SystemTextMessageDataReference> innerFormatter = options.Resolver.GetFormatterWithVerify<SystemTextMessageDataReference>();
 
         innerFormatter.Serialize(ref writer, reference, options);
     }
 
-    /// <summary>
-    /// Performs the deserialize operation.
-    /// </summary>
-    /// <param name="reader">The reader value.</param>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reads an inline value, an external reference, or an empty message-data handle.</summary>
+    /// <param name="reader">The MessagePack reader positioned at the reference envelope.</param>
+    /// <param name="options">The serializer options whose resolver supplies the envelope formatter.</param>
+    /// <returns>A handle for the inline value or external address, or the shared empty handle when neither is present.</returns>
     public MessageData<T>? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
         IMessagePackFormatter<SystemTextMessageDataReference> innerFormatter = options.Resolver.GetFormatterWithVerify<SystemTextMessageDataReference>();

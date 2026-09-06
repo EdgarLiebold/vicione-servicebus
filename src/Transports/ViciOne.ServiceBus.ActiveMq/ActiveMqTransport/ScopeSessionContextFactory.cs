@@ -6,18 +6,14 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides a scope session context factory implementation.
-/// </summary>
+/// <summary>Creates operation-scoped proxies over a shared ActiveMQ session context.</summary>
 public class ScopeSessionContextFactory :
     IPipeContextFactory<SessionContext>
 {
     readonly ISessionContextSupervisor _supervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
+    /// <summary>Creates a scope factory backed by a parent session supervisor.</summary>
+    /// <param name="supervisor">The parent session supervisor.</param>
     public ScopeSessionContextFactory(ISessionContextSupervisor supervisor)
     {
         _supervisor = supervisor;
@@ -70,9 +66,8 @@ public class ScopeSessionContextFactory :
             return Task.FromResult<SessionContext>(sharedSessionContext);
         }
 
-        // Install the connection-fault listener inside the agent factory. CreateAgent publishes the
-        // shared context only after this factory returns, so no caller can observe a cached session
-        // during the former listener-registration race.
+        // Installing the fault listener inside the agent factory makes it visible before the shared
+        // context is published, so every cached session is fault-observable from its first use.
         _supervisor.StartAgent(asyncContext, CreateSharedSessionContextAsync, supervisor.Stopped);
 
         return asyncContext;

@@ -6,57 +6,41 @@ using ViciOne.ServiceBus.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Defines the contract for entity framework saga repository configurator.
-/// </summary>
+/// <summary>Configures DbContext creation, transactions, and concurrency for an EF Core saga repository.</summary>
 public interface IEntityFrameworkSagaRepositoryConfigurator
 {
-    /// <summary>
-    /// Gets or sets the concurrency mode value.
-    /// </summary>
+    /// <summary>Sets whether saga rows use optimistic checks or provider-specific pessimistic locks.</summary>
     ConcurrencyMode ConcurrencyMode { set; }
-    /// <summary>
-    /// Gets or sets the isolation level value.
-    /// </summary>
+    /// <summary>Sets the isolation level used when the repository creates a transaction.</summary>
     IsolationLevel IsolationLevel { set; }
-    /// <summary>
-    /// Gets or sets the lock statement provider value.
-    /// </summary>
+    /// <summary>Sets the provider-specific SQL used for pessimistic row locks.</summary>
     ILockStatementProvider LockStatementProvider { set; }
 
-    /// <summary>
-    /// Add the DbContext to the container, and configure the repository to use it
-    /// </summary>
-    /// <param name="optionsAction"></param>
-    /// <typeparam name="TContext"></typeparam>
-    /// <typeparam name="TImplementation"></typeparam>
+    /// <summary>Add the DbContext to the container, and configure the repository to use it.</summary>
+    /// <typeparam name="TContext">The service type through which the DbContext is resolved.</typeparam>
+    /// <typeparam name="TImplementation">The concrete DbContext type.</typeparam>
+    /// <param name="optionsAction">An optional callback that configures the concrete DbContext.</param>
     void AddDbContext<TContext, TImplementation>(Action<IServiceProvider, DbContextOptionsBuilder<TImplementation>>? optionsAction = null)
         where TContext : DbContext
         where TImplementation : DbContext, TContext;
 
-    /// <summary>
-    /// Use a simple factory method to create the database
-    /// </summary>
-    /// <param name="databaseFactory"></param>
+    /// <summary>Use a simple factory method to create the database.</summary>
+    /// <param name="databaseFactory">The delegate that creates the DbContext.</param>
     void DatabaseFactory(Func<DbContext> databaseFactory);
 
-    /// <summary>
-    /// Use the configuration service provider to resolve the database factory
-    /// </summary>
-    /// <param name="databaseFactory"></param>
+    /// <summary>Use the configuration service provider to resolve the database factory.</summary>
+    /// <param name="databaseFactory">A function that resolves the DbContext factory from the active service provider.</param>
     void DatabaseFactory(Func<IServiceProvider, Func<DbContext>> databaseFactory);
 
     /// <summary>
     /// Use an existing (already configured in the container) DbContext that will be resolved
-    /// within the container scope
+    /// within the container scope.
     /// </summary>
-    /// <typeparam name="TContext"></typeparam>
+    /// <typeparam name="TContext">The registered DbContext type.</typeparam>
     void ExistingDbContext<TContext>()
         where TContext : DbContext;
 
-    /// <summary>
-    /// Configures the saga to use optimistic concurrency, with optional transaction support.
-    /// </summary>
+    /// <summary>Configures the saga to use optimistic concurrency, with optional transaction support.</summary>
     /// <param name="useTransaction">
     /// If <c>true</c>, operations on the saga will be executed within a transaction;
     /// if <c>false</c>, no transaction will be used.
@@ -65,17 +49,13 @@ public interface IEntityFrameworkSagaRepositoryConfigurator
 }
 
 
-/// <summary>
-/// Defines the contract for entity framework saga repository configurator.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Adds saga-type-specific EF Core query configuration.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public interface IEntityFrameworkSagaRepositoryConfigurator<TSaga> :
     IEntityFrameworkSagaRepositoryConfigurator
     where TSaga : class, ISaga
 {
-    /// <summary>
-    /// Use custom query
-    /// </summary>
-    /// <param name="queryCustomization"></param>
+    /// <summary>Registers a transformation applied to all EF Core queries for this saga type.</summary>
+    /// <param name="queryCustomization">A function that returns the query the repository should execute.</param>
     void CustomizeQuery(Func<IQueryable<TSaga>, IQueryable<TSaga>> queryCustomization);
 }

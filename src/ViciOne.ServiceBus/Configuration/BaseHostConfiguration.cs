@@ -10,11 +10,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a base host configuration implementation.
-/// </summary>
-/// <typeparam name="TConfiguration">The t configuration type.</typeparam>
-/// <typeparam name="TConfigurator">The t configurator type.</typeparam>
+/// <summary>Stores and validates base host configuration.</summary>
+/// <typeparam name="TConfiguration">The configuration type.</typeparam>
+/// <typeparam name="TConfigurator">The configurator type.</typeparam>
 public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
     IHostConfiguration,
     IMessageLimitsHostConfiguration,
@@ -33,10 +31,8 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
     MessageLimits? _messageLimits;
     IPayloadAdmissionRuntime? _payloadAdmissionRuntime;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="busConfiguration">The bus configuration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="busConfiguration">The bus configuration.</param>
     protected BaseHostConfiguration(IBusConfiguration busConfiguration)
     {
         BusConfiguration = busConfiguration;
@@ -50,38 +46,24 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
         _sendObservers = new SendObservable();
     }
 
-    /// <summary>
-    /// Gets the observers value.
-    /// </summary>
+    /// <summary>Gets the observers.</summary>
     protected IEndpointConfigurationObserver Observers => _endpointObservable;
 
-    /// <summary>
-    /// Gets the bus configuration value.
-    /// </summary>
+    /// <summary>Gets the bus configuration.</summary>
     public IBusConfiguration BusConfiguration { get; }
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the host address.</summary>
     public abstract Uri HostAddress { get; }
 
-    /// <summary>
-    /// Gets or sets the deploy topology only value.
-    /// </summary>
+    /// <summary>Gets or sets the deploy topology only.</summary>
     public bool DeployTopologyOnly { get; set; }
-    /// <summary>
-    /// Gets or sets the deploy publish topology value.
-    /// </summary>
+    /// <summary>Gets or sets the deploy publish topology.</summary>
     public bool DeployPublishTopology { get; set; }
 
-    /// <summary>
-    /// Gets the send observers value.
-    /// </summary>
+    /// <summary>Gets the send observers.</summary>
     public ISendObserver SendObservers => _sendObservers;
 
-    /// <summary>
-    /// Gets or sets the log context value.
-    /// </summary>
+    /// <summary>Gets or sets the log context.</summary>
     public ILogContext? LogContext
     {
         get => _logContext;
@@ -97,30 +79,22 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the receive log context value.
-    /// </summary>
+    /// <summary>Gets or sets the receive log context.</summary>
     public ILogContext? ReceiveLogContext { get; private set; }
-    /// <summary>
-    /// Gets or sets the send log context value.
-    /// </summary>
+    /// <summary>Gets or sets the send log context.</summary>
     public ILogContext? SendLogContext { get; private set; }
 
-    /// <summary>
-    /// Connects endpoint configuration observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects endpoint configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectEndpointConfigurationObserver(IEndpointConfigurationObserver observer)
     {
         return _endpointObservable.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects receive endpoint context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive endpoint context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveEndpointContext(ReceiveEndpointContext context)
     {
         var consume = context.ReceivePipe.ConnectConsumeObserver(_consumeObservers);
@@ -131,35 +105,23 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
         return new MultipleConnectHandle(consume, receive, publish, send);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public virtual IEnumerable<ValidationResult> Validate()
     {
         return _endpoints.SelectMany(x => x.Validate());
     }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the topology.</summary>
     public abstract IBusTopology Topology { get; }
 
-    /// <summary>
-    /// Gets the receive transport retry policy value.
-    /// </summary>
+    /// <summary>Gets the receive transport retry policy.</summary>
     public abstract IRetryPolicy ReceiveTransportRetryPolicy { get; }
-    /// <summary>
-    /// Gets the send transport retry policy value.
-    /// </summary>
+    /// <summary>Gets the send transport retry policy.</summary>
     public virtual IRetryPolicy SendTransportRetryPolicy => ReceiveTransportRetryPolicy;
-    /// <summary>
-    /// Gets or sets the consumer stop timeout value.
-    /// </summary>
+    /// <summary>Gets or sets the consumer stop timeout.</summary>
     public TimeSpan? ConsumerStopTimeout { get; set; }
-    /// <summary>
-    /// Gets or sets the stop timeout value.
-    /// </summary>
+    /// <summary>Gets or sets the stop timeout.</summary>
     public TimeSpan? StopTimeout { get; set; }
 
     MessageLimits? IMessageLimitsHostConfiguration.MessageLimits => Volatile.Read(ref _messageLimits);
@@ -186,103 +148,81 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
 
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates receive endpoint configuration.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The created receive endpoint configuration.</returns>
     public abstract IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName, Action<IReceiveEndpointConfigurator>? configure);
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the configured component.</summary>
+    /// <returns>The configured component.</returns>
     public abstract IHost Build();
 
-    /// <summary>
-    /// Connects receive observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveObserver(IReceiveObserver observer)
     {
         return _receiveObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects consume observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer)
     {
         return _consumeObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects publish observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects publish observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
         return _publishObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects send observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _sendObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Applies the receive-endpoint configuration.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configureEndpoint">The configure endpoint.</param>
     public void ReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint)
     {
         ReceiveEndpoint(queueName, (TConfigurator configuration) => configureEndpoint(configuration));
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Applies the receive-endpoint configuration.</summary>
+    /// <param name="definition">The definition.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
+    /// <param name="configureEndpoint">The configure endpoint.</param>
     public void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint)
     {
         ReceiveEndpoint(definition, endpointNameFormatter, (TConfigurator configuration) => configureEndpoint?.Invoke(configuration));
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Applies the receive-endpoint configuration.</summary>
+    /// <param name="definition">The definition.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
+    /// <param name="configureEndpoint">The configure endpoint.</param>
     public abstract void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<TConfigurator>? configureEndpoint = null);
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Applies the receive-endpoint configuration.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configureEndpoint">The configure endpoint.</param>
     public abstract void ReceiveEndpoint(string queueName, Action<TConfigurator> configureEndpoint);
 
-    /// <summary>
-    /// Performs the apply endpoint definition operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="definition">The definition value.</param>
+    /// <summary>Applies endpoint definition.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="definition">The definition.</param>
     protected void ApplyEndpointDefinition(IReceiveEndpointConfigurator configurator, IEndpointDefinition definition)
     {
         configurator.ConfigureConsumeTopology = definition.ConfigureConsumeTopology;
@@ -303,10 +243,8 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
         definition.Configure(configurator);
     }
 
-    /// <summary>
-    /// Gets configured endpoints.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets configured endpoints.</summary>
+    /// <returns>The configured endpoints.</returns>
     protected IEnumerable<TConfiguration> GetConfiguredEndpoints()
     {
         IList<TConfiguration> endpoints = _endpoints;
@@ -316,10 +254,8 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
         return endpoints;
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="configuration">The configuration callback.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="configuration">The callback used to configure the component.</param>
     protected void Add(TConfiguration configuration)
     {
         _endpoints.Add(configuration);

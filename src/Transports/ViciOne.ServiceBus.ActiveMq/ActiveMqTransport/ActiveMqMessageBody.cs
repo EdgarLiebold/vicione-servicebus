@@ -5,9 +5,7 @@ using Apache.NMS;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides an active mq message body implementation.
-/// </summary>
+/// <summary>Provides cached body access for Apache NMS text and byte messages.</summary>
 public class ActiveMqMessageBody :
     MessageBody
 {
@@ -17,25 +15,16 @@ public class ActiveMqMessageBody :
     bool _initialized;
     string? _string;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Creates a body adapter for an Apache NMS message.</summary>
+    /// <param name="message">The native message whose body is exposed.</param>
     public ActiveMqMessageBody(IMessage message)
     {
         _message = message;
     }
 
     /// <summary>
-    /// The number of bytes this body transmits, which is by definition the length of what
-    /// <see cref="GetBytes" /> returns, whichever accessor ran first. Reporting only the cached
-    /// array meant the length was nothing at all until somebody had already read the body, so the
-    /// same message answered differently depending on the order of two independent calls.
-    /// <para>
-    /// Answering it from the message a second time instead of from <see cref="GetBytes" /> would
-    /// let the two drift apart and would touch a provider property that is not always readable, so
-    /// it delegates: whatever the body is, and whatever refuses it, both members agree.
-    /// </para>
+    /// Gets the exact encoded byte length returned by <see cref="GetBytes" />. The body is initialized
+    /// once so length, stream, byte, and string accessors observe the same provider snapshot.
     /// </summary>
     public long? Length
     {
@@ -46,30 +35,24 @@ public class ActiveMqMessageBody :
         }
     }
 
-    /// <summary>
-    /// Gets stream.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a read-only stream over the cached body bytes.</summary>
+    /// <returns>A non-writable memory stream positioned at the beginning of the body.</returns>
     public Stream GetStream()
     {
         EnsureInitialized();
         return new MemoryStream(_bytes!, false);
     }
 
-    /// <summary>
-    /// Gets bytes.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the cached body bytes.</summary>
+    /// <returns>The UTF-8 bytes of a text message or a snapshot of a byte message.</returns>
     public byte[] GetBytes()
     {
         EnsureInitialized();
         return _bytes!;
     }
 
-    /// <summary>
-    /// Gets string.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the cached body as text.</summary>
+    /// <returns>The text body or the configured decoding of a byte message.</returns>
     public string GetString()
     {
         EnsureInitialized();

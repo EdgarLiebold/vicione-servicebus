@@ -5,18 +5,14 @@ using ViciOne.ServiceBus.JobService.Scheduling;
 
 namespace ViciOne.ServiceBus.JobService.Messages;
 
-/// <summary>
-/// Provides a recurring job schedule info implementation.
-/// </summary>
+/// <summary>Carries diagnostic information for recurring job schedule.</summary>
 public class RecurringJobScheduleInfo :
     RecurringJobSchedule,
     IRecurringJobScheduleConfigurator,
     ISpecification
 {
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         var hasCronExpression = !string.IsNullOrWhiteSpace(CronExpression);
@@ -44,20 +40,12 @@ public class RecurringJobScheduleInfo :
             yield return failure;
     }
 
-    /// <summary>
-    /// Gets or sets the cron expression value.
-    /// </summary>
+    /// <summary>Gets or sets the cron expression.</summary>
     public string? CronExpression { get; set; }
-    /// <summary>
-    /// Gets or sets the time zone id value.
-    /// </summary>
+    /// <summary>Gets or sets the time zone id.</summary>
     public string? TimeZoneId { get; set; }
-    /// <summary>
-    /// Gets or sets the start value.
-    /// </summary>
+    /// <summary>Gets or sets the start.</summary>
     public DateTimeOffset? Start { get; set; }
-    /// <summary>
-    /// Gets or sets the end value.
-    /// </summary>
+    /// <summary>Gets or sets the end.</summary>
     public DateTimeOffset? End { get; set; }
 }

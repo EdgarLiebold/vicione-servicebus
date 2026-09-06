@@ -7,15 +7,11 @@ using ViciOne.ServiceBus.JobService.Messages;
 
 namespace ViciOne.ServiceBus.JobService;
 
-/// <summary>
-/// Provides a job attempt state machine implementation.
-/// </summary>
+/// <summary>Coordinates the state transitions for job attempt.</summary>
 public sealed class JobAttemptStateMachine :
     ViciOneServiceBusStateMachine<JobAttemptSaga>
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public JobAttemptStateMachine()
     {
         Event(() => StartJobAttempt, x =>
@@ -184,67 +180,36 @@ public sealed class JobAttemptStateMachine :
         SetCompletedWhenFinalized();
     }
 
-    //
-    /// <summary>
-    /// Gets the starting value.
-    /// </summary>
+    /// <summary>Gets the starting.</summary>
     public State Starting { get; } = null!;
-    /// <summary>
-    /// Gets the running value.
-    /// </summary>
+    /// <summary>Gets the running.</summary>
     public State Running { get; } = null!;
-    /// <summary>
-    /// Gets the checking status value.
-    /// </summary>
+    /// <summary>Gets the checking status.</summary>
     public State CheckingStatus { get; } = null!;
-    /// <summary>
-    /// Gets the suspect value.
-    /// </summary>
+    /// <summary>Gets the suspect.</summary>
     public State Suspect { get; } = null!;
-    /// <summary>
-    /// Gets the faulted value.
-    /// </summary>
+    /// <summary>Gets the faulted.</summary>
     public State Faulted { get; } = null!;
 
-    /// <summary>
-    /// Gets the start job attempt value.
-    /// </summary>
+    /// <summary>Gets the start job attempt.</summary>
     public Event<StartJobAttempt> StartJobAttempt { get; } = null!;
-    /// <summary>
-    /// Gets the start job faulted value.
-    /// </summary>
+    /// <summary>Gets the start job faulted.</summary>
     public Event<Fault<StartJob>> StartJobFaulted { get; } = null!;
-    /// <summary>
-    /// Gets the finalize job attempt value.
-    /// </summary>
+    /// <summary>Gets the finalize job attempt.</summary>
     public Event<FinalizeJobAttempt> FinalizeJobAttempt { get; } = null!;
-    /// <summary>
-    /// Gets the cancel job attempt value.
-    /// </summary>
+    /// <summary>Gets the cancel job attempt.</summary>
     public Event<CancelJobAttempt> CancelJobAttempt { get; } = null!;
-    /// <summary>
-    /// Gets the attempt started value.
-    /// </summary>
+    /// <summary>Gets the attempt started.</summary>
     public Event<JobAttemptStarted> AttemptStarted { get; } = null!;
-    /// <summary>
-    /// Gets the attempt faulted value.
-    /// </summary>
+    /// <summary>Gets the attempt faulted.</summary>
     public Event<JobAttemptFaulted> AttemptFaulted { get; } = null!;
-    /// <summary>
-    /// Gets the attempt completed value.
-    /// </summary>
+    /// <summary>Gets the attempt completed.</summary>
     public Event<JobAttemptCompleted> AttemptCompleted { get; } = null!;
-    /// <summary>
-    /// Gets the attempt canceled value.
-    /// </summary>
+    /// <summary>Gets the attempt canceled.</summary>
     public Event<JobAttemptCanceled> AttemptCanceled { get; } = null!;
-    /// <summary>
-    /// Gets the attempt status value.
-    /// </summary>
+    /// <summary>Gets the attempt status.</summary>
     public Event<JobAttemptStatus> AttemptStatus { get; } = null!;
-    /// <summary>
-    /// Gets the status check requested value.
-    /// </summary>
+    /// <summary>Gets the status check requested.</summary>
     public Schedule<JobAttemptSaga, JobStatusCheckRequested> StatusCheckRequested { get; } = null!;
 }
 

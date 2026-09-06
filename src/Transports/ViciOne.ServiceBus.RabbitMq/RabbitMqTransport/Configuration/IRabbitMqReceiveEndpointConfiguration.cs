@@ -3,21 +3,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Defines the contract for rabbit mq receive endpoint configuration.
-/// </summary>
+/// <summary>Builds a RabbitMQ receive endpoint from validated queue and pipeline settings.</summary>
 public interface IRabbitMqReceiveEndpointConfiguration :
     IReceiveEndpointConfiguration,
     IRabbitMqEndpointConfiguration
 {
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the immutable receive settings used to declare broker topology.</summary>
     ReceiveSettings Settings { get; }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <param name="host">The host value.</param>
+    /// <summary>Builds and attaches the receive endpoint to a running host.</summary>
+    /// <param name="host">The host that owns the receive endpoint.</param>
     void Build(IHost host);
 }

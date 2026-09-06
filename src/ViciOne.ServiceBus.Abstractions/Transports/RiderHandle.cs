@@ -3,19 +3,13 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Defines the contract for rider handle.
-/// </summary>
+/// <summary>Controls the lifetime of rider.</summary>
 public interface RiderHandle
 {
-    /// <summary>
-    /// Gets the ready value.
-    /// </summary>
+    /// <summary>Gets the ready.</summary>
     Task Ready { get; }
-    /// <summary>
-    /// Stops the configured component.
-    /// </summary>
+    /// <summary>Stops the configured component.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task StopAsync(CancellationToken cancellationToken);
 }

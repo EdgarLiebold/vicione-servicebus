@@ -2,19 +2,15 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SqlTransport.Middleware;
 
-/// <summary>
-/// Purges the queue on startup, only once per filter instance
-/// </summary>
+/// <summary>Purges the queue on startup, only once per filter instance.</summary>
 public class PurgeOnStartupFilter :
     IFilter<ClientContext>
 {
     readonly string _queueName;
     bool _queueAlreadyPurged;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="queueName">The queue name.</param>
     public PurgeOnStartupFilter(string queueName)
     {
         _queueName = queueName;

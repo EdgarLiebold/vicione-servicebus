@@ -6,11 +6,9 @@ namespace ViciOne.ServiceBus.Serialization;
 /// </summary>
 public static class ObjectDeserializer
 {
-    /// <summary>
-    /// Performs the serialize operation.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Serializes the supplied value.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The serialized value.</returns>
     public static string? Serialize(object? value)
     {
         return value == null
@@ -18,13 +16,11 @@ public static class ObjectDeserializer
             : ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(value).GetString();
     }
 
-    /// <summary>
-    /// Performs the deserialize operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="value">The value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deserializes the supplied payload.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="value">The value to process.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The deserialized value.</returns>
     public static T? Deserialize<T>(object? value, T? defaultValue = null)
         where T : class
     {
@@ -36,13 +32,11 @@ public static class ObjectDeserializer
         };
     }
 
-    /// <summary>
-    /// Performs the deserialize operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="value">The value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deserializes the supplied payload.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="value">The value to process.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The deserialized value.</returns>
     public static T? Deserialize<T>(object? value, T? defaultValue = default)
         where T : struct
     {

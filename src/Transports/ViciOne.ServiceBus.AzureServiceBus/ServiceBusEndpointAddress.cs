@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Represents a service bus endpoint address value.
-/// </summary>
+/// <summary>Parses and formats Azure Service Bus queue or topic addresses.</summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct ServiceBusEndpointAddress
 {
@@ -18,56 +16,36 @@ public readonly struct ServiceBusEndpointAddress
     const string TypeKey = "type";
 
 
-    /// <summary>
-    /// Specifies the available address type values.
-    /// </summary>
+    /// <summary>Identifies the Azure entity addressed by an endpoint URI.</summary>
     public enum AddressType
     {
-        /// <summary>
-        /// Indicates queue.
-        /// </summary>
+        /// <summary>The address identifies a queue.</summary>
         Queue = 0,
-        /// <summary>
-        /// Indicates topic.
-        /// </summary>
+        /// <summary>The address identifies a topic.</summary>
         Topic = 1
     }
 
 
     static readonly ITypeConverter<AddressType, string> _parseConverter = new EnumTypeConverter<AddressType>();
 
-    /// <summary>
-    /// Defines the scheme value.
-    /// </summary>
+    /// <summary>The Azure Service Bus URI scheme.</summary>
     public readonly string Scheme;
-    /// <summary>
-    /// Defines the host value.
-    /// </summary>
+    /// <summary>The Azure Service Bus namespace host.</summary>
     public readonly string Host;
-    /// <summary>
-    /// Defines the scope value.
-    /// </summary>
+    /// <summary>The optional namespace-relative scope preceding the entity name.</summary>
     public readonly string Scope;
 
-    /// <summary>
-    /// Defines the name value.
-    /// </summary>
+    /// <summary>The queue or topic name.</summary>
     public readonly string Name;
-    /// <summary>
-    /// Defines the auto delete value.
-    /// </summary>
+    /// <summary>The optional idle interval after which the entity is deleted.</summary>
     public readonly TimeSpan? AutoDelete;
-    /// <summary>
-    /// Defines the type value.
-    /// </summary>
+    /// <summary>The addressed entity kind.</summary>
     public readonly AddressType Type;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="address">The address value.</param>
-    /// <param name="type">The type value.</param>
+    /// <summary>Resolves an endpoint URI against an Azure Service Bus namespace address.</summary>
+    /// <param name="hostAddress">The namespace address used for relative queue or topic URIs.</param>
+    /// <param name="address">The absolute or transport-relative endpoint address.</param>
+    /// <param name="type">The default entity kind when the address does not override it.</param>
     public ServiceBusEndpointAddress(Uri hostAddress, Uri address, AddressType type = AddressType.Queue)
     {
         ArgumentNullException.ThrowIfNull(hostAddress);
@@ -123,13 +101,11 @@ public readonly struct ServiceBusEndpointAddress
         }
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="type">The type value.</param>
+    /// <summary>Creates an endpoint address from a namespace address and entity name.</summary>
+    /// <param name="hostAddress">The Azure Service Bus namespace address.</param>
+    /// <param name="name">The namespace-relative entity name.</param>
+    /// <param name="autoDelete">The optional idle interval after which the entity is deleted.</param>
+    /// <param name="type">The entity kind.</param>
     public ServiceBusEndpointAddress(Uri hostAddress, string name, TimeSpan? autoDelete = default, AddressType type = AddressType.Queue)
     {
         ArgumentNullException.ThrowIfNull(hostAddress);
@@ -144,9 +120,7 @@ public readonly struct ServiceBusEndpointAddress
         Type = type;
     }
 
-    /// <summary>
-    /// Gets the path value.
-    /// </summary>
+    /// <summary>Gets the namespace-relative entity path, including its scope.</summary>
     public string Path => Scope == "/" ? Name : $"{Scope}/{Name}";
 
     static void ParseLeft(Uri address, out string scheme, out string host, out string scope)
@@ -157,11 +131,9 @@ public readonly struct ServiceBusEndpointAddress
         scope = hostAddress.Scope;
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the endpoint address and its non-default options as a URI.</summary>
+    /// <param name="address">The endpoint address to format.</param>
+    /// <returns>The absolute Azure Service Bus endpoint URI.</returns>
     public static implicit operator Uri(in ServiceBusEndpointAddress address)
     {
         var builder = new UriBuilder

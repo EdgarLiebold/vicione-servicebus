@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a message receiver implementation.
-/// </summary>
+/// <summary>Caches receive pipelines used to dispatch Azure Functions trigger messages.</summary>
 public class MessageReceiver :
     IMessageReceiver
 {
@@ -23,12 +21,10 @@ public class MessageReceiver :
     readonly ConcurrentDictionary<string, Lazy<IServiceBusMessageReceiver>> _receivers;
     readonly IBusRegistrationContext _registration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="registration">The registration value.</param>
-    /// <param name="busHandle">The bus handle value.</param>
-    /// <param name="busInstance">The bus instance value.</param>
+    /// <summary>Creates a receiver bound to an Azure Service Bus bus instance.</summary>
+    /// <param name="registration">The registration context used to configure consumers and sagas.</param>
+    /// <param name="busHandle">The asynchronous bus handle retained for the receiver lifetime.</param>
+    /// <param name="busInstance">The bus instance that supplies Azure host configuration.</param>
     public MessageReceiver(IBusRegistrationContext registration, IAsyncBusHandle busHandle, IBusInstance busInstance)
     {
         _hostConfiguration = busInstance.HostConfiguration as IServiceBusHostConfiguration
@@ -40,13 +36,11 @@ public class MessageReceiver :
         _receivers = new ConcurrentDictionary<string, Lazy<IServiceBusMessageReceiver>>();
     }
 
-    /// <summary>
-    /// Performs the handle operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Dispatches a queue delivery through every matching configured consumer and saga.</summary>
+    /// <param name="queueName">The source queue name.</param>
+    /// <param name="message">The received Azure Service Bus message.</param>
+    /// <param name="cancellationToken">Cancels dispatch.</param>
+    /// <returns>The cached queue receiver's dispatch task.</returns>
     public Task HandleAsync(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
     {
         var receiver = CreateMessageReceiver(queueName, cfg =>
@@ -58,14 +52,12 @@ public class MessageReceiver :
         return receiver.HandleAsync(message, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the handle operation.
-    /// </summary>
-    /// <param name="topicPath">The topic path value.</param>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Dispatches a subscription delivery through every matching configured consumer and saga.</summary>
+    /// <param name="topicPath">The source topic path.</param>
+    /// <param name="subscriptionName">The source subscription name.</param>
+    /// <param name="message">The received Azure Service Bus message.</param>
+    /// <param name="cancellationToken">Cancels dispatch.</param>
+    /// <returns>The cached subscription receiver's dispatch task.</returns>
     public Task HandleAsync(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
     {
         var receiver = CreateMessageReceiver(topicPath, subscriptionName, cfg =>
@@ -77,14 +69,12 @@ public class MessageReceiver :
         return receiver.HandleAsync(message, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the handle consumer operation.
-    /// </summary>
-    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Dispatches a queue delivery through one consumer type.</summary>
+    /// <typeparam name="TConsumer">The consumer type to invoke.</typeparam>
+    /// <param name="queueName">The source queue name.</param>
+    /// <param name="message">The received Azure Service Bus message.</param>
+    /// <param name="cancellationToken">Cancels dispatch.</param>
+    /// <returns>The cached queue receiver's dispatch task for <typeparamref name="TConsumer"/>.</returns>
     public Task HandleConsumerAsync<TConsumer>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TConsumer : class, IConsumer
     {
@@ -96,15 +86,13 @@ public class MessageReceiver :
         return receiver.HandleAsync(message, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the handle consumer operation.
-    /// </summary>
-    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
-    /// <param name="topicPath">The topic path value.</param>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Dispatches a subscription delivery through one consumer type.</summary>
+    /// <typeparam name="TConsumer">The consumer type to invoke.</typeparam>
+    /// <param name="topicPath">The source topic path.</param>
+    /// <param name="subscriptionName">The source subscription name.</param>
+    /// <param name="message">The received Azure Service Bus message.</param>
+    /// <param name="cancellationToken">Cancels dispatch.</param>
+    /// <returns>The cached subscription receiver's dispatch task for <typeparamref name="TConsumer"/>.</returns>
     public Task HandleConsumerAsync<TConsumer>(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TConsumer : class, IConsumer
     {
@@ -116,14 +104,12 @@ public class MessageReceiver :
         return receiver.HandleAsync(message, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the handle saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Dispatches a queue delivery through one saga type.</summary>
+    /// <typeparam name="TSaga">The saga state type to invoke.</typeparam>
+    /// <param name="queueName">The source queue name.</param>
+    /// <param name="message">The received Azure Service Bus message.</param>
+    /// <param name="cancellationToken">Cancels dispatch.</param>
+    /// <returns>The cached queue receiver's dispatch task for <typeparamref name="TSaga"/>.</returns>
     public Task HandleSagaAsync<TSaga>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TSaga : class, ISaga
     {
@@ -135,15 +121,13 @@ public class MessageReceiver :
         return receiver.HandleAsync(message, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the handle saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="topicPath">The topic path value.</param>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Dispatches a subscription delivery through one saga type.</summary>
+    /// <typeparam name="TSaga">The saga state type to invoke.</typeparam>
+    /// <param name="topicPath">The source topic path.</param>
+    /// <param name="subscriptionName">The source subscription name.</param>
+    /// <param name="message">The received Azure Service Bus message.</param>
+    /// <param name="cancellationToken">Cancels dispatch.</param>
+    /// <returns>The cached subscription receiver's dispatch task for <typeparamref name="TSaga"/>.</returns>
     public Task HandleSagaAsync<TSaga>(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TSaga : class, ISaga
     {
@@ -155,14 +139,12 @@ public class MessageReceiver :
         return receiver.HandleAsync(message, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the handle execute activity operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Dispatches a queue delivery through one execute-activity type.</summary>
+    /// <typeparam name="TActivity">The execute-activity type to invoke.</typeparam>
+    /// <param name="queueName">The source queue name.</param>
+    /// <param name="message">The received Azure Service Bus message.</param>
+    /// <param name="cancellationToken">Cancels dispatch.</param>
+    /// <returns>The cached queue receiver's dispatch task for <typeparamref name="TActivity"/>.</returns>
     public Task HandleExecuteActivityAsync<TActivity>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TActivity : class
     {
@@ -174,9 +156,7 @@ public class MessageReceiver :
         return receiver.HandleAsync(message, cancellationToken);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Completes disposal; cached receiver pipelines are owned by the bus configuration.</summary>
     public void Dispose()
     {
     }

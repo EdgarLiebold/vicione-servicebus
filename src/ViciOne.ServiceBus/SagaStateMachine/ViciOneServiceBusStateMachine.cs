@@ -17,7 +17,7 @@ namespace ViciOne.ServiceBus.Sagas;
 /// Defines a saga state machine with event correlation, request/response activities, retries, and
 /// transition policies.
 /// </summary>
-/// <typeparam name="TInstance">The state instance type</typeparam>
+/// <typeparam name="TInstance">The state instance type.</typeparam>
 public partial class ViciOneServiceBusStateMachine<TInstance> :
     SagaStateMachine<TInstance>
     where TInstance : class, SagaStateMachineInstance
@@ -39,9 +39,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     List<PropertyInfo> _stateMachineProperties = null!;
     UnhandledEventCallback<TInstance> _unhandledEventCallback;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     protected ViciOneServiceBusStateMachine()
     {
         _registrations = new Lazy<StateMachineRegistration[]>(() => GetRegistrations());
@@ -87,9 +85,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         }
     }
 
-    /// <summary>
-    /// Gets the correlations value.
-    /// </summary>
+    /// <summary>Gets the correlations.</summary>
     public IEnumerable<EventCorrelation> Correlations
     {
         get
@@ -108,17 +104,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     }
 
     string StateMachine.Name => _name;
-    /// <summary>
-    /// Gets the accessor value.
-    /// </summary>
+    /// <summary>Gets the accessor.</summary>
     public IStateAccessor<TInstance> Accessor => _accessor;
-    /// <summary>
-    /// Gets the initial value.
-    /// </summary>
+    /// <summary>Gets the initial.</summary>
     public State Initial => _initial;
-    /// <summary>
-    /// Gets the final value.
-    /// </summary>
+    /// <summary>Gets the final.</summary>
     public State Final => _final;
 
     State StateMachine.GetState(string name)
@@ -151,11 +141,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         await instanceState.RaiseAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Gets state.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets state.</summary>
+    /// <param name="name">The name.</param>
+    /// <returns>The state.</returns>
     public State<TInstance> GetState(string name)
     {
         if (TryGetState(name, out State<TInstance>? result))
@@ -164,9 +152,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         throw new UnknownStateException(_name, name);
     }
 
-    /// <summary>
-    /// Gets the states value.
-    /// </summary>
+    /// <summary>Gets the states.</summary>
     public IEnumerable<State> States => _stateCache.Values;
 
     Event StateMachine.GetEvent(string name)
@@ -177,9 +163,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         throw new UnknownEventException(_name, name);
     }
 
-    /// <summary>
-    /// Gets the events value.
-    /// </summary>
+    /// <summary>Gets the events.</summary>
     public IEnumerable<Event> Events
     {
         get { return _eventCache.Values.Where(x => false == x.IsTransitionEvent).Select(x => x.Event); }
@@ -187,11 +171,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
     Type StateMachine.InstanceType => typeof(TInstance);
 
-    /// <summary>
-    /// Performs the next events operation.
-    /// </summary>
-    /// <param name="state">The state value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the next state-machine events.</summary>
+    /// <param name="state">The state.</param>
+    /// <returns>The enumerable produced by the operation.</returns>
     public IEnumerable<Event> NextEvents(State state)
     {
         if (_stateCache.TryGetValue(state.Name, out State<TInstance>? result))
@@ -200,30 +182,24 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         throw new UnknownStateException(_name, state.Name);
     }
 
-    /// <summary>
-    /// Determines whether composite event.
-    /// </summary>
-    /// <param name="event">The event value.</param>
+    /// <summary>Determines whether composite event.</summary>
+    /// <param name="event">The event.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsCompositeEvent(Event @event)
     {
         return _compositeEvents.Contains(@event.Name);
     }
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         foreach (State<TInstance> x in IntrospectionStates)
             x.Accept(visitor);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("stateMachine");
@@ -238,11 +214,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
             state.Probe(scope);
     }
 
-    /// <summary>
-    /// Connects event observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects event observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public IDisposable ConnectEventObserver(IEventObserver<TInstance> observer)
     {
         var eventObserver = new NonTransitionEventObserver<TInstance>(_eventCache, observer);
@@ -250,12 +224,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return _eventObservers.Connect(eventObserver);
     }
 
-    /// <summary>
-    /// Connects event observer.
-    /// </summary>
-    /// <param name="event">The event value.</param>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects event observer.</summary>
+    /// <param name="event">The event.</param>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public IDisposable ConnectEventObserver(Event @event, IEventObserver<TInstance> observer)
     {
         var eventObserver = new SelectedEventObserver(@event, observer);
@@ -263,11 +235,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return _eventObservers.Connect(eventObserver);
     }
 
-    /// <summary>
-    /// Connects state observer.
-    /// </summary>
-    /// <param name="stateObserver">The state observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects state observer.</summary>
+    /// <param name="stateObserver">The state observer.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public IDisposable ConnectStateObserver(IStateObserver<TInstance> stateObserver)
     {
         return _stateObservers.Connect(stateObserver);
@@ -283,10 +253,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         throw new UnhandledEventException(_name, context.Event.Name, context.CurrentState.Name);
     }
 
-    /// <summary>
-    /// Declares what property holds the TInstance's state on the current instance of the state machine
-    /// </summary>
-    /// <param name="instanceStateProperty"></param>
+    /// <summary>Declares what property holds the TInstance's state on the current instance of the state machine.</summary>
+    /// <param name="instanceStateProperty">The instance state property.</param>
     /// <remarks>
     /// Setting the state accessor more than once will cause the property managed by the state machine to change each time.
     /// Please note, the state machine can only manage one property at a given time per instance,
@@ -299,10 +267,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         _accessor = new InitialIfNullStateAccessor(_stateCache[Initial.Name], stateAccessor);
     }
 
-    /// <summary>
-    /// Declares the property to hold the instance's state as a string (the state name is stored in the property)
-    /// </summary>
-    /// <param name="instanceStateProperty"></param>
+    /// <summary>Declares the property to hold the instance's state as a string (the state name is stored in the property).</summary>
+    /// <param name="instanceStateProperty">The instance state property.</param>
     protected internal void InstanceState(Expression<Func<TInstance, string>> instanceStateProperty)
     {
         var stateAccessor = new StringStateAccessor(this, instanceStateProperty, _stateObservers);
@@ -310,11 +276,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         _accessor = new InitialIfNullStateAccessor(_stateCache[Initial.Name], stateAccessor);
     }
 
-    /// <summary>
-    /// Declares the property to hold the instance's state as an int (0 - none, 1 = initial, 2 = final, 3... the rest)
-    /// </summary>
-    /// <param name="instanceStateProperty"></param>
-    /// <param name="states">Specifies the states, in order, to which the int values should be assigned</param>
+    /// <summary>Declares the property to hold the instance's state as an int (0 - none, 1 = initial, 2 = final, 3... the rest).</summary>
+    /// <param name="instanceStateProperty">The instance state property.</param>
+    /// <param name="states">Specifies the states, in order, to which the int values should be assigned.</param>
     protected internal void InstanceState(Expression<Func<TInstance, int>> instanceStateProperty, params State[] states)
     {
         var stateIndex = new StateAccessorIndex(this, _initial, _final, states);
@@ -324,10 +288,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         _accessor = new InitialIfNullStateAccessor(_stateCache[Initial.Name], stateAccessor);
     }
 
-    /// <summary>
-    /// Specifies the name of the state machine
-    /// </summary>
-    /// <param name="machineName"></param>
+    /// <summary>Specifies the name of the state machine.</summary>
+    /// <param name="machineName">The machine name.</param>
     protected internal void Name(string machineName)
     {
         if (string.IsNullOrWhiteSpace(machineName))
@@ -336,20 +298,16 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         _name = machineName;
     }
 
-    /// <summary>
-    /// Declares an event, and initializes the event property
-    /// </summary>
-    /// <param name="propertyExpression"></param>
+    /// <summary>Declares an event, and initializes the event property.</summary>
+    /// <param name="propertyExpression">The property expression.</param>
     protected internal void Event(Expression<Func<Event>> propertyExpression)
     {
         DeclarePropertyBasedEvent(prop => DeclareTriggerEvent(prop.Name), propertyExpression.GetPropertyInfo());
     }
 
-    /// <summary>
-    /// Performs the event operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Applies the event configuration.</summary>
+    /// <param name="name">The name.</param>
+    /// <returns>The event produced by the operation.</returns>
     protected internal Event Event(string name)
     {
         return DeclareTriggerEvent(name);
@@ -360,10 +318,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return DeclareEvent(_ => new TriggerEvent(name), name);
     }
 
-    /// <summary>
-    /// Sets the method used to determine if a state machine instance has completed. The saga repository removes completed state machine instances.
-    /// </summary>
-    /// <param name="completed"></param>
+    /// <summary>Sets the method used to determine if a state machine instance has completed. The saga repository removes completed state machine instances.</summary>
+    /// <param name="completed">The completed.</param>
     protected void SetCompleted(Func<TInstance, Task<bool>> completed)
     {
         _isCompleted = completed != null
@@ -371,18 +327,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
             : NotCompletedByDefaultAsync;
     }
 
-    /// <summary>
-    /// Sets completed.
-    /// </summary>
-    /// <param name="completed">The completed value.</param>
+    /// <summary>Sets completed.</summary>
+    /// <param name="completed">The completed.</param>
     protected void SetCompleted(Func<BehaviorContext<TInstance>, Task<bool>> completed)
     {
         _isCompleted = completed ?? NotCompletedByDefaultAsync;
     }
 
-    /// <summary>
-    /// Sets the state machine instance to Completed when in the final state. The saga repository removes completed state machine instances.
-    /// </summary>
+    /// <summary>Sets the state machine instance to Completed when in the final state. The saga repository removes completed state machine instances.</summary>
     protected void SetCompletedWhenFinalized()
     {
         _isCompleted = IsFinalizedAsync;
@@ -423,9 +375,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// Declares an Event on the state machine with the specified data type, and allows the correlation of the event
     /// to be configured.
     /// </summary>
-    /// <typeparam name="T">The event data type</typeparam>
-    /// <param name="propertyExpression">The event property</param>
-    /// <param name="configureEventCorrelation">Configuration callback for the event</param>
+    /// <typeparam name="T">The event data type.</typeparam>
+    /// <param name="propertyExpression">The event property.</param>
+    /// <param name="configureEventCorrelation">Configuration callback for the event.</param>
     protected void Event<T>(Expression<Func<Event<T>>> propertyExpression, Action<IEventCorrelationConfigurator<TInstance, T>> configureEventCorrelation)
         where T : class
     {
@@ -449,11 +401,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// Declares an Event on the state machine with the specified data type, and allows the correlation of the event
     /// to be configured.
     /// </summary>
-    /// <typeparam name="T">The event data type</typeparam>
-    /// <typeparam name="TProperty">The property type</typeparam>
-    /// <param name="propertyExpression">The containing property</param>
-    /// <param name="eventPropertyExpression">The event property expression</param>
-    /// <param name="configureEventCorrelation">Configuration callback for the event</param>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <typeparam name="T">The event data type.</typeparam>
+    /// <param name="propertyExpression">The containing property.</param>
+    /// <param name="eventPropertyExpression">The event property expression.</param>
+    /// <param name="configureEventCorrelation">Configuration callback for the event.</param>
     protected internal void Event<TProperty, T>(Expression<Func<TProperty>> propertyExpression,
         Expression<Func<TProperty, Event<T>>> eventPropertyExpression,
         Action<IEventCorrelationConfigurator<TInstance, T>> configureEventCorrelation)
@@ -479,11 +431,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         _eventCorrelations[@event] = configurator.Build();
     }
 
-    /// <summary>
-    /// Declares a data event on a property of the state machine, and initializes the property
-    /// </summary>
-    /// <param name="propertyExpression">The property</param>
-    /// <param name="eventPropertyExpression">The event property on the property</param>
+    /// <summary>Declares a data event on a property of the state machine, and initializes the property.</summary>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="propertyExpression">The property.</param>
+    /// <param name="eventPropertyExpression">The event property on the property.</param>
     protected internal void Event<TProperty, T>(Expression<Func<TProperty>> propertyExpression,
         Expression<Func<TProperty, Event<T>>> eventPropertyExpression)
         where TProperty : class
@@ -510,8 +462,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// CorrelatedBy(Guid) interface. The correlation by CorrelationId is automatically configured to the saga
     /// instance.
     /// </summary>
-    /// <typeparam name="T">The event data type</typeparam>
-    /// <param name="propertyExpression">The property to initialize</param>
+    /// <typeparam name="T">The event data type.</typeparam>
+    /// <param name="propertyExpression">The property to initialize.</param>
     protected internal void Event<T>(Expression<Func<Event<T>>> propertyExpression)
         where T : class
     {
@@ -531,8 +483,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// Declares an Event on the state machine with the specified data type, and allows the correlation of the event
     /// to be configured.
     /// </summary>
-    /// <typeparam name="T">The event data type</typeparam>
-    /// <param name="name">The event name (must be unique)</param>
+    /// <typeparam name="T">The event data type.</typeparam>
+    /// <param name="name">The event name (must be unique).</param>
+    /// <returns>The event produced by the operation.</returns>
     protected internal Event<T> Event<T>(string name)
         where T : class
     {
@@ -549,9 +502,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// Declares an Event on the state machine with the specified data type, and allows the correlation of the event
     /// to be configured.
     /// </summary>
-    /// <typeparam name="T">The event data type</typeparam>
-    /// <param name="name">The event name (must be unique)</param>
-    /// <param name="configure">Configuration callback method</param>
+    /// <typeparam name="T">The event data type.</typeparam>
+    /// <param name="name">The event name (must be unique).</param>
+    /// <param name="configure">Configuration callback method.</param>
+    /// <returns>The event produced by the operation.</returns>
     protected internal Event<T> Event<T>(string name, Action<IEventCorrelationConfigurator<TInstance, T>> configure)
         where T : class
     {
@@ -571,11 +525,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <summary>
     /// Adds a composite event to the state machine. A composite event is triggered when all
     /// off the required events have been raised. Note that required events cannot be in the initial
-    /// state since it would cause extra instances of the state machine to be created
+    /// state since it would cause extra instances of the state machine to be created.
     /// </summary>
-    /// <param name="propertyExpression">The composite event</param>
-    /// <param name="trackingPropertyExpression">The property in the instance used to track the state of the composite event</param>
-    /// <param name="events">The events that must be raised before the composite event is raised</param>
+    /// <param name="propertyExpression">The composite event.</param>
+    /// <param name="trackingPropertyExpression">The property in the instance used to track the state of the composite event.</param>
+    /// <param name="events">The events that must be raised before the composite event is raised.</param>
+    /// <returns>The event produced by the operation.</returns>
     protected internal Event CompositeEvent(Expression<Func<Event>> propertyExpression,
         Expression<Func<TInstance, CompositeEventStatus>> trackingPropertyExpression,
         params Event[] events)
@@ -586,12 +541,13 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <summary>
     /// Adds a composite event to the state machine. A composite event is triggered when all
     /// off the required events have been raised. Note that required events cannot be in the initial
-    /// state since it would cause extra instances of the state machine to be created
+    /// state since it would cause extra instances of the state machine to be created.
     /// </summary>
-    /// <param name="propertyExpression">The composite event</param>
-    /// <param name="trackingPropertyExpression">The property in the instance used to track the state of the composite event</param>
-    /// <param name="options">Options on the composite event</param>
-    /// <param name="events">The events that must be raised before the composite event is raised</param>
+    /// <param name="propertyExpression">The composite event.</param>
+    /// <param name="trackingPropertyExpression">The property in the instance used to track the state of the composite event.</param>
+    /// <param name="options">Options on the composite event.</param>
+    /// <param name="events">The events that must be raised before the composite event is raised.</param>
+    /// <returns>The event produced by the operation.</returns>
     protected internal Event CompositeEvent(Expression<Func<Event>> propertyExpression,
         Expression<Func<TInstance, CompositeEventStatus>> trackingPropertyExpression,
         CompositeEventOptions options, params Event[] events)
@@ -606,11 +562,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <summary>
     /// Adds a composite event to the state machine. A composite event is triggered when all
     /// off the required events have been raised. Note that required events cannot be in the initial
-    /// state since it would cause extra instances of the state machine to be created
+    /// state since it would cause extra instances of the state machine to be created.
     /// </summary>
-    /// <param name="propertyExpression">The composite event</param>
-    /// <param name="trackingPropertyExpression">The property in the instance used to track the state of the composite event</param>
-    /// <param name="events">The events that must be raised before the composite event is raised</param>
+    /// <param name="propertyExpression">The composite event.</param>
+    /// <param name="trackingPropertyExpression">The property in the instance used to track the state of the composite event.</param>
+    /// <param name="events">The events that must be raised before the composite event is raised.</param>
+    /// <returns>The event produced by the operation.</returns>
     protected internal Event CompositeEvent(Expression<Func<Event>> propertyExpression, Expression<Func<TInstance, int>> trackingPropertyExpression,
         params Event[] events)
     {
@@ -620,12 +577,13 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <summary>
     /// Adds a composite event to the state machine. A composite event is triggered when all
     /// off the required events have been raised. Note that required events cannot be in the initial
-    /// state since it would cause extra instances of the state machine to be created
+    /// state since it would cause extra instances of the state machine to be created.
     /// </summary>
-    /// <param name="propertyExpression">The composite event</param>
-    /// <param name="trackingPropertyExpression">The property in the instance used to track the state of the composite event</param>
-    /// <param name="options">Options on the composite event</param>
-    /// <param name="events">The events that must be raised before the composite event is raised</param>
+    /// <param name="propertyExpression">The composite event.</param>
+    /// <param name="trackingPropertyExpression">The property in the instance used to track the state of the composite event.</param>
+    /// <param name="options">Options on the composite event.</param>
+    /// <param name="events">The events that must be raised before the composite event is raised.</param>
+    /// <returns>The event produced by the operation.</returns>
     protected internal Event CompositeEvent(Expression<Func<Event>> propertyExpression, Expression<Func<TInstance, int>> trackingPropertyExpression,
         CompositeEventOptions options, params Event[] events)
     {
@@ -641,14 +599,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return CompositeEvent(name, trackingPropertyExpression, CompositeEventOptions.None, events);
     }
 
-    /// <summary>
-    /// Performs the composite event operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="trackingPropertyExpression">The tracking property expression value.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="events">The events value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Configures the composite event.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="trackingPropertyExpression">The tracking property expression.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="events">The events.</param>
+    /// <returns>The event produced by the operation.</returns>
     protected internal Event CompositeEvent(string name, Expression<Func<TInstance, CompositeEventStatus>> trackingPropertyExpression,
         CompositeEventOptions options,
         params Event[] events)
@@ -661,41 +617,35 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return CompositeEvent(name, trackingPropertyExpression, CompositeEventOptions.None, events);
     }
 
-    /// <summary>
-    /// Performs the composite event operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="trackingPropertyExpression">The tracking property expression value.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="events">The events value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Configures the composite event.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="trackingPropertyExpression">The tracking property expression.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="events">The events.</param>
+    /// <returns>The event produced by the operation.</returns>
     protected internal Event CompositeEvent(string name, Expression<Func<TInstance, int>> trackingPropertyExpression, CompositeEventOptions options,
         params Event[] events)
     {
         return CompositeEvent(name, new IntCompositeEventStatusAccessor<TInstance>(trackingPropertyExpression.GetPropertyInfo()), options, events);
     }
 
-    /// <summary>
-    /// Performs the composite event operation.
-    /// </summary>
-    /// <param name="event">The event value.</param>
-    /// <param name="trackingPropertyExpression">The tracking property expression value.</param>
-    /// <param name="events">The events value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Configures the composite event.</summary>
+    /// <param name="event">The event.</param>
+    /// <param name="trackingPropertyExpression">The tracking property expression.</param>
+    /// <param name="events">The events.</param>
+    /// <returns>The event produced by the operation.</returns>
     protected internal Event CompositeEvent(Event @event, Expression<Func<TInstance, CompositeEventStatus>> trackingPropertyExpression,
         params Event[] events)
     {
         return CompositeEvent(@event, trackingPropertyExpression, CompositeEventOptions.None, events);
     }
 
-    /// <summary>
-    /// Performs the composite event operation.
-    /// </summary>
-    /// <param name="event">The event value.</param>
-    /// <param name="trackingPropertyExpression">The tracking property expression value.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="events">The events value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Configures the composite event.</summary>
+    /// <param name="event">The event.</param>
+    /// <param name="trackingPropertyExpression">The tracking property expression.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="events">The events.</param>
+    /// <returns>The event produced by the operation.</returns>
     protected internal Event CompositeEvent(Event @event,
         Expression<Func<TInstance, CompositeEventStatus>> trackingPropertyExpression,
         CompositeEventOptions options,
@@ -704,13 +654,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return CompositeEvent(@event, new StructCompositeEventStatusAccessor<TInstance>(trackingPropertyExpression.GetPropertyInfo()), options, events);
     }
 
-    /// <summary>
-    /// Performs the composite event operation.
-    /// </summary>
-    /// <param name="event">The event value.</param>
-    /// <param name="trackingPropertyExpression">The tracking property expression value.</param>
-    /// <param name="events">The events value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Configures the composite event.</summary>
+    /// <param name="event">The event.</param>
+    /// <param name="trackingPropertyExpression">The tracking property expression.</param>
+    /// <param name="events">The events.</param>
+    /// <returns>The event produced by the operation.</returns>
     protected internal Event CompositeEvent(Event @event,
         Expression<Func<TInstance, int>> trackingPropertyExpression,
         params Event[] events)
@@ -718,14 +666,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return CompositeEvent(@event, trackingPropertyExpression, CompositeEventOptions.None, events);
     }
 
-    /// <summary>
-    /// Performs the composite event operation.
-    /// </summary>
-    /// <param name="event">The event value.</param>
-    /// <param name="trackingPropertyExpression">The tracking property expression value.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="events">The events value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Configures the composite event.</summary>
+    /// <param name="event">The event.</param>
+    /// <param name="trackingPropertyExpression">The tracking property expression.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="events">The events.</param>
+    /// <returns>The event produced by the operation.</returns>
     protected internal Event CompositeEvent(Event @event,
         Expression<Func<TInstance, int>> trackingPropertyExpression,
         CompositeEventOptions options,
@@ -813,10 +759,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return @event;
     }
 
-    /// <summary>
-    /// Declares a state on the state machine, and initialized the property
-    /// </summary>
-    /// <param name="propertyExpression">The state property</param>
+    /// <summary>Declares a state on the state machine, and initialized the property.</summary>
+    /// <param name="propertyExpression">The state property.</param>
     protected internal void State(Expression<Func<State>> propertyExpression)
     {
         var property = propertyExpression.GetPropertyInfo();
@@ -824,11 +768,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         DeclareState(property);
     }
 
-    /// <summary>
-    /// Performs the state operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Applies the state configuration.</summary>
+    /// <param name="name">The name.</param>
+    /// <returns>The state produced by the operation.</returns>
     protected internal State<TInstance> State(string name)
     {
         if (TryGetState(name, out State<TInstance>? foundState))
@@ -847,7 +789,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
         var propertyValue = property.GetValue(this);
 
-        // If the state was already defined, don't define it again
+        // A matching initialized property already represents the declared state.
         var existingState = propertyValue as StateMachineState;
         if (name.Equals(existingState?.Name))
             return;
@@ -859,11 +801,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         SetState(name, state);
     }
 
-    /// <summary>
-    /// Declares a state on the state machine, and initialized the property
-    /// </summary>
-    /// <param name="propertyExpression">The property containing the state</param>
-    /// <param name="statePropertyExpression">The state property</param>
+    /// <summary>Declares a state on the state machine, and initialized the property.</summary>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyExpression">The property containing the state.</param>
+    /// <param name="statePropertyExpression">The state property.</param>
     protected internal void State<TProperty>(Expression<Func<TProperty>> propertyExpression,
         Expression<Func<TProperty, State>> statePropertyExpression)
         where TProperty : class
@@ -905,8 +846,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// Declares a sub-state on the machine. A sub-state is a state that is valid within a super-state,
     /// allowing a state machine to have multiple "states" -- nested parts of an overall state.
     /// </summary>
-    /// <param name="propertyExpression">The state property expression</param>
-    /// <param name="superState">The superstate of which this state is a substate</param>
+    /// <param name="propertyExpression">The state property expression.</param>
+    /// <param name="superState">The superstate of which this state is a substate.</param>
     protected internal void SubState(Expression<Func<State>> propertyExpression, State superState)
     {
         if (superState == null)
@@ -920,7 +861,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
         var propertyValue = property.GetValue(this);
 
-        // If the state was already defined, don't define it again
+        // A matching initialized property already represents the declared substate.
         var existingState = propertyValue as StateMachineState;
         if (name.Equals(existingState?.Name) && superState.Name.Equals(existingState?.SuperState?.Name))
             return;
@@ -932,12 +873,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         SetState(name, state);
     }
 
-    /// <summary>
-    /// Performs the sub state operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="superState">The super state value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Configures a state-machine substate.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="superState">The super state.</param>
+    /// <returns>The state produced by the operation.</returns>
     protected internal State<TInstance> SubState(string name, State superState)
     {
         if (superState == null)
@@ -945,7 +884,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
         State<TInstance> superStateInstance = GetState(superState.Name);
 
-        // If the state was already defined, don't define it again
+        // A matching named state with the same parent already represents the declared substate.
         if (TryGetState(name, out State<TInstance>? existingState) &&
             name.Equals(existingState?.Name) &&
             superState.Name.Equals(existingState?.SuperState?.Name))
@@ -957,12 +896,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return state;
     }
 
-    /// <summary>
-    /// Declares a state on the state machine, and initialized the property
-    /// </summary>
-    /// <param name="propertyExpression">The property containing the state</param>
-    /// <param name="statePropertyExpression">The state property</param>
-    /// <param name="superState">The superstate of which this state is a substate</param>
+    /// <summary>Declares a state on the state machine, and initialized the property.</summary>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyExpression">The property containing the state.</param>
+    /// <param name="statePropertyExpression">The state property.</param>
+    /// <param name="superState">The superstate of which this state is a substate.</param>
     protected internal void SubState<TProperty>(Expression<Func<TProperty>> propertyExpression,
         Expression<Func<TProperty, State>> statePropertyExpression, State superState)
         where TProperty : class
@@ -992,11 +930,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         SetState(name, state);
     }
 
-    /// <summary>
-    /// Adds the state, and state transition events, to the cache
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="state"></param>
+    /// <summary>Adds the state, and state transition events, to the cache.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="state">The state.</param>
     void SetState(string name, StateMachineState state)
     {
         _stateCache[name] = state;
@@ -1007,11 +943,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         _eventCache[state.AfterLeave.Name] = new StateMachineEvent(state.AfterLeave, true);
     }
 
-    /// <summary>
-    /// Declares the events and associated activities that are handled during the specified state
-    /// </summary>
-    /// <param name="state">The state</param>
-    /// <param name="activities">The event and activities</param>
+    /// <summary>Declares the events and associated activities that are handled during the specified state.</summary>
+    /// <param name="state">The state.</param>
+    /// <param name="activities">The event and activities.</param>
     protected internal void During(State state, params EventActivities<TInstance>[] activities)
     {
         IActivityBinder<TInstance>[] activitiesBinder = activities.SelectMany(x => x.GetStateActivityBinders()).ToArray();
@@ -1019,12 +953,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         BindActivitiesToState(state, activitiesBinder);
     }
 
-    /// <summary>
-    /// Declares the events and associated activities that are handled during the specified states
-    /// </summary>
-    /// <param name="state1">The state</param>
-    /// <param name="state2">The other state</param>
-    /// <param name="activities">The event and activities</param>
+    /// <summary>Declares the events and associated activities that are handled during the specified states.</summary>
+    /// <param name="state1">The state.</param>
+    /// <param name="state2">The other state.</param>
+    /// <param name="activities">The event and activities.</param>
     protected internal void During(State state1, State state2, params EventActivities<TInstance>[] activities)
     {
         IActivityBinder<TInstance>[] activitiesBinder = activities.SelectMany(x => x.GetStateActivityBinders()).ToArray();
@@ -1033,13 +965,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         BindActivitiesToState(state2, activitiesBinder);
     }
 
-    /// <summary>
-    /// Declares the events and associated activities that are handled during the specified states
-    /// </summary>
-    /// <param name="state1">The state</param>
-    /// <param name="state2">The other state</param>
-    /// <param name="state3">The other other state</param>
-    /// <param name="activities">The event and activities</param>
+    /// <summary>Declares the events and associated activities that are handled during the specified states.</summary>
+    /// <param name="state1">The state.</param>
+    /// <param name="state2">The other state.</param>
+    /// <param name="state3">The other other state.</param>
+    /// <param name="activities">The event and activities.</param>
     protected internal void During(State state1, State state2, State state3, params EventActivities<TInstance>[] activities)
     {
         IActivityBinder<TInstance>[] activitiesBinder = activities.SelectMany(x => x.GetStateActivityBinders()).ToArray();
@@ -1049,14 +979,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         BindActivitiesToState(state3, activitiesBinder);
     }
 
-    /// <summary>
-    /// Declares the events and associated activities that are handled during the specified states
-    /// </summary>
-    /// <param name="state1">The state</param>
-    /// <param name="state2">The other state</param>
-    /// <param name="state3">The other other state</param>
-    /// <param name="state4">Okay, this is getting a bit ridiculous at this point</param>
-    /// <param name="activities">The event and activities</param>
+    /// <summary>Declares the events and associated activities that are handled during the specified states.</summary>
+    /// <param name="state1">The state.</param>
+    /// <param name="state2">The other state.</param>
+    /// <param name="state3">The other other state.</param>
+    /// <param name="state4">Okay, this is getting a bit ridiculous at this point.</param>
+    /// <param name="activities">The event and activities.</param>
     protected internal void During(State state1, State state2, State state3, State state4,
         params EventActivities<TInstance>[] activities)
     {
@@ -1068,11 +996,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         BindActivitiesToState(state4, activitiesBinder);
     }
 
-    /// <summary>
-    /// Declares the events and associated activities that are handled during the specified states
-    /// </summary>
-    /// <param name="states">The states</param>
-    /// <param name="activities">The event and activities</param>
+    /// <summary>Declares the events and associated activities that are handled during the specified states.</summary>
+    /// <param name="states">The states.</param>
+    /// <param name="activities">The event and activities.</param>
     protected internal void During(IEnumerable<State> states, params EventActivities<TInstance>[] activities)
     {
         IActivityBinder<TInstance>[] activitiesBinder = activities.SelectMany(x => x.GetStateActivityBinders()).ToArray();
@@ -1089,31 +1015,26 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
             activity.Bind(activityState);
     }
 
-    /// <summary>
-    /// Declares the events and activities that are handled during the initial state
-    /// </summary>
-    /// <param name="activities">The event and activities</param>
+    /// <summary>Declares the events and activities that are handled during the initial state.</summary>
+    /// <param name="activities">The event and activities.</param>
     protected internal void Initially(params EventActivities<TInstance>[] activities)
     {
         During(Initial, activities);
     }
 
-    /// <summary>
-    /// Declares events and activities that are handled during any state except the Initial and Final
-    /// </summary>
-    /// <param name="activities">The event and activities</param>
+    /// <summary>Declares events and activities that are handled during any state except the Initial and Final.</summary>
+    /// <param name="activities">The event and activities.</param>
     protected internal void DuringAny(params EventActivities<TInstance>[] activities)
     {
         IActivityBinder<TInstance>[] activitiesBinder = activities.SelectMany(x => x.GetStateActivityBinders()).ToArray();
 
         IEnumerable<State<TInstance>> states = _stateCache.Values.Where(x => !Equals(x, Initial) && !Equals(x, Final));
 
-        // We only add DuringAny event handlers to non-initial and non-final states to avoid
-        // reviving finalized state machine instances or creating new ones accidentally.
+        // DuringAny handlers exclude boundary states so they cannot create or revive an instance.
         foreach (State<TInstance> state in states)
             BindActivitiesToState(state, activitiesBinder);
 
-        // Specifically bind CompositeEvents to Initial and Final states to avoid them not being able to be fired.
+        // Composite events remain observable at both boundary states.
         IActivityBinder<TInstance>[] compositeEvents = activitiesBinder.Where(binder => IsCompositeEvent(binder.Event)).ToArray();
         BindActivitiesToState(_initial, compositeEvents);
         BindActivitiesToState(_final, compositeEvents);
@@ -1122,9 +1043,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         BindTransitionEvents(_final, activities);
     }
 
-    /// <summary>
-    /// When the Final state is entered, execute the chained activities. This occurs in any state that is not the initial or final state
-    /// </summary>
+    /// <summary>When the Final state is entered, execute the chained activities. This occurs in any state that is not the initial or final state.</summary>
     /// <param name="activityCallback">Specify the activities that are executes when the Final state is entered.</param>
     protected internal void Finally(Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> activityCallback)
     {
@@ -1144,33 +1063,26 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
             eventActivity.Bind(state);
     }
 
-    /// <summary>
-    /// When the event is fired in this state, execute the chained activities
-    /// </summary>
-    /// <param name="event">The fired event</param>
-    /// <returns></returns>
+    /// <summary>When the event is fired in this state, execute the chained activities.</summary>
+    /// <param name="event">The fired event.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     protected internal EventActivityBinder<TInstance> When(Event @event)
     {
         return When(@event, null);
     }
 
-    /// <summary>
-    /// When the event is fired in this state, and the event data matches the filter expression, execute the chained activities
-    /// </summary>
-    /// <param name="event">The fired event</param>
-    /// <param name="filter">The filter applied to the event</param>
-    /// <returns></returns>
+    /// <summary>When the event is fired in this state, and the event data matches the filter expression, execute the chained activities.</summary>
+    /// <param name="event">The fired event.</param>
+    /// <param name="filter">The filter applied to the event.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     protected internal EventActivityBinder<TInstance> When(Event @event, StateMachineCondition<TInstance>? filter)
     {
         return new TriggerEventActivityBinder<TInstance>(this, @event, filter);
     }
 
-    /// <summary>
-    /// When entering the specified state
-    /// </summary>
-    /// <param name="state"></param>
-    /// <param name="activityCallback"></param>
-    /// <returns></returns>
+    /// <summary>When entering the specified state.</summary>
+    /// <param name="state">The state.</param>
+    /// <param name="activityCallback">The activity callback.</param>
     protected internal void WhenEnter(State state, Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> activityCallback)
     {
         State<TInstance> activityState = GetState(state.Name);
@@ -1182,21 +1094,15 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         During(state, binder);
     }
 
-    /// <summary>
-    /// When entering any state
-    /// </summary>
-    /// <param name="activityCallback"></param>
-    /// <returns></returns>
+    /// <summary>When entering any state.</summary>
+    /// <param name="activityCallback">The activity callback.</param>
     protected internal void WhenEnterAny(Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> activityCallback)
     {
         BindEveryTransitionEvent(activityCallback, x => x.Enter);
     }
 
-    /// <summary>
-    /// When leaving any state
-    /// </summary>
-    /// <param name="activityCallback"></param>
-    /// <returns></returns>
+    /// <summary>When leaving any state.</summary>
+    /// <param name="activityCallback">The activity callback.</param>
     protected internal void WhenLeaveAny(Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> activityCallback)
     {
         BindEveryTransitionEvent(activityCallback, x => x.Leave);
@@ -1221,21 +1127,15 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         }
     }
 
-    /// <summary>
-    /// Before entering any state
-    /// </summary>
-    /// <param name="activityCallback"></param>
-    /// <returns></returns>
+    /// <summary>Before entering any state.</summary>
+    /// <param name="activityCallback">The activity callback.</param>
     protected internal void BeforeEnterAny(Func<EventActivityBinder<TInstance, State>, EventActivityBinder<TInstance, State>> activityCallback)
     {
         BindEveryTransitionEvent(activityCallback, x => x.BeforeEnter);
     }
 
-    /// <summary>
-    /// After leaving any state
-    /// </summary>
-    /// <param name="activityCallback"></param>
-    /// <returns></returns>
+    /// <summary>After leaving any state.</summary>
+    /// <param name="activityCallback">The activity callback.</param>
     protected internal void AfterLeaveAny(Func<EventActivityBinder<TInstance, State>, EventActivityBinder<TInstance, State>> activityCallback)
     {
         BindEveryTransitionEvent(activityCallback, x => x.AfterLeave);
@@ -1260,12 +1160,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         }
     }
 
-    /// <summary>
-    /// When leaving the specified state
-    /// </summary>
-    /// <param name="state"></param>
-    /// <param name="activityCallback"></param>
-    /// <returns></returns>
+    /// <summary>When leaving the specified state.</summary>
+    /// <param name="state">The state.</param>
+    /// <param name="activityCallback">The activity callback.</param>
     protected internal void WhenLeave(State state, Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> activityCallback)
     {
         State<TInstance> activityState = GetState(state.Name);
@@ -1277,12 +1174,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         During(state, binder);
     }
 
-    /// <summary>
-    /// Before entering the specified state
-    /// </summary>
-    /// <param name="state"></param>
-    /// <param name="activityCallback"></param>
-    /// <returns></returns>
+    /// <summary>Before entering the specified state.</summary>
+    /// <param name="state">The state.</param>
+    /// <param name="activityCallback">The activity callback.</param>
     protected internal void BeforeEnter(State state,
         Func<EventActivityBinder<TInstance, State>, EventActivityBinder<TInstance, State>> activityCallback)
     {
@@ -1295,12 +1189,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         During(state, binder);
     }
 
-    /// <summary>
-    /// After leaving the specified state
-    /// </summary>
-    /// <param name="state"></param>
-    /// <param name="activityCallback"></param>
-    /// <returns></returns>
+    /// <summary>After leaving the specified state.</summary>
+    /// <param name="state">The state.</param>
+    /// <param name="activityCallback">The activity callback.</param>
     protected internal void AfterLeave(State state,
         Func<EventActivityBinder<TInstance, State>, EventActivityBinder<TInstance, State>> activityCallback)
     {
@@ -1313,36 +1204,30 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         During(state, binder);
     }
 
-    /// <summary>
-    /// When the event is fired in this state, execute the chained activities
-    /// </summary>
-    /// <typeparam name="TMessage">The event data type</typeparam>
-    /// <param name="event">The fired event</param>
-    /// <returns></returns>
+    /// <summary>When the event is fired in this state, execute the chained activities.</summary>
+    /// <typeparam name="TMessage">The event data type.</typeparam>
+    /// <param name="event">The fired event.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     protected internal EventActivityBinder<TInstance, TMessage> When<TMessage>(Event<TMessage> @event)
         where TMessage : class
     {
         return When(@event, null);
     }
 
-    /// <summary>
-    /// When the event is fired in this state, and the event data matches the filter expression, execute the chained activities
-    /// </summary>
-    /// <typeparam name="TMessage">The event data type</typeparam>
-    /// <param name="event">The fired event</param>
-    /// <param name="filter">The filter applied to the event</param>
-    /// <returns></returns>
+    /// <summary>When the event is fired in this state, and the event data matches the filter expression, execute the chained activities.</summary>
+    /// <typeparam name="TMessage">The event data type.</typeparam>
+    /// <param name="event">The fired event.</param>
+    /// <param name="filter">The filter applied to the event.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     protected internal EventActivityBinder<TInstance, TMessage> When<TMessage>(Event<TMessage> @event, StateMachineCondition<TInstance, TMessage>? filter)
         where TMessage : class
     {
         return new DataEventActivityBinder<TInstance, TMessage>(this, @event, filter);
     }
 
-    /// <summary>
-    /// Ignore the event in this state (no exception is thrown)
-    /// </summary>
-    /// <param name="event">The ignored event</param>
-    /// <returns></returns>
+    /// <summary>Ignore the event in this state (no exception is thrown).</summary>
+    /// <param name="event">The ignored event.</param>
+    /// <returns>The event activities produced by the operation.</returns>
     protected internal EventActivities<TInstance> Ignore(Event @event)
     {
         IActivityBinder<TInstance> activityBinder = new IgnoreEventActivityBinder<TInstance>(@event);
@@ -1350,12 +1235,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return new TriggerEventActivityBinder<TInstance>(this, @event, activityBinder);
     }
 
-    /// <summary>
-    /// Ignore the event in this state (no exception is thrown)
-    /// </summary>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <param name="event">The ignored event</param>
-    /// <returns></returns>
+    /// <summary>Ignore the event in this state (no exception is thrown).</summary>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <param name="event">The ignored event.</param>
+    /// <returns>The event activities produced by the operation.</returns>
     protected internal EventActivities<TInstance> Ignore<TData>(Event<TData> @event)
         where TData : class
     {
@@ -1364,13 +1247,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return new DataEventActivityBinder<TInstance, TData>(this, @event, activityBinder);
     }
 
-    /// <summary>
-    /// Ignore the event in this state (no exception is thrown)
-    /// </summary>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <param name="event">The ignored event</param>
-    /// <param name="filter">The filter to apply to the event data</param>
-    /// <returns></returns>
+    /// <summary>Ignore the event in this state (no exception is thrown).</summary>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <param name="event">The ignored event.</param>
+    /// <param name="filter">The filter to apply to the event data.</param>
+    /// <returns>The event activities produced by the operation.</returns>
     protected internal EventActivities<TInstance> Ignore<TData>(Event<TData> @event, StateMachineCondition<TInstance, TData> filter)
         where TData : class
     {
@@ -1379,10 +1260,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return new DataEventActivityBinder<TInstance, TData>(this, @event, activityBinder);
     }
 
-    /// <summary>
-    /// Specifies a callback to invoke when an event is raised in a state where the event is not handled
-    /// </summary>
-    /// <param name="callback">The unhandled event callback</param>
+    /// <summary>Specifies a callback to invoke when an event is raised in a state where the event is not handled.</summary>
+    /// <param name="callback">The unhandled event callback.</param>
     protected internal void OnUnhandledEvent(UnhandledEventCallback<TInstance> callback)
     {
         if (callback == null)
@@ -1403,11 +1282,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// timeout handling. The property is initialized with the fully built Request. The request must be declared before
     /// it is used in the state/event declaration statements.
     /// </summary>
-    /// <typeparam name="TRequest">The request type</typeparam>
-    /// <typeparam name="TResponse">The response type</typeparam>
-    /// <param name="propertyExpression">The request property on the state machine</param>
-    /// <param name="requestIdExpression">The property where the requestId is stored</param>
-    /// <param name="configureRequest">Allow the request settings to be specified inline</param>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <param name="propertyExpression">The request property on the state machine.</param>
+    /// <param name="requestIdExpression">The property where the requestId is stored.</param>
+    /// <param name="configureRequest">Allow the request settings to be specified inline.</param>
     protected void Request<TRequest, TResponse>(Expression<Func<Request<TInstance, TRequest, TResponse>>> propertyExpression,
         Expression<Func<TInstance, Guid?>> requestIdExpression,
         Action<IRequestConfigurator<TInstance, TRequest, TResponse>>? configureRequest = default)
@@ -1425,12 +1304,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// Declares a request that is sent by the state machine to a service, and the associated response, fault, and
     /// timeout handling. The property is initialized with the fully built Request. The request must be declared before
     /// it is used in the state/event declaration statements.
-    /// Uses the Saga CorrelationId as the RequestId
+    /// Uses the Saga CorrelationId as the RequestId.
     /// </summary>
-    /// <typeparam name="TRequest">The request type</typeparam>
-    /// <typeparam name="TResponse">The response type</typeparam>
-    /// <param name="propertyExpression">The request property on the state machine</param>
-    /// <param name="configureRequest">Allow the request settings to be specified inline</param>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <param name="propertyExpression">The request property on the state machine.</param>
+    /// <param name="configureRequest">Allow the request settings to be specified inline.</param>
     protected void Request<TRequest, TResponse>(Expression<Func<Request<TInstance, TRequest, TResponse>>> propertyExpression,
         Action<IRequestConfigurator<TInstance, TRequest, TResponse>>? configureRequest = default)
         where TRequest : class
@@ -1448,11 +1327,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// timeout handling. The property is initialized with the fully built Request. The request must be declared before
     /// it is used in the state/event declaration statements.
     /// </summary>
-    /// <typeparam name="TRequest">The request type</typeparam>
-    /// <typeparam name="TResponse">The response type</typeparam>
-    /// <param name="propertyExpression">The request property on the state machine</param>
-    /// <param name="requestIdExpression">The property where the requestId is stored</param>
-    /// <param name="settings">The request settings (which can be read from configuration, etc.)</param>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <param name="propertyExpression">The request property on the state machine.</param>
+    /// <param name="requestIdExpression">The property where the requestId is stored.</param>
+    /// <param name="settings">The request settings (which can be read from configuration, etc.).</param>
     protected void Request<TRequest, TResponse>(Expression<Func<Request<TInstance, TRequest, TResponse>>> propertyExpression,
         Expression<Func<TInstance, Guid?>> requestIdExpression, RequestSettings<TInstance, TRequest, TResponse> settings)
         where TRequest : class
@@ -1493,12 +1372,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// Declares a request that is sent by the state machine to a service, and the associated response, fault, and
     /// timeout handling. The property is initialized with the fully built Request. The request must be declared before
     /// it is used in the state/event declaration statements.
-    /// Uses the Saga CorrelationId as the RequestId
+    /// Uses the Saga CorrelationId as the RequestId.
     /// </summary>
-    /// <typeparam name="TRequest">The request type</typeparam>
-    /// <typeparam name="TResponse">The response type</typeparam>
-    /// <param name="propertyExpression">The request property on the state machine</param>
-    /// <param name="settings">The request settings (which can be read from configuration, etc.)</param>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <param name="propertyExpression">The request property on the state machine.</param>
+    /// <param name="settings">The request settings (which can be read from configuration, etc.).</param>
     protected internal void Request<TRequest, TResponse>(Expression<Func<Request<TInstance, TRequest, TResponse>>> propertyExpression,
         RequestSettings<TInstance, TRequest, TResponse> settings)
         where TRequest : class
@@ -1540,12 +1419,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// timeout handling. The property is initialized with the fully built Request. The request must be declared before
     /// it is used in the state/event declaration statements.
     /// </summary>
-    /// <typeparam name="TRequest">The request type</typeparam>
-    /// <typeparam name="TResponse">The response type</typeparam>
-    /// <typeparam name="TResponse2">The alternate response type</typeparam>
-    /// <param name="propertyExpression">The request property on the state machine</param>
-    /// <param name="requestIdExpression">The property where the requestId is stored</param>
-    /// <param name="configureRequest">Allow the request settings to be specified inline</param>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <typeparam name="TResponse2">The alternate response type.</typeparam>
+    /// <param name="propertyExpression">The request property on the state machine.</param>
+    /// <param name="requestIdExpression">The property where the requestId is stored.</param>
+    /// <param name="configureRequest">Allow the request settings to be specified inline.</param>
     protected void Request<TRequest, TResponse, TResponse2>(Expression<Func<Request<TInstance, TRequest, TResponse, TResponse2>>> propertyExpression,
         Expression<Func<TInstance, Guid?>> requestIdExpression,
         Action<IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2>>? configureRequest = default)
@@ -1564,13 +1443,13 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// Declares a request that is sent by the state machine to a service, and the associated response, fault, and
     /// timeout handling. The property is initialized with the fully built Request. The request must be declared before
     /// it is used in the state/event declaration statements.
-    /// Uses the Saga CorrelationId as the RequestId
+    /// Uses the Saga CorrelationId as the RequestId.
     /// </summary>
-    /// <typeparam name="TRequest">The request type</typeparam>
-    /// <typeparam name="TResponse">The response type</typeparam>
-    /// <typeparam name="TResponse2">The alternate response type</typeparam>
-    /// <param name="propertyExpression">The request property on the state machine</param>
-    /// <param name="configureRequest">Allow the request settings to be specified inline</param>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <typeparam name="TResponse2">The alternate response type.</typeparam>
+    /// <param name="propertyExpression">The request property on the state machine.</param>
+    /// <param name="configureRequest">Allow the request settings to be specified inline.</param>
     protected void Request<TRequest, TResponse, TResponse2>(Expression<Func<Request<TInstance, TRequest, TResponse, TResponse2>>> propertyExpression,
         Action<IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2>>? configureRequest = default)
         where TRequest : class
@@ -1589,12 +1468,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// timeout handling. The property is initialized with the fully built Request. The request must be declared before
     /// it is used in the state/event declaration statements.
     /// </summary>
-    /// <typeparam name="TRequest">The request type</typeparam>
-    /// <typeparam name="TResponse">The response type</typeparam>
-    /// <typeparam name="TResponse2">The alternate response type</typeparam>
-    /// <param name="propertyExpression">The request property on the state machine</param>
-    /// <param name="requestIdExpression">The property where the requestId is stored</param>
-    /// <param name="settings">The request settings (which can be read from configuration, etc.)</param>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <typeparam name="TResponse2">The alternate response type.</typeparam>
+    /// <param name="propertyExpression">The request property on the state machine.</param>
+    /// <param name="requestIdExpression">The property where the requestId is stored.</param>
+    /// <param name="settings">The request settings (which can be read from configuration, etc.).</param>
     protected internal void Request<TRequest, TResponse, TResponse2>(
         Expression<Func<Request<TInstance, TRequest, TResponse, TResponse2>>> propertyExpression,
         Expression<Func<TInstance, Guid?>> requestIdExpression, RequestSettings<TInstance, TRequest, TResponse, TResponse2> settings)
@@ -1644,13 +1523,13 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// Declares a request that is sent by the state machine to a service, and the associated response, fault, and
     /// timeout handling. The property is initialized with the fully built Request. The request must be declared before
     /// it is used in the state/event declaration statements.
-    /// Uses the Saga CorrelationId as the RequestId
+    /// Uses the Saga CorrelationId as the RequestId.
     /// </summary>
-    /// <typeparam name="TRequest">The request type</typeparam>
-    /// <typeparam name="TResponse">The response type</typeparam>
-    /// <typeparam name="TResponse2">The alternate response type</typeparam>
-    /// <param name="propertyExpression">The request property on the state machine</param>
-    /// <param name="settings">The request settings (which can be read from configuration, etc.)</param>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <typeparam name="TResponse2">The alternate response type.</typeparam>
+    /// <param name="propertyExpression">The request property on the state machine.</param>
+    /// <param name="settings">The request settings (which can be read from configuration, etc.).</param>
     protected internal void Request<TRequest, TResponse, TResponse2>(
         Expression<Func<Request<TInstance, TRequest, TResponse, TResponse2>>> propertyExpression,
         RequestSettings<TInstance, TRequest, TResponse, TResponse2> settings)
@@ -1701,13 +1580,13 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// timeout handling. The property is initialized with the fully built Request. The request must be declared before
     /// it is used in the state/event declaration statements.
     /// </summary>
-    /// <typeparam name="TRequest">The request type</typeparam>
-    /// <typeparam name="TResponse">The response type</typeparam>
-    /// <typeparam name="TResponse2">The alternate response type</typeparam>
-    /// <typeparam name="TResponse3"></typeparam>
-    /// <param name="propertyExpression">The request property on the state machine</param>
-    /// <param name="requestIdExpression">The property where the requestId is stored</param>
-    /// <param name="configureRequest">Allow the request settings to be specified inline</param>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <typeparam name="TResponse2">The alternate response type.</typeparam>
+    /// <typeparam name="TResponse3">The response3 type.</typeparam>
+    /// <param name="propertyExpression">The request property on the state machine.</param>
+    /// <param name="requestIdExpression">The property where the requestId is stored.</param>
+    /// <param name="configureRequest">Allow the request settings to be specified inline.</param>
     protected void Request<TRequest, TResponse, TResponse2, TResponse3>(
         Expression<Func<Request<TInstance, TRequest, TResponse, TResponse2, TResponse3>>> propertyExpression,
         Expression<Func<TInstance, Guid?>> requestIdExpression,
@@ -1728,14 +1607,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// Declares a request that is sent by the state machine to a service, and the associated response, fault, and
     /// timeout handling. The property is initialized with the fully built Request. The request must be declared before
     /// it is used in the state/event declaration statements.
-    /// Uses the Saga CorrelationId as the RequestId
+    /// Uses the Saga CorrelationId as the RequestId.
     /// </summary>
-    /// <typeparam name="TRequest">The request type</typeparam>
-    /// <typeparam name="TResponse">The response type</typeparam>
-    /// <typeparam name="TResponse2">The alternate response type</typeparam>
-    /// <typeparam name="TResponse3"></typeparam>
-    /// <param name="propertyExpression">The request property on the state machine</param>
-    /// <param name="configureRequest">Allow the request settings to be specified inline</param>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <typeparam name="TResponse2">The alternate response type.</typeparam>
+    /// <typeparam name="TResponse3">The response3 type.</typeparam>
+    /// <param name="propertyExpression">The request property on the state machine.</param>
+    /// <param name="configureRequest">Allow the request settings to be specified inline.</param>
     protected void Request<TRequest, TResponse, TResponse2, TResponse3>(
         Expression<Func<Request<TInstance, TRequest, TResponse, TResponse2, TResponse3>>> propertyExpression,
         Action<IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2, TResponse3>>? configureRequest = default)
@@ -1756,13 +1635,13 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// timeout handling. The property is initialized with the fully built Request. The request must be declared before
     /// it is used in the state/event declaration statements.
     /// </summary>
-    /// <typeparam name="TRequest">The request type</typeparam>
-    /// <typeparam name="TResponse">The response type</typeparam>
-    /// <typeparam name="TResponse2">The alternate response type</typeparam>
-    /// <typeparam name="TResponse3"></typeparam>
-    /// <param name="propertyExpression">The request property on the state machine</param>
-    /// <param name="requestIdExpression">The property where the requestId is stored</param>
-    /// <param name="settings">The request settings (which can be read from configuration, etc.)</param>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <typeparam name="TResponse2">The alternate response type.</typeparam>
+    /// <typeparam name="TResponse3">The response3 type.</typeparam>
+    /// <param name="propertyExpression">The request property on the state machine.</param>
+    /// <param name="requestIdExpression">The property where the requestId is stored.</param>
+    /// <param name="settings">The request settings (which can be read from configuration, etc.).</param>
     protected internal void Request<TRequest, TResponse, TResponse2, TResponse3>(
         Expression<Func<Request<TInstance, TRequest, TResponse, TResponse2, TResponse3>>> propertyExpression,
         Expression<Func<TInstance, Guid?>> requestIdExpression, RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> settings)
@@ -1820,14 +1699,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// Declares a request that is sent by the state machine to a service, and the associated response, fault, and
     /// timeout handling. The property is initialized with the fully built Request. The request must be declared before
     /// it is used in the state/event declaration statements.
-    /// Uses the Saga CorrelationId as the RequestId
+    /// Uses the Saga CorrelationId as the RequestId.
     /// </summary>
-    /// <typeparam name="TRequest">The request type</typeparam>
-    /// <typeparam name="TResponse">The response type</typeparam>
-    /// <typeparam name="TResponse2">The alternate response type</typeparam>
-    /// <typeparam name="TResponse3"></typeparam>
-    /// <param name="propertyExpression">The request property on the state machine</param>
-    /// <param name="settings">The request settings (which can be read from configuration, etc.)</param>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <typeparam name="TResponse2">The alternate response type.</typeparam>
+    /// <typeparam name="TResponse3">The response3 type.</typeparam>
+    /// <param name="propertyExpression">The request property on the state machine.</param>
+    /// <param name="settings">The request settings (which can be read from configuration, etc.).</param>
     protected internal void Request<TRequest, TResponse, TResponse2, TResponse3>(
         Expression<Func<Request<TInstance, TRequest, TResponse, TResponse2, TResponse3>>> propertyExpression,
         RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> settings)
@@ -1881,13 +1760,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
                 .CancelRequestTimeout(request, false));
     }
 
-    /// <summary>
-    /// Declares a schedule placeholder that is stored with the state machine instance
-    /// </summary>
-    /// <typeparam name="TMessage">The request type</typeparam>
-    /// <param name="propertyExpression">The schedule property on the state machine</param>
-    /// <param name="tokenIdExpression">The property where the tokenId is stored</param>
-    /// <param name="configureSchedule">The callback to configure the schedule</param>
+    /// <summary>Declares a schedule placeholder that is stored with the state machine instance.</summary>
+    /// <typeparam name="TMessage">The request type.</typeparam>
+    /// <param name="propertyExpression">The schedule property on the state machine.</param>
+    /// <param name="tokenIdExpression">The property where the tokenId is stored.</param>
+    /// <param name="configureSchedule">The callback to configure the schedule.</param>
     protected void Schedule<TMessage>(Expression<Func<Schedule<TInstance, TMessage>>> propertyExpression,
         Expression<Func<TInstance, Guid?>> tokenIdExpression,
         Action<IScheduleConfigurator<TInstance, TMessage>>? configureSchedule = default)
@@ -1900,13 +1777,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         Schedule(propertyExpression, tokenIdExpression, configurator.Settings);
     }
 
-    /// <summary>
-    /// Declares a schedule placeholder that is stored with the state machine instance
-    /// </summary>
-    /// <typeparam name="TMessage">The scheduled message type</typeparam>
-    /// <param name="propertyExpression">The schedule property on the state machine</param>
-    /// <param name="tokenIdExpression">The property where the tokenId is stored</param>
-    /// <param name="settings">The request settings (which can be read from configuration, etc.)</param>
+    /// <summary>Declares a schedule placeholder that is stored with the state machine instance.</summary>
+    /// <typeparam name="TMessage">The scheduled message type.</typeparam>
+    /// <param name="propertyExpression">The schedule property on the state machine.</param>
+    /// <param name="tokenIdExpression">The property where the tokenId is stored.</param>
+    /// <param name="settings">The request settings (which can be read from configuration, etc.).</param>
     protected internal void Schedule<TMessage>(Expression<Func<Schedule<TInstance, TMessage>>> propertyExpression,
         Expression<Func<TInstance, Guid?>> tokenIdExpression,
         ScheduleSettings<TInstance, TMessage> settings)
@@ -1996,9 +1871,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
             throw new ArgumentException($"The request property is not writable: {property.Name}");
     }
 
-    /// <summary>
-    /// Register all remaining events and states that have not been explicitly declared.
-    /// </summary>
+    /// <summary>Register all remaining events and states that have not been explicitly declared.</summary>
     void RegisterImplicit()
     {
         foreach (var declaration in _registrations.Value)
@@ -2023,7 +1896,6 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
                 : typeof(UncorrelatedEventRegistration<>).MakeGenericType(typeof(TInstance), messageType);
         }
 
-        // return (EventRegistration)Activator.CreateInstance(registrationType, @event);
         return CreateRegistration(registrationType, @event, messageType);
     }
 
@@ -2051,11 +1923,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return this;
     }
 
-    /// <summary>
-    /// Create a new state machine using the builder pattern
-    /// </summary>
-    /// <param name="modifier"></param>
-    /// <returns></returns>
+    /// <summary>Create a new state machine using the builder pattern.</summary>
+    /// <param name="modifier">The modifier.</param>
+    /// <returns>The vici one service bus state machine produced by the operation.</returns>
     public static ViciOneServiceBusStateMachine<TInstance> New(Action<IStateMachineModifier<TInstance>> modifier)
     {
         var machine = new BuilderStateMachine();

@@ -8,18 +8,14 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for consume context endpoint.
-/// </summary>
+/// <summary>Provides extension methods for consume context endpoint.</summary>
 public static class ConsumeContextEndpointExtensions
 {
-    /// <summary>
-    /// Returns the endpoint for a fault, either directly to the requester or published
-    /// </summary>
-    /// <param name="context"></param>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <returns></returns>
+    /// <summary>Returns the endpoint for a fault, either directly to the requester or published.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the requested value.</returns>
     public static Task<ISendEndpoint> GetFaultEndpointAsync<T>(this ConsumeContext context, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -28,15 +24,13 @@ public static class ConsumeContextEndpointExtensions
         return GetEndpointAsync<Fault<T>>(context.Advanced().ReceiveContext, context, destinationAddress, context.RequestId);
     }
 
-    /// <summary>
-    /// Returns the endpoint for a fault, either directly to the requester or published
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="faultAddress"></param>
-    /// <param name="requestId"></param>
-    /// <typeparam name="T">The response type</typeparam>
-    /// <returns></returns>
+    /// <summary>Returns the endpoint for a fault, either directly to the requester or published.</summary>
+    /// <typeparam name="T">The response type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="faultAddress">The fault address.</param>
+    /// <param name="requestId">The request id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the requested value.</returns>
     public static Task<ISendEndpoint> GetFaultEndpointAsync<T>(this ConsumeContext context, Uri faultAddress, Guid? requestId = null, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -45,14 +39,12 @@ public static class ConsumeContextEndpointExtensions
         return GetEndpointAsync<T>(context.Advanced().ReceiveContext, context, destinationAddress, requestId ?? context.RequestId);
     }
 
-    /// <summary>
-    /// Returns the endpoint for a <see cref="ReceiveFault"/>, either directly to the requester or published
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="consumeContext"></param>
-    /// <param name="requestId"></param>
-    /// <returns></returns>
+    /// <summary>Returns the endpoint for a <see cref="ReceiveFault"/>, either directly to the requester or published.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="consumeContext">The consume context.</param>
+    /// <param name="requestId">The request id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the requested value.</returns>
     public static Task<ISendEndpoint> GetReceiveFaultEndpointAsync(this ReceiveContext context, ConsumeContext? consumeContext, Guid? requestId, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); var destinationAddress = consumeContext?.FaultAddress ?? consumeContext?.ResponseAddress;
@@ -60,43 +52,37 @@ public static class ConsumeContextEndpointExtensions
         return GetEndpointAsync<ReceiveFault>(context, consumeContext, destinationAddress, requestId);
     }
 
-    /// <summary>
-    /// Returns the endpoint for a response, either directly to the requester or published
-    /// </summary>
-    /// <param name="context"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Returns the endpoint for a response, either directly to the requester or published.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the requested value.</returns>
     public static Task<ISendEndpoint> GetResponseEndpointAsync<T>(this ConsumeContext context, CancellationToken cancellationToken = default)
         where T : class
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); return GetEndpointAsync<T>(context.Advanced().ReceiveContext, context, context.ResponseAddress, context.RequestId);
     }
 
-    /// <summary>
-    /// Returns the endpoint for a response, either directly to the requester or published
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="responseAddress"></param>
-    /// <param name="requestId"></param>
-    /// <typeparam name="T">The response type</typeparam>
-    /// <returns></returns>
+    /// <summary>Returns the endpoint for a response, either directly to the requester or published.</summary>
+    /// <typeparam name="T">The response type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="responseAddress">The response address.</param>
+    /// <param name="requestId">The request id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the requested value.</returns>
     public static Task<ISendEndpoint> GetResponseEndpointAsync<T>(this ConsumeContext context, Uri responseAddress, Guid? requestId = null, CancellationToken cancellationToken = default)
         where T : class
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); return GetEndpointAsync<T>(context.Advanced().ReceiveContext, context, responseAddress ?? context.ResponseAddress, requestId ?? context.RequestId);
     }
 
-    /// <summary>
-    /// Returns the endpoint for a response, either directly to the requester or published
-    /// </summary>
-    /// <param name="receiveContext"></param>
-    /// <param name="consumeContext"></param>
-    /// <param name="destinationAddress"></param>
-    /// <param name="requestId"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Returns the endpoint for a response, either directly to the requester or published.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="receiveContext">The receive context.</param>
+    /// <param name="consumeContext">The consume context.</param>
+    /// <param name="destinationAddress">The destination address.</param>
+    /// <param name="requestId">The request id.</param>
+    /// <returns>A task that produces the endpoint.</returns>
     static Task<ISendEndpoint> GetEndpointAsync<T>(ReceiveContext receiveContext, ConsumeContext? consumeContext, Uri? destinationAddress, Guid? requestId)
         where T : class
     {

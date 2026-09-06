@@ -9,29 +9,23 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus queue move transport implementation.
-/// </summary>
+/// <summary>Copies an Azure Service Bus delivery and its transport metadata to another entity.</summary>
 public class ServiceBusQueueMoveTransport
 {
     readonly Recycle<ISendEndpointContextSupervisor> _sendEndpointContext;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Creates a move transport for a destination entity.</summary>
+    /// <param name="supervisor">The namespace connection supervisor.</param>
+    /// <param name="settings">The destination entity declaration and sender settings.</param>
     protected ServiceBusQueueMoveTransport(IConnectionContextSupervisor supervisor, SendSettings settings)
     {
         _sendEndpointContext = new Recycle<ISendEndpointContextSupervisor>(() => supervisor.CreateSendEndpointContextSupervisor(settings));
     }
 
-    /// <summary>
-    /// Performs the move operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="preSend">The pre send value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Copies the current delivery to the destination while preserving provider metadata.</summary>
+    /// <param name="context">The source receive context.</param>
+    /// <param name="preSend">Applies move-specific headers immediately before the copy is sent.</param>
+    /// <returns>A task that completes when the destination sender accepts the copied message.</returns>
     protected Task MoveAsync(ReceiveContext context, Action<ServiceBusMessage, SendHeaders> preSend)
     {
         IPipe<SendEndpointContext> clientPipe = Pipe.ExecuteAsync<SendEndpointContext>(async clientContext =>

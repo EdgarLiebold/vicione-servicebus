@@ -2,36 +2,25 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>
-/// Defines the contract for transport send context.
-/// </summary>
+/// <summary>Exposes state for transport send operations.</summary>
 public interface TransportSendContext :
     PublishContext
 {
-    /// <summary>
-    /// Gets the serialized body used by the transport. The value is created once and shared by
-    /// transport-adjacent features so serialization is never repeated with a divergent result.
-    /// </summary>
+    /// <summary>Gets the body.</summary>
     MessageBody Body { get; }
 
-    /// <summary>
-    /// Performs the write properties to operation.
-    /// </summary>
-    /// <param name="properties">The properties value.</param>
+    /// <summary>Writes properties to.</summary>
+    /// <param name="properties">The properties.</param>
     void WritePropertiesTo(IDictionary<string, object> properties);
 
-    /// <summary>
-    /// Performs the read properties from operation.
-    /// </summary>
-    /// <param name="properties">The properties value.</param>
+    /// <summary>Reads properties from.</summary>
+    /// <param name="properties">The properties.</param>
     void ReadPropertiesFrom(IReadOnlyDictionary<string, object> properties);
 }
 
 
-/// <summary>
-/// Defines the contract for transport send context.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Exposes state for transport send operations.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public interface TransportSendContext<out TMessage> :
     PublishContext<TMessage>,
     TransportSendContext

@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a receive pipe dispatcher implementation.
-/// </summary>
+/// <summary>Dispatches receive pipe operations.</summary>
 public class ReceivePipeDispatcher :
     IReceivePipeDispatcher
 {
@@ -24,13 +22,11 @@ public class ReceivePipeDispatcher :
     long _dispatchCount;
     int _maxConcurrentDispatchCount;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="receivePipe">The receive pipe value.</param>
-    /// <param name="observers">The observers value.</param>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="inputAddress">The input address value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="receivePipe">The receive pipe.</param>
+    /// <param name="observers">The observers.</param>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="inputAddress">The input address.</param>
     public ReceivePipeDispatcher(IReceivePipe receivePipe, ReceiveObservable observers, IHostConfiguration hostConfiguration, Uri inputAddress)
     {
         _receivePipe = receivePipe;
@@ -42,40 +38,28 @@ public class ReceivePipeDispatcher :
         _endpointName = inputAddress.GetEndpointName() ?? "";
     }
 
-    /// <summary>
-    /// Gets the active dispatch count value.
-    /// </summary>
+    /// <summary>Gets the active dispatch count.</summary>
     public int ActiveDispatchCount => _activeDispatchCount;
-    /// <summary>
-    /// Gets the dispatch count value.
-    /// </summary>
+    /// <summary>Gets the dispatch count.</summary>
     public long DispatchCount => _dispatchCount;
-    /// <summary>
-    /// Gets the max concurrent dispatch count value.
-    /// </summary>
+    /// <summary>Gets the max concurrent dispatch count.</summary>
     public int MaxConcurrentDispatchCount => _maxConcurrentDispatchCount;
 
-    /// <summary>
-    /// Gets metrics.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets metrics.</summary>
+    /// <returns>The metrics.</returns>
     public DeliveryMetrics GetMetrics()
     {
         return new Metrics(_dispatchCount, _maxConcurrentDispatchCount);
     }
 
-    /// <summary>
-    /// Occurs when zero activity.
-    /// </summary>
+    /// <summary>Occurs when zero activity.</summary>
     public event ZeroActiveDispatchHandler? ZeroActivity;
 
-    /// <summary>
-    /// Performs the dispatch operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="receiveLock">The receive lock value.</param>
+    /// <summary>Dispatches the current message.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="receiveLock">The receive lock.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task DispatchAsync(ReceiveContext context, ReceiveLockContext receiveLock, CancellationToken cancellationToken = default)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.ReceiveLogContext);
@@ -148,79 +132,65 @@ public class ReceivePipeDispatcher :
         }
     }
 
-    /// <summary>
-    /// Connects receive observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveObserver(IReceiveObserver observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         _receivePipe.Probe(context);
     }
 
-    /// <summary>
-    /// Connects consume pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
         return _receivePipe.ConnectConsumePipe(pipe);
     }
 
-    /// <summary>
-    /// Connects consume pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
         where T : class
     {
         return _receivePipe.ConnectConsumePipe(pipe, options);
     }
 
-    /// <summary>
-    /// Connects request pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="requestId">The request id value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects request pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="requestId">The request id.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
         return _receivePipe.ConnectRequestPipe(requestId, pipe);
     }
 
-    /// <summary>
-    /// Connects consume observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer)
     {
         return _receivePipe.ConnectConsumeObserver(observer);
     }
 
-    /// <summary>
-    /// Connects consume message observer.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume message observer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumeMessageObserver<T>(IConsumeMessageObserver<T> observer)
         where T : class
     {

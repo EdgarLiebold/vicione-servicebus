@@ -6,33 +6,23 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Util.Scanning;
 
-/// <summary>
-/// Provides an assembly scan type info implementation.
-/// </summary>
+/// <summary>Carries diagnostic information for assembly scan type.</summary>
 public class AssemblyScanTypeInfo
 {
-    /// <summary>
-    /// Defines the closed types value.
-    /// </summary>
+    /// <summary>Exposes the closed types used by the containing type.</summary>
     public readonly AssemblyTypeList ClosedTypes = new AssemblyTypeList();
-    /// <summary>
-    /// Defines the open types value.
-    /// </summary>
+    /// <summary>Exposes the open types used by the containing type.</summary>
     public readonly AssemblyTypeList OpenTypes = new AssemblyTypeList();
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="assembly">The assembly value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="assembly">The assembly.</param>
     public AssemblyScanTypeInfo(Assembly assembly)
         : this(assembly.FullName, assembly.GetExportedTypes)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="name">The name value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="name">The name.</param>
     /// <param name="source">The source value.</param>
     public AssemblyScanTypeInfo(string? name, Func<IEnumerable<Type>> source)
     {
@@ -53,16 +43,12 @@ public class AssemblyScanTypeInfo
         }
     }
 
-    /// <summary>
-    /// Gets the record value.
-    /// </summary>
+    /// <summary>Gets the record.</summary>
     public AssemblyScanRecord Record { get; } = new AssemblyScanRecord();
 
-    /// <summary>
-    /// Performs the find types operation.
-    /// </summary>
-    /// <param name="classification">The classification value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Finds types.</summary>
+    /// <param name="classification">The classification.</param>
+    /// <returns>The matching types.</returns>
     public IEnumerable<Type> FindTypes(TypeClassification classification)
     {
         if (classification == TypeClassification.All)

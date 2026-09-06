@@ -2,28 +2,18 @@ using System;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Defines the contract for batch settings.
-/// </summary>
+/// <summary>Defines immutable RabbitMQ client-side publish-batch settings.</summary>
 public interface BatchSettings
 {
-    /// <summary>
-    /// If true, messages are queued up to send in batches to reduce broker round-trip calls
-    /// </summary>
+    /// <summary>Indicates whether client-side publish batching is enabled.</summary>
     bool Enabled { get; }
 
-    /// <summary>
-    /// The maximum number of messages to include in a batch
-    /// </summary>
+    /// <summary>The maximum number of messages to include in a batch.</summary>
     int MessageLimit { get; }
 
-    /// <summary>
-    /// A rough size limit for a batch of messages
-    /// </summary>
+    /// <summary>Gets the approximate combined message-body limit in bytes.</summary>
     int SizeLimit { get; }
 
-    /// <summary>
-    /// The time to wait for more messages before sending a batch. Should be small, like &lt; 10 milliseconds
-    /// </summary>
+    /// <summary>Gets the maximum time to collect messages before publishing a partial batch.</summary>
     TimeSpan Timeout { get; }
 }

@@ -2,9 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Represents an endpoint health result value.
-/// </summary>
+/// <summary>Represents an endpoint health result.</summary>
 public readonly struct EndpointHealthResult
 {
     EndpointHealthResult(BusHealthStatus status, IReceiveEndpoint receiveEndpoint, string? description = null, Exception? exception = null)
@@ -16,60 +14,44 @@ public readonly struct EndpointHealthResult
         Exception = exception;
     }
 
-    /// <summary>
-    /// Defines the input address value.
-    /// </summary>
+    /// <summary>Exposes the input address used by the containing type.</summary>
     public readonly Uri InputAddress;
 
-    /// <summary>
-    /// Defines the status value.
-    /// </summary>
+    /// <summary>Exposes the status used by the containing type.</summary>
     public readonly BusHealthStatus Status;
 
-    /// <summary>
-    /// Defines the description value.
-    /// </summary>
+    /// <summary>Exposes the description used by the containing type.</summary>
     public readonly string? Description;
 
-    /// <summary>
-    /// Defines the exception value.
-    /// </summary>
+    /// <summary>Exposes the exception used by the containing type.</summary>
     public readonly Exception? Exception;
 
-    /// <summary>
-    /// Defines the receive endpoint value.
-    /// </summary>
+    /// <summary>Exposes the receive endpoint used by the containing type.</summary>
     public readonly IReceiveEndpoint ReceiveEndpoint;
 
-    /// <summary>
-    /// Performs the healthy operation.
-    /// </summary>
-    /// <param name="receiveEndpoint">The receive endpoint value.</param>
-    /// <param name="description">The description value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a healthy status result.</summary>
+    /// <param name="receiveEndpoint">The receive endpoint.</param>
+    /// <param name="description">The description.</param>
+    /// <returns>The endpoint health result produced by the operation.</returns>
     public static EndpointHealthResult Healthy(IReceiveEndpoint receiveEndpoint, string? description)
     {
         return new EndpointHealthResult(BusHealthStatus.Healthy, receiveEndpoint, description);
     }
 
-    /// <summary>
-    /// Performs the degraded operation.
-    /// </summary>
-    /// <param name="receiveEndpoint">The receive endpoint value.</param>
-    /// <param name="description">The description value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a degraded health result.</summary>
+    /// <param name="receiveEndpoint">The receive endpoint.</param>
+    /// <param name="description">The description.</param>
+    /// <returns>The endpoint health result produced by the operation.</returns>
     public static EndpointHealthResult Degraded(IReceiveEndpoint receiveEndpoint, string? description)
     {
         return new EndpointHealthResult(BusHealthStatus.Degraded, receiveEndpoint, description);
     }
 
-    /// <summary>
-    /// Performs the unhealthy operation.
-    /// </summary>
-    /// <param name="receiveEndpoint">The receive endpoint value.</param>
-    /// <param name="description">The description value.</param>
+    /// <summary>Creates an unhealthy status result.</summary>
+    /// <param name="receiveEndpoint">The receive endpoint.</param>
+    /// <param name="description">The description.</param>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The endpoint health result produced by the operation.</returns>
     public static EndpointHealthResult Unhealthy(IReceiveEndpoint receiveEndpoint, string? description, Exception? exception)
     {
         return new EndpointHealthResult(BusHealthStatus.Unhealthy, receiveEndpoint, description, exception);

@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides a connection context factory implementation.
-/// </summary>
+/// <summary>Creates and shares supervised Event Hubs connection contexts.</summary>
 public class ConnectionContextFactory :
     IPipeContextFactory<ConnectionContext>
 {
@@ -18,12 +16,10 @@ public class ConnectionContextFactory :
     readonly IHostSettings _hostSettings;
     readonly IStorageSettings _storageSettings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostSettings">The host settings value.</param>
-    /// <param name="storageSettings">The storage settings value.</param>
-    /// <param name="configureOptions">The configure options value.</param>
+    /// <summary>Creates a factory from namespace, storage, and producer client settings.</summary>
+    /// <param name="hostSettings">The Event Hubs namespace authentication settings.</param>
+    /// <param name="storageSettings">The Blob Storage checkpoint settings carried by each context.</param>
+    /// <param name="configureOptions">The optional producer client options callback.</param>
     public ConnectionContextFactory(IHostSettings hostSettings, IStorageSettings storageSettings, Action<EventHubProducerClientOptions>? configureOptions)
     {
         _hostSettings = hostSettings;

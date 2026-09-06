@@ -8,21 +8,17 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq connection context implementation.
-/// </summary>
+/// <summary>Owns one RabbitMQ connection and leases it to channel-creation operations until disposal.</summary>
 public class RabbitMqConnectionContext :
     BasePipeContext,
     ConnectionContext,
     IAsyncDisposable
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connection">The connection value.</param>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="description">The description value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a lifetime-managed context around an open RabbitMQ connection.</summary>
+    /// <param name="connection">The RabbitMQ client connection.</param>
+    /// <param name="hostConfiguration">The effective host and topology configuration.</param>
+    /// <param name="description">The sanitized connection description used in diagnostics.</param>
+    /// <param name="cancellationToken">Cancellation linked to the connection context.</param>
     public RabbitMqConnectionContext(IConnection connection, IRabbitMqHostConfiguration hostConfiguration, string description,
         CancellationToken cancellationToken)
         : base(cancellationToken)
@@ -47,60 +43,38 @@ public class RabbitMqConnectionContext :
     readonly TransportLifetime _lifetime;
 
     /// <summary>
-    /// The connection's ownership, so the shutdown notification can invalidate it without disposing
-    /// a connection that operations are still unwinding out of. Same model as the channel's, and the
-    /// same type: a connection that closes underneath a channel being created loses the broker's
-    /// reason exactly as a channel did.
+    /// Coordinates invalidation and disposal so shutdown preserves the broker reason while active
+    /// connection operations retain their lease until completion.
     /// </summary>
     internal TransportLifetime Lifetime => _lifetime;
 
-    /// <summary>
-    /// Gets the connection value.
-    /// </summary>
+    /// <summary>Gets the RabbitMQ client connection.</summary>
     public IConnection Connection { get; }
 
-    /// <summary>
-    /// Gets the description value.
-    /// </summary>
+    /// <summary>Gets the sanitized connection description.</summary>
     public string Description { get; }
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the host address.</summary>
     public Uri HostAddress { get; }
-    /// <summary>
-    /// Gets the publisher confirmation value.
-    /// </summary>
+    /// <summary>Gets whether channels use RabbitMQ publisher confirmations.</summary>
     public bool PublisherConfirmation { get; }
 
-    /// <summary>
-    /// Gets the batch settings value.
-    /// </summary>
+    /// <summary>Gets client-side publish-batch settings.</summary>
     public BatchSettings BatchSettings { get; }
-    /// <summary>
-    /// Gets the continuation timeout value.
-    /// </summary>
+    /// <summary>Gets the timeout for RabbitMQ client RPC continuations.</summary>
     public TimeSpan ContinuationTimeout { get; }
 
-    /// <summary>
-    /// Gets the stop timeout value.
-    /// </summary>
+    /// <summary>Gets the maximum time allowed for dependent transport agents to stop.</summary>
     public TimeSpan StopTimeout { get; }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets bus-level RabbitMQ topology.</summary>
     public IRabbitMqBusTopology Topology { get; }
-    /// <summary>
-    /// Gets the topology entity cache value.
-    /// </summary>
+    /// <summary>Gets the per-connection cache of successfully declared broker entities.</summary>
     public RabbitMqTopologyEntityCache TopologyEntityCache { get; }
 
-    /// <summary>
-    /// Creates channel.
-    /// </summary>
-    /// <param name="concurrentMessageLimit">The concurrent message limit value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and configures a RabbitMQ channel under a connection lease.</summary>
+    /// <param name="concurrentMessageLimit">The optional consumer dispatch concurrency.</param>
+    /// <param name="cancellationToken">Cancellation for channel creation.</param>
+    /// <returns>The open RabbitMQ channel.</returns>
     public async Task<IChannel> CreateChannelAsync(ushort? concurrentMessageLimit, CancellationToken cancellationToken)
     {
         using var lease = Lease();
@@ -114,13 +88,11 @@ public class RabbitMqConnectionContext :
         return channel;
     }
 
-    /// <summary>
-    /// Creates channel context.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a channel and wraps it in a lifetime-managed context.</summary>
+    /// <param name="agent">The transport agent that owns the channel.</param>
+    /// <param name="concurrentMessageLimit">The optional consumer dispatch concurrency.</param>
+    /// <param name="cancellationToken">Cancellation for channel creation and the resulting context.</param>
+    /// <returns>The active RabbitMQ channel context.</returns>
     public async Task<ChannelContext> CreateChannelContextAsync(IAgent agent, ushort? concurrentMessageLimit, CancellationToken cancellationToken)
     {
         using var lease = Lease();
@@ -130,10 +102,8 @@ public class RabbitMqConnectionContext :
         return new RabbitMqChannelContext(this, channel, agent, cancellationToken);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task-like value that completes after in-flight leases finish and the connection is cleaned up.</returns>
     public async ValueTask DisposeAsync()
     {
         TransportLogMessages.DisconnectHost(Description);
@@ -143,9 +113,8 @@ public class RabbitMqConnectionContext :
         TransportLogMessages.DisconnectedHost(Description);
     }
 
-    /// <summary>
-    /// Takes this connection's lease, or refuses with the reason the connection actually closed for.
-    /// </summary>
+    /// <summary>Takes this connection's lease, or refuses with the reason the connection actually closed for.</summary>
+    /// <returns>A lease that prevents connection disposal until released.</returns>
     TransportLifetime.Lease Lease()
     {
         if (_lifetime.TryLease(out var lease))

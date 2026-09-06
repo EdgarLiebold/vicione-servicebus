@@ -5,55 +5,37 @@ using Amazon.DynamoDBv2.DocumentModel;
 
 namespace ViciOne.ServiceBus.DynamoDb.Saga;
 
-/// <summary>
-/// Provides a dynamo db saga implementation.
-/// </summary>
+/// <summary>Represents the DynamoDB document used to persist a saga instance.</summary>
 public class DynamoDbSaga
 {
-    /// <summary>
-    /// Defines the default entity type value.
-    /// </summary>
+    /// <summary>Gets the sort-key value that distinguishes saga documents from other entities in the same partition.</summary>
     [DynamoDBIgnore] public static readonly string DefaultEntityType = "SAGA";
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Creates an empty persistence document with the saga sort-key discriminator.</summary>
     public DynamoDbSaga()
     {
         EntityType = DefaultEntityType;
     }
 
-    /// <summary>
-    /// Gets or sets the correlation id value.
-    /// </summary>
+    /// <summary>Gets or sets the canonical saga correlation identifier stored as the partition key.</summary>
     [DynamoDBHashKey(AttributeName = "PK")]
     public string CorrelationId { get; set; } = null!;
 
-    /// <summary>
-    /// Gets or sets the entity type value.
-    /// </summary>
+    /// <summary>Gets or sets the saga discriminator stored as the sort key.</summary>
     [DynamoDBRangeKey(AttributeName = "SK")]
     public string EntityType { get; set; } = DefaultEntityType;
 
-    /// <summary>
-    /// Gets or sets the version number value.
-    /// </summary>
+    /// <summary>Gets or sets the optimistic concurrency version.</summary>
     public int VersionNumber { get; set; }
 
-    /// <summary>
-    /// Gets or sets the properties value.
-    /// </summary>
+    /// <summary>Gets or sets the serialized saga state.</summary>
     public string Properties { get; set; } = null!;
 
-    /// <summary>
-    /// Gets or sets the expiration epoch seconds value.
-    /// </summary>
+    /// <summary>Gets or sets the optional Unix-time expiration consumed by Amazon DynamoDB time to live.</summary>
     public long? ExpirationEpochSeconds { get; set; }
 
-    /// <summary>
-    /// Performs the to document operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Projects the persistence model into an Amazon DynamoDB document for conditional writes.</summary>
+    /// <returns>A document containing keys, version, serialized state, and optional expiration.</returns>
     public Document ToDocument()
     {
         var attributes = new Dictionary<string, DynamoDBEntry>

@@ -2,15 +2,11 @@ using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for dead letter settings.
-/// </summary>
+/// <summary>Defines RabbitMQ exchange settings for dead-lettered messages.</summary>
 public interface DeadLetterSettings :
     EntitySettings
 {
-    /// <summary>
-    /// Return the BrokerTopology to apply at startup (to create exchange and queue if binding is specified)
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Builds the exchange and optional queue topology deployed before use.</summary>
+    /// <returns>The dead-letter broker topology.</returns>
     BrokerTopology GetBrokerTopology();
 }

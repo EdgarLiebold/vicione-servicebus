@@ -2,58 +2,43 @@ using System;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for rabbit mq bus factory configurator.
-/// </summary>
+/// <summary>Configures a RabbitMQ-backed bus and its transport topology.</summary>
 public interface IRabbitMqBusFactoryConfigurator :
     IBusFactoryConfigurator<IRabbitMqReceiveEndpointConfigurator>,
     IRabbitMqQueueEndpointConfigurator
 {
-    /// <summary>
-    /// Gets the send topology value.
-    /// </summary>
+    /// <summary>Gets the send topology.</summary>
     new IRabbitMqSendTopologyConfigurator SendTopology { get; }
 
-    /// <summary>
-    /// Gets the publish topology value.
-    /// </summary>
+    /// <summary>Gets the publish topology.</summary>
     new IRabbitMqPublishTopologyConfigurator PublishTopology { get; }
 
-    /// <summary>
-    /// Configure the send topology of the message type
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="configureTopology"></param>
+    /// <summary>Configures send topology for a message contract.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="configureTopology">An optional callback that customizes the message send topology.</param>
     void Send<T>(Action<IRabbitMqMessageSendTopologyConfigurator<T>>? configureTopology = null)
         where T : class;
 
-    /// <summary>
-    /// Configure the send topology of the message type
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="configureTopology"></param>
+    /// <summary>Configures publish topology for a message contract.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="configureTopology">An optional callback that customizes the message publish topology.</param>
     void Publish<T>(Action<IRabbitMqMessagePublishTopologyConfigurator<T>>? configureTopology = null)
         where T : class;
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures publish topology for a runtime message-contract type.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="configure">An optional callback that customizes the message publish topology.</param>
     void Publish(Type messageType, Action<IRabbitMqMessagePublishTopologyConfigurator>? configure = null);
 
     /// <summary>
-    /// In most cases, this is not needed and should not be used. However, if for any reason the default bus
-    /// endpoint queue name needs to be changed, this will do it. Do NOT set it to the same name as a receive
-    /// endpoint or you will screw things up.
+    /// Overrides the queue name of the bus endpoint. The name must not collide with a receive endpoint queue.
     /// </summary>
+    /// <param name="queueName">The replacement bus-endpoint queue name.</param>
     void OverrideDefaultBusEndpointQueueName(string queueName);
 
     /// <summary>
-    /// Configure a Host that can be connected. If only one host is specified, it is used as the default
-    /// host for receive endpoints.
+    /// Applies the RabbitMQ host settings used by bus and receive-endpoint connections.
     /// </summary>
-    /// <param name="settings"></param>
-    /// <returns></returns>
+    /// <param name="settings">The fully configured RabbitMQ host settings.</param>
     void Host(RabbitMqHostSettings settings);
 }

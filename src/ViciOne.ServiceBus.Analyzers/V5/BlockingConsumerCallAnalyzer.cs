@@ -7,15 +7,11 @@ using Microsoft.CodeAnalysis.Operations;
 
 namespace ViciOne.ServiceBus.Analyzers.V5;
 
-/// <summary>
-/// Provides a blocking consumer call analyzer implementation.
-/// </summary>
+/// <summary>Analyzes source code for blocking consumer call.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class BlockingConsumerCallAnalyzer : DiagnosticAnalyzer
 {
-    /// <summary>
-    /// Defines the diagnostic id value.
-    /// </summary>
+    /// <summary>Exposes the diagnostic id used by the containing type.</summary>
     public const string DiagnosticId = "VOSB5001";
 
     private static readonly DiagnosticDescriptor s_rule = new(
@@ -27,15 +23,11 @@ public sealed class BlockingConsumerCallAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: "Blocking waits consume receive concurrency and make shutdown or cancellation nondeterministic.");
 
-    /// <summary>
-    /// Gets the supported diagnostics value.
-    /// </summary>
+    /// <summary>Gets the supported diagnostics.</summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [s_rule];
 
-    /// <summary>
-    /// Performs the initialize operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes the target component.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context is null)

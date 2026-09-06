@@ -3,20 +3,16 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Converts an inbound context type to a pipe context type post-dispatch
-/// </summary>
-/// <typeparam name="TOutput">The subsequent pipe context type</typeparam>
+/// <summary>Converts an inbound context type to a pipe context type post-dispatch.</summary>
+/// <typeparam name="TOutput">The subsequent pipe context type.</typeparam>
 public class MessageSendPipe<TOutput> :
     IMessageSendPipe<TOutput>
     where TOutput : class
 {
     readonly IPipe<SendContext<TOutput>> _outputPipe;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="outputPipe">The output pipe value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="outputPipe">The output pipe.</param>
     public MessageSendPipe(IPipe<SendContext<TOutput>> outputPipe)
     {
         _outputPipe = outputPipe;

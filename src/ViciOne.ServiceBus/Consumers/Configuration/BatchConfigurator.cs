@@ -2,20 +2,16 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a batch configurator implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures batch.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class BatchConfigurator<TMessage> :
     IBatchConfigurator<TMessage>
     where TMessage : class
 {
     readonly IReceiveEndpointConfigurator _configurator;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public BatchConfigurator(IReceiveEndpointConfigurator configurator)
     {
         _configurator = configurator;
@@ -26,29 +22,19 @@ public class BatchConfigurator<TMessage> :
         TimeLimitStart = BatchTimeLimitStart.FromFirst;
     }
 
-    /// <summary>
-    /// Gets or sets the time limit value.
-    /// </summary>
+    /// <summary>Gets or sets the time limit.</summary>
     public TimeSpan TimeLimit { private get; set; }
-    /// <summary>
-    /// Gets or sets the time limit start value.
-    /// </summary>
+    /// <summary>Gets or sets the time limit start.</summary>
     public BatchTimeLimitStart TimeLimitStart { private get; set; }
-    /// <summary>
-    /// Gets or sets the message limit value.
-    /// </summary>
+    /// <summary>Gets or sets the message limit.</summary>
     public int MessageLimit { private get; set; }
-    /// <summary>
-    /// Gets or sets the concurrency limit value.
-    /// </summary>
+    /// <summary>Gets or sets the concurrency limit.</summary>
     public int ConcurrencyLimit { private get; set; }
 
-    /// <summary>
-    /// Consumes r.
-    /// </summary>
-    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
-    /// <param name="consumerFactory">The consumer factory value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures batch consumption for the selected consumer type.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="consumerFactory">The consumer factory.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void Consumer<TConsumer>(IConsumerFactory<TConsumer> consumerFactory,
         Action<IConsumerMessageConfigurator<TConsumer, Batch<TMessage>>>? configure)
         where TConsumer : class, IConsumer<Batch<TMessage>>

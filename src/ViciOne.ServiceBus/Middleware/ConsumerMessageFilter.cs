@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Consumes a message via Consumer, resolved through the consumer factory and notifies the context that the message was consumed.
-/// </summary>
-/// <typeparam name="TConsumer">The consumer type</typeparam>
-/// <typeparam name="TMessage">The message type</typeparam>
+/// <summary>Consumes a message via Consumer, resolved through the consumer factory and notifies the context that the message was consumed.</summary>
+/// <typeparam name="TConsumer">The consumer type.</typeparam>
+/// <typeparam name="TMessage">The message type.</typeparam>
 public class ConsumerMessageFilter<TConsumer, TMessage> :
     IFilter<ConsumeContext<TMessage>>
     where TConsumer : class
@@ -18,11 +16,9 @@ public class ConsumerMessageFilter<TConsumer, TMessage> :
     readonly IConsumerFactory<TConsumer> _consumerFactory;
     readonly IPipe<ConsumerConsumeContext<TConsumer, TMessage>> _consumerPipe;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="consumerFactory">The consumer factory value.</param>
-    /// <param name="consumerPipe">The consumer pipe value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="consumerFactory">The consumer factory.</param>
+    /// <param name="consumerPipe">The consumer pipe.</param>
     public ConsumerMessageFilter(IConsumerFactory<TConsumer> consumerFactory, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> consumerPipe)
     {
         _consumerFactory = consumerFactory;

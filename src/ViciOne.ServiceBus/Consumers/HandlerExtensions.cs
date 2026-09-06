@@ -3,18 +3,14 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Advanced.Registration;
 
-/// <summary>
-/// Provides extension methods for handler.
-/// </summary>
+/// <summary>Provides extension methods for handler.</summary>
 public static class HandlerExtensions
 {
-    /// <summary>
-    /// Adds a handler to the receive endpoint with additional configuration specified
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="handler"></param>
-    /// <param name="configure"></param>
+    /// <summary>Adds a handler to the receive endpoint with additional configuration specified.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="handler">The handler.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void Handler<T>(this IReceiveEndpointConfigurator configurator, MessageHandler<T> handler,
         Action<IHandlerConfigurator<T>>? configure = null)
         where T : class
@@ -29,15 +25,12 @@ public static class HandlerExtensions
         configurator.AddEndpointSpecification(handlerConfigurator);
     }
 
-    /// <summary>
-    /// Adds a message handler to the service bus for handling a specific type of message
-    /// </summary>
-    /// <typeparam name="T">The message type to handle, often inferred from the callback specified</typeparam>
-    /// <param name="connector"></param>
-    /// <param name="handler">
-    /// The callback to invoke when messages of the specified type arrive at the service bus
-    /// </param>
-    /// <param name="configurator"></param>
+    /// <summary>Adds a message handler to the service bus for handling a specific type of message.</summary>
+    /// <typeparam name="T">The message type to handle, often inferred from the callback specified.</typeparam>
+    /// <param name="connector">The connector.</param>
+    /// <param name="handler">The callback to invoke when messages of the specified type arrive at the service bus.</param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectHandler<T>(this IConsumePipeConnector connector, MessageHandler<T> handler,
         IBuildPipeConfigurator<ConsumeContext<T>>? configurator = null)
         where T : class
@@ -48,15 +41,13 @@ public static class HandlerExtensions
         return HandlerConnectorCache<T>.Connector.ConnectHandler(connector, handler, configurator);
     }
 
-    /// <summary>
-    /// Subscribe a request handler to the bus's endpoint
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="connector"></param>
-    /// <param name="requestId"></param>
-    /// <param name="handler"></param>
-    /// <param name="configurator"></param>
-    /// <returns></returns>
+    /// <summary>Subscribe a request handler to the bus's endpoint.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="connector">The connector.</param>
+    /// <param name="requestId">The request id.</param>
+    /// <param name="handler">The handler.</param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectRequestHandler<T>(this IRequestPipeConnector connector, Guid requestId, MessageHandler<T> handler,
         IBuildPipeConfigurator<ConsumeContext<T>> configurator)
         where T : class

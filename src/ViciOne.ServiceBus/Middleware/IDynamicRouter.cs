@@ -5,6 +5,7 @@ namespace ViciOne.ServiceBus.Middleware;
 /// routed through the pipe based upon the output requirements of the connected pipes. It is built
 /// around the dynamic filter, which is the central point of the router.
 /// </summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public interface IDynamicRouter<in TContext> :
     IPipe<TContext>,
     IPipeConnector,
@@ -19,6 +20,8 @@ public interface IDynamicRouter<in TContext> :
 /// routed through the pipe based upon the output requirements of the connected pipes. It is built
 /// around the dynamic filter, which is the central point of the router.
 /// </summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
 public interface IDynamicRouter<in TContext, in TKey> :
     IDynamicRouter<TContext>,
     IKeyPipeConnector<TKey>

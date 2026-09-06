@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
-/// <summary>
-/// Provides a test consumer factory decorator implementation.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
+/// <summary>Records consumer delivery outcomes while delegating consumer creation and invocation.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
 public class TestConsumerFactoryDecorator<TConsumer> :
     IConsumerFactory<TConsumer>
     where TConsumer : class, IConsumer
@@ -14,24 +12,20 @@ public class TestConsumerFactoryDecorator<TConsumer> :
     readonly IConsumerFactory<TConsumer> _consumerFactory;
     readonly ReceivedMessageList _received;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="consumerFactory">The consumer factory value.</param>
-    /// <param name="received">The received value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="consumerFactory">The consumer factory.</param>
+    /// <param name="received">The received.</param>
     public TestConsumerFactoryDecorator(IConsumerFactory<TConsumer> consumerFactory, ReceivedMessageList received)
     {
         _consumerFactory = consumerFactory;
         _received = received;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
         where TMessage : class
     {

@@ -12,9 +12,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides a test activity listener implementation.
-/// </summary>
+/// <summary>Observes test activity events.</summary>
 public class TestActivityListener :
     IAsyncDisposable
 {
@@ -28,13 +26,11 @@ public class TestActivityListener :
     readonly TextWriter _writer;
     int _disposed;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="writer">The writer value.</param>
-    /// <param name="methodName">The method name value.</param>
-    /// <param name="className">The class name value.</param>
-    /// <param name="includeDetails">The include details value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="writer">The writer.</param>
+    /// <param name="methodName">The method name.</param>
+    /// <param name="className">The class name.</param>
+    /// <param name="includeDetails">The include details.</param>
     public TestActivityListener(TextWriter writer, string? methodName, string? className, bool includeDetails)
     {
         _writer = writer ?? throw new ArgumentNullException(nameof(writer));
@@ -57,10 +53,8 @@ public class TestActivityListener :
             _testActivity = _source.StartActivity(methodName);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         if (Interlocked.Exchange(ref _disposed, 1) != 0)

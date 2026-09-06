@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a job consumer convention implementation.
-/// </summary>
+/// <summary>Applies conventions for job consumer.</summary>
 public class JobConsumerConvention :
     IConsumerConvention
 {

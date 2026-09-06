@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a receiver implementation.
-/// </summary>
+/// <summary>Runs a non-session Azure Service Bus processor and dispatches its deliveries.</summary>
 public class Receiver :
     ConsumerAgent<long>,
     IReceiver
@@ -18,11 +16,9 @@ public class Receiver :
     readonly ClientContext _clientContext;
     readonly ServiceBusReceiveEndpointContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="clientClientContext">The client client context value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Creates a receiver for a processor client and receive endpoint.</summary>
+    /// <param name="clientClientContext">The processor client context.</param>
+    /// <param name="context">The receive endpoint context that owns dispatch.</param>
     public Receiver(ClientContext clientClientContext, ServiceBusReceiveEndpointContext context)
         : base(context)
     {
@@ -32,9 +28,7 @@ public class Receiver :
         TrySetManualConsumeTask();
     }
 
-    /// <summary>
-    /// Starts the configured component.
-    /// </summary>
+    /// <summary>Registers processor callbacks and starts the Azure Service Bus processor.</summary>
     public virtual void Start()
     {
         _clientContext.OnMessageAsync(OnMessageAsync, ExceptionHandlerAsync);
@@ -42,11 +36,9 @@ public class Receiver :
         SetReady(_clientContext.StartAsync());
     }
 
-    /// <summary>
-    /// Performs the exception handler operation.
-    /// </summary>
-    /// <param name="args">The args value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Classifies an Azure processor error and faults the client supervisor when recycling is required.</summary>
+    /// <param name="args">The processor error and its source.</param>
+    /// <returns>A task that completes after any required fault notification.</returns>
     protected async Task ExceptionHandlerAsync(ProcessErrorEventArgs args)
     {
         var requiresRecycle = args.Exception switch
@@ -82,7 +74,7 @@ public class Receiver :
             case ServiceBusException { Reason: ServiceBusFailureReason.MessageLockLost }:
             case ServiceBusException { Reason: ServiceBusFailureReason.SessionLockLost }:
             case ServiceBusException { Reason: ServiceBusFailureReason.MessagingEntityDisabled }:
-                // don't log those
+                // These expected lifecycle conditions require no additional receiver log entry.
                 break;
             default:
                 {
@@ -107,11 +99,9 @@ public class Receiver :
         }
     }
 
-    /// <summary>
-    /// Performs the active and actual agents completed operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Shuts down dispatch, waits for active agents, and closes the Azure processor context.</summary>
+    /// <param name="context">The stop context.</param>
+    /// <returns>A task that completes after receiver shutdown.</returns>
     protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
         await _clientContext.ShutdownAsync().ConfigureAwait(false);
@@ -162,7 +152,7 @@ public class Receiver :
         }
         catch (Exception)
         {
-            // do NOT let exceptions propagate to the Azure SDK
+            // The receiver callback owns dispatch failures so they cannot escape into the Azure SDK pump.
         }
         finally
         {
@@ -175,13 +165,11 @@ public class Receiver :
         }
     }
 
-    /// <summary>
-    /// Performs the dispatch operation.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="lockContext">The lock context value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Dispatches a delivery under a renewable Azure Service Bus receive lock.</summary>
+    /// <param name="message">The broker delivery.</param>
+    /// <param name="context">The transport receive context.</param>
+    /// <param name="lockContext">The settlement context for the delivery.</param>
+    /// <returns>A task that completes when dispatch and settlement handling finish.</returns>
     protected async Task DispatchAsync(ServiceBusReceivedMessage message, ServiceBusReceiveContext context, MessageLockContext lockContext)
     {
         try

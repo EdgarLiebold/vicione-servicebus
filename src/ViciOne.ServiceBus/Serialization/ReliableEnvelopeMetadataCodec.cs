@@ -15,6 +15,10 @@ public static class ReliableEnvelopeMetadataCodec
     const int CurrentVersion = 1;
 
     /// <summary>Snapshots infrastructure metadata before a send context crosses the reliable-store boundary.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="capturedAt">The captured at.</param>
+    /// <returns>The read only memory produced by the operation.</returns>
     public static ReadOnlyMemory<byte> Capture<T>(SendContext<T> context, DateTimeOffset capturedAt)
         where T : class
     {
@@ -49,6 +53,9 @@ public static class ReliableEnvelopeMetadataCodec
     }
 
     /// <summary>Restores validated infrastructure metadata onto a transport-owned replay context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="metadata">The metadata.</param>
+    /// <param name="replayedAt">The replayed at.</param>
     public static void Apply(SendContext context, ReadOnlyMemory<byte> metadata, DateTimeOffset replayedAt)
     {
         ArgumentNullException.ThrowIfNull(context);

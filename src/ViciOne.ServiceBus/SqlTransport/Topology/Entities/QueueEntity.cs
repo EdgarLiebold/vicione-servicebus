@@ -4,20 +4,16 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>
-/// Provides a queue entity implementation.
-/// </summary>
+/// <summary>Represents the queue topology entity.</summary>
 public class QueueEntity :
     Queue,
     QueueHandle
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="autoDeleteOnIdle">The auto delete on idle value.</param>
-    /// <param name="maxDeliveryCount">The max delivery count value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="id">The id.</param>
+    /// <param name="name">The name.</param>
+    /// <param name="autoDeleteOnIdle">The auto delete on idle.</param>
+    /// <param name="maxDeliveryCount">The max delivery count.</param>
     public QueueEntity(long id, string name, TimeSpan? autoDeleteOnIdle, int? maxDeliveryCount)
     {
         Id = id;
@@ -26,41 +22,25 @@ public class QueueEntity :
         MaxDeliveryCount = maxDeliveryCount;
     }
 
-    /// <summary>
-    /// Gets the name comparer value.
-    /// </summary>
+    /// <summary>Gets the name comparer.</summary>
     public static IEqualityComparer<QueueEntity> NameComparer { get; } = new NameEqualityComparer();
 
-    /// <summary>
-    /// Gets the queue comparer value.
-    /// </summary>
+    /// <summary>Gets the queue comparer.</summary>
     public static IEqualityComparer<QueueEntity> QueueComparer { get; } = new QueueEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the queue name value.
-    /// </summary>
+    /// <summary>Gets the queue name.</summary>
     public string QueueName { get; }
-    /// <summary>
-    /// Gets the auto delete on idle value.
-    /// </summary>
+    /// <summary>Gets the auto delete on idle.</summary>
     public TimeSpan? AutoDeleteOnIdle { get; }
-    /// <summary>
-    /// Gets the max delivery count value.
-    /// </summary>
+    /// <summary>Gets the max delivery count.</summary>
     public int? MaxDeliveryCount { get; }
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the id.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the queue value.
-    /// </summary>
+    /// <summary>Gets the queue.</summary>
     public Queue Queue => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the string representation of this instance.</summary>
+    /// <returns>The converted string.</returns>
     public override string ToString()
     {
         return string.Join(", ",

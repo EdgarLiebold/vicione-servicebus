@@ -2,26 +2,18 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace ViciOne.ServiceBus.SignalR;
 
-/// <summary>
-/// Defines the contract for hub lifetime manager options.
-/// </summary>
+/// <summary>Defines configuration options for hub lifetime manager.</summary>
 public interface IHubLifetimeManagerOptions
 {
-    /// <summary>
-    /// Gets or sets the server name value.
-    /// </summary>
+    /// <summary>Gets or sets the server name.</summary>
     string ServerName { set; }
-    /// <summary>
-    /// Gets or sets the request timeout value.
-    /// </summary>
+    /// <summary>Gets or sets the request timeout.</summary>
     RequestTimeout RequestTimeout { set; }
 }
 
 
-/// <summary>
-/// Defines the contract for hub lifetime manager options.
-/// </summary>
-/// <typeparam name="THub">The t hub type.</typeparam>
+/// <summary>Defines configuration options for hub lifetime manager.</summary>
+/// <typeparam name="THub">The hub type.</typeparam>
 public interface IHubLifetimeManagerOptions<THub> :
     IHubLifetimeManagerOptions
     where THub : Hub

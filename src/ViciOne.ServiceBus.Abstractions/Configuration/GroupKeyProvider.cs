@@ -2,11 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a group key provider implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
-/// <typeparam name="TKey">The t key type.</typeparam>
+/// <summary>Provides group key services.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
 public class GroupKeyProvider<TMessage, TKey> :
     IGroupKeyProvider<TMessage, TKey>
     where TMessage : class
@@ -14,20 +12,16 @@ public class GroupKeyProvider<TMessage, TKey> :
 {
     readonly Func<ConsumeContext<TMessage>, TKey> _provider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
     public GroupKeyProvider(Func<ConsumeContext<TMessage>, TKey> provider)
     {
         _provider = provider;
     }
 
-    /// <summary>
-    /// Attempts to get key.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
+    /// <summary>Attempts to get key.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">Receives the key produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetKey(ConsumeContext<TMessage> context, out TKey key)
     {

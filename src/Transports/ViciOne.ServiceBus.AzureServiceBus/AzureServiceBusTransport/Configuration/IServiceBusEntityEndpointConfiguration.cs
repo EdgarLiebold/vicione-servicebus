@@ -3,16 +3,12 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for service bus entity endpoint configuration.
-/// </summary>
+/// <summary>Builds an Azure Service Bus entity-backed receive endpoint into a host.</summary>
 public interface IServiceBusEntityEndpointConfiguration :
     IReceiveEndpointConfiguration,
     IServiceBusEndpointConfiguration
 {
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <param name="host">The host value.</param>
+    /// <summary>Creates the receive transport and adds the configured endpoint to the host.</summary>
+    /// <param name="host">The host that owns the receive endpoint.</param>
     void Build(IHost host);
 }

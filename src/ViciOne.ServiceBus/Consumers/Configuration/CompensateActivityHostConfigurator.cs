@@ -8,11 +8,9 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a compensate activity host configurator implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TLog">The t log type.</typeparam>
+/// <summary>Configures compensate activity host.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TLog">The log type.</typeparam>
 public class CompensateActivityHostConfigurator<TActivity, TLog> :
     ICompensateActivityConfigurator<TActivity, TLog>,
     IReceiveEndpointSpecification
@@ -27,11 +25,9 @@ public class CompensateActivityHostConfigurator<TActivity, TLog> :
     readonly RoutingSlipConfigurator _routingSlipConfigurator;
     readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="activityFactory">The activity factory value.</param>
-    /// <param name="observer">The observer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="activityFactory">The activity factory.</param>
+    /// <param name="observer">The observer to connect.</param>
     public CompensateActivityHostConfigurator(ICompensateActivityFactory<TActivity, TLog> activityFactory, IActivityConfigurationObserver observer)
     {
         _activityFactory = activityFactory ?? throw new ArgumentNullException(nameof(activityFactory));
@@ -46,29 +42,21 @@ public class CompensateActivityHostConfigurator<TActivity, TLog> :
         _configurationObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<CompensateActivityContext<TActivity, TLog>> specification)
     {
         _activityPipeConfigurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Gets or sets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets or sets the concurrent message limit.</summary>
     public int? ConcurrentMessageLimit { get; set; }
 
-    /// <summary>
-    /// Gets the routing-slip message type hosted by this compensation pipeline.
-    /// </summary>
+    /// <summary>Gets the message type.</summary>
     public Type MessageType => typeof(RoutingSlip);
 
-    /// <summary>
-    /// Performs the log operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Writes the current diagnostic event.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void Log(Action<ICompensateLogConfigurator<TLog>> configure)
     {
         var configurator = new CompensateLogConfigurator<TLog>(_compensatePipeConfigurator);
@@ -76,10 +64,8 @@ public class CompensateActivityHostConfigurator<TActivity, TLog> :
         configure?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Performs the activity log operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Adds an activity log to the routing slip.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void ActivityLog(Action<ICompensateActivityLogConfigurator<TLog>> configure)
     {
         var configurator = new CompensateActivityLogConfigurator<TActivity, TLog>(this);
@@ -87,20 +73,16 @@ public class CompensateActivityHostConfigurator<TActivity, TLog> :
         configure?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Performs the routing slip operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Creates or configures the routing slip.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void RoutingSlip(Action<IRoutingSlipConfigurator> configure)
     {
         configure?.Invoke(_routingSlipConfigurator);
     }
 
-    /// <summary>
-    /// Configures the activity transport-message pipeline.
-    /// </summary>
-    /// <typeparam name="TMessage">The activity transport-message type.</typeparam>
-    /// <param name="configure">The message-pipeline callback.</param>
+    /// <summary>Configures the activity transport-message pipeline.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void Message<TMessage>(Action<IActivityMessageConfigurator<TMessage>> configure)
         where TMessage : class
     {
@@ -112,20 +94,16 @@ public class CompensateActivityHostConfigurator<TActivity, TLog> :
         configure((IActivityMessageConfigurator<TMessage>)(object)_routingSlipConfigurator);
     }
 
-    /// <summary>
-    /// Connects activity observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects activity observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectActivityObserver(IActivityObserver observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         _configurationNotification.EnsureNotified(() =>
@@ -137,10 +115,8 @@ public class CompensateActivityHostConfigurator<TActivity, TLog> :
             .ToArray();
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Configure(IReceiveEndpointBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);

@@ -7,33 +7,27 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>
-/// Provides a request send endpoint implementation.
-/// </summary>
-/// <typeparam name="TRequest">The t request type.</typeparam>
+/// <summary>Provides an endpoint for request send.</summary>
+/// <typeparam name="TRequest">The request type.</typeparam>
 public abstract class RequestSendEndpoint<TRequest> :
     IRequestSendEndpoint<TRequest>
     where TRequest : class
 {
     readonly ConsumeContext? _consumeContext;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="consumeContext">The consume context value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="consumeContext">The consume context.</param>
     protected RequestSendEndpoint(ConsumeContext? consumeContext)
     {
         _consumeContext = consumeContext;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="requestId">The request id value.</param>
-    /// <param name="values">The values value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="requestId">The request id.</param>
+    /// <param name="values">The values.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the send outcome.</returns>
     public async Task<TRequest> SendAsync(Guid requestId, object values, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
     {
         ISendEndpoint endpoint = (await GetSendEndpointAsync().ConfigureAwait(false)).SkipOutbox();
@@ -48,14 +42,12 @@ public abstract class RequestSendEndpoint<TRequest> :
         return message;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="requestId">The request id value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="requestId">The request id.</param>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(Guid requestId, TRequest message, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
     {
         ISendEndpoint endpoint = (await GetSendEndpointAsync().ConfigureAwait(false)).SkipOutbox();
@@ -67,9 +59,7 @@ public abstract class RequestSendEndpoint<TRequest> :
         await endpoint.SendAsync(message, consumePipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Gets send endpoint.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets send endpoint.</summary>
+    /// <returns>A task that produces the requested value.</returns>
     protected abstract Task<ISendEndpoint> GetSendEndpointAsync();
 }

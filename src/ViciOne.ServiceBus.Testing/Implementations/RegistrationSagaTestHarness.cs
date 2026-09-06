@@ -2,22 +2,18 @@ using ViciOne.ServiceBus.DependencyInjection.Testing;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
-/// <summary>
-/// Provides a registration saga test harness implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Provides a test harness for registration saga test.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class RegistrationSagaTestHarness<TSaga> :
     BaseSagaTestHarness<TSaga>,
     ISagaTestHarness<TSaga>
     where TSaga : class, ISaga
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="registration">The registration value.</param>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="loadRepository">The load repository value.</param>
-    /// <param name="queryRepository">The query repository value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="registration">The registration.</param>
+    /// <param name="repository">The repository.</param>
+    /// <param name="loadRepository">The load repository.</param>
+    /// <param name="queryRepository">The query repository.</param>
     public RegistrationSagaTestHarness(SagaContainerTestHarnessRegistration<TSaga> registration, ISagaRepository<TSaga> repository,
         ILoadSagaRepository<TSaga> loadRepository, IQuerySagaRepository<TSaga> queryRepository)
         : base(queryRepository, loadRepository, registration.TestTimeout, registration.TimeProvider)
@@ -27,18 +23,12 @@ public class RegistrationSagaTestHarness<TSaga> :
         Sagas = registration.Sagas;
     }
 
-    /// <summary>
-    /// Gets the consumed value.
-    /// </summary>
+    /// <summary>Gets the consumed.</summary>
     public IReceivedMessageList Consumed { get; }
 
-    /// <summary>
-    /// Gets the sagas value.
-    /// </summary>
+    /// <summary>Gets the sagas.</summary>
     public ISagaList<TSaga> Sagas { get; }
 
-    /// <summary>
-    /// Gets the created value.
-    /// </summary>
+    /// <summary>Gets the created.</summary>
     public ISagaList<TSaga> Created { get; }
 }

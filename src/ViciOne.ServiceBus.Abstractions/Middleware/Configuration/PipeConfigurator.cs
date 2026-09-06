@@ -3,27 +3,22 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a pipe configurator implementation.
-/// </summary>
+/// <summary>Configures pipe.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public partial class PipeConfigurator<TContext> :
     IBuildPipeConfigurator<TContext>
     where TContext : class, PipeContext
 {
     readonly List<IPipeSpecification<TContext>> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public PipeConfigurator()
     {
         _specifications = new List<IPipeSpecification<TContext>>(16);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_specifications.Count == 0)
@@ -36,10 +31,8 @@ public partial class PipeConfigurator<TContext> :
         }
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<TContext> specification)
     {
         if (specification == null)
@@ -48,10 +41,8 @@ public partial class PipeConfigurator<TContext> :
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the configured component.</summary>
+    /// <returns>The configured component.</returns>
     public IPipe<TContext> Build()
     {
         if (_specifications.Count == 0)

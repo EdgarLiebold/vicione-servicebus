@@ -4,11 +4,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a consumer message split filter specification implementation.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Describes requirements for consumer message split filter.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class ConsumerMessageSplitFilterSpecification<TConsumer, TMessage> :
     IPipeSpecification<ConsumerConsumeContext<TConsumer, TMessage>>
     where TMessage : class
@@ -16,28 +14,22 @@ public class ConsumerMessageSplitFilterSpecification<TConsumer, TMessage> :
 {
     readonly IPipeSpecification<ConsumeContext<TMessage>> _specification;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="specification">The specification.</param>
     public ConsumerMessageSplitFilterSpecification(IPipeSpecification<ConsumeContext<TMessage>> specification)
     {
         _specification = specification;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPipeBuilder<ConsumerConsumeContext<TConsumer, TMessage>> builder)
     {
         _specification.Apply(new BuilderProxy(builder));
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (!typeof(TConsumer).ImplementsInterface<IConsumer<TMessage>>())

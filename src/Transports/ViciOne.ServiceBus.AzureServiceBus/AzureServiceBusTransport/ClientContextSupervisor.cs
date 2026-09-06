@@ -3,17 +3,13 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a client context supervisor implementation.
-/// </summary>
+/// <summary>Supervises creation, sharing, and disposal of an Azure Service Bus client context.</summary>
 public class ClientContextSupervisor :
     TransportPipeContextSupervisor<ClientContext>,
     IClientContextSupervisor
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="contextFactory">The context factory value.</param>
+    /// <summary>Initializes the supervisor with its client-context factory.</summary>
+    /// <param name="contextFactory">The factory used when the supervised context must be created or recycled.</param>
     public ClientContextSupervisor(IPipeContextFactory<ClientContext> contextFactory)
         : base(contextFactory)
     {

@@ -7,21 +7,17 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides a processor context supervisor implementation.
-/// </summary>
+/// <summary>Supervises an Event Hubs processor context and registers it as a dependent receive agent of the shared connection.</summary>
 public class ProcessorContextSupervisor :
     TransportPipeContextSupervisor<ProcessorContext>,
     IProcessorContextSupervisor
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="clientFactory">The client factory value.</param>
-    /// <param name="partitionClosingHandler">The partition closing handler value.</param>
-    /// <param name="partitionInitializingHandler">The partition initializing handler value.</param>
+    /// <summary>Creates a processor supervisor for one receive endpoint.</summary>
+    /// <param name="supervisor">The shared Event Hubs connection supervisor.</param>
+    /// <param name="hostConfiguration">The bus host configuration used for logging.</param>
+    /// <param name="clientFactory">Creates the Azure SDK event processor client.</param>
+    /// <param name="partitionClosingHandler">The optional application partition-closing handler.</param>
+    /// <param name="partitionInitializingHandler">The optional application partition-initializing handler.</param>
     public ProcessorContextSupervisor(IConnectionContextSupervisor supervisor, IHostConfiguration hostConfiguration,
         Func<EventProcessorClient> clientFactory, Func<PartitionClosingEventArgs, Task>? partitionClosingHandler,
         Func<PartitionInitializingEventArgs, Task>? partitionInitializingHandler)

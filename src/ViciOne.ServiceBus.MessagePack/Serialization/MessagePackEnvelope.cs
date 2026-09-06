@@ -5,82 +5,49 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a message pack envelope implementation.
-/// </summary>
+/// <summary>Represents the MessagePack wire envelope and its transport metadata.</summary>
 public class MessagePackEnvelope :
     MessageEnvelope
 {
-    /// <summary>
-    /// Gets or sets the message id value.
-    /// </summary>
+    /// <summary>Gets or sets the message identifier encoded in the envelope.</summary>
     public string? MessageId { get; set; }
-    /// <summary>
-    /// Gets or sets the request id value.
-    /// </summary>
+    /// <summary>Gets or sets the request identifier used to correlate a response.</summary>
     public string? RequestId { get; set; }
-    /// <summary>
-    /// Gets or sets the correlation id value.
-    /// </summary>
+    /// <summary>Gets or sets the application correlation identifier.</summary>
     public string? CorrelationId { get; set; }
-    /// <summary>
-    /// Gets or sets the conversation id value.
-    /// </summary>
+    /// <summary>Gets or sets the identifier shared by all messages in a conversation.</summary>
     public string? ConversationId { get; set; }
-    /// <summary>
-    /// Gets or sets the initiator id value.
-    /// </summary>
+    /// <summary>Gets or sets the identifier of the message that initiated the conversation.</summary>
     public string? InitiatorId { get; set; }
-    /// <summary>
-    /// Gets or sets the source address value.
-    /// </summary>
+    /// <summary>Gets or sets the endpoint address from which the message was sent.</summary>
     public string? SourceAddress { get; set; }
-    /// <summary>
-    /// Gets or sets the destination address value.
-    /// </summary>
+    /// <summary>Gets or sets the intended destination endpoint address.</summary>
     public string? DestinationAddress { get; set; }
-    /// <summary>
-    /// Gets or sets the response address value.
-    /// </summary>
+    /// <summary>Gets or sets the endpoint address to which a response should be sent.</summary>
     public string? ResponseAddress { get; set; }
-    /// <summary>
-    /// Gets or sets the fault address value.
-    /// </summary>
+    /// <summary>Gets or sets the endpoint address to which a fault should be sent.</summary>
     public string? FaultAddress { get; set; }
-    /// <summary>
-    /// Gets or sets the message type value.
-    /// </summary>
+    /// <summary>Gets or sets the URNs of the message contracts represented by the payload.</summary>
     public string[]? MessageType { get; set; }
     /// <summary>
-    /// Gets or sets the is message native message pack serialized value.
+    /// Gets or sets whether <see cref="Message" /> contains a natively serialized MessagePack payload
+    /// rather than a MessagePack-encoded object dictionary that requires metadata projection.
     /// </summary>
     public bool IsMessageNativeMessagePackSerialized { get; set; }
-    /// <summary>
-    /// Gets or sets the message value.
-    /// </summary>
+    /// <summary>Gets or sets the encoded payload, normally as a byte array.</summary>
     public object? Message { get; set; }
-    /// <summary>
-    /// Gets or sets the expiration time value.
-    /// </summary>
+    /// <summary>Gets or sets the instant after which the message is expired.</summary>
     public DateTimeOffset? ExpirationTime { get; set; }
-    /// <summary>
-    /// Gets or sets the sent time value.
-    /// </summary>
+    /// <summary>Gets or sets the instant at which the message was sent.</summary>
     public DateTimeOffset? SentTime { get; set; }
-    /// <summary>
-    /// Gets or sets the headers value.
-    /// </summary>
+    /// <summary>Gets or sets application and transport-independent message headers.</summary>
     public Dictionary<string, object?>? Headers { get; set; }
-    /// <summary>
-    /// Gets or sets the host value.
-    /// </summary>
+    /// <summary>Gets or sets information about the producing host.</summary>
     public HostInfo? Host { get; set; }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="message">The message value.</param>
+    /// <summary>Captures send metadata and serializes the supplied message into a new envelope.</summary>
+    /// <param name="context">The send context that supplies envelope metadata.</param>
+    /// <param name="message">The message to serialize.</param>
     public MessagePackEnvelope(SendContext context, object message)
     {
         ApplyMetadata(EnvelopeMetadataProjection.From(context));
@@ -95,25 +62,16 @@ public class MessagePackEnvelope :
         Message = serializedMessage ?? throw new ArgumentNullException(nameof(serializedMessage));
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="envelope">The envelope value.</param>
+    /// <summary>Creates a MessagePack envelope from another envelope without sharing mutable payload bytes.</summary>
+    /// <param name="envelope">The source envelope and metadata.</param>
     public MessagePackEnvelope(MessageEnvelope envelope)
     {
         ApplyMetadata(EnvelopeMetadataProjection.From(envelope));
 
         if (envelope is MessagePackEnvelope alreadyMessagePack)
         {
-            // The payload of a MessagePack envelope is already MessagePack, whether it came off the wire
-            // or from an overlay. Serializing it again wrapped those bytes in a second encoding, and the
-            // receiver then found a byte array where it expected the message. Delayed redelivery and
-            // scheduling both clone an envelope, which is why a redelivered message was never consumed.
-            //
-            // What has to be carried over is the bytes, not the array. Message is public and settable and
-            // holds a mutable array, so two envelopes sharing one would let either of them write into
-            // what the other sends; the payload is copied at the boundary instead. That is a memory copy
-            // against an encoding, which is the trade the defect above was about.
+            // A MessagePack envelope already carries encoded payload bytes and must not be encoded again.
+            // Copy the mutable array at the envelope boundary so clones cannot alter one another's payload.
             IsMessageNativeMessagePackSerialized = alreadyMessagePack.IsMessageNativeMessagePackSerialized;
             Message = CopyPayload(alreadyMessagePack.Message);
         }
@@ -132,12 +90,10 @@ public class MessagePackEnvelope :
         Message = serializedMessage ?? throw new ArgumentNullException(nameof(serializedMessage));
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="messageTypesNames">The message types names value.</param>
+    /// <summary>Captures message metadata and serializes a payload whose supported contract URNs are supplied explicitly.</summary>
+    /// <param name="context">The message context that supplies envelope metadata.</param>
+    /// <param name="message">The message to serialize.</param>
+    /// <param name="messageTypesNames">The supported message contract URNs.</param>
     public MessagePackEnvelope(MessageContext context, object message, string[] messageTypesNames)
     {
         ApplyMetadata(EnvelopeMetadataProjection.From(context, messageTypesNames));
@@ -145,9 +101,7 @@ public class MessagePackEnvelope :
         Message = InternalMessagePackResolver.Serialize(message);
     }
 
-    /// <summary>
-    /// Used for deserialization.
-    /// </summary>
+    /// <summary>Creates an empty envelope for MessagePack deserialization.</summary>
     MessagePackEnvelope()
     {
     }
@@ -180,10 +134,11 @@ public class MessagePackEnvelope :
     }
 
     /// <summary>
-    /// The payload of an envelope that is already MessagePack travels as bytes. It is copied rather than
-    /// aliased because <see cref="Message" /> is public and mutable; a payload that is not a byte array
-    /// is carried as it is, because there is nothing defined to copy.
+    /// Copies an encoded byte-array payload so two envelopes cannot mutate one another; non-array payload
+    /// representations are returned unchanged.
     /// </summary>
+    /// <param name="message">The encoded payload representation.</param>
+    /// <returns>A cloned byte array when applicable; otherwise, the original value.</returns>
     static object? CopyPayload(object? message)
     {
         return message is byte[] bytes ? bytes.Clone() : message;

@@ -4,56 +4,36 @@ using System.Reflection;
 
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>
-/// Provides a bus host info implementation.
-/// </summary>
+/// <summary>Carries diagnostic information for bus host.</summary>
 public sealed class BusHostInfo : HostInfo
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public BusHostInfo()
     {
     }
 
-    /// <summary>
-    /// Gets or sets the machine name value.
-    /// </summary>
+    /// <summary>Gets or sets the machine name.</summary>
     public string? MachineName { get; set; }
 
-    /// <summary>
-    /// Gets or sets the process name value.
-    /// </summary>
+    /// <summary>Gets or sets the process name.</summary>
     public string? ProcessName { get; set; }
 
-    /// <summary>
-    /// Gets or sets the process id value.
-    /// </summary>
+    /// <summary>Gets or sets the process id.</summary>
     public int ProcessId { get; set; }
 
-    /// <summary>
-    /// Gets or sets the assembly value.
-    /// </summary>
+    /// <summary>Gets or sets the assembly.</summary>
     public string? Assembly { get; set; }
 
-    /// <summary>
-    /// Gets or sets the assembly version value.
-    /// </summary>
+    /// <summary>Gets or sets the assembly version.</summary>
     public string? AssemblyVersion { get; set; }
 
-    /// <summary>
-    /// Gets or sets the framework version value.
-    /// </summary>
+    /// <summary>Gets or sets the framework version.</summary>
     public string? FrameworkVersion { get; set; }
 
-    /// <summary>
-    /// Gets or sets the vici one service bus version value.
-    /// </summary>
+    /// <summary>Gets or sets the vici one service bus version.</summary>
     public string? ViciOneServiceBusVersion { get; set; }
 
-    /// <summary>
-    /// Gets or sets the operating system version value.
-    /// </summary>
+    /// <summary>Gets or sets the operating system version.</summary>
     public string? OperatingSystemVersion { get; set; }
 
     internal static BusHostInfo CaptureCurrent()

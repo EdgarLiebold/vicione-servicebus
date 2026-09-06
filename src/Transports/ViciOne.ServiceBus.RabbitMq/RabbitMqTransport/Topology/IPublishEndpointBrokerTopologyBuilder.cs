@@ -1,19 +1,13 @@
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// A builder for creating the topology when publishing a message
-/// </summary>
+/// <summary>Builds the exchange topology required to publish a message contract.</summary>
 public interface IPublishEndpointBrokerTopologyBuilder :
     IBrokerTopologyBuilder
 {
-    /// <summary>
-    /// The exchange to which the message is published
-    /// </summary>
+    /// <summary>Gets or sets the exchange to which the message contract is published.</summary>
     ExchangeHandle? Exchange { get; set; }
 
-    /// <summary>
-    /// Creates implemented builder.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a child builder for an implemented message contract.</summary>
+    /// <returns>A child builder that either preserves or flattens the implemented-contract hierarchy.</returns>
     IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder();
 }

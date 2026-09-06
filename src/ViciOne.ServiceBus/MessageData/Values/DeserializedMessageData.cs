@@ -7,34 +7,24 @@ namespace ViciOne.ServiceBus.MessageData.Values;
 /// When a message data property is deserialized, this is used as a placeholder for the actual message
 /// data accessor which replaces this property value once the message is transformed on the pipeline.
 /// </summary>
-/// <typeparam name="T">
-/// The type used to access the message data, valid types include stream, string, and byte[].
-/// </typeparam>
+/// <typeparam name="T">The type used to access the message data, valid types include stream, string, and byte[].</typeparam>
 public class DeserializedMessageData<T> :
     MessageData<T>
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="address">The address.</param>
     public DeserializedMessageData(Uri address)
     {
         Address = address;
         HasValue = true;
     }
 
-    /// <summary>
-    /// Gets the address value.
-    /// </summary>
+    /// <summary>Gets the address.</summary>
     public Uri Address { get; }
-    /// <summary>
-    /// Gets the has value value.
-    /// </summary>
+    /// <summary>Gets whether this instance contains a value.</summary>
     public bool HasValue { get; }
 
-    /// <summary>
-    /// Gets the underlying value.
-    /// </summary>
+    /// <summary>Gets the value.</summary>
     public Task<T?> Value
     {
         get

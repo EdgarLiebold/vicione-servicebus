@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.RabbitMq.Configuration;
 using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq;
-/// <summary>
-/// Immutable RabbitMQ-native technical redelivery topology for one receive queue.
-/// </summary>
+/// <summary>Immutable RabbitMQ-native technical redelivery topology for one receive queue.</summary>
 public sealed class RabbitMqQueueRedeliveryPlan
 {
     const string QueueTypeArgument = "x-queue-type";
@@ -23,11 +21,9 @@ public sealed class RabbitMqQueueRedeliveryPlan
     readonly IReadOnlyDictionary<long, string> _routingKeys;
     readonly IReadOnlyDictionary<string, object?> _sourceQueueArguments;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="intervals">The intervals value.</param>
+    /// <summary>Validates and snapshots the finite whole-millisecond delays for one receive queue.</summary>
+    /// <param name="settings">The source queue declaration copied into compatible delay queues.</param>
+    /// <param name="intervals">The positive delay intervals to predeclare.</param>
     public RabbitMqQueueRedeliveryPlan(RabbitMqReceiveSettings settings, IEnumerable<TimeSpan> intervals)
     {
         ArgumentNullException.ThrowIfNull(settings);
@@ -66,36 +62,22 @@ public sealed class RabbitMqQueueRedeliveryPlan
         Intervals = delayValues.Select(milliseconds => TimeSpan.FromMilliseconds(milliseconds)).ToArray();
     }
 
-    /// <summary>
-    /// Gets the queue name value.
-    /// </summary>
+    /// <summary>Gets the queue name.</summary>
     public string QueueName { get; }
-    /// <summary>
-    /// Gets the delay exchange name value.
-    /// </summary>
+    /// <summary>Gets the delay exchange name.</summary>
     public string DelayExchangeName { get; }
-    /// <summary>
-    /// Gets the return exchange name value.
-    /// </summary>
+    /// <summary>Gets the return exchange name.</summary>
     public string ReturnExchangeName { get; }
-    /// <summary>
-    /// Gets the durable value.
-    /// </summary>
+    /// <summary>Gets whether redelivery topology survives broker restarts.</summary>
     public bool Durable { get; }
-    /// <summary>
-    /// Gets the auto delete value.
-    /// </summary>
+    /// <summary>Gets whether RabbitMQ deletes redelivery topology when unused.</summary>
     public bool AutoDelete { get; }
-    /// <summary>
-    /// Gets the intervals value.
-    /// </summary>
+    /// <summary>Gets the distinct, ascending redelivery intervals declared by this plan.</summary>
     public IReadOnlyList<TimeSpan> Intervals { get; }
 
-    /// <summary>
-    /// Gets routing key.
-    /// </summary>
-    /// <param name="delay">The delay value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the routing key for an exact predeclared delay.</summary>
+    /// <param name="delay">The requested redelivery delay.</param>
+    /// <returns>The invariant-culture whole-millisecond routing key.</returns>
     public string GetRoutingKey(TimeSpan delay)
     {
         var milliseconds = ValidateInterval(delay);
@@ -108,12 +90,10 @@ public sealed class RabbitMqQueueRedeliveryPlan
         return routingKey;
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Declares and binds the delay, return, source, and per-interval queue topology.</summary>
+    /// <param name="context">The active RabbitMQ channel context.</param>
+    /// <param name="cancellationToken">Cancellation for broker declarations and bindings.</param>
+    /// <returns>A task that completes when all redelivery topology exists.</returns>
     public async Task ConfigureAsync(ChannelContext context, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(context);

@@ -4,32 +4,18 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides a broker topology builder implementation.
-/// </summary>
+/// <summary>Deduplicates and links Amazon SNS topic, Amazon SQS queue, and subscription topology entities.</summary>
 public abstract class BrokerTopologyBuilder
 {
-    /// <summary>
-    /// Defines the queues value.
-    /// </summary>
+    /// <summary>Stores deduplicated Amazon SQS queue entities.</summary>
     protected readonly NamedEntityCollection<QueueEntity, QueueHandle> Queues;
-    /// <summary>
-    /// Defines the queue subscriptions value.
-    /// </summary>
+    /// <summary>Stores deduplicated topic-to-queue subscriptions.</summary>
     protected readonly NamedEntityCollection<QueueSubscriptionEntity, QueueSubscriptionHandle> QueueSubscriptions;
-    /// <summary>
-    /// Defines the topics value.
-    /// </summary>
+    /// <summary>Stores deduplicated Amazon SNS topic entities.</summary>
     protected readonly NamedEntityCollection<TopicEntity, TopicHandle> Topics;
-    /// <summary>
-    /// Defines the topic subscriptions value.
-    /// </summary>
-    protected readonly NamedEntityCollection<TopicSubscriptionEntity, TopicSubscriptionHandle> TopicSubscriptions;
     long _nextId;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes empty provider topology collections.</summary>
     protected BrokerTopologyBuilder()
     {
         Topics = new NamedEntityCollection<TopicEntity, TopicHandle>(TopicEntity.EntityComparer, TopicEntity.NameComparer);
@@ -37,9 +23,6 @@ public abstract class BrokerTopologyBuilder
         QueueSubscriptions =
             new NamedEntityCollection<QueueSubscriptionEntity, QueueSubscriptionHandle>(QueueSubscriptionEntity.EntityComparer,
                 QueueSubscriptionEntity.NameComparer);
-        TopicSubscriptions =
-            new NamedEntityCollection<TopicSubscriptionEntity, TopicSubscriptionHandle>(TopicSubscriptionEntity.EntityComparer,
-                TopicSubscriptionEntity.NameComparer);
     }
 
     long GetNextId()
@@ -47,16 +30,14 @@ public abstract class BrokerTopologyBuilder
         return Interlocked.Increment(ref _nextId);
     }
 
-    /// <summary>
-    /// Creates topic.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="topicAttributes">The topic attributes value.</param>
-    /// <param name="topicSubscriptionAttributes">The topic subscription attributes value.</param>
-    /// <param name="tags">The tags value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds or reuses an Amazon SNS topic entity.</summary>
+    /// <param name="name">The topic name.</param>
+    /// <param name="durable">Whether the topic is retained when its endpoint stops.</param>
+    /// <param name="autoDelete">Whether the topic is deleted when its endpoint stops.</param>
+    /// <param name="topicAttributes">Optional Amazon SNS topic attributes.</param>
+    /// <param name="topicSubscriptionAttributes">Optional default subscription attributes.</param>
+    /// <param name="tags">Optional topic tags.</param>
+    /// <returns>A handle to the deduplicated topic entity.</returns>
     public TopicHandle CreateTopic(string name, bool durable, bool autoDelete, IDictionary<string, object>? topicAttributes = null,
         IDictionary<string, object>? topicSubscriptionAttributes = null, IDictionary<string, string>? tags = null)
     {
@@ -67,16 +48,14 @@ public abstract class BrokerTopologyBuilder
         return Topics.GetOrAdd(topicEntity);
     }
 
-    /// <summary>
-    /// Creates queue.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="queueAttributes">The queue attributes value.</param>
-    /// <param name="queueSubscriptionAttributes">The queue subscription attributes value.</param>
-    /// <param name="tags">The tags value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds or reuses an Amazon SQS queue entity.</summary>
+    /// <param name="name">The queue name.</param>
+    /// <param name="durable">Whether the queue is retained when its endpoint stops.</param>
+    /// <param name="autoDelete">Whether the queue is deleted when its endpoint stops.</param>
+    /// <param name="queueAttributes">Optional Amazon SQS queue attributes.</param>
+    /// <param name="queueSubscriptionAttributes">Optional attributes for subscriptions targeting the queue.</param>
+    /// <param name="tags">Optional queue tags.</param>
+    /// <returns>A handle to the deduplicated queue entity.</returns>
     public QueueHandle CreateQueue(string name, bool durable, bool autoDelete, IDictionary<string, object>? queueAttributes = null,
         IDictionary<string, object>? queueSubscriptionAttributes = null, IDictionary<string, string>? tags = null)
     {
@@ -87,12 +66,10 @@ public abstract class BrokerTopologyBuilder
         return Queues.GetOrAdd(queueEntity);
     }
 
-    /// <summary>
-    /// Creates queue subscription.
-    /// </summary>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="queue">The queue value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds or reuses a subscription from an Amazon SNS topic to an Amazon SQS queue.</summary>
+    /// <param name="topic">The source topic handle.</param>
+    /// <param name="queue">The destination queue handle.</param>
+    /// <returns>A handle to the deduplicated subscription.</returns>
     public QueueSubscriptionHandle CreateQueueSubscription(TopicHandle topic, QueueHandle queue)
     {
         var id = GetNextId();
@@ -106,22 +83,4 @@ public abstract class BrokerTopologyBuilder
         return QueueSubscriptions.GetOrAdd(binding);
     }
 
-    /// <summary>
-    /// Creates topic subscription.
-    /// </summary>
-    /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination value.</param>
-    /// <returns>The result of the operation.</returns>
-    public TopicSubscriptionHandle CreateTopicSubscription(TopicHandle source, TopicHandle destination)
-    {
-        var id = GetNextId();
-
-        var sourceEntity = Topics.Get(source);
-
-        var destinationEntity = Topics.Get(destination);
-
-        var binding = new TopicSubscriptionEntity(id, sourceEntity, destinationEntity);
-
-        return TopicSubscriptions.GetOrAdd(binding);
-    }
 }

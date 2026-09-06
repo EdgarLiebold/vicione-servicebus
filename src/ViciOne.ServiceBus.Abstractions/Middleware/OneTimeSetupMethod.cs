@@ -71,13 +71,9 @@ class OneTimeSetupMethod
 }
 
 
-/// <summary>
-/// Defines the contract for one time context.
-/// </summary>
+/// <summary>Exposes state for one time operations.</summary>
 public interface OneTimeContext
 {
-    /// <summary>
-    /// Performs the evict operation.
-    /// </summary>
+    /// <summary>Evicts the selected cached entry.</summary>
     void Evict();
 }

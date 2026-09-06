@@ -6,17 +6,15 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for message scheduler registration.
-/// </summary>
+/// <summary>Provides extension methods for message scheduler registration.</summary>
 public static class MessageSchedulerRegistrationExtensions
 {
     /// <summary>
     /// Add a <see cref="IMessageScheduler" /> to the container that sends <see cref="ScheduleMessage" />
     /// to an external message scheduler on the specified endpoint address, such as Quartz.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="schedulerEndpointAddress">The endpoint address where the scheduler is running</param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="schedulerEndpointAddress">The endpoint address where the scheduler is running.</param>
     public static void AddMessageScheduler(this IBusRegistrationConfigurator configurator, Uri schedulerEndpointAddress)
     {
         if (schedulerEndpointAddress == null)
@@ -43,8 +41,9 @@ public static class MessageSchedulerRegistrationExtensions
     /// Add a <see cref="IMessageScheduler" /> to the container that sends <see cref="ScheduleMessage" />
     /// to an external message scheduler on the specified endpoint address, such as Quartz.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="schedulerEndpointAddress">The endpoint address where the scheduler is running</param>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="schedulerEndpointAddress">The endpoint address where the scheduler is running.</param>
     public static void AddMessageScheduler<TBus>(this IBusRegistrationConfigurator<TBus> configurator, Uri schedulerEndpointAddress)
         where TBus : class, IBus
     {
@@ -73,7 +72,7 @@ public static class MessageSchedulerRegistrationExtensions
     /// Add a <see cref="IMessageScheduler" /> to the container that publishes <see cref="ScheduleMessage" />
     /// to an external message scheduler, such as Quartz.
     /// </summary>
-    /// <param name="configurator"></param>
+    /// <param name="configurator">The configurator to update.</param>
     public static void AddPublishMessageScheduler(this IBusRegistrationConfigurator configurator)
     {
         configurator.Services.TryAddScoped(provider =>
@@ -97,7 +96,8 @@ public static class MessageSchedulerRegistrationExtensions
     /// Add a <see cref="IMessageScheduler" /> to the container that publishes <see cref="ScheduleMessage" />
     /// to an external message scheduler, such as Quartz.
     /// </summary>
-    /// <param name="configurator"></param>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public static void AddPublishMessageScheduler<TBus>(this IBusRegistrationConfigurator<TBus> configurator)
         where TBus : class, IBus
     {

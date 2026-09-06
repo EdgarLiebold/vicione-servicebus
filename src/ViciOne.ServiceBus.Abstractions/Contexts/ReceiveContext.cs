@@ -11,98 +11,70 @@ namespace ViciOne.ServiceBus.Advanced;
 public interface ReceiveContext :
     PipeContext
 {
-    // the amount of time elapsed since the message was read from the queue
-    /// <summary>
-    /// Gets the elapsed time value.
-    /// </summary>
+    /// <summary>Gets the time elapsed since the transport read the message.</summary>
     TimeSpan ElapsedTime { get; }
 
-    /// <summary>
-    /// The address on which the message was received
-    /// </summary>
+    /// <summary>The address on which the message was received.</summary>
     Uri InputAddress { get; }
 
-    /// <summary>
-    /// The content type of the message, as determined by the available headers
-    /// </summary>
+    /// <summary>The content type of the message, as determined by the available headers.</summary>
     ContentType ContentType { get; }
 
-    /// <summary>
-    /// If True, the message is being redelivered by the transport
-    /// </summary>
+    /// <summary>If True, the message is being redelivered by the transport.</summary>
     bool Redelivered { get; }
 
-    /// <summary>
-    /// Headers specific to the transport
-    /// </summary>
+    /// <summary>Headers specific to the transport.</summary>
     Headers TransportHeaders { get; }
 
-    /// <summary>
-    /// The task that is completed once all pending tasks are completed
-    /// </summary>
+    /// <summary>The task that is completed once all pending tasks are completed.</summary>
     Task ReceiveCompleted { get; }
 
-    /// <summary>
-    /// Returns true if the message was successfully consumed by at least one consumer
-    /// </summary>
+    /// <summary>Returns true if the message was successfully consumed by at least one consumer.</summary>
     bool IsDelivered { get; }
 
-    /// <summary>
-    /// Returns true if a fault occurred during the message delivery
-    /// </summary>
+    /// <summary>Returns true if a fault occurred during the message delivery.</summary>
     bool IsFaulted { get; }
 
-    /// <summary>
-    /// The send endpoint provider from the transport
-    /// </summary>
+    /// <summary>The send endpoint provider from the transport.</summary>
     ISendEndpointProvider SendEndpointProvider { get; }
 
-    /// <summary>
-    /// The publish endpoint provider from the transport
-    /// </summary>
+    /// <summary>The publish endpoint provider from the transport.</summary>
     IPublishEndpointProvider PublishEndpointProvider { get; }
 
-    /// <summary>
-    /// If true (the default), faults should be published when no ResponseAddress or FaultAddress are present.
-    /// </summary>
+    /// <summary>If true (the default), faults should be published when no ResponseAddress or FaultAddress are present.</summary>
     bool PublishFaults { get; }
 
-    /// <summary>
-    /// The message body
-    /// </summary>
+    /// <summary>The message body.</summary>
     MessageBody Body { get; }
 
-    /// <summary>
-    /// Notify that a message has been consumed from the received context
-    /// </summary>
-    /// <param name="context">The consume context of the message</param>
-    /// <param name="duration">The time spent by the consumer</param>
-    /// <param name="consumerType">The consumer type</param>
+    /// <summary>Notify that a message has been consumed from the received context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The consume context of the message.</param>
+    /// <param name="duration">The time spent by the consumer.</param>
+    /// <param name="consumerType">The consumer type.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>
-    /// Notify that a message consumer faulted
-    /// </summary>
-    /// <param name="context">The consume context of the message</param>
-    /// <param name="duration">The time spent by the consumer</param>
-    /// <param name="consumerType">The message consumer type that faulted</param>
-    /// <param name="exception">The exception that occurred</param>
+    /// <summary>Notify that a message consumer faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The consume context of the message.</param>
+    /// <param name="duration">The time spent by the consumer.</param>
+    /// <param name="consumerType">The message consumer type that faulted.</param>
+    /// <param name="exception">The exception that occurred.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>
-    /// Notify that a message receive faulted outside of the message consumer
-    /// </summary>
-    /// <param name="exception">The exception that occurred</param>
+    /// <summary>Notify that a message receive faulted outside of the message consumer.</summary>
+    /// <param name="exception">The exception that occurred.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Adds a pending Task to the completion of the message receiver
-    /// </summary>
-    /// <param name="task"></param>
+    /// <summary>Adds a pending Task to the completion of the message receiver.</summary>
+    /// <param name="task">The task.</param>
     void AddReceiveTask(Task task);
 }

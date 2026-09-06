@@ -6,37 +6,34 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a message pack message serializer context implementation.
-/// </summary>
+/// <summary>Exposes a decoded MessagePack envelope through the transport-neutral serializer context.</summary>
 public class MessagePackMessageSerializerContext :
     BaseSerializerContext
 {
     readonly MessagePackEnvelope _envelope;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="serializer">The serializer value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="supportedMessageTypes">The supported message types value.</param>
-    /// <param name="envelope">The envelope value.</param>
+    /// <summary>Creates a serializer context for a decoded MessagePack envelope.</summary>
+    /// <param name="serializer">The MessagePack serializer used for value conversion and forwarding.</param>
+    /// <param name="context">The envelope-backed message metadata context.</param>
+    /// <param name="supportedMessageTypes">The contract URNs represented by the encoded message.</param>
+    /// <param name="envelope">The decoded envelope containing a non-null encoded message.</param>
     public MessagePackMessageSerializerContext(MessagePackMessageSerializer serializer, MessageContext context, string[] supportedMessageTypes,
         MessagePackEnvelope envelope)
-        : base(serializer, context, supportedMessageTypes)
+        : base(
+            serializer ?? throw new ArgumentNullException(nameof(serializer)),
+            context ?? throw new ArgumentNullException(nameof(context)),
+            supportedMessageTypes ?? throw new ArgumentNullException(nameof(supportedMessageTypes)))
     {
-        _envelope = envelope;
+        _envelope = envelope ?? throw new ArgumentNullException(nameof(envelope));
 
         if (_envelope.Message is null)
             throw new ArgumentException("Message cannot be null.", nameof(envelope));
     }
 
-    /// <summary>
-    /// Attempts to get message.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Attempts to decode the envelope payload as a supported message contract.</summary>
+    /// <typeparam name="T">The requested message contract.</typeparam>
+    /// <param name="message">Receives the decoded message when the contract is supported and decoding succeeds.</param>
+    /// <returns><see langword="true"/> when a non-null <typeparamref name="T"/> was decoded; otherwise, <see langword="false"/>.</returns>
     public override bool TryGetMessage<T>([NotNullWhen(true)] out T? message)
         where T : class
     {
@@ -50,12 +47,10 @@ public class MessagePackMessageSerializerContext :
         return true;
     }
 
-    /// <summary>
-    /// Attempts to get message.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="message">The message value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Attempts to decode the envelope payload as a supported runtime message contract.</summary>
+    /// <param name="messageType">The requested message contract type.</param>
+    /// <param name="message">Receives the decoded message when the contract is supported and decoding succeeds.</param>
+    /// <returns><see langword="true"/> when a non-null message was decoded; otherwise, <see langword="false"/>.</returns>
     public override bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message)
     {
         try
@@ -72,8 +67,7 @@ public class MessagePackMessageSerializerContext :
                 message = InternalMessagePackResolver.Deserialize(messageType, messagePackSerializedObjectBuffer);
             else
             {
-                // If a message is serialized as dictionary of string-object pairs, we need to deserialize using a different approach.
-
+                // Object dictionaries use metadata-aware JSON projection to reconstruct their declared contract.
                 var messageAsDictionary = InternalMessagePackResolver
                     .Deserialize<Dictionary<string, object>>(messagePackSerializedObjectBuffer);
 
@@ -89,25 +83,18 @@ public class MessagePackMessageSerializerContext :
         }
     }
 
-    /// <summary>
-    /// Gets message serializer.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a serializer that preserves this envelope while forwarding it.</summary>
+    /// <returns>A MessagePack body serializer containing a private copy of the envelope payload.</returns>
     public override IMessageSerializer GetMessageSerializer()
     {
-        if (_envelope is null)
-            throw new InvalidOperationException("Context has no envelope.");
-
         return new MessagePackMessageBodySerializer(_envelope);
     }
 
-    /// <summary>
-    /// Gets message serializer.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="envelope">The envelope value.</param>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a forwarding serializer that overlays a replacement contract onto an envelope.</summary>
+    /// <typeparam name="T">The replacement message contract.</typeparam>
+    /// <param name="envelope">The envelope whose metadata and current payload are preserved.</param>
+    /// <param name="message">The replacement values merged into the current payload by property name.</param>
+    /// <returns>A MessagePack body serializer for the updated envelope.</returns>
     public override IMessageSerializer GetMessageSerializer<T>(MessageEnvelope envelope, T message)
     {
         var messageEnvelopeSerializer = new MessagePackMessageBodySerializer(envelope);
@@ -117,12 +104,10 @@ public class MessagePackMessageSerializerContext :
         return messageEnvelopeSerializer;
     }
 
-    /// <summary>
-    /// Gets message serializer.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="messageTypes">The message types value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a forwarding serializer for a new message with explicitly supplied contract URNs.</summary>
+    /// <param name="message">The message encoded into the new envelope.</param>
+    /// <param name="messageTypes">The contract URNs represented by the message.</param>
+    /// <returns>A MessagePack body serializer for the new envelope.</returns>
     public override IMessageSerializer GetMessageSerializer(object message, string[] messageTypes)
     {
         var messagePackEnvelope = new MessagePackEnvelope(this, message, messageTypes);
@@ -130,19 +115,17 @@ public class MessagePackMessageSerializerContext :
         return new MessagePackMessageBodySerializer(messagePackEnvelope);
     }
 
-    /// <summary>
-    /// Performs the to dictionary operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Projects a message into a case-insensitive property dictionary used for payload overlays.</summary>
+    /// <typeparam name="T">The message contract to project.</typeparam>
+    /// <param name="message">The message to project, or <see langword="null"/> for an empty dictionary.</param>
+    /// <returns>A case-insensitive property dictionary.</returns>
     public override Dictionary<string, object> ToDictionary<T>(T? message)
         where T : class
     {
         if (message is null)
             return new Dictionary<string, object>(0, StringComparer.OrdinalIgnoreCase);
 
-        // We serialize internally using JSON.
+        // Metadata-aware JSON projection supplies the case-insensitive object dictionary.
         return message.Transform<Dictionary<string, object>>(ServiceBusMetadataJson.Options)
             ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
     }

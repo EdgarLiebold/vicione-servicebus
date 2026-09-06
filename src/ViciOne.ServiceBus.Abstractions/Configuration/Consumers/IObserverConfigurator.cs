@@ -2,9 +2,9 @@ namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Configure a message handler, including specifying filters that are executed around
-/// the handler itself
+/// the handler itself.
 /// </summary>
-/// <typeparam name="TMessage"></typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public interface IObserverConfigurator<TMessage> :
     IConsumeConfigurator,
     IPipeConfigurator<ConsumeContext<TMessage>>

@@ -2,6 +2,7 @@ using System.Net.Security;
 using System.Security.Authentication;
 using RabbitMQ.Client;
 using ViciOne.ServiceBus.RabbitMq.Configuration;
+using ViciOne.ServiceBus.RabbitMq.Topology;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -69,5 +70,29 @@ public sealed class ConfigurationHostSettingsTests
 
         Assert.False(configurator.Settings.Ssl);
         Assert.Equal(new Uri("rabbitmq://broker:5671/production"), configurator.Settings.HostAddress);
+    }
+
+    [Theory]
+    [InlineData(1023, true)]
+    [InlineData(1024, false)]
+    [InlineData(262144, false)]
+    [InlineData(262145, true)]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-HOST-CONFIGURATION", "batch-size-validation-uses-byte-limit")]
+    public void BatchSizeValidation_UsesTheConfiguredSizeLimit(int sizeLimit, bool expectsFailure)
+    {
+        var topology = new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology());
+        var busConfiguration = new RabbitMqBusConfiguration(topology);
+        var settings = new ConfigurationHostSettings();
+        settings.ConfigureBatch(batch =>
+        {
+            batch.Enabled = true;
+            batch.SizeLimit = sizeLimit;
+        });
+        busConfiguration.HostConfiguration.Settings = settings;
+
+        bool hasBatchSizeFailure = busConfiguration.HostConfiguration.Validate()
+            .Any(static result => result.Key == "BatchSizeLimit");
+
+        Assert.Equal(expectsFailure, hasBatchSizeFailure);
     }
 }

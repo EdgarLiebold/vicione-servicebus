@@ -15,9 +15,7 @@ using Microsoft.CodeAnalysis.Simplification;
 
 namespace ViciOne.ServiceBus.Analyzers;
 
-/// <summary>
-/// Provides a message contract code fix provider implementation.
-/// </summary>
+/// <summary>Provides message contract code fix services.</summary>
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MessageContractCodeFixProvider))]
 [Shared]
 public class MessageContractCodeFixProvider :
@@ -25,26 +23,19 @@ public class MessageContractCodeFixProvider :
 {
     const string Title = "Add missing properties";
 
-    /// <summary>
-    /// Gets the fixable diagnostic ids value.
-    /// </summary>
+    /// <summary>Gets the fixable diagnostic ids.</summary>
     public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MessageContractAnalyzer.MissingPropertiesRuleId);
 
-    /// <summary>
-    /// Gets fix all provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets fix all provider.</summary>
+    /// <returns>The fix all provider.</returns>
     public sealed override FixAllProvider GetFixAllProvider()
     {
-        // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/FixAllProvider.md for more information on Fix All Providers
         return WellKnownFixAllProviders.BatchFixer;
     }
 
-    /// <summary>
-    /// Performs the register code fixes operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers code fixes.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
     {
         var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
@@ -54,7 +45,6 @@ public class MessageContractCodeFixProvider :
         var diagnostic = context.Diagnostics.First();
         var diagnosticSpan = diagnostic.Location.SourceSpan;
 
-        // Find the type declaration identified by the diagnostic.
         var anonymousObject = root.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf()
             .OfType<AnonymousObjectCreationExpressionSyntax>().FirstOrDefault();
         if (anonymousObject == null)
@@ -65,7 +55,6 @@ public class MessageContractCodeFixProvider :
             || string.IsNullOrWhiteSpace(fullType))
             return;
 
-        // Register a code action that will invoke the fix.
         context.RegisterCodeFix(
             CodeAction.Create(
                 Title,
@@ -86,7 +75,6 @@ public class MessageContractCodeFixProvider :
 
         var symbolDisplayFormat = new SymbolDisplayFormat(typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
 
-        // Find the interface identified by the diagnostic
         var symbols = root.DescendantNodes().OfType<InterfaceDeclarationSyntax>().Select(i => semanticModel.GetDeclaredSymbol(i, cancellationToken: cancellationToken)).ToList();
         ITypeSymbol? contractType = symbols.FirstOrDefault(i => i?.ToDisplayString(symbolDisplayFormat) == fullType);
 

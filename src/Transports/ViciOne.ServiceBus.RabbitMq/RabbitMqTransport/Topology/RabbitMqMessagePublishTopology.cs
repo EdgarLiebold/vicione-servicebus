@@ -7,10 +7,8 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a rabbit mq message publish topology implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Builds the RabbitMQ publish exchange and related bindings for one message contract.</summary>
+/// <typeparam name="TMessage">The published message contract type.</typeparam>
 public class RabbitMqMessagePublishTopology<TMessage> :
     MessagePublishTopology<TMessage>,
     IRabbitMqMessagePublishTopologyConfigurator<TMessage>
@@ -21,12 +19,10 @@ public class RabbitMqMessagePublishTopology<TMessage> :
     readonly IRabbitMqPublishTopology _publishTopology;
     readonly List<IRabbitMqPublishTopologySpecification> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="publishTopology">The publish topology value.</param>
-    /// <param name="messageTopology">The message topology value.</param>
-    /// <param name="exchangeTypeSelector">The exchange type selector value.</param>
+    /// <summary>Creates publish topology for a message contract.</summary>
+    /// <param name="publishTopology">The parent RabbitMQ publish topology.</param>
+    /// <param name="messageTopology">The message metadata that supplies the exchange name.</param>
+    /// <param name="exchangeTypeSelector">The selector that determines the exchange type.</param>
     public RabbitMqMessagePublishTopology(IRabbitMqPublishTopology publishTopology, IMessageTopology<TMessage> messageTopology,
         IMessageExchangeTypeSelector<TMessage> exchangeTypeSelector)
         : base(publishTopology)
@@ -50,10 +46,8 @@ public class RabbitMqMessagePublishTopology<TMessage> :
 
     IMessageExchangeTypeSelector<TMessage> ExchangeTypeSelector { get; }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Declares the message exchange, its hierarchy binding, and configured subordinate topology.</summary>
+    /// <param name="builder">The publish-endpoint topology builder.</param>
     public void Apply(IPublishEndpointBrokerTopologyBuilder builder)
     {
         if (Exclude)
@@ -80,32 +74,26 @@ public class RabbitMqMessagePublishTopology<TMessage> :
             configurator.Apply(builder);
     }
 
-    /// <summary>
-    /// Attempts to get publish address.
-    /// </summary>
-    /// <param name="baseAddress">The base address value.</param>
-    /// <param name="publishAddress">The publish address value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Builds the publish address for this message exchange.</summary>
+    /// <param name="baseAddress">The RabbitMQ host address.</param>
+    /// <param name="publishAddress">Receives the configured exchange address.</param>
+    /// <returns>Always <see langword="true"/> because RabbitMQ publish topology always has an exchange address.</returns>
     public override bool TryGetPublishAddress(Uri baseAddress, [NotNullWhen(true)] out Uri? publishAddress)
     {
         publishAddress = _exchange.GetEndpointAddress(baseAddress);
         return true;
     }
 
-    /// <summary>
-    /// Gets send settings.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates send settings for this message exchange.</summary>
+    /// <param name="hostAddress">The RabbitMQ host address.</param>
+    /// <returns>The exchange send settings.</returns>
     public SendSettings GetSendSettings(Uri hostAddress)
     {
         return new RabbitMqSendSettings(_exchange.GetEndpointAddress(hostAddress));
     }
 
-    /// <summary>
-    /// Gets broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the complete broker topology required to publish this message contract.</summary>
+    /// <returns>The publish broker topology.</returns>
     public BrokerTopology GetBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder(_publishTopology.BrokerTopologyOptions);
@@ -115,18 +103,14 @@ public class RabbitMqMessagePublishTopology<TMessage> :
         return builder.BuildBrokerTopology();
     }
 
-    /// <summary>
-    /// Performs the apply broker topology operation.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this message contract's publish topology to an existing builder.</summary>
+    /// <param name="builder">The publish-endpoint topology builder.</param>
     public void ApplyBrokerTopology(IPublishEndpointBrokerTopologyBuilder builder)
     {
         Apply(builder);
     }
 
-    /// <summary>
-    /// Gets the exchange value.
-    /// </summary>
+    /// <summary>Gets this message contract's exchange declaration.</summary>
     public Exchange Exchange => _exchange;
 
     bool IRabbitMqExchangeConfigurator.Durable
@@ -154,20 +138,16 @@ public class RabbitMqMessagePublishTopology<TMessage> :
         _exchange.SetExchangeArgument(key, value);
     }
 
-    /// <summary>
-    /// Gets or sets the alternate exchange value.
-    /// </summary>
+    /// <summary>Sets the alternate exchange used for unroutable messages.</summary>
     public string AlternateExchange
     {
         set => _exchange.SetExchangeArgument(RabbitMQ.Client.Headers.AlternateExchange, value);
     }
 
-    /// <summary>
-    /// Performs the bind queue operation.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Adds an exchange-to-queue binding to this message's publish topology.</summary>
+    /// <param name="exchangeName">The exchange to declare and bind.</param>
+    /// <param name="queueName">The queue to declare, or <see langword="null"/> to use the exchange name.</param>
+    /// <param name="configure">An optional callback that customizes the exchange, queue, and binding.</param>
     public void BindQueue(string exchangeName, string? queueName, Action<IRabbitMqQueueBindingConfigurator>? configure)
     {
         if (string.IsNullOrWhiteSpace(exchangeName))
@@ -182,12 +162,10 @@ public class RabbitMqMessagePublishTopology<TMessage> :
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Performs the bind alternate exchange queue operation.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Adds an exchange-to-queue binding and selects that exchange as the alternate exchange.</summary>
+    /// <param name="exchangeName">The alternate exchange to declare.</param>
+    /// <param name="queueName">The queue to bind, or <see langword="null"/> to use the exchange name.</param>
+    /// <param name="configure">An optional callback that customizes the exchange, queue, and binding.</param>
     public void BindAlternateExchangeQueue(string exchangeName, string? queueName, Action<IRabbitMqQueueBindingConfigurator>? configure)
     {
         BindQueue(exchangeName, queueName, configure);
@@ -195,12 +173,10 @@ public class RabbitMqMessagePublishTopology<TMessage> :
         AlternateExchange = exchangeName;
     }
 
-    /// <summary>
-    /// Adds implemented message configurator to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="direct">The direct value.</param>
+    /// <summary>Adds publish topology for a directly implemented message contract.</summary>
+    /// <typeparam name="T">The implemented message contract type.</typeparam>
+    /// <param name="configurator">The implemented contract's publish topology.</param>
+    /// <param name="direct">Whether <typeparamref name="T"/> is implemented directly by <typeparamref name="TMessage"/>.</param>
     public void AddImplementedMessageConfigurator<T>(IRabbitMqMessagePublishTopologyConfigurator<T> configurator, bool direct)
         where T : class
     {

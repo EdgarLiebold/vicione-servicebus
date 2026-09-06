@@ -2,18 +2,12 @@ using System;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Configure a database transport queue
-/// </summary>
+/// <summary>Configure a database transport queue.</summary>
 public interface ISqlQueueConfigurator
 {
-    /// <summary>
-    /// If specified, the queue will be automatically removed after no consumer activity within the specific idle period
-    /// </summary>
+    /// <summary>If specified, the queue will be automatically removed after no consumer activity within the specific idle period.</summary>
     TimeSpan? AutoDeleteOnIdle { set; }
 
-    /// <summary>
-    /// The maximum number of message delivery attempts by the transport before moving the message to the DLQ (defaults to 10)
-    /// </summary>
+    /// <summary>The maximum number of message delivery attempts by the transport before moving the message to the DLQ (defaults to 10).</summary>
     int? MaxDeliveryCount { set; }
 }

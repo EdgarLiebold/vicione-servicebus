@@ -4,25 +4,17 @@ using ViciOne.ServiceBus.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Defines the contract for entity framework outbox configurator.
-/// </summary>
+/// <summary>Configures EF Core inbox deduplication and transactional-outbox persistence.</summary>
 public interface IEntityFrameworkOutboxConfigurator :
     ITransactionalOutboxConfigurator
 {
-    /// <summary>
-    /// The amount of time a message remains in the inbox for duplicate detection (based on MessageId)
-    /// </summary>
+    /// <summary>The amount of time a message remains in the inbox for duplicate detection (based on MessageId).</summary>
     public TimeSpan DuplicateDetectionWindow { set; }
 
-    /// <summary>
-    /// Gets or sets the isolation level value.
-    /// </summary>
+    /// <summary>Sets the isolation level used by inbox and outbox transactions.</summary>
     IsolationLevel IsolationLevel { set; }
 
-    /// <summary>
-    /// Gets or sets the lock statement provider value.
-    /// </summary>
+    /// <summary>Sets the provider-specific SQL used to acquire inbox and outbox locks.</summary>
     ILockStatementProvider LockStatementProvider { set; }
 
     /// <summary>
@@ -31,19 +23,13 @@ public interface IEntityFrameworkOutboxConfigurator :
     /// </summary>
     public TimeSpan QueryDelay { set; }
 
-    /// <summary>
-    /// The maximum number of messages to query from the database at a time
-    /// </summary>
+    /// <summary>The maximum number of messages to query from the database at a time.</summary>
     public int QueryMessageLimit { set; }
 
-    /// <summary>
-    /// Database query timeout
-    /// </summary>
+    /// <summary>Database query timeout.</summary>
     public TimeSpan QueryTimeout { set; }
 
-    /// <summary>
-    /// Disable the inbox cleanup service, removing the hosted service from the service collection
-    /// </summary>
+    /// <summary>Disable the inbox cleanup service, removing the hosted service from the service collection.</summary>
     void DisableInboxCleanupService();
 
     /// <summary>
@@ -51,5 +37,6 @@ public interface IEntityFrameworkOutboxConfigurator :
     /// that are used when not consuming messages. Messages sent or published via those interfaces are written to the outbox
     /// instead of being delivered directly to the message broker.
     /// </summary>
+    /// <param name="configure">An optional callback that configures bus-outbox delivery behavior.</param>
     void EnableTransactionalOutbox(Action<IEntityFrameworkBusOutboxConfigurator>? configure = null);
 }

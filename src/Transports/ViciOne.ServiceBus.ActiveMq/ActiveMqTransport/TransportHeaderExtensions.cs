@@ -5,18 +5,14 @@ using ViciOne.ServiceBus.Initializers.TypeConverters;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides extension methods for transport header.
-/// </summary>
+/// <summary>Copies supported service-bus headers into Apache NMS primitive properties.</summary>
 public static class TransportHeaderExtensions
 {
     static readonly DateTimeOffsetTypeConverter _dateTimeOffsetConverter = new DateTimeOffsetTypeConverter();
 
-    /// <summary>
-    /// Sets headers.
-    /// </summary>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="headers">The headers value.</param>
+    /// <summary>Copies absent, non-null headers using provider-compatible primitive representations.</summary>
+    /// <param name="dictionary">The native message-property map to populate.</param>
+    /// <param name="headers">The send headers to copy.</param>
     public static void SetHeaders(this IPrimitiveMap dictionary, SendHeaders headers)
     {
         foreach (KeyValuePair<string, object> header in headers.GetAll())

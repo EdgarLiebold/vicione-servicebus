@@ -8,12 +8,13 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for message journal configuration.
-/// </summary>
+/// <summary>Provides extension methods for message journal configuration.</summary>
 public static class MessageJournalConfigurationExtensions
 {
     /// <summary>Enables one bounded journal owned by the default bus registration.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The configured message journal.</returns>
     public static IBusRegistrationConfigurator UseMessageJournal(
         this IBusRegistrationConfigurator configurator,
         Action<IMessageJournalConfigurator> configure)
@@ -24,6 +25,10 @@ public static class MessageJournalConfigurationExtensions
     }
 
     /// <summary>Enables one bounded journal owned by a typed bus registration.</summary>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The configured message journal.</returns>
     public static IBusRegistrationConfigurator<TBus> UseMessageJournal<TBus>(
         this IBusRegistrationConfigurator<TBus> configurator,
         Action<IMessageJournalConfigurator> configure)
@@ -38,6 +43,12 @@ public static class MessageJournalConfigurationExtensions
     /// Explicitly connects send, publish and consume journal observers. Without this call the
     /// MessageJournal capability has no runtime object and no resource cost.
     /// </summary>
+    /// <typeparam name="TConnector">The connector type.</typeparam>
+    /// <param name="connector">The connector.</param>
+    /// <param name="store">The store.</param>
+    /// <param name="policy">The policy.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectMessageJournal<TConnector>(
         this TConnector connector,
         IMessageJournalStore store,
@@ -55,9 +66,13 @@ public static class MessageJournalConfigurationExtensions
             () => connector.ConnectConsumeObserver(new MessageJournalConsumeObserver(writer)));
     }
 
-    /// <summary>
-    /// Explicitly connects only outgoing send and publish journal observers.
-    /// </summary>
+    /// <summary>Explicitly connects only outgoing send and publish journal observers.</summary>
+    /// <typeparam name="TConnector">The connector type.</typeparam>
+    /// <param name="connector">The connector.</param>
+    /// <param name="store">The store.</param>
+    /// <param name="policy">The policy.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectOutgoingMessageJournal<TConnector>(
         this TConnector connector,
         IMessageJournalStore store,
@@ -74,9 +89,12 @@ public static class MessageJournalConfigurationExtensions
             () => connector.ConnectPublishObserver(new MessageJournalPublishObserver(writer)));
     }
 
-    /// <summary>
-    /// Explicitly connects only a consume journal observer.
-    /// </summary>
+    /// <summary>Explicitly connects only a consume journal observer.</summary>
+    /// <param name="connector">The connector.</param>
+    /// <param name="store">The store.</param>
+    /// <param name="policy">The policy.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectConsumeMessageJournal(
         this IConsumeObserverConnector connector,
         IMessageJournalStore store,

@@ -2,24 +2,16 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
-/// <summary>
-/// Defines the contract for sql topology configuration.
-/// </summary>
+/// <summary>Defines sql topology configuration.</summary>
 public interface ISqlTopologyConfiguration :
     ITopologyConfiguration
 {
-    /// <summary>
-    /// Gets the publish value.
-    /// </summary>
+    /// <summary>Gets the publish.</summary>
     new ISqlPublishTopologyConfigurator Publish { get; }
 
-    /// <summary>
-    /// Gets the send value.
-    /// </summary>
+    /// <summary>Gets the send.</summary>
     new ISqlSendTopologyConfigurator Send { get; }
 
-    /// <summary>
-    /// Gets the consume value.
-    /// </summary>
+    /// <summary>Gets the consume.</summary>
     new ISqlConsumeTopologyConfigurator Consume { get; }
 }

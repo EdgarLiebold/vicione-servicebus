@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Completes a volatile durable send only after the full receive pipeline and all receive-owned tasks succeed.
-/// </summary>
+/// <summary>Completes a volatile durable send only after the full receive pipeline and all receive-owned tasks succeed.</summary>
 internal sealed class InMemoryDurableSendCompletionFilter : IFilter<ReceiveContext>
 {
     public async Task SendAsync(ReceiveContext context, IPipe<ReceiveContext> next)

@@ -4,19 +4,15 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides an active mq publish topology implementation.
-/// </summary>
+/// <summary>Builds ActiveMQ virtual-topic publish topology for message types.</summary>
 public class ActiveMqPublishTopology :
     PublishTopology,
     IActiveMqPublishTopologyConfigurator
 {
     readonly IMessageTopology _messageTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Creates publish topology with the standard ActiveMQ virtual-topic convention.</summary>
+    /// <param name="messageTopology">The message topology supplying entity names.</param>
     public ActiveMqPublishTopology(IMessageTopology messageTopology)
     {
         _messageTopology = messageTopology;
@@ -31,14 +27,10 @@ public class ActiveMqPublishTopology :
             ?? throw new InvalidOperationException($"The publish topology for {typeof(T).FullName} is not an ActiveMQ topology.");
     }
 
-    /// <summary>
-    /// Gets or sets the virtual topic prefix value.
-    /// </summary>
+    /// <summary>Gets or sets the prefix prepended to published message entity names.</summary>
     public string VirtualTopicPrefix { get; set; }
 
-    /// <summary>
-    /// Gets or sets the virtual topic consumer pattern value.
-    /// </summary>
+    /// <summary>Gets or sets the regular expression that identifies virtual-topic consumer destinations.</summary>
     public string VirtualTopicConsumerPattern { get; set; }
 
     IActiveMqMessagePublishTopologyConfigurator IActiveMqPublishTopologyConfigurator.GetMessageTopology(Type messageType)
@@ -47,10 +39,8 @@ public class ActiveMqPublishTopology :
             ?? throw new InvalidOperationException($"The publish topology for {messageType.FullName} is not an ActiveMQ topology.");
     }
 
-    /// <summary>
-    /// Gets publish broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the combined broker topology for all configured publish message types.</summary>
+    /// <returns>The publish broker topology.</returns>
     public BrokerTopology GetPublishBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder();
@@ -71,11 +61,9 @@ public class ActiveMqPublishTopology :
             ?? throw new InvalidOperationException($"The publish topology for {typeof(T).FullName} is not an ActiveMQ topology.");
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates publish topology for a message type and discovers its implemented message contracts.</summary>
+    /// <typeparam name="T">The published message type.</typeparam>
+    /// <returns>The new ActiveMQ message publish topology.</returns>
     protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()
     {
         var messageTopology = new ActiveMqMessagePublishTopology<T>(this, _messageTopology.GetMessageTopology<T>());

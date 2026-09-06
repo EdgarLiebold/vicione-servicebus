@@ -3,12 +3,10 @@ using System.Globalization;
 
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
-/// <summary>
-/// Conservative bounded rendering that never invokes arbitrary application <see cref="object.ToString"/> implementations.
-/// </summary>
+/// <summary>Conservative bounded rendering that never invokes arbitrary application <see cref="object.ToString"/> implementations.</summary>
 public sealed class MessageDiagnosticRedactor : IMessageDiagnosticRedactor
 {
-    /// <summary>The stable redacted marker.</summary>
+    /// <summary>Exposes the redacted used by the containing type.</summary>
     public const string Redacted = "[REDACTED]";
 
     /// <summary>The stable marker for values that diagnostics deliberately do not materialize.</summary>
@@ -18,6 +16,8 @@ public sealed class MessageDiagnosticRedactor : IMessageDiagnosticRedactor
     private readonly int _maximumStringLength;
 
     /// <summary>Creates a redactor with a positive bounded string length.</summary>
+    /// <param name="inspector">The inspector.</param>
+    /// <param name="maximumStringLength">The maximum string length.</param>
     public MessageDiagnosticRedactor(IMessageSensitivityInspector inspector, int maximumStringLength = 256)
     {
         _inspector = inspector ?? throw new ArgumentNullException(nameof(inspector));
@@ -27,13 +27,11 @@ public sealed class MessageDiagnosticRedactor : IMessageDiagnosticRedactor
         _maximumStringLength = maximumStringLength;
     }
 
-    /// <summary>
-    /// Performs the render value operation.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="memberName">The member name value.</param>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Renders the supplied value for diagnostics.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="memberName">The member name.</param>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The string produced by the operation.</returns>
     public string RenderValue(Type messageType, string? memberName, object? value)
     {
         ArgumentNullException.ThrowIfNull(messageType);

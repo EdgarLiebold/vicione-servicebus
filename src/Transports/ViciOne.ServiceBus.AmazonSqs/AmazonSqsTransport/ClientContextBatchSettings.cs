@@ -18,14 +18,12 @@ static class ClientContextBatchSettings
     {
         public ClientBatchSettings(int messageLimit, int batchLimit, int sizeLimit, TimeSpan timeout)
         {
-            Enabled = true;
             MessageLimit = messageLimit;
             BatchLimit = batchLimit;
             SizeLimit = sizeLimit;
             Timeout = timeout;
         }
 
-        public bool Enabled { get; }
         public int MessageLimit { get; }
         public int BatchLimit { get; }
         public int SizeLimit { get; }

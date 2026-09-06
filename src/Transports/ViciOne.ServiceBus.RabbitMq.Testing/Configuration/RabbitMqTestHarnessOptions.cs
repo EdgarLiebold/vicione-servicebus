@@ -4,30 +4,23 @@ using RabbitMQ.Client;
 
 namespace ViciOne.ServiceBus.RabbitMq.Testing;
 
-/// <summary>
-/// Defines configuration options for rabbit mq test harness.
-/// </summary>
+/// <summary>Controls how the hosted RabbitMQ test harness prepares its virtual host.</summary>
 public sealed class RabbitMqTestHarnessOptions
 {
     /// <summary>
-    /// Attempts to create the virtual host on the RabbitMQ broker using the management API. The <see cref="RabbitMqTransportOptions" /> will be
-    /// used to obtain the host, port, management port, etc.
+    /// Creates a missing non-root virtual host through the RabbitMQ management API before tests start.
+    /// Connection and management settings come from <see cref="RabbitMqTransportOptions" />.
     /// </summary>
     public bool CreateVirtualHostIfNotExists { get; set; }
 
-    /// <summary>
-    /// Remove all exchanges and queues from the virtual host when starting the test harness (via a hosted service)
-    /// </summary>
+    /// <summary>Deletes all non-system exchanges and queues from the virtual host before the test host starts.</summary>
     public bool CleanVirtualHost { get; set; }
 
-    /// <summary>
-    /// If the root virtual host is being used, ensure that the virtual host can be cleaned to avoid accidental destruction
-    /// </summary>
+    /// <summary>Allows <see cref="CleanVirtualHost" /> to delete entities from the root virtual host.</summary>
     public bool ForceCleanRootVirtualHost { get; set; }
 
     /// <summary>
-    /// If specified, and create virtual host if not exists is specified, will call this method to apply additional configuration
-    /// to the virtual host after it has been created.
+    /// Gets or sets an optional asynchronous callback invoked after creation and cleanup to configure the virtual host through a broker channel.
     /// </summary>
     public Func<IChannel, Task>? ConfigureVirtualHostCallback { get; set; }
 }

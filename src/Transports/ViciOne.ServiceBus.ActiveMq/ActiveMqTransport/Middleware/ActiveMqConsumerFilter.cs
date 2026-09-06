@@ -9,18 +9,14 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.ActiveMq.Middleware;
 
-/// <summary>
-/// A filter that uses the model context to create a basic consumer and connect it to the model
-/// </summary>
+/// <summary>Creates the native queue and topic consumers required by an ActiveMQ receive endpoint.</summary>
 public class ActiveMqConsumerFilter :
     IFilter<SessionContext>
 {
     readonly ActiveMqReceiveEndpointContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Creates a consumer filter for a receive endpoint.</summary>
+    /// <param name="context">The ActiveMQ receive-endpoint context.</param>
     public ActiveMqConsumerFilter(ActiveMqReceiveEndpointContext context)
     {
         _context = context;

@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.AmazonSqs;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
-/// <summary>
-/// Immutable settings for an Amazon SQS host produced by the typed host configurator.
-/// </summary>
+/// <summary>Immutable settings for an Amazon SQS host produced by the typed host configurator.</summary>
 public sealed class AmazonSqsHostSettings
 {
     readonly Func<IConnection> _connectionFactory;
@@ -30,43 +28,29 @@ public sealed class AmazonSqsHostSettings
         Credentials = credentials;
     }
 
-    /// <summary>
-    /// The AmazonSQS region to connect
-    /// </summary>
+    /// <summary>Gets the AWS region used by Amazon SQS and Amazon SNS clients.</summary>
     public RegionEndpoint Region { get; }
 
-    /// <summary>
-    /// Gets the allow transport header value.
-    /// </summary>
+    /// <summary>Gets the optional predicate that permits transport-specific headers.</summary>
     public AllowTransportHeader? AllowTransportHeader { get; }
 
-    /// <summary>
-    /// If true, topics are named "{Scope}_{topicName}" when publishing messages
-    /// </summary>
+    /// <summary>Gets whether Amazon SNS topic names are prefixed with the host scope.</summary>
     public bool ScopeTopics { get; }
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the canonical Amazon SQS transport host address.</summary>
     public Uri HostAddress { get; }
 
-    /// <summary>
-    /// Gets the client context cache options value.
-    /// </summary>
+    /// <summary>Gets the queue and topic cache limits.</summary>
     public AmazonSqsClientContextCacheOptions ClientContextCacheOptions { get; }
 
     internal AWSCredentials? Credentials { get; }
 
-    /// <summary>
-    /// Creates connection.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the configured AWS client connection.</summary>
+    /// <returns>A connection containing Amazon SQS and Amazon SNS clients.</returns>
     public IConnection CreateConnection() => _connectionFactory();
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the HTTPS endpoint for the configured AWS region.</summary>
+    /// <returns>The region endpoint URI.</returns>
     public override string ToString() => new UriBuilder
     {
         Scheme = "https",

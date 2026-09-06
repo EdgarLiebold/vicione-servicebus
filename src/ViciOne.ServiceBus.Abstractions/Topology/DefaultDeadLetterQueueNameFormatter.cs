@@ -1,23 +1,17 @@
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>
-/// Provides a default dead letter queue name formatter implementation.
-/// </summary>
+/// <summary>Formats default dead letter queue name values.</summary>
 public class DefaultDeadLetterQueueNameFormatter :
     IDeadLetterQueueNameFormatter
 {
     const string DeadLetterQueueSuffix = "_skipped";
 
-    /// <summary>
-    /// Defines the instance value.
-    /// </summary>
+    /// <summary>Exposes the instance used by the containing type.</summary>
     public static readonly IDeadLetterQueueNameFormatter Instance = new DefaultDeadLetterQueueNameFormatter();
 
-    /// <summary>
-    /// Performs the format dead letter queue name operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats dead letter queue name.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <returns>The formatted dead letter queue name.</returns>
     public string FormatDeadLetterQueueName(string queueName)
     {
         return queueName + DeadLetterQueueSuffix;

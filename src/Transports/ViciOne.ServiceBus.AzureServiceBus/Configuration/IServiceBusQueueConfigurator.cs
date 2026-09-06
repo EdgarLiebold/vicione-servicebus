@@ -2,27 +2,19 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus queue configurator.
-/// </summary>
+/// <summary>Configures and validates Azure Service Bus queue creation properties.</summary>
 public interface IServiceBusQueueConfigurator :
     IServiceBusMessageEntityConfigurator,
     IServiceBusEndpointEntityConfigurator,
     ISpecification
 {
-    /// <summary>
-    /// Move messages to the dead letter queue on filter evaluation exception
-    /// </summary>
+    /// <summary>Sets whether subscription filter evaluation failures are dead-lettered.</summary>
     bool? EnableDeadLetteringOnFilterEvaluationExceptions { set; }
 
-    /// <summary>
-    /// Sets the path where messages are forwarded to
-    /// </summary>
+    /// <summary>Sets the entity path to which active messages are forwarded.</summary>
     string ForwardTo { set; }
 
-    /// <summary>
-    /// Create the CreateQueueOptions for the configuration
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Projects the configured values into Azure SDK queue-creation options.</summary>
+    /// <returns>The SDK options for creating or comparing the queue.</returns>
     CreateQueueOptions GetCreateQueueOptions();
 }

@@ -4,16 +4,12 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for consumer configurator.
-/// </summary>
+/// <summary>Configures consumer.</summary>
 public interface IConsumerConfigurator :
     IConsumeConfigurator,
     IConsumerConfigurationObserverConnector
 {
-    /// <summary>
-    /// Gets or sets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets or sets the concurrent message limit.</summary>
     int? ConcurrentMessageLimit { set; }
 
     /// <summary>
@@ -24,21 +20,17 @@ public interface IConsumerConfigurator :
 }
 
 
-/// <summary>
-/// Defines the contract for consumer configurator.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
+/// <summary>Configures consumer.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
 public interface IConsumerConfigurator<TConsumer> :
     IPipeConfigurator<ConsumerConsumeContext<TConsumer>>,
     IConsumerConfigurator,
     IOptionsSet
     where TConsumer : class
 {
-    /// <summary>
-    /// Add middleware to the message pipeline, which is invoked prior to the consumer factory.
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="configure">The callback to configure the message pipeline</param>
+    /// <summary>Add middleware to the message pipeline, which is invoked prior to the consumer factory.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="configure">The callback to configure the message pipeline.</param>
     void Message<T>(Action<IConsumerMessageConfigurator<T>>? configure = null)
         where T : class;
 
@@ -46,8 +38,8 @@ public interface IConsumerConfigurator<TConsumer> :
     /// Add middleware to the consumer pipeline, for the specified message type, which is invoked
     /// after the consumer factory.
     /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="configure">The callback to configure the message pipeline</param>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="configure">The callback to configure the message pipeline.</param>
     void ConsumerMessage<T>(Action<IConsumerMessageConfigurator<TConsumer, T>>? configure = null)
         where T : class;
 
@@ -55,6 +47,11 @@ public interface IConsumerConfigurator<TConsumer> :
     /// Applies bounded, strongly typed partition mutual exclusion to one message contract
     /// consumed by this consumer.
     /// </summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TKey">The key used for lookup.</typeparam>
+    /// <param name="partitionCount">The partition count.</param>
+    /// <param name="selector">The selector.</param>
+    /// <param name="comparer">The comparer.</param>
     void UsePartitionedConcurrency<TMessage, TKey>(
         int partitionCount,
         ConsumerPartitionKeySelector<TMessage, TKey> selector,

@@ -1,21 +1,17 @@
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a retry activity binder implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <summary>Binds retry activity activities to the pipeline.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
 public class RetryActivityBinder<TInstance> :
     IActivityBinder<TInstance>
     where TInstance : class, SagaStateMachineInstance
 {
     readonly IStateMachineActivity<TInstance> _activity;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="event">The event value.</param>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="retryActivities">The retry activities value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="event">The event.</param>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="retryActivities">The retry activities.</param>
     public RetryActivityBinder(Event @event, IRetryPolicy retryPolicy, EventActivities<TInstance> retryActivities)
     {
         Event = @event;
@@ -30,15 +26,11 @@ public class RetryActivityBinder<TInstance> :
         _activity = new RetryActivity<TInstance>(retryPolicy, behavior);
     }
 
-    /// <summary>
-    /// Gets the event value.
-    /// </summary>
+    /// <summary>Gets the event.</summary>
     public Event Event { get; }
 
-    /// <summary>
-    /// Determines whether state transition event.
-    /// </summary>
-    /// <param name="state">The state value.</param>
+    /// <summary>Determines whether state transition event.</summary>
+    /// <param name="state">The state.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsStateTransitionEvent(State state)
     {
@@ -46,19 +38,15 @@ public class RetryActivityBinder<TInstance> :
             || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="state">The state value.</param>
+    /// <summary>Binds the configured entities.</summary>
+    /// <param name="state">The state.</param>
     public void Bind(State<TInstance> state)
     {
         state.Bind(Event, _activity);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Binds the configured entities.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Bind(IBehaviorBuilder<TInstance> builder)
     {
         builder.Add(_activity);
@@ -66,11 +54,9 @@ public class RetryActivityBinder<TInstance> :
 }
 
 
-/// <summary>
-/// Provides a retry activity binder implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Binds retry activity activities to the pipeline.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class RetryActivityBinder<TInstance, TMessage> :
     IActivityBinder<TInstance>
     where TInstance : class, SagaStateMachineInstance
@@ -78,12 +64,10 @@ public class RetryActivityBinder<TInstance, TMessage> :
 {
     readonly IStateMachineActivity<TInstance> _activity;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="event">The event value.</param>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="retryActivities">The retry activities value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="event">The event.</param>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="retryActivities">The retry activities.</param>
     public RetryActivityBinder(Event @event, IRetryPolicy retryPolicy, EventActivities<TInstance> retryActivities)
     {
         Event = @event;
@@ -98,15 +82,11 @@ public class RetryActivityBinder<TInstance, TMessage> :
         _activity = new RetryActivity<TInstance, TMessage>(retryPolicy, behavior);
     }
 
-    /// <summary>
-    /// Gets the event value.
-    /// </summary>
+    /// <summary>Gets the event.</summary>
     public Event Event { get; }
 
-    /// <summary>
-    /// Determines whether state transition event.
-    /// </summary>
-    /// <param name="state">The state value.</param>
+    /// <summary>Determines whether state transition event.</summary>
+    /// <param name="state">The state.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsStateTransitionEvent(State state)
     {
@@ -114,19 +94,15 @@ public class RetryActivityBinder<TInstance, TMessage> :
             || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="state">The state value.</param>
+    /// <summary>Binds the configured entities.</summary>
+    /// <param name="state">The state.</param>
     public void Bind(State<TInstance> state)
     {
         state.Bind(Event, _activity);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Binds the configured entities.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Bind(IBehaviorBuilder<TInstance> builder)
     {
         builder.Add(_activity);

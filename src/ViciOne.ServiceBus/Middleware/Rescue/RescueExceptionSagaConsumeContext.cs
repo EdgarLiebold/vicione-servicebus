@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Events;
 
 namespace ViciOne.ServiceBus.Middleware.Rescue;
 
-/// <summary>
-/// Provides a rescue exception saga consume context implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Carries state for rescue exception saga consume operations.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class RescueExceptionSagaConsumeContext<TSaga> :
     ConsumeContextProxy,
     ExceptionSagaConsumeContext<TSaga>
@@ -17,10 +15,8 @@ public class RescueExceptionSagaConsumeContext<TSaga> :
     readonly SagaConsumeContext<TSaga> _context;
     ExceptionInfo _exceptionInfo = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     public RescueExceptionSagaConsumeContext(SagaConsumeContext<TSaga> context, Exception exception)
         : base(context)
@@ -29,34 +25,24 @@ public class RescueExceptionSagaConsumeContext<TSaga> :
         Exception = exception;
     }
 
-    /// <summary>
-    /// Gets the saga value.
-    /// </summary>
+    /// <summary>Gets the saga.</summary>
     public TSaga Saga => _context.Saga;
 
-    /// <summary>
-    /// Sets completed.
-    /// </summary>
+    /// <summary>Sets completed.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SetCompletedAsync(CancellationToken cancellationToken = default)
     {
         return _context.SetCompletedAsync(cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Gets the is completed value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether completed.</summary>
     public bool IsCompleted => _context.IsCompleted;
 
-    /// <summary>
-    /// Gets the exception value.
-    /// </summary>
+    /// <summary>Gets the exception.</summary>
     public Exception Exception { get; }
 
-    /// <summary>
-    /// Gets the exception info value.
-    /// </summary>
+    /// <summary>Gets the exception info.</summary>
     public ExceptionInfo ExceptionInfo
     {
         get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }

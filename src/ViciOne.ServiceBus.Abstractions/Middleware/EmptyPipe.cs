@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides an empty pipe implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Executes the pipeline for empty.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class EmptyPipe<TContext> :
     IPipe<TContext>
     where TContext : class, PipeContext

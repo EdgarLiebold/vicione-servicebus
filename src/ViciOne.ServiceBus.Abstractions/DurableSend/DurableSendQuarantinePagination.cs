@@ -11,11 +11,9 @@ public static class DurableSendQuarantinePagination
     private const byte Version = 1;
     private const int TokenBytes = 25;
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <param name="query">The query value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <param name="query">The query.</param>
+    /// <returns>The validation failures.</returns>
     public static DurableSendQuarantineSeek Validate(DurableSendQuarantineQuery query)
     {
         ArgumentNullException.ThrowIfNull(query);
@@ -25,12 +23,10 @@ public static class DurableSendQuarantinePagination
             : Decode(query.ContinuationToken);
     }
 
-    /// <summary>
-    /// Creates page.
-    /// </summary>
-    /// <param name="fetchedEntries">The fetched entries value.</param>
-    /// <param name="pageSize">The page size value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates page.</summary>
+    /// <param name="fetchedEntries">The fetched entries.</param>
+    /// <param name="pageSize">The page size.</param>
+    /// <returns>The created page.</returns>
     public static DurableSendQuarantinePage CreatePage(
         IEnumerable<DurableSendQuarantineEntry> fetchedEntries,
         int pageSize)
@@ -46,11 +42,9 @@ public static class DurableSendQuarantinePagination
         return new DurableSendQuarantinePage(entries, continuation);
     }
 
-    /// <summary>
-    /// Performs the encode operation.
-    /// </summary>
-    /// <param name="seek">The seek value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Encodes the supplied value.</summary>
+    /// <param name="seek">The seek.</param>
+    /// <returns>The string produced by the operation.</returns>
     public static string Encode(DurableSendQuarantineSeek seek)
     {
         if (!seek.HasValue)
@@ -95,10 +89,10 @@ public static class DurableSendQuarantinePagination
 }
 
 /// <summary>Decoded provider seek. Ordering is QuarantinedAt descending, then DurableSendId ascending.</summary>
+/// <param name="QuarantinedAt">The quarantined at.</param>
+/// <param name="Id">The id.</param>
 public readonly record struct DurableSendQuarantineSeek(DateTimeOffset QuarantinedAt, DurableSendId Id)
 {
-    /// <summary>
-    /// Gets the has value value.
-    /// </summary>
+    /// <summary>Gets whether this instance contains a value.</summary>
     public bool HasValue => Id.Value != Guid.Empty;
 }

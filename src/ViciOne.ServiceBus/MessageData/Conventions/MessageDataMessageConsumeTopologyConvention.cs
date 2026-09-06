@@ -4,20 +4,16 @@ using ViciOne.ServiceBus.MessageData.Configuration;
 
 namespace ViciOne.ServiceBus.MessageData.Conventions;
 
-/// <summary>
-/// Provides a message data message consume topology convention implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Applies conventions for message data message consume topology.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class MessageDataMessageConsumeTopologyConvention<TMessage> :
     IMessageDataMessageConsumeTopologyConvention<TMessage>
     where TMessage : class
 {
     readonly IMessageDataRepository _repository;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="repository">The repository value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="repository">The repository.</param>
     public MessageDataMessageConsumeTopologyConvention(IMessageDataRepository repository)
     {
         _repository = repository;
@@ -31,10 +27,8 @@ public class MessageDataMessageConsumeTopologyConvention<TMessage> :
         return convention != null;
     }
 
-    /// <summary>
-    /// Attempts to get message consume topology.
-    /// </summary>
-    /// <param name="messageConsumeTopology">The message consume topology value.</param>
+    /// <summary>Attempts to get message consume topology.</summary>
+    /// <param name="messageConsumeTopology">Receives the message consume topology produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetMessageConsumeTopology([NotNullWhen(true)] out IMessageConsumeTopology<TMessage>? messageConsumeTopology)
     {

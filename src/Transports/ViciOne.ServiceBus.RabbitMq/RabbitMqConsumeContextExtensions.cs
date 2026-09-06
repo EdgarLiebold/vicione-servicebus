@@ -4,16 +4,12 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides extension methods for rabbit mq consume context.
-/// </summary>
+/// <summary>Reads RabbitMQ delivery metadata from consume contexts.</summary>
 public static class RabbitMqConsumeContextExtensions
 {
-    /// <summary>
-    /// Gets rabbit mq timestamp.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reads the AMQP sender timestamp as an absolute UTC instant.</summary>
+    /// <param name="context">The consumed message context.</param>
+    /// <returns>The sender timestamp, or <see langword="null" /> when the transport header is absent or not an AMQP timestamp.</returns>
     public static DateTimeOffset? GetRabbitMqTimestamp(this ConsumeContext context)
     {
         if (context.ReceiveContext.TransportHeaders.TryGetHeader(MessageHeaders.TransportSentTime, out object? value))

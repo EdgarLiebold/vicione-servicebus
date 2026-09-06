@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transactions;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for dependency injection transaction.
-/// </summary>
+/// <summary>Provides extension methods for dependency injection transaction.</summary>
 public static class DependencyInjectionTransactionExtensions
 {
     /// <summary>
@@ -17,6 +15,7 @@ public static class DependencyInjectionTransactionExtensions
     /// ambient transaction exists and are deferred to the prepare phase while <see cref="System.Transactions.Transaction.Current" /> is active.
     /// This capability is best-effort and is not a durable atomic outbox.
     /// </summary>
+    /// <param name="busConfigurator">The bus configurator.</param>
     public static void AddAmbientTransactionBus(this IBusRegistrationConfigurator busConfigurator)
     {
         if (busConfigurator == null)
@@ -35,9 +34,9 @@ public static class DependencyInjectionTransactionExtensions
         busConfigurator.Services.ReplaceScoped<IScopedBusContextProvider<IBus>, AmbientTransactionScopedBusContextProvider<IBus>>();
     }
 
-    /// <summary>
-    /// Adds a singleton ambient-transaction capability bound to the specified bus instance.
-    /// </summary>
+    /// <summary>Adds a singleton ambient-transaction capability bound to the specified bus instance.</summary>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <param name="busConfigurator">The bus configurator.</param>
     public static void AddAmbientTransactionBus<TBus>(this IBusRegistrationConfigurator<TBus> busConfigurator)
         where TBus : class, IBus
     {
@@ -59,6 +58,8 @@ public static class DependencyInjectionTransactionExtensions
     /// Adds a scoped <see cref="IBufferedBus" /> for the default bus. Each scope owns an in-memory FIFO buffer that is dispatched only by
     /// <see cref="IBufferedBus.FlushAsync" />. This capability is not durable and is not an atomic outbox.
     /// </summary>
+    /// <param name="busConfigurator">The bus configurator.</param>
+    /// <param name="capacity">The capacity.</param>
     public static void AddBufferedBus(this IBusRegistrationConfigurator busConfigurator, int capacity = BufferedBus.DefaultCapacity)
     {
         if (busConfigurator == null)
@@ -78,9 +79,10 @@ public static class DependencyInjectionTransactionExtensions
         busConfigurator.Services.ReplaceScoped<IScopedBusContextProvider<IBus>, BufferedBusScopedBusContextProvider<IBus>>();
     }
 
-    /// <summary>
-    /// Adds a scoped explicitly buffered capability bound to the specified bus instance.
-    /// </summary>
+    /// <summary>Adds a scoped explicitly buffered capability bound to the specified bus instance.</summary>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <param name="busConfigurator">The bus configurator.</param>
+    /// <param name="capacity">The capacity.</param>
     public static void AddBufferedBus<TBus>(this IBusRegistrationConfigurator<TBus> busConfigurator,
         int capacity = BufferedBus.DefaultCapacity)
         where TBus : class, IBus

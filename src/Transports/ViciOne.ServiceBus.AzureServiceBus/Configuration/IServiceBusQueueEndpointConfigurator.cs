@@ -2,40 +2,26 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus queue endpoint configurator.
-/// </summary>
+/// <summary>Configures queue-specific entity properties on an Azure Service Bus receive endpoint.</summary>
 public interface IServiceBusQueueEndpointConfigurator :
     IServiceBusEndpointConfigurator
 {
-    /// <summary>
-    /// Sets the TimeSpan structure that defines the duration of the duplicate detection history. The default value is 10 minutes
-    /// </summary>
+    /// <summary>Sets how long Azure Service Bus retains message identifiers for duplicate detection.</summary>
     TimeSpan DuplicateDetectionHistoryTimeWindow { set; }
 
-    /// <summary>
-    /// Sets a value that indicates whether the queue to be partitioned across multiple message brokers is enabled
-    /// </summary>
+    /// <summary>Sets whether the queue is partitioned across message brokers.</summary>
     bool EnablePartitioning { set; }
 
-    /// <summary>
-    /// Sets the maximum size of the queue in megabytes, which is the size of memory allocated for the queue
-    /// </summary>
+    /// <summary>Sets the maximum queue size in megabytes.</summary>
     long MaxSizeInMegabytes { set; }
 
-    /// <summary>
-    /// Set the maximum message size, in kilobytes
-    /// </summary>
+    /// <summary>Set the maximum message size, in kilobytes.</summary>
     long MaxMessageSizeInKilobytes { set; }
 
-    /// <summary>
-    /// Sets the value indicating if this queue requires duplicate detection.
-    /// </summary>
+    /// <summary>Sets whether Azure Service Bus rejects duplicate message identifiers.</summary>
     bool RequiresDuplicateDetection { set; }
 
-    /// <summary>
-    /// Enable duplicate detection on the queue, specifying the time window
-    /// </summary>
-    /// <param name="historyTimeWindow">The time window for duplicate history</param>
+    /// <summary>Enables duplicate detection and sets its identifier-retention window.</summary>
+    /// <param name="historyTimeWindow">How long message identifiers remain available for duplicate detection.</param>
     void EnableDuplicateDetection(TimeSpan historyTimeWindow);
 }

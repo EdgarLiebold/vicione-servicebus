@@ -4,14 +4,14 @@ using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides the registration surface contributed by the Futures capability package.
-/// </summary>
+/// <summary>Provides the registration surface contributed by the Futures capability package.</summary>
 public static class FutureRegistrationConfiguratorExtensions
 {
-    /// <summary>
-    /// Adds a future with an optional definition.
-    /// </summary>
+    /// <summary>Adds a future with an optional definition.</summary>
+    /// <typeparam name="TFuture">The future type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="futureDefinitionType">The runtime future definition type used by the operation.</param>
+    /// <returns>The future registration configurator produced by the operation.</returns>
     public static IFutureRegistrationConfigurator<TFuture> AddFuture<TFuture>(this IRegistrationConfigurator configurator,
         Type? futureDefinitionType = null)
         where TFuture : class, SagaStateMachine<FutureState>

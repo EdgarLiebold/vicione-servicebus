@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
-/// <summary>
-/// Defines the contract for postgres sql host configurator.
-/// </summary>
+/// <summary>Configures a PostgreSQL host used by the SQL transport.</summary>
 public interface IPostgresSqlHostConfigurator :
     ISqlHostConfigurator
 {

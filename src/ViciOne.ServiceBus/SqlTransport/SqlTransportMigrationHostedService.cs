@@ -6,9 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>
-/// Provides a sql transport migration hosted service implementation.
-/// </summary>
+/// <summary>Provides the sql transport migration hosted service.</summary>
 public class SqlTransportMigrationHostedService :
     IHostedService
 {
@@ -17,13 +15,11 @@ public class SqlTransportMigrationHostedService :
     readonly SqlTransportMigrationOptions _options;
     readonly SqlTransportOptions _transportOptions;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="migrator">The migrator value.</param>
-    /// <param name="logger">The logger value.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="dbOptions">The db options value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="migrator">The migrator.</param>
+    /// <param name="logger">The logger.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="dbOptions">The db options.</param>
     public SqlTransportMigrationHostedService(ISqlTransportDatabaseMigrator migrator, ILogger<SqlTransportMigrationHostedService> logger,
         IOptions<SqlTransportMigrationOptions> options, IOptions<SqlTransportOptions> dbOptions)
     {
@@ -33,11 +29,9 @@ public class SqlTransportMigrationHostedService :
         _transportOptions = dbOptions.Value;
     }
 
-    /// <summary>
-    /// Starts the configured component.
-    /// </summary>
+    /// <summary>Starts the configured component.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         if (_options.CreateDatabase)
@@ -62,11 +56,9 @@ public class SqlTransportMigrationHostedService :
         }
     }
 
-    /// <summary>
-    /// Stops the configured component.
-    /// </summary>
+    /// <summary>Stops the configured component.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         if (_options.DeleteDatabase)

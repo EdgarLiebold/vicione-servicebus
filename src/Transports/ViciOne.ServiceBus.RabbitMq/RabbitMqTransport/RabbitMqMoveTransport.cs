@@ -8,33 +8,27 @@ using ViciOne.ServiceBus.RabbitMq.Middleware;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq move transport implementation.
-/// </summary>
-/// <typeparam name="TSettings">The t settings type.</typeparam>
+/// <summary>Copies received messages to a RabbitMQ exchange after ensuring its topology exists.</summary>
+/// <typeparam name="TSettings">The destination topology settings.</typeparam>
 public class RabbitMqMoveTransport<TSettings>
     where TSettings : class
 {
     readonly string _exchange;
     readonly ConfigureRabbitMqTopologyFilter<TSettings> _topologyFilter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="topologyFilter">The topology filter value.</param>
+    /// <summary>Creates a move transport for one destination exchange and topology plan.</summary>
+    /// <param name="exchange">The destination exchange name.</param>
+    /// <param name="topologyFilter">The filter that declares destination topology.</param>
     protected RabbitMqMoveTransport(string exchange, ConfigureRabbitMqTopologyFilter<TSettings> topologyFilter)
     {
         _topologyFilter = topologyFilter;
         _exchange = exchange;
     }
 
-    /// <summary>
-    /// Performs the move operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="preSend">The pre send value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Copies the receive body and AMQP properties, customizes them, and publishes to the destination exchange.</summary>
+    /// <param name="context">The received message and active RabbitMQ channel.</param>
+    /// <param name="preSend">The callback that adds move-specific properties and headers.</param>
+    /// <returns>A task that follows the mandatory RabbitMQ client publish operation; source settlement remains the receive pipeline's responsibility.</returns>
     protected async Task MoveAsync(ReceiveContext context, Action<BasicProperties, SendHeaders> preSend)
     {
         if (!context.TryGetPayload(out ChannelContext? channelContext))
@@ -42,11 +36,8 @@ public class RabbitMqMoveTransport<TSettings>
 
         if (channelContext.Channel.IsClosed)
         {
-            // Channel.IsClosed and Channel.CloseReason are read-only diagnostics and safe to read at
-            // any time; the operations themselves go through the owning context and its lease. The
-            // reason reported is the one the channel actually closed for. Where there is none — a
-            // close this process started — the initiator is Library, because a locally produced
-            // state must not claim the peer sent it.
+            // Preserve a broker close reason when available; otherwise identify the synthesized
+            // unavailable state as library-initiated.
             var reason = channelContext.Channel.CloseReason;
 
             throw new OperationInterruptedException(reason

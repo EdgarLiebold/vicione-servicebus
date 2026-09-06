@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Util;
 
-/// <summary>
-/// Provides a lambda equality comparer implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Compares lambda equality values.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class LambdaEqualityComparer<T> :
     IEqualityComparer<T>
     where T : class
@@ -14,20 +12,16 @@ public class LambdaEqualityComparer<T> :
     readonly Func<T, T, bool> _comparer;
     readonly Func<T, int> _hash;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="comparer">The comparer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="comparer">The comparer.</param>
     public LambdaEqualityComparer(Func<T, T, bool> comparer)
         : this(comparer, o => 0)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="comparer">The comparer value.</param>
-    /// <param name="hash">The hash value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="comparer">The comparer.</param>
+    /// <param name="hash">The hash.</param>
     public LambdaEqualityComparer(Func<T, T, bool> comparer, Func<T?, int> hash)
     {
         if (comparer == null)
@@ -39,11 +33,9 @@ public class LambdaEqualityComparer<T> :
         _hash = hash;
     }
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="x">The x value.</param>
-    /// <param name="y">The y value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="x">The <c>x</c> value.</param>
+    /// <param name="y">The <c>y</c> value.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Equals(T? x, T? y)
     {
@@ -53,11 +45,9 @@ public class LambdaEqualityComparer<T> :
         return _comparer(x, y);
     }
 
-    /// <summary>
-    /// Gets hash code.
-    /// </summary>
-    /// <param name="obj">The obj value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets hash code.</summary>
+    /// <param name="obj">The obj.</param>
+    /// <returns>The hash code for this instance.</returns>
     public int GetHashCode(T obj)
     {
         return _hash(obj);

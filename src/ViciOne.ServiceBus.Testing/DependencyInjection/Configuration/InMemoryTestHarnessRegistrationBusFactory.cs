@@ -6,30 +6,24 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an in memory test harness registration bus factory implementation.
-/// </summary>
+/// <summary>Creates in memory test harness registration bus instances.</summary>
 public class InMemoryTestHarnessRegistrationBusFactory :
     IRegistrationBusFactory
 {
     readonly string? _virtualHost;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="virtualHost">The virtual host value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="virtualHost">The virtual host.</param>
     public InMemoryTestHarnessRegistrationBusFactory(string? virtualHost = null)
     {
         _virtualHost = virtualHost;
     }
 
-    /// <summary>
-    /// Creates bus.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="specifications">The specifications value.</param>
-    /// <param name="busName">The bus name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates bus.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="specifications">The specifications.</param>
+    /// <param name="busName">The bus name.</param>
+    /// <returns>The created bus.</returns>
     public IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
     {
         var timeProvider = context.GetService(typeof(TimeProvider)) as TimeProvider ?? TimeProvider.System;

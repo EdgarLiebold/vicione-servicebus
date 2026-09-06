@@ -5,30 +5,18 @@ using Azure.Storage.Blobs;
 
 namespace ViciOne.ServiceBus.EventHubs.Configuration;
 
-/// <summary>
-/// Provides a storage settings implementation.
-/// </summary>
+/// <summary>Stores Blob Storage connection, credential, and client settings for Event Hubs checkpoints.</summary>
 public class StorageSettings :
     IStorageSettings
 {
-    /// <summary>
-    /// Gets or sets the connection string value.
-    /// </summary>
+    /// <summary>Gets or sets the Azure Storage connection string.</summary>
     public string? ConnectionString { get; set; }
-    /// <summary>
-    /// Gets or sets the container uri value.
-    /// </summary>
+    /// <summary>Gets or sets the Blob Storage URI used to construct the checkpoint client.</summary>
     public Uri? ContainerUri { get; set; }
-    /// <summary>
-    /// Gets or sets the shared key credential value.
-    /// </summary>
+    /// <summary>Gets or sets the storage account shared-key credential.</summary>
     public StorageSharedKeyCredential? SharedKeyCredential { get; set; }
-    /// <summary>
-    /// Gets or sets the token credential value.
-    /// </summary>
+    /// <summary>Gets or sets the Azure token credential.</summary>
     public TokenCredential? TokenCredential { get; set; }
-    /// <summary>
-    /// Gets or sets the configure value.
-    /// </summary>
+    /// <summary>Gets or sets the callback applied to Blob client options.</summary>
     public Action<BlobClientOptions>? Configure { get; set; }
 }

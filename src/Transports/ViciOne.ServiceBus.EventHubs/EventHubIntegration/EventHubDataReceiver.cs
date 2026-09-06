@@ -11,9 +11,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides an event hub data receiver implementation.
-/// </summary>
+/// <summary>Runs an Event Hubs processor client and dispatches events through bounded, partition-aware receive execution.</summary>
 public class EventHubDataReceiver :
     ConsumerAgent<PartitionOffset>,
     IEventHubDataReceiver
@@ -21,22 +19,19 @@ public class EventHubDataReceiver :
     readonly CancellationTokenSource _checkpointTokenSource;
     readonly EventProcessorClient _client;
     readonly ReceiveEndpointContext _context;
+    readonly EventHubReceiveAdmission _admission;
     readonly IPartitionedTaskExecutor<ProcessEventArgs> _executorPool;
-    readonly SemaphoreSlim _limit;
     readonly IProcessorLockContext _lockContext;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="receiveSettings">The receive settings value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="processorContext">The processor context value.</param>
+    /// <summary>Starts the processor client and initializes receive admission, partition dispatch, and checkpoint coordination.</summary>
+    /// <param name="receiveSettings">The endpoint concurrency, prefetch, and checkpoint settings.</param>
+    /// <param name="context">The owning receive-endpoint context.</param>
+    /// <param name="processorContext">The active processor context that owns the Azure SDK client.</param>
     public EventHubDataReceiver(ReceiveSettings receiveSettings, ReceiveEndpointContext context, ProcessorContext processorContext)
         : base(context)
     {
         _context = context;
         _checkpointTokenSource = CancellationTokenSource.CreateLinkedTokenSource(Stopped);
-        _limit = new SemaphoreSlim(receiveSettings.PrefetchCount);
 
         var lockContext = new ProcessorLockContext(processorContext, receiveSettings, _checkpointTokenSource.Token);
 
@@ -47,6 +42,7 @@ public class EventHubDataReceiver :
 
         _client = lockContext.Client;
         _lockContext = lockContext;
+        _admission = new EventHubReceiveAdmission(receiveSettings.PrefetchCount, _lockContext, _executorPool);
 
         _client.ProcessErrorAsync += HandleErrorAsync;
         _client.ProcessEventAsync += HandleMessageAsync;
@@ -79,9 +75,7 @@ public class EventHubDataReceiver :
         if (IsStopping || !eventArgs.HasEvent)
             return;
 
-        await _limit.WaitAsync(Stopping).ConfigureAwait(false);
-        await _lockContext.PendingAsync(eventArgs).ConfigureAwait(false);
-        await _executorPool.EnqueueAsync(eventArgs, () => HandleAsync(eventArgs), Stopping).ConfigureAwait(false);
+        await _admission.EnqueueAsync(eventArgs, () => HandleAsync(eventArgs), Stopping).ConfigureAwait(false);
     }
 
     async Task HandleAsync(ProcessEventArgs eventArgs)
@@ -107,15 +101,12 @@ public class EventHubDataReceiver :
         {
             registration?.Dispose();
             context.Dispose();
-            _limit.Release();
         }
     }
 
-    /// <summary>
-    /// Performs the active and actual agents completed operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Stops the processor, drains partitioned dispatch, ends checkpoint waiting, and releases receive resources.</summary>
+    /// <param name="context">The stop context controlling receiver shutdown.</param>
+    /// <returns>A task that completes after the processor and checkpoint resources have stopped.</returns>
     protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
         var stopProcessing = _client.StopProcessingAsync();
@@ -124,15 +115,15 @@ public class EventHubDataReceiver :
 
         await _executorPool.DisposeAsync().ConfigureAwait(false);
 
-        // There is not point to wait any longer, we drained our queue
+        // A drained executor queue makes further checkpoint waiting unnecessary.
         _checkpointTokenSource.Cancel();
 
         await stopProcessing.ConfigureAwait(false);
         _client.ProcessEventAsync -= HandleMessageAsync;
         _client.ProcessErrorAsync -= HandleErrorAsync;
 
+        _admission.Dispose();
         await _lockContext.DisposeAsync().ConfigureAwait(false);
         _checkpointTokenSource.Dispose();
-        _limit.Dispose();
     }
 }

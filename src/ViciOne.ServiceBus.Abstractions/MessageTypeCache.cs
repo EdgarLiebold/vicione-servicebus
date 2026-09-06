@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides a message type cache implementation.
-/// </summary>
+/// <summary>Caches message type data.</summary>
 public static class MessageTypeCache
 {
     static CachedType GetOrAdd(Type type)
@@ -18,61 +16,49 @@ public static class MessageTypeCache
         return Cached.Instance.GetOrAdd(type, _ => Activation.Activate(type, new Factory()));
     }
 
-    /// <summary>
-    /// Gets properties.
-    /// </summary>
-    /// <param name="type">The type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets properties.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns>The properties.</returns>
     public static IReadOnlyList<PropertyInfo> GetProperties(Type type)
     {
         return GetOrAdd(type).Properties;
     }
 
-    /// <summary>
-    /// Determines whether valid message type.
-    /// </summary>
-    /// <param name="type">The type value.</param>
+    /// <summary>Determines whether valid message type.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsValidMessageType(Type type)
     {
         return GetOrAdd(type).IsValidMessageType;
     }
 
-    /// <summary>
-    /// Performs the invalid message type reason operation.
-    /// </summary>
-    /// <param name="type">The type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Explains why the message type is invalid.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns>The string produced by the operation.</returns>
     public static string? InvalidMessageTypeReason(Type type)
     {
         return GetOrAdd(type).InvalidMessageTypeReason;
     }
 
-    /// <summary>
-    /// Determines whether temporary message type.
-    /// </summary>
-    /// <param name="type">The type value.</param>
+    /// <summary>Determines whether temporary message type.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsTemporaryMessageType(Type type)
     {
         return GetOrAdd(type).IsTemporaryMessageType;
     }
 
-    /// <summary>
-    /// Gets message types.
-    /// </summary>
-    /// <param name="type">The type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message types.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns>The message types.</returns>
     public static IReadOnlyList<Type> GetMessageTypes(Type type)
     {
         return GetOrAdd(type).MessageTypes;
     }
 
-    /// <summary>
-    /// Gets message type names.
-    /// </summary>
-    /// <param name="type">The type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message type names.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns>The message type names.</returns>
     public static IReadOnlyList<string> GetMessageTypeNames(Type type)
     {
         return GetOrAdd(type).MessageTypeNames;
@@ -121,10 +107,8 @@ public static class MessageTypeCache
 }
 
 
-/// <summary>
-/// Provides a message type cache implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Caches message type data.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class MessageTypeCache<T> :
     IMessageTypeCache
 {
@@ -145,33 +129,19 @@ public class MessageTypeCache<T> :
         _diagnosticAddress = new Lazy<string>(GetDiagnosticAddress);
     }
 
-    /// <summary>
-    /// Gets the diagnostic address value.
-    /// </summary>
+    /// <summary>Gets the diagnostic address.</summary>
     public static string DiagnosticAddress => Cached.Metadata.Value.DiagnosticAddress;
-    /// <summary>
-    /// Gets the properties value.
-    /// </summary>
+    /// <summary>Gets the properties.</summary>
     public static IReadOnlyList<PropertyInfo> Properties => Cached.Metadata.Value.Properties;
-    /// <summary>
-    /// Gets the is valid message type value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether valid message type.</summary>
     public static bool IsValidMessageType => Cached.Metadata.Value.IsValidMessageType;
-    /// <summary>
-    /// Gets the invalid message type reason value.
-    /// </summary>
+    /// <summary>Gets the invalid message type reason.</summary>
     public static string? InvalidMessageTypeReason => Cached.Metadata.Value.InvalidMessageTypeReason;
-    /// <summary>
-    /// Gets the is temporary message type value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether temporary message type.</summary>
     public static bool IsTemporaryMessageType => Cached.Metadata.Value.IsTemporaryMessageType;
-    /// <summary>
-    /// Gets the message types value.
-    /// </summary>
+    /// <summary>Gets the message types.</summary>
     public static IReadOnlyList<Type> MessageTypes => Cached.Metadata.Value.MessageTypes;
-    /// <summary>
-    /// Gets the message type names value.
-    /// </summary>
+    /// <summary>Gets the message type names.</summary>
     public static IReadOnlyList<string> MessageTypeNames => Cached.Metadata.Value.MessageTypeNames;
 
     bool IMessageTypeCache.IsTemporaryMessageType => _isTemporaryMessageType.Value;
@@ -206,7 +176,7 @@ public class MessageTypeCache<T> :
     /// return any base classes or interfaces implemented by the type that are allowed
     /// message types.
     /// </summary>
-    /// <returns>An enumeration of valid message types implemented by the specified type</returns>
+    /// <returns>An enumeration of valid message types implemented by the specified type.</returns>
     static IEnumerable<Type> GetMessageTypes()
     {
         if (IsValidMessageType)
@@ -243,7 +213,7 @@ public class MessageTypeCache<T> :
     /// that it doesn't come from the .Net core assemblies or is without a namespace,
     /// amongst others.
     /// </summary>
-    /// <returns>True if the message can be sent, otherwise false</returns>
+    /// <returns>True if the message can be sent, otherwise false.</returns>
     bool CheckIfValidMessageType()
     {
         var type = typeof(T);

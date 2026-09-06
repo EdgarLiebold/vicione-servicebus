@@ -3,55 +3,34 @@ using Apache.NMS;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Settings to configure a ActiveMQ host explicitly without requiring the fluent interface
-/// </summary>
+/// <summary>Provides the complete settings required to create an ActiveMQ connection.</summary>
 public interface ActiveMqHostSettings
 {
-    /// <summary>
-    /// The ActiveMQ host to connect to (should be a valid hostname)
-    /// </summary>
+    /// <summary>Gets the broker host name.</summary>
     string Host { get; }
 
-    /// <summary>
-    /// The ActiveMQ port to connect
-    /// </summary>
+    /// <summary>Gets the broker port.</summary>
     int Port { get; }
 
-    /// <summary>
-    /// The logical host scope used when formatting endpoint addresses.
-    /// </summary>
+    /// <summary>Gets the logical broker namespace used in service-bus endpoint addresses.</summary>
     string VirtualHost { get; }
 
-    /// <summary>
-    /// The Username for connecting to the host
-    /// </summary>
+    /// <summary>Gets the broker user name.</summary>
     string Username { get; }
 
-    /// <summary>
-    /// The password for connection to the host
-    /// MAYBE this should be a SecureString instead of a regular string
-    /// </summary>
+    /// <summary>Gets the broker password.</summary>
     string Password { get; }
 
-    /// <summary>
-    /// Returns the host address
-    /// </summary>
+    /// <summary>Gets the canonical service-bus host address without credentials or native provider options.</summary>
     Uri HostAddress { get; }
 
-    /// <summary>
-    /// Gets the use ssl value.
-    /// </summary>
+    /// <summary>Gets whether the native provider uses TLS.</summary>
     bool UseSsl { get; }
 
-    /// <summary>
-    /// Gets the broker address value.
-    /// </summary>
+    /// <summary>Gets the native Apache NMS connection URI.</summary>
     Uri BrokerAddress { get; }
 
-    /// <summary>
-    /// Creates connection.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an Apache NMS connection using these settings.</summary>
+    /// <returns>The unstarted native connection.</returns>
     IConnection CreateConnection();
 }

@@ -5,20 +5,16 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>
-/// Provides a courier context scope implementation.
-/// </summary>
+/// <summary>Defines the lifetime scope for courier context.</summary>
 public abstract class CourierContextScope :
     ConsumeContextScope<RoutingSlip>,
     CourierContext
 {
     readonly CourierContext _courierContext;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="courierContext">The courier context value.</param>
-    /// <param name="payloads">The payloads value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="courierContext">The courier context.</param>
+    /// <param name="payloads">The payloads.</param>
     protected CourierContextScope(CourierContext courierContext, params object[] payloads)
         : base(courierContext, payloads)
     {

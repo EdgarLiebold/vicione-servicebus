@@ -3,23 +3,19 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides a queue entity implementation.
-/// </summary>
+/// <summary>Represents a deduplicated Amazon SQS queue topology entity.</summary>
 public class QueueEntity :
     Queue,
     QueueHandle
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="queueAttributes">The queue attributes value.</param>
-    /// <param name="queueSubscriptionAttributes">The queue subscription attributes value.</param>
-    /// <param name="queueTags">The queue tags value.</param>
+    /// <summary>Initializes an Amazon SQS queue topology entity.</summary>
+    /// <param name="id">The builder-assigned entity identifier.</param>
+    /// <param name="name">The queue name.</param>
+    /// <param name="durable">Whether the queue is retained when its endpoint stops.</param>
+    /// <param name="autoDelete">Whether the queue is deleted when its endpoint stops.</param>
+    /// <param name="queueAttributes">Optional Amazon SQS queue attributes.</param>
+    /// <param name="queueSubscriptionAttributes">Optional attributes for Amazon SNS subscriptions targeting the queue.</param>
+    /// <param name="queueTags">Optional queue tags.</param>
     public QueueEntity(long id, string name, bool durable, bool autoDelete, IDictionary<string, object>? queueAttributes = null,
         IDictionary<string, object>? queueSubscriptionAttributes = null, IDictionary<string, string>? queueTags = null)
     {
@@ -32,53 +28,31 @@ public class QueueEntity :
         QueueTags = queueTags ?? new Dictionary<string, string>();
     }
 
-    /// <summary>
-    /// Gets the name comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that identifies queues by name.</summary>
     public static IEqualityComparer<QueueEntity> NameComparer { get; } = new NameEqualityComparer();
 
-    /// <summary>
-    /// Gets the queue comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that identifies queues by name and lifetime.</summary>
     public static IEqualityComparer<QueueEntity> QueueComparer { get; } = new QueueEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the entity name value.
-    /// </summary>
+    /// <inheritdoc />
     public string EntityName { get; }
-    /// <summary>
-    /// Gets the durable value.
-    /// </summary>
+    /// <inheritdoc />
     public bool Durable { get; }
-    /// <summary>
-    /// Gets the auto delete value.
-    /// </summary>
+    /// <inheritdoc />
     public bool AutoDelete { get; }
-    /// <summary>
-    /// Gets the queue attributes value.
-    /// </summary>
+    /// <inheritdoc />
     public IDictionary<string, object> QueueAttributes { get; }
-    /// <summary>
-    /// Gets the queue subscription attributes value.
-    /// </summary>
+    /// <inheritdoc />
     public IDictionary<string, object> QueueSubscriptionAttributes { get; }
-    /// <summary>
-    /// Gets the queue tags value.
-    /// </summary>
+    /// <inheritdoc />
     public IDictionary<string, string> QueueTags { get; }
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the builder-assigned entity identifier.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the queue value.
-    /// </summary>
+    /// <summary>Gets this entity as a queue declaration.</summary>
     public Queue Queue => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the queue name, lifetime, tags, and attributes for diagnostics.</summary>
+    /// <returns>The diagnostic queue description.</returns>
     public override string ToString()
     {
         return string.Join(", ",

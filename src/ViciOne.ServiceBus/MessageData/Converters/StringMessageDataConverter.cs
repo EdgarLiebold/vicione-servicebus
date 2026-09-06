@@ -6,18 +6,14 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.MessageData.Converters;
 
-/// <summary>
-/// Provides a string message data converter implementation.
-/// </summary>
+/// <summary>Converts string message data values.</summary>
 public class StringMessageDataConverter :
     IMessageDataConverter<string>
 {
-    /// <summary>
-    /// Performs the convert operation.
-    /// </summary>
-    /// <param name="stream">The stream value.</param>
+    /// <summary>Converts the supplied value.</summary>
+    /// <param name="stream">The stream.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the converted value.</returns>
     public async Task<string?> ConvertAsync(Stream stream, CancellationToken cancellationToken)
     {
         using var ms = new MemoryStream();

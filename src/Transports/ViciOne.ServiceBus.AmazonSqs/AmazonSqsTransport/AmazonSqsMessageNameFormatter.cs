@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides an amazon sqs message name formatter implementation.
-/// </summary>
+/// <summary>Formats .NET message types as Amazon SQS and Amazon SNS entity-name segments.</summary>
 public class AmazonSqsMessageNameFormatter :
     IMessageNameFormatter
 {
@@ -18,27 +16,23 @@ public class AmazonSqsMessageNameFormatter :
     readonly string _namespaceSeparator;
     readonly string _nestedTypeSeparator;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="genericArgumentSeparator">The generic argument separator value.</param>
-    /// <param name="genericTypeSeparator">The generic type separator value.</param>
-    /// <param name="namespaceSeparator">The namespace separator value.</param>
-    /// <param name="nestedTypeSeparator">The nested type separator value.</param>
+    /// <summary>Creates a formatter that includes namespaces and uses optional custom separators.</summary>
+    /// <param name="genericArgumentSeparator">The separator between generic arguments, or <c>__</c> by default.</param>
+    /// <param name="genericTypeSeparator">The delimiter around generic arguments, or <c>--</c> by default.</param>
+    /// <param name="namespaceSeparator">The separator between namespace and type, or <c>-</c> by default.</param>
+    /// <param name="nestedTypeSeparator">The separator for namespace segments and nested types, or <c>_</c> by default.</param>
     public AmazonSqsMessageNameFormatter(string? genericArgumentSeparator = null, string? genericTypeSeparator = null,
         string? namespaceSeparator = null, string? nestedTypeSeparator = null)
         : this(true, genericArgumentSeparator, genericTypeSeparator, namespaceSeparator, nestedTypeSeparator)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="includeNamespace">The include namespace value.</param>
-    /// <param name="genericArgumentSeparator">The generic argument separator value.</param>
-    /// <param name="genericTypeSeparator">The generic type separator value.</param>
-    /// <param name="namespaceSeparator">The namespace separator value.</param>
-    /// <param name="nestedTypeSeparator">The nested type separator value.</param>
+    /// <summary>Creates a formatter with configurable namespace inclusion and separators.</summary>
+    /// <param name="includeNamespace">Whether to include the declaring namespace.</param>
+    /// <param name="genericArgumentSeparator">The separator between generic arguments, or <c>__</c> by default.</param>
+    /// <param name="genericTypeSeparator">The delimiter around generic arguments, or <c>--</c> by default.</param>
+    /// <param name="namespaceSeparator">The separator between namespace and type, or <c>-</c> by default.</param>
+    /// <param name="nestedTypeSeparator">The separator for namespace segments and nested types, or <c>_</c> by default.</param>
     public AmazonSqsMessageNameFormatter(bool includeNamespace, string? genericArgumentSeparator = null,
         string? genericTypeSeparator = null, string? namespaceSeparator = null, string? nestedTypeSeparator = null)
     {
@@ -51,11 +45,9 @@ public class AmazonSqsMessageNameFormatter :
         _cache = new ConcurrentDictionary<Type, string>();
     }
 
-    /// <summary>
-    /// Gets message name.
-    /// </summary>
-    /// <param name="type">The type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats and caches a message type's AWS-compatible entity name.</summary>
+    /// <param name="type">The closed message type to format.</param>
+    /// <returns>The formatted message name.</returns>
     public string GetMessageName(Type type)
     {
         return _cache.GetOrAdd(type, CreateMessageName);
@@ -93,7 +85,7 @@ public class AmazonSqsMessageNameFormatter :
         {
             var name = type.GetGenericTypeDefinition().Name;
 
-            //remove `1
+            // The CLR generic arity suffix is not part of an Amazon SQS entity name.
             var index = name.IndexOf('`');
             if (index > 0)
                 name = name.Remove(index);

@@ -3,16 +3,12 @@ using System.Diagnostics;
 
 namespace ViciOne.ServiceBus.NewIdProviders;
 
-/// <summary>
-/// Provides a current process id provider implementation.
-/// </summary>
+/// <summary>Provides current process id services.</summary>
 public class CurrentProcessIdProvider :
     IProcessIdProvider
 {
-    /// <summary>
-    /// Gets process id.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets process id.</summary>
+    /// <returns>The process id.</returns>
     public byte[] GetProcessId()
     {
         var processId = BitConverter.GetBytes(Process.GetCurrentProcess().Id);

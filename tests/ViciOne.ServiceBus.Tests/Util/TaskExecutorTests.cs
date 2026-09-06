@@ -275,8 +275,8 @@ public sealed class TaskExecutorTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-CANCELLATION", "queued-fire-and-forget-work")]
-    public async Task CancellationAfterQueuedAdmission_SkipsFireAndForgetWorkAsync()
+    [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-CANCELLATION", "accepted-fire-and-forget-work-owns-completion")]
+    public async Task CancellationAfterQueuedAdmission_DoesNotRevokeAcceptedFireAndForgetWorkAsync()
     {
         await using var executor = new TaskExecutor();
         var started = NewCompletionSource();
@@ -299,7 +299,7 @@ public sealed class TaskExecutorTests
         await first.WaitAsync(OperationTimeout, TestCancellationToken);
         await executor.DisposeAsync();
 
-        Assert.False(invoked);
+        Assert.True(invoked);
     }
 
     [Fact]

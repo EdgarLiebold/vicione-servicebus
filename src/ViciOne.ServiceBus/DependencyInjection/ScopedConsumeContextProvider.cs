@@ -6,23 +6,19 @@ namespace ViciOne.ServiceBus.DependencyInjection;
 
 /// <summary>
 /// Captures the <see cref="ConsumeContext" /> for the current message as a scoped provider, so that it can be resolved
-/// by components at runtime (since MS DI doesn't support runtime configuration of scopes)
+/// by components at runtime (since MS DI doesn't support runtime configuration of scopes).
 /// </summary>
 public class ScopedConsumeContextProvider :
     IScopedConsumeContextProvider
 {
     ConsumeContext _context = null!;
 
-    /// <summary>
-    /// Gets the has context value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether this instance has context.</summary>
     public bool HasContext => _context != null && !(_context is MissingConsumeContext);
 
-    /// <summary>
-    /// Performs the push context operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Pushes context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The disposable produced by the operation.</returns>
     public virtual IDisposable PushContext(ConsumeContext context)
     {
         if (context == null)
@@ -38,10 +34,8 @@ public class ScopedConsumeContextProvider :
         }
     }
 
-    /// <summary>
-    /// Gets context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets context.</summary>
+    /// <returns>The context.</returns>
     public ConsumeContext GetContext()
     {
         return _context;

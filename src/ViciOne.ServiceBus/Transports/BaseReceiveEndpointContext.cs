@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a base receive endpoint context implementation.
-/// </summary>
+/// <summary>Carries state for base receive endpoint operations.</summary>
 public abstract class BaseReceiveEndpointContext :
     BasePipeContext,
     ReceiveEndpointContext
@@ -30,11 +28,9 @@ public abstract class BaseReceiveEndpointContext :
     Lazy<ISendEndpointProvider> _sendEndpointProvider;
     Lazy<ISendTransportProvider> _sendTransportProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="configuration">The configuration callback.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="configuration">The callback used to configure the component.</param>
     protected BaseReceiveEndpointContext(IHostConfiguration hostConfiguration, IReceiveEndpointConfiguration configuration)
     {
         _hostConfiguration = hostConfiguration;
@@ -79,157 +75,107 @@ public abstract class BaseReceiveEndpointContext :
 
     Uri HostAddress { get; }
 
-    /// <summary>
-    /// Gets the is bus endpoint value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether bus endpoint.</summary>
     public bool IsBusEndpoint { get; }
 
-    /// <summary>
-    /// Gets the receive observers value.
-    /// </summary>
+    /// <summary>Gets the receive observers.</summary>
     public IReceiveObserver ReceiveObservers => _receiveObservers;
 
-    /// <summary>
-    /// Gets the transport observers value.
-    /// </summary>
+    /// <summary>Gets the transport observers.</summary>
     public IReceiveTransportObserver TransportObservers => _transportObservers;
 
-    /// <summary>
-    /// Gets the endpoint observers value.
-    /// </summary>
+    /// <summary>Gets the endpoint observers.</summary>
     public IReceiveEndpointObserver EndpointObservers => _endpointObservers;
 
-    /// <summary>
-    /// Gets the message routes value.
-    /// </summary>
+    /// <summary>Gets the message routes.</summary>
     public IMessageRouteTable MessageRoutes => _hostConfiguration.BusConfiguration.MessageRoutes;
 
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects send observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _sendObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects publish observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects publish observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
         return _publishObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects receive transport observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive transport observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveTransportObserver(IReceiveTransportObserver observer)
     {
         return _transportObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects receive observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveObserver(IReceiveObserver observer)
     {
         return _receiveObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects receive endpoint observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive endpoint observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
     {
         return _endpointObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Gets the consumer stop timeout value.
-    /// </summary>
+    /// <summary>Gets the consumer stop timeout.</summary>
     public TimeSpan? ConsumerStopTimeout => _hostConfiguration.ConsumerStopTimeout;
-    /// <summary>
-    /// Gets the stop timeout value.
-    /// </summary>
+    /// <summary>Gets the stop timeout.</summary>
     public TimeSpan? StopTimeout => _hostConfiguration.StopTimeout;
 
-    /// <summary>
-    /// Gets the input address value.
-    /// </summary>
+    /// <summary>Gets the input address.</summary>
     public Uri InputAddress { get; }
 
-    /// <summary>
-    /// Gets the dependencies ready value.
-    /// </summary>
+    /// <summary>Gets the dependencies ready.</summary>
     public Task DependenciesReady { get; }
-    /// <summary>
-    /// Gets the dependents completed value.
-    /// </summary>
+    /// <summary>Gets the dependents completed.</summary>
     public Task DependentsCompleted { get; }
 
-    /// <summary>
-    /// Gets the publish faults value.
-    /// </summary>
+    /// <summary>Gets the publish faults.</summary>
     public bool PublishFaults { get; }
 
-    /// <summary>
-    /// Gets the prefetch count value.
-    /// </summary>
+    /// <summary>Gets the prefetch count.</summary>
     public int PrefetchCount { get; }
-    /// <summary>
-    /// Gets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets the concurrent message limit.</summary>
     public int? ConcurrentMessageLimit { get; }
 
-    /// <summary>
-    /// Gets the log context value.
-    /// </summary>
+    /// <summary>Gets the log context.</summary>
     public ILogContext LogContext => _hostConfiguration.ReceiveLogContext ?? throw new InvalidOperationException("ReceiveLogContext should not be null");
 
-    /// <summary>
-    /// Gets the publish value.
-    /// </summary>
+    /// <summary>Gets the publish.</summary>
     public IPublishTopology Publish => _publishTopology;
 
-    /// <summary>
-    /// Gets the receive pipe value.
-    /// </summary>
+    /// <summary>Gets the receive pipe.</summary>
     public IReceivePipe ReceivePipe => _receivePipe.Value;
 
-    /// <summary>
-    /// Gets the send endpoint provider value.
-    /// </summary>
+    /// <summary>Gets the send endpoint provider.</summary>
     public ISendEndpointProvider SendEndpointProvider => _sendEndpointProvider.Value;
 
-    /// <summary>
-    /// Gets the publish endpoint provider value.
-    /// </summary>
+    /// <summary>Gets the publish endpoint provider.</summary>
     public IPublishEndpointProvider PublishEndpointProvider => _publishEndpointProvider.Value;
 
-    /// <summary>
-    /// Creates receive pipe dispatcher.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates receive pipe dispatcher.</summary>
+    /// <returns>The created receive pipe dispatcher.</returns>
     public IReceivePipeDispatcher CreateReceivePipeDispatcher()
     {
         return new ReceivePipeDispatcher(_receivePipe.Value, _receiveObservers, _hostConfiguration, InputAddress);
     }
 
-    /// <summary>
-    /// Performs the reset operation.
-    /// </summary>
+    /// <summary>Resets the current state.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask ResetAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); ISendEndpointProvider? sendEndpointProvider = _sendEndpointProvider.IsValueCreated ? _sendEndpointProvider.Value : null;
@@ -248,85 +194,63 @@ public abstract class BaseReceiveEndpointContext :
         _publishEndpointProvider = new Lazy<IPublishEndpointProvider>(CreatePublishEndpointProvider);
     }
 
-    /// <summary>
-    /// Performs the release send endpoint provider operation.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases send endpoint provider.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected virtual ValueTask ReleaseSendEndpointProviderAsync(ISendEndpointProvider provider)
     {
         return provider is IAsyncDisposable disposable ? disposable.DisposeAsync() : default;
     }
 
-    /// <summary>
-    /// Performs the release publish endpoint provider operation.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases publish endpoint provider.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected virtual ValueTask ReleasePublishEndpointProviderAsync(IPublishEndpointProvider provider)
     {
         return provider is IAsyncDisposable disposable ? disposable.DisposeAsync() : default;
     }
 
-    /// <summary>
-    /// Adds send agent to the configuration.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
+    /// <summary>Adds send agent to the configuration.</summary>
+    /// <param name="agent">The agent.</param>
     public abstract void AddSendAgent(IAgent agent);
-    /// <summary>
-    /// Adds consume agent to the configuration.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
+    /// <summary>Adds consume agent to the configuration.</summary>
+    /// <param name="agent">The agent.</param>
     public abstract void AddConsumeAgent(IAgent agent);
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public virtual void Probe(ProbeContext context)
     {
     }
 
-    /// <summary>
-    /// Performs the convert exception operation.
-    /// </summary>
+    /// <summary>Converts exception.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <returns>The converted exception.</returns>
     public abstract Exception ConvertException(Exception exception, string message);
 
-    /// <summary>
-    /// Gets the serialization value.
-    /// </summary>
+    /// <summary>Gets the serialization.</summary>
     public ISerialization Serialization { get; }
 
-    /// <summary>
-    /// Creates send endpoint provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates send endpoint provider.</summary>
+    /// <returns>The created send endpoint provider.</returns>
     protected virtual ISendEndpointProvider CreateSendEndpointProvider()
     {
         return new SendEndpointProvider(_sendTransportProvider.Value, _sendObservers, this, _sendPipe.Value);
     }
 
-    /// <summary>
-    /// Creates publish endpoint provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates publish endpoint provider.</summary>
+    /// <returns>The created publish endpoint provider.</returns>
     protected virtual IPublishEndpointProvider CreatePublishEndpointProvider()
     {
         return new PublishEndpointProvider(_publishTransportProvider.Value, HostAddress, _publishObservers, this, _publishPipe.Value, _publishTopology);
     }
 
-    /// <summary>
-    /// Creates send transport provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates send transport provider.</summary>
+    /// <returns>The created send transport provider.</returns>
     protected abstract ISendTransportProvider CreateSendTransportProvider();
 
-    /// <summary>
-    /// Creates publish transport provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates publish transport provider.</summary>
+    /// <returns>The created publish transport provider.</returns>
     protected abstract IPublishTransportProvider CreatePublishTransportProvider();
 }

@@ -3,9 +3,7 @@ using System.Threading;
 
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
-/// <summary>
-/// Managed writer that never owns more memory than its configured hard maximum.
-/// </summary>
+/// <summary>Managed writer that never owns more memory than its configured hard maximum.</summary>
 internal sealed class BoundedPayloadSerializationBuffer : IPayloadSerializationBuffer
 {
     private readonly int _maximumBytes;

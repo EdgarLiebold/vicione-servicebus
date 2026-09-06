@@ -3,17 +3,13 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.EventHubs.Checkpoints;
 
-/// <summary>
-/// Defines the contract for checkpointer.
-/// </summary>
+/// <summary>Queues event confirmations for durable partition checkpoint updates.</summary>
 public interface ICheckpointer :
     IAsyncDisposable
 {
-    /// <summary>
-    /// Performs the pending operation.
-    /// </summary>
-    /// <param name="confirmation">The confirmation value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Queues an event confirmation for checkpoint processing.</summary>
+    /// <param name="confirmation">The confirmation associated with a received event.</param>
+    /// <param name="cancellationToken">Cancels waiting to enqueue the confirmation.</param>
+    /// <returns>A task that completes when the confirmation has been accepted.</returns>
     Task PendingAsync(IPendingConfirmation confirmation, CancellationToken cancellationToken = default);
 }

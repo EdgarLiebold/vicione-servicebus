@@ -5,23 +5,17 @@ using ViciOne.ServiceBus.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides a saga class map implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Configures the correlation identifier as the non-generated key for a saga entity.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public abstract class SagaClassMap<TSaga> :
     ISagaClassMap<TSaga>
     where TSaga : class, ISaga
 {
-    /// <summary>
-    /// Gets the saga type value.
-    /// </summary>
+    /// <summary>Gets the saga entity type configured by this map.</summary>
     public Type SagaType => typeof(TSaga);
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="model">The model value.</param>
+    /// <summary>Adds the saga entity, configures its correlation key, and applies derived mapping rules.</summary>
+    /// <param name="model">The EF Core model builder to configure.</param>
     public virtual void Configure(ModelBuilder model)
     {
         EntityTypeBuilder<TSaga> entity = model.Entity<TSaga>();
@@ -34,20 +28,16 @@ public abstract class SagaClassMap<TSaga> :
         Configure(entity, model);
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="entity">The entity value.</param>
-    /// <param name="model">The model value.</param>
+    /// <summary>Configures saga-specific properties and relationships.</summary>
+    /// <param name="entity">The saga entity builder.</param>
+    /// <param name="model">The containing EF Core model builder.</param>
     protected virtual void Configure(EntityTypeBuilder<TSaga> entity, ModelBuilder model)
     {
     }
 
-    /// <summary>
-    /// Override to configure the primary CorrelationId key, to add things like clustering
-    /// </summary>
-    /// <param name="keyBuilder"></param>
-    /// <returns></returns>
+    /// <summary>Customizes the primary correlation key, for example with provider-specific clustering.</summary>
+    /// <param name="keyBuilder">The correlation-key builder.</param>
+    /// <returns>The same or a replacement key builder.</returns>
     protected virtual KeyBuilder ConfigureCorrelationIdKey(KeyBuilder keyBuilder)
     {
         return keyBuilder;

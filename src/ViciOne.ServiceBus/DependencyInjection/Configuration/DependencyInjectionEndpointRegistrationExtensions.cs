@@ -5,20 +5,16 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for dependency injection endpoint registration.
-/// </summary>
+/// <summary>Provides extension methods for dependency injection endpoint registration.</summary>
 public static class DependencyInjectionEndpointRegistrationExtensions
 {
-    /// <summary>
-    /// Performs the register endpoint operation.
-    /// </summary>
-    /// <typeparam name="TDefinition">The t definition type.</typeparam>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registration">The registration value.</param>
-    /// <param name="settings">The settings value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers endpoint.</summary>
+    /// <typeparam name="TDefinition">The definition type.</typeparam>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registration">The registration.</param>
+    /// <param name="settings">The settings that control the operation.</param>
+    /// <returns>The endpoint registration produced by the operation.</returns>
     public static IEndpointRegistration RegisterEndpoint<TDefinition, T>(this IServiceCollection collection, IRegistration registration,
         IEndpointSettings<IEndpointDefinition<T>>? settings = null)
         where TDefinition : class, IEndpointDefinition<T>
@@ -27,16 +23,14 @@ public static class DependencyInjectionEndpointRegistrationExtensions
         return RegisterEndpoint<TDefinition, T>(collection, new DependencyInjectionContainerRegistrar(collection), registration, settings);
     }
 
-    /// <summary>
-    /// Performs the register endpoint operation.
-    /// </summary>
-    /// <typeparam name="TDefinition">The t definition type.</typeparam>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registrar">The registrar value.</param>
-    /// <param name="registration">The registration value.</param>
-    /// <param name="settings">The settings value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers endpoint.</summary>
+    /// <typeparam name="TDefinition">The definition type.</typeparam>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registrar">The registrar.</param>
+    /// <param name="registration">The registration.</param>
+    /// <param name="settings">The settings that control the operation.</param>
+    /// <returns>The endpoint registration produced by the operation.</returns>
     public static IEndpointRegistration RegisterEndpoint<TDefinition, T>(this IServiceCollection collection, IContainerRegistrar registrar,
         IRegistration registration, IEndpointSettings<IEndpointDefinition<T>>? settings = null)
         where T : class
@@ -45,24 +39,20 @@ public static class DependencyInjectionEndpointRegistrationExtensions
         return new EndpointRegistrar<TDefinition, T>(registration).Register(registrar, settings);
     }
 
-    /// <summary>
-    /// Performs the register endpoint operation.
-    /// </summary>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="endpointDefinitionType">The endpoint definition type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers endpoint.</summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="endpointDefinitionType">The runtime endpoint definition type used by the operation.</param>
+    /// <returns>The endpoint registration produced by the operation.</returns>
     public static IEndpointRegistration RegisterEndpoint(this IServiceCollection collection, Type endpointDefinitionType)
     {
         return RegisterEndpoint(collection, new DependencyInjectionContainerRegistrar(collection), endpointDefinitionType);
     }
 
-    /// <summary>
-    /// Performs the register endpoint operation.
-    /// </summary>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registrar">The registrar value.</param>
-    /// <param name="endpointDefinitionType">The endpoint definition type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers endpoint.</summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registrar">The registrar.</param>
+    /// <param name="endpointDefinitionType">The runtime endpoint definition type used by the operation.</param>
+    /// <returns>The endpoint registration produced by the operation.</returns>
     public static IEndpointRegistration RegisterEndpoint(this IServiceCollection collection, IContainerRegistrar registrar, Type endpointDefinitionType)
     {
         if (!endpointDefinitionType.TryGetSingleClosedGenericArguments(typeof(IEndpointDefinition<>), out Type[] types))

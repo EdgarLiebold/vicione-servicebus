@@ -6,9 +6,7 @@ namespace ViciOne.ServiceBus.Operations;
 /// </summary>
 public interface IProbeSite
 {
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     void Probe(ProbeContext context);
 }

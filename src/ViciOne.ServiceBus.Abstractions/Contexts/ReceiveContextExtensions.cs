@@ -3,117 +3,93 @@ using System.Text;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for receive context.
-/// </summary>
+/// <summary>Provides extension methods for receive context.</summary>
 public static class ReceiveContextExtensions
 {
-    /// <summary>
-    /// Returns the messageId from the transport header, if available
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <summary>Returns the messageId from the transport header, if available.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The message id.</returns>
     public static Guid? GetMessageId(this ReceiveContext context)
     {
         return context.TransportHeaders.GetHeaderId(MessageHeaders.MessageId);
     }
 
-    /// <summary>
-    /// Returns the messageId from the transport header, if available
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="defaultValue"></param>
-    /// <returns></returns>
+    /// <summary>Returns the messageId from the transport header, if available.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The message id.</returns>
     public static Guid GetMessageId(this ReceiveContext context, Guid defaultValue)
     {
         return context.TransportHeaders.GetHeaderId(MessageHeaders.MessageId, defaultValue);
     }
 
-    /// <summary>
-    /// Returns the CorrelationId from the transport header, if available
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <summary>Returns the CorrelationId from the transport header, if available.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The correlation id.</returns>
     public static Guid? GetCorrelationId(this ReceiveContext context)
     {
         return context.TransportHeaders.GetHeaderId(MessageHeaders.CorrelationId);
     }
 
-    /// <summary>
-    /// Returns the ConversationId from the transport header, if available
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <summary>Returns the ConversationId from the transport header, if available.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The conversation id.</returns>
     public static Guid? GetConversationId(this ReceiveContext context)
     {
         return context.TransportHeaders.GetHeaderId(MessageHeaders.ConversationId);
     }
 
-    /// <summary>
-    /// Returns the RequestId from the transport header, if available
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <summary>Returns the RequestId from the transport header, if available.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The request id.</returns>
     public static Guid? GetRequestId(this ReceiveContext context)
     {
         return context.TransportHeaders.GetHeaderId(MessageHeaders.RequestId);
     }
 
-    /// <summary>
-    /// Returns the InitiatorId from the transport header, if available
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <summary>Returns the InitiatorId from the transport header, if available.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The initiator id.</returns>
     public static Guid? GetInitiatorId(this ReceiveContext context)
     {
         return context.TransportHeaders.GetHeaderId(MessageHeaders.InitiatorId);
     }
 
-    /// <summary>
-    /// Returns the SourceAddress from the transport headers, if present
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <summary>Returns the SourceAddress from the transport headers, if present.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The source address.</returns>
     public static Uri? GetSourceAddress(this ReceiveContext context)
     {
         return context.TransportHeaders.GetEndpointAddress(MessageHeaders.SourceAddress);
     }
 
-    /// <summary>
-    /// Returns the ResponseAddress from the transport headers, if present
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <summary>Returns the ResponseAddress from the transport headers, if present.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The response address.</returns>
     public static Uri? GetResponseAddress(this ReceiveContext context)
     {
         return context.TransportHeaders.GetEndpointAddress(MessageHeaders.ResponseAddress);
     }
 
-    /// <summary>
-    /// Returns the FaultAddress from the transport headers, if present
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <summary>Returns the FaultAddress from the transport headers, if present.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The fault address.</returns>
     public static Uri? GetFaultAddress(this ReceiveContext context)
     {
         return context.TransportHeaders.GetEndpointAddress(MessageHeaders.FaultAddress);
     }
 
-    /// <summary>
-    /// Returns the message sent timestamp from the transport (not message headers)
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <summary>Returns the message sent timestamp from the transport (not message headers).</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The sent time.</returns>
     public static DateTimeOffset? GetSentTime(this ReceiveContext context)
     {
         return context.TransportHeaders.GetTimestamp(MessageHeaders.TransportSentTime);
     }
 
-    /// <summary>
-    /// Gets message types.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message types.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The message types.</returns>
     public static string[] GetMessageTypes(this ReceiveContext context)
     {
         if (context.TransportHeaders.TryGetHeader(MessageHeaders.MessageType, out var value) && value is string text && !string.IsNullOrWhiteSpace(text))
@@ -122,11 +98,9 @@ public static class ReceiveContextExtensions
         return [];
     }
 
-    /// <summary>
-    /// Returns either the Content-Encoding from the transport header, or the default UTF-8 encoding (no BOM).
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <summary>Returns either the Content-Encoding from the transport header, or the default UTF-8 encoding (no BOM).</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The message encoding.</returns>
     public static Encoding GetMessageEncoding(this ReceiveContext context)
     {
         if (context.TransportHeaders.TryGetHeader("Content-Encoding", out var value) && value is string text && !string.IsNullOrWhiteSpace(text))
@@ -135,102 +109,82 @@ public static class ReceiveContextExtensions
         return MessageDefaults.Encoding;
     }
 
-    /// <summary>
-    /// Returns the messageId from the transport header, if available
-    /// </summary>
-    /// <param name="headers"></param>
-    /// <returns></returns>
+    /// <summary>Returns the messageId from the transport header, if available.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <returns>The message id.</returns>
     public static Guid? GetMessageId(this Headers headers)
     {
         return headers.GetHeaderId(MessageHeaders.MessageId);
     }
 
-    /// <summary>
-    /// Returns the messageId from the transport header, if available
-    /// </summary>
-    /// <param name="headers"></param>
-    /// <param name="defaultValue"></param>
-    /// <returns></returns>
+    /// <summary>Returns the messageId from the transport header, if available.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The message id.</returns>
     public static Guid GetMessageId(this Headers headers, Guid defaultValue)
     {
         return headers.GetHeaderId(MessageHeaders.MessageId, defaultValue);
     }
 
-    /// <summary>
-    /// Returns the CorrelationId from the transport header, if available
-    /// </summary>
-    /// <param name="headers"></param>
-    /// <returns></returns>
+    /// <summary>Returns the CorrelationId from the transport header, if available.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <returns>The correlation id.</returns>
     public static Guid? GetCorrelationId(this Headers headers)
     {
         return headers.GetHeaderId(MessageHeaders.CorrelationId);
     }
 
-    /// <summary>
-    /// Returns the ConversationId from the transport header, if available
-    /// </summary>
-    /// <param name="headers"></param>
-    /// <returns></returns>
+    /// <summary>Returns the ConversationId from the transport header, if available.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <returns>The conversation id.</returns>
     public static Guid? GetConversationId(this Headers headers)
     {
         return headers.GetHeaderId(MessageHeaders.ConversationId);
     }
 
-    /// <summary>
-    /// Returns the RequestId from the transport header, if available
-    /// </summary>
-    /// <param name="headers"></param>
-    /// <returns></returns>
+    /// <summary>Returns the RequestId from the transport header, if available.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <returns>The request id.</returns>
     public static Guid? GetRequestId(this Headers headers)
     {
         return headers.GetHeaderId(MessageHeaders.RequestId);
     }
 
-    /// <summary>
-    /// Returns the InitiatorId from the transport header, if available
-    /// </summary>
-    /// <param name="headers"></param>
-    /// <returns></returns>
+    /// <summary>Returns the InitiatorId from the transport header, if available.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <returns>The initiator id.</returns>
     public static Guid? GetInitiatorId(this Headers headers)
     {
         return headers.GetHeaderId(MessageHeaders.InitiatorId);
     }
 
-    /// <summary>
-    /// Returns the SourceAddress from the transport headers, if present
-    /// </summary>
-    /// <param name="headers"></param>
-    /// <returns></returns>
+    /// <summary>Returns the SourceAddress from the transport headers, if present.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <returns>The source address.</returns>
     public static Uri? GetSourceAddress(this Headers headers)
     {
         return headers.GetEndpointAddress(MessageHeaders.SourceAddress);
     }
 
-    /// <summary>
-    /// Returns the ResponseAddress from the transport headers, if present
-    /// </summary>
-    /// <param name="headers"></param>
-    /// <returns></returns>
+    /// <summary>Returns the ResponseAddress from the transport headers, if present.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <returns>The response address.</returns>
     public static Uri? GetResponseAddress(this Headers headers)
     {
         return headers.GetEndpointAddress(MessageHeaders.ResponseAddress);
     }
 
-    /// <summary>
-    /// Returns the FaultAddress from the transport headers, if present
-    /// </summary>
-    /// <param name="headers"></param>
-    /// <returns></returns>
+    /// <summary>Returns the FaultAddress from the transport headers, if present.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <returns>The fault address.</returns>
     public static Uri? GetFaultAddress(this Headers headers)
     {
         return headers.GetEndpointAddress(MessageHeaders.FaultAddress);
     }
 
-    /// <summary>
-    /// Gets message types.
-    /// </summary>
-    /// <param name="headers">The headers value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message types.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <returns>The message types.</returns>
     public static string[] GetMessageTypes(this Headers headers)
     {
         if (headers.TryGetHeader(MessageHeaders.MessageType, out var value))
@@ -242,11 +196,9 @@ public static class ReceiveContextExtensions
         return [];
     }
 
-    /// <summary>
-    /// Returns either the Content-Encoding from the transport header, or the default UTF-8 encoding (no BOM).
-    /// </summary>
-    /// <param name="headers"></param>
-    /// <returns></returns>
+    /// <summary>Returns either the Content-Encoding from the transport header, or the default UTF-8 encoding (no BOM).</summary>
+    /// <param name="headers">The headers.</param>
+    /// <returns>The message encoding.</returns>
     public static Encoding GetMessageEncoding(this Headers headers)
     {
         if (headers.TryGetHeader("Content-Encoding", out var value) && value is string text && !string.IsNullOrWhiteSpace(text))
@@ -255,24 +207,20 @@ public static class ReceiveContextExtensions
         return MessageDefaults.Encoding;
     }
 
-    /// <summary>
-    /// Gets header id.
-    /// </summary>
-    /// <param name="headers">The headers value.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets header id.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The header id.</returns>
     public static Guid GetHeaderId(this Headers headers, string key, Guid defaultValue)
     {
         return GetHeaderId(headers, key) ?? defaultValue;
     }
 
-    /// <summary>
-    /// Gets header id.
-    /// </summary>
-    /// <param name="headers">The headers value.</param>
-    /// <param name="key">The key value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets header id.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <returns>The header id.</returns>
     public static Guid? GetHeaderId(this Headers headers, string key)
     {
         if (headers.TryGetHeader(key, out var value))
@@ -303,12 +251,10 @@ public static class ReceiveContextExtensions
         return default;
     }
 
-    /// <summary>
-    /// Gets endpoint address.
-    /// </summary>
-    /// <param name="headers">The headers value.</param>
-    /// <param name="key">The key value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets endpoint address.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <returns>The endpoint address.</returns>
     public static Uri? GetEndpointAddress(this Headers headers, string key)
     {
         if (headers.TryGetHeader(key, out var value))

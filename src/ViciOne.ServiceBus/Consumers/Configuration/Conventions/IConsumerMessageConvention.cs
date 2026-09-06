@@ -8,9 +8,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// </summary>
 public interface IConsumerMessageConvention
 {
-    /// <summary>
-    /// Returns the message types handled by the consumer class
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Returns the message types handled by the consumer class.</summary>
+    /// <returns>The message types.</returns>
     IEnumerable<IMessageInterfaceType> GetMessageTypes();
 }

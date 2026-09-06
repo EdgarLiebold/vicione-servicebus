@@ -5,18 +5,14 @@ using ViciOne.ServiceBus.SqlTransport.SqlServer;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
-/// <summary>
-/// Provides extension methods for sql server db transport configuration.
-/// </summary>
+/// <summary>Provides SQL Server database migration registration extensions.</summary>
 public static class SqlServerDbTransportConfigurationExtensions
 {
-    /// <summary>
-    /// Adds sql server migration hosted service to the configuration.
-    /// </summary>
+    /// <summary>Registers the SQL Server migration hosted service with create and delete switches.</summary>
     /// <param name="services">The dependency-injection service collection.</param>
-    /// <param name="create">The create value.</param>
-    /// <param name="delete">The delete value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="create">Whether to create the database, schema, and transport infrastructure.</param>
+    /// <param name="delete">Whether to delete the transport database before creation.</param>
+    /// <returns>The same service collection.</returns>
     public static IServiceCollection AddSqlServerMigrationHostedService(this IServiceCollection services, bool create = true, bool delete = false)
     {
         services.AddSqlServerMigrationHostedService(options =>
@@ -30,12 +26,10 @@ public static class SqlServerDbTransportConfigurationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Adds sql server migration hosted service to the configuration.
-    /// </summary>
+    /// <summary>Registers and configures the SQL Server migration hosted service.</summary>
     /// <param name="services">The dependency-injection service collection.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="configure">An optional callback that selects migration operations.</param>
+    /// <returns>The same service collection.</returns>
     public static IServiceCollection AddSqlServerMigrationHostedService(this IServiceCollection services, Action<SqlTransportMigrationOptions>? configure)
     {
         services.AddTransient<ISqlTransportDatabaseMigrator, SqlServerDatabaseMigrator>();

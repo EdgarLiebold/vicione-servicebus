@@ -3,21 +3,17 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a partition filter implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Processes partition pipeline stages.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class PartitionFilter<TContext> :
     IFilter<TContext>
     where TContext : class, PipeContext
 {
     readonly IPartitioner<TContext> _partitioner;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="keyProvider">The key provider value.</param>
-    /// <param name="partitioner">The partitioner value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="keyProvider">The key provider.</param>
+    /// <param name="partitioner">The partitioner.</param>
     public PartitionFilter(PartitionKeyProvider<TContext> keyProvider, IPartitioner partitioner)
     {
         ArgumentNullException.ThrowIfNull(keyProvider);

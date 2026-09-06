@@ -3,25 +3,17 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Defines the contract for processor context.
-/// </summary>
+/// <summary>Owns an Event Hubs processor client and its partition lifecycle subscriptions.</summary>
 public interface ProcessorContext :
     PipeContext
 {
-    /// <summary>
-    /// Gets the log context value.
-    /// </summary>
+    /// <summary>Gets the receive endpoint's logging context.</summary>
     ILogContext LogContext { get; }
-    /// <summary>
-    /// Gets client.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers partition callbacks and leases the processor client to a lock context.</summary>
+    /// <param name="context">The callback target for partition initialization and closure.</param>
+    /// <returns>The owned processor client.</returns>
     EventProcessorClient GetClient(ProcessorClientBuilderContext context);
-    /// <summary>
-    /// Performs the release client operation.
-    /// </summary>
-    /// <param name="processorLockContext">The processor lock context value.</param>
+    /// <summary>Unsubscribes the partition callbacks associated with the current client lease.</summary>
+    /// <param name="processorLockContext">The callback target whose lease is being released.</param>
     void ReleaseClient(ProcessorClientBuilderContext processorLockContext);
 }

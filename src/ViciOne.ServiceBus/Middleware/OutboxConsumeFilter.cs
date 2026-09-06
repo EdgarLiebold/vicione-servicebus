@@ -3,11 +3,9 @@ using ViciOne.ServiceBus.DependencyInjection;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Sends the message through the outbox
-/// </summary>
-/// <typeparam name="TContext">The outbox context type</typeparam>
-/// <typeparam name="TMessage">The message type</typeparam>
+/// <summary>Sends the message through the outbox.</summary>
+/// <typeparam name="TContext">The outbox context type.</typeparam>
+/// <typeparam name="TMessage">The message type.</typeparam>
 public class OutboxConsumeFilter<TContext, TMessage> :
     IFilter<ConsumeContext<TMessage>>
     where TContext : class
@@ -16,11 +14,9 @@ public class OutboxConsumeFilter<TContext, TMessage> :
     readonly OutboxConsumeOptions _options;
     readonly IConsumeScopeProvider _scopeProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="scopeProvider">The scope provider value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="scopeProvider">The scope provider.</param>
+    /// <param name="options">The options that control the operation.</param>
     public OutboxConsumeFilter(IConsumeScopeProvider scopeProvider, OutboxConsumeOptions options)
     {
         _scopeProvider = scopeProvider ?? throw new ArgumentNullException(nameof(scopeProvider));
@@ -29,21 +25,17 @@ public class OutboxConsumeFilter<TContext, TMessage> :
         _options = options;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateFilterScope("outbox");
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
         await using IConsumeScopeContext<TMessage> scope = await _scopeProvider.GetScopeAsync(context).ConfigureAwait(false);

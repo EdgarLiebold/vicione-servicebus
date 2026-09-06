@@ -6,22 +6,18 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Provides extension methods for state machine request.
-/// </summary>
+/// <summary>Provides extension methods for state machine request.</summary>
 public static class StateMachineRequestExtensions
 {
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
         Request<TInstance, TRequest, TResponse> request, EventMessageFactory<TInstance, TData, TRequest> messageFactory)
         where TInstance : class, SagaStateMachineInstance
@@ -35,17 +31,15 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
         Request<TInstance, TRequest, TResponse> request, AsyncEventMessageFactory<TInstance, TData, TRequest> messageFactory)
         where TInstance : class, SagaStateMachineInstance
@@ -59,17 +53,15 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
         Request<TInstance, TRequest, TResponse> request, Func<BehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
         where TInstance : class, SagaStateMachineInstance
@@ -83,18 +75,16 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="serviceAddressProvider">A provider for the address used for the request</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="serviceAddressProvider">A provider for the address used for the request.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
         Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance, TData> serviceAddressProvider,
         EventMessageFactory<TInstance, TData, TRequest> messageFactory)
@@ -110,18 +100,16 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="serviceAddressProvider">A provider for the address used for the request</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="serviceAddressProvider">A provider for the address used for the request.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
         Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance, TData> serviceAddressProvider,
         AsyncEventMessageFactory<TInstance, TData, TRequest> messageFactory)
@@ -137,18 +125,16 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="serviceAddressProvider">A provider for the address used for the request</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="serviceAddressProvider">A provider for the address used for the request.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
         Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance, TData> serviceAddressProvider,
         Func<BehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
@@ -164,17 +150,15 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
         EventExceptionMessageFactory<TInstance, TException, TRequest> messageFactory)
@@ -189,17 +173,15 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
         AsyncEventExceptionMessageFactory<TInstance, TException, TRequest> messageFactory)
@@ -214,17 +196,15 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
         Func<BehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
@@ -239,18 +219,16 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="serviceAddressProvider"></param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="serviceAddressProvider">The service address provider.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TException> serviceAddressProvider,
@@ -267,18 +245,16 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="serviceAddressProvider"></param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="serviceAddressProvider">The service address provider.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TException> serviceAddressProvider,
@@ -295,18 +271,16 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="serviceAddressProvider"></param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="serviceAddressProvider">The service address provider.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TException> serviceAddressProvider,
@@ -323,18 +297,16 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
         EventExceptionMessageFactory<TInstance, TData, TException, TRequest> messageFactory)
@@ -351,18 +323,16 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
         AsyncEventExceptionMessageFactory<TInstance, TData, TException, TRequest> messageFactory)
@@ -379,18 +349,16 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
         Func<BehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
@@ -407,19 +375,17 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="serviceAddressProvider"></param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="serviceAddressProvider">The service address provider.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TData, TException> serviceAddressProvider,
@@ -437,19 +403,17 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="serviceAddressProvider"></param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="serviceAddressProvider">The service address provider.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TData, TException> serviceAddressProvider,
@@ -467,19 +431,17 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TData">The event data type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="serviceAddressProvider"></param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TData">The event data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="serviceAddressProvider">The service address provider.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TData, TException> serviceAddressProvider,
@@ -497,16 +459,14 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
         Request<TInstance, TRequest, TResponse> request, EventMessageFactory<TInstance, TRequest> messageFactory)
         where TInstance : class, SagaStateMachineInstance
@@ -519,16 +479,14 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
         Request<TInstance, TRequest, TResponse> request, AsyncEventMessageFactory<TInstance, TRequest> messageFactory)
         where TInstance : class, SagaStateMachineInstance
@@ -541,16 +499,14 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
         Request<TInstance, TRequest, TResponse> request, Func<BehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
         where TInstance : class, SagaStateMachineInstance
@@ -563,17 +519,15 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="serviceAddressProvider"></param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="serviceAddressProvider">The service address provider.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
         Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance> serviceAddressProvider,
         EventMessageFactory<TInstance, TRequest> messageFactory)
@@ -588,17 +542,15 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="serviceAddressProvider"></param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="serviceAddressProvider">The service address provider.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
         Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance> serviceAddressProvider,
         AsyncEventMessageFactory<TInstance, TRequest> messageFactory)
@@ -613,17 +565,15 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Send a request to the configured service endpoint, and setup the state machine to accept the response.
-    /// </summary>
-    /// <typeparam name="TInstance">The state instance type</typeparam>
-    /// <typeparam name="TRequest">The request message type</typeparam>
-    /// <typeparam name="TResponse">The response message type</typeparam>
-    /// <param name="binder">The event binder</param>
-    /// <param name="request">The configured request to use</param>
-    /// <param name="serviceAddressProvider"></param>
-    /// <param name="messageFactory">The request message factory</param>
-    /// <returns></returns>
+    /// <summary>Send a request to the configured service endpoint, and setup the state machine to accept the response.</summary>
+    /// <typeparam name="TInstance">The state instance type.</typeparam>
+    /// <typeparam name="TRequest">The request message type.</typeparam>
+    /// <typeparam name="TResponse">The response message type.</typeparam>
+    /// <param name="binder">The event binder.</param>
+    /// <param name="request">The configured request to use.</param>
+    /// <param name="serviceAddressProvider">The service address provider.</param>
+    /// <param name="messageFactory">The request message factory.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
         Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance> serviceAddressProvider,
         Func<BehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
@@ -638,17 +588,15 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>
-    /// Cancels the request timeout, and clears the request data from the state instance
-    /// </summary>
-    /// <typeparam name="TInstance"></typeparam>
-    /// <typeparam name="TData"></typeparam>
-    /// <typeparam name="TRequest"></typeparam>
-    /// <typeparam name="TResponse"></typeparam>
-    /// <param name="binder"></param>
-    /// <param name="request"></param>
-    /// <param name="completed"></param>
-    /// <returns></returns>
+    /// <summary>Cancels the request timeout, and clears the request data from the state instance.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <param name="binder">The binder.</param>
+    /// <param name="request">The request.</param>
+    /// <param name="completed">The completed.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> CancelRequestTimeout<TInstance, TData, TRequest, TResponse>(
         this EventActivityBinder<TInstance, TData> binder, Request<TInstance, TRequest, TResponse> request, bool completed = true)
         where TInstance : class, SagaStateMachineInstance

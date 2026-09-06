@@ -2,18 +2,14 @@ using System;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>
-/// Defines the contract for consumer consume scope context.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Exposes state for consumer consume scope operations.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+/// <typeparam name="T">The value type.</typeparam>
 public interface IConsumerConsumeScopeContext<out TConsumer, out T> :
     IAsyncDisposable
     where T : class
     where TConsumer : class
 {
-    /// <summary>
-    /// Gets the context value.
-    /// </summary>
+    /// <summary>Gets the context.</summary>
     ConsumerConsumeContext<TConsumer, T> Context { get; }
 }

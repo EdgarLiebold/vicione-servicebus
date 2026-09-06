@@ -4,30 +4,25 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides extension methods for service bus publish topology configuration.
-/// </summary>
+/// <summary>Adds message contracts to Azure Service Bus publish topology by type or namespace.</summary>
 public static class ServiceBusPublishTopologyConfigurationExtensions
 {
-    /// <summary>
-    /// Adds any valid message types found in the specified namespace to the publish topology
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <param name="filter"></param>
+    /// <summary>Adds any valid message types found in the specified namespace to the publish topology.</summary>
+    /// <typeparam name="T">A marker type whose assembly and namespace are scanned.</typeparam>
+    /// <param name="configurator">The Azure Service Bus factory topology to update.</param>
+    /// <param name="configure">Optionally configures each discovered message type.</param>
+    /// <param name="filter">Optionally accepts or rejects otherwise valid message types.</param>
     public static void AddPublishMessageTypesFromNamespaceContaining<T>(this IServiceBusBusFactoryConfigurator configurator,
         Action<IServiceBusMessagePublishTopologyConfigurator, Type>? configure = null, Func<Type, bool>? filter = null)
     {
         AddPublishMessageTypesFromNamespaceContaining(configurator, typeof(T), configure, filter);
     }
 
-    /// <summary>
-    /// Adds any valid message types found in the specified namespace to the publish topology
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="type">The type to use to identify the assembly and namespace to scan</param>
-    /// <param name="configure"></param>
-    /// <param name="filter"></param>
+    /// <summary>Adds any valid message types found in the specified namespace to the publish topology.</summary>
+    /// <param name="configurator">The Azure Service Bus factory topology to update.</param>
+    /// <param name="type">The type to use to identify the assembly and namespace to scan.</param>
+    /// <param name="configure">Optionally configures each discovered message type.</param>
+    /// <param name="filter">Optionally accepts or rejects otherwise valid message types.</param>
     public static void AddPublishMessageTypesFromNamespaceContaining(this IServiceBusBusFactoryConfigurator configurator, Type type,
         Action<IServiceBusMessagePublishTopologyConfigurator, Type>? configure = null, Func<Type, bool>? filter = null)
     {
@@ -58,12 +53,10 @@ public static class ServiceBusPublishTopologyConfigurationExtensions
             configurator.Publish(messageType, x => configure?.Invoke(x, messageType));
     }
 
-    /// <summary>
-    /// Adds the specified message types to the publish topology
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="messageTypes"></param>
-    /// <param name="configure"></param>
+    /// <summary>Adds the specified message types to the publish topology.</summary>
+    /// <param name="configurator">The Azure Service Bus factory topology to update.</param>
+    /// <param name="messageTypes">The runtime message types to add.</param>
+    /// <param name="configure">Optionally configures each message type.</param>
     public static void AddPublishMessageTypes(this IServiceBusBusFactoryConfigurator configurator, IEnumerable<Type> messageTypes,
         Action<IServiceBusMessagePublishTopologyConfigurator, Type>? configure = null)
     {

@@ -9,22 +9,16 @@ using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Represents a rabbit mq endpoint address value.
-/// </summary>
+/// <summary>Parses and normalizes a RabbitMQ exchange address and its topology options.</summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct RabbitMqEndpointAddress
 {
-    /// <summary>
-    /// Defines the delayed message exchange type value.
-    /// </summary>
+    /// <summary>The RabbitMQ exchange type supplied by the delayed-message exchange plug-in.</summary>
     public const string DelayedMessageExchangeType = "x-delayed-message";
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="address">The address value.</param>
+    /// <summary>Resolves a full or short endpoint address against a RabbitMQ host address.</summary>
+    /// <param name="hostAddress">The default RabbitMQ host and virtual-host address.</param>
+    /// <param name="address">The full, <c>queue:</c>, or <c>exchange:</c> endpoint address to parse.</param>
     public RabbitMqEndpointAddress(Uri hostAddress, Uri address)
     {
         ArgumentNullException.ThrowIfNull(hostAddress);
@@ -159,7 +153,7 @@ public readonly struct RabbitMqEndpointAddress
                     SingleActiveConsumer = ParseBoolean(key, value);
                     break;
 
-                // Host settings and endpoint settings intentionally share one URI.
+                // Full transport addresses may carry host and endpoint options in the same query.
                 case RabbitMqAddressOptionNames.Heartbeat:
                 case RabbitMqAddressOptionNames.Prefetch:
                 case RabbitMqAddressOptionNames.TimeToLive:
@@ -181,20 +175,18 @@ public readonly struct RabbitMqEndpointAddress
         BindExchanges = new ReadOnlyCollection<string>(bindExchanges);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="exchangeType">The exchange type value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="bindToQueue">The bind to queue value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="delayedType">The delayed type value.</param>
-    /// <param name="bindExchanges">The bind exchanges value.</param>
-    /// <param name="alternateExchange">The alternate exchange value.</param>
-    /// <param name="singleActiveConsumer">The single active consumer value.</param>
+    /// <summary>Creates an endpoint address from explicit exchange and binding settings.</summary>
+    /// <param name="hostAddress">The RabbitMQ host and virtual-host address.</param>
+    /// <param name="exchangeName">The destination exchange name.</param>
+    /// <param name="exchangeType">The RabbitMQ exchange type, or <c>fanout</c> when omitted.</param>
+    /// <param name="durable">Whether the exchange and optional queue survive broker restarts.</param>
+    /// <param name="autoDelete">Whether RabbitMQ deletes the exchange and optional queue when unused.</param>
+    /// <param name="bindToQueue">Whether to declare and bind a queue.</param>
+    /// <param name="queueName">The queue name, or the exchange name when binding without an override.</param>
+    /// <param name="delayedType">The underlying exchange type for an <c>x-delayed-message</c> exchange.</param>
+    /// <param name="bindExchanges">Additional exchanges to bind to the destination exchange.</param>
+    /// <param name="alternateExchange">The exchange that receives otherwise unroutable messages.</param>
+    /// <param name="singleActiveConsumer">Whether the optional queue uses RabbitMQ single-active-consumer semantics.</param>
     public RabbitMqEndpointAddress(Uri hostAddress, string exchangeName, string? exchangeType = null, bool durable = true,
         bool autoDelete = false, bool bindToQueue = false, string? queueName = null, string? delayedType = null,
         IEnumerable<string>? bindExchanges = null, string? alternateExchange = null, bool singleActiveConsumer = false)
@@ -259,67 +251,37 @@ public readonly struct RabbitMqEndpointAddress
         AlternateExchange = alternateExchange;
     }
 
-    /// <summary>
-    /// Gets the scheme value.
-    /// </summary>
+    /// <summary>Gets the normalized RabbitMQ or AMQP URI scheme.</summary>
     public string Scheme { get; }
-    /// <summary>
-    /// Gets the host value.
-    /// </summary>
+    /// <summary>Gets the broker host name.</summary>
     public string Host { get; }
-    /// <summary>
-    /// Gets the port value.
-    /// </summary>
+    /// <summary>Gets the AMQP port.</summary>
     public int Port { get; }
-    /// <summary>
-    /// Gets the virtual host value.
-    /// </summary>
+    /// <summary>Gets the RabbitMQ virtual host.</summary>
     public string VirtualHost { get; }
-    /// <summary>
-    /// Gets the name value.
-    /// </summary>
+    /// <summary>Gets the destination exchange name.</summary>
     public string Name { get; }
-    /// <summary>
-    /// Gets the exchange type value.
-    /// </summary>
+    /// <summary>Gets the declared RabbitMQ exchange type.</summary>
     public string ExchangeType { get; }
-    /// <summary>
-    /// Gets the durable value.
-    /// </summary>
+    /// <summary>Gets whether the exchange and optional queue are durable.</summary>
     public bool Durable { get; }
-    /// <summary>
-    /// Gets the auto delete value.
-    /// </summary>
+    /// <summary>Gets whether the exchange and optional queue are auto-delete.</summary>
     public bool AutoDelete { get; }
-    /// <summary>
-    /// Gets the bind to queue value.
-    /// </summary>
+    /// <summary>Gets whether topology includes a queue bound to the exchange.</summary>
     public bool BindToQueue { get; }
-    /// <summary>
-    /// Gets the single active consumer value.
-    /// </summary>
+    /// <summary>Gets whether the queue uses RabbitMQ single-active-consumer semantics.</summary>
     public bool SingleActiveConsumer { get; }
-    /// <summary>
-    /// Gets the queue name value.
-    /// </summary>
+    /// <summary>Gets the explicit queue name, when one was supplied.</summary>
     public string? QueueName { get; }
-    /// <summary>
-    /// Gets the delayed type value.
-    /// </summary>
+    /// <summary>Gets the underlying exchange type for delayed-message routing.</summary>
     public string? DelayedType { get; }
-    /// <summary>
-    /// Gets the bind exchanges value.
-    /// </summary>
+    /// <summary>Gets the additional exchanges bound to the destination exchange.</summary>
     public IReadOnlyList<string> BindExchanges { get; }
-    /// <summary>
-    /// Gets the alternate exchange value.
-    /// </summary>
+    /// <summary>Gets the exchange used for otherwise unroutable messages.</summary>
     public string? AlternateExchange { get; }
 
-    /// <summary>
-    /// Gets delay settings.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates delayed-exchange settings that route expired deliveries back to this endpoint.</summary>
+    /// <returns>The derived RabbitMQ delay settings.</returns>
     public RabbitMqDelaySettings GetDelaySettings()
     {
         var delayExchangeName = $"{Name}_delay";
@@ -344,10 +306,8 @@ public readonly struct RabbitMqEndpointAddress
         return delaySettings;
     }
 
-    /// <summary>
-    /// Performs the to short address operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a host-independent <c>queue:</c> or <c>exchange:</c> address.</summary>
+    /// <returns>The short endpoint address with topology query options.</returns>
     public Uri ToShortAddress()
     {
         var builder = new StringBuilder();
@@ -361,11 +321,9 @@ public readonly struct RabbitMqEndpointAddress
         return new Uri(builder.ToString());
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a full RabbitMQ transport URI from the normalized endpoint settings.</summary>
+    /// <param name="address">The endpoint settings to serialize.</param>
+    /// <returns>The full RabbitMQ endpoint URI.</returns>
     public static implicit operator Uri(in RabbitMqEndpointAddress address)
     {
         var builder = new UriBuilder

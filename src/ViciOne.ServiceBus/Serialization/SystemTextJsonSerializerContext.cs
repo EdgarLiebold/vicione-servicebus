@@ -7,24 +7,20 @@ using System.Text.Json.Nodes;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a system text json serializer context implementation.
-/// </summary>
+/// <summary>Carries state for system text json serializer operations.</summary>
 public class SystemTextJsonSerializerContext :
     BaseSerializerContext
 {
     readonly MessageEnvelope? _envelope;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="objectDeserializer">The object deserializer value.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="contentType">The content type value.</param>
-    /// <param name="messageContext">The message context value.</param>
-    /// <param name="messageTypes">The message types value.</param>
-    /// <param name="envelope">The envelope value.</param>
-    /// <param name="message">The message value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="objectDeserializer">The object deserializer.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="contentType">The runtime content type used by the operation.</param>
+    /// <param name="messageContext">The message context.</param>
+    /// <param name="messageTypes">The message types.</param>
+    /// <param name="envelope">The envelope.</param>
+    /// <param name="message">The message to process.</param>
     public SystemTextJsonSerializerContext(IObjectDeserializer objectDeserializer, JsonSerializerOptions options, ContentType contentType,
         MessageContext messageContext, string[] messageTypes, MessageEnvelope? envelope = null, object? message = null)
         : base(objectDeserializer, messageContext, messageTypes)
@@ -35,24 +31,16 @@ public class SystemTextJsonSerializerContext :
         Options = options;
     }
 
-    /// <summary>
-    /// Gets the message value.
-    /// </summary>
+    /// <summary>Gets the message.</summary>
     protected object Message { get; }
-    /// <summary>
-    /// Gets the content type value.
-    /// </summary>
+    /// <summary>Gets the content type.</summary>
     protected ContentType ContentType { get; }
-    /// <summary>
-    /// Gets the options value.
-    /// </summary>
+    /// <summary>Gets the options.</summary>
     protected JsonSerializerOptions Options { get; }
 
-    /// <summary>
-    /// Attempts to get message.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
+    /// <summary>Attempts to get message.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">Receives the message produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool TryGetMessage<T>([NotNullWhen(true)] out T? message)
         where T : class
@@ -81,11 +69,9 @@ public class SystemTextJsonSerializerContext :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get message.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="message">The message value.</param>
+    /// <summary>Attempts to get message.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="message">Receives the message produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message)
     {
@@ -104,10 +90,8 @@ public class SystemTextJsonSerializerContext :
         return message != null;
     }
 
-    /// <summary>
-    /// Gets message serializer.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message serializer.</summary>
+    /// <returns>The message serializer.</returns>
     public override IMessageSerializer GetMessageSerializer()
     {
         if (_envelope == null)
@@ -116,13 +100,11 @@ public class SystemTextJsonSerializerContext :
         return new SystemTextJsonBodyMessageSerializer(_envelope, ContentType, Options);
     }
 
-    /// <summary>
-    /// Gets message serializer.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="envelope">The envelope value.</param>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message serializer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="envelope">The envelope.</param>
+    /// <param name="message">The message to process.</param>
+    /// <returns>The message serializer.</returns>
     public override IMessageSerializer GetMessageSerializer<T>(MessageEnvelope envelope, T message)
     {
         var serializer = new SystemTextJsonBodyMessageSerializer(envelope, ContentType, Options);
@@ -132,12 +114,10 @@ public class SystemTextJsonSerializerContext :
         return serializer;
     }
 
-    /// <summary>
-    /// Gets message serializer.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="messageTypes">The message types value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message serializer.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="messageTypes">The message types.</param>
+    /// <returns>The message serializer.</returns>
     public override IMessageSerializer GetMessageSerializer(object message, string[] messageTypes)
     {
         if (message == null)
@@ -148,12 +128,10 @@ public class SystemTextJsonSerializerContext :
         return new SystemTextJsonBodyMessageSerializer(envelope, ContentType, Options, messageTypes);
     }
 
-    /// <summary>
-    /// Performs the to dictionary operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to dictionary.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <returns>The converted dictionary.</returns>
     public override Dictionary<string, object> ToDictionary<T>(T? message)
         where T : class
     {

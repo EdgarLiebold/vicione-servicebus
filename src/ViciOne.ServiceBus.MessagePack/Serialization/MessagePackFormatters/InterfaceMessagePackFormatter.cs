@@ -21,6 +21,7 @@ delegate TInterface DeserializeDelegate<out TInterface>(object formatter, ref Me
 /// <see cref="ConcreteFormatterCache{TInterface}" /> for how the entries are bounded and why.
 /// </para>
 /// </summary>
+/// <typeparam name="TInterface">The interface message contract being serialized.</typeparam>
 public class InterfaceMessagePackFormatter<TInterface> :
     IMessagePackFormatter<TInterface>
 {
@@ -31,17 +32,13 @@ public class InterfaceMessagePackFormatter<TInterface> :
     // entries are bounded by the lifetime of their key, not by this being static.
     static readonly ConcreteFormatterCache<TInterface> _cache = new();
 
-    /// <summary>
-    /// How many entries this closed formatter has actually compiled.
-    /// </summary>
+    /// <summary>Gets the number of concrete-type invokers compiled for this closed interface contract.</summary>
     internal static int CompiledInvokerCount => _cache.CompiledCount;
 
-    /// <summary>
-    /// Performs the serialize operation.
-    /// </summary>
-    /// <param name="writer">The writer value.</param>
-    /// <param name="value">The value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Serializes an interface message using its runtime concrete type when available.</summary>
+    /// <param name="writer">The MessagePack writer that receives the concrete message.</param>
+    /// <param name="value">The interface value to serialize.</param>
+    /// <param name="options">The serializer options whose resolver supplies the concrete formatter.</param>
     public void Serialize(ref MessagePackWriter writer, TInterface value, MessagePackSerializerOptions options)
     {
         // A value that is still typed as an interface has no formatter of its own; the type declared for
@@ -56,12 +53,10 @@ public class InterfaceMessagePackFormatter<TInterface> :
         access.Serialize(access.GetFormatter(options.Resolver), ref writer, value, options);
     }
 
-    /// <summary>
-    /// Performs the deserialize operation.
-    /// </summary>
-    /// <param name="reader">The reader value.</param>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deserializes the implementation type declared for the interface contract.</summary>
+    /// <param name="reader">The MessagePack reader positioned at the concrete message.</param>
+    /// <param name="options">The serializer options whose resolver supplies the concrete formatter.</param>
+    /// <returns>The deserialized concrete message exposed as <typeparamref name="TInterface"/>.</returns>
     public TInterface Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
         var access = _cache.Get(_declaredConcreteType);

@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.Initializers.Conventions;
 
-/// <summary>
-/// A convention cache for type specified, which converts to the generic type requested
-/// </summary>
-/// <typeparam name="T"></typeparam>
+/// <summary>A convention cache for type specified, which converts to the generic type requested.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface IConventionTypeCache<in T>
     where T : class
 {
@@ -11,9 +9,9 @@ public interface IConventionTypeCache<in T>
     /// Returns the cached item for the specified type key, creating a new value
     /// if one has not yet been created.
     /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TResult"></typeparam>
-    /// <returns></returns>
+    /// <typeparam name="TKey">The key used for lookup.</typeparam>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
+    /// <returns>The or add.</returns>
     TResult GetOrAdd<TKey, TResult>()
         where TKey : class
         where TResult : class, T;

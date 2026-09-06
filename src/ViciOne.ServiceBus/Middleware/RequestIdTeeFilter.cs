@@ -2,10 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a request id tee filter implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Processes request id tee pipeline stages.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class RequestIdTeeFilter<TMessage> :
     TeeFilter<ConsumeContext<TMessage>>,
     IRequestIdTeeFilter<TMessage>
@@ -13,20 +11,16 @@ public class RequestIdTeeFilter<TMessage> :
 {
     readonly Lazy<IKeyPipeConnector<TMessage, Guid>> _keyConnections;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public RequestIdTeeFilter()
     {
         _keyConnections = new Lazy<IKeyPipeConnector<TMessage, Guid>>(ConnectKeyFilter);
     }
 
-    /// <summary>
-    /// Connects pipe.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects pipe.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPipe(Guid key, IPipe<ConsumeContext<TMessage>> pipe)
     {
         return _keyConnections.Value.ConnectPipe(key, pipe);

@@ -2,28 +2,18 @@ using System;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for rabbit mq batch publish configurator.
-/// </summary>
+/// <summary>Configures RabbitMQ client-side publish batching.</summary>
 public interface IRabbitMqBatchPublishConfigurator
 {
-    /// <summary>
-    /// If true, messages are queued up to send in batches to reduce broker round-trip calls
-    /// </summary>
+    /// <summary>Enables client-side batching to reduce broker round trips.</summary>
     bool Enabled { set; }
 
-    /// <summary>
-    /// The maximum number of messages to include in a batch
-    /// </summary>
+    /// <summary>The maximum number of messages to include in a batch.</summary>
     int MessageLimit { set; }
 
-    /// <summary>
-    /// A rough size limit for a batch of messages
-    /// </summary>
+    /// <summary>The approximate maximum combined message-body size of a batch, in bytes.</summary>
     int SizeLimit { set; }
 
-    /// <summary>
-    /// The time to wait for more messages before sending a batch. Should be small, like &lt; 10 milliseconds
-    /// </summary>
+    /// <summary>The maximum time to collect messages before publishing a partial batch.</summary>
     TimeSpan Timeout { set; }
 }

@@ -13,19 +13,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a connection context factory implementation.
-/// </summary>
+/// <summary>Creates supervised RabbitMQ connection contexts and invalidates them on broker shutdown.</summary>
 public class ConnectionContextFactory :
     IPipeContextFactory<ConnectionContext>
 {
     readonly Lazy<ConnectionFactory> _connectionFactory;
     readonly IRabbitMqHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <summary>Creates a connection factory from the effective RabbitMQ host configuration.</summary>
+    /// <param name="hostConfiguration">The host configuration used for every connection attempt.</param>
     public ConnectionContextFactory(IRabbitMqHostConfiguration hostConfiguration)
     {
         _hostConfiguration = hostConfiguration;
@@ -40,11 +36,9 @@ public class ConnectionContextFactory :
         });
     }
 
-    /// <summary>
-    /// Creates context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and monitors an owned RabbitMQ connection context.</summary>
+    /// <param name="supervisor">The supervisor that owns the context agent.</param>
+    /// <returns>The connection-context agent.</returns>
     public IPipeContextAgent<ConnectionContext> CreateContext(ISupervisor supervisor)
     {
         Task<ConnectionContext> context = CreateConnectionAsync(supervisor);
@@ -53,10 +47,7 @@ public class ConnectionContextFactory :
 
         Task HandleShutdownAsync(object sender, ShutdownEventArgs args)
         {
-            // Invalidate before stopping, and never dispose from inside this notification: an operation
-            // that is still unwinding — a channel creation, say — has to finish touching the connection
-            // before the connection goes away. RabbitMQ's callback is already asynchronous, so its
-            // returned task is the lifecycle owner and no detached ThreadPool hop is necessary.
+            // Invalidate immediately and defer disposal until every active connection lease has finished.
             if (context.Status == TaskStatus.RanToCompletion && context.Result is RabbitMqConnectionContext connectionContext)
             {
                 connectionContext.TopologyEntityCache.Invalidate();
@@ -92,13 +83,11 @@ public class ConnectionContextFactory :
         return contextHandle;
     }
 
-    /// <summary>
-    /// Creates active context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a scoped view over an existing active connection context.</summary>
+    /// <param name="supervisor">The supervisor that owns the scoped view.</param>
+    /// <param name="context">The handle for the shared connection context.</param>
+    /// <param name="cancellationToken">Cancellation linked to the scoped view.</param>
+    /// <returns>The active scoped context agent.</returns>
     public IActivePipeContextAgent<ConnectionContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ConnectionContext> context,
         CancellationToken cancellationToken)
     {
@@ -113,7 +102,7 @@ public class ConnectionContextFactory :
 
         if (!context.Connection.IsOpen)
         {
-            // The connection's own reason, not a locally invented one claiming the peer said this.
+            // Prefer the typed broker reply; synthesize a library reply only when none exists.
             var reason = context.Connection.CloseReason;
 
             throw new OperationInterruptedException(reason

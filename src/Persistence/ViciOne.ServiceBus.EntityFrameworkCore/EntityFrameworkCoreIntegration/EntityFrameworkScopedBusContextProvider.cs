@@ -8,6 +8,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// Selects the EF bus outbox for a scoped bus. Selection is deterministic: one registration is implicit, multiple
 /// registrations require exactly one explicit default. DbContext-specific APIs bypass this selector entirely.
 /// </summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 internal sealed class EntityFrameworkScopedBusContextProvider<TBus> : IScopedBusContextProvider<TBus>
     where TBus : class, IBus
 {

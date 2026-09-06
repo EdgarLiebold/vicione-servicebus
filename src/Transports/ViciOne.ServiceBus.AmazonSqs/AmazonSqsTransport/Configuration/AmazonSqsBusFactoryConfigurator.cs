@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Configuration;
 
-/// <summary>
-/// Provides an amazon sqs bus factory configurator implementation.
-/// </summary>
+/// <summary>Configures an Amazon SQS bus and its default temporary bus endpoint.</summary>
 public class AmazonSqsBusFactoryConfigurator :
     BusFactoryConfigurator,
     IAmazonSqsBusFactoryConfigurator,
@@ -17,10 +15,8 @@ public class AmazonSqsBusFactoryConfigurator :
     readonly IAmazonSqsHostConfiguration _hostConfiguration;
     readonly QueueReceiveSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="busConfiguration">The bus configuration value.</param>
+    /// <summary>Initializes an Amazon SQS bus-factory configurator.</summary>
+    /// <param name="busConfiguration">The bus configuration to update.</param>
     public AmazonSqsBusFactoryConfigurator(IAmazonSqsBusConfiguration busConfiguration)
         : base(busConfiguration)
     {
@@ -31,64 +27,46 @@ public class AmazonSqsBusFactoryConfigurator :
         _settings = new QueueReceiveSettings(busConfiguration.BusEndpointConfiguration, queueName, false, true);
     }
 
-    /// <summary>
-    /// Gets or sets the wait time seconds value.
-    /// </summary>
+    /// <summary>Sets the default Amazon SQS long-poll wait time, in seconds.</summary>
     public ushort WaitTimeSeconds
     {
         set => _settings.WaitTimeSeconds = AmazonSqsReceiveSettingsLimits.WaitTimeSeconds(value);
     }
 
-    /// <summary>
-    /// Gets or sets the durable value.
-    /// </summary>
+    /// <summary>Sets whether the default bus queue is retained when the bus stops.</summary>
     public bool Durable
     {
         set => _settings.Durable = value;
     }
 
-    /// <summary>
-    /// Gets or sets the auto delete value.
-    /// </summary>
+    /// <summary>Sets whether the default bus queue is deleted when the bus stops.</summary>
     public bool AutoDelete
     {
         set => _settings.AutoDelete = value;
     }
 
-    /// <summary>
-    /// Gets or sets the purge on startup value.
-    /// </summary>
+    /// <summary>Sets whether available messages are purged from the default bus queue during startup.</summary>
     public bool PurgeOnStartup
     {
         set => _settings.PurgeOnStartup = value;
     }
 
-    /// <summary>
-    /// Performs the override default bus endpoint queue name operation.
-    /// </summary>
-    /// <param name="value">The value.</param>
+    /// <summary>Overrides the generated name of the default bus endpoint queue.</summary>
+    /// <param name="value">The queue name to use.</param>
     public void OverrideDefaultBusEndpointQueueName(string value)
     {
         _settings.EntityName = value;
     }
 
-    /// <summary>
-    /// Gets the queue attributes value.
-    /// </summary>
+    /// <summary>Gets the Amazon SQS attributes applied to the default bus queue.</summary>
     public IDictionary<string, object> QueueAttributes => _settings.QueueAttributes;
-    /// <summary>
-    /// Gets the queue subscription attributes value.
-    /// </summary>
+    /// <summary>Gets the Amazon SNS subscription attributes applied to subscriptions targeting the default bus queue.</summary>
     public IDictionary<string, object> QueueSubscriptionAttributes => _settings.QueueSubscriptionAttributes;
-    /// <summary>
-    /// Gets the queue tags value.
-    /// </summary>
+    /// <summary>Gets the tags applied to the default bus queue.</summary>
     public IDictionary<string, string> QueueTags => _settings.QueueTags;
 
-    /// <summary>
-    /// Performs the host operation.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Applies frozen Amazon SQS host settings to the bus.</summary>
+    /// <param name="settings">The host settings to use.</param>
     public void Host(AmazonSqsHostSettings settings)
     {
         _busConfiguration.HostConfiguration.Settings = settings;
@@ -108,11 +86,9 @@ public class AmazonSqsBusFactoryConfigurator :
         configureTopology?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures Amazon SNS publish topology for a runtime message type.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="configure">An optional callback that configures the message publish topology.</param>
     public void Publish(Type messageType, Action<IAmazonSqsMessagePublishTopologyConfigurator>? configure = null)
     {
         var configurator = _busConfiguration.Topology.Publish.GetMessageTopology(messageType);
@@ -120,73 +96,57 @@ public class AmazonSqsBusFactoryConfigurator :
         configure?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Gets the send topology value.
-    /// </summary>
+    /// <summary>Gets the Amazon SQS send-topology configurator.</summary>
     public new IAmazonSqsSendTopologyConfigurator SendTopology => _busConfiguration.Topology.Send;
-    /// <summary>
-    /// Gets the publish topology value.
-    /// </summary>
+    /// <summary>Gets the Amazon SNS publish-topology configurator.</summary>
     public new IAmazonSqsPublishTopologyConfigurator PublishTopology => _busConfiguration.Topology.Publish;
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Configures an Amazon SQS receive endpoint from an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null"/> to use the configured default.</param>
+    /// <param name="configureEndpoint">An optional Amazon SQS-specific endpoint callback.</param>
     public void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IAmazonSqsReceiveEndpointConfigurator>? configureEndpoint)
     {
         _hostConfiguration.ReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Configures a receive endpoint from an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null"/> to use the configured default.</param>
+    /// <param name="configureEndpoint">An optional transport-neutral endpoint callback.</param>
     public void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint)
     {
         _hostConfiguration.ReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Configures an Amazon SQS receive endpoint for a named queue.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configureEndpoint">The Amazon SQS-specific endpoint callback.</param>
     public void ReceiveEndpoint(string queueName, Action<IAmazonSqsReceiveEndpointConfigurator> configureEndpoint)
     {
         _hostConfiguration.ReceiveEndpoint(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Configures a receive endpoint for a named Amazon SQS queue.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configureEndpoint">The transport-neutral endpoint callback.</param>
     public void ReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint)
     {
         _hostConfiguration.ReceiveEndpoint(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Creates bus endpoint configuration.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the receive-endpoint configuration for the default bus queue.</summary>
+    /// <param name="configure">An optional transport-neutral endpoint callback.</param>
+    /// <returns>The configured default bus endpoint.</returns>
     public IReceiveEndpointConfiguration CreateBusEndpointConfiguration(Action<IReceiveEndpointConfigurator>? configure)
     {
         return _busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration(_settings, _busConfiguration.BusEndpointConfiguration, configure);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the bus and requires a nonempty default bus queue name.</summary>
+    /// <returns>All detected validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         foreach (var result in base.Validate())

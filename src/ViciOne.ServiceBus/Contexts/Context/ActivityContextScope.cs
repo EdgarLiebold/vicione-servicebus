@@ -5,20 +5,16 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>
-/// Adds a payload scope while preserving transport-independent activity metadata.
-/// </summary>
+/// <summary>Adds a payload scope while preserving transport-independent activity metadata.</summary>
 public abstract class ActivityContextScope :
     ConsumeContextScope,
     ActivityContext
 {
     readonly ActivityContext _activityContext;
 
-    /// <summary>
-    /// Initializes the scope for the specified activity context.
-    /// </summary>
+    /// <summary>Initializes the scope for the specified activity context.</summary>
     /// <param name="activityContext">The activity context.</param>
-    /// <param name="payloads">The scoped payloads.</param>
+    /// <param name="payloads">The payloads.</param>
     protected ActivityContextScope(ActivityContext activityContext, params object[] payloads)
         : base(activityContext, payloads)
     {

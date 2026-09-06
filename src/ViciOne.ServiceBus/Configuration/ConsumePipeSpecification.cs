@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a consume pipe specification implementation.
-/// </summary>
+/// <summary>Describes requirements for consume pipe.</summary>
 public class ConsumePipeSpecification :
     IConsumePipeConfigurator,
     IConsumePipeSpecification
@@ -25,9 +23,7 @@ public class ConsumePipeSpecification :
     readonly SagaConfigurationObservable _sagaObservers;
     readonly List<IPipeSpecification<ConsumeContext>> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public ConsumePipeSpecification()
     {
         _prePipeSpecifications = new List<IPipeSpecification<ConsumeContext>>();
@@ -44,10 +40,8 @@ public class ConsumePipeSpecification :
         AutoStart = true;
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumeContext> specification)
     {
         lock (_lock)
@@ -59,51 +53,41 @@ public class ConsumePipeSpecification :
         }
     }
 
-    /// <summary>
-    /// Connects consumer configuration observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consumer configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumerConfigurationObserver(IConsumerConfigurationObserver observer)
     {
         return _consumerObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects saga configuration observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects saga configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSagaConfigurationObserver(ISagaConfigurationObserver observer)
     {
         return _sagaObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects handler configuration observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects handler configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectHandlerConfigurationObserver(IHandlerConfigurationObserver observer)
     {
         return _handlerObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects activity configuration observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects activity configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectActivityConfigurationObserver(IActivityConfigurationObserver observer)
     {
         return _activityObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification<T>(IPipeSpecification<ConsumeContext<T>> specification)
         where T : class
     {
@@ -112,10 +96,8 @@ public class ConsumePipeSpecification :
         messageSpecification.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Adds pre pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pre pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPrePipeSpecification(IPipeSpecification<ConsumeContext> specification)
     {
         lock (_lock)
@@ -127,28 +109,22 @@ public class ConsumePipeSpecification :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the auto start value.
-    /// </summary>
+    /// <summary>Gets or sets the auto start.</summary>
     public bool AutoStart { get; set; }
 
-    /// <summary>
-    /// Consumes r configured.
-    /// </summary>
-    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Consumes r configured.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void ConsumerConfigured<TConsumer>(IConsumerConfigurator<TConsumer> configurator)
         where TConsumer : class
     {
         _consumerObservers.ConsumerConfigured(configurator);
     }
 
-    /// <summary>
-    /// Consumes r message configured.
-    /// </summary>
-    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Consumes r message configured.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void ConsumerMessageConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, TMessage> configurator)
         where TConsumer : class
         where TMessage : class
@@ -156,35 +132,29 @@ public class ConsumePipeSpecification :
         _consumerObservers.ConsumerMessageConfigured(configurator);
     }
 
-    /// <summary>
-    /// Performs the saga configured operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that saga has been configured.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
         where TSaga : class
     {
         _sagaObservers.SagaConfigured(configurator);
     }
 
-    /// <summary>
-    /// Performs the state machine saga configured operation.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="stateMachine">The state machine value.</param>
+    /// <summary>Reports that state machine saga has been configured.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="stateMachine">The state machine.</param>
     public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
         where TInstance : class
     {
         _sagaObservers.StateMachineSagaConfigured(configurator, stateMachine);
     }
 
-    /// <summary>
-    /// Performs the saga message configured operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that saga message has been configured.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
         where TSaga : class
         where TMessage : class
@@ -192,24 +162,20 @@ public class ConsumePipeSpecification :
         _sagaObservers.SagaMessageConfigured(configurator);
     }
 
-    /// <summary>
-    /// Performs the handler configured operation.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that handler has been configured.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void HandlerConfigured<TMessage>(IHandlerConfigurator<TMessage> configurator)
         where TMessage : class
     {
         _handlerObservers.HandlerConfigured(configurator);
     }
 
-    /// <summary>
-    /// Performs the activity configured operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="compensateAddress">The compensate address value.</param>
+    /// <summary>Reports that activity has been configured.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="compensateAddress">The compensate address.</param>
     public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
         where TActivity : class
         where TArguments : class
@@ -217,12 +183,10 @@ public class ConsumePipeSpecification :
         _activityObservers.ActivityConfigured(configurator, compensateAddress);
     }
 
-    /// <summary>
-    /// Performs the execute activity configured operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that execute activity has been configured.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
         where TActivity : class
         where TArguments : class
@@ -230,12 +194,10 @@ public class ConsumePipeSpecification :
         _activityObservers.ExecuteActivityConfigured(configurator);
     }
 
-    /// <summary>
-    /// Performs the compensate activity configured operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that compensate activity has been configured.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
         where TActivity : class
         where TLog : class
@@ -243,10 +205,8 @@ public class ConsumePipeSpecification :
         _activityObservers.CompensateActivityConfigured(configurator);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         foreach (var result in _specifications.SelectMany(x => x.Validate()))
@@ -262,11 +222,9 @@ public class ConsumePipeSpecification :
         }
     }
 
-    /// <summary>
-    /// Gets message specification.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message specification.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The message specification.</returns>
     public IMessageConsumePipeSpecification<T> GetMessageSpecification<T>()
         where T : class
     {
@@ -278,20 +236,16 @@ public class ConsumePipeSpecification :
         }
     }
 
-    /// <summary>
-    /// Connects consume pipe specification observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume pipe specification observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumePipeSpecificationObserver(IConsumePipeSpecificationObserver observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Performs the build consume pipe operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds consume pipe.</summary>
+    /// <returns>The configured consume pipe.</returns>
     public IConsumePipe BuildConsumePipe()
     {
         var filter = new ConsumeContextMessageTypeFilter();
@@ -306,10 +260,8 @@ public class ConsumePipeSpecification :
         return new ConsumePipe(this, filter, configurator.Build(), AutoStart);
     }
 
-    /// <summary>
-    /// Creates consume pipe specification.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates consume pipe specification.</summary>
+    /// <returns>The created consume pipe specification.</returns>
     public IConsumePipeSpecification CreateConsumePipeSpecification()
     {
         var specification = new ConsumePipeSpecification();

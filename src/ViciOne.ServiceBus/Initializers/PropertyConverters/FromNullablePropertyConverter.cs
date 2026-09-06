@@ -2,10 +2,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 
-/// <summary>
-/// Provides a from nullable property converter implementation.
-/// </summary>
-/// <typeparam name="TResult">The t result type.</typeparam>
+/// <summary>Converts from nullable property values.</summary>
+/// <typeparam name="TResult">The result produced by the operation.</typeparam>
 public class FromNullablePropertyConverter<TResult> :
     IPropertyConverter<TResult, TResult?>
     where TResult : struct
@@ -17,21 +15,17 @@ public class FromNullablePropertyConverter<TResult> :
 }
 
 
-/// <summary>
-/// Provides a from nullable property converter implementation.
-/// </summary>
-/// <typeparam name="TResult">The t result type.</typeparam>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Converts from nullable property values.</summary>
+/// <typeparam name="TResult">The result produced by the operation.</typeparam>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class FromNullablePropertyConverter<TResult, TInput> :
     IPropertyConverter<TResult, TInput?>
     where TInput : struct
 {
     readonly IPropertyConverter<TResult, TInput> _converter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="converter">The converter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="converter">The converter.</param>
     public FromNullablePropertyConverter(IPropertyConverter<TResult, TInput> converter)
     {
         _converter = converter;

@@ -1,29 +1,23 @@
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a state machine activity selector implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Selects state machine activity values.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class StateMachineActivitySelector<TSaga> :
     IStateMachineActivitySelector<TSaga>
     where TSaga : class, SagaStateMachineInstance
 {
     readonly EventActivityBinder<TSaga> _binder;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="binder">The binder value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="binder">The binder.</param>
     public StateMachineActivitySelector(EventActivityBinder<TSaga> binder)
     {
         _binder = binder;
     }
 
-    /// <summary>
-    /// Performs the of type operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Restricts the operation to the specified type.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public EventActivityBinder<TSaga> OfType<TActivity>()
         where TActivity : class, IStateMachineActivity<TSaga>
     {
@@ -34,11 +28,9 @@ public class StateMachineActivitySelector<TSaga> :
 }
 
 
-/// <summary>
-/// Provides a state machine activity selector implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Selects state machine activity values.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class StateMachineActivitySelector<TSaga, TMessage> :
     IStateMachineActivitySelector<TSaga, TMessage>
     where TSaga : class, SagaStateMachineInstance
@@ -46,20 +38,16 @@ public class StateMachineActivitySelector<TSaga, TMessage> :
 {
     readonly EventActivityBinder<TSaga, TMessage> _binder;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="binder">The binder value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="binder">The binder.</param>
     public StateMachineActivitySelector(EventActivityBinder<TSaga, TMessage> binder)
     {
         _binder = binder;
     }
 
-    /// <summary>
-    /// Performs the of type operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Restricts the operation to the specified type.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public EventActivityBinder<TSaga, TMessage> OfType<TActivity>()
         where TActivity : class, IStateMachineActivity<TSaga, TMessage>
     {
@@ -68,11 +56,9 @@ public class StateMachineActivitySelector<TSaga, TMessage> :
         return _binder.Add(activity);
     }
 
-    /// <summary>
-    /// Performs the of instance type operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Restricts the operation to the saga instance type.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public EventActivityBinder<TSaga, TMessage> OfInstanceType<TActivity>()
         where TActivity : class, IStateMachineActivity<TSaga>
     {

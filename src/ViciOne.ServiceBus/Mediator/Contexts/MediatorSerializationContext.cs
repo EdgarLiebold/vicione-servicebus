@@ -5,34 +5,28 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Mediator.Contexts;
 
-/// <summary>
-/// Provides a mediator serialization context implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Carries state for mediator serialization operations.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class MediatorSerializationContext<TMessage> :
     BaseSerializerContext
     where TMessage : class
 {
     readonly TMessage _message;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="deserializer">The deserializer value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="supportedMessageTypes">The supported message types value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="deserializer">The deserializer.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="message">The message to process.</param>
+    /// <param name="supportedMessageTypes">The supported message types.</param>
     public MediatorSerializationContext(IObjectDeserializer deserializer, MessageContext context, TMessage message, string[] supportedMessageTypes)
         : base(deserializer, context, supportedMessageTypes)
     {
         _message = message;
     }
 
-    /// <summary>
-    /// Attempts to get message.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
+    /// <summary>Attempts to get message.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">Receives the message produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool TryGetMessage<T>([NotNullWhen(true)] out T? message)
         where T : class
@@ -47,11 +41,9 @@ public class MediatorSerializationContext<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get message.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="message">The message value.</param>
+    /// <summary>Attempts to get message.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="message">Receives the message produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message)
     {
@@ -65,44 +57,36 @@ public class MediatorSerializationContext<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Gets message serializer.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message serializer.</summary>
+    /// <returns>The message serializer.</returns>
     public override IMessageSerializer GetMessageSerializer()
     {
         throw new NotSupportedException("The in-process mediator does not expose a transport message serializer.");
     }
 
-    /// <summary>
-    /// Gets message serializer.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="envelope">The envelope value.</param>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message serializer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="envelope">The envelope.</param>
+    /// <param name="message">The message to process.</param>
+    /// <returns>The message serializer.</returns>
     public override IMessageSerializer GetMessageSerializer<T>(MessageEnvelope envelope, T message)
     {
         throw new NotSupportedException("The in-process mediator does not expose a transport message serializer.");
     }
 
-    /// <summary>
-    /// Gets message serializer.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="messageTypes">The message types value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message serializer.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="messageTypes">The message types.</param>
+    /// <returns>The message serializer.</returns>
     public override IMessageSerializer GetMessageSerializer(object message, string[] messageTypes)
     {
         throw new NotSupportedException("The in-process mediator does not expose a transport message serializer.");
     }
 
-    /// <summary>
-    /// Performs the to dictionary operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to dictionary.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <returns>The converted dictionary.</returns>
     public override Dictionary<string, object> ToDictionary<T>(T? message)
         where T : class
     {

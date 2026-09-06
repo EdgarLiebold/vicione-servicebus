@@ -10,10 +10,8 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>
-/// Provides an indexed saga dictionary implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Stores indexed saga values by key.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class IndexedSagaDictionary<TSaga>
     where TSaga : class, ISaga
 {
@@ -22,9 +20,7 @@ public class IndexedSagaDictionary<TSaga>
     readonly SemaphoreSlim _inUse = new SemaphoreSlim(1);
     readonly object _lock = new object();
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public IndexedSagaDictionary()
     {
         _indices = new Dictionary<string, IIndexedSagaProperty<TSaga>>();
@@ -34,10 +30,8 @@ public class IndexedSagaDictionary<TSaga>
         _indexById = _indices["CorrelationId"];
     }
 
-    /// <summary>
-    /// Gets or sets the value at the specified index.
-    /// </summary>
-    /// <param name="sagaId">The saga id value.</param>
+    /// <summary>Gets or sets the value at the specified index.</summary>
+    /// <param name="sagaId">The saga id.</param>
     public SagaInstance<TSaga>? this[Guid sagaId]
     {
         get
@@ -47,9 +41,7 @@ public class IndexedSagaDictionary<TSaga>
         }
     }
 
-    /// <summary>
-    /// Gets the count value.
-    /// </summary>
+    /// <summary>Gets the count.</summary>
     public int Count
     {
         get
@@ -59,28 +51,22 @@ public class IndexedSagaDictionary<TSaga>
         }
     }
 
-    /// <summary>
-    /// Performs the mark in use operation.
-    /// </summary>
+    /// <summary>Marks in use.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task MarkInUseAsync(CancellationToken cancellationToken)
     {
         return _inUse.WaitAsync(cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the release operation.
-    /// </summary>
+    /// <summary>Releases the owned resource.</summary>
     public void Release()
     {
         _inUse.Release();
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="instance">The instance.</param>
     public void Add(SagaInstance<TSaga> instance)
     {
         lock (_lock)
@@ -90,10 +76,8 @@ public class IndexedSagaDictionary<TSaga>
         }
     }
 
-    /// <summary>
-    /// Performs the remove operation.
-    /// </summary>
-    /// <param name="item">The item value.</param>
+    /// <summary>Removes the selected value.</summary>
+    /// <param name="item">The item.</param>
     public void Remove(SagaInstance<TSaga> item)
     {
         lock (_lock)
@@ -103,11 +87,9 @@ public class IndexedSagaDictionary<TSaga>
         }
     }
 
-    /// <summary>
-    /// Performs the where operation.
-    /// </summary>
-    /// <param name="query">The query value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Filters values using the supplied predicate.</summary>
+    /// <param name="query">The query.</param>
+    /// <returns>The enumerable produced by the operation.</returns>
     public IEnumerable<SagaInstance<TSaga>> Where(ISagaQuery<TSaga> query)
     {
         lock (_lock)
@@ -124,12 +106,10 @@ public class IndexedSagaDictionary<TSaga>
         }
     }
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <typeparam name="TResult">The t result type.</typeparam>
-    /// <param name="transformer">The transformer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Selects the matching value.</summary>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
+    /// <param name="transformer">The transformer.</param>
+    /// <returns>The selected value.</returns>
     public IEnumerable<TResult> Select<TResult>(Func<TSaga, TResult> transformer)
     {
         lock (_lock)

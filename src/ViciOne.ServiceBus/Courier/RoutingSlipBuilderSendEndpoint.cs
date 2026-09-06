@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Courier;
 
-/// <summary>
-/// Provides a routing slip builder send endpoint implementation.
-/// </summary>
+/// <summary>Provides an endpoint for routing slip builder send.</summary>
 public class RoutingSlipBuilderSendEndpoint :
     ISendEndpoint,
     Advanced.IAdvancedSendEndpoint
@@ -23,14 +21,12 @@ public class RoutingSlipBuilderSendEndpoint :
     readonly RoutingSlipEventContents _include;
     readonly SendObservable _observers;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
-    /// <param name="destinationAddress">The destination address value.</param>
-    /// <param name="events">The events value.</param>
-    /// <param name="activityName">The activity name value.</param>
-    /// <param name="include">The include value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
+    /// <param name="destinationAddress">The destination address.</param>
+    /// <param name="events">The events.</param>
+    /// <param name="activityName">The activity name.</param>
+    /// <param name="include">The include.</param>
     public RoutingSlipBuilderSendEndpoint(IRoutingSlipSendEndpointTarget builder, Uri destinationAddress, RoutingSlipEvents events, string? activityName,
         RoutingSlipEventContents include = RoutingSlipEventContents.All)
     {
@@ -42,13 +38,11 @@ public class RoutingSlipBuilderSendEndpoint :
         _destinationAddress = destinationAddress;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
@@ -58,14 +52,12 @@ public class RoutingSlipBuilderSendEndpoint :
         return SendAsync(message, Pipe.Empty<SendContext<T>>(), cancellationToken);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -81,14 +73,12 @@ public class RoutingSlipBuilderSendEndpoint :
         _builder.AddSubscription(_destinationAddress, _events, _include, _activityName, context.GetMessageEnvelope());
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -100,12 +90,10 @@ public class RoutingSlipBuilderSendEndpoint :
         return SendAsync(message, (IPipe<SendContext<T>>)pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(object message, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -116,13 +104,11 @@ public class RoutingSlipBuilderSendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="messageType">The message type value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="messageType">The runtime type of the message contract.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -133,13 +119,11 @@ public class RoutingSlipBuilderSendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -152,14 +136,12 @@ public class RoutingSlipBuilderSendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -173,13 +155,11 @@ public class RoutingSlipBuilderSendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="values">The values.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
@@ -192,14 +172,12 @@ public class RoutingSlipBuilderSendEndpoint :
         await SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="values">The values.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -212,14 +190,12 @@ public class RoutingSlipBuilderSendEndpoint :
         await SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="values">The values.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -234,11 +210,9 @@ public class RoutingSlipBuilderSendEndpoint :
         await SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects send observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _observers.Connect(observer);

@@ -15,9 +15,7 @@ using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Middleware;
-/// <summary>
-/// Receives messages from AmazonSQS, pushing them to the InboundPipe of the service endpoint.
-/// </summary>
+/// <summary>Long-polls Amazon SQS and dispatches received messages through the endpoint pipeline.</summary>
 public sealed class AmazonSqsMessageReceiver :
     ConsumerAgent<string>
 {
@@ -26,11 +24,9 @@ public sealed class AmazonSqsMessageReceiver :
     readonly IPartitionedTaskExecutor<Message> _executorPool;
     readonly ReceiveSettings _receiveSettings;
 
-    /// <summary>
-    /// Polls Amazon SQS for messages and dispatches them to the receive pipeline.
-    /// </summary>
-    /// <param name="client">The model context for the consumer</param>
-    /// <param name="context">The topology</param>
+    /// <summary>Polls Amazon SQS for messages and dispatches them to the receive pipeline.</summary>
+    /// <param name="client">The client context used for queue and settlement operations.</param>
+    /// <param name="context">The receive endpoint that dispatches messages.</param>
     public AmazonSqsMessageReceiver(ClientContext client, SqsReceiveEndpointContext context)
         : base(context, StringComparer.Ordinal)
     {
@@ -44,11 +40,9 @@ public sealed class AmazonSqsMessageReceiver :
         TrySetConsumeTask(ConsumeAsync());
     }
 
-    /// <summary>
-    /// Performs the active and actual agents completed operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Waits for child agents to stop, then drains and disposes the ordered-delivery executor.</summary>
+    /// <param name="context">The receiver stop context.</param>
+    /// <returns>A task that completes when receiver-owned asynchronous resources have stopped.</returns>
     protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
         await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);

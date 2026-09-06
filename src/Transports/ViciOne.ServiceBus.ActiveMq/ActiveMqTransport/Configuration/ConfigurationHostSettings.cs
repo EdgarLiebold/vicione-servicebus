@@ -5,13 +5,11 @@ using Apache.NMS;
 
 namespace ViciOne.ServiceBus.ActiveMq.Configuration;
 
-/// <summary>
-/// Provides a configuration host settings implementation.
-/// </summary>
+/// <summary>Builds validated Apache NMS broker and failover addresses from ActiveMQ host settings.</summary>
 public abstract class ConfigurationHostSettings :
     ActiveMqHostSettings
 {
-    // ActiveMQ Failover connection parameters https://activemq.apache.org/components/classic/documentation/failover-transport-reference
+    // Failover transport parameters are encoded separately from broker transport parameters.
     static readonly HashSet<string> _failoverArguments =
         new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
@@ -36,10 +34,8 @@ public abstract class ConfigurationHostSettings :
             "priorityURIs"
         };
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Initializes provider settings from a validated ActiveMQ host address.</summary>
+    /// <param name="address">The broker host address.</param>
     protected ConfigurationHostSettings(Uri address)
     {
         var hostAddress = new ActiveMqHostAddress(address);
@@ -55,78 +51,46 @@ public abstract class ConfigurationHostSettings :
         FailoverHosts = Array.Empty<Uri>();
     }
 
-    /// <summary>
-    /// Gets or sets the failover hosts value.
-    /// </summary>
+    /// <summary>Gets or sets the alternate broker addresses used for provider failover.</summary>
     public IReadOnlyList<Uri> FailoverHosts { get; set; }
-    /// <summary>
-    /// Gets the transport options value.
-    /// </summary>
+    /// <summary>Gets the native Apache NMS URI options.</summary>
     public Dictionary<string, string> TransportOptions { get; }
 
-    /// <summary>
-    /// Gets the host scheme value.
-    /// </summary>
+    /// <summary>Gets the native scheme used for an individual broker URI.</summary>
     public abstract string HostScheme { get; }
 
-    /// <summary>
-    /// Gets the failover scheme value.
-    /// </summary>
+    /// <summary>Gets the native failover URI scheme.</summary>
     public abstract string FailoverScheme { get; }
 
-    /// <summary>
-    /// Gets the scheme value.
-    /// </summary>
+    /// <summary>Gets the native scheme used for the primary broker URI.</summary>
     public abstract string Scheme { get; }
 
-    /// <summary>
-    /// Gets the nms scheme value.
-    /// </summary>
+    /// <summary>Gets the base Apache NMS provider scheme.</summary>
     public abstract string NmsScheme { get; }
 
-    /// <summary>
-    /// Gets the failover connection setting prefix value.
-    /// </summary>
+    /// <summary>Gets the prefix applied to connection-wide failover options.</summary>
     public abstract string FailoverConnectionSettingPrefix { get; }
 
-    /// <summary>
-    /// Gets the host value.
-    /// </summary>
+    /// <summary>Gets the primary broker host name.</summary>
     public string Host { get; }
-    /// <summary>
-    /// Gets or sets the port value.
-    /// </summary>
+    /// <summary>Gets or sets the primary broker port.</summary>
     public int Port { get; set; }
-    /// <summary>
-    /// Gets the virtual host value.
-    /// </summary>
+    /// <summary>Gets the configured broker namespace path.</summary>
     public string VirtualHost { get; }
-    /// <summary>
-    /// Gets or sets the username value.
-    /// </summary>
+    /// <summary>Gets or sets the broker user name.</summary>
     public string Username { get; set; }
-    /// <summary>
-    /// Gets or sets the password value.
-    /// </summary>
+    /// <summary>Gets or sets the broker password.</summary>
     public string Password { get; set; }
-    /// <summary>
-    /// Gets or sets the use ssl value.
-    /// </summary>
+    /// <summary>Gets or sets whether the native provider uses TLS.</summary>
     public bool UseSsl { get; set; }
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the canonical service-bus host address without credentials or native options.</summary>
     public Uri HostAddress => FormatHostAddress();
-    /// <summary>
-    /// Gets the broker address value.
-    /// </summary>
+    /// <summary>Gets the native Apache NMS connection URI, including failover hosts and provider options.</summary>
     public Uri BrokerAddress => FormatBrokerAddress();
 
-    /// <summary>
-    /// Creates connection.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an Apache NMS connection for the configured broker address and credentials.</summary>
+    /// <returns>The unstarted native connection.</returns>
     public IConnection CreateConnection()
     {
         var factory = new NMSConnectionFactory(BrokerAddress);
@@ -142,14 +106,13 @@ public abstract class ConfigurationHostSettings :
 
     Uri FormatBrokerAddress()
     {
-        // create broker URI: http://activemq.apache.org/nms/activemq-uri-configuration.html
         if (FailoverHosts.Count > 0)
         {
-            //filter only parameters which are not failover parameters
+            // Each broker URI receives only transport-specific parameters.
             var failoverServerPart = GetQueryString(kv => !IsFailoverArgument(kv.Key));
             var failoverPart = string.Join(",", FailoverHosts
                 .Select(failoverHost => FormatFailoverHost(failoverHost, failoverServerPart)));
-            //filter failover parameters only. Apache.NMS.ActiveMQ requires prefix "transport." for failover parameters
+            // Apache.NMS.ActiveMQ requires the "transport." prefix on failover parameters.
             var failoverQueryPart = GetQueryString(kv => IsFailoverArgument(kv.Key), FailoverConnectionSettingPrefix);
             return new Uri($"{FailoverScheme}:({failoverPart}){failoverQueryPart}");
         }
@@ -175,10 +138,8 @@ public abstract class ConfigurationHostSettings :
         return $"?{queryString}";
     }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the primary TCP or TLS broker endpoint without credentials or provider options.</summary>
+    /// <returns>The absolute broker endpoint string.</returns>
     public override string ToString()
     {
         return new UriBuilder

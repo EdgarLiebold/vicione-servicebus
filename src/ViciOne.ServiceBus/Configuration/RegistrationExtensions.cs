@@ -9,18 +9,15 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for core registration.
-/// </summary>
+/// <summary>Provides extension methods for core registration.</summary>
 public static class RegistrationExtensions
 {
-    /// <summary>
-    /// Adds the consumer, allowing configuration when it is configured on an endpoint
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <typeparam name="T">The consumer type</typeparam>
-    /// <typeparam name="TDefinition">The consumer definition type</typeparam>
+    /// <summary>Adds the consumer, allowing configuration when it is configured on an endpoint.</summary>
+    /// <typeparam name="T">The consumer type.</typeparam>
+    /// <typeparam name="TDefinition">The consumer definition type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The consumer registration configurator produced by the operation.</returns>
     public static IConsumerRegistrationConfigurator<T> AddConsumer<T, TDefinition>(this IRegistrationConfigurator configurator,
         Action<IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
@@ -29,22 +26,18 @@ public static class RegistrationExtensions
         return configurator.AddConsumer(typeof(TDefinition), configure);
     }
 
-    /// <summary>
-    /// Adds all consumers in the specified assemblies
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="assemblies">The assemblies to scan for consumers</param>
+    /// <summary>Adds all consumers in the specified assemblies.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="assemblies">The assemblies to scan for consumers.</param>
     public static void AddConsumers(this IRegistrationConfigurator configurator, params Assembly[] assemblies)
     {
         AddConsumers(configurator, null, assemblies);
     }
 
-    /// <summary>
-    /// Adds all consumers that match the given filter in the specified assemblies
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="filter"></param>
-    /// <param name="assemblies">The assemblies to scan for consumers</param>
+    /// <summary>Adds all consumers that match the given filter in the specified assemblies.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="assemblies">The assemblies to scan for consumers.</param>
     public static void AddConsumers(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Assembly[] assemblies)
     {
         if (assemblies.Length == 0)
@@ -55,23 +48,19 @@ public static class RegistrationExtensions
         AddConsumers(configurator, filter, types.FindTypes(TypeClassification.Concrete | TypeClassification.Closed).ToArray());
     }
 
-    /// <summary>
-    /// Adds all consumers from the assembly containing the specified type that are in the same (or deeper) namespace.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="filter"></param>
-    /// <typeparam name="T">The anchor type</typeparam>
+    /// <summary>Adds all consumers from the assembly containing the specified type that are in the same (or deeper) namespace.</summary>
+    /// <typeparam name="T">The anchor type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public static void AddConsumersFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool>? filter = null)
     {
         AddConsumersFromNamespaceContaining(configurator, typeof(T), filter);
     }
 
-    /// <summary>
-    /// Adds all consumers in the specified assemblies matching the namespace
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="type">The type to use to identify the assembly and namespace to scan</param>
-    /// <param name="filter"></param>
+    /// <summary>Adds all consumers in the specified assemblies matching the namespace.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="type">The type to use to identify the assembly and namespace to scan.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public static void AddConsumersFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool>? filter = null)
     {
         if (type == null)
@@ -83,23 +72,19 @@ public static class RegistrationExtensions
         AddConsumers(configurator, filter, FindTypesInNamespace(type, RegistrationMetadata.IsConsumerOrDefinition));
     }
 
-    /// <summary>
-    /// Adds the specified consumer types
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Adds the specified consumer types.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="types">The state machine types to add.</param>
     /// ˆ
-    /// <param name="types">The state machine types to add</param>
     public static void AddConsumers(this IRegistrationConfigurator configurator, params Type[] types)
     {
         AddConsumers(configurator, null, types);
     }
 
-    /// <summary>
-    /// Adds the specified consumer types which match the given filter
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="filter"></param>
-    /// <param name="types">The consumer types to add</param>
+    /// <summary>Adds the specified consumer types which match the given filter.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="types">The consumer types to add.</param>
     public static void AddConsumers(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Type[] types)
     {
         filter ??= t => true;
@@ -121,28 +106,22 @@ public static class RegistrationExtensions
             configurator.AddConsumer(consumer.ConsumerType, consumer.DefinitionType);
     }
 
-    /// <summary>
-    /// Configure the default endpoint name formatter in the container
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Configure the default endpoint name formatter in the container.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public static void SetDefaultEndpointNameFormatter(this IRegistrationConfigurator configurator)
     {
         configurator.SetEndpointNameFormatter(DefaultEndpointNameFormatter.Instance);
     }
 
-    /// <summary>
-    /// Sets snake case endpoint name formatter.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Sets snake case endpoint name formatter.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public static void SetSnakeCaseEndpointNameFormatter(this IRegistrationConfigurator configurator)
     {
         configurator.SetEndpointNameFormatter(SnakeCaseEndpointNameFormatter.Instance);
     }
 
-    /// <summary>
-    /// Configure the Kebab Case endpoint name formatter
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Configure the Kebab Case endpoint name formatter.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public static void SetKebabCaseEndpointNameFormatter(this IRegistrationConfigurator configurator)
     {
         configurator.SetEndpointNameFormatter(KebabCaseEndpointNameFormatter.Instance);

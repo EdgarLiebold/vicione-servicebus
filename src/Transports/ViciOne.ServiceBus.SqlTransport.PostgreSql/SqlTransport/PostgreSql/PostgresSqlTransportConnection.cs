@@ -5,40 +5,30 @@ using Npgsql;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
-/// <summary>
-/// Provides a postgres sql transport connection implementation.
-/// </summary>
+/// <summary>Wraps an <see cref="NpgsqlConnection" /> for PostgreSQL SQL transport operations.</summary>
 public class PostgresSqlTransportConnection :
     IPostgresSqlTransportConnection
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connection">The connection value.</param>
+    /// <summary>Initializes the wrapper with an existing PostgreSQL connection.</summary>
+    /// <param name="connection">The connection owned by this wrapper.</param>
     public PostgresSqlTransportConnection(NpgsqlConnection connection)
     {
         Connection = connection;
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         return Connection.DisposeAsync();
     }
 
-    /// <summary>
-    /// Gets the connection value.
-    /// </summary>
+    /// <summary>Gets the underlying PostgreSQL connection.</summary>
     public NpgsqlConnection Connection { get; }
 
-    /// <summary>
-    /// Creates command.
-    /// </summary>
-    /// <param name="commandText">The command text value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a command associated with the underlying connection.</summary>
+    /// <param name="commandText">The SQL command text.</param>
+    /// <returns>A command whose connection is set to <see cref="Connection" />.</returns>
     public NpgsqlCommand CreateCommand(string commandText)
     {
         var command = new NpgsqlCommand(commandText);
@@ -47,31 +37,25 @@ public class PostgresSqlTransportConnection :
         return command;
     }
 
-    /// <summary>
-    /// Performs the open operation.
-    /// </summary>
+    /// <summary>Opens the underlying PostgreSQL connection.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task OpenAsync(CancellationToken cancellationToken = default)
     {
         return Connection.OpenAsync(cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the close operation.
-    /// </summary>
+    /// <summary>Closes the underlying PostgreSQL connection.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CloseAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Connection.CloseAsync();
     }
 
-    /// <summary>
-    /// Gets system database connection.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an administrative connection to the PostgreSQL <c>postgres</c> database.</summary>
+    /// <param name="options">The transport and optional administrator credentials.</param>
+    /// <returns>A connection configured for system-database migration operations.</returns>
     public static PostgresSqlTransportConnection GetSystemDatabaseConnection(SqlTransportOptions options)
     {
         var builder = CreateBuilder(options);
@@ -86,11 +70,9 @@ public class PostgresSqlTransportConnection :
         return new PostgresSqlTransportConnection(new NpgsqlConnection(builder.ToString()));
     }
 
-    /// <summary>
-    /// Gets database admin connection.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an administrative connection to the configured transport database.</summary>
+    /// <param name="options">The transport and optional administrator credentials.</param>
+    /// <returns>A connection configured for database migration operations.</returns>
     public static PostgresSqlTransportConnection GetDatabaseAdminConnection(SqlTransportOptions options)
     {
         var builder = CreateBuilder(options);
@@ -103,21 +85,17 @@ public class PostgresSqlTransportConnection :
         return new PostgresSqlTransportConnection(new NpgsqlConnection(builder.ToString()));
     }
 
-    /// <summary>
-    /// Gets database connection.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a connection to the configured transport database.</summary>
+    /// <param name="options">The transport connection options.</param>
+    /// <returns>A connection configured with the transport credentials.</returns>
     public static PostgresSqlTransportConnection GetDatabaseConnection(SqlTransportOptions options)
     {
         return new PostgresSqlTransportConnection(new NpgsqlConnection(CreateBuilder(options).ToString()));
     }
 
-    /// <summary>
-    /// Creates builder.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Combines a connection string and explicit options into a PostgreSQL connection-string builder.</summary>
+    /// <param name="options">The options to apply. Missing connection fields and provider defaults are written back to this instance.</param>
+    /// <returns>The resulting PostgreSQL connection-string builder.</returns>
     public static NpgsqlConnectionStringBuilder CreateBuilder(SqlTransportOptions options)
     {
         var builder = new NpgsqlConnectionStringBuilder(options.ConnectionString);
@@ -156,11 +134,9 @@ public class PostgresSqlTransportConnection :
         return builder;
     }
 
-    /// <summary>
-    /// Gets admin migration principal.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the PostgreSQL role name used for administrative migration grants.</summary>
+    /// <param name="options">The options containing administrator or transport credentials.</param>
+    /// <returns>The configured username without a server suffix, or <c>postgres</c> when no username is configured.</returns>
     public static string? GetAdminMigrationPrincipal(SqlTransportOptions options)
     {
         var principal = options.AdminUsername ?? options.Username ?? "postgres";

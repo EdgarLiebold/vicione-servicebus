@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a publish pipe specification implementation.
-/// </summary>
+/// <summary>Describes requirements for publish pipe.</summary>
 public class PublishPipeSpecification :
     IPublishPipeConfigurator,
     IPublishPipeSpecification
@@ -18,9 +16,7 @@ public class PublishPipeSpecification :
     readonly PublishPipeSpecificationObservable _observers;
     readonly List<IPipeSpecification<PublishContext>> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public PublishPipeSpecification()
     {
         _specifications = new List<IPipeSpecification<PublishContext>>();
@@ -28,10 +24,8 @@ public class PublishPipeSpecification :
         _observers = new PublishPipeSpecificationObservable();
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<PublishContext> specification)
     {
         ArgumentNullException.ThrowIfNull(specification);
@@ -45,11 +39,9 @@ public class PublishPipeSpecification :
         }
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification<T>(IPipeSpecification<PublishContext<T>> specification)
         where T : class
     {
@@ -79,20 +71,16 @@ public class PublishPipeSpecification :
         AddPipeSpecification(splitSpecification);
     }
 
-    /// <summary>
-    /// Connects publish pipe specification observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects publish pipe specification observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPublishPipeSpecificationObserver(IPublishPipeSpecificationObserver observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         lock (_lock)
@@ -103,11 +91,9 @@ public class PublishPipeSpecification :
         }
     }
 
-    /// <summary>
-    /// Gets message specification.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message specification.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The message specification.</returns>
     public IMessagePublishPipeSpecification<T> GetMessageSpecification<T>()
         where T : class
     {

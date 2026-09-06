@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.Advanced.Topology;
 
-/// <summary>
-/// Provides a consume topology implementation.
-/// </summary>
+/// <summary>Defines the topology for consume.</summary>
 public class ConsumeTopology :
     IConsumeTopologyConfigurator,
     IConsumeTopologyConfigurationObserver
@@ -22,10 +20,8 @@ public class ConsumeTopology :
     readonly ConcurrentDictionary<Type, IMessageTypeSelector> _messageTypeSelectorCache;
     readonly ConsumeTopologyConfigurationObservable _observers;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="maxQueueNameLength">The max queue name length value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="maxQueueNameLength">The max queue name length.</param>
     protected ConsumeTopology(int maxQueueNameLength = 1024)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(maxQueueNameLength, EntityNameShortener.MinimumMaximumLength);
@@ -56,41 +52,33 @@ public class ConsumeTopology :
         return GetMessageTopology<T>();
     }
 
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message topology.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <returns>The message topology.</returns>
     public IMessageConsumeTopologyConfigurator GetMessageTopology(Type messageType)
     {
         return _messageTypeSelectorCache.GetOrAdd(messageType, _ => Activation.Activate(messageType, new MessageTypeSelectorFactory(), this))
             .GetMessageTopology();
     }
 
-    /// <summary>
-    /// Creates temporary queue name.
-    /// </summary>
-    /// <param name="tag">The tag value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates temporary queue name.</summary>
+    /// <param name="tag">The tag.</param>
+    /// <returns>The created temporary queue name.</returns>
     public virtual string CreateTemporaryQueueName(string tag)
     {
         return EntityNameShortener.Shorten(DefaultEndpointNameFormatter.GetTemporaryQueueName(tag), _maxQueueNameLength);
     }
 
-    /// <summary>
-    /// Connects consume topology configuration observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume topology configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumeTopologyConfigurationObserver(IConsumeTopologyConfigurationObserver observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Performs the try add convention operation.
-    /// </summary>
-    /// <param name="convention">The convention value.</param>
+    /// <summary>Attempts to add convention.</summary>
+    /// <param name="convention">The convention.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryAddConvention(IConsumeTopologyConvention convention)
     {
@@ -113,20 +101,16 @@ public class ConsumeTopology :
         return true;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public virtual IEnumerable<ValidationResult> Validate()
     {
         return _messageTypes.Values.SelectMany(x => x.Value.Validate());
     }
 
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message topology.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The message topology.</returns>
     protected IMessageConsumeTopologyConfigurator<T> GetMessageTopology<T>()
         where T : class
     {
@@ -140,10 +124,8 @@ public class ConsumeTopology :
             ?? throw new InvalidOperationException($"The consume topology for {TypeCache<T>.ShortName} has an incompatible type.");
     }
 
-    /// <summary>
-    /// Performs the all operation.
-    /// </summary>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Returns every available value.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     protected bool All(Func<IMessageConsumeTopologyConfigurator, bool> callback)
     {
@@ -160,13 +142,11 @@ public class ConsumeTopology :
         return configurators.All(callback);
     }
 
-    /// <summary>
-    /// Performs the select many operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TResult">The t result type.</typeparam>
-    /// <param name="selector">The selector value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Selects many.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
+    /// <param name="selector">The selector.</param>
+    /// <returns>The selected many.</returns>
     protected IEnumerable<TResult> SelectMany<T, TResult>(Func<T, IEnumerable<TResult>> selector)
         where T : class
     {
@@ -183,11 +163,9 @@ public class ConsumeTopology :
         return configurators.Cast<T>().SelectMany(selector);
     }
 
-    /// <summary>
-    /// Performs the for each operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Applies the callback to every value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="callback">The callback invoked by the operation.</param>
     protected void ForEach<T>(Action<T> callback)
         where T : class
     {
@@ -210,11 +188,9 @@ public class ConsumeTopology :
         }
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates message topology.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The created message topology.</returns>
     protected virtual IMessageConsumeTopologyConfigurator CreateMessageTopology<T>()
         where T : class
     {
@@ -224,11 +200,9 @@ public class ConsumeTopology :
         return messageTopology;
     }
 
-    /// <summary>
-    /// Performs the on message topology created operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Reports that on message topology has been created.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="messageTopology">The message topology.</param>
     protected void OnMessageTopologyCreated<T>(IMessageConsumeTopologyConfigurator<T> messageTopology)
         where T : class
     {

@@ -5,31 +5,25 @@ using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
-/// <summary>
-/// Provides an in memory message move transport implementation.
-/// </summary>
+/// <summary>Transports in memory message move messages.</summary>
 public class InMemoryMessageMoveTransport
 {
     readonly IInMemoryDelayProvider _delayProvider;
     readonly IMessageExchange<InMemoryTransportMessage> _exchange;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="delayProvider">The delay provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="exchange">The exchange.</param>
+    /// <param name="delayProvider">The delay provider.</param>
     protected InMemoryMessageMoveTransport(IMessageExchange<InMemoryTransportMessage> exchange, IInMemoryDelayProvider delayProvider)
     {
         _exchange = exchange;
         _delayProvider = delayProvider ?? throw new ArgumentNullException(nameof(delayProvider));
     }
 
-    /// <summary>
-    /// Performs the move operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="preSend">The pre send value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Moves the current message or entity.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="preSend">The pre send.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected async Task MoveAsync(ReceiveContext context, Action<InMemoryTransportMessage, SendHeaders> preSend)
     {
         var messageId = context.GetMessageId(NewId.NextGuid());

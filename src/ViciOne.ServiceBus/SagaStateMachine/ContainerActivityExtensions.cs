@@ -3,19 +3,15 @@ using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Provides extension methods for container activity.
-/// </summary>
+/// <summary>Provides extension methods for container activity.</summary>
 public static class ContainerActivityExtensions
 {
-    /// <summary>
-    /// Adds an activity to the state machine that is resolved from the container, rather than being initialized directly.
-    /// </summary>
-    /// <typeparam name="TInstance"></typeparam>
-    /// <typeparam name="TData"></typeparam>
-    /// <param name="binder"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Adds an activity to the state machine that is resolved from the container, rather than being initialized directly.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <param name="binder">The binder.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> Activity<TInstance, TData>(this EventActivityBinder<TInstance, TData> binder,
         Func<IStateMachineActivitySelector<TInstance, TData>, EventActivityBinder<TInstance, TData>> configure)
         where TInstance : class, SagaStateMachineInstance
@@ -26,13 +22,11 @@ public static class ContainerActivityExtensions
         return configure(selector);
     }
 
-    /// <summary>
-    /// Adds an activity to the state machine that is resolved from the container, rather than being initialized directly.
-    /// </summary>
-    /// <typeparam name="TInstance"></typeparam>
-    /// <param name="binder"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Adds an activity to the state machine that is resolved from the container, rather than being initialized directly.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="binder">The binder.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> Activity<TInstance>(this EventActivityBinder<TInstance> binder,
         Func<IStateMachineActivitySelector<TInstance>, EventActivityBinder<TInstance>> configure)
         where TInstance : class, SagaStateMachineInstance
@@ -42,14 +36,12 @@ public static class ContainerActivityExtensions
         return configure(selector);
     }
 
-    /// <summary>
-    /// Adds an activity to the state machine that is resolved from the container, but only handles Faulted behaviors
-    /// </summary>
-    /// <param name="binder"></param>
-    /// <param name="configure"></param>
-    /// <typeparam name="TInstance"></typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <returns></returns>
+    /// <summary>Adds an activity to the state machine that is resolved from the container, but only handles Faulted behaviors.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="binder">The binder.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> Activity<TInstance, TException>(this ExceptionActivityBinder<TInstance, TException> binder,
         Func<IStateMachineFaultedActivitySelector<TInstance, TException>, ExceptionActivityBinder<TInstance, TException>> configure)
         where TInstance : class, SagaStateMachineInstance
@@ -60,15 +52,13 @@ public static class ContainerActivityExtensions
         return configure(selector);
     }
 
-    /// <summary>
-    /// Adds an activity to the state machine that is resolved from the container, but only handles Faulted behaviors
-    /// </summary>
-    /// <param name="binder"></param>
-    /// <param name="configure"></param>
-    /// <typeparam name="TInstance"></typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <typeparam name="TMessage"></typeparam>
-    /// <returns></returns>
+    /// <summary>Adds an activity to the state machine that is resolved from the container, but only handles Faulted behaviors.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="binder">The binder.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TMessage, TException> Activity<TInstance, TMessage, TException>(
         this ExceptionActivityBinder<TInstance, TMessage, TException> binder,
         Func<IStateMachineFaultedActivitySelector<TInstance, TMessage, TException>, ExceptionActivityBinder<TInstance, TMessage, TException>> configure)

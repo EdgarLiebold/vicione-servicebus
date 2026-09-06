@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>
-/// A PipeContext, which as an agent can be Stopped, which disposes of the context making it unavailable
-/// </summary>
-/// <typeparam name="TContext"></typeparam>
+/// <summary>A PipeContext, which as an agent can be Stopped, which disposes of the context making it unavailable.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class AsyncPipeContextAgent<TContext> :
     IAsyncPipeContextAgent<TContext>
     where TContext : class, PipeContext
@@ -16,9 +14,7 @@ public class AsyncPipeContextAgent<TContext> :
     readonly IPipeContextAgent<TContext> _agent;
     readonly TaskCompletionSource<TContext> _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public AsyncPipeContextAgent()
     {
         _context = TaskCompletionSources.Create<TContext>();

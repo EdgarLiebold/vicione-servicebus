@@ -11,9 +11,7 @@ using Amazon.S3.Transfer;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AmazonS3.MessageData;
-/// <summary>
-/// Stores message payloads in one caller-owned Amazon S3 bucket.
-/// </summary>
+/// <summary>Stores message payloads in one caller-owned Amazon S3 bucket.</summary>
 public sealed class AmazonS3MessageDataRepository :
     IMessageDataRepository,
     IBusObserver
@@ -23,11 +21,9 @@ public sealed class AmazonS3MessageDataRepository :
     private readonly IAmazonS3 _client;
     private readonly AmazonS3MessageDataRepositoryOptions _options;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="client">The client value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Creates a message-data repository that uses the supplied Amazon S3 client and bucket settings.</summary>
+    /// <param name="client">The client used for all Amazon S3 operations.</param>
+    /// <param name="options">The bucket name and optional lifecycle-expiration policy.</param>
     public AmazonS3MessageDataRepository(
         IAmazonS3 client,
         AmazonS3MessageDataRepositoryOptions options)
@@ -39,35 +35,27 @@ public sealed class AmazonS3MessageDataRepository :
         _options = options;
     }
 
-    /// <summary>
-    /// Performs the post create operation.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
+    /// <summary>Observes successful bus creation; this repository requires no post-creation work.</summary>
+    /// <param name="bus">The bus that was created.</param>
     public void PostCreate(IBus bus) => ArgumentNullException.ThrowIfNull(bus);
 
-    /// <summary>
-    /// Creates faulted.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Observes a bus-creation failure; this repository performs no recovery work.</summary>
+    /// <param name="exception">The exception that prevented bus creation.</param>
     public void CreateFaulted(Exception exception) => ArgumentNullException.ThrowIfNull(exception);
 
-    /// <summary>
-    /// Performs the pre start operation.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Ensures that the configured bucket and repository-owned lifecycle rule are ready before the bus starts.</summary>
+    /// <param name="bus">The bus that is about to start.</param>
+    /// <returns>A task that completes after the Amazon S3 resources have been reconciled.</returns>
     public Task PreStartAsync(IBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
         return EnsureReadyAsync(CancellationToken.None);
     }
 
-    /// <summary>
-    /// Performs the post start operation.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <param name="busReady">The bus ready value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Observes successful bus startup; all repository initialization occurs before startup.</summary>
+    /// <param name="bus">The bus that started.</param>
+    /// <param name="busReady">The task that reports the bus readiness result.</param>
+    /// <returns>An already-completed task.</returns>
     public Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
         ArgumentNullException.ThrowIfNull(bus);
@@ -75,12 +63,10 @@ public sealed class AmazonS3MessageDataRepository :
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Starts faulted.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Observes a bus-start failure; this repository performs no recovery work.</summary>
+    /// <param name="bus">The bus whose start failed.</param>
+    /// <param name="exception">The startup exception.</param>
+    /// <returns>An already-completed task.</returns>
     public Task StartFaultedAsync(IBus bus, Exception exception)
     {
         ArgumentNullException.ThrowIfNull(bus);
@@ -88,34 +74,28 @@ public sealed class AmazonS3MessageDataRepository :
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the pre stop operation.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Observes that the bus is about to stop; this repository owns no shutdown work.</summary>
+    /// <param name="bus">The bus that is about to stop.</param>
+    /// <returns>An already-completed task.</returns>
     public Task PreStopAsync(IBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the post stop operation.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Observes successful bus shutdown; this repository owns no post-stop work.</summary>
+    /// <param name="bus">The bus that stopped.</param>
+    /// <returns>An already-completed task.</returns>
     public Task PostStopAsync(IBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Stops faulted.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Observes a bus-stop failure; this repository performs no recovery work.</summary>
+    /// <param name="bus">The bus whose stop failed.</param>
+    /// <param name="exception">The shutdown exception.</param>
+    /// <returns>An already-completed task.</returns>
     public Task StopFaultedAsync(IBus bus, Exception exception)
     {
         ArgumentNullException.ThrowIfNull(bus);
@@ -123,12 +103,10 @@ public sealed class AmazonS3MessageDataRepository :
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Opens a readable stream for the Amazon S3 object identified by a message-data address.</summary>
+    /// <param name="address">An absolute <c>urn:file</c> address containing the repository object key.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task whose result is the readable object stream returned by Amazon S3.</returns>
     public async Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default)
     {
         string objectKey = ParseObjectKey(address);
@@ -139,13 +117,11 @@ public sealed class AmazonS3MessageDataRepository :
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the put operation.
-    /// </summary>
-    /// <param name="stream">The stream value.</param>
-    /// <param name="timeToLive">The time to live value.</param>
+    /// <summary>Uploads a message-data stream under a new object key in the configured bucket.</summary>
+    /// <param name="stream">The readable payload stream to upload.</param>
+    /// <param name="timeToLive">An optional positive whole-day retention period that must match the configured bucket lifecycle expiration.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task whose result is the generated <c>urn:file</c> address of the uploaded object.</returns>
     public async Task<Uri> PutAsync(
         Stream stream,
         TimeSpan? timeToLive = null,

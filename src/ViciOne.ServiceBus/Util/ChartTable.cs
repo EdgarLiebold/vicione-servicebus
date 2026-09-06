@@ -5,32 +5,26 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Util;
 
-/// <summary>
-/// Provides a chart table implementation.
-/// </summary>
+/// <summary>Represents a table of chart data.</summary>
 public class ChartTable
 {
     readonly int _chartWidth;
     readonly List<Line> _lines;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="chartWidth">The chart width value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="chartWidth">The chart width.</param>
     public ChartTable(int chartWidth = 60)
     {
         _chartWidth = chartWidth;
         _lines = new List<Line>();
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="text">The text value.</param>
-    /// <param name="startTime">The start time value.</param>
-    /// <param name="duration">The duration value.</param>
-    /// <param name="columns">The columns value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="text">The text.</param>
+    /// <param name="startTime">The start time.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="columns">The columns.</param>
+    /// <returns>The chart table produced by the operation.</returns>
     public ChartTable Add(string text, DateTimeOffset startTime, TimeSpan? duration, params object[] columns)
     {
         _lines.Add(new Line(text, startTime, duration, columns));
@@ -38,10 +32,8 @@ public class ChartTable
         return this;
     }
 
-    /// <summary>
-    /// Gets rows.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets rows.</summary>
+    /// <returns>The rows.</returns>
     public IEnumerable<ChartRow> GetRows()
     {
         if (_lines.Count == 0)
@@ -65,10 +57,8 @@ public class ChartTable
         }
     }
 
-    /// <summary>
-    /// Performs the calculate range operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Calculates range.</summary>
+    /// <returns>The value produced by the operation.</returns>
     public (DateTimeOffset low, DateTimeOffset high) CalculateRange()
     {
         var low = _lines.Min(x => x.StartTime);
@@ -78,18 +68,14 @@ public class ChartTable
     }
 
 
-    /// <summary>
-    /// Provides a line implementation.
-    /// </summary>
+    /// <summary>Represents one timed line in a diagnostic chart.</summary>
     public class Line
     {
-        /// <summary>
-        /// Initializes a new instance of the containing type.
-        /// </summary>
-        /// <param name="text">The text value.</param>
-        /// <param name="startTime">The start time value.</param>
-        /// <param name="duration">The duration value.</param>
-        /// <param name="columns">The columns value.</param>
+        /// <summary>Initializes a new instance.</summary>
+        /// <param name="text">The text.</param>
+        /// <param name="startTime">The start time.</param>
+        /// <param name="duration">The duration.</param>
+        /// <param name="columns">The columns.</param>
         public Line(string text, DateTimeOffset startTime, TimeSpan? duration, object[] columns)
         {
             Text = text;
@@ -98,26 +84,16 @@ public class ChartTable
             Duration = duration ?? new TimeSpan(1);
         }
 
-        /// <summary>
-        /// Gets the text value.
-        /// </summary>
+        /// <summary>Gets the text.</summary>
         public string Text { get; }
-        /// <summary>
-        /// Gets the start time value.
-        /// </summary>
+        /// <summary>Gets the start time.</summary>
         public DateTimeOffset StartTime { get; }
-        /// <summary>
-        /// Gets the duration value.
-        /// </summary>
+        /// <summary>Gets the duration.</summary>
         public TimeSpan Duration { get; }
-        /// <summary>
-        /// Gets the columns value.
-        /// </summary>
+        /// <summary>Gets the columns.</summary>
         public object[] Columns { get; }
 
-        /// <summary>
-        /// Gets the end time value.
-        /// </summary>
+        /// <summary>Gets the end time.</summary>
         public DateTimeOffset EndTime => StartTime + Duration;
     }
 }

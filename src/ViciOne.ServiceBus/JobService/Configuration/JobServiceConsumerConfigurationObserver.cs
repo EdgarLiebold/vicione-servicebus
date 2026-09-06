@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a job service consumer configuration observer implementation.
-/// </summary>
+/// <summary>Observes job service consumer configuration events.</summary>
 public class JobServiceConsumerConfigurationObserver :
     IConsumerConfigurationObserver
 {
@@ -18,12 +16,10 @@ public class JobServiceConsumerConfigurationObserver :
     readonly JobServiceSettings _settings;
     bool _endpointConfigured;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="settings">The settings that control the operation.</param>
+    /// <param name="configureEndpoint">The configure endpoint.</param>
     public JobServiceConsumerConfigurationObserver(IReceiveEndpointConfigurator configurator, JobServiceSettings settings,
         Action<IReceiveEndpointConfigurator> configureEndpoint)
     {
@@ -35,11 +31,9 @@ public class JobServiceConsumerConfigurationObserver :
         _consumerConfigurators = new Dictionary<Type, IConsumeConfigurator>();
     }
 
-    /// <summary>
-    /// Consumes r configured.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Consumes r configured.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void ConsumerConfigured<T>(IConsumerConfigurator<T> configurator)
         where T : class
     {
@@ -58,12 +52,10 @@ public class JobServiceConsumerConfigurationObserver :
         }
     }
 
-    /// <summary>
-    /// Consumes r message configured.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Consumes r message configured.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void ConsumerMessageConfigured<T, TMessage>(IConsumerMessageConfigurator<T, TMessage> configurator)
         where T : class
         where TMessage : class

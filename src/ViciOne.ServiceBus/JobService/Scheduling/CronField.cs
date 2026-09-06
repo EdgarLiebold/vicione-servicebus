@@ -3,9 +3,7 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.JobService.Scheduling;
 
-/// <summary>
-/// Provides a cron field implementation.
-/// </summary>
+/// <summary>Represents the parsed cron field.</summary>
 public sealed class CronField :
     IEnumerable<int>
 {
@@ -14,17 +12,13 @@ public sealed class CronField :
     int? _singleValue;
     SortedSet<int>? _values;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public CronField()
     {
         Clear();
     }
 
-    /// <summary>
-    /// Gets the count value.
-    /// </summary>
+    /// <summary>Gets the count.</summary>
     public int Count
     {
         get
@@ -50,10 +44,8 @@ public sealed class CronField :
         }
     }
 
-    /// <summary>
-    /// Gets enumerator.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets enumerator.</summary>
+    /// <returns>The enumerator.</returns>
     public IEnumerator<int> GetEnumerator()
     {
         if (_singleValue is not null)
@@ -99,7 +91,7 @@ public sealed class CronField :
                 return true;
             }
 
-            // didn't match
+            // A single value below the requested start has no eligible result.
             return false;
         }
 
@@ -132,10 +124,8 @@ public sealed class CronField :
         return false;
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="value">The value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="value">The value to process.</param>
     public void Add(int value)
     {
         _hasAllOrNoSpec = value is CronExpressionConstants.AllSpec or CronExpressionConstants.NoSpec;
@@ -158,10 +148,8 @@ public sealed class CronField :
         }
     }
 
-    /// <summary>
-    /// Performs the contains operation.
-    /// </summary>
-    /// <param name="value">The value.</param>
+    /// <summary>Determines whether the current collection contains the supplied value.</summary>
+    /// <param name="value">The value to process.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Contains(int value)
     {

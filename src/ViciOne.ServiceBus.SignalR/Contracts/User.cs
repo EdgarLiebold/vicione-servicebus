@@ -3,19 +3,13 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace ViciOne.ServiceBus.SignalR.Contracts;
 
-/// <summary>
-/// Defines the contract for user.
-/// </summary>
-/// <typeparam name="THub">The t hub type.</typeparam>
+/// <summary>Defines the operations required by user.</summary>
+/// <typeparam name="THub">The hub type.</typeparam>
 public interface User<THub>
     where THub : Hub
 {
-    /// <summary>
-    /// Gets the user id value.
-    /// </summary>
+    /// <summary>Gets the user id.</summary>
     string UserId { get; }
-    /// <summary>
-    /// Gets the messages value.
-    /// </summary>
+    /// <summary>Gets the messages.</summary>
     IReadOnlyDictionary<string, byte[]> Messages { get; }
 }

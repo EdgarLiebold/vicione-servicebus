@@ -2,19 +2,13 @@ using System;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for rabbit mq send topology configurator.
-/// </summary>
+/// <summary>Configures RabbitMQ send topology and generated fault-queue settings.</summary>
 public interface IRabbitMqSendTopologyConfigurator :
     ISendTopologyConfigurator,
     IRabbitMqSendTopology
 {
-    /// <summary>
-    /// Gets or sets the configure error settings value.
-    /// </summary>
+    /// <summary>Sets the callback that customizes generated error-queue topology.</summary>
     Action<IRabbitMqQueueBindingConfigurator>? ConfigureErrorSettings { set; }
-    /// <summary>
-    /// Gets or sets the configure dead letter settings value.
-    /// </summary>
+    /// <summary>Sets the callback that customizes generated dead-letter-queue topology.</summary>
     Action<IRabbitMqQueueBindingConfigurator>? ConfigureDeadLetterSettings { set; }
 }

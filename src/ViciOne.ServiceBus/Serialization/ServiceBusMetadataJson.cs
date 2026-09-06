@@ -17,16 +17,10 @@ public static class ServiceBusMetadataJson
         _serializer = new SystemTextJsonMessageSerializer(Options);
     }
 
-    /// <summary>
-    /// Gets the options value.
-    /// </summary>
+    /// <summary>Gets the options.</summary>
     public static JsonSerializerOptions Options { get; }
-    /// <summary>
-    /// Gets the object deserializer value.
-    /// </summary>
+    /// <summary>Gets the object deserializer.</summary>
     public static IObjectDeserializer ObjectDeserializer => _serializer;
-    /// <summary>
-    /// Gets the message serializer value.
-    /// </summary>
+    /// <summary>Gets the message serializer.</summary>
     public static IMessageSerializer MessageSerializer => _serializer;
 }

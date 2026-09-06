@@ -2,9 +2,7 @@ using System;
 using Npgsql;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
-/// <summary>
-/// Classifies PostgreSQL send failures from Npgsql's typed transient contract.
-/// </summary>
+/// <summary>Classifies PostgreSQL send failures from Npgsql's typed transient contract.</summary>
 public sealed class PostgresSendFailureClassifier : ITransportSendFailureClassifier
 {
     /// <inheritdoc />

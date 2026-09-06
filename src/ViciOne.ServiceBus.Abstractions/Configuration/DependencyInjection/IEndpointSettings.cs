@@ -1,48 +1,32 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for endpoint settings.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
+/// <summary>Defines settings for endpoint.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
 public interface IEndpointSettings<TConsumer>
     where TConsumer : class
 {
-    /// <summary>
-    /// Gets the name value.
-    /// </summary>
+    /// <summary>Gets the name.</summary>
     string? Name { get; }
 
-    /// <summary>
-    /// Gets the is temporary value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether temporary.</summary>
     bool IsTemporary { get; }
 
-    /// <summary>
-    /// Gets the prefetch count value.
-    /// </summary>
+    /// <summary>Gets the prefetch count.</summary>
     int? PrefetchCount { get; }
 
-    /// <summary>
-    /// Gets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets the concurrent message limit.</summary>
     int? ConcurrentMessageLimit { get; }
 
-    /// <summary>
-    /// Gets the configure consume topology value.
-    /// </summary>
+    /// <summary>Gets the configure consume topology.</summary>
     bool ConfigureConsumeTopology { get; }
 
-    /// <summary>
-    /// Gets the instance id value.
-    /// </summary>
+    /// <summary>Gets the instance id.</summary>
     string? InstanceId { get; }
 
-    /// <summary>
-    /// Configures endpoint.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Configures endpoint.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
     void ConfigureEndpoint<T>(T configurator, IRegistrationContext? context)
         where T : IReceiveEndpointConfigurator;
 }

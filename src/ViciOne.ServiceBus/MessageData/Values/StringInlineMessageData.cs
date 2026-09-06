@@ -3,20 +3,16 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.MessageData.Values;
 
-/// <summary>
-/// Provides a string inline message data implementation.
-/// </summary>
+/// <summary>Carries string inline message data.</summary>
 public class StringInlineMessageData :
     MessageData<string>,
     IInlineMessageData
 {
     readonly string _value;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="address">The address value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <param name="address">The address.</param>
     public StringInlineMessageData(string value, Uri? address = null)
     {
         Address = address;
@@ -25,28 +21,20 @@ public class StringInlineMessageData :
         Value = Task.FromResult<string?>(value);
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="reference">The reference value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <param name="reference">The reference.</param>
     public void Set(IMessageDataReference reference)
     {
         reference.Text = _value;
         reference.Data = default;
     }
 
-    /// <summary>
-    /// Gets the address value.
-    /// </summary>
+    /// <summary>Gets the address.</summary>
     public Uri? Address { get; }
 
-    /// <summary>
-    /// Gets the has value value.
-    /// </summary>
+    /// <summary>Gets whether this instance contains a value.</summary>
     public bool HasValue => true;
 
-    /// <summary>
-    /// Gets the underlying value.
-    /// </summary>
+    /// <summary>Gets the value.</summary>
     public Task<string?> Value { get; }
 }

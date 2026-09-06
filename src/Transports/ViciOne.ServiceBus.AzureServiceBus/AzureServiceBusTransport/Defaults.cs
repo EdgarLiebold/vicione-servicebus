@@ -3,69 +3,41 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a defaults implementation.
-/// </summary>
+/// <summary>Defines Azure Service Bus entity, processor, shutdown, and header-size defaults.</summary>
 public static class Defaults
 {
-    /// <summary>
-    /// Gets the lock duration value.
-    /// </summary>
+    /// <summary>Gets the initial peek-lock duration for received messages.</summary>
     public static TimeSpan LockDuration { get; } = TimeSpan.FromMinutes(5);
-    /// <summary>
-    /// Gets the default message time to live value.
-    /// </summary>
+    /// <summary>Gets the default lifetime assigned to messages on durable entities.</summary>
     public static TimeSpan DefaultMessageTimeToLive { get; } = TimeSpan.FromDays(365 + 1);
-    /// <summary>
-    /// Gets the basic message time to live value.
-    /// </summary>
+    /// <summary>Gets the shorter message lifetime used by basic transport scenarios.</summary>
     public static TimeSpan BasicMessageTimeToLive { get; } = TimeSpan.FromDays(14);
 
-    /// <summary>
-    /// Gets the auto delete on idle value.
-    /// </summary>
+    /// <summary>Gets the idle-deletion duration used for durable entities.</summary>
     public static TimeSpan AutoDeleteOnIdle { get; } = TimeSpan.FromDays(427);
-    /// <summary>
-    /// Gets the temporary auto delete on idle value.
-    /// </summary>
+    /// <summary>Gets the minimum Azure Service Bus idle-deletion duration used for temporary entities.</summary>
     public static TimeSpan TemporaryAutoDeleteOnIdle { get; } = TimeSpan.FromMinutes(5);
-    /// <summary>
-    /// Gets the max auto renew duration value.
-    /// </summary>
+    /// <summary>Gets the maximum duration for automatic message- or session-lock renewal.</summary>
     public static TimeSpan MaxAutoRenewDuration { get; } = TimeSpan.FromMinutes(5);
 
-    /// <summary>
-    /// Gets the session idle timeout value.
-    /// </summary>
-    public static TimeSpan? SessionIdleTimeout { get; } = null; // SDKs default is undefined - explicitly defined here for clarity
-    /// <summary>
-    /// Gets the shutdown timeout value.
-    /// </summary>
+    /// <summary>Gets the optional session idle timeout; <see langword="null"/> delegates the timeout choice to the Azure SDK.</summary>
+    public static TimeSpan? SessionIdleTimeout { get; } = null;
+    /// <summary>Gets the transport's short processor-shutdown timeout.</summary>
     public static TimeSpan ShutdownTimeout { get; } = TimeSpan.FromMilliseconds(100);
 
-    /// <summary>
-    /// Gets the max concurrent sessions value.
-    /// </summary>
+    /// <summary>Gets the default maximum number of sessions processed concurrently.</summary>
     public static int MaxConcurrentSessions { get; } = 8;
-    /// <summary>
-    /// Gets the max concurrent calls per sessions value.
-    /// </summary>
+    /// <summary>Gets the default maximum number of concurrent message callbacks for each session.</summary>
     public static int MaxConcurrentCallsPerSessions { get; } = 1;
 
-    /// <summary>
-    /// Defines the max header length bytes value.
-    /// </summary>
+    /// <summary>Specifies the maximum serialized transport-header length in bytes.</summary>
     public const int MaxHeaderLengthBytes = 32767;
-    /// <summary>
-    /// Defines the max header length value.
-    /// </summary>
+    /// <summary>Specifies the corresponding maximum UTF-16 header length, reserving one terminating character.</summary>
     public const int MaxHeaderLength = MaxHeaderLengthBytes / sizeof(char) - 1;
 
-    /// <summary>
-    /// Gets create queue options.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates durable queue options using the transport defaults.</summary>
+    /// <param name="queueName">The Azure Service Bus queue name.</param>
+    /// <returns>The default SDK queue-creation options.</returns>
     public static CreateQueueOptions GetCreateQueueOptions(string queueName)
     {
         return new CreateQueueOptions(queueName)
@@ -79,11 +51,9 @@ public static class Defaults
         };
     }
 
-    /// <summary>
-    /// Gets create topic options.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates durable topic options using the transport defaults.</summary>
+    /// <param name="topicName">The Azure Service Bus topic name.</param>
+    /// <returns>The default SDK topic-creation options.</returns>
     public static CreateTopicOptions GetCreateTopicOptions(string topicName)
     {
         return new CreateTopicOptions(topicName)

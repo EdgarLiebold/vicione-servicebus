@@ -11,15 +11,11 @@ using ViciOne.ServiceBus.JobService.Messages;
 
 namespace ViciOne.ServiceBus.JobService;
 
-/// <summary>
-/// Provides a job type state machine implementation.
-/// </summary>
+/// <summary>Coordinates the state transitions for job type.</summary>
 public sealed class JobTypeStateMachine :
     ViciOneServiceBusStateMachine<JobTypeSaga>
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public JobTypeStateMachine()
     {
         Event(() => JobSlotRequested, x =>
@@ -84,27 +80,16 @@ public sealed class JobTypeStateMachine :
         );
     }
 
-    //
-    /// <summary>
-    /// Gets the active value.
-    /// </summary>
+    /// <summary>Gets the active.</summary>
     public State Active { get; } = null!;
-    /// <summary>
-    /// Gets the idle value.
-    /// </summary>
+    /// <summary>Gets the idle.</summary>
     public State Idle { get; } = null!;
 
-    /// <summary>
-    /// Gets the job slot requested value.
-    /// </summary>
+    /// <summary>Gets the job slot requested.</summary>
     public Event<AllocateJobSlot> JobSlotRequested { get; } = null!;
-    /// <summary>
-    /// Gets the job slot released value.
-    /// </summary>
+    /// <summary>Gets the job slot released.</summary>
     public Event<JobSlotReleased> JobSlotReleased { get; } = null!;
-    /// <summary>
-    /// Gets the set concurrent job limit value.
-    /// </summary>
+    /// <summary>Gets the set concurrent job limit.</summary>
     public Event<SetConcurrentJobLimit> SetConcurrentJobLimit { get; } = null!;
 }
 

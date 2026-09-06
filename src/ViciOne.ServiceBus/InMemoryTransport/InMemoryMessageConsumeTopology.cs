@@ -6,10 +6,8 @@ using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
-/// <summary>
-/// Provides an in memory message consume topology implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Defines the topology for in memory message consume.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class InMemoryMessageConsumeTopology<TMessage> :
     MessageConsumeTopology<TMessage>,
     IInMemoryMessageConsumeTopologyConfigurator<TMessage>,
@@ -20,11 +18,9 @@ public class InMemoryMessageConsumeTopology<TMessage> :
     readonly IInMemoryPublishTopology _publishTopology;
     readonly List<IInMemoryConsumeTopologySpecification> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
-    /// <param name="publishTopology">The publish topology value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="messageTopology">The message topology.</param>
+    /// <param name="publishTopology">The publish topology.</param>
     public InMemoryMessageConsumeTopology(IMessageTopology<TMessage> messageTopology, IInMemoryPublishTopologyConfigurator publishTopology)
     {
         _messageTopology = messageTopology;
@@ -32,21 +28,17 @@ public class InMemoryMessageConsumeTopology<TMessage> :
         _specifications = new List<IInMemoryConsumeTopologySpecification>();
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IMessageFabricConsumeTopologyBuilder builder)
     {
         foreach (var specification in _specifications)
             specification.Apply(builder);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="exchangeType">The exchange type value.</param>
-    /// <param name="routingKey">The routing key value.</param>
+    /// <summary>Binds the configured entities.</summary>
+    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
+    /// <param name="routingKey">The routing key.</param>
     public void Bind(ExchangeType? exchangeType, string? routingKey = default)
     {
         if (!IsBindableMessageType)
@@ -62,10 +54,8 @@ public class InMemoryMessageConsumeTopology<TMessage> :
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));

@@ -2,17 +2,13 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Configuration;
 
-/// <summary>
-/// Provides an amazon sqs endpoint configuration implementation.
-/// </summary>
+/// <summary>Combines transport-neutral endpoint settings with Amazon SQS topology configuration.</summary>
 public class AmazonSqsEndpointConfiguration :
     EndpointConfiguration,
     IAmazonSqsEndpointConfiguration
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Initializes a root Amazon SQS endpoint configuration.</summary>
+    /// <param name="topologyConfiguration">The topology configuration used by the endpoint.</param>
     public AmazonSqsEndpointConfiguration(IAmazonSqsTopologyConfiguration topologyConfiguration)
         : base(topologyConfiguration)
     {
@@ -25,16 +21,12 @@ public class AmazonSqsEndpointConfiguration :
         Topology = topologyConfiguration;
     }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the Amazon SQS topology configuration.</summary>
     public new IAmazonSqsTopologyConfiguration Topology { get; }
 
-    /// <summary>
-    /// Creates endpoint configuration.
-    /// </summary>
-    /// <param name="isBusEndpoint">The is bus endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a child endpoint configuration with a cloned topology scope.</summary>
+    /// <param name="isBusEndpoint">Whether the child configures the bus endpoint.</param>
+    /// <returns>The child Amazon SQS endpoint configuration.</returns>
     public IAmazonSqsEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
     {
         var topologyConfiguration = new AmazonSqsTopologyConfiguration(Topology);

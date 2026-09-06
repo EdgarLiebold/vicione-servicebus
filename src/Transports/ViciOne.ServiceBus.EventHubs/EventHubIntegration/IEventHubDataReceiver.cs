@@ -2,9 +2,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Defines the contract for event hub data receiver.
-/// </summary>
+/// <summary>Represents the lifecycle and delivery metrics of an Event Hubs data receiver.</summary>
 public interface IEventHubDataReceiver :
     IAgent,
     DeliveryMetrics

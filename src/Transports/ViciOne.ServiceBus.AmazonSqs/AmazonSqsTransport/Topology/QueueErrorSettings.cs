@@ -3,18 +3,14 @@ using ViciOne.ServiceBus.AmazonSqs.Configuration;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides a queue error settings implementation.
-/// </summary>
+/// <summary>Derives error-queue settings from a receive queue.</summary>
 public class QueueErrorSettings :
     AmazonSqsQueueSubscriptionConfigurator,
     ErrorSettings
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="source">The source value.</param>
-    /// <param name="queueName">The queue name value.</param>
+    /// <summary>Initializes error-queue settings with cloned source tags and attributes.</summary>
+    /// <param name="source">The source receive-queue settings.</param>
+    /// <param name="queueName">The error queue name.</param>
     public QueueErrorSettings(ReceiveSettings source, string queueName)
         : base(queueName, source.Durable, source.AutoDelete)
     {
@@ -22,10 +18,8 @@ public class QueueErrorSettings :
         QueueAttributes = source.QueueAttributes.ToDictionary(x => x.Key, x => x.Value);
     }
 
-    /// <summary>
-    /// Gets broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds topology containing the error queue.</summary>
+    /// <returns>The queue broker topology.</returns>
     public BrokerTopology GetBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder();

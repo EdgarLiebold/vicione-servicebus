@@ -4,28 +4,22 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a publish to send topology configuration observer implementation.
-/// </summary>
+/// <summary>Observes publish to send topology configuration events.</summary>
 public class PublishToSendTopologyConfigurationObserver :
     IPublishTopologyConfigurationObserver
 {
     readonly ISendTopology _sendTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="sendTopology">The send topology value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="sendTopology">The send topology.</param>
     public PublishToSendTopologyConfigurationObserver(ISendTopology sendTopology)
     {
         _sendTopology = sendTopology;
     }
 
-    /// <summary>
-    /// Performs the message topology created operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that message topology has been created.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void MessageTopologyCreated<T>(IMessagePublishTopologyConfigurator<T> configurator)
         where T : class
     {

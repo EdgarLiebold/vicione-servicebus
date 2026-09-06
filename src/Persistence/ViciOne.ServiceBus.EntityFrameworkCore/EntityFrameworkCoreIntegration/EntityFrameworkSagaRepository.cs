@@ -7,20 +7,16 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides an entity framework saga repository implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Creates standalone EF Core saga repositories with optimistic or pessimistic concurrency.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public static class EntityFrameworkSagaRepository<TSaga>
     where TSaga : class, ISaga
 {
-    /// <summary>
-    /// Creates optimistic.
-    /// </summary>
-    /// <param name="dbContextFactory">The db context factory value.</param>
-    /// <param name="queryCustomization">The query customization value.</param>
-    /// <param name="isTransactionEnabled">The is transaction enabled value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an optimistic repository from an explicit saga DbContext factory.</summary>
+    /// <param name="dbContextFactory">The factory that supplies and releases DbContext instances.</param>
+    /// <param name="queryCustomization">An optional transformation applied to every saga query.</param>
+    /// <param name="isTransactionEnabled"><see langword="true"/> to wrap repository operations in read-committed transactions.</param>
+    /// <returns>An EF Core saga repository using optimistic concurrency.</returns>
     public static ISagaRepository<TSaga> CreateOptimistic(ISagaDbContextFactory<TSaga> dbContextFactory,
         Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization = null, bool isTransactionEnabled = true)
     {
@@ -32,13 +28,11 @@ public static class EntityFrameworkSagaRepository<TSaga>
         return CreateRepository(dbContextFactory, lockStrategy);
     }
 
-    /// <summary>
-    /// Creates optimistic.
-    /// </summary>
-    /// <param name="dbContextFactory">The db context factory value.</param>
-    /// <param name="queryCustomization">The query customization value.</param>
-    /// <param name="isTransactionEnabled">The is transaction enabled value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an optimistic repository from a DbContext creation delegate.</summary>
+    /// <param name="dbContextFactory">The delegate that creates a DbContext for each repository scope.</param>
+    /// <param name="queryCustomization">An optional transformation applied to every saga query.</param>
+    /// <param name="isTransactionEnabled"><see langword="true"/> to wrap repository operations in read-committed transactions.</param>
+    /// <returns>An EF Core saga repository using optimistic concurrency.</returns>
     public static ISagaRepository<TSaga> CreateOptimistic(Func<DbContext> dbContextFactory,
         Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization = null, bool isTransactionEnabled = true)
     {
@@ -47,13 +41,11 @@ public static class EntityFrameworkSagaRepository<TSaga>
         return CreateOptimistic(new DelegateSagaDbContextFactory<TSaga>(dbContextFactory), queryCustomization, isTransactionEnabled);
     }
 
-    /// <summary>
-    /// Creates pessimistic.
-    /// </summary>
-    /// <param name="dbContextFactory">The db context factory value.</param>
-    /// <param name="lockStatementProvider">The lock statement provider value.</param>
-    /// <param name="queryCustomization">The query customization value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a serializable pessimistic repository from an explicit saga DbContext factory.</summary>
+    /// <param name="dbContextFactory">The factory that supplies and releases DbContext instances.</param>
+    /// <param name="lockStatementProvider">The relational provider that generates row-lock SQL.</param>
+    /// <param name="queryCustomization">An optional transformation applied to every saga query.</param>
+    /// <returns>An EF Core saga repository using provider-specific row locks.</returns>
     public static ISagaRepository<TSaga> CreatePessimistic(ISagaDbContextFactory<TSaga> dbContextFactory,
         ILockStatementProvider lockStatementProvider,
         Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization = null)
@@ -67,13 +59,11 @@ public static class EntityFrameworkSagaRepository<TSaga>
         return CreateRepository(dbContextFactory, lockStrategy);
     }
 
-    /// <summary>
-    /// Creates pessimistic.
-    /// </summary>
-    /// <param name="dbContextFactory">The db context factory value.</param>
-    /// <param name="lockStatementProvider">The lock statement provider value.</param>
-    /// <param name="queryCustomization">The query customization value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a serializable pessimistic repository from a DbContext creation delegate.</summary>
+    /// <param name="dbContextFactory">The delegate that creates a DbContext for each repository scope.</param>
+    /// <param name="lockStatementProvider">The relational provider that generates row-lock SQL.</param>
+    /// <param name="queryCustomization">An optional transformation applied to every saga query.</param>
+    /// <returns>An EF Core saga repository using provider-specific row locks.</returns>
     public static ISagaRepository<TSaga> CreatePessimistic(Func<DbContext> dbContextFactory, ILockStatementProvider lockStatementProvider,
         Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization = null)
     {

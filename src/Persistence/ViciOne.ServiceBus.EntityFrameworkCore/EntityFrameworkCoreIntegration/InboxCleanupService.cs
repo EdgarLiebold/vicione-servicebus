@@ -17,6 +17,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// Removes expired inbox entries. Only one process owns cleanup for a given physical inbox table at a time.
 /// The ownership lock is transaction-bound so process death releases it automatically.
 /// </summary>
+/// <typeparam name="TDbContext">The db context type.</typeparam>
 public sealed class InboxCleanupService<TDbContext> : BackgroundService
     where TDbContext : DbContext
 {
@@ -29,14 +30,12 @@ public sealed class InboxCleanupService<TDbContext> : BackgroundService
     readonly TimeProvider _timeProvider;
     string? _cleanupLockStatement;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <param name="outboxOptions">The outbox options value.</param>
-    /// <param name="logger">The logger value.</param>
-    /// <param name="provider">The service provider.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes the cleanup worker for one DbContext type.</summary>
+    /// <param name="options">The duplicate-detection window, batch size, poll delay, and query timeout.</param>
+    /// <param name="outboxOptions">The transaction isolation and relational lock provider.</param>
+    /// <param name="logger">The destination for cleanup failures and removal counts.</param>
+    /// <param name="provider">The root provider used to create a scope for each cleanup attempt.</param>
+    /// <param name="timeProvider">The source for retention cutoffs and delays.</param>
     public InboxCleanupService(IOptions<InboxCleanupServiceOptions<TDbContext>> options,
         IOptions<EntityFrameworkOutboxOptions<TDbContext>> outboxOptions,
         ILogger<InboxCleanupService<TDbContext>> logger,
@@ -54,11 +53,9 @@ public sealed class InboxCleanupService<TDbContext> : BackgroundService
         _retryPolicy = Retry.Exponential(1000, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(3));
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="stoppingToken">The stopping token value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Polls for expired inbox rows and removes bounded batches while the host is running.</summary>
+    /// <param name="stoppingToken">The host-shutdown token.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var removed = 0;

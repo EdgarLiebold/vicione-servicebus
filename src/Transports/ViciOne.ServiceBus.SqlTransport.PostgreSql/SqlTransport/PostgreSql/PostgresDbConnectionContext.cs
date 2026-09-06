@@ -16,9 +16,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
-/// <summary>
-/// Provides a postgres db connection context implementation.
-/// </summary>
+/// <summary>Coordinates PostgreSQL connections, transactions, notifications, retries, and transport maintenance.</summary>
 public class PostgresDbConnectionContext :
     BasePipeContext,
     ConnectionContext,
@@ -37,11 +35,9 @@ public class PostgresDbConnectionContext :
         SqlMapper.AddTypeHandler(new UriTypeHandler());
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="supervisor">The supervisor value.</param>
+    /// <summary>Initializes a PostgreSQL connection context and registers its background agents.</summary>
+    /// <param name="hostConfiguration">The SQL host configuration.</param>
+    /// <param name="supervisor">The supervisor that owns the notification and maintenance agents.</param>
     public PostgresDbConnectionContext(ISqlHostConfiguration hostConfiguration, ITransportSupervisor<ConnectionContext> supervisor)
         : base(supervisor.Stopped)
     {
@@ -65,31 +61,21 @@ public class PostgresDbConnectionContext :
         _executor = new TaskExecutor(hostConfiguration.Settings.ConnectionLimit);
     }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the configured SQL bus topology.</summary>
     public ISqlBusTopology Topology { get; }
 
-    /// <summary>
-    /// Gets the isolation level value.
-    /// </summary>
+    /// <summary>Gets the transaction isolation level used for client operations.</summary>
     public IsolationLevel IsolationLevel => _hostSettings.IsolationLevel;
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the logical transport host address.</summary>
     public Uri HostAddress => _hostConfiguration.HostAddress;
 
-    /// <summary>
-    /// Gets the schema value.
-    /// </summary>
+    /// <summary>Gets the PostgreSQL schema containing the transport infrastructure.</summary>
     public string? Schema => _hostSettings.Schema;
 
-    /// <summary>
-    /// Creates client context.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a PostgreSQL client context with the specified lifetime token.</summary>
+    /// <param name="cancellationToken">The token that controls the client context lifetime.</param>
+    /// <returns>The new PostgreSQL client context.</returns>
     public ClientContext CreateClientContext(CancellationToken cancellationToken)
     {
         return new PostgresClientContext(this, cancellationToken);
@@ -100,13 +86,11 @@ public class PostgresDbConnectionContext :
         return await CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the query operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Executes a callback in a retried PostgreSQL transaction and commits its result.</summary>
+    /// <typeparam name="T">The callback result type.</typeparam>
+    /// <param name="callback">The operation to execute with the open connection and transaction.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The value returned by <paramref name="callback" /> after the transaction commits.</returns>
     public Task<T> QueryAsync<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
     {
         return _executor.ExecuteAsync(() =>
@@ -127,14 +111,12 @@ public class PostgresDbConnectionContext :
         }, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the delay until message ready operation.
-    /// </summary>
-    /// <param name="queueId">The queue id value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Waits until PostgreSQL notifies the queue or the polling timeout elapses.</summary>
+    /// <param name="queueId">The database identifier of the queue being observed.</param>
+    /// <param name="timeout">The maximum time to wait before polling again.</param>
+    /// <param name="timeProvider">The time source used for the polling delay.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task DelayUntilMessageReadyAsync(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(timeProvider);
@@ -155,10 +137,8 @@ public class PostgresDbConnectionContext :
         return WaitAsync();
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask DisposeAsync()
     {
         if (_hostSettings.IsProvidedDataSource == false)
@@ -243,16 +223,14 @@ public class PostgresDbConnectionContext :
                         await using var connection = await _context.CreateConnectionAsync(Stopping);
 
                         var queueIds = new HashSet<long>(_notificationTokens.Keys);
-                        var sanitizedSchemaName = NotifyChannel.SanitizeSchemaName(_context.Schema);
-
                         connection.Connection.Notification += OnConnectionOnNotification;
 
                         foreach (var queueId in queueIds)
                         {
-                            await connection.Connection.ExecuteScalarAsync<int>($"LISTEN \"{sanitizedSchemaName}_msg_{queueId}\"", Stopping)
+                            string channelName = NotifyChannel.CreateName(_context.Schema, queueId);
+                            await connection.Connection.ExecuteScalarAsync<int>($"LISTEN \"{channelName}\"", Stopping)
                                 .ConfigureAwait(false);
 
-                            // LogContext.Debug?.Log("LISTEN \"{sanitizedSchemaName}_msg_{queueId}\"", queueId);
                         }
 
                         while (!Stopping.IsCancellationRequested)
@@ -275,10 +253,10 @@ public class PostgresDbConnectionContext :
                                 if (queueIds.Contains(queueId))
                                     continue;
 
-                                await connection.Connection.ExecuteScalarAsync<int>($"LISTEN \"{sanitizedSchemaName}_msg_{queueId}\"", Stopping)
+                                string channelName = NotifyChannel.CreateName(_context.Schema, queueId);
+                                await connection.Connection.ExecuteScalarAsync<int>($"LISTEN \"{channelName}\"", Stopping)
                                     .ConfigureAwait(false);
 
-                                // LogContext.Debug?.Log("LISTEN \"{sanitizedSchemaName}_msg_{queueId}\"", queueId);
 
                                 queueIds.Add(queueId);
                             }
@@ -302,7 +280,6 @@ public class PostgresDbConnectionContext :
             var index = args.Channel.LastIndexOf('_');
             if (index > 0 && long.TryParse(args.Channel.Substring(index + 1), out var queueId) && _notificationTokens.TryGetValue(queueId, out var source))
             {
-                // LogContext.Debug?.Log("NOTIFY {Channel}", args.Channel);
                 source.Cancel();
             }
         }

@@ -6,24 +6,32 @@ namespace ViciOne.ServiceBus.Configuration;
 public interface IReliableMessagingConfigurator
 {
     /// <summary>Adds a stable message contract to the one immutable application catalog.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="name">The name.</param>
+    /// <param name="majorVersion">The major version.</param>
     void AddMessageContract<TMessage>(string name, int majorVersion = 1)
         where TMessage : class;
 
     /// <summary>Adds a message contract whose stable identity is declared by <see cref="MessageContractAttribute"/>.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     void AddMessageContract<TMessage>()
         where TMessage : class;
 
     /// <summary>Sets the hard retained-record and retained-content limits for the selected store.</summary>
+    /// <param name="limits">The limits.</param>
     void Store(ReliableStoreLimits limits);
 
     /// <summary>Configures the one delivery loop, its retry policy and lease fencing.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     void Delivery(Action<IReliableDeliveryConfigurator> configure);
 
     /// <summary>Sets how long terminal inbox and recurring-schedule state is retained.</summary>
+    /// <param name="duration">The duration.</param>
     void Retention(TimeSpan duration);
 }
 
 /// <summary>Configures reliable messaging for one typed bus.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 public interface IReliableMessagingConfigurator<TBus> : IReliableMessagingConfigurator
     where TBus : class, IBus
 {

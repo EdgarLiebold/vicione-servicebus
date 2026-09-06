@@ -4,10 +4,7 @@ using System.Diagnostics;
 
 namespace ViciOne.ServiceBus.Logging;
 
-/// <summary>
-/// Isolates Activity listener callbacks from messaging correctness. Host-owned observation may disappear when a
-/// listener or logger fails, but it must never change send, receive, outbox, retry, or fault behavior.
-/// </summary>
+/// <summary>Represents an observation of activity.</summary>
 internal static class ActivityObservation
 {
     public static Activity? TryCreate(Lazy<ActivitySource> source, string name, ActivityKind kind,

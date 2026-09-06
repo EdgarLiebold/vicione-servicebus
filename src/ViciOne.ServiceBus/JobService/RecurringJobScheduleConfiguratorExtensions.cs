@@ -2,19 +2,15 @@ using System;
 
 namespace ViciOne.ServiceBus.JobService;
 
-/// <summary>
-/// Provides extension methods for recurring job schedule configurator.
-/// </summary>
+/// <summary>Provides extension methods for recurring job schedule configurator.</summary>
 public static class RecurringJobScheduleConfiguratorExtensions
 {
-    /// <summary>
-    /// Sets the cron expression to run daily at the specified hour (and optionally, minute and second)
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="hour"></param>
-    /// <param name="minute"></param>
-    /// <param name="second"></param>
-    /// <returns></returns>
+    /// <summary>Sets the cron expression to run daily at the specified hour (and optionally, minute and second).</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="hour">The hour.</param>
+    /// <param name="minute">The minute.</param>
+    /// <param name="second">The second.</param>
+    /// <returns>The recurring job schedule configurator produced by the operation.</returns>
     public static IRecurringJobScheduleConfigurator DailyAt(this IRecurringJobScheduleConfigurator configurator, int hour, int minute = 0, int second = 0)
     {
         ValidateHour(hour);
@@ -26,14 +22,12 @@ public static class RecurringJobScheduleConfiguratorExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Sets the cron expression to run on the specified days of the week at the specified hour and minute
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="hour"></param>
-    /// <param name="minute"></param>
-    /// <param name="days"></param>
-    /// <returns></returns>
+    /// <summary>Sets the cron expression to run on the specified days of the week at the specified hour and minute.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="hour">The hour.</param>
+    /// <param name="minute">The minute.</param>
+    /// <param name="days">The days.</param>
+    /// <returns>The recurring job schedule configurator produced by the operation.</returns>
     public static IRecurringJobScheduleConfigurator At(this IRecurringJobScheduleConfigurator configurator, int hour, int minute, params DayOfWeek[] days)
     {
         ValidateHour(hour);
@@ -52,18 +46,16 @@ public static class RecurringJobScheduleConfiguratorExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Sets the cron expression to run on the specified days of the week at the specified hour and minute
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="seconds"></param>
+    /// <summary>Sets the cron expression to run on the specified days of the week at the specified hour and minute.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     /// <param name="hours">If specified, job will run every <paramref name="hour" /> hours at <paramref name="minute" />:<paramref name="second" /></param>
-    /// <param name="minute"></param>
-    /// <param name="second"></param>
-    /// <param name="days"></param>
-    /// <param name="hour"></param>
-    /// <param name="minutes"></param>
-    /// <returns></returns>
+    /// <param name="minutes">The minutes.</param>
+    /// <param name="seconds">The seconds.</param>
+    /// <param name="hour">The hour.</param>
+    /// <param name="minute">The minute.</param>
+    /// <param name="second">The second.</param>
+    /// <param name="days">The days.</param>
+    /// <returns>The recurring job schedule configurator produced by the operation.</returns>
     public static IRecurringJobScheduleConfigurator Every(this IRecurringJobScheduleConfigurator configurator, int? hours = default, int? minutes = null,
         int? seconds = null, int? hour = null, int? minute = null, int? second = null, DayOfWeek[]? days = null)
     {
@@ -91,14 +83,12 @@ public static class RecurringJobScheduleConfiguratorExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Sets the cron expression to run weekly on the specified day at the specified hour and minute
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="dayOfWeek">The day of the week to run</param>
-    /// <param name="hour"></param>
-    /// <param name="minute"></param>
-    /// <returns></returns>
+    /// <summary>Sets the cron expression to run weekly on the specified day at the specified hour and minute.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="dayOfWeek">The day of the week to run.</param>
+    /// <param name="hour">The hour.</param>
+    /// <param name="minute">The minute.</param>
+    /// <returns>The recurring job schedule configurator produced by the operation.</returns>
     public static IRecurringJobScheduleConfigurator Weekly(this IRecurringJobScheduleConfigurator configurator, DayOfWeek dayOfWeek, int hour, int minute = 0)
     {
         ValidateHour(hour);
@@ -109,14 +99,12 @@ public static class RecurringJobScheduleConfiguratorExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Sets the cron expression to run monthly on the specified day of the month at the specified hour and minute
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="dayOfMonth">The day of the month to run</param>
-    /// <param name="hour"></param>
-    /// <param name="minute"></param>
-    /// <returns></returns>
+    /// <summary>Sets the cron expression to run monthly on the specified day of the month at the specified hour and minute.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="dayOfMonth">The day of the month to run.</param>
+    /// <param name="hour">The hour.</param>
+    /// <param name="minute">The minute.</param>
+    /// <returns>The recurring job schedule configurator produced by the operation.</returns>
     public static IRecurringJobScheduleConfigurator Monthly(this IRecurringJobScheduleConfigurator configurator, int dayOfMonth, int hour, int minute = 0)
     {
         ValidateHour(hour);
@@ -128,15 +116,13 @@ public static class RecurringJobScheduleConfiguratorExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Sets the cron expression to run annually on the specified day of the month of the specified month at the specified hour and minute
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="month">The month of the year to run</param>
-    /// <param name="dayOfMonth">The day of the month to run</param>
-    /// <param name="hour"></param>
-    /// <param name="minute"></param>
-    /// <returns></returns>
+    /// <summary>Sets the cron expression to run annually on the specified day of the month of the specified month at the specified hour and minute.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="month">The month of the year to run.</param>
+    /// <param name="dayOfMonth">The day of the month to run.</param>
+    /// <param name="hour">The hour.</param>
+    /// <param name="minute">The minute.</param>
+    /// <returns>The recurring job schedule configurator produced by the operation.</returns>
     public static IRecurringJobScheduleConfigurator Yearly(this IRecurringJobScheduleConfigurator configurator, int month, int dayOfMonth, int hour,
         int minute = 0)
     {
@@ -150,12 +136,10 @@ public static class RecurringJobScheduleConfiguratorExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Specify the time zone for the cron expression evaluation
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="tz"></param>
-    /// <returns></returns>
+    /// <summary>Specify the time zone for the cron expression evaluation.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="tz">The tz.</param>
+    /// <returns>The recurring job schedule configurator produced by the operation.</returns>
     public static IRecurringJobScheduleConfigurator SetTimeZone(this IRecurringJobScheduleConfigurator configurator, TimeZoneInfo tz)
     {
         configurator.TimeZoneId = tz.Id;

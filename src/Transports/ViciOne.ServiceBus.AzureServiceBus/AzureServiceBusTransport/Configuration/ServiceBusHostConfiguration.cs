@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus host configuration implementation.
-/// </summary>
+/// <summary>Owns Azure Service Bus namespace settings, topology, endpoint definitions, and transport retry policies.</summary>
 public class ServiceBusHostConfiguration :
     BaseHostConfiguration<IServiceBusEntityEndpointConfiguration, IServiceBusReceiveEndpointConfigurator>,
     IServiceBusHostConfiguration
@@ -22,11 +20,9 @@ public class ServiceBusHostConfiguration :
     readonly IServiceBusTopologyConfiguration _topologyConfiguration;
     ServiceBusHostSettings _hostSettings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="busConfiguration">The bus configuration value.</param>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Initializes namespace configuration with transport retry policies and a recyclable connection supervisor.</summary>
+    /// <param name="busConfiguration">The bus configuration that creates child endpoint configurations.</param>
+    /// <param name="topologyConfiguration">The topology shared by hosted endpoints.</param>
     public ServiceBusHostConfiguration(IServiceBusBusConfiguration busConfiguration, IServiceBusTopologyConfiguration topologyConfiguration)
         : base(busConfiguration)
     {
@@ -84,72 +80,54 @@ public class ServiceBusHostConfiguration :
         _connectionContext = new Recycle<IConnectionContextSupervisor>(() => new ConnectionContextSupervisor(this, topologyConfiguration));
     }
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the configured Azure Service Bus namespace address.</summary>
     public override Uri HostAddress => _hostSettings.ServiceUri;
 
     string IServiceBusHostConfiguration.BasePath => _hostSettings.ServiceUri.AbsolutePath.Trim('/');
 
-    /// <summary>
-    /// Gets the connection context supervisor value.
-    /// </summary>
+    /// <summary>Gets the recyclable supervisor for the shared namespace connection.</summary>
     public IConnectionContextSupervisor ConnectionContextSupervisor => _connectionContext.Supervisor;
 
-    /// <summary>
-    /// Gets or sets the settings value.
-    /// </summary>
+    /// <summary>Gets or sets the resolved namespace, credential, retry, and transport settings.</summary>
     public ServiceBusHostSettings Settings
     {
         get => _hostSettings;
         set => _hostSettings = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    /// <summary>
-    /// Gets the receive transport retry policy value.
-    /// </summary>
+    /// <summary>Gets the policy used to recover receive transports from transient namespace failures.</summary>
     public override IRetryPolicy ReceiveTransportRetryPolicy { get; }
-    /// <summary>
-    /// Gets the send transport retry policy value.
-    /// </summary>
+    /// <summary>Gets the policy used to recover send transports and recreate missing destinations.</summary>
     public override IRetryPolicy SendTransportRetryPolicy { get; }
 
     IServiceBusBusTopology IServiceBusHostConfiguration.Topology => _busTopology;
 
-    /// <summary>
-    /// Sets namespace separator to tilde.
-    /// </summary>
+    /// <summary>Uses a tilde when formatting namespace segments in topic names.</summary>
     public void SetNamespaceSeparatorToTilde()
     {
         var messageNameFormatter = new ServiceBusMessageNameFormatter("~");
         _topologyConfiguration.Message.SetEntityNameFormatter(new MessageNameFormatterEntityNameFormatter(messageNameFormatter));
     }
 
-    /// <summary>
-    /// Sets namespace separator to underscore.
-    /// </summary>
+    /// <summary>Uses an underscore when formatting namespace segments in topic names.</summary>
     public void SetNamespaceSeparatorToUnderscore()
     {
         var messageNameFormatter = new ServiceBusMessageNameFormatter("_");
         _topologyConfiguration.Message.SetEntityNameFormatter(new MessageNameFormatterEntityNameFormatter(messageNameFormatter));
     }
 
-    /// <summary>
-    /// Sets namespace separator to.
-    /// </summary>
-    /// <param name="separator">The separator value.</param>
+    /// <summary>Uses the specified separator when formatting namespace segments in topic names.</summary>
+    /// <param name="separator">The separator inserted between namespace segments.</param>
     public void SetNamespaceSeparatorTo(string separator)
     {
         var messageNameFormatter = new ServiceBusMessageNameFormatter(separator);
         _topologyConfiguration.Message.SetEntityNameFormatter(new MessageNameFormatterEntityNameFormatter(messageNameFormatter));
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Creates a queue endpoint from an endpoint definition and an optional provider-specific callback.</summary>
+    /// <param name="definition">The definition that supplies the endpoint name and common settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or the default formatter when omitted.</param>
+    /// <param name="configureEndpoint">An optional callback that configures Azure Service Bus settings.</param>
     public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IServiceBusReceiveEndpointConfigurator>? configureEndpoint = null)
     {
@@ -162,21 +140,17 @@ public class ServiceBusHostConfiguration :
         });
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Creates and registers a receive-endpoint configuration for a queue.</summary>
+    /// <param name="queueName">The queue name relative to the namespace.</param>
+    /// <param name="configureEndpoint">The callback that configures the queue endpoint.</param>
     public override void ReceiveEndpoint(string queueName, Action<IServiceBusReceiveEndpointConfigurator> configureEndpoint)
     {
         CreateReceiveEndpointConfiguration(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the apply endpoint definition operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="definition">The definition value.</param>
+    /// <summary>Applies common endpoint settings and temporary-entity behavior to an Azure Service Bus endpoint.</summary>
+    /// <param name="configurator">The queue endpoint configurator to update.</param>
+    /// <param name="definition">The endpoint definition to apply.</param>
     public void ApplyEndpointDefinition(IServiceBusReceiveEndpointConfigurator configurator, IEndpointDefinition definition)
     {
         if (definition.IsTemporary)
@@ -188,12 +162,10 @@ public class ServiceBusHostConfiguration :
         base.ApplyEndpointDefinition(configurator, definition);
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and registers a queue endpoint using a fresh child endpoint configuration.</summary>
+    /// <param name="queueName">The queue name relative to the namespace.</param>
+    /// <param name="configure">An optional callback that configures the queue endpoint.</param>
+    /// <returns>The registered queue endpoint configuration.</returns>
     public IServiceBusReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
         Action<IServiceBusReceiveEndpointConfigurator>? configure)
     {
@@ -204,13 +176,11 @@ public class ServiceBusHostConfiguration :
         return CreateReceiveEndpointConfiguration(settings, endpointConfiguration, configure);
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates, observes, and registers a queue endpoint from resolved settings.</summary>
+    /// <param name="settings">The queue and processor settings.</param>
+    /// <param name="endpointConfiguration">The endpoint pipeline and topology configuration.</param>
+    /// <param name="configure">An optional callback that further configures the queue endpoint.</param>
+    /// <returns>The registered queue endpoint configuration.</returns>
     public IServiceBusReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(ReceiveEndpointSettings settings,
         IServiceBusEndpointConfiguration endpointConfiguration, Action<IServiceBusReceiveEndpointConfigurator>? configure)
     {
@@ -230,12 +200,10 @@ public class ServiceBusHostConfiguration :
         return configuration;
     }
 
-    /// <summary>
-    /// Performs the subscription endpoint operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Creates and registers a subscription endpoint for a message type's publish topic.</summary>
+    /// <typeparam name="T">The message type whose topology supplies the topic.</typeparam>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="configure">An optional callback that configures the subscription endpoint.</param>
     public void SubscriptionEndpoint<T>(string subscriptionName, Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
         where T : class
     {
@@ -246,12 +214,10 @@ public class ServiceBusHostConfiguration :
         CreateSubscriptionEndpointConfiguration(settings, endpointConfiguration, configure);
     }
 
-    /// <summary>
-    /// Performs the subscription endpoint operation.
-    /// </summary>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="topicPath">The topic path value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Creates and registers a subscription endpoint for an explicit topic path.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="topicPath">The topic path.</param>
+    /// <param name="configure">An optional callback that configures the subscription endpoint.</param>
     public void SubscriptionEndpoint(string subscriptionName, string topicPath, Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
     {
         var endpointConfiguration = _busConfiguration.CreateEndpointConfiguration();
@@ -260,17 +226,13 @@ public class ServiceBusHostConfiguration :
         CreateSubscriptionEndpointConfiguration(settings, endpointConfiguration, configure);
     }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the Azure Service Bus topology built for this namespace.</summary>
     public override IBusTopology Topology => _busTopology;
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a queue endpoint through the transport-independent host interface.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configure">An optional transport-independent endpoint callback.</param>
+    /// <returns>The registered queue endpoint configuration.</returns>
     public override IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
         Action<IReceiveEndpointConfigurator>? configure = null)
     {
@@ -278,10 +240,8 @@ public class ServiceBusHostConfiguration :
             configure == null ? null : endpoint => configure(endpoint));
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the host and adds every registered queue and subscription endpoint.</summary>
+    /// <returns>The configured Azure Service Bus host.</returns>
     public override IHost Build()
     {
         var host = new ServiceBusHost(this, _busTopology);
@@ -292,13 +252,11 @@ public class ServiceBusHostConfiguration :
         return host;
     }
 
-    /// <summary>
-    /// Creates subscription endpoint configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a subscription endpoint for a message type's publish topic.</summary>
+    /// <typeparam name="T">The message type whose topology supplies the topic.</typeparam>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="configure">An optional callback that configures the subscription endpoint.</param>
+    /// <returns>The registered subscription endpoint configuration.</returns>
     public IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration<T>(string subscriptionName,
         Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
         where T : class
@@ -310,13 +268,11 @@ public class ServiceBusHostConfiguration :
         return CreateSubscriptionEndpointConfiguration(settings, endpointConfiguration, configure);
     }
 
-    /// <summary>
-    /// Creates subscription endpoint configuration.
-    /// </summary>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="topicPath">The topic path value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a subscription endpoint for an explicit topic path.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="topicPath">The topic path.</param>
+    /// <param name="configure">An optional callback that configures the subscription endpoint.</param>
+    /// <returns>The registered subscription endpoint configuration.</returns>
     public IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration(string subscriptionName, string topicPath,
         Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
     {
@@ -326,13 +282,11 @@ public class ServiceBusHostConfiguration :
         return CreateSubscriptionEndpointConfiguration(settings, endpointConfiguration, configure);
     }
 
-    /// <summary>
-    /// Creates subscription endpoint configuration.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates, observes, and registers a subscription endpoint from resolved settings.</summary>
+    /// <param name="settings">The topic, subscription, and processor settings.</param>
+    /// <param name="endpointConfiguration">The endpoint pipeline and topology configuration.</param>
+    /// <param name="configure">An optional callback that further configures the subscription endpoint.</param>
+    /// <returns>The registered subscription endpoint configuration.</returns>
     public IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration(SubscriptionEndpointSettings settings,
         IServiceBusEndpointConfiguration endpointConfiguration, Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
     {

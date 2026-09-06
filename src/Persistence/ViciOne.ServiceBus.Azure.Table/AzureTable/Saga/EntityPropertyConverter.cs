@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.AzureTable.Saga;
 
-/// <summary>
-/// Provides an entity property converter implementation.
-/// </summary>
-/// <typeparam name="TEntity">The t entity type.</typeparam>
-/// <typeparam name="TProperty">The t property type.</typeparam>
+/// <summary>Maps one directly supported CLR property to an Azure Table property of the same name.</summary>
+/// <typeparam name="TEntity">The entity type.</typeparam>
+/// <typeparam name="TProperty">The property type.</typeparam>
 public class EntityPropertyConverter<TEntity, TProperty> :
     IEntityPropertyConverter<TEntity>
     where TEntity : class
@@ -20,10 +18,8 @@ public class EntityPropertyConverter<TEntity, TProperty> :
     readonly ITypeConverter<TProperty, object> _toEntity;
     readonly IWriteProperty<TEntity, TProperty> _write;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="name">The name value.</param>
+    /// <summary>Creates a converter for the named readable and writable property.</summary>
+    /// <param name="name">The CLR property name and persisted Azure Table property name.</param>
     public EntityPropertyConverter(string name)
     {
         _name = name;
@@ -37,11 +33,9 @@ public class EntityPropertyConverter<TEntity, TProperty> :
             ?? throw new ArgumentException("Invalid property type");
     }
 
-    /// <summary>
-    /// Performs the to entity operation.
-    /// </summary>
-    /// <param name="entity">The entity value.</param>
-    /// <param name="entityProperties">The entity properties value.</param>
+    /// <summary>Reads the persisted value, converts it to <typeparamref name="TProperty"/>, and assigns it to the instance.</summary>
+    /// <param name="entity">The instance to populate.</param>
+    /// <param name="entityProperties">The persisted Azure Table properties.</param>
     public void ToEntity(TEntity entity, IDictionary<string, object> entityProperties)
     {
         if (entityProperties.TryGetValue(_name, out var entityProperty))
@@ -57,11 +51,9 @@ public class EntityPropertyConverter<TEntity, TProperty> :
         }
     }
 
-    /// <summary>
-    /// Performs the from entity operation.
-    /// </summary>
-    /// <param name="entity">The entity value.</param>
-    /// <param name="entityProperties">The entity properties value.</param>
+    /// <summary>Reads the instance property and adds its Azure Table-compatible value to the property dictionary.</summary>
+    /// <param name="entity">The instance to read.</param>
+    /// <param name="entityProperties">The destination Azure Table property dictionary.</param>
     public void FromEntity(TEntity entity, IDictionary<string, object> entityProperties)
     {
         var propertyValue = _read.Get(entity);

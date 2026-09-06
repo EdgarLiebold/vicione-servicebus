@@ -4,42 +4,26 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Represents an active mq host address value.
-/// </summary>
+/// <summary>Represents a validated ActiveMQ broker address.</summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct ActiveMqHostAddress
 {
-    /// <summary>
-    /// Defines the active mq scheme value.
-    /// </summary>
+    /// <summary>The URI scheme for the ActiveMQ OpenWire transport.</summary>
     public const string ActiveMqScheme = "activemq";
-    /// <summary>
-    /// Defines the amqp scheme value.
-    /// </summary>
+    /// <summary>The URI scheme for the AMQP transport.</summary>
     public const string AmqpScheme = "amqp";
 
-    /// <summary>
-    /// Defines the scheme value.
-    /// </summary>
+    /// <summary>The transport scheme.</summary>
     public readonly string Scheme;
-    /// <summary>
-    /// Defines the host value.
-    /// </summary>
+    /// <summary>The broker host name.</summary>
     public readonly string Host;
-    /// <summary>
-    /// Defines the port value.
-    /// </summary>
+    /// <summary>The explicitly configured broker port.</summary>
     public readonly int Port;
-    /// <summary>
-    /// Defines the virtual host value.
-    /// </summary>
+    /// <summary>Exposes the broker namespace path encoded in the host address.</summary>
     public readonly string VirtualHost;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Parses and validates an absolute ActiveMQ broker address.</summary>
+    /// <param name="address">The absolute broker address.</param>
     public ActiveMqHostAddress(Uri address)
     {
         ArgumentNullException.ThrowIfNull(address);
@@ -67,13 +51,11 @@ public readonly struct ActiveMqHostAddress
         }
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="protocol">The protocol value.</param>
-    /// <param name="host">The host value.</param>
-    /// <param name="port">The port value.</param>
-    /// <param name="virtualHost">The virtual host value.</param>
+    /// <summary>Creates and validates an ActiveMQ broker address from explicit connection settings.</summary>
+    /// <param name="protocol">The broker transport protocol.</param>
+    /// <param name="host">The broker host name.</param>
+    /// <param name="port">The broker port.</param>
+    /// <param name="virtualHost">The broker namespace path.</param>
     public ActiveMqHostAddress(ActiveMqTransportProtocol protocol, string host, int port, string virtualHost)
         : this(SchemeFor(protocol), host, port, virtualHost)
     {
@@ -167,11 +149,9 @@ public readonly struct ActiveMqHostAddress
         }
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts the host address to its canonical absolute URI.</summary>
+    /// <param name="address">The validated host address.</param>
+    /// <returns>An absolute broker URI.</returns>
     public static implicit operator Uri(in ActiveMqHostAddress address)
     {
         ThrowIfInvalid(address);

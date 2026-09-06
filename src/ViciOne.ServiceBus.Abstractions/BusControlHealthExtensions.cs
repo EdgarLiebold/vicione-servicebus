@@ -5,20 +5,17 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
-/// <summary>
-/// Waits for one or more bus controls to reach a specific health status.
-/// </summary>
+/// <summary>Waits for one or more bus controls to reach a specific health status.</summary>
 public static class BusControlHealthExtensions
 {
     private static readonly TimeSpan PollInterval = TimeSpan.FromMilliseconds(100);
 
-    /// <summary>
-    /// Waits until the bus reaches <paramref name="expectedStatus" /> or the timeout expires.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="busControl">The bus control instance.</param>
-    /// <param name="timeout">The maximum time allowed for the operation.</param>
+    /// <summary>Waits until the bus reaches <paramref name="expectedStatus" /> or the timeout expires.</summary>
+    /// <param name="busControl">The bus control.</param>
     /// <param name="expectedStatus">The health status to wait for.</param>
+    /// <param name="timeout">The maximum time allowed for the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the wait for health status outcome.</returns>
     public static Task<BusHealthResult> WaitForHealthStatusAsync(
         this IBusControl busControl,
         BusHealthStatus expectedStatus,
@@ -26,14 +23,13 @@ public static class BusControlHealthExtensions
         CancellationToken cancellationToken = default) =>
         busControl.WaitForHealthStatusAsync(expectedStatus, timeout, TimeProvider.System, cancellationToken);
 
-    /// <summary>
-    /// Waits until the bus reaches <paramref name="expectedStatus" /> using the supplied time source.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="busControl">The bus control instance.</param>
+    /// <summary>Waits until the bus reaches <paramref name="expectedStatus" /> using the supplied time source.</summary>
+    /// <param name="busControl">The bus control.</param>
+    /// <param name="expectedStatus">The health status to wait for.</param>
     /// <param name="timeout">The maximum time allowed for the operation.</param>
     /// <param name="timeProvider">The time source used by the operation.</param>
-    /// <param name="expectedStatus">The health status to wait for.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the wait for health status outcome.</returns>
     public static async Task<BusHealthResult> WaitForHealthStatusAsync(
         this IBusControl busControl,
         BusHealthStatus expectedStatus,
@@ -82,12 +78,11 @@ public static class BusControlHealthExtensions
         }
     }
 
-    /// <summary>
-    /// Waits until the bus reaches <paramref name="expectedStatus" /> or cancellation is requested.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="busControl">The bus control instance.</param>
+    /// <summary>Waits until the bus reaches <paramref name="expectedStatus" /> or cancellation is requested.</summary>
+    /// <param name="busControl">The bus control.</param>
     /// <param name="expectedStatus">The health status to wait for.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the wait for health status outcome.</returns>
     public static Task<BusHealthResult> WaitForHealthStatusAsync(
         this IBusControl busControl,
         BusHealthStatus expectedStatus,
@@ -98,13 +93,12 @@ public static class BusControlHealthExtensions
             TimeProvider.System,
             cancellationToken);
 
-    /// <summary>
-    /// Waits concurrently for every bus to reach <paramref name="expectedStatus" />.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="busControls">The bus control instances.</param>
-    /// <param name="timeout">The maximum time allowed for the operation.</param>
+    /// <summary>Waits concurrently for every bus to reach <paramref name="expectedStatus" />.</summary>
+    /// <param name="busControls">The bus controls.</param>
     /// <param name="expectedStatus">The health status to wait for.</param>
+    /// <param name="timeout">The maximum time allowed for the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the wait for health status outcome.</returns>
     public static Task<BusHealthResult[]> WaitForHealthStatusAsync(
         this IEnumerable<IBusControl> busControls,
         BusHealthStatus expectedStatus,
@@ -120,11 +114,12 @@ public static class BusControlHealthExtensions
     /// Waits concurrently for every bus to reach <paramref name="expectedStatus" /> using the
     /// supplied time source and returns results in input order.
     /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="busControls">The bus control instances.</param>
+    /// <param name="busControls">The bus controls.</param>
+    /// <param name="expectedStatus">The health status to wait for.</param>
     /// <param name="timeout">The maximum time allowed for the operation.</param>
     /// <param name="timeProvider">The time source used by the operation.</param>
-    /// <param name="expectedStatus">The health status to wait for.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the wait for health status outcome.</returns>
     public static Task<BusHealthResult[]> WaitForHealthStatusAsync(
         this IEnumerable<IBusControl> busControls,
         BusHealthStatus expectedStatus,
@@ -149,9 +144,10 @@ public static class BusControlHealthExtensions
     /// Waits concurrently for every bus to reach <paramref name="expectedStatus" /> or cancellation
     /// is requested.
     /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="busControls">The bus control instances.</param>
+    /// <param name="busControls">The bus controls.</param>
     /// <param name="expectedStatus">The health status to wait for.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the wait for health status outcome.</returns>
     public static Task<BusHealthResult[]> WaitForHealthStatusAsync(
         this IEnumerable<IBusControl> busControls,
         BusHealthStatus expectedStatus,

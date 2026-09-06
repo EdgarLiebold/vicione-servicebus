@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a retry pipe specification implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Describes requirements for retry pipe.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class RetryPipeSpecification<TContext> :
     ExceptionSpecification,
     IRetryConfigurator,
@@ -18,18 +16,14 @@ public class RetryPipeSpecification<TContext> :
     readonly RetryObservable _observers;
     RetryPolicyFactory _policyFactory = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public RetryPipeSpecification()
     {
         _observers = new RetryObservable();
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPipeBuilder<TContext> builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -42,30 +36,24 @@ public class RetryPipeSpecification<TContext> :
         builder.AddFilter(new RetryFilter<TContext>(retryPolicy, _observers));
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_policyFactory == null)
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
-    /// <summary>
-    /// Sets retry policy.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Sets retry policy.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));
     }
 
-    /// <summary>
-    /// Connects retry observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects retry observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectRetryObserver(IRetryObserver observer)
     {
         ArgumentNullException.ThrowIfNull(observer);

@@ -5,17 +5,13 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Futures;
 
-/// <summary>
-/// Provides extension methods for future state.
-/// </summary>
+/// <summary>Provides extension methods for future state.</summary>
 public static class FutureStateExtensions
 {
-    /// <summary>
-    /// Gets command.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets command.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The command.</returns>
     public static T? GetCommand<T>(this BehaviorContext<FutureState> context)
         where T : class
     {
@@ -24,13 +20,11 @@ public static class FutureStateExtensions
             : null;
     }
 
-    /// <summary>
-    /// Performs the to object operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to object.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="message">The message to process.</param>
+    /// <returns>The converted object.</returns>
     public static T? ToObject<T>(this BehaviorContext<FutureState> context, FutureMessage message)
         where T : class
     {
@@ -39,13 +33,11 @@ public static class FutureStateExtensions
             : null;
     }
 
-    /// <summary>
-    /// Creates future message.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates future message.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="message">The message to process.</param>
+    /// <returns>The created future message.</returns>
     public static FutureMessage CreateFutureMessage<T>(this BehaviorContext<FutureState> context, T message)
         where T : class
     {
@@ -54,12 +46,10 @@ public static class FutureStateExtensions
         return new FutureMessage(dictionary, MessageTypeCache<T>.MessageTypeNames.ToArray());
     }
 
-    /// <summary>
-    /// Performs the select results operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Selects results.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The selected results.</returns>
     public static IEnumerable<T> SelectResults<T>(this BehaviorContext<FutureState> context)
         where T : class
     {
@@ -68,10 +58,8 @@ public static class FutureStateExtensions
             : Enumerable.Empty<T>();
     }
 
-    /// <summary>
-    /// Adds subscription to the configuration.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds subscription to the configuration.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public static void AddSubscription(this BehaviorContext<FutureState> context)
     {
         if (context.ResponseAddress == null)
@@ -80,16 +68,14 @@ public static class FutureStateExtensions
         context.Saga.Subscriptions.Add(new FutureSubscription(context.ResponseAddress, context.RequestId));
     }
 
-    /// <summary>
-    /// Sets result.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TResult">The t result type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="id">The id value.</param>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Sets result.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the set result outcome.</returns>
     public static async Task<TResult> SetResultAsync<T, TResult>(this BehaviorContext<FutureState, T> context, Guid id,
         AsyncEventMessageFactory<FutureState, T, TResult> factory, CancellationToken cancellationToken = default)
         where T : class
@@ -105,15 +91,13 @@ public static class FutureStateExtensions
         return result;
     }
 
-    /// <summary>
-    /// Sets result.
-    /// </summary>
-    /// <typeparam name="TResult">The t result type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="id">The id value.</param>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Sets result.</summary>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the set result outcome.</returns>
     public static async Task<TResult> SetResultAsync<TResult>(this BehaviorContext<FutureState> context, Guid id,
         AsyncEventMessageFactory<FutureState, TResult> factory, CancellationToken cancellationToken = default)
         where TResult : class
@@ -128,14 +112,12 @@ public static class FutureStateExtensions
         return result;
     }
 
-    /// <summary>
-    /// Sets result.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TResult">The t result type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="id">The id value.</param>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Sets result.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
     public static void SetResult<T, TResult>(this BehaviorContext<FutureState, T> context, Guid id, EventMessageFactory<FutureState, T, TResult> factory)
         where T : class
         where TResult : class
@@ -148,14 +130,12 @@ public static class FutureStateExtensions
         context.Saga.Results[id] = context.CreateFutureMessage(result);
     }
 
-    /// <summary>
-    /// Sets result.
-    /// </summary>
-    /// <typeparam name="TResult">The t result type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="id">The id value.</param>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets result.</summary>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The t result produced by the operation.</returns>
     public static TResult SetResult<TResult>(this BehaviorContext<FutureState> context, Guid id, EventMessageFactory<FutureState, TResult> factory)
         where TResult : class
     {
@@ -169,13 +149,11 @@ public static class FutureStateExtensions
         return result;
     }
 
-    /// <summary>
-    /// Sets result.
-    /// </summary>
-    /// <typeparam name="TResult">The t result type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="id">The id value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Sets result.</summary>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="result">The result.</param>
     public static void SetResult<TResult>(this BehaviorContext<FutureState> context, Guid id, TResult result)
         where TResult : class
     {
@@ -185,11 +163,9 @@ public static class FutureStateExtensions
         context.Saga.Results[id] = context.CreateFutureMessage(result);
     }
 
-    /// <summary>
-    /// Sets completed.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="id">The id value.</param>
+    /// <summary>Sets completed.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="id">The id.</param>
     public static void SetCompleted(this BehaviorContext<FutureState> context, Guid id)
     {
         var timestamp = context.SentTime ?? context.GetUtcDateTime();
@@ -207,12 +183,10 @@ public static class FutureStateExtensions
             future.Completed = timestamp;
     }
 
-    /// <summary>
-    /// Sets faulted.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="id">The id value.</param>
-    /// <param name="timestamp">The timestamp value.</param>
+    /// <summary>Sets faulted.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="timestamp">The timestamp.</param>
     public static void SetFaulted(this BehaviorContext<FutureState> context, Guid id, DateTimeOffset? timestamp = default)
     {
         timestamp ??= context.SentTime ?? context.GetUtcDateTime();
@@ -225,14 +199,12 @@ public static class FutureStateExtensions
         future.Faulted ??= timestamp;
     }
 
-    /// <summary>
-    /// Sets fault.
-    /// </summary>
-    /// <typeparam name="TFault">The t fault type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="id">The id value.</param>
-    /// <param name="fault">The fault value.</param>
-    /// <param name="timestamp">The timestamp value.</param>
+    /// <summary>Sets fault.</summary>
+    /// <typeparam name="TFault">The fault type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="fault">The fault.</param>
+    /// <param name="timestamp">The timestamp.</param>
     public static void SetFault<TFault>(this BehaviorContext<FutureState> context, Guid id, TFault fault, DateTimeOffset? timestamp = default)
         where TFault : class
     {
@@ -241,14 +213,12 @@ public static class FutureStateExtensions
         context.Saga.Faults[id] = context.CreateFutureMessage(fault);
     }
 
-    /// <summary>
-    /// Sets fault.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TFault">The t fault type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="id">The id value.</param>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Sets fault.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TFault">The fault type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
     public static void SetFault<T, TFault>(this BehaviorContext<FutureState, T> context, Guid id, EventMessageFactory<FutureState, T, TFault> factory)
         where T : class
         where TFault : class
@@ -260,17 +230,15 @@ public static class FutureStateExtensions
         context.Saga.Faults[id] = context.CreateFutureMessage(result);
     }
 
-    /// <summary>
-    /// Sets fault.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TFault">The t fault type.</typeparam>
-    /// <param name="future">The future value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="id">The id value.</param>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Sets fault.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TFault">The fault type.</typeparam>
+    /// <param name="future">The future.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the set fault outcome.</returns>
     public static async Task<TFault> SetFaultAsync<T, TFault>(this FutureState future, BehaviorContext<FutureState, T> context, Guid id,
         AsyncEventMessageFactory<FutureState, T, TFault> factory, CancellationToken cancellationToken = default)
         where T : class
@@ -290,13 +258,11 @@ public static class FutureStateExtensions
         return fault;
     }
 
-    /// <summary>
-    /// Attempts to get result.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="id">The id value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to get result.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool TryGetResult<T>(this BehaviorContext<FutureState> context, Guid id, [NotNullWhen(true)] out T? result)
         where T : class
@@ -311,13 +277,11 @@ public static class FutureStateExtensions
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get fault.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="id">The id value.</param>
-    /// <param name="fault">The fault value.</param>
+    /// <summary>Attempts to get fault.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="fault">Receives the fault produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool TryGetFault<T>(this BehaviorContext<FutureState> context, Guid id, [NotNullWhen(true)] out T? fault)
         where T : class

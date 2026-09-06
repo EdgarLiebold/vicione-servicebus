@@ -2,14 +2,10 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Defines the contract for rabbit mq endpoint configuration.
-/// </summary>
+/// <summary>Combines provider-neutral endpoint configuration with RabbitMQ topology.</summary>
 public interface IRabbitMqEndpointConfiguration :
     IEndpointConfiguration
 {
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the RabbitMQ topology configuration scoped to this endpoint.</summary>
     new IRabbitMqTopologyConfiguration Topology { get; }
 }

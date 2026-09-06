@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Defines the contract for amazon sqs send context.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Exposes Amazon SQS-native send settings for a typed message.</summary>
+/// <typeparam name="T">The message type.</typeparam>
 public interface AmazonSqsSendContext<out T> :
     AmazonSqsSendContext,
     SendContext<T>
@@ -12,22 +10,14 @@ public interface AmazonSqsSendContext<out T> :
 }
 
 
-/// <summary>
-/// Defines the contract for amazon sqs send context.
-/// </summary>
+/// <summary>Exposes Amazon SQS-native send settings.</summary>
 public interface AmazonSqsSendContext :
     SendContext
 {
-    /// <summary>
-    /// Gets or sets the group id value.
-    /// </summary>
+    /// <summary>Sets the FIFO message-group identifier.</summary>
     string? GroupId { set; }
-    /// <summary>
-    /// Gets or sets the deduplication id value.
-    /// </summary>
+    /// <summary>Sets the FIFO message-deduplication identifier.</summary>
     string? DeduplicationId { set; }
-    /// <summary>
-    /// Gets or sets the delay seconds value.
-    /// </summary>
+    /// <summary>Sets the per-message delivery delay in whole seconds.</summary>
     int? DelaySeconds { set; }
 }

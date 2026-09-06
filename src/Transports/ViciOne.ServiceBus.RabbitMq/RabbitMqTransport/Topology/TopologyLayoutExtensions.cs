@@ -1,14 +1,10 @@
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides extension methods for topology layout.
-/// </summary>
+/// <summary>Provides diagnostic logging for RabbitMQ broker topology.</summary>
 public static class TopologyLayoutExtensions
 {
-    /// <summary>
-    /// Performs the log result operation.
-    /// </summary>
-    /// <param name="layout">The layout value.</param>
+    /// <summary>Logs each exchange declaration and exchange-to-exchange binding in a topology.</summary>
+    /// <param name="layout">The broker topology to log.</param>
     public static void LogResult(this BrokerTopology layout)
     {
         foreach (var exchange in layout.Exchanges)

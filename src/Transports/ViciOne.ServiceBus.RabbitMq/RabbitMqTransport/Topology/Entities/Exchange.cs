@@ -2,33 +2,21 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// The exchange details used to declare the exchange to RabbitMQ
-/// </summary>
+/// <summary>Describes an exchange declaration in a RabbitMQ broker topology.</summary>
 public interface Exchange
 {
-    /// <summary>
-    /// The exchange name
-    /// </summary>
+    /// <summary>Gets the exchange name.</summary>
     string ExchangeName { get; }
 
-    /// <summary>
-    /// The exchange type
-    /// </summary>
+    /// <summary>Gets the RabbitMQ exchange type.</summary>
     string ExchangeType { get; }
 
-    /// <summary>
-    /// True if the exchange should be durable, and survive a broker restart
-    /// </summary>
+    /// <summary>Gets whether the exchange survives broker restarts.</summary>
     bool Durable { get; }
 
-    /// <summary>
-    /// True if the exchange should be deleted when the connection is closed
-    /// </summary>
+    /// <summary>Gets whether RabbitMQ deletes the exchange when it is no longer used.</summary>
     bool AutoDelete { get; }
 
-    /// <summary>
-    /// Additional exchange arguments
-    /// </summary>
+    /// <summary>Gets the broker-specific exchange declaration arguments.</summary>
     IDictionary<string, object?> ExchangeArguments { get; }
 }

@@ -3,19 +3,15 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a rabbit mq broker topology implementation.
-/// </summary>
+/// <summary>Provides an immutable snapshot of RabbitMQ exchange, queue, and binding declarations.</summary>
 public class RabbitMqBrokerTopology :
     BrokerTopology
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="exchanges">The exchanges value.</param>
-    /// <param name="exchangeBindings">The exchange bindings value.</param>
-    /// <param name="queues">The queues value.</param>
-    /// <param name="queueBindings">The queue bindings value.</param>
+    /// <summary>Creates a broker-topology snapshot from the supplied declarations.</summary>
+    /// <param name="exchanges">The exchange declarations.</param>
+    /// <param name="exchangeBindings">The exchange-to-exchange bindings.</param>
+    /// <param name="queues">The queue declarations.</param>
+    /// <param name="queueBindings">The exchange-to-queue bindings.</param>
     public RabbitMqBrokerTopology(IEnumerable<Exchange> exchanges, IEnumerable<ExchangeToExchangeBinding> exchangeBindings, IEnumerable<Queue> queues,
         IEnumerable<ExchangeToQueueBinding> queueBindings)
     {
@@ -25,21 +21,13 @@ public class RabbitMqBrokerTopology :
         QueueBindings = queueBindings.ToArray();
     }
 
-    /// <summary>
-    /// Gets the exchanges value.
-    /// </summary>
+    /// <summary>Gets the exchange declarations.</summary>
     public Exchange[] Exchanges { get; }
-    /// <summary>
-    /// Gets the queues value.
-    /// </summary>
+    /// <summary>Gets the queue declarations.</summary>
     public Queue[] Queues { get; }
-    /// <summary>
-    /// Gets the exchange bindings value.
-    /// </summary>
+    /// <summary>Gets the exchange-to-exchange bindings.</summary>
     public ExchangeToExchangeBinding[] ExchangeBindings { get; }
-    /// <summary>
-    /// Gets the queue bindings value.
-    /// </summary>
+    /// <summary>Gets the exchange-to-queue bindings.</summary>
     public ExchangeToQueueBinding[] QueueBindings { get; }
 
     void IProbeSite.Probe(ProbeContext context)

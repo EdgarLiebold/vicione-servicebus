@@ -14,6 +14,9 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class ReliableMessagingServiceCollectionExtensions
 {
     /// <summary>Adds and configures reliable messaging within the default bus configuration flow.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The configured reliable messaging.</returns>
     public static IBusRegistrationConfigurator UseReliableMessaging(
         this IBusRegistrationConfigurator configurator,
         Action<IReliableMessagingConfigurator<IBus>> configure)
@@ -24,6 +27,10 @@ public static class ReliableMessagingServiceCollectionExtensions
     }
 
     /// <summary>Adds and configures reliable messaging within its owning typed bus configuration flow.</summary>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The configured reliable messaging.</returns>
     public static IBusRegistrationConfigurator<TBus> UseReliableMessaging<TBus>(
         this IBusRegistrationConfigurator<TBus> configurator,
         Action<IReliableMessagingConfigurator<TBus>> configure)
@@ -38,6 +45,10 @@ public static class ReliableMessagingServiceCollectionExtensions
     /// Provider/testing-level registration for one durable sender runtime. Application configuration should use
     /// <see cref="UseReliableMessaging(IBusRegistrationConfigurator,Action{IReliableMessagingConfigurator{IBus}})"/>.
     /// </summary>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddViciOneReliableMessaging<TBus>(
         this IServiceCollection services,
         Action<ReliableMessagingOptions<TBus>>? configure = null)

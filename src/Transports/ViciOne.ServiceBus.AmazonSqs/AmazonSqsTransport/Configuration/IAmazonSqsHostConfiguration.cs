@@ -4,49 +4,37 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Configuration;
 
-/// <summary>
-/// Defines the contract for amazon sqs host configuration.
-/// </summary>
+/// <summary>Defines host settings, topology, connection supervision, and receive-endpoint creation for Amazon SQS.</summary>
 public interface IAmazonSqsHostConfiguration :
     IHostConfiguration,
     IReceiveConfigurator<IAmazonSqsReceiveEndpointConfigurator>
 {
-    /// <summary>
-    /// Gets or sets the settings value.
-    /// </summary>
+    /// <summary>Gets or sets the immutable Amazon SQS host settings.</summary>
     AmazonSqsHostSettings Settings { get; set; }
 
-    /// <summary>
-    /// Gets the connection context supervisor value.
-    /// </summary>
+    /// <summary>Gets the supervisor for Amazon SQS connection contexts.</summary>
     IConnectionContextSupervisor ConnectionContextSupervisor { get; }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the Amazon SQS bus topology.</summary>
     new IAmazonSqsBusTopology Topology { get; }
 
-    /// <summary>
-    /// Apply the endpoint definition to the receive endpoint configurator
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="definition"></param>
+    /// <summary>Applies transport-neutral endpoint-definition settings to an Amazon SQS endpoint.</summary>
+    /// <param name="configurator">The receive-endpoint configurator to update.</param>
+    /// <param name="definition">The endpoint definition to apply.</param>
     void ApplyEndpointDefinition(IAmazonSqsReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
 
-    /// <summary>
-    /// Create a receive endpoint configuration using the specified host
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Creates receive-endpoint configuration for a named Amazon SQS queue.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configure">An optional Amazon SQS-specific endpoint callback.</param>
+    /// <returns>The configured receive endpoint.</returns>
     IAmazonSqsReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
         Action<IAmazonSqsReceiveEndpointConfigurator>? configure = null);
 
-    /// <summary>
-    /// Create a receive endpoint configuration for the default host
-    /// </summary>
-    /// <param name="settings"></param>
-    /// <param name="endpointConfiguration"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Creates receive-endpoint configuration from prepared queue and endpoint settings.</summary>
+    /// <param name="settings">The queue and receive settings.</param>
+    /// <param name="endpointConfiguration">The endpoint-level pipeline and topology configuration.</param>
+    /// <param name="configure">An optional Amazon SQS-specific endpoint callback.</param>
+    /// <returns>The configured receive endpoint.</returns>
     IAmazonSqsReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(QueueReceiveSettings settings,
         IAmazonSqsEndpointConfiguration endpointConfiguration, Action<IAmazonSqsReceiveEndpointConfigurator>? configure = null);
 }

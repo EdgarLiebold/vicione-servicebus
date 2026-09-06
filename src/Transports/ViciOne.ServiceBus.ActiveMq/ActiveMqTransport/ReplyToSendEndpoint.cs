@@ -4,31 +4,25 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides a reply to send endpoint implementation.
-/// </summary>
+/// <summary>Decorates a send endpoint so replies can reuse a native Apache NMS reply destination.</summary>
 public class ReplyToSendEndpoint :
     SendEndpointProxy
 {
     readonly IDestination _destination;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="endpoint">The endpoint value.</param>
-    /// <param name="destination">The destination value.</param>
+    /// <summary>Creates a reply-aware send-endpoint proxy.</summary>
+    /// <param name="endpoint">The underlying send endpoint.</param>
+    /// <param name="destination">The native reply destination from the consumed message.</param>
     public ReplyToSendEndpoint(ISendEndpoint endpoint, IDestination destination)
         : base(endpoint)
     {
         _destination = destination;
     }
 
-    /// <summary>
-    /// Gets pipe proxy.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a pipeline adapter that applies the native reply destination when addresses match.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="pipe">An optional caller-supplied send pipeline.</param>
+    /// <returns>The reply-aware send pipeline.</returns>
     protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>>? pipe = default)
     {
         return new ReplyToPipe<T>(_destination, pipe);

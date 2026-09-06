@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a service bus consume topology implementation.
-/// </summary>
+/// <summary>Collects Azure Service Bus subscriptions applied to receive endpoints.</summary>
 public class ServiceBusConsumeTopology :
     ConsumeTopology,
     IServiceBusConsumeTopologyConfigurator
@@ -16,11 +14,9 @@ public class ServiceBusConsumeTopology :
     readonly IServiceBusPublishTopology _publishTopology;
     readonly IList<IServiceBusConsumeTopologySpecification> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
-    /// <param name="publishTopology">The publish topology value.</param>
+    /// <summary>Creates an empty consume topology linked to message and publish topology.</summary>
+    /// <param name="messageTopology">The provider-neutral message topology.</param>
+    /// <param name="publishTopology">The Azure publish topology used to resolve message topics.</param>
     public ServiceBusConsumeTopology(IMessageTopology messageTopology, IServiceBusPublishTopology publishTopology)
         : base(260)
     {
@@ -39,10 +35,8 @@ public class ServiceBusConsumeTopology :
         return (IServiceBusMessageConsumeTopologyConfigurator<T>)GetMessageTopology<T>();
     }
 
-    /// <summary>
-    /// Adds specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds a subscription specification to the consume topology.</summary>
+    /// <param name="specification">The specification to apply when an endpoint is built.</param>
     public void AddSpecification(IServiceBusConsumeTopologySpecification specification)
     {
         if (specification == null)
@@ -51,12 +45,10 @@ public class ServiceBusConsumeTopology :
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Performs the subscribe operation.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Adds a subscription to a named topic.</summary>
+    /// <param name="topicName">The namespace-relative topic name.</param>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="callback">Optionally configures the subscription.</param>
     public void Subscribe(string topicName, string subscriptionName, Action<IServiceBusSubscriptionConfigurator>? callback = null)
     {
         if (string.IsNullOrWhiteSpace(topicName))
@@ -80,10 +72,8 @@ public class ServiceBusConsumeTopology :
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies explicit and message-specific subscriptions to a receive-endpoint builder.</summary>
+    /// <param name="builder">The topology builder receiving the subscriptions.</param>
     public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
     {
         foreach (var specification in _specifications)
@@ -92,20 +82,16 @@ public class ServiceBusConsumeTopology :
         ForEach<IServiceBusMessageConsumeTopologyConfigurator>(x => x.Apply(builder));
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the bus-wide consume topology and every explicit subscription.</summary>
+    /// <returns>All Azure Service Bus consume-topology validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates consume topology for a message contract.</summary>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <returns>The message-specific Azure consume topology.</returns>
     protected override IMessageConsumeTopologyConfigurator CreateMessageTopology<T>()
     {
         var messageTopology = new ServiceBusMessageConsumeTopology<T>(_messageTopology.GetMessageTopology<T>(), _publishTopology.GetMessageTopology<T>());

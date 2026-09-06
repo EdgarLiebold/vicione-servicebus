@@ -9,27 +9,21 @@ using ViciOne.ServiceBus.Visualizer.Abstractions;
 
 namespace ViciOne.ServiceBus.Visualizer;
 
-/// <summary>
-/// Provides a state machine mermaid generator implementation.
-/// </summary>
+/// <summary>Generates state machine mermaid values.</summary>
 public class StateMachineMermaidGenerator : StateMachineGenerator
 {
     const string OpenBracket = "«";
     const string CloseBracket = "»";
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="data">The data value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="data">The data.</param>
     public StateMachineMermaidGenerator(StateMachineGraph data)
         : base(data)
     {
     }
 
-    /// <summary>
-    /// Creates mermaid file.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates mermaid file.</summary>
+    /// <returns>The created mermaid file.</returns>
     public string CreateMermaidFile()
     {
         StringBuilder output = new();

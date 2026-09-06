@@ -2,30 +2,22 @@ using System;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
-/// <summary>
-/// Provides a saga instance implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Represents an instance of saga.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class SagaInstance<T> :
     ISagaInstance<T>
     where T : class, ISaga
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="saga">The saga value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="saga">The saga.</param>
     public SagaInstance(T saga)
     {
         Saga = saga;
     }
 
-    /// <summary>
-    /// Gets the saga value.
-    /// </summary>
+    /// <summary>Gets the saga.</summary>
     public T Saga { get; }
 
-    /// <summary>
-    /// Gets the element id value.
-    /// </summary>
+    /// <summary>Gets the element id.</summary>
     public Guid? ElementId => Saga.CorrelationId;
 }

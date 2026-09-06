@@ -4,19 +4,15 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
-/// <summary>
-/// Provides an in memory transport message implementation.
-/// </summary>
+/// <summary>Carries in memory transport message data.</summary>
 public class InMemoryTransportMessage
 {
     static long _nextSequenceNumber;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageId">The message id value.</param>
-    /// <param name="body">The body value.</param>
-    /// <param name="contentType">The content type value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="messageId">The message id.</param>
+    /// <param name="body">The body.</param>
+    /// <param name="contentType">The runtime content type used by the operation.</param>
     public InMemoryTransportMessage(Guid messageId, byte[] body, string? contentType)
     {
         Headers = new DictionarySendHeaders();
@@ -29,38 +25,24 @@ public class InMemoryTransportMessage
         SequenceNumber = Interlocked.Increment(ref _nextSequenceNumber);
     }
 
-    /// <summary>
-    /// Gets the sequence number value.
-    /// </summary>
+    /// <summary>Gets the sequence number.</summary>
     public long SequenceNumber { get; }
 
-    /// <summary>
-    /// Gets the message id value.
-    /// </summary>
+    /// <summary>Gets the message id.</summary>
     public Guid MessageId { get; }
 
-    /// <summary>
-    /// Gets the body value.
-    /// </summary>
+    /// <summary>Gets the body.</summary>
     public byte[] Body { get; }
 
-    /// <summary>
-    /// Gets or sets the delivery count value.
-    /// </summary>
+    /// <summary>Gets or sets the delivery count.</summary>
     public int DeliveryCount { get; set; }
 
-    /// <summary>
-    /// Gets the headers value.
-    /// </summary>
+    /// <summary>Gets the headers.</summary>
     public SendHeaders Headers { get; }
 
-    /// <summary>
-    /// Gets or sets the delay value.
-    /// </summary>
+    /// <summary>Gets or sets the delay.</summary>
     public TimeSpan? Delay { get; set; }
-    /// <summary>
-    /// Gets or sets the routing key value.
-    /// </summary>
+    /// <summary>Gets or sets the routing key.</summary>
     public string? RoutingKey { get; set; }
 
     internal InMemoryDurableSendContext? DurableSendContext { get; set; }

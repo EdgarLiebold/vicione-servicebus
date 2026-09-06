@@ -4,31 +4,25 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus send transport provider implementation.
-/// </summary>
+/// <summary>Normalizes Azure Service Bus addresses and resolves send transports for a receive endpoint.</summary>
 public class ServiceBusSendTransportProvider :
     ISendTransportProvider
 {
     readonly IConnectionContextSupervisor _connectionContextSupervisor;
     readonly ReceiveEndpointContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionContextSupervisor">The connection context supervisor value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Creates a provider bound to a namespace connection and receive endpoint.</summary>
+    /// <param name="connectionContextSupervisor">The namespace connection supervisor.</param>
+    /// <param name="context">The receive endpoint requesting send transports.</param>
     public ServiceBusSendTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, ReceiveEndpointContext context)
     {
         _connectionContextSupervisor = connectionContextSupervisor;
         _context = context;
     }
 
-    /// <summary>
-    /// Performs the normalize address operation.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Resolves a relative or transport-specific address against the configured namespace.</summary>
+    /// <param name="address">The endpoint address to normalize.</param>
+    /// <returns>The absolute Azure Service Bus endpoint URI.</returns>
     public Uri NormalizeAddress(Uri address)
     {
         return _connectionContextSupervisor.NormalizeAddress(address);

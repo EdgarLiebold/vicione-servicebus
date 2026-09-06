@@ -4,9 +4,8 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Adds exactly one first-class consumer-concurrency gate to a consumed message pipeline.
-/// </summary>
+/// <summary>Adds exactly one first-class consumer-concurrency gate to a consumed message pipeline.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 internal sealed class ConsumerConcurrencyPipeSpecification<TMessage> :
     IPipeSpecification<ConsumeContext<TMessage>>
     where TMessage : class

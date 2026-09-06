@@ -4,17 +4,14 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides typed and runtime Courier registration extensions.
-/// </summary>
+/// <summary>Provides typed and runtime Courier registration extensions.</summary>
 public static class CourierRegistrationConfiguratorRuntimeExtensions
 {
-    /// <summary>
-    /// Adds an activity (Courier), along with an optional activity definition
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="activityType"></param>
-    /// <param name="activityDefinitionType"></param>
+    /// <summary>Adds an activity (Courier), along with an optional activity definition.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="activityType">The runtime activity type used by the operation.</param>
+    /// <param name="activityDefinitionType">The runtime activity definition type used by the operation.</param>
+    /// <returns>The activity registration configurator produced by the operation.</returns>
     public static IActivityRegistrationConfigurator AddActivity(this IRegistrationConfigurator configurator, Type activityType,
         Type? activityDefinitionType = null)
     {
@@ -26,12 +23,11 @@ public static class CourierRegistrationConfiguratorRuntimeExtensions
         return register.Register(configurator, activityDefinitionType);
     }
 
-    /// <summary>
-    /// Adds an execute activity (Courier), along with an optional activity definition
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="activityType"></param>
-    /// <param name="activityDefinitionType"></param>
+    /// <summary>Adds an execute activity (Courier), along with an optional activity definition.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="activityType">The runtime activity type used by the operation.</param>
+    /// <param name="activityDefinitionType">The runtime activity definition type used by the operation.</param>
+    /// <returns>The execute activity registration configurator produced by the operation.</returns>
     public static IExecuteActivityRegistrationConfigurator AddExecuteActivity(this IRegistrationConfigurator configurator, Type activityType,
         Type? activityDefinitionType = null)
     {

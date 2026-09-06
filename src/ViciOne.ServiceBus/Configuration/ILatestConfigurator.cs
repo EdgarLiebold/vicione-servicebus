@@ -1,14 +1,10 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for latest configurator.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Configures latest.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface ILatestConfigurator<T>
     where T : class, PipeContext
 {
-    /// <summary>
-    /// Gets or sets the created value.
-    /// </summary>
+    /// <summary>Gets or sets the created.</summary>
     LatestFilterCreated<T> Created { set; }
 }

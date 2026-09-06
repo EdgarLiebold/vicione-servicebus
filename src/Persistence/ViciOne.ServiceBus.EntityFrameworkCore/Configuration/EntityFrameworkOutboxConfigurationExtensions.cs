@@ -7,19 +7,16 @@ using ViciOne.ServiceBus.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides extension methods for entity framework outbox configuration.
-/// </summary>
+/// <summary>Registers EF Core inbox/outbox services, relational lock providers, and entity mappings.</summary>
 public static class EntityFrameworkOutboxConfigurationExtensions
 {
     /// <summary>
     /// Configures the Entity Framework Outbox on the bus, which can subsequently be used to configure
     /// the transactional outbox on a receive endpoint.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <typeparam name="TDbContext"></typeparam>
-    /// <returns></returns>
+    /// <typeparam name="TDbContext">The db context type.</typeparam>
+    /// <param name="configurator">The default-bus registration that receives the transactional store.</param>
+    /// <param name="configure">An optional callback that configures persistence, cleanup, and delivery.</param>
     public static void ConfigureEntityFrameworkTransactionalStore<TDbContext>(this IBusRegistrationConfigurator configurator,
         Action<IEntityFrameworkOutboxConfigurator>? configure = null)
         where TDbContext : DbContext
@@ -34,6 +31,10 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// Configures an Entity Framework outbox for a specific MultiBus instance. Bus and DbContext together form
     /// the durable outbox identity, allowing the same DbContext to host isolated outboxes for multiple buses.
     /// </summary>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <typeparam name="TDbContext">The db context type.</typeparam>
+    /// <param name="configurator">The typed-bus registration that receives the transactional store.</param>
+    /// <param name="configure">An optional callback that configures persistence, cleanup, and delivery.</param>
     public static void ConfigureEntityFrameworkTransactionalStore<TBus, TDbContext>(this IBusRegistrationConfigurator<TBus> configurator,
         Action<IEntityFrameworkOutboxConfigurator>? configure = null)
         where TBus : class, IBus
@@ -45,12 +46,11 @@ public static class EntityFrameworkOutboxConfigurationExtensions
         outboxConfigurator.Configure(configure);
     }
 
-    /// <summary>
-    /// Configure the Entity Framework outbox on the receive endpoint
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="context">Configuration service provider</param>
-    /// <param name="configure"></param>
+    /// <summary>Enables EF Core inbox deduplication and receive-side outbox persistence on an endpoint.</summary>
+    /// <typeparam name="TDbContext">The db context type.</typeparam>
+    /// <param name="configurator">The receive endpoint on which the EF Core outbox is enabled.</param>
+    /// <param name="context">The registration context used to resolve the DbContext and outbox services.</param>
+    /// <param name="configure">An optional callback that configures receive-side outbox behavior.</param>
     public static void UseEntityFrameworkOutbox<TDbContext>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
         Action<IOutboxOptionsConfigurator>? configure = null)
         where TDbContext : DbContext
@@ -69,11 +69,9 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     }
 
 
-    /// <summary>
-    /// Configure the outbox for use with SQL Server
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <returns></returns>
+    /// <summary>Selects SQL Server lock statements for the outbox.</summary>
+    /// <param name="configurator">The outbox configuration on which SQL Server locking is selected.</param>
+    /// <returns>The same outbox configurator.</returns>
     public static IEntityFrameworkOutboxConfigurator UseSqlServer(this IEntityFrameworkOutboxConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -82,11 +80,9 @@ public static class EntityFrameworkOutboxConfigurationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Configure the outbox for use with Postgres
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <returns></returns>
+    /// <summary>Selects PostgreSQL lock statements and read-committed transactions for the outbox.</summary>
+    /// <param name="configurator">The outbox configuration on which PostgreSQL locking is selected.</param>
+    /// <returns>The same outbox configurator.</returns>
     public static IEntityFrameworkOutboxConfigurator UsePostgres(this IEntityFrameworkOutboxConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -96,11 +92,9 @@ public static class EntityFrameworkOutboxConfigurationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Configure the outbox for use with SQLite
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <returns></returns>
+    /// <summary>Selects SQLite statements and serializable transactions for the outbox.</summary>
+    /// <param name="configurator">The outbox configuration on which SQLite locking is selected.</param>
+    /// <returns>The same outbox configurator.</returns>
     public static IEntityFrameworkOutboxConfigurator UseSqlite(this IEntityFrameworkOutboxConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -115,8 +109,8 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// to the DbContext. If this method is used, the <see cref="AddInboxStateEntity" />, <see cref="AddOutboxStateEntity" />, and
     /// <see cref="AddOutboxMessageEntity" /> methods should not be used.
     /// </summary>
-    /// <param name="modelBuilder"></param>
-    /// <param name="callback">Optional, to customize all three entity model builders</param>
+    /// <param name="modelBuilder">The model builder.</param>
+    /// <param name="callback">Optional, to customize all three entity model builders.</param>
     public static void AddTransactionalOutboxEntities(this ModelBuilder modelBuilder, Action<EntityTypeBuilder>? callback = null)
     {
         modelBuilder.AddInboxStateEntity(callback);
@@ -124,11 +118,9 @@ public static class EntityFrameworkOutboxConfigurationExtensions
         modelBuilder.AddOutboxMessageEntity(callback);
     }
 
-    /// <summary>
-    /// Adds the <see cref="InboxState" /> entity to the DbContext. If used, the <see cref="AddTransactionalOutboxEntities" /> method should not be used.
-    /// </summary>
-    /// <param name="modelBuilder"></param>
-    /// <param name="callback">Optional, to customize the entity model builder</param>
+    /// <summary>Adds the <see cref="InboxState" /> entity to the DbContext. If used, the <see cref="AddTransactionalOutboxEntities" /> method should not be used.</summary>
+    /// <param name="modelBuilder">The model builder.</param>
+    /// <param name="callback">Optional, to customize the entity model builder.</param>
     public static void AddInboxStateEntity(this ModelBuilder modelBuilder, Action<EntityTypeBuilder<InboxState>>? callback = null)
     {
         EntityTypeBuilder<InboxState> inbox = modelBuilder.Entity<InboxState>();
@@ -138,10 +130,8 @@ public static class EntityFrameworkOutboxConfigurationExtensions
         callback?.Invoke(inbox);
     }
 
-    /// <summary>
-    /// Configures the <see cref="InboxState" /> entity using an already created <see cref="ModelBuilder" />.
-    /// </summary>
-    /// <param name="inbox">The model builder</param>
+    /// <summary>Configures the <see cref="InboxState" /> entity using an already created <see cref="ModelBuilder" />.</summary>
+    /// <param name="inbox">The model builder.</param>
     public static void ConfigureInboxStateEntity(this EntityTypeBuilder<InboxState> inbox)
     {
         inbox.OptOutOfEntityFrameworkConventions();
@@ -173,11 +163,9 @@ public static class EntityFrameworkOutboxConfigurationExtensions
         inbox.Property(p => p.LastSequenceNumber);
     }
 
-    /// <summary>
-    /// Adds the <see cref="OutboxState" /> entity to the DbContext. If used, the <see cref="AddTransactionalOutboxEntities" /> method should not be used.
-    /// </summary>
-    /// <param name="modelBuilder"></param>
-    /// <param name="callback">Optional, to customize the entity model builder</param>
+    /// <summary>Adds the <see cref="OutboxState" /> entity to the DbContext. If used, the <see cref="AddTransactionalOutboxEntities" /> method should not be used.</summary>
+    /// <param name="modelBuilder">The model builder.</param>
+    /// <param name="callback">Optional, to customize the entity model builder.</param>
     public static void AddOutboxStateEntity(this ModelBuilder modelBuilder, Action<EntityTypeBuilder<OutboxState>>? callback = null)
     {
         EntityTypeBuilder<OutboxState> outbox = modelBuilder.Entity<OutboxState>();
@@ -187,10 +175,8 @@ public static class EntityFrameworkOutboxConfigurationExtensions
         callback?.Invoke(outbox);
     }
 
-    /// <summary>
-    /// Configures the <see cref="OutboxState" /> entity using an already created <see cref="ModelBuilder" />.
-    /// </summary>
-    /// <param name="outbox">The model builder</param>
+    /// <summary>Configures the <see cref="OutboxState" /> entity using an already created <see cref="ModelBuilder" />.</summary>
+    /// <param name="outbox">The model builder.</param>
     public static void ConfigureOutboxStateEntity(this EntityTypeBuilder<OutboxState> outbox)
     {
         outbox.OptOutOfEntityFrameworkConventions();
@@ -224,11 +210,9 @@ public static class EntityFrameworkOutboxConfigurationExtensions
         });
     }
 
-    /// <summary>
-    /// Adds the <see cref="OutboxMessage" /> entity to the DbContext. If used, the <see cref="AddTransactionalOutboxEntities" /> method should not be used.
-    /// </summary>
-    /// <param name="modelBuilder"></param>
-    /// <param name="callback">Optional, to customize the entity model builder</param>
+    /// <summary>Adds the <see cref="OutboxMessage" /> entity to the DbContext. If used, the <see cref="AddTransactionalOutboxEntities" /> method should not be used.</summary>
+    /// <param name="modelBuilder">The model builder.</param>
+    /// <param name="callback">Optional, to customize the entity model builder.</param>
     public static void AddOutboxMessageEntity(this ModelBuilder modelBuilder, Action<EntityTypeBuilder<OutboxMessage>>? callback = null)
     {
         EntityTypeBuilder<OutboxMessage> outbox = modelBuilder.Entity<OutboxMessage>();
@@ -238,10 +222,8 @@ public static class EntityFrameworkOutboxConfigurationExtensions
         callback?.Invoke(outbox);
     }
 
-    /// <summary>
-    /// Configures the <see cref="OutboxMessage" /> entity using an already created <see cref="ModelBuilder" />.
-    /// </summary>
-    /// <param name="outbox">The model builder</param>
+    /// <summary>Configures the <see cref="OutboxMessage" /> entity using an already created <see cref="ModelBuilder" />.</summary>
+    /// <param name="outbox">The model builder.</param>
     public static void ConfigureOutboxMessageEntity(this EntityTypeBuilder<OutboxMessage> outbox)
     {
         outbox.OptOutOfEntityFrameworkConventions();

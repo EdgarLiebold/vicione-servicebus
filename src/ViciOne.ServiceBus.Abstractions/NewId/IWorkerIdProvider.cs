@@ -1,14 +1,10 @@
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Defines the contract for worker id provider.
-/// </summary>
+/// <summary>Provides worker id services.</summary>
 public interface IWorkerIdProvider
 {
-    /// <summary>
-    /// Gets worker id.
-    /// </summary>
-    /// <param name="index">The index value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets worker id.</summary>
+    /// <param name="index">The index.</param>
+    /// <returns>The worker id.</returns>
     byte[] GetWorkerId(int index);
 }

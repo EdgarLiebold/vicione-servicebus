@@ -5,40 +5,30 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>
-/// Provides a saga instance implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Represents an instance of saga.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class SagaInstance<TSaga> :
     IEquatable<SagaInstance<TSaga>>
     where TSaga : class, ISaga
 {
     readonly SemaphoreSlim _inUse;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="instance">The instance.</param>
     public SagaInstance(TSaga instance)
     {
         Instance = instance;
         _inUse = new SemaphoreSlim(1);
     }
 
-    /// <summary>
-    /// Gets the instance value.
-    /// </summary>
+    /// <summary>Gets the instance.</summary>
     public TSaga Instance { get; }
 
-    /// <summary>
-    /// Gets or sets the is removed value.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether removed.</summary>
     public bool IsRemoved { get; set; }
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="other">The other value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="other">The other.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Equals(SagaInstance<TSaga>? other)
     {
@@ -51,10 +41,8 @@ public class SagaInstance<TSaga> :
         return EqualityComparer<TSaga>.Default.Equals(Instance, other.Instance);
     }
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="obj">The obj value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="obj">The obj.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool Equals(object? obj)
     {
@@ -70,20 +58,16 @@ public class SagaInstance<TSaga> :
         return Equals((SagaInstance<TSaga>)obj);
     }
 
-    /// <summary>
-    /// Gets hash code.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets hash code.</summary>
+    /// <returns>The hash code for this instance.</returns>
     public override int GetHashCode()
     {
         return EqualityComparer<TSaga>.Default.GetHashCode(Instance);
     }
 
-    /// <summary>
-    /// Performs the mark in use operation.
-    /// </summary>
+    /// <summary>Marks in use.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task MarkInUseAsync(CancellationToken cancellationToken)
     {
         if (IsRemoved)
@@ -92,9 +76,7 @@ public class SagaInstance<TSaga> :
         return _inUse.WaitAsync(cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the release operation.
-    /// </summary>
+    /// <summary>Releases the owned resource.</summary>
     public void Release()
     {
         if (IsRemoved)
@@ -103,9 +85,7 @@ public class SagaInstance<TSaga> :
         _inUse.Release();
     }
 
-    /// <summary>
-    /// Performs the remove operation.
-    /// </summary>
+    /// <summary>Removes the selected value.</summary>
     public void Remove()
     {
         IsRemoved = true;

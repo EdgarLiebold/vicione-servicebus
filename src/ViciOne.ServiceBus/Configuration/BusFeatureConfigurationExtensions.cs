@@ -4,12 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Places application-owned contract and diagnostic policy declarations inside their owning bus block.
-/// </summary>
+/// <summary>Places application-owned contract and diagnostic policy declarations inside their owning bus block.</summary>
 public static class BusFeatureConfigurationExtensions
 {
     /// <summary>Adds contract declarations owned by the default bus.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The bus registration configurator produced by the operation.</returns>
     public static IBusRegistrationConfigurator Contracts(
         this IBusRegistrationConfigurator configurator,
         Action<MessageContractCatalogBuilder> configure)
@@ -20,6 +21,10 @@ public static class BusFeatureConfigurationExtensions
     }
 
     /// <summary>Adds contract declarations owned by a typed bus.</summary>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The bus registration configurator produced by the operation.</returns>
     public static IBusRegistrationConfigurator<TBus> Contracts<TBus>(
         this IBusRegistrationConfigurator<TBus> configurator,
         Action<MessageContractCatalogBuilder> configure)
@@ -31,6 +36,8 @@ public static class BusFeatureConfigurationExtensions
     }
 
     /// <summary>Enables conservative diagnostic redaction for the default bus.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <returns>The bus registration configurator produced by the operation.</returns>
     public static IBusRegistrationConfigurator Redaction(this IBusRegistrationConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -39,6 +46,9 @@ public static class BusFeatureConfigurationExtensions
     }
 
     /// <summary>Enables conservative diagnostic redaction for a typed bus.</summary>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <returns>The bus registration configurator produced by the operation.</returns>
     public static IBusRegistrationConfigurator<TBus> Redaction<TBus>(this IBusRegistrationConfigurator<TBus> configurator)
         where TBus : class, IBus
     {

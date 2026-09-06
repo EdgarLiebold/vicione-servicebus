@@ -16,10 +16,10 @@ public static class MessageSchedulerBusExtensions
     /// NOTE that this should only be used to schedule messages outside of a message consumer. Consumers should
     /// use the ScheduleSend extensions on ConsumeContext.
     /// </summary>
-    /// <param name="bus"></param>
-    /// <param name="schedulerEndpointAddress">The endpoint address of the scheduler service</param>
+    /// <param name="bus">The bus.</param>
+    /// <param name="schedulerEndpointAddress">The endpoint address of the scheduler service.</param>
     /// <param name="timeProvider">The clock used for relative scheduling operations.</param>
-    /// <returns></returns>
+    /// <returns>The created message scheduler.</returns>
     public static IMessageScheduler CreateMessageScheduler(this IBus bus, Uri schedulerEndpointAddress, TimeProvider? timeProvider = null)
     {
         Task<ISendEndpoint> GetSchedulerEndpointAsync()
@@ -36,11 +36,11 @@ public static class MessageSchedulerBusExtensions
     /// NOTE that this should only be used to schedule messages outside of a message consumer. Consumers should
     /// use the ScheduleSend extensions on ConsumeContext.
     /// </summary>
-    /// <param name="busTopology"></param>
-    /// <param name="schedulerEndpointAddress">The endpoint address of the scheduler service</param>
-    /// <param name="sendEndpointProvider"></param>
+    /// <param name="sendEndpointProvider">The send endpoint provider.</param>
+    /// <param name="busTopology">The bus topology.</param>
+    /// <param name="schedulerEndpointAddress">The endpoint address of the scheduler service.</param>
     /// <param name="timeProvider">The clock used for relative scheduling operations.</param>
-    /// <returns></returns>
+    /// <returns>The created message scheduler.</returns>
     public static IMessageScheduler CreateMessageScheduler(this ISendEndpointProvider sendEndpointProvider, IBusTopology busTopology,
         Uri schedulerEndpointAddress, TimeProvider? timeProvider = null)
     {
@@ -59,9 +59,9 @@ public static class MessageSchedulerBusExtensions
     /// NOTE that this should only be used to schedule messages outside of a message consumer. Consumers should
     /// use the ScheduleSend extensions on ConsumeContext.
     /// </summary>
-    /// <param name="bus"></param>
+    /// <param name="bus">The bus.</param>
     /// <param name="timeProvider">The clock used for relative scheduling operations.</param>
-    /// <returns></returns>
+    /// <returns>The created message scheduler.</returns>
     public static IMessageScheduler CreateMessageScheduler(this IBus bus, TimeProvider? timeProvider = null)
     {
         return new MessageScheduler(new PublishScheduleMessageProvider(bus), bus.Topology, timeProvider);
@@ -74,10 +74,10 @@ public static class MessageSchedulerBusExtensions
     /// NOTE that this should only be used to schedule messages outside of a message consumer. Consumers should
     /// use the ScheduleSend extensions on ConsumeContext.
     /// </summary>
-    /// <param name="publishEndpoint"></param>
-    /// <param name="busTopology"></param>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
+    /// <param name="busTopology">The bus topology.</param>
     /// <param name="timeProvider">The clock used for relative scheduling operations.</param>
-    /// <returns></returns>
+    /// <returns>The created message scheduler.</returns>
     public static IMessageScheduler CreateMessageScheduler(this IPublishEndpoint publishEndpoint, IBusTopology busTopology, TimeProvider? timeProvider = null)
     {
         return new MessageScheduler(new PublishScheduleMessageProvider(publishEndpoint), busTopology, timeProvider);
@@ -88,9 +88,9 @@ public static class MessageSchedulerBusExtensions
     /// NOTE that this should only be used to schedule messages outside of a message consumer. Consumers should
     /// use the ScheduleSend extensions on ConsumeContext.
     /// </summary>
-    /// <param name="bus"></param>
+    /// <param name="bus">The bus.</param>
     /// <param name="timeProvider">The clock used for relative scheduling operations.</param>
-    /// <returns></returns>
+    /// <returns>The created delayed message scheduler.</returns>
     public static IMessageScheduler CreateDelayedMessageScheduler(this IBus bus, TimeProvider? timeProvider = null)
     {
         TimeProvider schedulerTimeProvider = timeProvider ?? TimeProvider.System;
@@ -102,10 +102,10 @@ public static class MessageSchedulerBusExtensions
     /// NOTE that this should only be used to schedule messages outside of a message consumer. Consumers should
     /// use the ScheduleSend extensions on ConsumeContext.
     /// </summary>
-    /// <param name="sendEndpointProvider"></param>
-    /// <param name="busTopology"></param>
+    /// <param name="sendEndpointProvider">The send endpoint provider.</param>
+    /// <param name="busTopology">The bus topology.</param>
     /// <param name="timeProvider">The clock used for relative scheduling operations.</param>
-    /// <returns></returns>
+    /// <returns>The created delayed message scheduler.</returns>
     public static IMessageScheduler CreateDelayedMessageScheduler(this ISendEndpointProvider sendEndpointProvider, IBusTopology busTopology, TimeProvider? timeProvider = null)
     {
         TimeProvider schedulerTimeProvider = timeProvider ?? TimeProvider.System;

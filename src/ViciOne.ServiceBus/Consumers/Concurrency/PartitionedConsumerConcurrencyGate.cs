@@ -11,6 +11,8 @@ namespace ViciOne.ServiceBus.Advanced.Registration;
 /// global ordering guarantee. Hash collisions may serialize unrelated keys, which is a throughput cost but never a
 /// correctness violation.
 /// </summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
 public sealed class PartitionedConsumerConcurrencyGate<TMessage, TKey> : IConsumerConcurrencyGate<TMessage>, IDisposable
     where TKey : notnull
 {
@@ -19,12 +21,10 @@ public sealed class PartitionedConsumerConcurrencyGate<TMessage, TKey> : IConsum
     private readonly ConsumerPartitionKeySelector<TMessage, TKey> _selector;
     private int _disposed;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="partitionCount">The partition count value.</param>
-    /// <param name="selector">The selector value.</param>
-    /// <param name="comparer">The comparer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="partitionCount">The partition count.</param>
+    /// <param name="selector">The selector.</param>
+    /// <param name="comparer">The comparer.</param>
     public PartitionedConsumerConcurrencyGate(
         int partitionCount,
         ConsumerPartitionKeySelector<TMessage, TKey> selector,
@@ -45,15 +45,13 @@ public sealed class PartitionedConsumerConcurrencyGate<TMessage, TKey> : IConsum
             _partitions[index] = new SemaphoreSlim(1, 1);
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <typeparam name="TState">The t state type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="state">The state value.</param>
-    /// <param name="next">The next value.</param>
+    /// <summary>Runs the configured action.</summary>
+    /// <typeparam name="TState">The state carried by the operation.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <param name="state">The state.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask ExecuteAsync<TState>(
         TMessage message,
         TState state,
@@ -71,9 +69,7 @@ public sealed class PartitionedConsumerConcurrencyGate<TMessage, TKey> : IConsum
             cancellationToken);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         // See ConsumerConcurrencyGate: do not race SemaphoreSlim.Dispose against active or waiting invocations.

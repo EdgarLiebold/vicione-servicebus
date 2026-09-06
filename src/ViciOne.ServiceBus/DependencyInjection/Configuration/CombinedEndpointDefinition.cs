@@ -4,9 +4,7 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a combined endpoint definition implementation.
-/// </summary>
+/// <summary>Defines configuration for combined endpoint.</summary>
 public class CombinedEndpointDefinition :
     IEndpointDefinition
 {
@@ -51,42 +49,30 @@ public class CombinedEndpointDefinition :
         }
     }
 
-    /// <summary>
-    /// Gets the is temporary value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether temporary.</summary>
     public bool IsTemporary => _definitions.All(x => x.IsTemporary);
 
-    /// <summary>
-    /// Gets the prefetch count value.
-    /// </summary>
+    /// <summary>Gets the prefetch count.</summary>
     public int? PrefetchCount => _transportQos.PrefetchCount;
 
-    /// <summary>
-    /// Gets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets the concurrent message limit.</summary>
     public int? ConcurrentMessageLimit => _transportQos.ConcurrentDeliveryLimit;
 
-    /// <summary>
-    /// Gets the configure consume topology value.
-    /// </summary>
+    /// <summary>Gets the configure consume topology.</summary>
     public bool ConfigureConsumeTopology { get; }
 
-    /// <summary>
-    /// Gets endpoint name.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets endpoint name.</summary>
+    /// <param name="formatter">The formatter.</param>
+    /// <returns>The endpoint name.</returns>
     public string GetEndpointName(IEndpointNameFormatter formatter)
     {
         return _definitions[0].GetEndpointName(formatter);
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public void Configure<T>(T configurator, IRegistrationContext? context)
         where T : IReceiveEndpointConfigurator
     {

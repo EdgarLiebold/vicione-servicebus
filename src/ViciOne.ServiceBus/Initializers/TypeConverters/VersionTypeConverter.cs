@@ -2,19 +2,15 @@ using System;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>
-/// Provides a version type converter implementation.
-/// </summary>
+/// <summary>Converts version type values.</summary>
 public class VersionTypeConverter :
     ITypeConverter<string, Version>,
     ITypeConverter<Version, string>,
     ITypeConverter<Version, object>
 {
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(Version? input, out string? result)
     {
@@ -23,11 +19,9 @@ public class VersionTypeConverter :
         return true;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(object? input, out Version? result)
     {
@@ -55,11 +49,9 @@ public class VersionTypeConverter :
         }
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(string? input, out Version? result)
     {

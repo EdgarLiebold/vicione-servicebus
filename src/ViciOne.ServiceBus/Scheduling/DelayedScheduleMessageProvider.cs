@@ -4,19 +4,15 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>
-/// Provides a delayed schedule message provider implementation.
-/// </summary>
+/// <summary>Provides delayed schedule message services.</summary>
 public class DelayedScheduleMessageProvider :
     IScheduleMessageProvider
 {
     readonly ISendEndpointProvider _sendEndpointProvider;
     readonly TimeProvider _timeProvider = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="sendEndpointProvider">The send endpoint provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="sendEndpointProvider">The send endpoint provider.</param>
     public DelayedScheduleMessageProvider(ISendEndpointProvider sendEndpointProvider)
     {
         _sendEndpointProvider = sendEndpointProvider;
@@ -28,16 +24,14 @@ public class DelayedScheduleMessageProvider :
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
-    /// <summary>
-    /// Schedules send.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="destinationAddress">The destination address value.</param>
-    /// <param name="dueAt">The due at value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Schedules send.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="destinationAddress">The destination address.</param>
+    /// <param name="dueAt">The due at.</param>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the schedule send outcome.</returns>
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
@@ -60,24 +54,20 @@ public class DelayedScheduleMessageProvider :
         return new ScheduledMessageHandle<T>(scheduleMessagePipe.ScheduledMessageId ?? NewId.NextGuid(), dueAt, destinationAddress, message);
     }
 
-    /// <summary>
-    /// Determines whether the current value can cel scheduled send.
-    /// </summary>
-    /// <param name="tokenId">The token id value.</param>
+    /// <summary>Determines whether the current value can cel scheduled send.</summary>
+    /// <param name="tokenId">The token id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CancelScheduledSendAsync(Guid tokenId, CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Determines whether the current value can cel scheduled send.
-    /// </summary>
-    /// <param name="destinationAddress">The destination address value.</param>
-    /// <param name="tokenId">The token id value.</param>
+    /// <summary>Determines whether the current value can cel scheduled send.</summary>
+    /// <param name="destinationAddress">The destination address.</param>
+    /// <param name="tokenId">The token id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;

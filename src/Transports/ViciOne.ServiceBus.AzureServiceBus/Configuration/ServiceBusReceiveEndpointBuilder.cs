@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.AzureServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus receive endpoint builder implementation.
-/// </summary>
+/// <summary>Builds an Azure Service Bus queue endpoint, its subscriptions, and its runtime context.</summary>
 public class ServiceBusReceiveEndpointBuilder :
     ReceiveEndpointBuilder
 {
@@ -16,11 +14,9 @@ public class ServiceBusReceiveEndpointBuilder :
     readonly IServiceBusReceiveEndpointConfiguration _configuration;
     readonly IServiceBusHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="configuration">The configuration callback.</param>
+    /// <summary>Creates a builder for an Azure Service Bus receive endpoint.</summary>
+    /// <param name="hostConfiguration">The namespace and connection configuration.</param>
+    /// <param name="configuration">The queue endpoint configuration to build.</param>
     public ServiceBusReceiveEndpointBuilder(IServiceBusHostConfiguration hostConfiguration, IServiceBusReceiveEndpointConfiguration configuration)
         : base(configuration)
     {
@@ -28,13 +24,11 @@ public class ServiceBusReceiveEndpointBuilder :
         _configuration = configuration;
     }
 
-    /// <summary>
-    /// Connects consume pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a typed consume pipe and adds its topic subscription when topology configuration is enabled.</summary>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="pipe">The typed consume pipe to connect.</param>
+    /// <param name="options">Flags that control whether consume topology is configured.</param>
+    /// <returns>A handle that disconnects the consume pipe.</returns>
     public override ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
     {
         if (_configuration.ConfigureConsumeTopology && options.HasFlag(ConnectPipeOptions.ConfigureConsumeTopology))
@@ -50,10 +44,8 @@ public class ServiceBusReceiveEndpointBuilder :
         return base.ConnectConsumePipe(pipe, options);
     }
 
-    /// <summary>
-    /// Creates receive endpoint context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds broker topology and creates the queue endpoint runtime context.</summary>
+    /// <returns>The initialized Azure Service Bus receive endpoint context.</returns>
     public ServiceBusReceiveEndpointContext CreateReceiveEndpointContext()
     {
         var topologyLayout = BuildTopology(_configuration.Settings);

@@ -3,33 +3,25 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Advanced.Registration;
 
-/// <summary>
-/// Bind is used to store types bound to their owner, such as an IBusControl to an IMyBus.
-/// </summary>
-/// <typeparam name="TKey">The key type</typeparam>
-/// <typeparam name="TValue">The bound type</typeparam>
+/// <summary>Bind is used to store types bound to their owner, such as an IBusControl to an IMyBus.</summary>
+/// <typeparam name="TKey">The key type.</typeparam>
+/// <typeparam name="TValue">The bound type.</typeparam>
 public class Bind<TKey, TValue> :
     IEquatable<Bind<TKey, TValue>>
     where TValue : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="value">The value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="value">The value to process.</param>
     public Bind(TValue value)
     {
         Value = value;
     }
 
-    /// <summary>
-    /// Gets the underlying value.
-    /// </summary>
+    /// <summary>Gets the value.</summary>
     public TValue Value { get; }
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="other">The other value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="other">The other.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Equals(Bind<TKey, TValue>? other)
     {
@@ -40,10 +32,8 @@ public class Bind<TKey, TValue> :
         return EqualityComparer<TValue>.Default.Equals(Value, other.Value);
     }
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="obj">The obj value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="obj">The obj.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool Equals(object? obj)
     {
@@ -56,21 +46,17 @@ public class Bind<TKey, TValue> :
         return Equals((Bind<TKey, TValue>)obj);
     }
 
-    /// <summary>
-    /// Gets hash code.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets hash code.</summary>
+    /// <returns>The hash code for this instance.</returns>
     public override int GetHashCode()
     {
         return EqualityComparer<TValue>.Default.GetHashCode(Value);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The newly created instance.</returns>
     public static Bind<TKey, TValue, T> Create<T>(T value)
         where T : class
     {
@@ -79,43 +65,33 @@ public class Bind<TKey, TValue> :
 }
 
 
-/// <summary>
-/// Provides a bind implementation.
-/// </summary>
-/// <typeparam name="TKey1">The t key1 type.</typeparam>
-/// <typeparam name="TKey2">The t key2 type.</typeparam>
-/// <typeparam name="TValue">The t value type.</typeparam>
+/// <summary>Associates a registered service with a keyed binding.</summary>
+/// <typeparam name="TKey1">The key1 type.</typeparam>
+/// <typeparam name="TKey2">The key2 type.</typeparam>
+/// <typeparam name="TValue">The value stored by the member.</typeparam>
 public class Bind<TKey1, TKey2, TValue>
     where TValue : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="value">The value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="value">The value to process.</param>
     public Bind(TValue value)
     {
         Value = value;
     }
 
-    /// <summary>
-    /// Gets the underlying value.
-    /// </summary>
+    /// <summary>Gets the value.</summary>
     public TValue Value { get; }
 }
 
 
-/// <summary>
-/// Provides a bind implementation.
-/// </summary>
-/// <typeparam name="TKey">The t key type.</typeparam>
+/// <summary>Associates a registered service with a keyed binding.</summary>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
 public static class Bind<TKey>
 {
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TValue">The t value type.</typeparam>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TValue">The value stored by the member.</typeparam>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The newly created instance.</returns>
     public static Bind<TKey, TValue> Create<TValue>(TValue value)
         where TValue : class
     {

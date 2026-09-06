@@ -6,10 +6,8 @@ using ViciOne.ServiceBus.Initializers.Conventions;
 
 namespace ViciOne.ServiceBus.Transformation;
 
-/// <summary>
-/// Provides a message transform convention implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Applies conventions for message transform.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class MessageTransformConvention<TMessage> :
     IInitializerConvention<TMessage, TMessage>,
     IInitializerConvention<TMessage>,
@@ -18,27 +16,21 @@ public class MessageTransformConvention<TMessage> :
 {
     readonly IDictionary<string, IPropertyInitializer<TMessage, TMessage>> _initializers;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public MessageTransformConvention()
     {
         _initializers = new Dictionary<string, IPropertyInitializer<TMessage, TMessage>>(StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>
-    /// Gets the count value.
-    /// </summary>
+    /// <summary>Gets the count.</summary>
     public int Count => _initializers.Count;
 
-    /// <summary>
-    /// Attempts to get property initializer.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TInput">The t input type.</typeparam>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get property initializer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TInput">The input type.</typeparam>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetPropertyInitializer<T, TInput, TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IPropertyInitializer<T, TInput>? initializer)
@@ -52,14 +44,12 @@ public class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get header initializer.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TInput">The t input type.</typeparam>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get header initializer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TInput">The input type.</typeparam>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeaderInitializer<T, TInput, TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<T, TInput>? initializer)
@@ -73,14 +63,12 @@ public class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get headers initializer.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TInput">The t input type.</typeparam>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get headers initializer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TInput">The input type.</typeparam>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeadersInitializer<T, TInput, TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<T, TInput>? initializer)
@@ -94,12 +82,10 @@ public class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get property initializer.
-    /// </summary>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get property initializer.</summary>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetPropertyInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IPropertyInitializer<TMessage, TMessage>? initializer)
@@ -111,12 +97,10 @@ public class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get header initializer.
-    /// </summary>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get header initializer.</summary>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeaderInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<TMessage, TMessage>? initializer)
@@ -125,12 +109,10 @@ public class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get headers initializer.
-    /// </summary>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get headers initializer.</summary>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeadersInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<TMessage, TMessage>? initializer)
@@ -139,13 +121,11 @@ public class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get property initializer.
-    /// </summary>
-    /// <typeparam name="TInput">The t input type.</typeparam>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get property initializer.</summary>
+    /// <typeparam name="TInput">The input type.</typeparam>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetPropertyInitializer<TInput, TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IPropertyInitializer<TMessage, TInput>? initializer)
@@ -158,13 +138,11 @@ public class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get header initializer.
-    /// </summary>
-    /// <typeparam name="TInput">The t input type.</typeparam>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get header initializer.</summary>
+    /// <typeparam name="TInput">The input type.</typeparam>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeaderInitializer<TInput, TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
@@ -177,13 +155,11 @@ public class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get headers initializer.
-    /// </summary>
-    /// <typeparam name="TInput">The t input type.</typeparam>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get headers initializer.</summary>
+    /// <typeparam name="TInput">The input type.</typeparam>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeadersInitializer<TInput, TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
@@ -196,11 +172,9 @@ public class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="propertyName">The property name value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="propertyName">The property name.</param>
+    /// <param name="initializer">The initializer.</param>
     public void Add(string propertyName, IPropertyInitializer<TMessage, TMessage> initializer)
     {
         _initializers.Add(propertyName, initializer);

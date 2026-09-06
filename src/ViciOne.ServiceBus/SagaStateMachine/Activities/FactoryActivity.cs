@@ -3,49 +3,39 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a factory activity implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Executes the factory activity.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class FactoryActivity<TSaga> :
     IStateMachineActivity<TSaga>
     where TSaga : class, SagaStateMachineInstance
 {
     readonly Func<BehaviorContext<TSaga>, IStateMachineActivity<TSaga>> _activityFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="activityFactory">The activity factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="activityFactory">The activity factory.</param>
     public FactoryActivity(Func<BehaviorContext<TSaga>, IStateMachineActivity<TSaga>> activityFactory)
     {
         _activityFactory = activityFactory;
     }
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateScope("factory");
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         IStateMachineActivity<TSaga> activity = _activityFactory(context);
@@ -53,13 +43,11 @@ public class FactoryActivity<TSaga> :
         return activity.ExecuteAsync(context, next);
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
@@ -68,13 +56,11 @@ public class FactoryActivity<TSaga> :
         return activity.ExecuteAsync(context, next);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
@@ -83,14 +69,12 @@ public class FactoryActivity<TSaga> :
         return activity.FaultedAsync(context, next);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
@@ -102,11 +86,9 @@ public class FactoryActivity<TSaga> :
 }
 
 
-/// <summary>
-/// Provides a factory activity implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Executes the factory activity.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class FactoryActivity<TSaga, TMessage> :
     IStateMachineActivity<TSaga, TMessage>
     where TSaga : class, SagaStateMachineInstance
@@ -114,39 +96,31 @@ public class FactoryActivity<TSaga, TMessage> :
 {
     readonly Func<BehaviorContext<TSaga, TMessage>, IStateMachineActivity<TSaga, TMessage>> _activityFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="activityFactory">The activity factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="activityFactory">The activity factory.</param>
     public FactoryActivity(Func<BehaviorContext<TSaga, TMessage>, IStateMachineActivity<TSaga, TMessage>> activityFactory)
     {
         _activityFactory = activityFactory;
     }
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateScope("factory");
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         IStateMachineActivity<TSaga, TMessage> activity = _activityFactory(context);
@@ -154,13 +128,11 @@ public class FactoryActivity<TSaga, TMessage> :
         return activity.ExecuteAsync(context, next);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {

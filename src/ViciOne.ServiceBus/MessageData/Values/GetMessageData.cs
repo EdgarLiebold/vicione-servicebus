@@ -7,10 +7,8 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.MessageData.Values;
 
-/// <summary>
-/// Gets the message data when accessed via Value, using the specified repository and converter.
-/// </summary>
-/// <typeparam name="T">The message data property type</typeparam>
+/// <summary>Carries get message data.</summary>
+/// <typeparam name="T">The message data property type.</typeparam>
 public class GetMessageData<T> :
     MessageData<T>
 {
@@ -19,12 +17,10 @@ public class GetMessageData<T> :
     readonly IMessageDataRepository _repository;
     readonly Lazy<Task<T?>> _value;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="converter">The converter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="address">The address.</param>
+    /// <param name="repository">The repository.</param>
+    /// <param name="converter">The converter.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public GetMessageData(Uri address, IMessageDataRepository repository, IMessageDataConverter<T> converter, CancellationToken cancellationToken)
     {
@@ -37,25 +33,18 @@ public class GetMessageData<T> :
         _value = new Lazy<Task<T?>>(GetValueAsync);
     }
 
-    /// <summary>
-    /// Gets the address value.
-    /// </summary>
+    /// <summary>Gets the address.</summary>
     public Uri Address { get; }
 
-    /// <summary>
-    /// Gets the has value value.
-    /// </summary>
+    /// <summary>Gets whether this instance contains a value.</summary>
     public bool HasValue => true;
 
-    /// <summary>
-    /// Gets the underlying value.
-    /// </summary>
+    /// <summary>Gets the value.</summary>
     public Task<T?> Value => _value.Value;
 
     async Task<T?> GetValueAsync()
     {
-        // To prevent the stream message data convertor from having to copy the stream, the stream
-        // is not disposed if the converter is a StreamMessageDataConverter
+        // Stream converters take ownership to avoid an additional payload copy.
 
         Stream? valueStream = null;
         try

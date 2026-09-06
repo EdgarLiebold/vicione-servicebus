@@ -6,31 +6,25 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a client context factory implementation.
-/// </summary>
+/// <summary>Creates supervised Azure Service Bus client contexts from connection contexts.</summary>
 public abstract class ClientContextFactory :
     IPipeContextFactory<ClientContext>
 {
     readonly ClientSettings _settings;
     readonly IConnectionContextSupervisor _supervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Initializes the factory with the connection supervisor and entity settings used for every client context.</summary>
+    /// <param name="supervisor">The connection-context supervisor that supplies active connections.</param>
+    /// <param name="settings">The settings that identify and configure the target entity.</param>
     protected ClientContextFactory(IConnectionContextSupervisor supervisor, ClientSettings settings)
     {
         _supervisor = supervisor;
         _settings = settings;
     }
 
-    /// <summary>
-    /// Creates context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and starts a supervised client-context agent.</summary>
+    /// <param name="supervisor">The owning supervisor.</param>
+    /// <returns>The agent that exposes the client context when its connection is ready.</returns>
     public IPipeContextAgent<ClientContext> CreateContext(ISupervisor supervisor)
     {
         IAsyncPipeContextAgent<ClientContext> asyncContext = supervisor.AddAsyncContext<ClientContext>();
@@ -40,26 +34,22 @@ public abstract class ClientContextFactory :
         return asyncContext;
     }
 
-    /// <summary>
-    /// Creates active context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an active agent whose shared context is canceled with the caller's lease.</summary>
+    /// <param name="supervisor">The owning supervisor.</param>
+    /// <param name="context">The client-context handle to share.</param>
+    /// <param name="cancellationToken">The token that ends the active lease.</param>
+    /// <returns>An active agent over the shared client context.</returns>
     public IActivePipeContextAgent<ClientContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ClientContext> context,
         CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedContextAsync(context.Context, cancellationToken));
     }
 
-    /// <summary>
-    /// Creates client context.
-    /// </summary>
-    /// <param name="connectionContext">The connection context value.</param>
-    /// <param name="inputAddress">The input address value.</param>
-    /// <param name="agent">The agent value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the provider-specific client context for an established connection and entity address.</summary>
+    /// <param name="connectionContext">The established namespace connection.</param>
+    /// <param name="inputAddress">The resolved queue or subscription address.</param>
+    /// <param name="agent">The agent notified when the context faults.</param>
+    /// <returns>The provider-specific client context.</returns>
     protected abstract ClientContext CreateClientContext(ConnectionContext connectionContext, Uri inputAddress, IAgent agent);
 
     void CreateClientContext(IAsyncPipeContextAgent<ClientContext> asyncContext, CancellationToken cancellationToken)

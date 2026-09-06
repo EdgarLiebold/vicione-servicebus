@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Quartz;
 
-/// <summary>
-/// Provides a job data message context implementation.
-/// </summary>
+/// <summary>Reconstructs message metadata and headers from a fired Quartz trigger's merged job data.</summary>
 public class JobDataMessageContext :
     MessageContext,
     Headers
@@ -34,11 +32,9 @@ public class JobDataMessageContext :
     DateTimeOffset? _sentTime;
     Uri? _sourceAddress;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="executionContext">The execution context value.</param>
-    /// <param name="objectDeserializer">The object deserializer value.</param>
+    /// <summary>Initializes message metadata from a fired Quartz job's merged data map.</summary>
+    /// <param name="executionContext">The fired Quartz job context.</param>
+    /// <param name="objectDeserializer">The deserializer for persisted headers and transport properties.</param>
     public JobDataMessageContext(IJobExecutionContext executionContext, IObjectDeserializer objectDeserializer)
     {
         _executionContext = executionContext ?? throw new ArgumentNullException(nameof(executionContext));
@@ -58,10 +54,8 @@ public class JobDataMessageContext :
         }
     }
 
-    /// <summary>
-    /// Gets enumerator.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns an enumerator over reconstructed message headers.</summary>
+    /// <returns>A header-value enumerator.</returns>
     public IEnumerator<HeaderValue> GetEnumerator()
     {
         return Headers.GetEnumerator();
@@ -72,21 +66,17 @@ public class JobDataMessageContext :
         return GetEnumerator();
     }
 
-    /// <summary>
-    /// Gets all.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Enumerates all reconstructed message headers.</summary>
+    /// <returns>The header name/value pairs.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
         return Headers.GetAll();
     }
 
-    /// <summary>
-    /// Attempts to get header.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Attempts to resolve a standard message property or persisted user header.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">Receives the resolved value when present.</param>
+    /// <returns><see langword="true"/> when the property or header exists; otherwise, <see langword="false"/>.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         switch (key)
@@ -120,95 +110,63 @@ public class JobDataMessageContext :
         return _jobDataMap.TryGetValue(key, out value);
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deserializes a reference-type header value.</summary>
+    /// <typeparam name="T">The requested reference type.</typeparam>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the header is absent or cannot be converted.</param>
+    /// <returns>The converted header value, or <paramref name="defaultValue"/> when no value can be materialized.</returns>
     public T? Get<T>(string key, T? defaultValue = default)
         where T : class
     {
-        return TryGetHeader(key, out var value) ? _objectDeserializer.DeserializeObject(value, defaultValue) : default;
+        return TryGetHeader(key, out var value) ? _objectDeserializer.DeserializeObject(value, defaultValue) : defaultValue;
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deserializes a value-type header value.</summary>
+    /// <typeparam name="T">The requested value type.</typeparam>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the header is absent or cannot be converted.</param>
+    /// <returns>The converted header value, or <paramref name="defaultValue"/> when no value can be materialized.</returns>
     public T? Get<T>(string key, T? defaultValue = default)
         where T : struct
     {
-        return TryGetHeader(key, out var value) ? _objectDeserializer.DeserializeObject(value, defaultValue) : default;
+        return TryGetHeader(key, out var value) ? _objectDeserializer.DeserializeObject(value, defaultValue) : defaultValue;
     }
 
-    /// <summary>
-    /// Gets the message id value.
-    /// </summary>
+    /// <summary>Gets the persisted message identifier or a generated identifier when none was stored.</summary>
     public Guid? MessageId => _messageId ??= _jobDataMap.TryGetValue(nameof(MessageId), out string? value) ? ConvertIdToGuid(value) : NewId.NextGuid();
-    /// <summary>
-    /// Gets the request id value.
-    /// </summary>
+    /// <summary>Gets the request id.</summary>
     public Guid? RequestId => _requestId ??= _jobDataMap.TryGetValue(nameof(RequestId), out string? value) ? ConvertIdToGuid(value) : default;
-    /// <summary>
-    /// Gets the correlation id value.
-    /// </summary>
+    /// <summary>Gets the correlation id.</summary>
     public Guid? CorrelationId => _correlationId ??= _jobDataMap.TryGetValue(nameof(CorrelationId), out string? value) ? ConvertIdToGuid(value) : default;
-    /// <summary>
-    /// Gets the conversation id value.
-    /// </summary>
+    /// <summary>Gets the conversation id.</summary>
     public Guid? ConversationId => _conversationId ??= _jobDataMap.TryGetValue(nameof(ConversationId), out string? value) ? ConvertIdToGuid(value) : default;
-    /// <summary>
-    /// Gets the initiator id value.
-    /// </summary>
+    /// <summary>Gets the initiator id.</summary>
     public Guid? InitiatorId => _initiatorId ??= _jobDataMap.TryGetValue(nameof(InitiatorId), out string? value) ? ConvertIdToGuid(value) : default;
 
-    /// <summary>
-    /// Gets the expiration time value.
-    /// </summary>
+    /// <summary>Gets the original absolute expiration time.</summary>
     public DateTimeOffset? ExpirationTime =>
         _expirationTime ??= _jobDataMap.TryGetValue(nameof(ExpirationTime), out string? value) ? ConvertDateTime(value) : default;
 
-    /// <summary>
-    /// Gets the source address value.
-    /// </summary>
+    /// <summary>Gets the source address.</summary>
     public Uri? SourceAddress => _sourceAddress ??= _jobDataMap.TryGetValue(nameof(SourceAddress), out string? value) ? ConvertToUri(value) : default;
 
-    /// <summary>
-    /// Gets the destination address value.
-    /// </summary>
+    /// <summary>Gets the destination address.</summary>
     public Uri? DestinationAddress =>
         _destinationAddress ??= _jobDataMap.TryGetValue(nameof(DestinationAddress), out string? value) ? ConvertToUri(value) : default;
 
-    /// <summary>
-    /// Gets the response address value.
-    /// </summary>
+    /// <summary>Gets the response address.</summary>
     public Uri? ResponseAddress => _responseAddress ??= _jobDataMap.TryGetValue(nameof(ResponseAddress), out string? value) ? ConvertToUri(value) : default;
-    /// <summary>
-    /// Gets the fault address value.
-    /// </summary>
+    /// <summary>Gets the fault address.</summary>
     public Uri? FaultAddress => _faultAddress ??= _jobDataMap.TryGetValue(nameof(FaultAddress), out string? value) ? ConvertToUri(value) : default;
-    /// <summary>
-    /// Gets the sent time value.
-    /// </summary>
+    /// <summary>Gets the sent time.</summary>
     public DateTimeOffset? SentTime =>
         _sentTime ??= _jobDataMap.TryGetValue(nameof(SentTime), out object? value) ? ConvertDateTime(value) : default;
-    /// <summary>
-    /// Gets the headers value.
-    /// </summary>
+    /// <summary>Gets user headers enriched with Quartz fire-time and schedule metadata.</summary>
     public Headers Headers => _headers ??= GetHeaders();
-    /// <summary>
-    /// Gets the host value.
-    /// </summary>
+    /// <summary>Gets the persisted sender host information, or empty host metadata when absent.</summary>
     public HostInfo Host => _hostInfo ??= _jobDataMap.TryGetValue(nameof(Host), out HostInfo? value) ? value! : HostMetadataCache.Empty;
 
-    /// <summary>
-    /// Gets the transport properties value.
-    /// </summary>
+    /// <summary>Gets the transport-specific properties captured when the message was scheduled.</summary>
     public IReadOnlyDictionary<string, object>? TransportProperties =>
         _jobDataMap.TryGetValue("TransportProperties", out object? value)
             ? _objectDeserializer.DeserializeObject<IReadOnlyDictionary<string, object>>(value)

@@ -4,11 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>
-/// Provides a created compensate activity scope context implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TLog">The t log type.</typeparam>
+/// <summary>Carries state for created compensate activity scope operations.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TLog">The log type.</typeparam>
 public class CreatedCompensateActivityScopeContext<TActivity, TLog> :
     ICompensateActivityScopeContext<TActivity, TLog>
     where TActivity : class, ICompensateActivity<TLog>
@@ -17,12 +15,10 @@ public class CreatedCompensateActivityScopeContext<TActivity, TLog> :
     readonly IDisposable _disposable;
     readonly IServiceScope _scope;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="scope">The scope value.</param>
-    /// <param name="disposable">The disposable value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="scope">The scope.</param>
+    /// <param name="disposable">The disposable.</param>
     public CreatedCompensateActivityScopeContext(CompensateActivityContext<TActivity, TLog> context, IServiceScope scope, IDisposable disposable)
     {
         _scope = scope;
@@ -30,15 +26,11 @@ public class CreatedCompensateActivityScopeContext<TActivity, TLog> :
         Context = context;
     }
 
-    /// <summary>
-    /// Gets the context value.
-    /// </summary>
+    /// <summary>Gets the context.</summary>
     public CompensateActivityContext<TActivity, TLog> Context { get; }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         _disposable?.Dispose();
@@ -50,11 +42,9 @@ public class CreatedCompensateActivityScopeContext<TActivity, TLog> :
         return default;
     }
 
-    /// <summary>
-    /// Gets service.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets service.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The service.</returns>
     public T GetService<T>()
         where T : class
     {

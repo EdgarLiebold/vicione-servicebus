@@ -3,9 +3,7 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a transport configuration implementation.
-/// </summary>
+/// <summary>Stores and validates transport configuration.</summary>
 public class TransportConfiguration :
     ITransportConfiguration,
     ITransportConfigurator
@@ -14,10 +12,8 @@ public class TransportConfiguration :
     int? _concurrentMessageLimit;
     int? _prefetchCount;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="parent">The parent value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="parent">The parent.</param>
     public TransportConfiguration(ITransportConfiguration parent)
     {
         if (parent == null)
@@ -26,50 +22,38 @@ public class TransportConfiguration :
         _parent = parent;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public TransportConfiguration()
     {
         _parent = new DefaultTransportConfiguration();
     }
 
-    /// <summary>
-    /// Gets the configurator value.
-    /// </summary>
+    /// <summary>Gets the configurator.</summary>
     public ITransportConfigurator Configurator => this;
 
-    /// <summary>
-    /// Gets or sets the prefetch count value.
-    /// </summary>
+    /// <summary>Gets or sets the prefetch count.</summary>
     public int PrefetchCount
     {
         get => _prefetchCount ?? _parent.PrefetchCount;
         set => _prefetchCount = value;
     }
 
-    /// <summary>
-    /// Gets or sets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets or sets the concurrent message limit.</summary>
     public int? ConcurrentMessageLimit
     {
         get => _concurrentMessageLimit ?? _parent.ConcurrentMessageLimit;
         set => _concurrentMessageLimit = value;
     }
 
-    /// <summary>
-    /// Gets concurrent message limit.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets concurrent message limit.</summary>
+    /// <returns>The concurrent message limit.</returns>
     public int GetConcurrentMessageLimit()
     {
         return ConcurrentMessageLimit ?? PrefetchCount;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (PrefetchCount < ConcurrentMessageLimit)

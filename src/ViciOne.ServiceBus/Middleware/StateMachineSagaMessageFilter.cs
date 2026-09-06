@@ -6,11 +6,9 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Dispatches the ConsumeContext to the consumer method for the specified message type
-/// </summary>
-/// <typeparam name="TInstance">The consumer type</typeparam>
-/// <typeparam name="TMessage">The message type</typeparam>
+/// <summary>Dispatches the ConsumeContext to the consumer method for the specified message type.</summary>
+/// <typeparam name="TInstance">The consumer type.</typeparam>
+/// <typeparam name="TMessage">The message type.</typeparam>
 public class StateMachineSagaMessageFilter<TInstance, TMessage> :
     ISagaMessageFilter<TInstance, TMessage>
     where TInstance : class, ISaga, SagaStateMachineInstance
@@ -20,11 +18,9 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
     readonly Event<TMessage> _event;
     readonly SagaStateMachine<TInstance> _machine;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="event">The event value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="machine">The machine.</param>
+    /// <param name="event">The event.</param>
     public StateMachineSagaMessageFilter(SagaStateMachine<TInstance> machine, Event<TMessage> @event)
     {
         _machine = machine;
@@ -50,12 +46,10 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
         _machine.Probe(context);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(SagaConsumeContext<TInstance, TMessage> context, IPipe<SagaConsumeContext<TInstance, TMessage>> next)
     {
         BehaviorContext<TInstance, TMessage> behaviorContext =

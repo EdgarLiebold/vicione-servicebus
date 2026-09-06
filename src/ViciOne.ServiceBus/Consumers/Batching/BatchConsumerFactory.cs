@@ -4,10 +4,8 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Batching;
 
-/// <summary>
-/// Provides a batch consumer factory implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Creates batch consumer instances.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class BatchConsumerFactory<TMessage> :
     IConsumerFactory<BatchConsumer<TMessage>>,
     IAsyncDisposable
@@ -16,11 +14,9 @@ public class BatchConsumerFactory<TMessage> :
     readonly IBatchCollector<TMessage> _collector;
     readonly BatchOptions _options;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <param name="collector">The collector value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="collector">The collector.</param>
     public BatchConsumerFactory(BatchOptions options, IBatchCollector<TMessage>
         collector)
     {
@@ -28,22 +24,18 @@ public class BatchConsumerFactory<TMessage> :
         _collector = collector ?? throw new ArgumentNullException(nameof(collector));
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         return _collector.DisposeAsync();
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public virtual async Task SendAsync<T>(ConsumeContext<T> context, IPipe<ConsumerConsumeContext<BatchConsumer<TMessage>, T>> next)
         where T : class
     {
@@ -64,10 +56,8 @@ public class BatchConsumerFactory<TMessage> :
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateConsumerFactoryScope<IConsumer<TMessage>>("batch");

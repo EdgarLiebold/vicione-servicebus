@@ -5,44 +5,34 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Connects multiple output pipes to a single input pipe
-/// </summary>
-/// <typeparam name="TContext"></typeparam>
+/// <summary>Connects multiple output pipes to a single input pipe.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class TeeFilter<TContext> :
     ITeeFilter<TContext>
     where TContext : class, PipeContext
 {
     readonly Connectable<IPipe<TContext>> _connections;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public TeeFilter()
     {
         _connections = new Connectable<IPipe<TContext>>();
     }
 
-    /// <summary>
-    /// Gets the count value.
-    /// </summary>
+    /// <summary>Gets the count.</summary>
     public int Count => _connections.Count;
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         _connections.ForEach(pipe => pipe.Probe(context));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [DebuggerNonUserCode]
     public Task SendAsync(TContext context, IPipe<TContext> next)
     {
@@ -60,11 +50,9 @@ public class TeeFilter<TContext> :
         return SendAsync();
     }
 
-    /// <summary>
-    /// Connects pipe.
-    /// </summary>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects pipe.</summary>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPipe(IPipe<TContext> pipe)
     {
         return _connections.Connect(pipe);
@@ -72,11 +60,9 @@ public class TeeFilter<TContext> :
 }
 
 
-/// <summary>
-/// Connects multiple output pipes to a single input pipe
-/// </summary>
-/// <typeparam name="TContext"></typeparam>
-/// <typeparam name="TKey">The key type</typeparam>
+/// <summary>Connects multiple output pipes to a single input pipe.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+/// <typeparam name="TKey">The key type.</typeparam>
 public class TeeFilter<TContext, TKey> :
     TeeFilter<TContext>,
     ITeeFilter<TContext, TKey>
@@ -86,10 +72,8 @@ public class TeeFilter<TContext, TKey> :
     readonly KeyAccessor<TContext, TKey> _keyAccessor;
     readonly Lazy<IKeyPipeConnector<TKey>> _keyConnections;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="keyAccessor">The key accessor value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="keyAccessor">The key accessor.</param>
     public TeeFilter(KeyAccessor<TContext, TKey> keyAccessor)
     {
         _keyAccessor = keyAccessor ?? throw new ArgumentNullException(nameof(keyAccessor));
@@ -97,13 +81,11 @@ public class TeeFilter<TContext, TKey> :
         _keyConnections = new Lazy<IKeyPipeConnector<TKey>>(ConnectKeyFilter);
     }
 
-    /// <summary>
-    /// Connects pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="key">The key value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
         where T : class, PipeContext
     {

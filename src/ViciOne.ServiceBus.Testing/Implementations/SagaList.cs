@@ -6,103 +6,83 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
-/// <summary>
-/// Provides a saga list implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Stores a list of saga values.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class SagaList<T> :
     AsyncElementList<ISagaInstance<T>>,
     ISagaList<T>
     where T : class, ISaga
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="testCompleted">The test completed value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="testCompleted">The test completed.</param>
     public SagaList(TimeSpan timeout, CancellationToken testCompleted = default)
         : base(timeout, testCompleted)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="testCompleted">The test completed value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="testCompleted">The test completed.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public SagaList(TimeSpan timeout, CancellationToken testCompleted, TimeProvider timeProvider)
         : base(timeout, testCompleted, timeProvider)
     {
     }
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects the matching value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The selected value.</returns>
     public IEnumerable<ISagaInstance<T>> Select(FilterDelegate<T> filter, CancellationToken cancellationToken = default)
     {
         return Select(x => filter(x.Saga), cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the contains operation.
-    /// </summary>
-    /// <param name="sagaId">The saga id value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Determines whether the current collection contains the supplied value.</summary>
+    /// <param name="sagaId">The saga id.</param>
+    /// <returns>The t produced by the operation.</returns>
     public T? Contains(Guid sagaId)
     {
         return Select(x => x.Saga.CorrelationId == sagaId).Select(x => x.Saga).FirstOrDefault();
     }
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
+    /// <summary>Selects the matching value.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>An asynchronous sequence containing the selected value.</returns>
     public IAsyncEnumerable<ISagaInstance<T>> SelectAsync(CancellationToken cancellationToken = default)
     {
         return SelectAsync(x => true, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects the matching value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>An asynchronous sequence containing the selected value.</returns>
     public IAsyncEnumerable<ISagaInstance<T>> SelectAsync(FilterDelegate<T> filter, CancellationToken cancellationToken = default)
     {
         return SelectAsync(x => filter(x.Saga), cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the any operation.
-    /// </summary>
+    /// <summary>Selects any matching value.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the any outcome.</returns>
     public Task<bool> AnyAsync(CancellationToken cancellationToken = default)
     {
         return AnyAsync(x => true, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the any operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects any matching value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the any outcome.</returns>
     public Task<bool> AnyAsync(FilterDelegate<T> filter, CancellationToken cancellationToken = default)
     {
         return AnyAsync(x => filter(x.Saga), cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Add(SagaConsumeContext<T> context)
     {
         Add(new SagaInstance<T>(context.Saga));

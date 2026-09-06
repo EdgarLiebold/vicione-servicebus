@@ -11,6 +11,7 @@ namespace ViciOne.ServiceBus.Providers.Persistence;
 /// Deterministic in-memory implementation used by unit/in-memory integration tests. It obeys the exact durable-store
 /// atomicity/fencing/boundedness contract but is intentionally not a production durability substitute.
 /// </summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 internal sealed class InMemoryReliableStore<TBus> :
     IOutboxStore<TBus>,
     IInboxStore<TBus>,

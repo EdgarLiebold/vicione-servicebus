@@ -6,17 +6,12 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Provides a vici one service bus state machine implementation.
-/// </summary>
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, SagaStateMachineInstance
 {
-    /// <summary>
-    /// Provides a state machine request implementation.
-    /// </summary>
-    /// <typeparam name="TRequest">The t request type.</typeparam>
-    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <summary>Carries the request for state machine.</summary>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
     public class StateMachineRequest<TRequest, TResponse> :
         Request<TInstance, TRequest, TResponse>
         where TRequest : class
@@ -26,12 +21,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         readonly IReadProperty<TInstance, Guid?> _read = null!;
         readonly IWriteProperty<TInstance, Guid?> _write = null!;
 
-        /// <summary>
-        /// Initializes a new instance of the containing type.
-        /// </summary>
-        /// <param name="name">The name value.</param>
-        /// <param name="settings">The settings value.</param>
-        /// <param name="requestIdExpression">The request id expression value.</param>
+        /// <summary>Initializes a new instance.</summary>
+        /// <param name="name">The name.</param>
+        /// <param name="settings">The settings that control the operation.</param>
+        /// <param name="requestIdExpression">The request id expression.</param>
         public StateMachineRequest(string name, RequestSettings<TInstance, TRequest, TResponse> settings,
             Expression<Func<TInstance, Guid?>>? requestIdExpression = default)
         {
@@ -51,35 +44,21 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             }
         }
 
-        /// <summary>
-        /// Gets the name value.
-        /// </summary>
+        /// <summary>Gets the name.</summary>
         public string Name { get; }
-        /// <summary>
-        /// Gets the settings value.
-        /// </summary>
+        /// <summary>Gets the settings.</summary>
         public RequestSettings<TInstance, TRequest, TResponse> Settings { get; }
-        /// <summary>
-        /// Gets or sets the completed value.
-        /// </summary>
+        /// <summary>Gets or sets the completed.</summary>
         public Event<TResponse> Completed { get; set; } = null!;
-        /// <summary>
-        /// Gets or sets the faulted value.
-        /// </summary>
+        /// <summary>Gets or sets the faulted.</summary>
         public Event<Fault<TRequest>> Faulted { get; set; } = null!;
-        /// <summary>
-        /// Gets or sets the timeout expired value.
-        /// </summary>
+        /// <summary>Gets or sets the timeout expired.</summary>
         public Event<RequestTimeoutExpired<TRequest>> TimeoutExpired { get; set; } = null!;
-        /// <summary>
-        /// Gets or sets the pending value.
-        /// </summary>
+        /// <summary>Gets or sets the pending.</summary>
         public State Pending { get; set; } = null!;
-        /// <summary>
-        /// Sets request id.
-        /// </summary>
-        /// <param name="instance">The instance value.</param>
-        /// <param name="requestId">The request id value.</param>
+        /// <summary>Sets request id.</summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="requestId">The request id.</param>
         public void SetRequestId(TInstance instance, Guid? requestId)
         {
             if (instance == null)
@@ -88,11 +67,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _write?.Set(instance, requestId);
         }
 
-        /// <summary>
-        /// Gets request id.
-        /// </summary>
-        /// <param name="instance">The instance value.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Gets request id.</summary>
+        /// <param name="instance">The instance.</param>
+        /// <returns>The request id.</returns>
         public Guid? GetRequestId(TInstance instance)
         {
             if (instance == null)
@@ -103,11 +80,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 : instance.CorrelationId;
         }
 
-        /// <summary>
-        /// Performs the generate request id operation.
-        /// </summary>
-        /// <param name="instance">The instance value.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Generates request id.</summary>
+        /// <param name="instance">The instance.</param>
+        /// <returns>The guid produced by the operation.</returns>
         public Guid GenerateRequestId(TInstance instance)
         {
             return _read != null
@@ -115,10 +90,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 : instance.CorrelationId;
         }
 
-        /// <summary>
-        /// Sets send context headers.
-        /// </summary>
-        /// <param name="context">The operation context.</param>
+        /// <summary>Sets send context headers.</summary>
+        /// <param name="context">The context associated with the operation.</param>
         public void SetSendContextHeaders(SendContext<TRequest> context)
         {
             if (Settings.TimeToLive.HasValue && Settings.TimeToLive.Value > TimeSpan.Zero)
@@ -127,10 +100,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             context.Headers.Set(MessageHeaders.Request.Accept, _accept);
         }
 
-        /// <summary>
-        /// Performs the event filter operation.
-        /// </summary>
-        /// <param name="context">The operation context.</param>
+        /// <summary>Filters events using the supplied predicate.</summary>
+        /// <param name="context">The context associated with the operation.</param>
         /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
         public bool EventFilter(BehaviorContext<TInstance, RequestTimeoutExpired<TRequest>> context)
         {
@@ -142,10 +113,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             return requestId.HasValue && requestId.Value == context.RequestId.Value;
         }
 
-        /// <summary>
-        /// Performs the accept response operation.
-        /// </summary>
-        /// <typeparam name="T">The t type.</typeparam>
+        /// <summary>Accepts response.</summary>
+        /// <typeparam name="T">The value type.</typeparam>
         protected void AcceptResponse<T>()
             where T : class
         {
@@ -154,12 +123,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
     }
 
 
-    /// <summary>
-    /// Provides a state machine request implementation.
-    /// </summary>
-    /// <typeparam name="TRequest">The t request type.</typeparam>
-    /// <typeparam name="TResponse">The t response type.</typeparam>
-    /// <typeparam name="TResponse2">The t response2 type.</typeparam>
+    /// <summary>Carries the request for state machine.</summary>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <typeparam name="TResponse2">The response2 type.</typeparam>
     public class StateMachineRequest<TRequest, TResponse, TResponse2> :
         StateMachineRequest<TRequest, TResponse>,
         Request<TInstance, TRequest, TResponse, TResponse2>
@@ -167,12 +134,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         where TResponse : class
         where TResponse2 : class
     {
-        /// <summary>
-        /// Initializes a new instance of the containing type.
-        /// </summary>
-        /// <param name="name">The name value.</param>
-        /// <param name="settings">The settings value.</param>
-        /// <param name="requestIdExpression">The request id expression value.</param>
+        /// <summary>Initializes a new instance.</summary>
+        /// <param name="name">The name.</param>
+        /// <param name="settings">The settings that control the operation.</param>
+        /// <param name="requestIdExpression">The request id expression.</param>
         public StateMachineRequest(string name, RequestSettings<TInstance, TRequest, TResponse, TResponse2> settings,
             Expression<Func<TInstance, Guid?>>? requestIdExpression = default)
             : base(name, settings, requestIdExpression)
@@ -182,25 +147,19 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             AcceptResponse<TResponse2>();
         }
 
-        /// <summary>
-        /// Gets the settings value.
-        /// </summary>
+        /// <summary>Gets the settings.</summary>
         public new RequestSettings<TInstance, TRequest, TResponse, TResponse2> Settings { get; }
 
-        /// <summary>
-        /// Gets or sets the completed2 value.
-        /// </summary>
+        /// <summary>Gets or sets the completed2.</summary>
         public Event<TResponse2> Completed2 { get; set; } = null!;
     }
 
 
-    /// <summary>
-    /// Provides a state machine request implementation.
-    /// </summary>
-    /// <typeparam name="TRequest">The t request type.</typeparam>
-    /// <typeparam name="TResponse">The t response type.</typeparam>
-    /// <typeparam name="TResponse2">The t response2 type.</typeparam>
-    /// <typeparam name="TResponse3">The t response3 type.</typeparam>
+    /// <summary>Carries the request for state machine.</summary>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <typeparam name="TResponse2">The response2 type.</typeparam>
+    /// <typeparam name="TResponse3">The response3 type.</typeparam>
     public class StateMachineRequest<TRequest, TResponse, TResponse2, TResponse3> :
         StateMachineRequest<TRequest, TResponse, TResponse2>,
         Request<TInstance, TRequest, TResponse, TResponse2, TResponse3>
@@ -209,12 +168,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         where TResponse2 : class
         where TResponse3 : class
     {
-        /// <summary>
-        /// Initializes a new instance of the containing type.
-        /// </summary>
-        /// <param name="name">The name value.</param>
-        /// <param name="settings">The settings value.</param>
-        /// <param name="requestIdExpression">The request id expression value.</param>
+        /// <summary>Initializes a new instance.</summary>
+        /// <param name="name">The name.</param>
+        /// <param name="settings">The settings that control the operation.</param>
+        /// <param name="requestIdExpression">The request id expression.</param>
         public StateMachineRequest(string name, RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> settings,
             Expression<Func<TInstance, Guid?>>? requestIdExpression = default)
             : base(name, settings, requestIdExpression)
@@ -224,14 +181,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             AcceptResponse<TResponse3>();
         }
 
-        /// <summary>
-        /// Gets the settings value.
-        /// </summary>
+        /// <summary>Gets the settings.</summary>
         public new RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> Settings { get; }
 
-        /// <summary>
-        /// Gets or sets the completed3 value.
-        /// </summary>
+        /// <summary>Gets or sets the completed3.</summary>
         public Event<TResponse3> Completed3 { get; set; } = null!;
     }
 }

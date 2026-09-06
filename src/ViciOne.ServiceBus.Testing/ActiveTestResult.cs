@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace ViciOne.ServiceBus.Testing;
-/// <summary>
-/// Immutable messages observed while one <c>Act</c> operation and its resulting activity chain were active.
-/// </summary>
+/// <summary>Immutable messages observed while one <c>Act</c> operation and its resulting activity chain were active.</summary>
 public sealed record ActiveTestResult
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="consumed">The consumed value.</param>
-    /// <param name="published">The published value.</param>
-    /// <param name="sent">The sent value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="consumed">The consumed.</param>
+    /// <param name="published">The published.</param>
+    /// <param name="sent">The sent.</param>
     public ActiveTestResult(
         IEnumerable<IReceivedMessage> consumed,
         IEnumerable<IPublishedMessage> published,
@@ -28,18 +24,12 @@ public sealed record ActiveTestResult
         Sent = Array.AsReadOnly(sent.ToArray());
     }
 
-    /// <summary>
-    /// Gets the consumed value.
-    /// </summary>
+    /// <summary>Gets the consumed.</summary>
     public IReadOnlyList<IReceivedMessage> Consumed { get; }
 
-    /// <summary>
-    /// Gets the published value.
-    /// </summary>
+    /// <summary>Gets the published.</summary>
     public IReadOnlyList<IPublishedMessage> Published { get; }
 
-    /// <summary>
-    /// Gets the sent value.
-    /// </summary>
+    /// <summary>Gets the sent.</summary>
     public IReadOnlyList<ISentMessage> Sent { get; }
 }

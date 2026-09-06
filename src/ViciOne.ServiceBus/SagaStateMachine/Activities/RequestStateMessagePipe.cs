@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Components;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a request state message pipe implementation.
-/// </summary>
+/// <summary>Executes the pipeline for request state message.</summary>
 public class RequestStateMessagePipe :
     IPipe<SendContext>
 {
@@ -14,12 +12,10 @@ public class RequestStateMessagePipe :
     readonly object _message;
     readonly string[] _messageType;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="messageType">The message type value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="message">The message to process.</param>
+    /// <param name="messageType">The runtime type of the message contract.</param>
     public RequestStateMessagePipe(BehaviorContext<RequestState> context, object message, string[] messageType)
     {
         _context = context;
@@ -28,19 +24,15 @@ public class RequestStateMessagePipe :
         _messageType = messageType;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(SendContext context)
     {
         context.DestinationAddress = _context.Saga.ResponseAddress;

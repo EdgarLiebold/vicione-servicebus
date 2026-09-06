@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a partition implementation.
-/// </summary>
+/// <summary>Serializes pipeline operations assigned to the same partition.</summary>
 public class Partition :
     IAsyncDisposable
 {
@@ -16,20 +14,16 @@ public class Partition :
     long _failureCount;
     long _successCount;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="index">The index value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="index">The index.</param>
     public Partition(int index)
     {
         _index = index;
         _limit = new SemaphoreSlim(1);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask DisposeAsync()
     {
         await _limit.WaitAsync().ConfigureAwait(false);
@@ -37,10 +31,8 @@ public class Partition :
         _limit.Dispose();
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var partitionScope = context.CreateScope($"partition-{_index}");
@@ -52,14 +44,12 @@ public class Partition :
         });
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync<T>(T context, IPipe<T> next, CancellationToken cancellationToken = default)
         where T : class, PipeContext
     {

@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs.Configuration;
 
-/// <summary>
-/// Provides an event hub receive endpoint specification implementation.
-/// </summary>
+/// <summary>Stores, validates, and builds one Event Hubs receive endpoint.</summary>
 public class EventHubReceiveEndpointSpecification :
     IEventHubReceiveEndpointSpecification
 {
@@ -20,15 +18,13 @@ public class EventHubReceiveEndpointSpecification :
     readonly IHostSettings _hostSettings;
     readonly IStorageSettings _storageSettings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="eventHubName">The event hub name value.</param>
-    /// <param name="consumerGroup">The consumer group value.</param>
-    /// <param name="hostSettings">The host settings value.</param>
-    /// <param name="storageSettings">The storage settings value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Creates a receive-endpoint specification from rider and endpoint settings.</summary>
+    /// <param name="hostConfiguration">The Event Hubs rider host configuration.</param>
+    /// <param name="eventHubName">The Event Hub entity name.</param>
+    /// <param name="consumerGroup">The consumer group used to coordinate partition ownership.</param>
+    /// <param name="hostSettings">The namespace connection settings.</param>
+    /// <param name="storageSettings">The Blob Storage checkpoint settings.</param>
+    /// <param name="configure">Configures the endpoint immediately before it is built.</param>
     public EventHubReceiveEndpointSpecification(IEventHubHostConfiguration hostConfiguration, string eventHubName, string consumerGroup,
         IHostSettings hostSettings, IStorageSettings storageSettings,
         Action<IEventHubReceiveEndpointConfigurator> configure)
@@ -46,25 +42,19 @@ public class EventHubReceiveEndpointSpecification :
         _endpointObservers = new ReceiveEndpointObservable();
     }
 
-    /// <summary>
-    /// Gets the endpoint name value.
-    /// </summary>
+    /// <summary>Gets the bus endpoint name derived from the Event Hub and consumer group.</summary>
     public string EndpointName { get; }
 
-    /// <summary>
-    /// Connects receive endpoint observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive endpoint observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
     {
         return _endpointObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (string.IsNullOrWhiteSpace(_eventHubName))
@@ -81,11 +71,9 @@ public class EventHubReceiveEndpointSpecification :
             yield return this.Failure("StorageSettings", "is invalid");
     }
 
-    /// <summary>
-    /// Creates receive endpoint.
-    /// </summary>
-    /// <param name="busInstance">The bus instance value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates, builds, and returns the receive endpoint.</summary>
+    /// <param name="busInstance">The bus instance that will own the endpoint.</param>
+    /// <returns>The configured receive endpoint.</returns>
     public ReceiveEndpoint CreateReceiveEndpoint(IBusInstance busInstance)
     {
         var endpointConfiguration = busInstance.HostConfiguration.CreateReceiveEndpointConfiguration(EndpointName);

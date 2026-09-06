@@ -1,48 +1,28 @@
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Specifies the available active mq transport protocol values.
-/// </summary>
+/// <summary>Identifies the native protocol used to connect to ActiveMQ.</summary>
 public enum ActiveMqTransportProtocol
 {
-    /// <summary>
-    /// Indicates open wire.
-    /// </summary>
+    /// <summary>Uses the ActiveMQ OpenWire protocol.</summary>
     OpenWire = 0,
-    /// <summary>
-    /// Indicates amqp.
-    /// </summary>
+    /// <summary>Uses AMQP 1.0.</summary>
     Amqp = 1
 }
 
 
-/// <summary>
-/// Defines configuration options for active mq transport.
-/// </summary>
+/// <summary>Defines options-bound ActiveMQ connection settings for bus registration.</summary>
 public sealed class ActiveMqTransportOptions
 {
-    /// <summary>
-    /// Gets or sets the host value.
-    /// </summary>
+    /// <summary>Gets or sets the broker host name.</summary>
     public string? Host { get; set; }
-    /// <summary>
-    /// Gets or sets the protocol value.
-    /// </summary>
+    /// <summary>Gets or sets the required native broker protocol.</summary>
     public ActiveMqTransportProtocol? Protocol { get; set; }
-    /// <summary>
-    /// Gets or sets the port value.
-    /// </summary>
+    /// <summary>Gets or sets the required broker port.</summary>
     public ushort? Port { get; set; }
-    /// <summary>
-    /// Gets or sets the use ssl value.
-    /// </summary>
+    /// <summary>Gets or sets whether TLS is enabled.</summary>
     public bool UseSsl { get; set; }
-    /// <summary>
-    /// Gets or sets the user value.
-    /// </summary>
+    /// <summary>Gets or sets the broker user name.</summary>
     public string? User { get; set; }
-    /// <summary>
-    /// Gets or sets the pass value.
-    /// </summary>
+    /// <summary>Gets or sets the broker password.</summary>
     public string? Pass { get; set; }
 }

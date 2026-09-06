@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.MessageData.PropertyProviders;
 
-/// <summary>
-/// Provides a get message data property provider implementation.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
-/// <typeparam name="TValue">The t value type.</typeparam>
+/// <summary>Provides get message data property services.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TValue">The value stored by the member.</typeparam>
 public class GetMessageDataPropertyProvider<TInput, TValue> :
     IPropertyProvider<TInput, MessageData<TValue>>
     where TInput : class
@@ -18,11 +16,9 @@ public class GetMessageDataPropertyProvider<TInput, TValue> :
     readonly IMessageDataReader<TValue> _reader;
     readonly IMessageDataRepository? _repository;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="inputProvider">The input provider value.</param>
-    /// <param name="repository">The repository value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="inputProvider">The input provider.</param>
+    /// <param name="repository">The repository.</param>
     public GetMessageDataPropertyProvider(IPropertyProvider<TInput, MessageData<TValue>> inputProvider, IMessageDataRepository? repository = default)
     {
         _repository = repository;
@@ -31,13 +27,11 @@ public class GetMessageDataPropertyProvider<TInput, TValue> :
         _reader = MessageDataReaderFactory.CreateReader<TValue>();
     }
 
-    /// <summary>
-    /// Gets property.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Gets property.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<MessageData<TValue>?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {

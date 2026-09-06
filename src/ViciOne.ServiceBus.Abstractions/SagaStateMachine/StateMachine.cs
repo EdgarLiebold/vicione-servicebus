@@ -4,125 +4,89 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// A state machine definition
-/// </summary>
+/// <summary>A state machine definition.</summary>
 public interface StateMachine :
     IVisitable
 {
-    /// <summary>
-    /// The name of the state machine (defaults to the state machine type name)
-    /// </summary>
+    /// <summary>The name of the state machine (defaults to the state machine type name).</summary>
     string Name { get; }
 
-    /// <summary>
-    /// The events defined in the state machine
-    /// </summary>
+    /// <summary>The events defined in the state machine.</summary>
     IEnumerable<Event> Events { get; }
 
-    /// <summary>
-    /// The states defined in the state machine
-    /// </summary>
+    /// <summary>The states defined in the state machine.</summary>
     IEnumerable<State> States { get; }
 
-    /// <summary>
-    /// The instance type associated with the state machine
-    /// </summary>
+    /// <summary>The instance type associated with the state machine.</summary>
     Type InstanceType { get; }
 
-    /// <summary>
-    /// The initial state of a new state machine instance
-    /// </summary>
+    /// <summary>The initial state of a new state machine instance.</summary>
     State Initial { get; }
 
-    /// <summary>
-    /// The final state of a state machine instance
-    /// </summary>
+    /// <summary>The final state of a state machine instance.</summary>
     State Final { get; }
 
-    /// <summary>
-    /// Returns the event requested
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
+    /// <summary>Returns the event requested.</summary>
+    /// <param name="name">The name.</param>
+    /// <returns>The event.</returns>
     Event GetEvent(string name);
 
-    /// <summary>
-    /// Returns the state requested
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
+    /// <summary>Returns the state requested.</summary>
+    /// <param name="name">The name.</param>
+    /// <returns>The state.</returns>
     State GetState(string name);
 
-    /// <summary>
-    /// The valid events that can be raised during the specified state
-    /// </summary>
-    /// <param name="state">The state to query</param>
-    /// <returns>An enumeration of valid events</returns>
+    /// <summary>The valid events that can be raised during the specified state.</summary>
+    /// <param name="state">The state to query.</param>
+    /// <returns>An enumeration of valid events.</returns>
     IEnumerable<Event> NextEvents(State state);
 
-    /// <summary>
-    /// Returns true if the event is or is used by a composite event
-    /// </summary>
-    /// <param name="event"></param>
-    /// <returns></returns>
+    /// <summary>Returns true if the event is or is used by a composite event.</summary>
+    /// <param name="event">The event.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     bool IsCompositeEvent(Event @event);
 }
 
 
-/// <summary>
-/// A defined state machine that operations against the specified instance
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
+/// <summary>A defined state machine that operations against the specified instance.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public interface StateMachine<TSaga> :
     StateMachine
     where TSaga : class, SagaStateMachineInstance
 {
-    /// <summary>
-    /// Exposes the current state on the given instance
-    /// </summary>
+    /// <summary>Exposes the current state on the given instance.</summary>
     IStateAccessor<TSaga> Accessor { get; }
 
-    /// <summary>
-    /// Returns the state requested bound to the instance
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
+    /// <summary>Returns the state requested bound to the instance.</summary>
+    /// <param name="name">The name.</param>
+    /// <returns>The state.</returns>
     new State<TSaga> GetState(string name);
 
-    /// <summary>
-    /// Raise a simple event on the state machine instance asynchronously
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns>Task for the instance once completed</returns>
+    /// <summary>Raise a simple event on the state machine instance asynchronously.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>Task for the instance once completed.</returns>
     Task RaiseEventAsync(BehaviorContext<TSaga> context, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Raise a data event on the state machine instance
-    /// </summary>
-    /// <param name="context"></param>
+    /// <summary>Raise a data event on the state machine instance.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task RaiseEventAsync<T>(BehaviorContext<TSaga, T> context, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>
-    /// Connects event observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects event observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     IDisposable ConnectEventObserver(IEventObserver<TSaga> observer);
-    /// <summary>
-    /// Connects event observer.
-    /// </summary>
-    /// <param name="event">The event value.</param>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects event observer.</summary>
+    /// <param name="event">The event.</param>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     IDisposable ConnectEventObserver(Event @event, IEventObserver<TSaga> observer);
-    /// <summary>
-    /// Connects state observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects state observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     IDisposable ConnectStateObserver(IStateObserver<TSaga> observer);
 }

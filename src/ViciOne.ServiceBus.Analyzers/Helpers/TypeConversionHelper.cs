@@ -7,17 +7,13 @@ using Microsoft.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Analyzers.Helpers;
 
-/// <summary>
-/// Provides a type conversion helper implementation.
-/// </summary>
+/// <summary>Provides helper operations for type conversion.</summary>
 public class TypeConversionHelper
 {
     readonly SemanticModel _semanticModel;
     readonly NodeList<ITypeSymbol> _typeSymbols;
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="semanticModel">The semantic model value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="semanticModel">The semantic model.</param>
     public TypeConversionHelper(SemanticModel semanticModel)
     {
         _semanticModel = semanticModel;
@@ -127,11 +123,9 @@ public class TypeConversionHelper
             ?? throw new InvalidOperationException($"The compilation does not reference '{metadataName}'.");
     }
 
-    /// <summary>
-    /// Determines whether the current value can convert.
-    /// </summary>
-    /// <param name="type">The type value.</param>
-    /// <param name="sourceSymbol">The source symbol value.</param>
+    /// <summary>Determines whether the current value can convert.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <param name="sourceSymbol">The source symbol.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool CanConvert(Type type, ITypeSymbol sourceSymbol)
     {
@@ -140,11 +134,9 @@ public class TypeConversionHelper
         return CanConvert(symbol, sourceSymbol);
     }
 
-    /// <summary>
-    /// Determines whether the current value can convert.
-    /// </summary>
-    /// <param name="symbol">The symbol value.</param>
-    /// <param name="sourceSymbol">The source symbol value.</param>
+    /// <summary>Determines whether the current value can convert.</summary>
+    /// <param name="symbol">The symbol.</param>
+    /// <param name="sourceSymbol">The source symbol.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool CanConvert(ITypeSymbol symbol, ITypeSymbol sourceSymbol)
     {
@@ -252,11 +244,9 @@ public class TypeConversionHelper
         return false;
     }
 
-    /// <summary>
-    /// Determines whether message data.
-    /// </summary>
-    /// <param name="symbol">The symbol value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Determines whether message data.</summary>
+    /// <param name="symbol">The symbol.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsMessageData(ITypeSymbol symbol, [NotNullWhen(true)] out ITypeSymbol? result)
     {

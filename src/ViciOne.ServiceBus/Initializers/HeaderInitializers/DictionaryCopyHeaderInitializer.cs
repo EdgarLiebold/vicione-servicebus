@@ -6,12 +6,10 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.HeaderInitializers;
 
-/// <summary>
-/// Provides a dictionary copy header initializer implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
-/// <typeparam name="TInput">The t input type.</typeparam>
-/// <typeparam name="THeader">The t header type.</typeparam>
+/// <summary>Initializes dictionary copy header values.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="THeader">The header type.</typeparam>
 public class DictionaryCopyHeaderInitializer<TMessage, TInput, THeader> :
     IHeaderInitializer<TMessage, TInput>
     where TMessage : class
@@ -20,11 +18,9 @@ public class DictionaryCopyHeaderInitializer<TMessage, TInput, THeader> :
     readonly IWriteProperty<SendContext, THeader> _headerProperty;
     readonly string _key;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="key">The key value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
     public DictionaryCopyHeaderInitializer(PropertyInfo propertyInfo, string key)
     {
         if (propertyInfo == null)
@@ -34,13 +30,11 @@ public class DictionaryCopyHeaderInitializer<TMessage, TInput, THeader> :
         _headerProperty = WritePropertyCache<SendContext>.GetProperty<THeader>(propertyInfo);
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="sendContext">The send context value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="sendContext">The send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (context.HasInput && context.Input.TryGetValue(_key, out var value))

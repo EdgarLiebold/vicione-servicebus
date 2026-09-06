@@ -4,33 +4,25 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a rabbit mq publish topology implementation.
-/// </summary>
+/// <summary>Creates and aggregates RabbitMQ publish topology for message contracts.</summary>
 public class RabbitMqPublishTopology :
     PublishTopology,
     IRabbitMqPublishTopologyConfigurator
 {
     readonly IMessageTopology _messageTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Creates a publish topology that uses fanout exchanges by default.</summary>
+    /// <param name="messageTopology">The message metadata used to derive exchange names.</param>
     public RabbitMqPublishTopology(IMessageTopology messageTopology)
     {
         _messageTopology = messageTopology;
         ExchangeTypeSelector = new FanoutExchangeTypeSelector();
     }
 
-    /// <summary>
-    /// Gets the exchange type selector value.
-    /// </summary>
+    /// <summary>Gets the selector used to determine exchange types for published message contracts.</summary>
     public IExchangeTypeSelector ExchangeTypeSelector { get; }
 
-    /// <summary>
-    /// Gets or sets the broker topology options value.
-    /// </summary>
+    /// <summary>Gets or sets how implemented-message exchange hierarchies are represented.</summary>
     public PublishBrokerTopologyOptions BrokerTopologyOptions { get; set; }
 
     IRabbitMqMessagePublishTopology<T> IRabbitMqPublishTopology.GetMessageTopology<T>()
@@ -45,10 +37,8 @@ public class RabbitMqPublishTopology :
             ?? throw new InvalidOperationException($"The message topology for '{messageType}' is not a RabbitMQ publish topology.");
     }
 
-    /// <summary>
-    /// Gets publish broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the combined broker topology for every configured publish message contract.</summary>
+    /// <returns>The de-duplicated publish broker topology.</returns>
     public BrokerTopology GetPublishBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder(BrokerTopologyOptions);
@@ -69,11 +59,9 @@ public class RabbitMqPublishTopology :
             ?? throw new InvalidOperationException($"The message topology for '{typeof(T)}' is not a RabbitMQ publish topology.");
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates publish topology for a message contract and connects its directly implemented contracts.</summary>
+    /// <typeparam name="T">The published message contract type.</typeparam>
+    /// <returns>The RabbitMQ publish topology for <typeparamref name="T"/>.</returns>
     protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()
     {
         var exchangeTypeSelector = new MessageExchangeTypeSelector<T>(ExchangeTypeSelector);

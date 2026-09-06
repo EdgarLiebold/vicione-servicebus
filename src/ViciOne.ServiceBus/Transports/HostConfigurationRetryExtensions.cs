@@ -6,34 +6,28 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides extension methods for host configuration retry.
-/// </summary>
+/// <summary>Provides extension methods for host configuration retry.</summary>
 public static class HostConfigurationRetryExtensions
 {
-    /// <summary>
-    /// Performs the retry operation.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="stoppingToken">The stopping token value.</param>
+    /// <summary>Retries the configured operation.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="stoppingToken">The stopping token.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static async Task RetryAsync(this IHostConfiguration hostConfiguration, Func<Task> factory, CancellationToken stoppingToken,
         CancellationToken cancellationToken = default)
     {
         await RetryAsync(hostConfiguration, factory, TimeProvider.System, stoppingToken, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the retry operation.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
-    /// <param name="stoppingToken">The stopping token value.</param>
+    /// <summary>Retries the configured operation.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <param name="stoppingToken">The stopping token.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static async Task RetryAsync(this IHostConfiguration hostConfiguration, Func<Task> factory, TimeProvider timeProvider,
         CancellationToken stoppingToken, CancellationToken cancellationToken = default)
     {

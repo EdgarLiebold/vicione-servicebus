@@ -239,7 +239,7 @@ class StateMachineModifier<TSaga> :
     public IStateMachineModifier<TSaga> InstanceState(Expression<Func<TSaga, int>> instanceStateProperty,
         params string[] stateNames)
     {
-        // NOTE: May need to re-think this; Assumes the states have already been declared.
+        // State replacement operates only on declarations already present in the machine graph.
         State<TSaga>[] states = stateNames
             .Select(name => _machine.GetState(name))
             .ToArray();

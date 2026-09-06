@@ -2,19 +2,15 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>
-/// Provides an in memory endpoint configuration implementation.
-/// </summary>
+/// <summary>Stores and validates in memory endpoint configuration.</summary>
 public class InMemoryEndpointConfiguration :
     EndpointConfiguration,
     IInMemoryEndpointConfiguration
 {
     readonly IInMemoryTopologyConfiguration _topologyConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="topologyConfiguration">The topology configuration.</param>
     protected InMemoryEndpointConfiguration(IInMemoryTopologyConfiguration topologyConfiguration)
         : base(topologyConfiguration)
     {
@@ -30,11 +26,9 @@ public class InMemoryEndpointConfiguration :
 
     IInMemoryTopologyConfiguration IInMemoryEndpointConfiguration.Topology => _topologyConfiguration;
 
-    /// <summary>
-    /// Creates endpoint configuration.
-    /// </summary>
-    /// <param name="isBusEndpoint">The is bus endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates endpoint configuration.</summary>
+    /// <param name="isBusEndpoint">The is bus endpoint.</param>
+    /// <returns>The created endpoint configuration.</returns>
     public IInMemoryEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
     {
         var topologyConfiguration = new InMemoryTopologyConfiguration(_topologyConfiguration);

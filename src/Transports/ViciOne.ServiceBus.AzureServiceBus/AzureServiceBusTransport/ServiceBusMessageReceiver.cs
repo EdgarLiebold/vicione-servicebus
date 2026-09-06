@@ -7,19 +7,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus message receiver implementation.
-/// </summary>
+/// <summary>Dispatches an Azure Functions trigger message through a configured receive pipeline.</summary>
 public class ServiceBusMessageReceiver :
     IServiceBusMessageReceiver
 {
     readonly ReceiveEndpointContext _context;
     readonly IReceivePipeDispatcher _dispatcher;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Creates a dispatcher for a configured receive endpoint.</summary>
+    /// <param name="context">The receive endpoint context that supplies pipeline and transport settings.</param>
     public ServiceBusMessageReceiver(ReceiveEndpointContext context)
     {
         _context = context;
@@ -27,12 +23,10 @@ public class ServiceBusMessageReceiver :
         _dispatcher = context.CreateReceivePipeDispatcher();
     }
 
-    /// <summary>
-    /// Performs the handle operation.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Wraps and dispatches a received Azure Service Bus message without broker settlement.</summary>
+    /// <param name="message">The trigger delivery to dispatch.</param>
+    /// <param name="cancellationToken">Cancels receive-pipeline dispatch.</param>
+    /// <returns>The dispatcher task for the trigger message's receive context.</returns>
     public async Task HandleAsync(ServiceBusReceivedMessage message, CancellationToken cancellationToken)
     {
         var context = new ServiceBusReceiveContext(message, _context);

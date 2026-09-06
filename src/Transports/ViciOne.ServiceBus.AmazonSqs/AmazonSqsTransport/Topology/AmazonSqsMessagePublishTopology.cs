@@ -7,10 +7,8 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides an amazon sqs message publish topology implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures the Amazon SNS topic used to publish a message type.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class AmazonSqsMessagePublishTopology<TMessage> :
     MessagePublishTopology<TMessage>,
     IAmazonSqsMessagePublishTopologyConfigurator<TMessage>
@@ -19,11 +17,9 @@ public class AmazonSqsMessagePublishTopology<TMessage> :
     readonly AmazonSqsTopicConfigurator _amazonSqsTopic;
     readonly IAmazonSqsPublishTopology _publishTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="publishTopology">The publish topology value.</param>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Initializes publish topology using the message entity name and temporary-type lifetime.</summary>
+    /// <param name="publishTopology">The parent Amazon SNS publish topology.</param>
+    /// <param name="messageTopology">The message topology that supplies the topic name.</param>
     public AmazonSqsMessagePublishTopology(IAmazonSqsPublishTopology publishTopology, IMessageTopology<TMessage> messageTopology)
         : base(publishTopology)
     {
@@ -39,9 +35,7 @@ public class AmazonSqsMessagePublishTopology<TMessage> :
         _amazonSqsTopic = new AmazonSqsTopicConfigurator(topicName, durable, autoDelete);
     }
 
-    /// <summary>
-    /// Gets the topic value.
-    /// </summary>
+    /// <summary>Gets the configured Amazon SNS topic entity.</summary>
     public Topic Topic => _amazonSqsTopic;
 
     bool IAmazonSqsTopicConfigurator.Durable
@@ -58,32 +52,26 @@ public class AmazonSqsMessagePublishTopology<TMessage> :
     IDictionary<string, object> IAmazonSqsTopicConfigurator.TopicSubscriptionAttributes => _amazonSqsTopic.TopicSubscriptionAttributes;
     IDictionary<string, string> IAmazonSqsTopicConfigurator.TopicTags => _amazonSqsTopic.TopicTags;
 
-    /// <summary>
-    /// Gets endpoint address.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the topic endpoint address relative to an Amazon SQS host.</summary>
+    /// <param name="hostAddress">The Amazon SQS host address.</param>
+    /// <returns>The Amazon SNS topic endpoint address.</returns>
     public AmazonSqsEndpointAddress GetEndpointAddress(Uri hostAddress)
     {
         return _amazonSqsTopic.GetEndpointAddress(hostAddress);
     }
 
-    /// <summary>
-    /// Attempts to get publish address.
-    /// </summary>
-    /// <param name="baseAddress">The base address value.</param>
-    /// <param name="publishAddress">The publish address value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Gets the message type's Amazon SNS publish address.</summary>
+    /// <param name="baseAddress">The Amazon SQS host address.</param>
+    /// <param name="publishAddress">The formatted topic address.</param>
+    /// <returns>Always <see langword="true"/>.</returns>
     public override bool TryGetPublishAddress(Uri baseAddress, [NotNullWhen(true)] out Uri? publishAddress)
     {
         publishAddress = _amazonSqsTopic.GetEndpointAddress(baseAddress);
         return true;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Adds the message topic to a publish builder unless the topology is excluded.</summary>
+    /// <param name="builder">The publish-endpoint broker-topology builder.</param>
     public void Apply(IPublishEndpointBrokerTopologyBuilder builder)
     {
         if (Exclude)
@@ -97,20 +85,16 @@ public class AmazonSqsMessagePublishTopology<TMessage> :
         builder.Topic ??= topicHandle;
     }
 
-    /// <summary>
-    /// Gets publish settings.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates publish settings for the message topic.</summary>
+    /// <param name="hostAddress">The Amazon SQS host address.</param>
+    /// <returns>The Amazon SNS topic publish settings.</returns>
     public PublishSettings GetPublishSettings(Uri hostAddress)
     {
         return new TopicPublishSettings(GetEndpointAddress(hostAddress));
     }
 
-    /// <summary>
-    /// Gets broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds broker topology for this message topic.</summary>
+    /// <returns>The topic broker topology.</returns>
     public BrokerTopology GetBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder();

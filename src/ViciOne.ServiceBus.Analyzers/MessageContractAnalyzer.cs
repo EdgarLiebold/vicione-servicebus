@@ -10,24 +10,16 @@ using ViciOne.ServiceBus.Analyzers.Helpers;
 
 namespace ViciOne.ServiceBus.Analyzers;
 
-/// <summary>
-/// Provides a message contract analyzer implementation.
-/// </summary>
+/// <summary>Analyzes source code for message contract.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class MessageContractAnalyzer :
     DiagnosticAnalyzer
 {
-    /// <summary>
-    /// Defines the structurally compatible rule id value.
-    /// </summary>
+    /// <summary>Exposes the structurally compatible rule id used by the containing type.</summary>
     public const string StructurallyCompatibleRuleId = "VOSB1002";
-    /// <summary>
-    /// Defines the valid message contract structure rule id value.
-    /// </summary>
+    /// <summary>Exposes the valid message contract structure rule id used by the containing type.</summary>
     public const string ValidMessageContractStructureRuleId = "VOSB1003";
-    /// <summary>
-    /// Defines the missing properties rule id value.
-    /// </summary>
+    /// <summary>Exposes the missing properties rule id used by the containing type.</summary>
     public const string MissingPropertiesRuleId = "VOSB1004";
 
     const string Category = "Usage";
@@ -50,16 +42,12 @@ public class MessageContractAnalyzer :
         Category, DiagnosticSeverity.Info, true,
         "Anonymous type misses properties that are in the message contract.");
 
-    /// <summary>
-    /// Gets the supported diagnostics value.
-    /// </summary>
+    /// <summary>Gets the supported diagnostics.</summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         ImmutableArray.Create(StructurallyCompatibleRule, ValidMessageContractStructureRule, MissingPropertiesRule);
 
-    /// <summary>
-    /// Performs the initialize operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes the target component.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context == null)
@@ -256,7 +244,7 @@ public class MessageContractAnalyzer :
                 if (!ElementTypesAreStructurallyCompatible(typeConverterHelper, contractElementType, inputElementType, path, incompatibleProperties))
                     return false;
             }
-            // a single element will be added to a list in the message contract
+            // A convertible scalar initializes a one-element message-contract collection.
             else if (!typeConverterHelper.CanConvert(contractElementType, inputPropertyType))
             {
                 incompatibleProperties.Add(path);

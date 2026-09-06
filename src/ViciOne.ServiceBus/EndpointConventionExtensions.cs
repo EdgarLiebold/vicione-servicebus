@@ -5,18 +5,14 @@ using ViciOne.ServiceBus.Initializers;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for endpoint convention.
-/// </summary>
+/// <summary>Provides extension methods for endpoint convention.</summary>
 public static class EndpointConventionExtensions
 {
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="provider"></param>
-    /// <param name="message">The message</param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Send a message.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync<T>(this ISendEndpointProvider provider, T message, CancellationToken cancellationToken = default)
         where T : class
@@ -29,14 +25,12 @@ public static class EndpointConventionExtensions
         await endpoint.SendAsync(message, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="provider"></param>
-    /// <param name="message">The message</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Send a message.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync<T>(this ISendEndpointProvider provider, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
@@ -50,14 +44,12 @@ public static class EndpointConventionExtensions
         await endpoint.SendAsync(message, pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="provider"></param>
-    /// <param name="message">The message</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Send a message.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpointProvider provider, T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -65,12 +57,10 @@ public static class EndpointConventionExtensions
         return SendAsync(provider, message, (IPipe<SendContext<T>>)pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <param name="provider"></param>
-    /// <param name="message">The message</param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Send a message.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync(this ISendEndpointProvider provider, object message, CancellationToken cancellationToken = default)
     {
@@ -87,13 +77,11 @@ public static class EndpointConventionExtensions
         await endpoint.SendAsync(message, messageType, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <param name="provider"></param>
-    /// <param name="message">The message</param>
-    /// <param name="messageType"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Send a message.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync(this ISendEndpointProvider provider, object message, Type messageType, CancellationToken cancellationToken = default)
     {
@@ -105,13 +93,11 @@ public static class EndpointConventionExtensions
         await endpoint.SendAsync(message, messageType, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <param name="provider"></param>
-    /// <param name="message">The message</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Send a message.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync(this ISendEndpointProvider provider, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
@@ -129,14 +115,12 @@ public static class EndpointConventionExtensions
         await endpoint.SendAsync(message, pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <param name="provider"></param>
-    /// <param name="message">The message</param>
-    /// <param name="messageType"></param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Send a message.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync(this ISendEndpointProvider provider, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
@@ -155,13 +139,11 @@ public static class EndpointConventionExtensions
         await endpoint.SendAsync(message, messageType, pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="provider"></param>
-    /// <param name="values"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Send a message.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="values">The values.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpointProvider provider, object values, CancellationToken cancellationToken = default)
         where T : class
@@ -169,14 +151,12 @@ public static class EndpointConventionExtensions
         return SendAsync(provider, values, Pipe.Empty<SendContext<T>>(), cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="provider"></param>
-    /// <param name="values"></param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Send a message.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="values">The values.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync<T>(this ISendEndpointProvider provider, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
@@ -197,14 +177,12 @@ public static class EndpointConventionExtensions
         await endpoint.SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="provider"></param>
-    /// <param name="values"></param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Send a message.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="values">The values.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpointProvider provider, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)

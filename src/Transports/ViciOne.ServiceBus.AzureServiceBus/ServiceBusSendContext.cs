@@ -2,44 +2,30 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus send context.
-/// </summary>
+/// <summary>Exposes Azure Service Bus-specific properties on an outgoing message.</summary>
 public interface ServiceBusSendContext :
     SendContext,
     PartitionKeySendContext
 {
-    /// <summary>
-    /// Set the time at which the message should be enqueued, which is essentially scheduling the message for future delivery to the queue.
-    /// </summary>
+    /// <summary>Sets the UTC instant at which Azure Service Bus should enqueue the message.</summary>
     DateTimeOffset? ScheduledEnqueueTimeUtc { set; }
 
-    /// <summary>
-    /// Set the sessionId of the message
-    /// </summary>
+    /// <summary>Sets the session identifier and partition key for the message.</summary>
     string? SessionId { set; }
 
-    /// <summary>
-    /// Set the replyToSessionId of the message
-    /// </summary>
+    /// <summary>Sets the session identifier expected on replies.</summary>
     string? ReplyToSessionId { set; }
 
-    /// <summary>
-    /// Sets the ReplyTo address of the message
-    /// </summary>
+    /// <summary>Sets the reply destination entity path.</summary>
     string? ReplyTo { set; }
 
-    /// <summary>
-    /// Set the application specific label of the message
-    /// </summary>
+    /// <summary>Sets the application-specific subject label.</summary>
     string? Label { set; }
 }
 
 
-/// <summary>
-/// Defines the contract for service bus send context.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Exposes Azure Service Bus-specific properties on an outgoing typed message.</summary>
+/// <typeparam name="T">The message contract.</typeparam>
 public interface ServiceBusSendContext<out T> :
     SendContext<T>,
     ServiceBusSendContext

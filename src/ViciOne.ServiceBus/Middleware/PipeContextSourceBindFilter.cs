@@ -3,11 +3,9 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Binds a context to the pipe using a <see cref="IPipeContextSource{TSource}" />.
-/// </summary>
-/// <typeparam name="TLeft"></typeparam>
-/// <typeparam name="TRight"></typeparam>
+/// <summary>Binds a context to the pipe using a <see cref="IPipeContextSource{TSource}" />.</summary>
+/// <typeparam name="TLeft">The left type.</typeparam>
+/// <typeparam name="TRight">The right type.</typeparam>
 public class PipeContextSourceBindFilter<TLeft, TRight> :
     IFilter<TLeft>
     where TLeft : class, PipeContext
@@ -16,10 +14,8 @@ public class PipeContextSourceBindFilter<TLeft, TRight> :
     readonly IPipe<BindContext<TLeft, TRight>> _output;
     readonly IPipeContextSource<TRight, TLeft> _source;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="output">The output value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="output">The output.</param>
     /// <param name="source">The source value.</param>
     public PipeContextSourceBindFilter(IPipe<BindContext<TLeft, TRight>> output, IPipeContextSource<TRight, TLeft> source)
     {
@@ -27,12 +23,10 @@ public class PipeContextSourceBindFilter<TLeft, TRight> :
         _source = source;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(TLeft context, IPipe<TLeft> next)
     {
         var bindPipe = new BindPipe(context, _output);
@@ -51,10 +45,8 @@ public class PipeContextSourceBindFilter<TLeft, TRight> :
         return SendAsync();
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("bind");

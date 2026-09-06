@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>
-/// Provides a sql receive lock context implementation.
-/// </summary>
+/// <summary>Carries state for sql receive lock operations.</summary>
 public class SqlReceiveLockContext :
     MessageRedeliveryContext,
     ReceiveLockContext
@@ -23,14 +21,12 @@ public class SqlReceiveLockContext :
     readonly TimeProvider _timeProvider;
     bool _locked;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="inputAddress">The input address value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="clientContext">The client context value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="inputAddress">The input address.</param>
+    /// <param name="message">The message to process.</param>
+    /// <param name="settings">The settings that control the operation.</param>
+    /// <param name="clientContext">The client context.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public SqlReceiveLockContext(Uri inputAddress, SqlTransportMessage message, ReceiveSettings settings, ClientContext clientContext,
         TimeProvider timeProvider)
     {
@@ -49,13 +45,11 @@ public class SqlReceiveLockContext :
             _renewLockTask = RenewLockAsync();
     }
 
-    /// <summary>
-    /// Schedules redelivery.
-    /// </summary>
-    /// <param name="delay">The delay value.</param>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Schedules redelivery.</summary>
+    /// <param name="delay">The delay before the operation is attempted.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ScheduleRedeliveryAsync(TimeSpan delay, Action<ConsumeContext, SendContext>? callback, CancellationToken cancellationToken = default)
     {
         if (_locked == false)
@@ -99,11 +93,9 @@ public class SqlReceiveLockContext :
         }
     }
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
+    /// <summary>Marks the current operation as complete.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CompleteAsync(CancellationToken cancellationToken = default)
     {
         if (_locked == false)
@@ -134,12 +126,10 @@ public class SqlReceiveLockContext :
         }
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
+    /// <summary>Reports that the operation has faulted.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         if (_locked == false)
@@ -184,11 +174,9 @@ public class SqlReceiveLockContext :
         }
     }
 
-    /// <summary>
-    /// Validates lock status.
-    /// </summary>
+    /// <summary>Validates lock status.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (_locked)
@@ -197,11 +185,9 @@ public class SqlReceiveLockContext :
         throw new TransportException(_inputAddress, $"Message Lock Lost: {_message.LockId}");
     }
 
-    /// <summary>
-    /// Performs the expired operation.
-    /// </summary>
+    /// <summary>Creates an expired result.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExpiredAsync(CancellationToken cancellationToken = default)
     {
         if (_locked == false)

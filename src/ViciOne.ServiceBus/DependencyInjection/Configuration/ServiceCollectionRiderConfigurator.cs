@@ -7,29 +7,23 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service collection rider configurator implementation.
-/// </summary>
+/// <summary>Configures service collection rider.</summary>
 public class ServiceCollectionRiderConfigurator :
     RegistrationConfigurator,
     IRiderRegistrationConfigurator
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registrar">The registrar value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registrar">The registrar.</param>
     public ServiceCollectionRiderConfigurator(IServiceCollection collection, IContainerRegistrar registrar)
         : base(collection, registrar)
     {
     }
 
-    /// <summary>
-    /// Performs the try add scoped operation.
-    /// </summary>
-    /// <typeparam name="TRider">The t rider type.</typeparam>
-    /// <typeparam name="TService">The t service type.</typeparam>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Attempts to add scoped.</summary>
+    /// <typeparam name="TRider">The rider type.</typeparam>
+    /// <typeparam name="TService">The service type.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
     public virtual void TryAddScoped<TRider, TService>(Func<TRider, IServiceProvider, TService> factory)
         where TRider : class, IRider
         where TService : class
@@ -37,11 +31,9 @@ public class ServiceCollectionRiderConfigurator :
         Services.TryAddScoped(provider => factory(provider.GetRequiredService<Bind<IBus, TRider>>().Value, provider));
     }
 
-    /// <summary>
-    /// Sets rider factory.
-    /// </summary>
-    /// <typeparam name="TRider">The t rider type.</typeparam>
-    /// <param name="riderFactory">The rider factory value.</param>
+    /// <summary>Sets rider factory.</summary>
+    /// <typeparam name="TRider">The rider type.</typeparam>
+    /// <param name="riderFactory">The rider factory.</param>
     public virtual void SetRiderFactory<TRider>(IRegistrationRiderFactory<TRider> riderFactory)
         where TRider : class, IRider
     {
@@ -74,10 +66,8 @@ public class ServiceCollectionRiderConfigurator :
         Services.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, TRider>>().Value);
     }
 
-    /// <summary>
-    /// Performs the throw if already configured operation.
-    /// </summary>
-    /// <param name="serviceType">The service type value.</param>
+    /// <summary>Reports that throw if already has been configured.</summary>
+    /// <param name="serviceType">The runtime service type used by the operation.</param>
     protected void ThrowIfAlreadyConfigured(Type serviceType)
     {
         ThrowIfAlreadyConfigured(nameof(SetRiderFactory));
@@ -87,41 +77,33 @@ public class ServiceCollectionRiderConfigurator :
 }
 
 
-/// <summary>
-/// Provides a service collection rider configurator implementation.
-/// </summary>
-/// <typeparam name="TBus">The t bus type.</typeparam>
+/// <summary>Configures service collection rider.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 public class ServiceCollectionRiderConfigurator<TBus> :
     ServiceCollectionRiderConfigurator,
     IRiderRegistrationConfigurator<TBus>
     where TBus : class, IBus
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registrar">The registrar value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registrar">The registrar.</param>
     public ServiceCollectionRiderConfigurator(IServiceCollection collection, IContainerRegistrar registrar)
         : base(collection, registrar)
     {
     }
 
-    /// <summary>
-    /// Performs the try add scoped operation.
-    /// </summary>
-    /// <typeparam name="TRider">The t rider type.</typeparam>
-    /// <typeparam name="TService">The t service type.</typeparam>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Attempts to add scoped.</summary>
+    /// <typeparam name="TRider">The rider type.</typeparam>
+    /// <typeparam name="TService">The service type.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
     public override void TryAddScoped<TRider, TService>(Func<TRider, IServiceProvider, TService> factory)
     {
         Services.TryAddScoped(provider => factory(provider.GetRequiredService<Bind<TBus, TRider>>().Value, provider));
     }
 
-    /// <summary>
-    /// Sets rider factory.
-    /// </summary>
-    /// <typeparam name="TRider">The t rider type.</typeparam>
-    /// <param name="riderFactory">The rider factory value.</param>
+    /// <summary>Sets rider factory.</summary>
+    /// <typeparam name="TRider">The rider type.</typeparam>
+    /// <param name="riderFactory">The rider factory.</param>
     public override void SetRiderFactory<TRider>(IRegistrationRiderFactory<TRider> riderFactory)
     {
         if (riderFactory == null)

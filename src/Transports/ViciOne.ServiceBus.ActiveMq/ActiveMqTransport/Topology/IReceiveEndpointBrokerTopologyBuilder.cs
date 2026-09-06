@@ -1,15 +1,11 @@
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
 /// <summary>
-/// A unique builder context should be created for each specification, so that the items added
-/// by it can be combined together into a group - so that if a subsequent specification yanks
-/// something that conflicts, the system can yank the group or warn that it's impacted.
+/// Builds the queue, topics, and consumer bindings required by one ActiveMQ receive endpoint.
 /// </summary>
 public interface IReceiveEndpointBrokerTopologyBuilder :
     IBrokerTopologyBuilder
 {
-    /// <summary>
-    /// A handle to the consuming queue
-    /// </summary>
+    /// <summary>Gets the receive endpoint's consuming queue.</summary>
     QueueHandle Queue { get; }
 }

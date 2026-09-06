@@ -6,10 +6,8 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>
-/// Provides a dependency injection saga repository context factory implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Creates dependency injection saga repository context instances.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class DependencyInjectionSagaRepositoryContextFactory<TSaga> :
     ISagaRepositoryContextFactory<TSaga>
     where TSaga : class, ISaga
@@ -17,56 +15,46 @@ public class DependencyInjectionSagaRepositoryContextFactory<TSaga> :
     readonly IServiceProvider _serviceProvider;
     readonly ISetScopedConsumeContext _setter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public DependencyInjectionSagaRepositoryContextFactory(IRegistrationContext context)
         : this(context, context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)))
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="serviceProvider">The service provider value.</param>
-    /// <param name="setter">The setter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="serviceProvider">The service provider.</param>
+    /// <param name="setter">The setter.</param>
     public DependencyInjectionSagaRepositoryContextFactory(IServiceProvider serviceProvider, ISetScopedConsumeContext setter)
     {
         _serviceProvider = serviceProvider;
         _setter = setter;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.Add("provider", "dependencyInjection");
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
         return SendAsync(context, (consumeContext, factory) => factory.SendAsync(consumeContext, next));
     }
 
-    /// <summary>
-    /// Sends query.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="query">The query value.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends query.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="query">The query.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {

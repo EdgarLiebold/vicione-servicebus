@@ -3,29 +3,23 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs.Middleware;
 
-/// <summary>
-/// Provides an event hub consumer filter implementation.
-/// </summary>
+/// <summary>Starts an Event Hubs data receiver, publishes transport lifecycle notifications, and records final delivery metrics.</summary>
 public class EventHubConsumerFilter :
     IFilter<ProcessorContext>
 {
     readonly ReceiveEndpointContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Creates the filter for a receive endpoint.</summary>
+    /// <param name="context">The receive-endpoint context that owns the receiver.</param>
     public EventHubConsumerFilter(ReceiveEndpointContext context)
     {
         _context = context;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the data receiver to completion before continuing the processor pipeline.</summary>
+    /// <param name="context">The active Event Hubs processor context.</param>
+    /// <param name="next">The remaining processor pipeline.</param>
+    /// <returns>A task that completes after receiver shutdown and downstream execution.</returns>
     public async Task SendAsync(ProcessorContext context, IPipe<ProcessorContext> next)
     {
         var receiveSettings = _context.GetPayload<ReceiveSettings>();
@@ -54,10 +48,8 @@ public class EventHubConsumerFilter :
         await next.SendAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The probe context; this filter does not add probe fields.</param>
     public void Probe(ProbeContext context)
     {
     }

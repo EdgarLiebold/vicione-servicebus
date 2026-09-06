@@ -9,8 +9,8 @@ namespace ViciOne.ServiceBus.Configuration;
 /// block. Does not add any handlers to the message pipe standalone, everything is within
 /// the consumer pipe segment.
 /// </summary>
-/// <typeparam name="TConsumer"></typeparam>
-/// <typeparam name="TMessage"></typeparam>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class ConsumerMessageSpecification<TConsumer, TMessage> :
     IConsumerMessageSpecification<TConsumer, TMessage>
     where TMessage : class
@@ -21,9 +21,7 @@ public class ConsumerMessageSpecification<TConsumer, TMessage> :
     readonly ConsumerConfigurationObservable _observers;
     readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public ConsumerMessageSpecification()
     {
         _configurator = new PipeConfigurator<ConsumerConsumeContext<TConsumer, TMessage>>();
@@ -31,10 +29,8 @@ public class ConsumerMessageSpecification<TConsumer, TMessage> :
         _observers = new ConsumerConfigurationObservable();
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         _configurationNotification.EnsureNotified(() =>
@@ -45,17 +41,13 @@ public class ConsumerMessageSpecification<TConsumer, TMessage> :
             .ToArray();
     }
 
-    /// <summary>
-    /// Gets the message type value.
-    /// </summary>
+    /// <summary>Gets the message type.</summary>
     public Type MessageType => typeof(TMessage);
 
-    /// <summary>
-    /// Attempts to get message specification.
-    /// </summary>
-    /// <typeparam name="TC">The tc type.</typeparam>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Attempts to get message specification.</summary>
+    /// <typeparam name="TC">The c type.</typeparam>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="specification">Receives the specification produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetMessageSpecification<TC, T>([NotNullWhen(true)] out IConsumerMessageSpecification<TC, T>? specification)
         where T : class
@@ -65,29 +57,23 @@ public class ConsumerMessageSpecification<TConsumer, TMessage> :
         return specification != null;
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer, TMessage>> specification)
     {
         _configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumeContext<TMessage>> specification)
     {
         _messagePipeConfigurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <param name="consumeFilter">The consume filter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the configured component.</summary>
+    /// <param name="consumeFilter">The consume filter.</param>
+    /// <returns>The configured component.</returns>
     public IPipe<ConsumerConsumeContext<TConsumer, TMessage>> Build(IFilter<ConsumerConsumeContext<TConsumer, TMessage>> consumeFilter)
     {
         _configurator.UseFilter(consumeFilter);
@@ -95,11 +81,9 @@ public class ConsumerMessageSpecification<TConsumer, TMessage> :
         return _configurator.Build();
     }
 
-    /// <summary>
-    /// Performs the build message pipe operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds message pipe.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The configured message pipe.</returns>
     public IPipe<ConsumeContext<TMessage>> BuildMessagePipe(Action<IPipeConfigurator<ConsumeContext<TMessage>>> configure)
     {
         configure?.Invoke(_messagePipeConfigurator);
@@ -107,29 +91,23 @@ public class ConsumerMessageSpecification<TConsumer, TMessage> :
         return _messagePipeConfigurator.Build();
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer>> specification)
     {
         _configurator.AddPipeSpecification(new ConsumerPipeSpecificationProxy<TConsumer, TMessage>(specification));
     }
 
-    /// <summary>
-    /// Connects consumer configuration observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consumer configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumerConfigurationObserver(IConsumerConfigurationObserver observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Performs the message operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Applies the message configuration.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void Message(Action<IConsumerMessageConfigurator<TMessage>> configure)
     {
         configure?.Invoke(new ConsumerMessageConfigurator(_configurator));

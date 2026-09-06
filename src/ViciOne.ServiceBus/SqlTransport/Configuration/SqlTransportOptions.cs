@@ -1,56 +1,32 @@
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Defines configuration options for sql transport.
-/// </summary>
+/// <summary>Defines configuration options for sql transport.</summary>
 public sealed class SqlTransportOptions
 {
-    /// <summary>
-    /// Gets or sets the host value.
-    /// </summary>
+    /// <summary>Gets or sets the host.</summary>
     public string? Host { get; set; }
-    /// <summary>
-    /// Gets or sets the port value.
-    /// </summary>
+    /// <summary>Gets or sets the port.</summary>
     public int? Port { get; set; }
-    /// <summary>
-    /// Gets or sets the database value.
-    /// </summary>
+    /// <summary>Gets or sets the database.</summary>
     public string? Database { get; set; }
-    /// <summary>
-    /// Gets or sets the schema value.
-    /// </summary>
+    /// <summary>Gets or sets the schema.</summary>
     public string? Schema { get; set; }
-    /// <summary>
-    /// Gets or sets the role value.
-    /// </summary>
+    /// <summary>Gets or sets the role.</summary>
     public string? Role { get; set; }
-    /// <summary>
-    /// Gets or sets the username value.
-    /// </summary>
+    /// <summary>Gets or sets the username.</summary>
     public string? Username { get; set; }
-    /// <summary>
-    /// Gets or sets the password value.
-    /// </summary>
+    /// <summary>Gets or sets the password.</summary>
     public string? Password { get; set; }
 
-    /// <summary>
-    /// Gets or sets the admin username value.
-    /// </summary>
+    /// <summary>Gets or sets the admin username.</summary>
     public string? AdminUsername { get; set; }
-    /// <summary>
-    /// Gets or sets the admin password value.
-    /// </summary>
+    /// <summary>Gets or sets the admin password.</summary>
     public string? AdminPassword { get; set; }
 
-    /// <summary>
-    /// Optional, if specified, will be parsed to capture additional properties on the connection.
-    /// </summary>
+    /// <summary>Optional, if specified, will be parsed to capture additional properties on the connection.</summary>
     public string? ConnectionString { get; set; }
 
-    /// <summary>
-    /// If specified, changes the connection limit from the default value (10)
-    /// </summary>
+    /// <summary>If specified, changes the connection limit from the default value (10).</summary>
     public int? ConnectionLimit { get; set; }
 
     /// <summary>

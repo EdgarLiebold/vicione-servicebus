@@ -6,17 +6,13 @@ using ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
-/// <summary>
-/// Provides extension methods for postgres host configuration.
-/// </summary>
+/// <summary>Provides PostgreSQL host configuration extensions for the SQL transport.</summary>
 public static class PostgresHostConfigurationExtensions
 {
-    /// <summary>
-    /// Configures the database transport to use PostgreSQL as the storage engine
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="hostAddress">The ViciOne.ServiceBus host address of the database</param>
-    /// <param name="configure"></param>
+    /// <summary>Configures the database transport to use PostgreSQL as the storage engine.</summary>
+    /// <param name="configurator">The SQL bus factory configurator.</param>
+    /// <param name="hostAddress">The PostgreSQL host address.</param>
+    /// <param name="configure">An optional callback that configures the host.</param>
     public static void UsePostgres(this ISqlBusFactoryConfigurator configurator, Uri hostAddress, Action<ISqlHostConfigurator>? configure = null)
     {
         var hostConfigurator = new PostgresSqlHostConfigurator(hostAddress);
@@ -26,12 +22,10 @@ public static class PostgresHostConfigurationExtensions
         configurator.Host(hostConfigurator.Settings);
     }
 
-    /// <summary>
-    /// Configures the database transport to use PostgreSQL as the storage engine
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="connectionString">A valid PostgreSQL connection string</param>
-    /// <param name="configure"></param>
+    /// <summary>Configures the database transport to use PostgreSQL as the storage engine.</summary>
+    /// <param name="configurator">The SQL bus factory configurator.</param>
+    /// <param name="connectionString">A valid PostgreSQL connection string.</param>
+    /// <param name="configure">An optional callback that configures the host.</param>
     public static void UsePostgres(this ISqlBusFactoryConfigurator configurator, string connectionString, Action<ISqlHostConfigurator>? configure = null)
     {
         var hostConfigurator = new PostgresSqlHostConfigurator(connectionString);
@@ -41,12 +35,10 @@ public static class PostgresHostConfigurationExtensions
         configurator.Host(hostConfigurator.Settings);
     }
 
-    /// <summary>
-    /// Configures the database transport to use PostgreSQL as the storage engine
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="dataSource">A preconfigured data source used to create connections</param>
-    /// <param name="configure"></param>
+    /// <summary>Configures the database transport to use PostgreSQL as the storage engine.</summary>
+    /// <param name="configurator">The SQL bus factory configurator.</param>
+    /// <param name="dataSource">The preconfigured data source used to open PostgreSQL connections.</param>
+    /// <param name="configure">An optional callback that configures the host.</param>
     public static void UsePostgres(this ISqlBusFactoryConfigurator configurator, NpgsqlDataSource dataSource,
         Action<ISqlHostConfigurator>? configure = null)
     {
@@ -57,12 +49,10 @@ public static class PostgresHostConfigurationExtensions
         configurator.Host(hostConfigurator.Settings);
     }
 
-    /// <summary>
-    /// Configures the database transport to use PostgreSQL as the storage engine
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="context">The bus registration context, used to retrieve the DbTransportOptions</param>
-    /// <param name="configure"></param>
+    /// <summary>Configures the database transport to use PostgreSQL as the storage engine.</summary>
+    /// <param name="configurator">The SQL bus factory configurator.</param>
+    /// <param name="context">The registration context from which <see cref="SqlTransportOptions" /> are resolved.</param>
+    /// <param name="configure">An optional callback that configures the host.</param>
     public static void UsePostgres(this ISqlBusFactoryConfigurator configurator, IBusRegistrationContext context,
         Action<ISqlHostConfigurator>? configure = null)
     {

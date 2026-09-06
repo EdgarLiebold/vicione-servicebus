@@ -4,38 +4,30 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for connection context supervisor.
-/// </summary>
+/// <summary>Supervises RabbitMQ connections and creates send transports from shared channels.</summary>
 public interface IConnectionContextSupervisor :
     ITransportSupervisor<ConnectionContext>
 {
-    /// <summary>
-    /// Performs the normalize address operation.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Resolves a full or short destination address against the configured host.</summary>
+    /// <param name="address">The destination address to resolve.</param>
+    /// <returns>The full RabbitMQ destination URI.</returns>
     Uri NormalizeAddress(Uri address);
 
-    /// <summary>
-    /// Creates send transport.
-    /// </summary>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="channelContextSupervisor">The channel context supervisor value.</param>
-    /// <param name="address">The address value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a send transport and its destination topology.</summary>
+    /// <param name="receiveEndpointContext">The endpoint context that owns the transport.</param>
+    /// <param name="channelContextSupervisor">The shared RabbitMQ channel supervisor.</param>
+    /// <param name="address">The full or short destination address.</param>
+    /// <param name="cancellationToken">Cancellation checked before transport creation.</param>
+    /// <returns>The configured send transport.</returns>
     Task<ISendTransport> CreateSendTransportAsync(RabbitMqReceiveEndpointContext receiveEndpointContext, IChannelContextSupervisor channelContextSupervisor,
         Uri address, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Creates publish transport.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="channelContextSupervisor">The channel context supervisor value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a publish transport and topology for a message contract.</summary>
+    /// <typeparam name="T">The published message contract.</typeparam>
+    /// <param name="receiveEndpointContext">The endpoint context that owns the transport.</param>
+    /// <param name="channelContextSupervisor">The shared RabbitMQ channel supervisor.</param>
+    /// <param name="cancellationToken">Cancellation checked before transport creation.</param>
+    /// <returns>The configured publish transport.</returns>
     Task<ISendTransport> CreatePublishTransportAsync<T>(RabbitMqReceiveEndpointContext receiveEndpointContext, IChannelContextSupervisor channelContextSupervisor, CancellationToken cancellationToken = default)
         where T : class;
 }

@@ -6,12 +6,10 @@ using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a future result configurator implementation.
-/// </summary>
-/// <typeparam name="TCommand">The t command type.</typeparam>
-/// <typeparam name="TResult">The t result type.</typeparam>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Configures future result.</summary>
+/// <typeparam name="TCommand">The command type.</typeparam>
+/// <typeparam name="TResult">The result produced by the operation.</typeparam>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class FutureResultConfigurator<TCommand, TResult, TInput> :
     IFutureResultConfigurator<TResult, TInput>
     where TCommand : class
@@ -20,19 +18,15 @@ public class FutureResultConfigurator<TCommand, TResult, TInput> :
 {
     readonly FutureResult<TCommand, TResult, TInput> _result;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="result">The result value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="result">The result.</param>
     public FutureResultConfigurator(FutureResult<TCommand, TResult, TInput> result)
     {
         _result = result;
     }
 
-    /// <summary>
-    /// Sets completed using factory.
-    /// </summary>
-    /// <param name="factoryMethod">The factory method value.</param>
+    /// <summary>Sets completed using factory.</summary>
+    /// <param name="factoryMethod">The factory method.</param>
     public void SetCompletedUsingFactory(EventMessageFactory<FutureState, TInput, TResult> factoryMethod)
     {
         if (factoryMethod == null)
@@ -41,10 +35,8 @@ public class FutureResultConfigurator<TCommand, TResult, TInput> :
         _result.Factory = MessageFactory<TResult>.Create(factoryMethod);
     }
 
-    /// <summary>
-    /// Sets completed using factory.
-    /// </summary>
-    /// <param name="factoryMethod">The factory method value.</param>
+    /// <summary>Sets completed using factory.</summary>
+    /// <param name="factoryMethod">The factory method.</param>
     public void SetCompletedUsingFactory(AsyncEventMessageFactory<FutureState, TInput, TResult> factoryMethod)
     {
         if (factoryMethod == null)
@@ -53,10 +45,8 @@ public class FutureResultConfigurator<TCommand, TResult, TInput> :
         _result.Factory = MessageFactory<TResult>.Create(factoryMethod);
     }
 
-    /// <summary>
-    /// Sets completed using initializer.
-    /// </summary>
-    /// <param name="valueProvider">The value provider value.</param>
+    /// <summary>Sets completed using initializer.</summary>
+    /// <param name="valueProvider">The value provider.</param>
     public void SetCompletedUsingInitializer(InitializerValueProvider<TInput> valueProvider)
     {
         if (valueProvider == null)
@@ -83,11 +73,9 @@ public class FutureResultConfigurator<TCommand, TResult, TInput> :
 }
 
 
-/// <summary>
-/// Provides a future result configurator implementation.
-/// </summary>
-/// <typeparam name="TCommand">The t command type.</typeparam>
-/// <typeparam name="TResult">The t result type.</typeparam>
+/// <summary>Configures future result.</summary>
+/// <typeparam name="TCommand">The command type.</typeparam>
+/// <typeparam name="TResult">The result produced by the operation.</typeparam>
 public class FutureResultConfigurator<TCommand, TResult> :
     IFutureResultConfigurator<TResult>
     where TCommand : class
@@ -95,19 +83,15 @@ public class FutureResultConfigurator<TCommand, TResult> :
 {
     readonly FutureResult<TCommand, TResult> _result;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="result">The result value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="result">The result.</param>
     public FutureResultConfigurator(FutureResult<TCommand, TResult> result)
     {
         _result = result;
     }
 
-    /// <summary>
-    /// Sets completed using factory.
-    /// </summary>
-    /// <param name="factoryMethod">The factory method value.</param>
+    /// <summary>Sets completed using factory.</summary>
+    /// <param name="factoryMethod">The factory method.</param>
     public void SetCompletedUsingFactory(EventMessageFactory<FutureState, TResult> factoryMethod)
     {
         if (factoryMethod == null)
@@ -116,10 +100,8 @@ public class FutureResultConfigurator<TCommand, TResult> :
         _result.Factory = MessageFactory<TResult>.Create(factoryMethod);
     }
 
-    /// <summary>
-    /// Sets completed using factory.
-    /// </summary>
-    /// <param name="factoryMethod">The factory method value.</param>
+    /// <summary>Sets completed using factory.</summary>
+    /// <param name="factoryMethod">The factory method.</param>
     public void SetCompletedUsingFactory(AsyncEventMessageFactory<FutureState, TResult> factoryMethod)
     {
         if (factoryMethod == null)
@@ -128,10 +110,8 @@ public class FutureResultConfigurator<TCommand, TResult> :
         _result.Factory = MessageFactory<TResult>.Create(factoryMethod);
     }
 
-    /// <summary>
-    /// Sets completed using initializer.
-    /// </summary>
-    /// <param name="valueProvider">The value provider value.</param>
+    /// <summary>Sets completed using initializer.</summary>
+    /// <param name="valueProvider">The value provider.</param>
     public void SetCompletedUsingInitializer(InitializerValueProvider valueProvider)
     {
         if (valueProvider == null)

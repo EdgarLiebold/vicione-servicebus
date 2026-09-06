@@ -5,16 +5,12 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides dependency-injection registration for in-memory saga repositories.
-/// </summary>
+/// <summary>Provides dependency-injection registration for in-memory saga repositories.</summary>
 public static class InMemorySagaRepositoryServiceCollectionExtensions
 {
-    /// <summary>
-    /// Registers the in-memory saga repository for the specified saga type.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="services">The service collection.</param>
+    /// <summary>Registers the in-memory saga repository for the specified saga type.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
     public static void RegisterInMemorySagaRepository<TSaga>(this IServiceCollection services)
         where TSaga : class, ISaga
     {

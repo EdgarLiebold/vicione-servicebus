@@ -3,11 +3,9 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an execute activity definition implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Defines configuration for execute activity.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class ExecuteActivityDefinition<TActivity, TArguments> :
     IExecuteActivityDefinition<TActivity, TArguments>
     where TActivity : class, IExecuteActivity<TArguments>
@@ -16,9 +14,7 @@ public class ExecuteActivityDefinition<TActivity, TArguments> :
     int? _concurrentMessageLimit;
     string? _executeEndpointName;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     protected ExecuteActivityDefinition()
     {
     }
@@ -33,16 +29,12 @@ public class ExecuteActivityDefinition<TActivity, TArguments> :
         set => _executeEndpointName = value;
     }
 
-    /// <summary>
-    /// Gets or sets the execute endpoint definition value.
-    /// </summary>
+    /// <summary>Gets or sets the execute endpoint definition.</summary>
     public IEndpointDefinition<IExecuteActivity<TArguments>>? ExecuteEndpointDefinition { get; set; }
 
     IEndpointDefinition? IExecuteActivityDefinition.ExecuteEndpointDefinition => ExecuteEndpointDefinition;
 
-    /// <summary>
-    /// Specify a concurrency limit, which is applied to the entire consumer, saga, or activity, regardless of message type.
-    /// </summary>
+    /// <summary>Specify a concurrency limit, which is applied to the entire consumer, saga, or activity, regardless of message type.</summary>
     public int? ConcurrentMessageLimit
     {
         get => _concurrentMessageLimit;
@@ -67,10 +59,8 @@ public class ExecuteActivityDefinition<TActivity, TArguments> :
     Type IExecuteActivityDefinition.ActivityType => typeof(TActivity);
     Type IExecuteActivityDefinition.ArgumentType => typeof(TArguments);
 
-    /// <summary>
-    /// Configure the execute endpoint
-    /// </summary>
-    /// <param name="configure"></param>
+    /// <summary>Configure the execute endpoint.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     protected void ExecuteEndpoint(Action<IEndpointRegistrationConfigurator>? configure = null)
     {
         var configurator = new EndpointRegistrationConfigurator<IExecuteActivity<TArguments>> { ConfigureConsumeTopology = false };
@@ -80,12 +70,10 @@ public class ExecuteActivityDefinition<TActivity, TArguments> :
         ExecuteEndpointDefinition = new ExecuteActivityEndpointDefinition<TActivity, TArguments>(configurator.Settings);
     }
 
-    /// <summary>
-    /// Called when the compensate activity is being configured on the endpoint.
-    /// </summary>
-    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer</param>
-    /// <param name="executeActivityConfigurator"></param>
-    /// <param name="context"></param>
+    /// <summary>Called when the compensate activity is being configured on the endpoint.</summary>
+    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer.</param>
+    /// <param name="executeActivityConfigurator">The execute activity configurator.</param>
+    /// <param name="context">The context associated with the operation.</param>
     protected virtual void ConfigureExecuteActivity(IReceiveEndpointConfigurator endpointConfigurator,
         IExecuteActivityConfigurator<TActivity, TArguments> executeActivityConfigurator, IRegistrationContext context)
     {

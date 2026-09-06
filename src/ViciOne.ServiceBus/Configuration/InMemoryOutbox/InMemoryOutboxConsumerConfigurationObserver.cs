@@ -2,10 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an in memory outbox consumer configuration observer implementation.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
+/// <summary>Observes in memory outbox consumer configuration events.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
 public class InMemoryOutboxConsumerConfigurationObserver<TConsumer> :
     IConsumerConfigurationObserver
     where TConsumer : class
@@ -14,24 +12,20 @@ public class InMemoryOutboxConsumerConfigurationObserver<TConsumer> :
     readonly Action<IOutboxConfigurator>? _configure;
     readonly ISetScopedConsumeContext? _setter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public InMemoryOutboxConsumerConfigurationObserver(IRegistrationContext context, IConsumerConfigurator<TConsumer> configurator,
         Action<IOutboxConfigurator>? configure)
         : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)), configurator, configure)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="setter">The setter value.</param>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="setter">The setter.</param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public InMemoryOutboxConsumerConfigurationObserver(ISetScopedConsumeContext? setter, IConsumerConfigurator<TConsumer> configurator,
         Action<IOutboxConfigurator>? configure)
     {

@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Observables;
 
-/// <summary>
-/// Converts the object message type to the generic type T and publishes it on the endpoint specified.
-/// </summary>
-/// <typeparam name="T"></typeparam>
+/// <summary>Converts the object message type to the generic type T and publishes it on the endpoint specified.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class ConsumeObserverConverter<T> :
     IConsumeObserverConverter
     where T : class

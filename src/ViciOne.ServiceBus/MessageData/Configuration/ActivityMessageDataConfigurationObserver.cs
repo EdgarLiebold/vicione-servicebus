@@ -3,9 +3,7 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.MessageData.Configuration;
 
-/// <summary>
-/// Loads externalized values for transport-independent activity arguments and compensation logs.
-/// </summary>
+/// <summary>Loads externalized values for transport-independent activity arguments and compensation logs.</summary>
 public sealed class ActivityMessageDataConfigurationObserver :
     ConfigurationObserver,
     IMessageConfigurationObserver
@@ -13,9 +11,10 @@ public sealed class ActivityMessageDataConfigurationObserver :
     readonly bool _includeMessages;
     readonly IMessageDataRepository _repository;
 
-    /// <summary>
-    /// Initializes the observer.
-    /// </summary>
+    /// <summary>Initializes the observer.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="repository">The repository.</param>
+    /// <param name="includeMessages">The include messages.</param>
     public ActivityMessageDataConfigurationObserver(IConsumePipeConfigurator configurator, IMessageDataRepository repository,
         bool includeMessages)
         : base(configurator)

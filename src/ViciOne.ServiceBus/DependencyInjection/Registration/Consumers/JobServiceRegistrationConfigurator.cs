@@ -3,31 +3,25 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
-/// <summary>
-/// Provides a job service registration configurator implementation.
-/// </summary>
+/// <summary>Configures job service registration.</summary>
 public class JobServiceRegistrationConfigurator :
     IJobServiceRegistrationConfigurator
 {
     readonly IBusRegistrationConfigurator _configurator;
     readonly IJobServiceRegistration _registration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="registration">The registration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="registration">The registration.</param>
     public JobServiceRegistrationConfigurator(IBusRegistrationConfigurator configurator, IJobServiceRegistration registration)
     {
         _configurator = configurator;
         _registration = registration;
     }
 
-    /// <summary>
-    /// Performs the options operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Applies the configured options.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The job service registration configurator produced by the operation.</returns>
     public IJobServiceRegistrationConfigurator Options(Action<JobConsumerOptions> configure)
     {
         _registration.AddConfigureAction(configure);
@@ -35,10 +29,8 @@ public class JobServiceRegistrationConfigurator :
         return this;
     }
 
-    /// <summary>
-    /// Performs the endpoint operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Applies the endpoint configuration.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void Endpoint(Action<IEndpointRegistrationConfigurator> configure)
     {
         configure?.Invoke(_registration.EndpointRegistrationConfigurator);

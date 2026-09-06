@@ -4,40 +4,30 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>
-/// Provides an entity collection implementation.
-/// </summary>
-/// <typeparam name="TEntity">The t entity type.</typeparam>
-/// <typeparam name="THandle">The t handle type.</typeparam>
+/// <summary>Stores a collection of entity values.</summary>
+/// <typeparam name="TEntity">The entity type.</typeparam>
+/// <typeparam name="THandle">The handle type.</typeparam>
 public class EntityCollection<TEntity, THandle> :
     IEnumerable<TEntity>
     where TEntity : THandle
     where THandle : EntityHandle
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="entityComparer">The entity comparer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="entityComparer">The entity comparer.</param>
     public EntityCollection(IEqualityComparer<TEntity> entityComparer)
     {
         EntityIds = new Dictionary<long, TEntity>();
         Entities = new Dictionary<TEntity, TEntity>(entityComparer);
     }
 
-    /// <summary>
-    /// Gets the entities value.
-    /// </summary>
+    /// <summary>Gets the entities.</summary>
     protected IDictionary<TEntity, TEntity> Entities { get; }
 
-    /// <summary>
-    /// Gets the entity ids value.
-    /// </summary>
+    /// <summary>Gets the entity ids.</summary>
     protected IDictionary<long, TEntity> EntityIds { get; }
 
-    /// <summary>
-    /// Gets enumerator.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets enumerator.</summary>
+    /// <returns>The enumerator.</returns>
     public IEnumerator<TEntity> GetEnumerator()
     {
         return Entities.Values.GetEnumerator();
@@ -48,17 +38,15 @@ public class EntityCollection<TEntity, THandle> :
         return GetEnumerator();
     }
 
-    /// <summary>
-    /// Gets or add.
-    /// </summary>
-    /// <param name="entity">The entity value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets or add.</summary>
+    /// <param name="entity">The entity.</param>
+    /// <returns>The or add.</returns>
     public virtual THandle GetOrAdd(TEntity entity)
     {
         if (entity == null)
             throw new ArgumentNullException(nameof(entity));
 
-        // if it's exactly the same exchange
+        // An equivalent entity reuses its existing handle.
         if (Entities.TryGetValue(entity, out var existingEntity))
             return existingEntity;
 
@@ -68,11 +56,9 @@ public class EntityCollection<TEntity, THandle> :
         return entity;
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <param name="entityHandle">The entity handle value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Retrieves the requested value.</summary>
+    /// <param name="entityHandle">The entity handle.</param>
+    /// <returns>The requested value.</returns>
     public virtual TEntity Get(THandle entityHandle)
     {
         if (entityHandle == null)

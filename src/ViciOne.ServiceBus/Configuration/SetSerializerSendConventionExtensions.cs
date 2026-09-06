@@ -4,17 +4,13 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for set serializer send convention.
-/// </summary>
+/// <summary>Provides extension methods for set serializer send convention.</summary>
 public static class SetSerializerSendConventionExtensions
 {
-    /// <summary>
-    /// Use the message serializer identified by the specified content type to serialize messages of this type
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="contentType"></param>
+    /// <summary>Use the message serializer identified by the specified content type to serialize messages of this type.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="contentType">The runtime content type used by the operation.</param>
     public static void UseSerializer<T>(this IMessageSendTopologyConfigurator<T> configurator, ContentType contentType)
         where T : class
     {
@@ -34,12 +30,10 @@ public static class SetSerializerSendConventionExtensions
             });
     }
 
-    /// <summary>
-    /// Use the message serializer identified by the specified content type to serialize messages of this type
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="contentType"></param>
+    /// <summary>Use the message serializer identified by the specified content type to serialize messages of this type.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="contentType">The runtime content type used by the operation.</param>
     public static void UseSerializer<T>(this IMessageSendTopologyConfigurator<T> configurator, string contentType)
         where T : class
     {

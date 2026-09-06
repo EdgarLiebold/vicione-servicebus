@@ -4,44 +4,36 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Observables;
 
-/// <summary>
-/// Provides a consume observable implementation.
-/// </summary>
+/// <summary>Publishes observations for consume.</summary>
 public class ConsumeObservable :
     Connectable<IConsumeObserver>,
     IConsumeObserver
 {
-    /// <summary>
-    /// Performs the pre consume operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs before consume.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PreConsumeAsync<T>(ConsumeContext<T> context)
         where T : class
     {
         return ForEachAsync(x => x.PreConsumeAsync(context));
     }
 
-    /// <summary>
-    /// Performs the post consume operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs after consume.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PostConsumeAsync<T>(ConsumeContext<T> context)
         where T : class
     {
         return ForEachAsync(x => x.PostConsumeAsync(context));
     }
 
-    /// <summary>
-    /// Consumes fault.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Consumes fault.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception)
         where T : class
     {

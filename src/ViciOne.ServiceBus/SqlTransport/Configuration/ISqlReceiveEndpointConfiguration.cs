@@ -3,21 +3,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
-/// <summary>
-/// Defines the contract for sql receive endpoint configuration.
-/// </summary>
+/// <summary>Defines sql receive endpoint configuration.</summary>
 public interface ISqlReceiveEndpointConfiguration :
     IReceiveEndpointConfiguration,
     ISqlEndpointConfiguration
 {
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the settings.</summary>
     ReceiveSettings Settings { get; }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <param name="host">The host value.</param>
+    /// <summary>Builds the configured component.</summary>
+    /// <param name="host">The host.</param>
     void Build(IHost host);
 }

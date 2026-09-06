@@ -4,17 +4,13 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for observer registration.
-/// </summary>
+/// <summary>Provides extension methods for observer registration.</summary>
 public static class ObserverRegistrationExtensions
 {
-    /// <summary>
-    /// Add a receive endpoint observer to the container, which will be resolved and connected to the bus by the container
-    /// </summary>
-    /// <param name="services"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add a receive endpoint observer to the container, which will be resolved and connected to the bus by the container.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddBusObserver<T>(this IServiceCollection services)
         where T : class, IBusObserver
     {
@@ -22,13 +18,11 @@ public static class ObserverRegistrationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Add a receive endpoint observer to the container, which will be resolved and connected to the bus by the container
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="factory"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add a receive endpoint observer to the container, which will be resolved and connected to the bus by the container.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddBusObserver<T>(this IServiceCollection services, Func<IServiceProvider, T> factory)
         where T : class, IBusObserver
     {
@@ -36,12 +30,10 @@ public static class ObserverRegistrationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Add a receive endpoint observer to the container, which will be resolved and connected to the bus by the container
-    /// </summary>
-    /// <param name="services"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add a receive endpoint observer to the container, which will be resolved and connected to the bus by the container.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddReceiveEndpointObserver<T>(this IServiceCollection services)
         where T : class, IReceiveEndpointObserver
     {
@@ -49,13 +41,11 @@ public static class ObserverRegistrationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Add a receive endpoint observer to the container, which will be resolved and connected to the bus by the container
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="factory"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add a receive endpoint observer to the container, which will be resolved and connected to the bus by the container.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddReceiveEndpointObserver<T>(this IServiceCollection services, Func<IServiceProvider, T> factory)
         where T : class, IReceiveEndpointObserver
     {
@@ -63,12 +53,10 @@ public static class ObserverRegistrationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Add a receive  observer to the container, which will be resolved and connected to the bus by the container
-    /// </summary>
-    /// <param name="services"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add a receive  observer to the container, which will be resolved and connected to the bus by the container.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddReceiveObserver<T>(this IServiceCollection services)
         where T : class, IReceiveObserver
     {
@@ -76,13 +64,11 @@ public static class ObserverRegistrationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Add a receive  observer to the container, which will be resolved and connected to the bus by the container
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="factory"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add a receive  observer to the container, which will be resolved and connected to the bus by the container.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddReceiveObserver<T>(this IServiceCollection services, Func<IServiceProvider, T> factory)
         where T : class, IReceiveObserver
     {
@@ -90,12 +76,10 @@ public static class ObserverRegistrationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Add a consume observer to the container, which will be resolved and connected to the bus by the container
-    /// </summary>
-    /// <param name="services"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add a consume observer to the container, which will be resolved and connected to the bus by the container.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddConsumeObserver<T>(this IServiceCollection services)
         where T : class, IConsumeObserver
     {
@@ -103,13 +87,11 @@ public static class ObserverRegistrationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Add a consume observer to the container, which will be resolved and connected to the bus by the container
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="factory"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add a consume observer to the container, which will be resolved and connected to the bus by the container.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddConsumeObserver<T>(this IServiceCollection services, Func<IServiceProvider, T> factory)
         where T : class, IConsumeObserver
     {
@@ -117,12 +99,10 @@ public static class ObserverRegistrationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Add a send observer to the container, which will be resolved and connected to the bus by the container
-    /// </summary>
-    /// <param name="services"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add a send observer to the container, which will be resolved and connected to the bus by the container.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddSendObserver<T>(this IServiceCollection services)
         where T : class, ISendObserver
     {
@@ -130,13 +110,11 @@ public static class ObserverRegistrationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Add a send observer to the container, which will be resolved and connected to the bus by the container
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="factory"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add a send observer to the container, which will be resolved and connected to the bus by the container.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddSendObserver<T>(this IServiceCollection services, Func<IServiceProvider, T> factory)
         where T : class, ISendObserver
     {
@@ -144,12 +122,10 @@ public static class ObserverRegistrationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Add a publish observer to the container, which will be resolved and connected to the bus by the container
-    /// </summary>
-    /// <param name="services"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add a publish observer to the container, which will be resolved and connected to the bus by the container.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddPublishObserver<T>(this IServiceCollection services)
         where T : class, IPublishObserver
     {
@@ -157,13 +133,11 @@ public static class ObserverRegistrationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Add a publish observer to the container, which will be resolved and connected to the bus by the container
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="factory"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add a publish observer to the container, which will be resolved and connected to the bus by the container.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddPublishObserver<T>(this IServiceCollection services, Func<IServiceProvider, T> factory)
         where T : class, IPublishObserver
     {

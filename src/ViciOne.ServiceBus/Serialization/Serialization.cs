@@ -5,9 +5,7 @@ using System.Net.Mime;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a serialization implementation.
-/// </summary>
+/// <summary>Provides service bus serialization entry points.</summary>
 public class Serialization :
     ISerialization
 {
@@ -16,13 +14,11 @@ public class Serialization :
     readonly IDictionary<string, IMessageDeserializer> _deserializers;
     readonly IDictionary<string, IMessageSerializer> _serializers;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="serializers">The serializers value.</param>
-    /// <param name="serializerContentType">The serializer content type value.</param>
-    /// <param name="deserializers">The deserializers value.</param>
-    /// <param name="defaultContentType">The default content type value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="serializers">The serializers.</param>
+    /// <param name="serializerContentType">The runtime serializer content type used by the operation.</param>
+    /// <param name="deserializers">The deserializers.</param>
+    /// <param name="defaultContentType">The runtime default content type used by the operation.</param>
     public Serialization(IEnumerable<IMessageSerializer> serializers, ContentType serializerContentType,
         IEnumerable<IMessageDeserializer> deserializers, ContentType defaultContentType)
     {
@@ -54,16 +50,12 @@ public class Serialization :
         _defaultDeserializer = defaultDeserializer;
     }
 
-    /// <summary>
-    /// Gets the default content type value.
-    /// </summary>
+    /// <summary>Gets the default content type.</summary>
     public ContentType DefaultContentType { get; }
 
-    /// <summary>
-    /// Gets message serializer.
-    /// </summary>
-    /// <param name="contentType">The content type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message serializer.</summary>
+    /// <param name="contentType">The runtime content type used by the operation.</param>
+    /// <returns>The message serializer.</returns>
     public IMessageSerializer GetMessageSerializer(ContentType? contentType = null)
     {
         var mediaType = contentType?.MediaType;
@@ -74,11 +66,9 @@ public class Serialization :
         return _defaultSerializer;
     }
 
-    /// <summary>
-    /// Attempts to get message serializer.
-    /// </summary>
-    /// <param name="contentType">The content type value.</param>
-    /// <param name="serializer">The serializer value.</param>
+    /// <summary>Attempts to get message serializer.</summary>
+    /// <param name="contentType">The runtime content type used by the operation.</param>
+    /// <param name="serializer">Receives the serializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetMessageSerializer(ContentType contentType, [NotNullWhen(true)] out IMessageSerializer? serializer)
     {
@@ -87,11 +77,9 @@ public class Serialization :
         return _serializers.TryGetValue(mediaType, out serializer);
     }
 
-    /// <summary>
-    /// Gets message deserializer.
-    /// </summary>
-    /// <param name="contentType">The content type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message deserializer.</summary>
+    /// <param name="contentType">The runtime content type used by the operation.</param>
+    /// <returns>The message deserializer.</returns>
     public IMessageDeserializer GetMessageDeserializer(ContentType? contentType = null)
     {
         var mediaType = contentType?.MediaType;
@@ -102,11 +90,9 @@ public class Serialization :
         return _defaultDeserializer;
     }
 
-    /// <summary>
-    /// Attempts to get message deserializer.
-    /// </summary>
-    /// <param name="contentType">The content type value.</param>
-    /// <param name="deserializer">The deserializer value.</param>
+    /// <summary>Attempts to get message deserializer.</summary>
+    /// <param name="contentType">The runtime content type used by the operation.</param>
+    /// <param name="deserializer">Receives the deserializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetMessageDeserializer(ContentType contentType, [NotNullWhen(true)] out IMessageDeserializer? deserializer)
     {
@@ -115,10 +101,8 @@ public class Serialization :
         return _deserializers.TryGetValue(mediaType, out deserializer);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("serializers");

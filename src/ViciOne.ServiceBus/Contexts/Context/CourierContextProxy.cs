@@ -5,19 +5,15 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>
-/// Provides a courier context proxy implementation.
-/// </summary>
+/// <summary>Forwards courier context operations to an underlying context.</summary>
 public abstract class CourierContextProxy :
     ConsumeContextProxy<RoutingSlip>,
     CourierContext
 {
     readonly CourierContext _courierContext;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="courierContext">The courier context value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="courierContext">The courier context.</param>
     protected CourierContextProxy(CourierContext courierContext)
         : base(courierContext)
     {

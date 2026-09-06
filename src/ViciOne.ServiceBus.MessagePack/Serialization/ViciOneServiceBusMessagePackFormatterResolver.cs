@@ -139,7 +139,7 @@ class ViciOneServiceBusMessagePackFormatterResolver :
 
         if (!typeof(T).IsInterface)
         {
-            // If we have no mapper for the type, and it's not an interface, we can't create a formatter.
+            // An unmapped concrete type has no formatter construction path.
             return null;
         }
 
@@ -152,7 +152,7 @@ class ViciOneServiceBusMessagePackFormatterResolver :
 
     bool TryGetMappedType(Type originType, [NotNullWhen(true)] out Type? mappedTargetType)
     {
-        // If the type is not generic, or it is a generic type definition, we use the non-generic mapping.
+        // Non-generic types and open generic definitions use the exact-type mapping table.
         return !originType.IsGenericType || originType.IsGenericTypeDefinition
             ? TryGetNonGenericMappedType(originType, out mappedTargetType)
             : TryGetOpenGenericMappedType(originType, out mappedTargetType);

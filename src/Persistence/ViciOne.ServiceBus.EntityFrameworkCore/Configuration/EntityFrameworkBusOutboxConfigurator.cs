@@ -12,11 +12,9 @@ using ViciOne.ServiceBus.Transactions;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an entity framework bus outbox configurator implementation.
-/// </summary>
-/// <typeparam name="TBus">The t bus type.</typeparam>
-/// <typeparam name="TDbContext">The t db context type.</typeparam>
+/// <summary>Registers and configures an Entity Framework Core transactional outbox for a bus and DbContext.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
+/// <typeparam name="TDbContext">The db context type.</typeparam>
 public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
     IEntityFrameworkBusOutboxConfigurator
     where TBus : class, IBus
@@ -27,11 +25,9 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
     bool _isDefault;
     bool _registerOutboxDeliveryService = true;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes the bus-specific outbox configurator over the shared EF Core outbox settings.</summary>
     /// <param name="services">The service collection owned by the bus configuration.</param>
-    /// <param name="outboxConfigurator">The outbox configurator value.</param>
+    /// <param name="outboxConfigurator">The outbox configurator.</param>
     internal EntityFrameworkBusOutboxConfigurator(IServiceCollection services,
         EntityFrameworkOutboxConfigurator<TBus, TDbContext> outboxConfigurator)
     {
@@ -39,47 +35,31 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
         _services = services ?? throw new ArgumentNullException(nameof(services));
     }
 
-    /// <summary>
-    /// Gets or sets the message delivery limit value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum number of persisted messages sent from one outbox row per delivery pass.</summary>
     public int MessageDeliveryLimit { get; set; } = 100;
-    /// <summary>
-    /// Gets or sets the message delivery timeout value.
-    /// </summary>
+    /// <summary>Gets or sets the timeout applied to each individual transport send.</summary>
     public TimeSpan MessageDeliveryTimeout { get; set; } = TimeSpan.FromSeconds(10);
-    /// <summary>
-    /// Gets or sets the maximum delivery attempts value.
-    /// </summary>
+    /// <summary>Gets or sets the number of failed delivery attempts after which an outbox row is quarantined.</summary>
     public int MaximumDeliveryAttempts { get; set; } = 10;
-    /// <summary>
-    /// Gets or sets the initial delivery retry delay value.
-    /// </summary>
+    /// <summary>Gets or sets the delay before the first retry of a failed transport send.</summary>
     public TimeSpan InitialDeliveryRetryDelay { get; set; } = TimeSpan.FromSeconds(1);
-    /// <summary>
-    /// Gets or sets the maximum delivery retry delay value.
-    /// </summary>
+    /// <summary>Gets or sets the upper bound for exponentially increasing delivery retry delays.</summary>
     public TimeSpan MaximumDeliveryRetryDelay { get; set; } = TimeSpan.FromMinutes(1);
 
-    /// <summary>
-    /// Performs the disable delivery service operation.
-    /// </summary>
+    /// <summary>Prevents registration of the hosted service that drains this outbox.</summary>
     public void DisableDeliveryService()
     {
         _registerOutboxDeliveryService = false;
     }
 
-    /// <summary>
-    /// Configures as default for the current pipeline.
-    /// </summary>
+    /// <summary>Selects this DbContext for untyped scoped send and publish APIs when the bus has multiple EF outboxes.</summary>
     public void UseAsDefault()
     {
         _isDefault = true;
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Applies the callback, validates all settings, and adds the outbox services to dependency injection.</summary>
+    /// <param name="configure">An optional callback that customizes outbox delivery.</param>
     public void Configure(Action<IEntityFrameworkBusOutboxConfigurator>? configure)
     {
         configure?.Invoke(this);

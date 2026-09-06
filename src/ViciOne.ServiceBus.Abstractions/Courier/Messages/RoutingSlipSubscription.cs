@@ -5,27 +5,21 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Courier.Messages;
 
-/// <summary>
-/// Provides a routing slip subscription implementation.
-/// </summary>
+/// <summary>Represents a subscription to routing slip.</summary>
 public class RoutingSlipSubscription :
     Subscription
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public RoutingSlipSubscription()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <param name="events">The events value.</param>
-    /// <param name="include">The include value.</param>
-    /// <param name="activityName">The activity name value.</param>
-    /// <param name="message">The message value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="address">The address.</param>
+    /// <param name="events">The events.</param>
+    /// <param name="include">The include.</param>
+    /// <param name="activityName">The activity name.</param>
+    /// <param name="message">The message to process.</param>
     public RoutingSlipSubscription(Uri address, RoutingSlipEvents events, RoutingSlipEventContents include, string? activityName = null,
         MessageEnvelope? message = null)
     {
@@ -36,10 +30,8 @@ public class RoutingSlipSubscription :
         Message = message;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="subscription">The subscription value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="subscription">The subscription.</param>
     public RoutingSlipSubscription(Subscription subscription)
     {
         if (subscription.Address == null)
@@ -52,24 +44,14 @@ public class RoutingSlipSubscription :
         ActivityName = subscription.ActivityName;
     }
 
-    /// <summary>
-    /// Gets or sets the address value.
-    /// </summary>
+    /// <summary>Gets or sets the address.</summary>
     public Uri Address { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the events value.
-    /// </summary>
+    /// <summary>Gets or sets the events.</summary>
     public RoutingSlipEvents Events { get; set; }
-    /// <summary>
-    /// Gets or sets the include value.
-    /// </summary>
+    /// <summary>Gets or sets the include.</summary>
     public RoutingSlipEventContents Include { get; set; }
-    /// <summary>
-    /// Gets or sets the message value.
-    /// </summary>
+    /// <summary>Gets or sets the message.</summary>
     public MessageEnvelope? Message { get; set; }
-    /// <summary>
-    /// Gets or sets the activity name value.
-    /// </summary>
+    /// <summary>Gets or sets the activity name.</summary>
     public string? ActivityName { get; set; }
 }

@@ -4,29 +4,19 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Util.Scanning;
 
-/// <summary>
-/// Provides an assembly type list implementation.
-/// </summary>
+/// <summary>Stores a list of assembly type values.</summary>
 public class AssemblyTypeList
 {
-    /// <summary>
-    /// Defines the abstract value.
-    /// </summary>
+    /// <summary>Exposes the abstract used by the containing type.</summary>
     public readonly List<Type> Abstract = new List<Type>();
-    /// <summary>
-    /// Defines the concrete value.
-    /// </summary>
+    /// <summary>Exposes the concrete used by the containing type.</summary>
     public readonly List<Type> Concrete = new List<Type>();
-    /// <summary>
-    /// Defines the interface value.
-    /// </summary>
+    /// <summary>Exposes the interface used by the containing type.</summary>
     public readonly List<Type> Interface = new List<Type>();
 
-    /// <summary>
-    /// Performs the select types operation.
-    /// </summary>
-    /// <param name="classification">The classification value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Selects types.</summary>
+    /// <param name="classification">The classification.</param>
+    /// <returns>The selected types.</returns>
     public IEnumerable<IList<Type>> SelectTypes(TypeClassification classification)
     {
         var interfaces = classification.HasFlag(TypeClassification.Interface);
@@ -50,19 +40,15 @@ public class AssemblyTypeList
         }
     }
 
-    /// <summary>
-    /// Performs the all types operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns every discovered type.</summary>
+    /// <returns>The enumerable produced by the operation.</returns>
     public IEnumerable<Type> AllTypes()
     {
         return Interface.Concat(Concrete).Concat(Abstract);
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="type">The type value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
     public void Add(Type type)
     {
         if (type.IsInterface)

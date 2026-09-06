@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for redelivery configurator.
-/// </summary>
+/// <summary>Configures redelivery.</summary>
 public interface IRedeliveryConfigurator :
     IRetryConfigurator
 {

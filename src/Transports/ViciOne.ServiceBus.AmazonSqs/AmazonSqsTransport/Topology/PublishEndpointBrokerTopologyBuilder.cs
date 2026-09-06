@@ -1,23 +1,17 @@
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides a publish endpoint broker topology builder implementation.
-/// </summary>
+/// <summary>Builds broker topology for an Amazon SNS publish endpoint.</summary>
 public class PublishEndpointBrokerTopologyBuilder :
     BrokerTopologyBuilder,
     IPublishEndpointBrokerTopologyBuilder
 {
-    /// <summary>
-    /// The exchange to which the published message is sent
-    /// </summary>
+    /// <summary>Gets the Amazon SNS topic to which the message is published.</summary>
     public TopicHandle? Topic { get; set; }
 
-    /// <summary>
-    /// Performs the build broker topology operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an immutable snapshot of the accumulated publish topology.</summary>
+    /// <returns>The broker topology snapshot.</returns>
     public BrokerTopology BuildBrokerTopology()
     {
-        return new AmazonSqsBrokerTopology(Topics, Queues, QueueSubscriptions, TopicSubscriptions);
+        return new AmazonSqsBrokerTopology(Topics, Queues, QueueSubscriptions);
     }
 }

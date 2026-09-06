@@ -3,18 +3,12 @@ using Amazon.SQS.Model;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Defines the contract for amazon sqs message context.
-/// </summary>
+/// <summary>Exposes Amazon SQS-native state for a received message.</summary>
 public interface AmazonSqsMessageContext
 {
-    /// <summary>
-    /// Gets the transport message value.
-    /// </summary>
+    /// <summary>Gets the underlying AWS SDK message.</summary>
     Message TransportMessage { get; }
 
-    /// <summary>
-    /// Gets the attributes value.
-    /// </summary>
+    /// <summary>Gets the native message attributes.</summary>
     Dictionary<string, MessageAttributeValue> Attributes { get; }
 }

@@ -14,6 +14,7 @@ namespace ViciOne.ServiceBus.Diagnostics;
 /// retention, RBAC and telemetry endpoints. Every observation path is exception-isolated so that
 /// telemetry can disappear but can never rewrite a messaging outcome.
 /// </summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
     where TBus : class
 {
@@ -515,49 +516,29 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
 
 internal enum DurableSendDeliveryOutcome
 {
-    /// <summary>
-    /// Indicates delivered.
-    /// </summary>
+    /// <summary>Indicates delivered.</summary>
     Delivered = 0,
-    /// <summary>
-    /// Indicates retry scheduled.
-    /// </summary>
+    /// <summary>Indicates retry scheduled.</summary>
     RetryScheduled = 1,
-    /// <summary>
-    /// Indicates quarantined.
-    /// </summary>
+    /// <summary>Indicates quarantined.</summary>
     Quarantined = 2,
-    /// <summary>
-    /// Indicates cancelled.
-    /// </summary>
+    /// <summary>Indicates cancelled.</summary>
     Cancelled = 3,
-    /// <summary>
-    /// Indicates state persistence failed.
-    /// </summary>
+    /// <summary>Indicates state persistence failed.</summary>
     StatePersistenceFailed = 4,
-    /// <summary>
-    /// Indicates awaiting consumer completion.
-    /// </summary>
+    /// <summary>Indicates awaiting consumer completion.</summary>
     AwaitingConsumerCompletion = 5,
 }
 
 internal enum DurableSendAdmissionFailure
 {
-    /// <summary>
-    /// Indicates capacity exceeded.
-    /// </summary>
+    /// <summary>Indicates capacity exceeded.</summary>
     CapacityExceeded = 0,
-    /// <summary>
-    /// Indicates identity conflict.
-    /// </summary>
+    /// <summary>Indicates identity conflict.</summary>
     IdentityConflict = 1,
-    /// <summary>
-    /// Indicates contract not registered.
-    /// </summary>
+    /// <summary>Indicates contract not registered.</summary>
     ContractNotRegistered = 2,
-    /// <summary>
-    /// Indicates store failure.
-    /// </summary>
+    /// <summary>Indicates store failure.</summary>
     StoreFailure = 3,
 }
 

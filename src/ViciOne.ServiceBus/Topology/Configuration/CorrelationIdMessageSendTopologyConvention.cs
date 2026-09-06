@@ -3,19 +3,15 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a correlation id message send topology convention implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Applies conventions for correlation id message send topology.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class CorrelationIdMessageSendTopologyConvention<TMessage> :
     ICorrelationIdMessageSendTopologyConvention<TMessage>
     where TMessage : class
 {
     readonly List<ICorrelationIdSelector<TMessage>> _selectors;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public CorrelationIdMessageSendTopologyConvention()
     {
         _selectors =
@@ -47,19 +43,15 @@ public class CorrelationIdMessageSendTopologyConvention<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Sets correlation id.
-    /// </summary>
-    /// <param name="messageCorrelationId">The message correlation id value.</param>
+    /// <summary>Sets correlation id.</summary>
+    /// <param name="messageCorrelationId">The message correlation id.</param>
     public void SetCorrelationId(IMessageCorrelationId<TMessage> messageCorrelationId)
     {
         _selectors.Insert(0, new SetCorrelationIdSelector<TMessage>(messageCorrelationId));
     }
 
-    /// <summary>
-    /// Attempts to get message correlation id.
-    /// </summary>
-    /// <param name="messageCorrelationId">The message correlation id value.</param>
+    /// <summary>Attempts to get message correlation id.</summary>
+    /// <param name="messageCorrelationId">Receives the message correlation id produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetMessageCorrelationId([NotNullWhen(true)] out IMessageCorrelationId<TMessage>? messageCorrelationId)
     {

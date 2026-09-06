@@ -2,33 +2,25 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a publish endpoint broker topology builder implementation.
-/// </summary>
+/// <summary>Builds publish exchanges and optionally preserves implemented-message exchange hierarchy.</summary>
 public class PublishEndpointBrokerTopologyBuilder :
     BrokerTopologyBuilder,
     IPublishEndpointBrokerTopologyBuilder
 {
     readonly PublishBrokerTopologyOptions _options;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Creates a publish topology builder.</summary>
+    /// <param name="options">The hierarchy behavior applied to implemented message contracts.</param>
     public PublishEndpointBrokerTopologyBuilder(PublishBrokerTopologyOptions options = PublishBrokerTopologyOptions.FlattenHierarchy)
     {
         _options = options;
     }
 
-    /// <summary>
-    /// The exchange to which the published message is sent
-    /// </summary>
+    /// <summary>Gets or sets the exchange to which the current message contract is published.</summary>
     public ExchangeHandle? Exchange { get; set; }
 
-    /// <summary>
-    /// Creates implemented builder.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a child builder for an implemented message contract.</summary>
+    /// <returns>A hierarchy-aware child builder, or this builder when implemented contracts are flattened.</returns>
     public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
     {
         if (_options.HasFlag(PublishBrokerTopologyOptions.MaintainHierarchy))

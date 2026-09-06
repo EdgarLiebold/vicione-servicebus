@@ -6,24 +6,16 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Futures;
 
-/// <summary>
-/// Represents a future location value.
-/// </summary>
+/// <summary>Represents a future location.</summary>
 public readonly struct FutureLocation
 {
-    /// <summary>
-    /// Defines the address value.
-    /// </summary>
+    /// <summary>Exposes the address used by the containing type.</summary>
     public readonly Uri Address;
-    /// <summary>
-    /// Defines the id value.
-    /// </summary>
+    /// <summary>Exposes the id used by the containing type.</summary>
     public readonly Guid Id;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="location">The location value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="location">The location.</param>
     public FutureLocation(Uri location)
     {
         ArgumentNullException.ThrowIfNull(location);
@@ -57,11 +49,9 @@ public readonly struct FutureLocation
         Address = new Uri(location.GetLeftPart(UriPartial.Path));
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="address">The address value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="id">The id.</param>
+    /// <param name="address">The address.</param>
     public FutureLocation(Guid id, Uri address)
     {
         ArgumentNullException.ThrowIfNull(address);
@@ -76,11 +66,9 @@ public readonly struct FutureLocation
         Address = new Uri($"queue:{endpointName}");
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="location">The location value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts a value to <see cref="Uri" />.</summary>
+    /// <param name="location">The location.</param>
+    /// <returns>The value produced by the operation.</returns>
     public static implicit operator Uri(FutureLocation location)
     {
         var newId = location.Id.ToNewId();

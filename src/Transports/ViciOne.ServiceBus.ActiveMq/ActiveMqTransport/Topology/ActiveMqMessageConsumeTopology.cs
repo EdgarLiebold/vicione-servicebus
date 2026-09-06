@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.ActiveMq.Configuration;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides an active mq message consume topology implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Collects ActiveMQ consume bindings for one message type.</summary>
+/// <typeparam name="TMessage">The consumed message type.</typeparam>
 public class ActiveMqMessageConsumeTopology<TMessage> :
     MessageConsumeTopology<TMessage>,
     IActiveMqMessageConsumeTopologyConfigurator<TMessage>,
@@ -19,11 +17,9 @@ public class ActiveMqMessageConsumeTopology<TMessage> :
     readonly IActiveMqMessagePublishTopology<TMessage> _publishTopology;
     readonly IList<IActiveMqConsumeTopologySpecification> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="publishTopology">The publish topology value.</param>
-    /// <param name="consumerEndpointQueueNameFormatter">The consumer endpoint queue name formatter value.</param>
+    /// <summary>Creates consume topology linked to a message's publish topic.</summary>
+    /// <param name="publishTopology">The publish topology that identifies the message topic.</param>
+    /// <param name="consumerEndpointQueueNameFormatter">An optional formatter for virtual-topic consumer names.</param>
     public ActiveMqMessageConsumeTopology(IActiveMqMessagePublishTopology<TMessage> publishTopology,
         IActiveMqConsumerEndpointQueueNameFormatter? consumerEndpointQueueNameFormatter)
     {
@@ -34,20 +30,16 @@ public class ActiveMqMessageConsumeTopology<TMessage> :
         _consumerEndpointQueueNameFormatter = consumerEndpointQueueNameFormatter;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies all message-specific consume specifications to a receive topology.</summary>
+    /// <param name="builder">The receive-topology builder.</param>
     public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
     {
         foreach (var specification in _specifications)
             specification.Apply(builder);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Binds the message's publish topic through ActiveMQ virtual-topic semantics.</summary>
+    /// <param name="configure">An optional callback that configures the topic binding.</param>
     public void Bind(Action<IActiveMqTopicBindingConfigurator>? configure = null)
     {
         if (!IsBindableMessageType)
@@ -63,10 +55,8 @@ public class ActiveMqMessageConsumeTopology<TMessage> :
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));

@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.JobService.Scheduling;
 
-/// <summary>
-/// Provides a cron expression implementation.
-/// </summary>
+/// <summary>Represents the parsed cron expression.</summary>
 public sealed class CronExpression :
     IEquatable<CronExpression>
 {
@@ -40,10 +38,8 @@ public sealed class CronExpression :
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="cronExpression">The cron expression value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="cronExpression">The cron expression.</param>
     public CronExpression(string? cronExpression)
     {
         if (cronExpression is null)
@@ -54,9 +50,7 @@ public sealed class CronExpression :
         BuildExpression(CronExpressionString);
     }
 
-    /// <summary>
-    /// Gets or sets the time zone value.
-    /// </summary>
+    /// <summary>Gets or sets the time zone.</summary>
     public TimeZoneInfo TimeZone
     {
         set => _timeZone = value;
@@ -65,10 +59,8 @@ public sealed class CronExpression :
 
     string CronExpressionString { get; }
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="other">The other value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="other">The other.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Equals(CronExpression? other)
     {
@@ -79,20 +71,16 @@ public sealed class CronExpression :
         return Equals(_timeZone, other._timeZone) && CronExpressionString == other.CronExpressionString;
     }
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="obj">The obj value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="obj">The obj.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool Equals(object? obj)
     {
         return ReferenceEquals(this, obj) || (obj is CronExpression other && Equals(other));
     }
 
-    /// <summary>
-    /// Gets hash code.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets hash code.</summary>
+    /// <returns>The hash code for this instance.</returns>
     public override int GetHashCode()
     {
         unchecked
@@ -101,32 +89,26 @@ public sealed class CronExpression :
         }
     }
 
-    /// <summary>
-    /// Applies the <c>==</c> operator.
-    /// </summary>
-    /// <param name="left">The left value.</param>
-    /// <param name="right">The right value.</param>
+    /// <summary>Applies the <c>==</c> operator.</summary>
+    /// <param name="left">The left.</param>
+    /// <param name="right">The right.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator ==(CronExpression? left, CronExpression? right)
     {
         return Equals(left, right);
     }
 
-    /// <summary>
-    /// Applies the <c>!=</c> operator.
-    /// </summary>
-    /// <param name="left">The left value.</param>
-    /// <param name="right">The right value.</param>
+    /// <summary>Applies the <c>!=</c> operator.</summary>
+    /// <param name="left">The left.</param>
+    /// <param name="right">The right.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator !=(CronExpression? left, CronExpression? right)
     {
         return !Equals(left, right);
     }
 
-    /// <summary>
-    /// Determines whether satisfied by.
-    /// </summary>
-    /// <param name="date">The date value.</param>
+    /// <summary>Determines whether satisfied by.</summary>
+    /// <param name="date">The date.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsSatisfiedBy(DateTimeOffset date)
     {
@@ -137,29 +119,23 @@ public sealed class CronExpression :
         return timeAfter.HasValue && timeAfter.Value.Equals(withoutMilliseconds);
     }
 
-    /// <summary>
-    /// Gets next valid time after.
-    /// </summary>
-    /// <param name="date">The date value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets next valid time after.</summary>
+    /// <param name="date">The date.</param>
+    /// <returns>The next valid time after.</returns>
     public DateTimeOffset? GetNextValidTimeAfter(DateTimeOffset date)
     {
         return GetTimeAfter(date);
     }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the string representation of this instance.</summary>
+    /// <returns>The converted string.</returns>
     public override string ToString()
     {
         return CronExpressionString;
     }
 
-    /// <summary>
-    /// Determines whether valid expression.
-    /// </summary>
-    /// <param name="cronExpression">The cron expression value.</param>
+    /// <summary>Determines whether valid expression.</summary>
+    /// <param name="cronExpression">The cron expression.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsValidExpression(string cronExpression)
     {
@@ -175,10 +151,8 @@ public sealed class CronExpression :
         return true;
     }
 
-    /// <summary>
-    /// Validates expression.
-    /// </summary>
-    /// <param name="cronExpression">The cron expression value.</param>
+    /// <summary>Validates expression.</summary>
+    /// <param name="cronExpression">The cron expression.</param>
     public static void ValidateExpression(string cronExpression)
     {
         _ = new CronExpression(cronExpression);
@@ -194,9 +168,8 @@ public sealed class CronExpression :
 
             foreach ((ReadOnlySpan<char> expr, ReadOnlySpan<char> _) in expression.SpanSplit(' ', '\t'))
             {
-                // Consecutive separators do not denote empty cron fields. Treating an empty span as
-                // a field advanced the parser index and shifted every following value into the
-                // wrong position, even though padded expressions were accepted by the constructor.
+                // Consecutive separators delimit fields without creating empty cron fields, so an
+                // empty span does not advance the parser index.
                 if (expr.IsEmpty)
                     continue;
 
@@ -708,10 +681,8 @@ public sealed class CronExpression :
         data.Add(value);
     }
 
-    /// <summary>
-    /// Gets expression summary.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets expression summary.</summary>
+    /// <returns>The expression summary.</returns>
     public string GetExpressionSummary()
     {
         return new CronExpressionSummary(
@@ -797,13 +768,11 @@ public sealed class CronExpression :
         };
     }
 
-    /// <summary>
-    /// Gets the max value for the cron expression type.
-    /// </summary>
-    /// <param name="type"> The type of the cron expression</param>
-    /// <param name="startAt"> The start value</param>
-    /// <param name="stopAt"> The stop value</param>
-    /// <returns>Returns -1 if stopAt is less than startAt otherwise returns the max value for the type</returns>
+    /// <summary>Gets the max value for the cron expression type.</summary>
+    /// <param name="type">The type of the cron expression.</param>
+    /// <param name="startAt">The start value.</param>
+    /// <param name="stopAt">The stop value.</param>
+    /// <returns>Returns -1 if stopAt is less than startAt otherwise returns the max value for the type.</returns>
     static int GetMaxValueForType(int type, int startAt, int stopAt)
     {
         if (stopAt >= startAt)
@@ -871,11 +840,9 @@ public sealed class CronExpression :
         }
     }
 
-    /// <summary>
-    /// Gets set.
-    /// </summary>
-    /// <param name="type">The type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets set.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns>The set.</returns>
     public CronField GetSet(int type)
     {
         var field = type switch
@@ -916,9 +883,10 @@ public sealed class CronExpression :
         return new ValueAndPosition(Convert.ToInt32(builder.ToString(), CultureInfo.InvariantCulture), index < span.Length ? index : index + 1);
     }
 
-    /// <summary>
-    /// Gets the numeric value from string.
-    /// </summary>
+    /// <summary>Gets numeric value.</summary>
+    /// <param name="span">The span.</param>
+    /// <param name="index">The index.</param>
+    /// <returns>The numeric value.</returns>
     static int GetNumericValue(ReadOnlySpan<char> span, int index)
     {
         var end = FindNextWhiteSpace(index, span);
@@ -926,11 +894,9 @@ public sealed class CronExpression :
         return ToInt32(span.Slice(index, end - index));
     }
 
-    /// <summary>
-    /// Gets the month number.
-    /// </summary>
+    /// <summary>Gets month number.</summary>
     /// <param name="span">The string to map with.</param>
-    /// <returns></returns>
+    /// <returns>The month number.</returns>
     static int GetMonthNumber(ReadOnlySpan<char> span)
     {
         return span switch
@@ -966,9 +932,9 @@ public sealed class CronExpression :
         };
     }
 
-    /// <summary>
-    /// Progress next fire time seconds
-    /// </summary>
+    /// <summary>Progress next fire time seconds.</summary>
+    /// <param name="date">The date.</param>
+    /// <returns>The next fire time cursor produced by the operation.</returns>
     NextFireTimeCursor ProgressNextFireTimeSecond(DateTimeOffset date)
     {
         var second = date.Second;
@@ -984,10 +950,9 @@ public sealed class CronExpression :
             new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, second, date.Millisecond, date.Offset));
     }
 
-    /// <summary>
-    /// Progress next Fire time Minutes
-    /// </summary>
-    /// <param name="date">NextFireTimeCheck</param>
+    /// <summary>Progress next Fire time Minutes.</summary>
+    /// <param name="date">NextFireTimeCheck.</param>
+    /// <returns>The next fire time cursor produced by the operation.</returns>
     NextFireTimeCursor ProgressNextFireTimeMinute(DateTimeOffset date)
     {
         var minute = date.Minute;
@@ -1016,10 +981,9 @@ public sealed class CronExpression :
             new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, minute, date.Second, date.Millisecond, date.Offset));
     }
 
-    /// <summary>
-    /// Progress next fire time Hour
-    /// </summary>
-    /// <param name="date">NextFireTimeCheck</param>
+    /// <summary>Progress next fire time Hour.</summary>
+    /// <param name="date">NextFireTimeCheck.</param>
+    /// <returns>The next fire time cursor produced by the operation.</returns>
     NextFireTimeCursor ProgressNextFireTimeHour(DateTimeOffset date)
     {
         int hour;
@@ -1148,14 +1112,14 @@ public sealed class CronExpression :
         var tDay = -1;
         var tMonth = month;
 
-        // get day by day of month rule
+        // Resolve the next eligible day from the day-of-month rule.
         (SortedSet<int>? daysOfMonthCalculated, var setIncludesDayBeforeStartDay) = CalculateDaysOfMonth(date);
         if (daysOfMonthCalculated.TryGetMinValueStartingFrom(date, setIncludesDayBeforeStartDay, out var min))
         {
             tDay = day;
             day = min;
 
-            // make sure we don't over-run a short month, such as february
+            // Short months advance to the next month instead of producing an invalid date.
             var lastDay = GetLastDayOfMonth(month, date.Year);
             if (day > lastDay)
             {
@@ -1377,11 +1341,9 @@ public sealed class CronExpression :
             : new NextFireTimeCursor(false, new DateTimeOffset(year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Offset));
     }
 
-    /// <summary>
-    /// Gets time after.
-    /// </summary>
-    /// <param name="afterTime">The after time value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets time after.</summary>
+    /// <param name="afterTime">The after time.</param>
+    /// <returns>The time after.</returns>
     public DateTimeOffset? GetTimeAfter(DateTimeOffset afterTime)
     {
         afterTime = afterTime.AddSeconds(1);

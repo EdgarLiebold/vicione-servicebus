@@ -7,30 +7,24 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for dependency injection consumer registration.
-/// </summary>
+/// <summary>Provides extension methods for dependency injection consumer registration.</summary>
 public static class DependencyInjectionConsumerRegistrationExtensions
 {
-    /// <summary>
-    /// Performs the register consumer operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers consumer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <returns>The consumer registration produced by the operation.</returns>
     public static IConsumerRegistration RegisterConsumer<T>(this IServiceCollection collection)
         where T : class, IConsumer
     {
         return RegisterConsumer<T>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
-    /// <summary>
-    /// Performs the register consumer operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registrar">The registrar value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers consumer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registrar">The registrar.</param>
+    /// <returns>The consumer registration produced by the operation.</returns>
     public static IConsumerRegistration RegisterConsumer<T>(this IServiceCollection collection, IContainerRegistrar registrar)
         where T : class, IConsumer
     {
@@ -40,13 +34,11 @@ public static class DependencyInjectionConsumerRegistrationExtensions
         return new ConsumerRegistrar<T>().Register(collection, registrar);
     }
 
-    /// <summary>
-    /// Performs the register consumer operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TDefinition">The t definition type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers consumer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TDefinition">The definition type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <returns>The consumer registration produced by the operation.</returns>
     public static IConsumerRegistration RegisterConsumer<T, TDefinition>(this IServiceCollection collection)
         where T : class, IConsumer
         where TDefinition : class, IConsumerDefinition<T>
@@ -54,14 +46,12 @@ public static class DependencyInjectionConsumerRegistrationExtensions
         return RegisterConsumer<T, TDefinition>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
-    /// <summary>
-    /// Performs the register consumer operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TDefinition">The t definition type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registrar">The registrar value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers consumer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TDefinition">The definition type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registrar">The registrar.</param>
+    /// <returns>The consumer registration produced by the operation.</returns>
     public static IConsumerRegistration RegisterConsumer<T, TDefinition>(this IServiceCollection collection, IContainerRegistrar registrar)
         where T : class, IConsumer
         where TDefinition : class, IConsumerDefinition<T>
@@ -72,27 +62,23 @@ public static class DependencyInjectionConsumerRegistrationExtensions
         return new ConsumerDefinitionRegistrar<T, TDefinition>().Register(collection, registrar);
     }
 
-    /// <summary>
-    /// Performs the register consumer operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="consumerDefinitionType">The consumer definition type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers consumer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <param name="consumerDefinitionType">The runtime consumer definition type used by the operation.</param>
+    /// <returns>The consumer registration produced by the operation.</returns>
     public static IConsumerRegistration RegisterConsumer<T>(this IServiceCollection collection, Type consumerDefinitionType)
         where T : class, IConsumer
     {
         return RegisterConsumer<T>(collection, new DependencyInjectionContainerRegistrar(collection), consumerDefinitionType);
     }
 
-    /// <summary>
-    /// Performs the register consumer operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registrar">The registrar value.</param>
-    /// <param name="consumerDefinitionType">The consumer definition type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers consumer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registrar">The registrar.</param>
+    /// <param name="consumerDefinitionType">The runtime consumer definition type used by the operation.</param>
+    /// <returns>The consumer registration produced by the operation.</returns>
     public static IConsumerRegistration RegisterConsumer<T>(this IServiceCollection collection, IContainerRegistrar registrar, Type? consumerDefinitionType)
         where T : class, IConsumer
     {
@@ -114,14 +100,12 @@ public static class DependencyInjectionConsumerRegistrationExtensions
         return register.Register(collection, registrar);
     }
 
-    /// <summary>
-    /// Performs the register consumer operation.
-    /// </summary>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registrar">The registrar value.</param>
-    /// <param name="consumerType">The consumer type value.</param>
-    /// <param name="consumerDefinitionType">The consumer definition type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers consumer.</summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registrar">The registrar.</param>
+    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
+    /// <param name="consumerDefinitionType">The runtime consumer definition type used by the operation.</param>
+    /// <returns>The consumer registration produced by the operation.</returns>
     public static IConsumerRegistration RegisterConsumer(this IServiceCollection collection, IContainerRegistrar registrar, Type consumerType,
         Type? consumerDefinitionType = null)
     {

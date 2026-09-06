@@ -2,9 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>
-/// Provides a long type converter implementation.
-/// </summary>
+/// <summary>Converts long type values.</summary>
 public class LongTypeConverter :
     ITypeConverter<string, long>,
     ITypeConverter<long, string>,
@@ -17,11 +15,9 @@ public class LongTypeConverter :
     ITypeConverter<long, uint>,
     ITypeConverter<long, ulong>
 {
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(byte input, out long result)
     {
@@ -29,11 +25,9 @@ public class LongTypeConverter :
         return true;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(int input, out long result)
     {
@@ -41,11 +35,9 @@ public class LongTypeConverter :
         return true;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(object? input, out long result)
     {
@@ -59,11 +51,9 @@ public class LongTypeConverter :
         return false;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(sbyte input, out long result)
     {
@@ -71,11 +61,9 @@ public class LongTypeConverter :
         return true;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(short input, out long result)
     {
@@ -83,22 +71,18 @@ public class LongTypeConverter :
         return true;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(string? input, out long result)
     {
         return long.TryParse(input, out result);
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(uint input, out long result)
     {
@@ -106,11 +90,9 @@ public class LongTypeConverter :
         return true;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(ulong input, out long result)
     {
@@ -118,11 +100,9 @@ public class LongTypeConverter :
         return true;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(ushort input, out long result)
     {
@@ -130,11 +110,9 @@ public class LongTypeConverter :
         return true;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(long input, out string result)
     {

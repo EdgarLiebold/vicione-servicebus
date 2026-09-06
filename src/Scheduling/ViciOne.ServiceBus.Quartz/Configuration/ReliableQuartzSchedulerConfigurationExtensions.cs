@@ -9,17 +9,13 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Selects Quartz-backed scheduling adapters inside a reliable-messaging block.
-/// </summary>
+/// <summary>Selects Quartz-backed scheduling adapters inside a reliable-messaging block.</summary>
 public static class ReliableQuartzSchedulerConfigurationExtensions
 {
-    /// <summary>
-    /// Selects a caller-registered Quartz scheduler and its durable scheduling endpoint.
-    /// </summary>
-    /// <param name="configurator">The owning reliable-messaging configurator.</param>
-    /// <param name="configure">Optional endpoint configuration.</param>
-    /// <returns>The same configurator.</returns>
+    /// <summary>Selects a caller-registered Quartz scheduler and its durable scheduling endpoint.</summary>
+    /// <param name="configurator">The reliable-messaging configuration that owns the bus.</param>
+    /// <param name="configure">Optional scheduling-endpoint configuration.</param>
+    /// <returns>The same reliable-messaging configurator.</returns>
     /// <remarks>
     /// The application must register exactly one <see cref="ISchedulerFactory" />. No in-memory
     /// scheduler is substituted when that dependency is absent.
@@ -34,12 +30,10 @@ public static class ReliableQuartzSchedulerConfigurationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Selects an explicitly volatile in-memory Quartz scheduler for tests and local development.
-    /// </summary>
-    /// <param name="configurator">The owning reliable-messaging configurator.</param>
-    /// <param name="configure">Optional endpoint configuration.</param>
-    /// <returns>The same configurator.</returns>
+    /// <summary>Selects an explicitly volatile in-memory Quartz scheduler for tests and local development.</summary>
+    /// <param name="configurator">The reliable-messaging configuration that owns the bus.</param>
+    /// <param name="configure">Optional scheduling-endpoint configuration.</param>
+    /// <returns>The same reliable-messaging configurator.</returns>
     public static IReliableMessagingConfigurator UseInMemoryScheduler(
         this IReliableMessagingConfigurator configurator,
         Action<QuartzEndpointOptions>? configure = null)

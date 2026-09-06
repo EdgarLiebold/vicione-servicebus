@@ -5,12 +5,10 @@ using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a future fault configurator implementation.
-/// </summary>
-/// <typeparam name="TCommand">The t command type.</typeparam>
-/// <typeparam name="TFault">The t fault type.</typeparam>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Configures future fault.</summary>
+/// <typeparam name="TCommand">The command type.</typeparam>
+/// <typeparam name="TFault">The fault type.</typeparam>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class FutureFaultConfigurator<TCommand, TFault, TInput> :
     IFutureFaultConfigurator<TFault, TInput>
     where TInput : class
@@ -19,19 +17,15 @@ public class FutureFaultConfigurator<TCommand, TFault, TInput> :
 {
     readonly FutureFault<TCommand, TFault, TInput> _fault;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="fault">The fault value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="fault">The fault.</param>
     public FutureFaultConfigurator(FutureFault<TCommand, TFault, TInput> fault)
     {
         _fault = fault;
     }
 
-    /// <summary>
-    /// Sets faulted using factory.
-    /// </summary>
-    /// <param name="factoryMethod">The factory method value.</param>
+    /// <summary>Sets faulted using factory.</summary>
+    /// <param name="factoryMethod">The factory method.</param>
     public void SetFaultedUsingFactory(EventMessageFactory<FutureState, TInput, TFault> factoryMethod)
     {
         if (factoryMethod == null)
@@ -40,10 +34,8 @@ public class FutureFaultConfigurator<TCommand, TFault, TInput> :
         _fault.Factory = MessageFactory<TFault>.Create(factoryMethod);
     }
 
-    /// <summary>
-    /// Sets faulted using factory.
-    /// </summary>
-    /// <param name="factoryMethod">The factory method value.</param>
+    /// <summary>Sets faulted using factory.</summary>
+    /// <param name="factoryMethod">The factory method.</param>
     public void SetFaultedUsingFactory(AsyncEventMessageFactory<FutureState, TInput, TFault> factoryMethod)
     {
         if (factoryMethod == null)
@@ -52,10 +44,8 @@ public class FutureFaultConfigurator<TCommand, TFault, TInput> :
         _fault.Factory = MessageFactory<TFault>.Create(factoryMethod);
     }
 
-    /// <summary>
-    /// Sets faulted using initializer.
-    /// </summary>
-    /// <param name="valueProvider">The value provider value.</param>
+    /// <summary>Sets faulted using initializer.</summary>
+    /// <param name="valueProvider">The value provider.</param>
     public void SetFaultedUsingInitializer(InitializerValueProvider<TInput> valueProvider)
     {
         if (valueProvider == null)
@@ -71,29 +61,23 @@ public class FutureFaultConfigurator<TCommand, TFault, TInput> :
 }
 
 
-/// <summary>
-/// Provides a future fault configurator implementation.
-/// </summary>
-/// <typeparam name="TFault">The t fault type.</typeparam>
+/// <summary>Configures future fault.</summary>
+/// <typeparam name="TFault">The fault type.</typeparam>
 public class FutureFaultConfigurator<TFault> :
     IFutureFaultConfigurator<TFault>
     where TFault : class
 {
     readonly FutureFault<TFault> _fault;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="fault">The fault value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="fault">The fault.</param>
     public FutureFaultConfigurator(FutureFault<TFault> fault)
     {
         _fault = fault;
     }
 
-    /// <summary>
-    /// Sets faulted using factory.
-    /// </summary>
-    /// <param name="factoryMethod">The factory method value.</param>
+    /// <summary>Sets faulted using factory.</summary>
+    /// <param name="factoryMethod">The factory method.</param>
     public void SetFaultedUsingFactory(EventMessageFactory<FutureState, TFault> factoryMethod)
     {
         if (factoryMethod == null)
@@ -102,10 +86,8 @@ public class FutureFaultConfigurator<TFault> :
         _fault.Factory = MessageFactory<TFault>.Create(factoryMethod);
     }
 
-    /// <summary>
-    /// Sets faulted using factory.
-    /// </summary>
-    /// <param name="factoryMethod">The factory method value.</param>
+    /// <summary>Sets faulted using factory.</summary>
+    /// <param name="factoryMethod">The factory method.</param>
     public void SetFaultedUsingFactory(AsyncEventMessageFactory<FutureState, TFault> factoryMethod)
     {
         if (factoryMethod == null)
@@ -114,10 +96,8 @@ public class FutureFaultConfigurator<TFault> :
         _fault.Factory = MessageFactory<TFault>.Create(factoryMethod);
     }
 
-    /// <summary>
-    /// Sets faulted using initializer.
-    /// </summary>
-    /// <param name="valueProvider">The value provider value.</param>
+    /// <summary>Sets faulted using initializer.</summary>
+    /// <param name="valueProvider">The value provider.</param>
     public void SetFaultedUsingInitializer(InitializerValueProvider valueProvider)
     {
         if (valueProvider == null)

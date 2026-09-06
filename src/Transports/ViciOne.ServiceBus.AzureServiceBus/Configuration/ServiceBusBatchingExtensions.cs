@@ -2,19 +2,18 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides extension methods for service bus batching.
-/// </summary>
+/// <summary>Configures consumer batches that preserve Azure Service Bus session ordering.</summary>
 public static class ServiceBusBatchingExtensions
 {
     /// <summary>
-    /// Configures <see cref="BatchOptions" /> for batching with Azure Service Bus sessions to ensure in-order processing of sessions
-    /// - Sessions will be delivered as batches of up to <see cref="ServiceBusSessionBatchOptions.MessageLimitPerSession" />
-    /// - Batches from up to <see cref="ServiceBusSessionBatchOptions.MaxConcurrentSessions" /> sessions will be processed concurrently
-    /// Note: Consider max concurrency impacts of the SDK to avoid thread exhaustion
-    /// - total number of concurrent calls = <see cref="ServiceBusSessionBatchOptions.MaxConcurrentSessions" /> *
-    /// <see cref="ServiceBusSessionBatchOptions.MessageLimitPerSession" />
+    /// Configures <see cref="BatchOptions" /> to group messages by Azure Service Bus session identifier.
+    /// Each batch contains at most <see cref="ServiceBusSessionBatchOptions.MessageLimitPerSession" /> messages from one session,
+    /// while up to <see cref="ServiceBusSessionBatchOptions.MaxConcurrentSessions" /> sessions can be processed concurrently.
+    /// The endpoint processor is configured for sessions and allows enough concurrent callbacks to fill each batch.
     /// </summary>
+    /// <typeparam name="TConsumer">The consumer receiving the session batches.</typeparam>
+    /// <param name="consumerConfigurator">The consumer registration to configure.</param>
+    /// <param name="configure">Configures the session batch limits and timing.</param>
     public static void SetServiceBusSessionBatchOptions<TConsumer>(this IConsumerConfigurator<TConsumer> consumerConfigurator,
         Action<ServiceBusSessionBatchOptions> configure)
         where TConsumer : class

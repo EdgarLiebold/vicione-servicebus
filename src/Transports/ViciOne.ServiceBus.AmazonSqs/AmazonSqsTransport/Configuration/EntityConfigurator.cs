@@ -2,17 +2,13 @@ using System;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Configuration;
 
-/// <summary>
-/// Provides an entity configurator implementation.
-/// </summary>
+/// <summary>Provides common naming and lifetime settings for Amazon SQS and Amazon SNS entities.</summary>
 public abstract class EntityConfigurator
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="entityName">The entity name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
+    /// <summary>Initializes common entity settings.</summary>
+    /// <param name="entityName">The provider entity name.</param>
+    /// <param name="durable">Whether the entity is retained when its endpoint stops.</param>
+    /// <param name="autoDelete">Whether the entity is deleted when its endpoint stops.</param>
     protected EntityConfigurator(string entityName, bool durable = true, bool autoDelete = false)
     {
         EntityName = entityName;
@@ -20,29 +16,19 @@ public abstract class EntityConfigurator
         AutoDelete = autoDelete;
     }
 
-    /// <summary>
-    /// Gets or sets the durable value.
-    /// </summary>
+    /// <summary>Gets or sets whether the entity is retained when its endpoint stops.</summary>
     public bool Durable { get; set; }
-    /// <summary>
-    /// Gets or sets the auto delete value.
-    /// </summary>
+    /// <summary>Gets or sets whether the entity is deleted when its endpoint stops.</summary>
     public bool AutoDelete { get; set; }
-    /// <summary>
-    /// Gets or sets the entity name value.
-    /// </summary>
+    /// <summary>Gets or sets the provider entity name.</summary>
     public string EntityName { get; set; }
 
-    /// <summary>
-    /// Gets the address type value.
-    /// </summary>
+    /// <summary>Gets the provider entity kind encoded in endpoint addresses.</summary>
     protected abstract AmazonSqsEndpointAddress.AddressType AddressType { get; }
 
-    /// <summary>
-    /// Gets endpoint address.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the provider endpoint address for the configured entity.</summary>
+    /// <param name="hostAddress">The Amazon SQS host address.</param>
+    /// <returns>The queue or topic endpoint address.</returns>
     public virtual AmazonSqsEndpointAddress GetEndpointAddress(Uri hostAddress)
     {
         return new AmazonSqsEndpointAddress(hostAddress, EntityName, Durable, AutoDelete, AddressType);

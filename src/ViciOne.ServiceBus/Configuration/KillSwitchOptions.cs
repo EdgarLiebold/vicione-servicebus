@@ -12,9 +12,7 @@ namespace ViciOne.ServiceBus.Configuration;
 public sealed class KillSwitchOptions :
     IOptions
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public KillSwitchOptions()
     {
         ActivationThreshold = 100;
@@ -25,41 +23,27 @@ public sealed class KillSwitchOptions :
         ExceptionFilter = new FilterSpecification().Build();
     }
 
-    /// <summary>
-    /// Minimum number of observed delivery attempts before the switch may trip.
-    /// </summary>
+    /// <summary>Minimum number of observed delivery attempts before the switch may trip.</summary>
     public int ActivationThreshold { get; private set; }
 
-    /// <summary>
-    /// Ratio of matching failures to all observed attempts that trips the switch, in the inclusive range 0.0 through 1.0.
-    /// </summary>
+    /// <summary>Ratio of matching failures to all observed attempts that trips the switch, in the inclusive range 0.0 through 1.0.</summary>
     public double TripThresholdRatio { get; private set; }
 
-    /// <summary>
-    /// Rolling observation window. Counters are reset lazily on the first observation after this duration.
-    /// </summary>
+    /// <summary>Rolling observation window. Counters are reset lazily on the first observation after this duration.</summary>
     public TimeSpan TrackingPeriod { get; private set; }
 
-    /// <summary>
-    /// Delay between a successful pause and the next restart attempt. The same bounded delay is used before retrying a failed pause.
-    /// </summary>
+    /// <summary>Delay between a successful pause and the next restart attempt. The same bounded delay is used before retrying a failed pause.</summary>
     public TimeSpan RestartDelay { get; private set; }
 
-    /// <summary>
-    /// Time source used for the observation window and recovery delay.
-    /// </summary>
+    /// <summary>Time source used for the observation window and recovery delay.</summary>
     public TimeProvider TimeProvider { get; private set; }
 
-    /// <summary>
-    /// Exception filter used to decide which consumer and routing-slip failures contribute to the failure ratio.
-    /// </summary>
+    /// <summary>Exception filter used to decide which consumer and routing-slip failures contribute to the failure ratio.</summary>
     public IExceptionFilter ExceptionFilter { get; private set; }
 
-    /// <summary>
-    /// Sets activation threshold.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets activation threshold.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The kill switch options produced by the operation.</returns>
     public KillSwitchOptions SetActivationThreshold(int value)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(value, 1);
@@ -68,11 +52,9 @@ public sealed class KillSwitchOptions :
         return this;
     }
 
-    /// <summary>
-    /// Sets trip threshold ratio.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets trip threshold ratio.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The kill switch options produced by the operation.</returns>
     public KillSwitchOptions SetTripThresholdRatio(double value)
     {
         if (!double.IsFinite(value) || value is < 0 or > 1)
@@ -82,11 +64,9 @@ public sealed class KillSwitchOptions :
         return this;
     }
 
-    /// <summary>
-    /// Sets tracking period.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets tracking period.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The kill switch options produced by the operation.</returns>
     public KillSwitchOptions SetTrackingPeriod(TimeSpan value)
     {
         if (value <= TimeSpan.Zero)
@@ -96,11 +76,9 @@ public sealed class KillSwitchOptions :
         return this;
     }
 
-    /// <summary>
-    /// Sets restart delay.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets restart delay.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The kill switch options produced by the operation.</returns>
     public KillSwitchOptions SetRestartDelay(TimeSpan value)
     {
         if (value < TimeSpan.FromSeconds(1))
@@ -110,22 +88,18 @@ public sealed class KillSwitchOptions :
         return this;
     }
 
-    /// <summary>
-    /// Sets time provider.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets time provider.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The kill switch options produced by the operation.</returns>
     public KillSwitchOptions SetTimeProvider(TimeProvider value)
     {
         TimeProvider = value ?? throw new ArgumentNullException(nameof(value));
         return this;
     }
 
-    /// <summary>
-    /// Sets exception filter.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets exception filter.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The kill switch options produced by the operation.</returns>
     public KillSwitchOptions SetExceptionFilter(Action<IExceptionConfigurator> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);

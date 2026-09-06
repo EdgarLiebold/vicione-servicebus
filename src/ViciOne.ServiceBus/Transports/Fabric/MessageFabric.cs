@@ -8,11 +8,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>
-/// Provides a message fabric implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Provides the in-process message fabric for message.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+/// <typeparam name="T">The value type.</typeparam>
 public class MessageFabric<TContext, T> :
     Supervisor,
     IMessageFabric<TContext, T>
@@ -25,10 +23,8 @@ public class MessageFabric<TContext, T> :
     readonly int _queueCapacity;
     readonly ConcurrentDictionary<string, IMessageQueue<TContext, T>> _queues;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="queueCapacity">The queue capacity value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="queueCapacity">The queue capacity.</param>
     public MessageFabric(int queueCapacity = 1024)
     {
         if (queueCapacity <= 0)
@@ -42,29 +38,23 @@ public class MessageFabric<TContext, T> :
         _queues = new ConcurrentDictionary<string, IMessageQueue<TContext, T>>(StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>
-    /// Gets the delay provider value.
-    /// </summary>
+    /// <summary>Gets the delay provider.</summary>
     public IInMemoryDelayProvider DelayProvider => _delayProvider;
 
-    /// <summary>
-    /// Performs the exchange declare operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="exchangeType">The exchange type value.</param>
+    /// <summary>Declares the configured exchange.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="name">The name.</param>
+    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
     public void ExchangeDeclare(TContext context, string name, ExchangeType exchangeType)
     {
         GetOrAddExchange(context, name, exchangeType);
     }
 
-    /// <summary>
-    /// Performs the exchange bind operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Binds the configured exchange.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="routingKey">The routing key value.</param>
+    /// <param name="destination">The destination.</param>
+    /// <param name="routingKey">The routing key.</param>
     public void ExchangeBind(TContext context, string source, string destination, string? routingKey)
     {
         if (source.Equals(destination))
@@ -81,22 +71,18 @@ public class MessageFabric<TContext, T> :
         sourceExchange.Connect(destinationExchange, routingKey);
     }
 
-    /// <summary>
-    /// Performs the queue declare operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="name">The name value.</param>
+    /// <summary>Declares the configured queue.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="name">The name.</param>
     public void QueueDeclare(TContext context, string name)
     {
         GetOrAddQueue(context, name);
     }
 
-    /// <summary>
-    /// Performs the queue bind operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Binds the configured queue.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination value.</param>
+    /// <param name="destination">The destination.</param>
     public void QueueBind(TContext context, string source, string destination)
     {
         IMessageExchange<T> sourceExchange = GetOrAddExchange(context, source, ExchangeType.FanOut);
@@ -110,10 +96,8 @@ public class MessageFabric<TContext, T> :
         sourceExchange.Connect(destinationQueue, null);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("messageFabric");
@@ -124,44 +108,36 @@ public class MessageFabric<TContext, T> :
             queue.Probe(scope);
     }
 
-    /// <summary>
-    /// Gets exchange.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="exchangeType">The exchange type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets exchange.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="name">The name.</param>
+    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
+    /// <returns>The exchange.</returns>
     public IMessageExchange<T> GetExchange(TContext context, string name, ExchangeType exchangeType)
     {
         return GetOrAddExchange(context, name, exchangeType);
     }
 
-    /// <summary>
-    /// Gets queue.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="name">The name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets queue.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="name">The name.</param>
+    /// <returns>The queue.</returns>
     public IMessageQueue<TContext, T> GetQueue(TContext context, string name)
     {
         return GetOrAddQueue(context, name);
     }
 
-    /// <summary>
-    /// Connects message fabric observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects message fabric observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectMessageFabricObserver(IMessageFabricObserver<TContext> observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Stops supervisor.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Stops supervisor.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected override async Task StopSupervisorAsync(StopSupervisorContext context)
     {
         await base.StopSupervisorAsync(context).ConfigureAwait(false);

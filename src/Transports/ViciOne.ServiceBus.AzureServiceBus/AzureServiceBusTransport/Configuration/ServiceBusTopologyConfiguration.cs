@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus topology configuration implementation.
-/// </summary>
+/// <summary>Owns the Azure Service Bus send, publish, and consume topology configurators.</summary>
 public class ServiceBusTopologyConfiguration :
     IServiceBusTopologyConfiguration
 {
@@ -16,10 +14,8 @@ public class ServiceBusTopologyConfiguration :
     readonly IServiceBusPublishTopologyConfigurator _publishTopology;
     readonly IServiceBusSendTopologyConfigurator _sendTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Creates transport topology with the global observers and default send conventions.</summary>
+    /// <param name="messageTopology">The message topology shared with transport-specific topology.</param>
     public ServiceBusTopologyConfiguration(IMessageTopologyConfigurator messageTopology)
     {
         _messageTopology = messageTopology;
@@ -38,10 +34,8 @@ public class ServiceBusTopologyConfiguration :
         _consumeTopology = new ServiceBusConsumeTopology(messageTopology, _publishTopology);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Creates endpoint topology that shares send and publish settings with a parent configuration.</summary>
+    /// <param name="topologyConfiguration">The parent transport topology.</param>
     public ServiceBusTopologyConfiguration(IServiceBusTopologyConfiguration topologyConfiguration)
     {
         _messageTopology = topologyConfiguration.Message;
@@ -60,10 +54,8 @@ public class ServiceBusTopologyConfiguration :
     IServiceBusSendTopologyConfigurator IServiceBusTopologyConfiguration.Send => _sendTopology;
     IServiceBusConsumeTopologyConfigurator IServiceBusTopologyConfiguration.Consume => _consumeTopology;
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Combines validation from send, publish, and consume topology.</summary>
+    /// <returns>All transport-topology validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return _sendTopology.Validate()

@@ -2,40 +2,32 @@ using System;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Defines the contract for active mq publish topology configurator.
-/// </summary>
+/// <summary>Configures ActiveMQ virtual-topic publish topology.</summary>
 public interface IActiveMqPublishTopologyConfigurator :
     IPublishTopologyConfigurator,
     IActiveMqPublishTopology
 {
     /// <summary>
-    /// ActiveMQ supports publish/subscribe using virtual topics. By default, virtual topics
-    /// must be prefixed with "VirtualTopic." however those defaults can be changed. Changing
-    /// this setting will use the specified prefix instead (or "", if so specified).
+    /// Sets the prefix prepended to message entity names published through ActiveMQ virtual topics.
+    /// The default is <c>VirtualTopic.</c>; an empty value disables the prefix.
     /// </summary>
     new string VirtualTopicPrefix { set; }
 
     /// <summary>
-    /// Regular expression to distinguish if a destination is for consuming data from a VirtualTopic.
-    /// Because bind is on server side and rely on names Virtual topics and connected consumers cannot be
-    /// created as temporary. A temporary destinations does not support custom names than we must use regular destinations.
+    /// Sets the regular expression used to recognize named virtual-topic consumer destinations.
+    /// Matching destinations retain their configured names instead of using broker-generated temporary names.
     /// </summary>
     /// <seealso href="https://activemq.apache.org/virtual-destinations">Virtual Destinations</seealso>
     new string VirtualTopicConsumerPattern { set; }
 
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets configurable publish topology for a message type.</summary>
+    /// <typeparam name="T">The published message type.</typeparam>
+    /// <returns>The ActiveMQ message publish-topology configurator.</returns>
     new IActiveMqMessagePublishTopologyConfigurator<T> GetMessageTopology<T>()
         where T : class;
 
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets configurable publish topology for a runtime message type.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <returns>The untyped ActiveMQ message publish-topology configurator.</returns>
     new IActiveMqMessagePublishTopologyConfigurator GetMessageTopology(Type messageType);
 }

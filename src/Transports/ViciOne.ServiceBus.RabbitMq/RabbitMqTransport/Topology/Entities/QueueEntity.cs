@@ -3,22 +3,18 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a queue entity implementation.
-/// </summary>
+/// <summary>Represents a de-duplicated queue declaration in a broker topology.</summary>
 public class QueueEntity :
     Queue,
     QueueHandle
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="exclusive">The exclusive value.</param>
-    /// <param name="arguments">The arguments value.</param>
+    /// <summary>Creates a queue entity.</summary>
+    /// <param name="id">The topology-local entity identifier.</param>
+    /// <param name="name">The queue name.</param>
+    /// <param name="durable">Whether the queue survives broker restarts.</param>
+    /// <param name="autoDelete">Whether RabbitMQ deletes the queue after its last consumer is gone.</param>
+    /// <param name="exclusive">Whether the queue belongs exclusively to its declaring connection.</param>
+    /// <param name="arguments">The broker-specific declaration arguments.</param>
     public QueueEntity(long id, string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object?> arguments)
     {
         Id = id;
@@ -29,49 +25,29 @@ public class QueueEntity :
         QueueArguments = arguments ?? new Dictionary<string, object?>();
     }
 
-    /// <summary>
-    /// Gets the name comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that considers only the queue name.</summary>
     public static IEqualityComparer<QueueEntity> NameComparer { get; } = new NameEqualityComparer();
 
-    /// <summary>
-    /// Gets the queue comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that includes all queue declaration properties.</summary>
     public static IEqualityComparer<QueueEntity> QueueComparer { get; } = new QueueEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the queue name value.
-    /// </summary>
+    /// <summary>Gets the queue name.</summary>
     public string QueueName { get; }
-    /// <summary>
-    /// Gets the durable value.
-    /// </summary>
+    /// <summary>Gets whether the queue survives broker restarts.</summary>
     public bool Durable { get; }
-    /// <summary>
-    /// Gets the auto delete value.
-    /// </summary>
+    /// <summary>Gets whether RabbitMQ deletes the queue after its last consumer is gone.</summary>
     public bool AutoDelete { get; }
-    /// <summary>
-    /// Gets the exclusive value.
-    /// </summary>
+    /// <summary>Gets whether the queue belongs exclusively to its declaring connection.</summary>
     public bool Exclusive { get; }
-    /// <summary>
-    /// Gets the queue arguments value.
-    /// </summary>
+    /// <summary>Gets the broker-specific declaration arguments.</summary>
     public IDictionary<string, object?> QueueArguments { get; }
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the topology-local entity identifier.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the queue value.
-    /// </summary>
+    /// <summary>Gets this entity as a queue declaration.</summary>
     public Queue Queue => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the queue properties for diagnostics.</summary>
+    /// <returns>A diagnostic description of the queue.</returns>
     public override string ToString()
     {
         return string.Join(", ",

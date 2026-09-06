@@ -2,23 +2,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for send pipe configuration.
-/// </summary>
+/// <summary>Defines send pipe configuration.</summary>
 public interface ISendPipeConfiguration
 {
-    /// <summary>
-    /// Gets the specification value.
-    /// </summary>
+    /// <summary>Gets the specification.</summary>
     ISendPipeSpecification Specification { get; }
-    /// <summary>
-    /// Gets the configurator value.
-    /// </summary>
+    /// <summary>Gets the configurator.</summary>
     ISendPipeConfigurator Configurator { get; }
 
-    /// <summary>
-    /// Creates pipe.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates pipe.</summary>
+    /// <returns>The created pipe.</returns>
     ISendPipe CreatePipe();
 }

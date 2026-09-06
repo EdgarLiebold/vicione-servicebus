@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Configuration;
-/// <summary>
-/// JobOptions contains the options used to configure the job consumer and related components
-/// </summary>
-/// <typeparam name="TJob">The Job Type</typeparam>
+/// <summary>JobOptions contains the options used to configure the job consumer and related components.</summary>
+/// <typeparam name="TJob">The Job Type.</typeparam>
 public sealed class JobOptions<TJob> :
     IOptions,
     ISpecification
@@ -17,9 +15,7 @@ public sealed class JobOptions<TJob> :
     readonly JobPropertyCollection _instanceProperties;
     readonly JobPropertyCollection _jobTypeProperties;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public JobOptions()
     {
         ConcurrentJobLimit = 1;
@@ -34,9 +30,7 @@ public sealed class JobOptions<TJob> :
         _instanceProperties = new JobPropertyCollection();
     }
 
-    /// <summary>
-    /// Set the allowed time for a job to complete (per attempt). If the job timeout expires and the job has not yet completed, it will be canceled.
-    /// </summary>
+    /// <summary>Set the allowed time for a job to complete (per attempt). If the job timeout expires and the job has not yet completed, it will be canceled.</summary>
     public TimeSpan JobTimeout { get; set; }
 
     /// <summary>
@@ -47,38 +41,26 @@ public sealed class JobOptions<TJob> :
 
     /// <summary>
     /// Set the concurrent job limit. The limit is applied to each instance if the job consumer is scaled out.
-    /// Do not use ConcurrentMessageLimit with job consumers."/>
+    /// Do not use ConcurrentMessageLimit with job consumers."/>.
     /// </summary>
     public int ConcurrentJobLimit { get; set; }
 
-    /// <summary>
-    /// Gets or sets the retry policy value.
-    /// </summary>
+    /// <summary>Gets or sets the retry policy.</summary>
     public IRetryPolicy RetryPolicy { get; private set; }
 
-    /// <summary>
-    /// Override the default job name (optional, automatically generated from the job type otherwise) that is displayed in the <see cref="JobTypeSaga" />.
-    /// </summary>
+    /// <summary>Override the default job name (optional, automatically generated from the job type otherwise) that is displayed in the <see cref="JobTypeSaga" />.</summary>
     public string? JobTypeName { get; set; }
 
-    /// <summary>
-    /// Configure the job progress buffer settings, if using job progress (optional)
-    /// </summary>
+    /// <summary>Configure the job progress buffer settings, if using job progress (optional).</summary>
     public ProgressBufferSettings ProgressBuffer { get; }
 
-    /// <summary>
-    /// Properties that are specific to the job type, which can be used by the job distribution strategy
-    /// </summary>
+    /// <summary>Properties that are specific to the job type, which can be used by the job distribution strategy.</summary>
     public JobPropertyCollection JobTypeProperties => _jobTypeProperties;
 
-    /// <summary>
-    /// Properties that are specific to this job consumer bus instance, such as region, data center, tenant, etc. also used by the job distribution strategy
-    /// </summary>
+    /// <summary>Properties that are specific to this job consumer bus instance, such as region, data center, tenant, etc. also used by the job distribution strategy.</summary>
     public JobPropertyCollection InstanceProperties => _instanceProperties;
 
-    /// <summary>
-    /// Optional, if specified, configures a global concurrent job limit across all job consumer instances
-    /// </summary>
+    /// <summary>Optional, if specified, configures a global concurrent job limit across all job consumer instances.</summary>
     public int? GlobalConcurrentJobLimit { get; set; }
 
     IEnumerable<ValidationResult> ISpecification.Validate()
@@ -99,11 +81,9 @@ public sealed class JobOptions<TJob> :
             yield return this.Failure("JobOptions", "ProgressBuffer.TimeLimit", "Must be > TimeSpan.Zero");
     }
 
-    /// <summary>
-    /// Set job type properties that can be used by a custom job distribution strategy
-    /// </summary>
-    /// <param name="callback"></param>
-    /// <returns></returns>
+    /// <summary>Set job type properties that can be used by a custom job distribution strategy.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The job options produced by the operation.</returns>
     public JobOptions<TJob> SetJobTypeProperties(Action<ISetPropertyCollection>? callback)
     {
         callback?.Invoke(_jobTypeProperties);
@@ -111,11 +91,9 @@ public sealed class JobOptions<TJob> :
         return this;
     }
 
-    /// <summary>
-    /// Set instance properties that can be used by a custom job distribution strategy
-    /// </summary>
-    /// <param name="callback"></param>
-    /// <returns></returns>
+    /// <summary>Set instance properties that can be used by a custom job distribution strategy.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The job options produced by the operation.</returns>
     public JobOptions<TJob> SetInstanceProperties(Action<ISetPropertyCollection>? callback)
     {
         callback?.Invoke(_instanceProperties);
@@ -123,11 +101,9 @@ public sealed class JobOptions<TJob> :
         return this;
     }
 
-    /// <summary>
-    /// Set the allowed time for a job to complete (per attempt). If the job timeout expires and the job has not yet completed, it will be canceled.
-    /// </summary>
-    /// <param name="timeout"></param>
-    /// <returns></returns>
+    /// <summary>Set the allowed time for a job to complete (per attempt). If the job timeout expires and the job has not yet completed, it will be canceled.</summary>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <returns>The job options produced by the operation.</returns>
     public JobOptions<TJob> SetJobTimeout(TimeSpan timeout)
     {
         JobTimeout = timeout;
@@ -139,8 +115,8 @@ public sealed class JobOptions<TJob> :
     /// Set the allowed time for a job to stop execution after the cancellation. If the job cancellation timeout expires and the job has not yet completed, it will be
     /// fully canceled.
     /// </summary>
-    /// <param name="timeout"></param>
-    /// <returns></returns>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <returns>The job options produced by the operation.</returns>
     public JobOptions<TJob> SetJobCancellationTimeout(TimeSpan timeout)
     {
         JobCancellationTimeout = timeout;
@@ -150,10 +126,10 @@ public sealed class JobOptions<TJob> :
 
     /// <summary>
     /// Set the concurrent job limit. The limit is applied to each instance if the job consumer is scaled out.
-    /// Do not use ConcurrentMessageLimit with job consumers."/>
+    /// Do not use ConcurrentMessageLimit with job consumers."/>.
     /// </summary>
-    /// <param name="limit"></param>
-    /// <returns></returns>
+    /// <param name="limit">The limit.</param>
+    /// <returns>The job options produced by the operation.</returns>
     public JobOptions<TJob> SetConcurrentJobLimit(int limit)
     {
         ConcurrentJobLimit = limit;
@@ -163,10 +139,10 @@ public sealed class JobOptions<TJob> :
 
     /// <summary>
     /// Set the global concurrent job limit across all job consumer instances
-    /// Do not use ConcurrentMessageLimit with job consumers."/>
+    /// Do not use ConcurrentMessageLimit with job consumers."/>.
     /// </summary>
-    /// <param name="limit"></param>
-    /// <returns></returns>
+    /// <param name="limit">The limit.</param>
+    /// <returns>The job options produced by the operation.</returns>
     public JobOptions<TJob> SetGlobalConcurrentJobLimit(int? limit)
     {
         GlobalConcurrentJobLimit = limit;
@@ -174,11 +150,9 @@ public sealed class JobOptions<TJob> :
         return this;
     }
 
-    /// <summary>
-    /// Override the default job name (optional, automatically generated from the job type otherwise) that is displayed in the <see cref="JobTypeSaga" />.
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
+    /// <summary>Override the default job name (optional, automatically generated from the job type otherwise) that is displayed in the <see cref="JobTypeSaga" />.</summary>
+    /// <param name="name">The name.</param>
+    /// <returns>The job options produced by the operation.</returns>
     public JobOptions<TJob> SetJobTypeName(string name)
     {
         JobTypeName = name;
@@ -186,11 +160,9 @@ public sealed class JobOptions<TJob> :
         return this;
     }
 
-    /// <summary>
-    /// Set the job retry policy, used to handle faulted jobs. Retry middleware on the job consumer endpoint is not used.
-    /// </summary>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Set the job retry policy, used to handle faulted jobs. Retry middleware on the job consumer endpoint is not used.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The job options produced by the operation.</returns>
     public JobOptions<TJob> SetRetry(Action<IRetryConfigurator>? configure)
     {
         var specification = new RetrySpecification();
@@ -204,12 +176,10 @@ public sealed class JobOptions<TJob> :
         return this;
     }
 
-    /// <summary>
-    /// Set the job progress buffer settings, either value can be set and will update the settings
-    /// </summary>
-    /// <param name="updateLimit">The number of updates to buffer before sending the most recent update to the job saga</param>
-    /// <param name="timeLimit">The time since the first update after the last update sent to the job saga before an update must be sent</param>
-    /// <returns></returns>
+    /// <summary>Set the job progress buffer settings, either value can be set and will update the settings.</summary>
+    /// <param name="updateLimit">The number of updates to buffer before sending the most recent update to the job saga.</param>
+    /// <param name="timeLimit">The time since the first update after the last update sent to the job saga before an update must be sent.</param>
+    /// <returns>The job options produced by the operation.</returns>
     public JobOptions<TJob> SetProgressBuffer(int? updateLimit = default, TimeSpan? timeLimit = default)
     {
         if (updateLimit.HasValue)

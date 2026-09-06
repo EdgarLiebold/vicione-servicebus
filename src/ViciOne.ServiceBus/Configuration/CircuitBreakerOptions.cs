@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.CircuitBreaker;
 
 namespace ViciOne.ServiceBus.Configuration;
-/// <summary>
-/// Configures a circuit breaker. The values are captured as an immutable snapshot when the pipe is built.
-/// </summary>
+/// <summary>Configures a circuit breaker. The values are captured as an immutable snapshot when the pipe is built.</summary>
 public sealed class CircuitBreakerOptions : IOptions
 {
     private static readonly TimeSpan[] DefaultBreakDurations =
@@ -27,9 +25,7 @@ public sealed class CircuitBreakerOptions : IOptions
 
     private ReadOnlyCollection<TimeSpan> _breakDurations;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public CircuitBreakerOptions()
     {
         MinimumThroughput = 5;
@@ -40,41 +36,27 @@ public sealed class CircuitBreakerOptions : IOptions
         ExceptionFilter = new FilterSpecification().Build();
     }
 
-    /// <summary>
-    /// Minimum number of admitted operations in one sampling window before a matching failure may open the circuit.
-    /// </summary>
+    /// <summary>Minimum number of admitted operations in one sampling window before a matching failure may open the circuit.</summary>
     public int MinimumThroughput { get; private set; }
 
-    /// <summary>
-    /// Ratio of matching failures to admitted operations that opens the circuit, in the inclusive range 0.0 through 1.0.
-    /// </summary>
+    /// <summary>Ratio of matching failures to admitted operations that opens the circuit, in the inclusive range 0.0 through 1.0.</summary>
     public double FailureRatio { get; private set; }
 
-    /// <summary>
-    /// Duration of the closed-state sampling window.
-    /// </summary>
+    /// <summary>Duration of the closed-state sampling window.</summary>
     public TimeSpan SamplingDuration { get; private set; }
 
-    /// <summary>
-    /// Bounded sequence of open-state durations. Repeated failures use the next value and then repeat the final value.
-    /// </summary>
+    /// <summary>Bounded sequence of open-state durations. Repeated failures use the next value and then repeat the final value.</summary>
     public IReadOnlyList<TimeSpan> BreakDurations => _breakDurations;
 
-    /// <summary>
-    /// Time source used for sampling and recovery boundaries.
-    /// </summary>
+    /// <summary>Time source used for sampling and recovery boundaries.</summary>
     public TimeProvider TimeProvider { get; private set; }
 
-    /// <summary>
-    /// Selects exceptions that count as protected-resource failures.
-    /// </summary>
+    /// <summary>Selects exceptions that count as protected-resource failures.</summary>
     public IExceptionFilter ExceptionFilter { get; private set; }
 
-    /// <summary>
-    /// Sets minimum throughput.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets minimum throughput.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The circuit breaker options produced by the operation.</returns>
     public CircuitBreakerOptions SetMinimumThroughput(int value)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(value, 1);
@@ -83,11 +65,9 @@ public sealed class CircuitBreakerOptions : IOptions
         return this;
     }
 
-    /// <summary>
-    /// Sets failure ratio.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets failure ratio.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The circuit breaker options produced by the operation.</returns>
     public CircuitBreakerOptions SetFailureRatio(double value)
     {
         if (!double.IsFinite(value) || value is < 0 or > 1)
@@ -97,11 +77,9 @@ public sealed class CircuitBreakerOptions : IOptions
         return this;
     }
 
-    /// <summary>
-    /// Sets sampling duration.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets sampling duration.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The circuit breaker options produced by the operation.</returns>
     public CircuitBreakerOptions SetSamplingDuration(TimeSpan value)
     {
         if (value <= TimeSpan.Zero)
@@ -111,18 +89,14 @@ public sealed class CircuitBreakerOptions : IOptions
         return this;
     }
 
-    /// <summary>
-    /// Sets break duration.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets break duration.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The circuit breaker options produced by the operation.</returns>
     public CircuitBreakerOptions SetBreakDuration(TimeSpan value) => SetBreakDurations(value);
 
-    /// <summary>
-    /// Sets break durations.
-    /// </summary>
-    /// <param name="values">The values value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets break durations.</summary>
+    /// <param name="values">The values.</param>
+    /// <returns>The circuit breaker options produced by the operation.</returns>
     public CircuitBreakerOptions SetBreakDurations(params TimeSpan[] values)
     {
         ArgumentNullException.ThrowIfNull(values);
@@ -137,22 +111,18 @@ public sealed class CircuitBreakerOptions : IOptions
         return this;
     }
 
-    /// <summary>
-    /// Sets time provider.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets time provider.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The circuit breaker options produced by the operation.</returns>
     public CircuitBreakerOptions SetTimeProvider(TimeProvider value)
     {
         TimeProvider = value ?? throw new ArgumentNullException(nameof(value));
         return this;
     }
 
-    /// <summary>
-    /// Sets exception filter.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets exception filter.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The circuit breaker options produced by the operation.</returns>
     public CircuitBreakerOptions SetExceptionFilter(Action<IExceptionConfigurator> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);

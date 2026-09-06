@@ -3,32 +3,26 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a transport set header adapter implementation.
-/// </summary>
-/// <typeparam name="TValueType">The t value type type.</typeparam>
+/// <summary>Adapts transport set header between component contracts.</summary>
+/// <typeparam name="TValueType">The value type type.</typeparam>
 public class TransportSetHeaderAdapter<TValueType> :
     ITransportSetHeaderAdapter<TValueType>
 {
     readonly IHeaderValueConverter<TValueType> _converter;
     readonly TransportHeaderOptions _options;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="converter">The converter value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="converter">The converter.</param>
+    /// <param name="options">The options that control the operation.</param>
     public TransportSetHeaderAdapter(IHeaderValueConverter<TValueType> converter, TransportHeaderOptions options = TransportHeaderOptions.Default)
     {
         _converter = converter;
         _options = options;
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="headerValue">The header value value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="headerValue">The header value to convert or store.</param>
     public void Set(IDictionary<string, TValueType> dictionary, in HeaderValue headerValue)
     {
         switch (headerValue.Value)
@@ -45,12 +39,10 @@ public class TransportSetHeaderAdapter<TValueType> :
         }
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="headerValue">The header value value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="headerValue">The header value to convert or store.</param>
     public void Set<T>(IDictionary<string, TValueType> dictionary, in HeaderValue<T> headerValue)
     {
         switch (headerValue.Value)

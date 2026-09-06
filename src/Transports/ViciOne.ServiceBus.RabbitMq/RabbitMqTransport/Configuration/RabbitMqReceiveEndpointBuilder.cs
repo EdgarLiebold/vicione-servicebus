@@ -8,20 +8,16 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Provides a rabbit mq receive endpoint builder implementation.
-/// </summary>
+/// <summary>Builds a RabbitMQ receive pipeline, broker topology, and fault transports.</summary>
 public class RabbitMqReceiveEndpointBuilder :
     ReceiveEndpointBuilder
 {
     readonly IRabbitMqReceiveEndpointConfiguration _configuration;
     readonly IRabbitMqHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="configuration">The configuration callback.</param>
+    /// <summary>Creates a builder over validated host and endpoint configuration.</summary>
+    /// <param name="hostConfiguration">The RabbitMQ host configuration.</param>
+    /// <param name="configuration">The receive-endpoint configuration.</param>
     public RabbitMqReceiveEndpointBuilder(IRabbitMqHostConfiguration hostConfiguration, IRabbitMqReceiveEndpointConfiguration configuration)
         : base(configuration)
     {
@@ -29,13 +25,11 @@ public class RabbitMqReceiveEndpointBuilder :
         _configuration = configuration;
     }
 
-    /// <summary>
-    /// Connects consume pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a typed consume pipeline and binds its message topology when requested.</summary>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public override ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
     {
         if (_configuration.ConfigureConsumeTopology && options.HasFlag(ConnectPipeOptions.ConfigureConsumeTopology))
@@ -48,10 +42,8 @@ public class RabbitMqReceiveEndpointBuilder :
         return base.ConnectConsumePipe(pipe, options);
     }
 
-    /// <summary>
-    /// Creates receive endpoint context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the runtime endpoint context with broker, error, and dead-letter topology.</summary>
+    /// <returns>The RabbitMQ receive-endpoint context.</returns>
     public RabbitMqReceiveEndpointContext CreateReceiveEndpointContext()
     {
         var brokerTopology = BuildTopology(_configuration.Settings);

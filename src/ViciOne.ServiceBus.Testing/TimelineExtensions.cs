@@ -9,19 +9,16 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides extension methods for timeline.
-/// </summary>
+/// <summary>Provides extension methods for timeline.</summary>
 public static class TimelineExtensions
 {
-    /// <summary>
-    /// Output a timeline of messages published, sent, and consumed by the test harness.
-    /// </summary>
-    /// <param name="harness"></param>
-    /// <param name="textWriter"></param>
-    /// <param name="configure">Configure the timeout output options</param>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <summary>Output a timeline of messages published, sent, and consumed by the test harness.</summary>
+    /// <param name="harness">The harness.</param>
+    /// <param name="textWriter">The text writer.</param>
+    /// <param name="configure">Configure the timeout output options.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when a required argument is <see langword="null" />.</exception>
     public static async Task OutputTimelineAsync(this IBaseTestHarness harness, TextWriter textWriter, Action<OutputTimelineOptions>? configure = default, CancellationToken cancellationToken = default)
     {
         if (harness == null)
@@ -132,29 +129,23 @@ public static class TimelineExtensions
     }
 
 
-    /// <summary>
-    /// Defines configuration options for output timeline.
-    /// </summary>
+    /// <summary>Defines configuration options for output timeline.</summary>
     public sealed class OutputTimelineOptions
     {
         bool _includeAddress;
         bool _now;
         bool _trim = true;
 
-        /// <summary>
-        /// Include the message namespace in the output. By default, it is removed to save space.
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Include the message namespace in the output. By default, it is removed to save space.</summary>
+        /// <returns>The output timeline options produced by the operation.</returns>
         public OutputTimelineOptions IncludeNamespace()
         {
             _trim = false;
             return this;
         }
 
-        /// <summary>
-        /// Include an additional column with the destination or input address
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Include an additional column with the destination or input address.</summary>
+        /// <returns>The output timeline options produced by the operation.</returns>
         public OutputTimelineOptions IncludeAddress()
         {
             _includeAddress = true;
@@ -165,7 +156,7 @@ public static class TimelineExtensions
         /// Forces the inactivity timeout to now so that the chart renders immediately. By default, the
         /// inactivity timeout is awaited.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The output timeline options produced by the operation.</returns>
         public OutputTimelineOptions Now()
         {
             _now = true;

@@ -1,16 +1,12 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an in memory saga repository registration provider implementation.
-/// </summary>
+/// <summary>Provides in memory saga repository registration services.</summary>
 public class InMemorySagaRepositoryRegistrationProvider :
     ISagaRepositoryRegistrationProvider
 {
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
         where TSaga : class, ISaga
     {

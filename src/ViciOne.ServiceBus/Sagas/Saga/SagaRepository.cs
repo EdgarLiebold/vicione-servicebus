@@ -6,10 +6,8 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>
-/// The modern saga repository, which can be used with any storage engine. Leverages the new interfaces for consume and query context.
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
+/// <summary>The modern saga repository, which can be used with any storage engine. Leverages the new interfaces for consume and query context.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class SagaRepository<TSaga> :
     ISagaRepository<TSaga>,
     IQuerySagaRepository<TSaga>,
@@ -20,12 +18,10 @@ public class SagaRepository<TSaga> :
     readonly QuerySagaRepository<TSaga> _querySagaRepository;
     readonly ISagaRepositoryContextFactory<TSaga> _repositoryContextFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="repositoryContextFactory">The repository context factory value.</param>
-    /// <param name="queryRepositoryContextFactory">The query repository context factory value.</param>
-    /// <param name="loadSagaRepositoryContextFactory">The load saga repository context factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="repositoryContextFactory">The repository context factory.</param>
+    /// <param name="queryRepositoryContextFactory">The query repository context factory.</param>
+    /// <param name="loadSagaRepositoryContextFactory">The load saga repository context factory.</param>
     public SagaRepository(ISagaRepositoryContextFactory<TSaga> repositoryContextFactory,
         IQuerySagaRepositoryContextFactory<TSaga>? queryRepositoryContextFactory = null,
         ILoadSagaRepositoryContextFactory<TSaga>? loadSagaRepositoryContextFactory = null)
@@ -35,32 +31,26 @@ public class SagaRepository<TSaga> :
         _loadSagaRepository = new LoadSagaRepository<TSaga>(loadSagaRepositoryContextFactory ?? NotImplementedSagaRepositoryContextFactory.Instance);
     }
 
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
-    /// <param name="correlationId">The correlation id value.</param>
+    /// <summary>Loads the requested state.</summary>
+    /// <param name="correlationId">The correlation id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the load outcome.</returns>
     public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         return _loadSagaRepository.LoadAsync(correlationId, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the find operation.
-    /// </summary>
-    /// <param name="query">The query value.</param>
+    /// <summary>Finds the matching value.</summary>
+    /// <param name="query">The query.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the matching value.</returns>
     public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
     {
         return _querySagaRepository.FindAsync(query, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("sagaRepository");
@@ -70,14 +60,12 @@ public class SagaRepository<TSaga> :
         _loadSagaRepository.Probe(scope);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="policy">The policy value.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="policy">The policy.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
         where T : class
     {
@@ -87,15 +75,13 @@ public class SagaRepository<TSaga> :
         return _repositoryContextFactory.SendAsync(context, new SendSagaPipe<TSaga, T>(policy, next, correlationId));
     }
 
-    /// <summary>
-    /// Sends query.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="query">The query value.</param>
-    /// <param name="policy">The policy value.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends query.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="query">The query.</param>
+    /// <param name="policy">The policy.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
         IPipe<SagaConsumeContext<TSaga, T>> next)
         where T : class

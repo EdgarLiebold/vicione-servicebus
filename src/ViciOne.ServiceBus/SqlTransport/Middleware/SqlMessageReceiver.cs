@@ -10,9 +10,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.SqlTransport.Middleware;
 
-/// <summary>
-/// Receives messages from AmazonSQS, pushing them to the InboundPipe of the service endpoint.
-/// </summary>
+/// <summary>Polls a SQL transport queue and dispatches admitted messages to the endpoint receive pipeline.</summary>
 public sealed class SqlMessageReceiver :
     ConsumerAgent<Guid>
 {
@@ -27,11 +25,9 @@ public sealed class SqlMessageReceiver :
     DateTime? _lastMaintenance;
     DateTime? _lastTouched;
 
-    /// <summary>
-    /// Fetches messages from the SQL transport and dispatches them to the receive pipeline.
-    /// </summary>
-    /// <param name="client">The model context for the consumer</param>
-    /// <param name="context">The topology</param>
+    /// <summary>Fetches messages from the SQL transport and dispatches them to the receive pipeline.</summary>
+    /// <param name="client">The model context for the consumer.</param>
+    /// <param name="context">The topology.</param>
     public SqlMessageReceiver(ClientContext client, SqlReceiveEndpointContext context)
         : base(context)
     {
@@ -49,11 +45,9 @@ public sealed class SqlMessageReceiver :
         TrySetConsumeTask(ConsumeAsync());
     }
 
-    /// <summary>
-    /// Performs the active and actual agents completed operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that active and actual agents has completed.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
         await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
@@ -213,9 +207,7 @@ public sealed class SqlMessageReceiver :
         }
     }
 
-    /// <summary>
-    /// Performs the message handled operation.
-    /// </summary>
+    /// <summary>Reports that the message has been handled.</summary>
     public void MessageHandled()
     {
         lock (_lock)

@@ -5,28 +5,22 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides a client context factory implementation.
-/// </summary>
+/// <summary>Creates shared and operation-scoped Amazon client contexts.</summary>
 public class ClientContextFactory :
     IPipeContextFactory<ClientContext>
 {
     readonly IConnectionContextSupervisor _connectionContextSupervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionContextSupervisor">The connection context supervisor value.</param>
+    /// <summary>Initializes a client-context factory.</summary>
+    /// <param name="connectionContextSupervisor">The supervisor that supplies the active connection context.</param>
     public ClientContextFactory(IConnectionContextSupervisor connectionContextSupervisor)
     {
         _connectionContextSupervisor = connectionContextSupervisor;
     }
 
-    /// <summary>
-    /// Creates context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an asynchronously established client-context agent.</summary>
+    /// <param name="supervisor">The supervisor that owns the agent.</param>
+    /// <returns>The new client-context agent.</returns>
     public IPipeContextAgent<ClientContext> CreateContext(ISupervisor supervisor)
     {
         IAsyncPipeContextAgent<ClientContext> asyncContext = supervisor.AddAsyncContext<ClientContext>();
@@ -36,13 +30,11 @@ public class ClientContextFactory :
         return asyncContext;
     }
 
-    /// <summary>
-    /// Creates active context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an operation-scoped client context from a shared context handle.</summary>
+    /// <param name="supervisor">The supervisor that owns the active context.</param>
+    /// <param name="context">The shared client-context handle.</param>
+    /// <param name="cancellationToken">The operation cancellation token assigned to the scoped context.</param>
+    /// <returns>The active scoped-context agent.</returns>
     public IActivePipeContextAgent<ClientContext> CreateActiveContext(ISupervisor supervisor,
         PipeContextHandle<ClientContext> context, CancellationToken cancellationToken)
     {

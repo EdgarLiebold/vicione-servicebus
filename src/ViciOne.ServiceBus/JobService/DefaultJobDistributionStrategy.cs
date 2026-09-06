@@ -4,24 +4,18 @@ using ViciOne.ServiceBus.Contracts.JobService;
 
 namespace ViciOne.ServiceBus.JobService;
 
-/// <summary>
-/// Provides a default job distribution strategy implementation.
-/// </summary>
+/// <summary>Defines the strategy for default job distribution.</summary>
 public class DefaultJobDistributionStrategy :
     IJobDistributionStrategy
 {
-    /// <summary>
-    /// Defines the instance value.
-    /// </summary>
+    /// <summary>Exposes the instance used by the containing type.</summary>
     public static readonly IJobDistributionStrategy Instance = new DefaultJobDistributionStrategy();
 
-    /// <summary>
-    /// Determines whether job slot available.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="jobTypeInfo">The job type info value.</param>
+    /// <summary>Determines whether job slot available.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="jobTypeInfo">The job type info.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the is job slot available outcome.</returns>
     public async Task<ActiveJob?> IsJobSlotAvailableAsync(ConsumeContext<AllocateJobSlot> context, JobTypeInfo jobTypeInfo, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var instances = from i in jobTypeInfo.Instances

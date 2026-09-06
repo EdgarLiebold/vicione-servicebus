@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyProviders;
 
-/// <summary>
-/// Provides an object property provider implementation.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
-/// <typeparam name="TProperty">The t property type.</typeparam>
+/// <summary>Provides object property services.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TProperty">The property type.</typeparam>
 public class ObjectPropertyProvider<TInput, TProperty> :
     IPropertyProvider<TInput, TProperty>
     where TInput : class
@@ -19,11 +17,9 @@ public class ObjectPropertyProvider<TInput, TProperty> :
     readonly IPropertyProviderFactory<TInput> _factory;
     readonly IPropertyProvider<TInput, object> _provider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="provider">The service provider.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
     public ObjectPropertyProvider(IPropertyProviderFactory<TInput> factory, IPropertyProvider<TInput, object> provider)
     {
         _factory = factory ?? throw new ArgumentNullException(nameof(factory));
@@ -32,13 +28,11 @@ public class ObjectPropertyProvider<TInput, TProperty> :
         _converters = new ConcurrentDictionary<Type, Converter>();
     }
 
-    /// <summary>
-    /// Gets property.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Gets property.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {

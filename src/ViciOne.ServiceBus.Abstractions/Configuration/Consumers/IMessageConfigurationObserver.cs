@@ -1,15 +1,11 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for message configuration observer.
-/// </summary>
+/// <summary>Receives notifications about message configuration events.</summary>
 public interface IMessageConfigurationObserver
 {
-    /// <summary>
-    /// Called when a message pipeline is configured, for the very first time
-    /// </summary>
-    /// <typeparam name="TMessage"></typeparam>
-    /// <param name="configurator"></param>
+    /// <summary>Called when a message pipeline is configured, for the very first time.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
         where TMessage : class;
 }

@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Events;
 
-/// <summary>
-/// Provides a fault exception info implementation.
-/// </summary>
+/// <summary>Carries diagnostic information for fault exception.</summary>
 public sealed class FaultExceptionInfo : ExceptionInfo
 {
     const int MaximumDataCount = 32;
@@ -17,16 +15,12 @@ public sealed class FaultExceptionInfo : ExceptionInfo
     const int MaximumTextLength = 2048;
 
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public FaultExceptionInfo()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     public FaultExceptionInfo(Exception exception)
         : this(exception, 0)
@@ -60,34 +54,22 @@ public sealed class FaultExceptionInfo : ExceptionInfo
         Source = Limit(GetSource(reportedException), MaximumTextLength);
     }
 
-    /// <summary>
-    /// Gets or sets the exception type value.
-    /// </summary>
+    /// <summary>Gets or sets the exception type.</summary>
     public string ExceptionType { get; set; } = null!;
 
-    /// <summary>
-    /// Gets or sets the inner exception value.
-    /// </summary>
+    /// <summary>Gets or sets the inner exception.</summary>
     public ExceptionInfo? InnerException { get; set; }
 
-    /// <summary>
-    /// Gets or sets the stack trace value.
-    /// </summary>
+    /// <summary>Gets or sets the stack trace.</summary>
     public string StackTrace { get; set; } = null!;
 
-    /// <summary>
-    /// Gets or sets the message value.
-    /// </summary>
+    /// <summary>Gets or sets the message.</summary>
     public string Message { get; set; } = null!;
 
-    /// <summary>
-    /// Gets or sets the source value.
-    /// </summary>
+    /// <summary>Gets or sets the source.</summary>
     public string Source { get; set; } = null!;
 
-    /// <summary>
-    /// Gets or sets the data value.
-    /// </summary>
+    /// <summary>Gets or sets the data.</summary>
     public IDictionary<string, object>? Data { get; set; }
 
     static IDictionary? GetData(Exception exception)

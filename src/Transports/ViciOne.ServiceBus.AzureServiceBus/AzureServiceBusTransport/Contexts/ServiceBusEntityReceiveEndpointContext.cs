@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus entity receive endpoint context implementation.
-/// </summary>
+/// <summary>Owns the broker topology and recyclable client supervisor for an Azure Service Bus receive endpoint.</summary>
 public sealed class ServiceBusEntityReceiveEndpointContext :
     BaseReceiveEndpointContext,
     ServiceBusReceiveEndpointContext
@@ -16,13 +14,11 @@ public sealed class ServiceBusEntityReceiveEndpointContext :
     readonly Recycle<IClientContextSupervisor> _clientContext;
     readonly IServiceBusHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="configuration">The configuration callback.</param>
-    /// <param name="brokerTopology">The broker topology value.</param>
-    /// <param name="supervisorFactory">The supervisor factory value.</param>
+    /// <summary>Initializes an endpoint context and its lazily created client supervisor.</summary>
+    /// <param name="hostConfiguration">The namespace host configuration.</param>
+    /// <param name="configuration">The entity endpoint configuration.</param>
+    /// <param name="brokerTopology">The topology deployed before receiving starts.</param>
+    /// <param name="supervisorFactory">The factory used to create or recycle the client supervisor.</param>
     public ServiceBusEntityReceiveEndpointContext(IServiceBusHostConfiguration hostConfiguration, IServiceBusEntityEndpointConfiguration configuration,
         BrokerTopology brokerTopology, Func<IClientContextSupervisor> supervisorFactory)
         : base(hostConfiguration, configuration)
@@ -36,20 +32,14 @@ public sealed class ServiceBusEntityReceiveEndpointContext :
         _clientContext = new Recycle<IClientContextSupervisor>(supervisorFactory);
     }
 
-    /// <summary>
-    /// Gets the broker topology value.
-    /// </summary>
+    /// <summary>Gets the topology deployed for this receive endpoint.</summary>
     public BrokerTopology BrokerTopology { get; }
 
-    /// <summary>
-    /// Gets the client context supervisor value.
-    /// </summary>
+    /// <summary>Gets the recyclable processor-client supervisor.</summary>
     public IClientContextSupervisor ClientContextSupervisor => _clientContext.Supervisor;
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The probe section to populate.</param>
     public override void Probe(ProbeContext context)
     {
         context.Set(new
@@ -62,48 +52,38 @@ public sealed class ServiceBusEntityReceiveEndpointContext :
         BrokerTopology.Probe(context);
     }
 
-    /// <summary>
-    /// Adds send agent to the configuration.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
+    /// <summary>Registers a send agent with the endpoint's client supervisor.</summary>
+    /// <param name="agent">The send agent to supervise.</param>
     public override void AddSendAgent(IAgent agent)
     {
         _clientContext.Supervisor.AddSendAgent(agent);
     }
 
-    /// <summary>
-    /// Adds consume agent to the configuration.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
+    /// <summary>Registers a consume agent with the endpoint's client supervisor.</summary>
+    /// <param name="agent">The consume agent to supervise.</param>
     public override void AddConsumeAgent(IAgent agent)
     {
         _clientContext.Supervisor.AddConsumeAgent(agent);
     }
 
-    /// <summary>
-    /// Performs the convert exception operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Wraps a transport failure with the endpoint address.</summary>
+    /// <param name="exception">The transport failure.</param>
+    /// <param name="message">The failure description.</param>
+    /// <returns>An Azure Service Bus connection exception.</returns>
     public override Exception ConvertException(Exception exception, string message)
     {
         return new ServiceBusConnectionException(message + InputAddress, exception);
     }
 
-    /// <summary>
-    /// Creates send transport provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the provider that resolves queue and topic send transports.</summary>
+    /// <returns>The Azure Service Bus send-transport provider.</returns>
     protected override ISendTransportProvider CreateSendTransportProvider()
     {
         return new ServiceBusSendTransportProvider(_hostConfiguration.ConnectionContextSupervisor, this);
     }
 
-    /// <summary>
-    /// Creates publish transport provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the provider that resolves publish transports from message topology.</summary>
+    /// <returns>The Azure Service Bus publish-transport provider.</returns>
     protected override IPublishTransportProvider CreatePublishTransportProvider()
     {
         return new ServiceBusPublishTransportProvider(_hostConfiguration.ConnectionContextSupervisor, this);

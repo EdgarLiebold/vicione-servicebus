@@ -3,21 +3,17 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Provides a rabbit mq queue redelivery configuration observer implementation.
-/// </summary>
+/// <summary>Adds RabbitMQ queue-redelivery and retry specifications for each configured message contract.</summary>
 public sealed class RabbitMqQueueRedeliveryConfigurationObserver : ConfigurationObserver, IMessageConfigurationObserver
 {
     readonly Action<IRedeliveryConfigurator> _configure;
     readonly IConsumePipeConfigurator _configurator;
     readonly RabbitMqQueueRedeliveryPlan _plan;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="plan">The plan value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Connects the observer after capturing the endpoint, redelivery plan, and retry callback.</summary>
+    /// <param name="configurator">The consume pipeline configurator.</param>
+    /// <param name="plan">The finite RabbitMQ redelivery-queue plan.</param>
+    /// <param name="configure">The callback that selects retryable exceptions.</param>
     public RabbitMqQueueRedeliveryConfigurationObserver(IConsumePipeConfigurator configurator, RabbitMqQueueRedeliveryPlan plan,
         Action<IRedeliveryConfigurator> configure)
         : base(configurator)
@@ -31,11 +27,9 @@ public sealed class RabbitMqQueueRedeliveryConfigurationObserver : Configuration
         Connect(this);
     }
 
-    /// <summary>
-    /// Performs the message configured operation.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Adds redelivery and retry filters for a configured message contract.</summary>
+    /// <typeparam name="TMessage">The message contract.</typeparam>
+    /// <param name="configurator">The message's consume pipeline configurator.</param>
     public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
         where TMessage : class
     {

@@ -1,18 +1,12 @@
 namespace ViciOne.ServiceBus.Advanced.Registration;
 
-/// <summary>
-/// Completes registrations owned by an optional capability package before the container is built.
-/// </summary>
+/// <summary>Completes registrations owned by an optional capability package before the container is built.</summary>
 public interface IRegistrationCompletionParticipant
 {
-    /// <summary>
-    /// Gets the ordering key used when multiple capability packages complete their registrations.
-    /// </summary>
+    /// <summary>Gets the order.</summary>
     int Order { get; }
 
-    /// <summary>
-    /// Completes registrations contributed by the capability package.
-    /// </summary>
-    /// <param name="configurator">The active registration configurator.</param>
+    /// <summary>Completes registrations contributed by the capability package.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     void Complete(IRegistrationConfigurator configurator);
 }

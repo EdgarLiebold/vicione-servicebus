@@ -3,18 +3,14 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Provides extension methods for state machine introspection.
-/// </summary>
+/// <summary>Provides extension methods for state machine introspection.</summary>
 public static class StateMachineIntrospectionExtensions
 {
-    /// <summary>
-    /// Performs the next events operation.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Returns the next state-machine events.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the next events outcome.</returns>
     public static async Task<IEnumerable<Event>> NextEventsAsync<TInstance>(this BehaviorContext<TInstance> context, CancellationToken cancellationToken = default)
         where TInstance : class, SagaStateMachineInstance
     {

@@ -6,23 +6,19 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// </summary>
 public static class Behavior
 {
-    /// <summary>
-    /// Returns an empty pipe of the specified context type
-    /// </summary>
-    /// <typeparam name="TSaga">The context type</typeparam>
-    /// <returns></returns>
+    /// <summary>Returns an empty pipe of the specified context type.</summary>
+    /// <typeparam name="TSaga">The context type.</typeparam>
+    /// <returns>The behavior produced by the operation.</returns>
     public static IBehavior<TSaga> Empty<TSaga>()
         where TSaga : class, SagaStateMachineInstance
     {
         return Cached<TSaga>.EmptyBehavior;
     }
 
-    /// <summary>
-    /// Performs the empty operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns an empty configured value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <returns>The behavior produced by the operation.</returns>
     public static IBehavior<TSaga, TMessage> Empty<TSaga, TMessage>()
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
@@ -30,23 +26,19 @@ public static class Behavior
         return Cached<TSaga, TMessage>.EmptyBehavior;
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <returns>The behavior produced by the operation.</returns>
     public static IBehavior<TSaga> Faulted<TSaga>()
         where TSaga : class, SagaStateMachineInstance
     {
         return Cached<TSaga>.FaultedBehavior;
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <returns>The behavior produced by the operation.</returns>
     public static IBehavior<TSaga, TMessage> Faulted<TSaga, TMessage>()
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class

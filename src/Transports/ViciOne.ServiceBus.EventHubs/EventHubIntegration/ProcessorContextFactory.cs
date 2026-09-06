@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides a processor context factory implementation.
-/// </summary>
+/// <summary>Creates and shares supervised Event Hubs processor contexts for a receive endpoint.</summary>
 public class ProcessorContextFactory :
     IPipeContextFactory<ProcessorContext>
 {
@@ -21,14 +19,12 @@ public class ProcessorContextFactory :
     readonly Func<PartitionClosingEventArgs, Task>? _partitionClosingHandler;
     readonly Func<PartitionInitializingEventArgs, Task>? _partitionInitializingHandler;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="contextSupervisor">The context supervisor value.</param>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="clientFactory">The client factory value.</param>
-    /// <param name="partitionClosingHandler">The partition closing handler value.</param>
-    /// <param name="partitionInitializingHandler">The partition initializing handler value.</param>
+    /// <summary>Creates a processor-context factory from connection, client, logging, and partition callback dependencies.</summary>
+    /// <param name="contextSupervisor">The shared Event Hubs connection supervisor.</param>
+    /// <param name="hostConfiguration">The bus host configuration used for logging.</param>
+    /// <param name="clientFactory">Creates the Azure SDK event processor client.</param>
+    /// <param name="partitionClosingHandler">The optional application partition-closing handler.</param>
+    /// <param name="partitionInitializingHandler">The optional application partition-initializing handler.</param>
     public ProcessorContextFactory(IConnectionContextSupervisor contextSupervisor, IHostConfiguration hostConfiguration,
         Func<EventProcessorClient> clientFactory,
         Func<PartitionClosingEventArgs, Task>? partitionClosingHandler,
@@ -41,13 +37,11 @@ public class ProcessorContextFactory :
         _partitionInitializingHandler = partitionInitializingHandler;
     }
 
-    /// <summary>
-    /// Creates active context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a caller-scoped active agent over an existing processor context.</summary>
+    /// <param name="supervisor">The supervisor that will own the active agent.</param>
+    /// <param name="context">The handle for the shared processor context.</param>
+    /// <param name="cancellationToken">The cancellation token exposed by the scoped context.</param>
+    /// <returns>The active processor-context agent.</returns>
     public IActivePipeContextAgent<ProcessorContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ProcessorContext> context,
         CancellationToken cancellationToken)
     {

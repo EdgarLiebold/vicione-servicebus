@@ -9,18 +9,14 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides a connection context factory implementation.
-/// </summary>
+/// <summary>Creates, monitors, and shares ActiveMQ connection contexts for a supervisor.</summary>
 public class ConnectionContextFactory :
     IPipeContextFactory<ConnectionContext>
 {
     readonly IActiveMqHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <summary>Creates a connection-context factory for an ActiveMQ host.</summary>
+    /// <param name="hostConfiguration">The ActiveMQ host configuration.</param>
     public ConnectionContextFactory(IActiveMqHostConfiguration hostConfiguration)
     {
         _hostConfiguration = hostConfiguration;

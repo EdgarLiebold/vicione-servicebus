@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a serialized message body implementation.
-/// </summary>
+/// <summary>Carries serialized message content.</summary>
 public class SerializedMessageBody
 {
 }

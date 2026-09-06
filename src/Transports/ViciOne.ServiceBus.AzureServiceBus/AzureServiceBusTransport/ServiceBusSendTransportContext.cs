@@ -10,9 +10,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus send transport context implementation.
-/// </summary>
+/// <summary>Creates Azure Service Bus messages and sends or schedules them through a supervised sender.</summary>
 public class ServiceBusSendTransportContext :
     BaseSendTransportContext,
     SendTransportContext<SendEndpointContext>
@@ -23,13 +21,11 @@ public class ServiceBusSendTransportContext :
     readonly IServiceBusHostConfiguration _hostConfiguration;
     readonly ISendEndpointContextSupervisor _supervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Creates a send transport for one Azure Service Bus entity.</summary>
+    /// <param name="hostConfiguration">The namespace connection and retry configuration.</param>
+    /// <param name="receiveEndpointContext">The receive endpoint providing serialization settings.</param>
+    /// <param name="supervisor">The sender-context supervisor.</param>
+    /// <param name="settings">The destination entity and sender settings.</param>
     public ServiceBusSendTransportContext(IServiceBusHostConfiguration hostConfiguration, ReceiveEndpointContext receiveEndpointContext,
         ISendEndpointContextSupervisor supervisor, SendSettings settings)
         : base(hostConfiguration, receiveEndpointContext.Serialization)
@@ -40,44 +36,34 @@ public class ServiceBusSendTransportContext :
         EntityName = settings.EntityPath;
     }
 
-    /// <summary>
-    /// Gets the entity name value.
-    /// </summary>
+    /// <summary>Gets the namespace-relative destination entity path.</summary>
     public override string EntityName { get; }
-    /// <summary>
-    /// Gets the activity system value.
-    /// </summary>
+    /// <summary>Gets the OpenTelemetry messaging-system identifier.</summary>
     public override string ActivitySystem => "servicebus";
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Executes a sender-context pipe under the configured retry policy.</summary>
+    /// <param name="pipe">The operations to execute with the sender context.</param>
+    /// <param name="cancellationToken">Cancels retries and sender acquisition.</param>
+    /// <returns>The retry-wrapped supervisor task for <paramref name="pipe"/>.</returns>
     public Task SendAsync(IPipe<SendEndpointContext> pipe, CancellationToken cancellationToken = default)
     {
         return _hostConfiguration.RetryAsync(() => _supervisor.SendAsync(pipe, cancellationToken),
             stoppingToken: _supervisor.SendStopping, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds sender-supervisor diagnostics to a probe.</summary>
+    /// <param name="context">The probe receiving diagnostic values.</param>
     public void Probe(ProbeContext context)
     {
         _supervisor.Probe(context);
     }
 
-    /// <summary>
-    /// Creates send context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an Azure send context, applies the send pipe, and inherits applicable incoming identifiers.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="message">The message instance to send.</param>
+    /// <param name="pipe">The send-context configuration pipe.</param>
+    /// <param name="cancellationToken">Cancels send-context configuration.</param>
+    /// <returns>A task that produces the configured send context.</returns>
     public override async Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
     {
         var sendContext = new AzureServiceBusSendContext<T>(message, cancellationToken);
@@ -89,24 +75,20 @@ public class ServiceBusSendTransportContext :
         return sendContext;
     }
 
-    /// <summary>
-    /// Gets agent handles.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the sender supervisor owned by this transport.</summary>
+    /// <returns>The transport agent handles.</returns>
     public override IEnumerable<IAgent> GetAgentHandles()
     {
         return [_supervisor];
     }
 
-    /// <summary>
-    /// Creates send context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a configured Azure send context for a sender-context pipeline.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="context">The acquired sender context; context creation does not use it.</param>
+    /// <param name="message">The message instance to send.</param>
+    /// <param name="pipe">The send-context configuration pipe.</param>
+    /// <param name="cancellationToken">Cancels send-context configuration.</param>
+    /// <returns>A task that produces the configured send context.</returns>
     public Task<SendContext<T>> CreateSendContextAsync<T>(SendEndpointContext context, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
@@ -114,19 +96,19 @@ public class ServiceBusSendTransportContext :
         return CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="sendEndpointContext">The send endpoint context value.</param>
-    /// <param name="sendContext">The send context value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends, schedules, or cancels a scheduled Azure Service Bus message.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="sendEndpointContext">The acquired Azure sender context.</param>
+    /// <param name="sendContext">The configured outgoing message context.</param>
+    /// <param name="cancellationToken">Cancels before the send begins; the send context token governs broker calls.</param>
+    /// <returns>A task that completes after the selected broker operation.</returns>
     public async Task SendAsync<T>(SendEndpointContext sendEndpointContext, SendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class
     {
-        cancellationToken.ThrowIfCancellationRequested(); AzureServiceBusSendContext<T> context = sendContext as AzureServiceBusSendContext<T>
-                    ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
+        cancellationToken.ThrowIfCancellationRequested();
+
+        AzureServiceBusSendContext<T> context = sendContext as AzureServiceBusSendContext<T>
+            ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
 
         if (Activity.Current?.IsAllDataRequested ?? false)
         {

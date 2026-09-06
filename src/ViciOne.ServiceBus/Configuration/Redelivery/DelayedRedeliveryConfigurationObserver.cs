@@ -2,28 +2,22 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a delayed redelivery configuration observer implementation.
-/// </summary>
+/// <summary>Observes delayed redelivery configuration events.</summary>
 public class DelayedRedeliveryConfigurationObserver :
     ScheduledRedeliveryConfigurationObserver
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public DelayedRedeliveryConfigurationObserver(IConsumePipeConfigurator configurator, Action<IRedeliveryConfigurator> configure)
         : base(configurator, configure)
     {
     }
 
-    /// <summary>
-    /// Adds redelivery pipe specification to the configuration.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds redelivery pipe specification to the configuration.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <returns>The redelivery pipe specification produced by the operation.</returns>
     protected override IRedeliveryPipeSpecification AddRedeliveryPipeSpecification<TMessage>(IConsumePipeConfigurator configurator)
     {
         var redeliverySpecification = new DelayedRedeliveryPipeSpecification<TMessage>();

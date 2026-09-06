@@ -5,20 +5,16 @@ using ViciOne.ServiceBus.Mediator;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for mediator request.
-/// </summary>
+/// <summary>Provides extension methods for mediator request.</summary>
 public static class MediatorRequestExtensions
 {
-    /// <summary>
-    /// Sends a request, with the specified response type, and awaits the response.
-    /// </summary>
-    /// <param name="mediator"></param>
-    /// <param name="request">The request message</param>
-    /// <param name="timeout"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T">The response type</typeparam>
-    /// <returns>The response object</returns>
+    /// <summary>Sends a request, with the specified response type, and awaits the response.</summary>
+    /// <typeparam name="T">The response type.</typeparam>
+    /// <param name="mediator">The mediator.</param>
+    /// <param name="request">The request message.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The response object.</returns>
     public static async Task<T> SendRequestAsync<T>(this IMediator mediator, Request<T> request, RequestTimeout timeout = default,
         CancellationToken cancellationToken = default)
         where T : class

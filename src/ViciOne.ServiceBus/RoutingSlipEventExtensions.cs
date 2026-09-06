@@ -4,397 +4,339 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Courier;
 
-/// <summary>
-/// Provides extension methods for routing slip event.
-/// </summary>
+/// <summary>Provides extension methods for routing slip event.</summary>
 public static class RoutingSlipEventExtensions
 {
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlip> context, string key, T? defaultValue = null)
         where T : class
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlip> context, string key, T? defaultValue = null)
         where T : struct
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets result.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets result.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The result.</returns>
     public static T? GetResult<T>(this ConsumeContext<RoutingSlipActivityCompensated> context, string key, T? defaultValue = null)
         where T : class
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Data, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets result.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets result.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The result.</returns>
     public static T? GetResult<T>(this ConsumeContext<RoutingSlipActivityCompensated> context, string key, T? defaultValue = null)
         where T : struct
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Data, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipActivityCompensated> context, string key, T? defaultValue = null)
         where T : class
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipActivityCompensated> context, string key, T? defaultValue = null)
         where T : struct
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets result.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets result.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The result.</returns>
     public static T? GetResult<T>(this ConsumeContext<RoutingSlipActivityCompensationFailed> context, string key, T? defaultValue = null)
         where T : class
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Data, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets result.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets result.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The result.</returns>
     public static T? GetResult<T>(this ConsumeContext<RoutingSlipActivityCompensationFailed> context, string key, T? defaultValue = null)
         where T : struct
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Data, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipActivityCompensationFailed> context, string key, T? defaultValue = null)
         where T : class
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipActivityCompensationFailed> context, string key, T? defaultValue = null)
         where T : struct
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets argument.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets argument.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The argument.</returns>
     public static T? GetArgument<T>(this ConsumeContext<RoutingSlipActivityCompleted> context, string key, T? defaultValue = null)
         where T : class
     {
         return GetDictionaryValue(context.Advanced().SerializerContext, context.Message.Arguments, context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets argument.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets argument.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The argument.</returns>
     public static T? GetArgument<T>(this ConsumeContext<RoutingSlipActivityCompleted> context, string key, T? defaultValue = null)
         where T : struct
     {
         return GetDictionaryValue(context.Advanced().SerializerContext, context.Message.Arguments, context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets result.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets result.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The result.</returns>
     public static T? GetResult<T>(this ConsumeContext<RoutingSlipActivityCompleted> context, string key, T? defaultValue = null)
         where T : class
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Data, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets result.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets result.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The result.</returns>
     public static T? GetResult<T>(this ConsumeContext<RoutingSlipActivityCompleted> context, string key, T? defaultValue = null)
         where T : struct
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Data, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipActivityCompleted> context, string key, T? defaultValue = null)
         where T : class
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipActivityCompleted> context, string key, T? defaultValue = null)
         where T : struct
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets argument.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets argument.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The argument.</returns>
     public static T? GetArgument<T>(this ConsumeContext<RoutingSlipActivityFaulted> context, string key, T? defaultValue = null)
         where T : class
     {
         return GetDictionaryValue(context.Advanced().SerializerContext, context.Message.Arguments, context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets argument.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets argument.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The argument.</returns>
     public static T? GetArgument<T>(this ConsumeContext<RoutingSlipActivityFaulted> context, string key, T? defaultValue = null)
         where T : struct
     {
         return GetDictionaryValue(context.Advanced().SerializerContext, context.Message.Arguments, context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipActivityFaulted> context, string key, T? defaultValue = null)
         where T : class
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipActivityFaulted> context, string key, T? defaultValue = null)
         where T : struct
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipCompensationFailed> context, string key, T? defaultValue = null)
         where T : class
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipCompensationFailed> context, string key, T? defaultValue = null)
         where T : struct
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipCompleted> context, string key, T? defaultValue = null)
         where T : class
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipCompleted> context, string key, T? defaultValue = null)
         where T : struct
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipFaulted> context, string key, T? defaultValue = null)
         where T : class
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipFaulted> context, string key, T? defaultValue = null)
         where T : struct
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipTerminated> context, string key, T? defaultValue = null)
         where T : class
     {
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>
-    /// Gets variable.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets variable.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The variable.</returns>
     public static T? GetVariable<T>(this ConsumeContext<RoutingSlipTerminated> context, string key, T? defaultValue = null)
         where T : struct
     {

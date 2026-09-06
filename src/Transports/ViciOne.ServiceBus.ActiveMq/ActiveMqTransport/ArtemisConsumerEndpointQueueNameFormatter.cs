@@ -1,18 +1,14 @@
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides an artemis consumer endpoint queue name formatter implementation.
-/// </summary>
+/// <summary>Formats ActiveMQ Artemis virtual-topic subscription queue names.</summary>
 public class ArtemisConsumerEndpointQueueNameFormatter :
     IActiveMqConsumerEndpointQueueNameFormatter,
     IActiveMqTopicSubscriptionNameFormatter
 {
-    /// <summary>
-    /// Performs the format operation.
-    /// </summary>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="endpointName">The endpoint name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Combines a consumer endpoint and topic into the ActiveMQ virtual-topic subscription convention.</summary>
+    /// <param name="topic">The virtual-topic name.</param>
+    /// <param name="endpointName">The consumer endpoint name.</param>
+    /// <returns>A name in the form <c>Consumer.{endpoint}.{topic}</c>.</returns>
     public string Format(string topic, string endpointName)
     {
         return $"Consumer.{endpointName}.{topic}";

@@ -4,11 +4,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a consumer message connector implementation.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Connects consumer message to the service bus pipeline.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class ConsumerMessageConnector<TConsumer, TMessage> :
     IConsumerMessageConnector<TConsumer>
     where TConsumer : class
@@ -17,10 +15,8 @@ public class ConsumerMessageConnector<TConsumer, TMessage> :
     const ConnectPipeOptions NotConfigureConsumeTopology = ConnectPipeOptions.All & ~ConnectPipeOptions.ConfigureConsumeTopology;
     readonly IFilter<ConsumerConsumeContext<TConsumer, TMessage>> _consumeFilter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="consumeFilter">The consume filter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="consumeFilter">The consume filter.</param>
     public ConsumerMessageConnector(IFilter<ConsumerConsumeContext<TConsumer, TMessage>> consumeFilter)
     {
         _consumeFilter = consumeFilter;
@@ -32,27 +28,21 @@ public class ConsumerMessageConnector<TConsumer, TMessage> :
 
     bool ConfigureConsumeTopology { get; } = true;
 
-    /// <summary>
-    /// Gets the message type value.
-    /// </summary>
+    /// <summary>Gets the message type.</summary>
     public Type MessageType => typeof(TMessage);
 
-    /// <summary>
-    /// Creates consumer message specification.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates consumer message specification.</summary>
+    /// <returns>The created consumer message specification.</returns>
     public IConsumerMessageSpecification<TConsumer> CreateConsumerMessageSpecification()
     {
         return new ConsumerMessageSpecification<TConsumer, TMessage>();
     }
 
-    /// <summary>
-    /// Connects consumer.
-    /// </summary>
-    /// <param name="consumePipe">The consume pipe value.</param>
-    /// <param name="consumerFactory">The consumer factory value.</param>
-    /// <param name="specification">The specification value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consumer.</summary>
+    /// <param name="consumePipe">The consume pipe.</param>
+    /// <param name="consumerFactory">The consumer factory.</param>
+    /// <param name="specification">The specification.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumer(IConsumePipeConnector consumePipe, IConsumerFactory<TConsumer> consumerFactory,
         IConsumerSpecification<TConsumer> specification)
     {

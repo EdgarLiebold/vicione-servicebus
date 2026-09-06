@@ -84,6 +84,20 @@ public sealed class GreenfieldApiArchitectureTests
             $"Former state-machine brand remains in product source or package metadata:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-GREENFIELD-APPLICATION-CONTRACTS", "host-bridge-overloads-dispatch-to-provider-contract")]
+    public void ProviderNeutralBridgeOverloads_DoNotForwardToThemselves()
+    {
+        string[] violations = ProductSources()
+            .SelectMany(FindSelfForwardingOverrides)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.True(
+            violations.Length == 0,
+            $"Provider-neutral bridge overloads must adapt their callback before dispatching to a provider-specific overload:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
+    }
+
     private static bool ContainsSerializableAttribute(string path)
     {
         CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(File.ReadAllText(path))
@@ -92,6 +106,38 @@ public sealed class GreenfieldApiArchitectureTests
             .OfType<AttributeSyntax>()
             .Any(attribute => attribute.Name.ToString() is "Serializable" or "SerializableAttribute"
                 or "System.Serializable" or "System.SerializableAttribute");
+    }
+
+    private static IEnumerable<string> FindSelfForwardingOverrides(string path)
+    {
+        CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(File.ReadAllText(path))
+            .GetCompilationUnitRoot();
+
+        foreach (MethodDeclarationSyntax method in root.DescendantNodes().OfType<MethodDeclarationSyntax>())
+        {
+            if (!method.Modifiers.Any(static modifier => modifier.RawKind == (int)SyntaxKind.OverrideKeyword))
+            {
+                continue;
+            }
+
+            string[] parameterNames = method.ParameterList.Parameters
+                .Select(static parameter => parameter.Identifier.ValueText)
+                .ToArray();
+
+            bool directlyForwardsEveryParameter = method.DescendantNodes()
+                .OfType<InvocationExpressionSyntax>()
+                .Where(invocation => invocation.Expression is IdentifierNameSyntax identifier &&
+                    identifier.Identifier.ValueText == method.Identifier.ValueText)
+                .Any(invocation => invocation.ArgumentList.Arguments.Count == parameterNames.Length &&
+                    invocation.ArgumentList.Arguments
+                        .Select(static argument => (argument.Expression as IdentifierNameSyntax)?.Identifier.ValueText)
+                        .SequenceEqual(parameterNames));
+
+            if (directlyForwardsEveryParameter)
+            {
+                yield return $"{RepositoryLayout.RelativeToRoot(path)}:{method.GetLocation().GetLineSpan().StartLinePosition.Line + 1}";
+            }
+        }
     }
 
     private static IEnumerable<string> ProductSources() => RepositoryLayout.ProductProjects

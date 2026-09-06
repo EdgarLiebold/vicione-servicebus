@@ -6,19 +6,15 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an instance connector implementation.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
+/// <summary>Connects instance to the service bus pipeline.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
 public class InstanceConnector<TConsumer> :
     IInstanceConnector
     where TConsumer : class
 {
     readonly List<IInstanceMessageConnector<TConsumer>> _connectors;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public InstanceConnector()
     {
         if (RegistrationMetadata.IsConsumerRegistrationExcluded(typeof(TConsumer)))
@@ -28,14 +24,12 @@ public class InstanceConnector<TConsumer> :
             .ToList();
     }
 
-    /// <summary>
-    /// Connects instance.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipeConnector">The pipe connector value.</param>
-    /// <param name="instance">The instance value.</param>
-    /// <param name="specification">The specification value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects instance.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="pipeConnector">The pipe connector.</param>
+    /// <param name="instance">The instance.</param>
+    /// <param name="specification">The specification.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectInstance<T>(IConsumePipeConnector pipeConnector, T instance, IConsumerSpecification<T> specification)
         where T : class
     {
@@ -59,12 +53,10 @@ public class InstanceConnector<TConsumer> :
         }
     }
 
-    /// <summary>
-    /// Connects instance.
-    /// </summary>
-    /// <param name="pipeConnector">The pipe connector value.</param>
-    /// <param name="instance">The instance value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects instance.</summary>
+    /// <param name="pipeConnector">The pipe connector.</param>
+    /// <param name="instance">The instance.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectInstance(IConsumePipeConnector pipeConnector, object instance)
     {
         if (instance is TConsumer consumer)
@@ -78,11 +70,9 @@ public class InstanceConnector<TConsumer> :
             $"The instance type {TypeCache.GetShortName(instance.GetType())} does not match the consumer type: {TypeCache<TConsumer>.ShortName}");
     }
 
-    /// <summary>
-    /// Creates consumer specification.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates consumer specification.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The created consumer specification.</returns>
     public IConsumerSpecification<T> CreateConsumerSpecification<T>()
         where T : class
     {

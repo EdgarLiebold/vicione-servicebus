@@ -4,20 +4,16 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>
-/// Provides a sql host implementation.
-/// </summary>
+/// <summary>Hosts SQL-backed receive endpoints and the connection resources they share.</summary>
 public class SqlHost :
     BaseHost,
     ISqlHost
 {
     readonly ISqlHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="busTopology">The bus topology value.</param>
+    /// <summary>Creates a SQL transport host from its validated configuration and topology.</summary>
+    /// <param name="hostConfiguration">The configuration used to create endpoints and supervise database connections.</param>
+    /// <param name="busTopology">The SQL transport topology exposed by the host.</param>
     public SqlHost(ISqlHostConfiguration hostConfiguration, ISqlBusTopology busTopology)
         : base(hostConfiguration, busTopology)
     {
@@ -25,42 +21,42 @@ public class SqlHost :
         Topology = busTopology;
     }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the SQL transport topology associated with this host.</summary>
     public new ISqlBusTopology Topology { get; }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a receive endpoint described by an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition that supplies the name and common settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null"/> to use the default formatter.</param>
+    /// <param name="configureEndpoint">An optional provider-neutral callback applied to the SQL endpoint configuration.</param>
+    /// <returns>A handle that controls the connected receive endpoint.</returns>
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
-        return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
+        Action<ISqlReceiveEndpointConfigurator>? configure = configureEndpoint == null
+            ? null
+            : endpoint => configureEndpoint(endpoint);
+
+        return ConnectReceiveEndpoint(definition, endpointNameFormatter, configure);
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a SQL-backed receive endpoint for a named queue.</summary>
+    /// <param name="queueName">The logical SQL queue name.</param>
+    /// <param name="configureEndpoint">An optional provider-neutral callback applied to the SQL endpoint configuration.</param>
+    /// <returns>A handle that controls the connected receive endpoint.</returns>
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
-        return ConnectReceiveEndpoint(queueName, configureEndpoint);
+        Action<ISqlReceiveEndpointConfigurator>? configure = configureEndpoint == null
+            ? null
+            : endpoint => configureEndpoint(endpoint);
+
+        return ConnectReceiveEndpoint(queueName, configure);
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a SQL-backed receive endpoint described by an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition that supplies the name and common settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null"/> to use the default formatter.</param>
+    /// <param name="configureEndpoint">An optional callback that applies SQL-transport-specific endpoint settings.</param>
+    /// <returns>A handle that controls the connected receive endpoint.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
         Action<ISqlReceiveEndpointConfigurator>? configureEndpoint = null)
     {
@@ -73,12 +69,10 @@ public class SqlHost :
         });
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates, validates, builds, and starts a SQL-backed receive endpoint.</summary>
+    /// <param name="queueName">The logical SQL queue name.</param>
+    /// <param name="configure">An optional callback that applies SQL-transport-specific endpoint settings before validation.</param>
+    /// <returns>A handle that controls the started receive endpoint.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<ISqlReceiveEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
@@ -94,10 +88,8 @@ public class SqlHost :
         return ReceiveEndpoints.Start(configuration.Settings.QueueName);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds the SQL host address and connection-supervisor state to a probe.</summary>
+    /// <param name="context">The probe context that receives the diagnostic values.</param>
     protected override void Probe(ProbeContext context)
     {
         context.Set(new
@@ -109,10 +101,8 @@ public class SqlHost :
         _hostConfiguration.ConnectionContextSupervisor.Probe(context);
     }
 
-    /// <summary>
-    /// Gets agent handles.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the connection supervisor whose lifecycle is owned by the host.</summary>
+    /// <returns>The host-owned database connection supervisor.</returns>
     protected override IAgent[] GetAgentHandles()
     {
         return new IAgent[] { _hostConfiguration.ConnectionContextSupervisor };

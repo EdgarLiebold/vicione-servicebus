@@ -3,10 +3,8 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Configures the Latest filter
-/// </summary>
-/// <typeparam name="T"></typeparam>
+/// <summary>Configures the Latest filter.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class LatestPipeSpecification<T> :
     IPipeSpecification<T>,
     ILatestConfigurator<T>

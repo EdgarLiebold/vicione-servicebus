@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Courier;
 
-/// <summary>
-/// Provides a routing slip executor implementation.
-/// </summary>
+/// <summary>Executes routing slip operations.</summary>
 public class RoutingSlipExecutor :
     IRoutingSlipExecutor
 {
@@ -15,12 +13,10 @@ public class RoutingSlipExecutor :
     readonly ISendEndpointProvider _sendEndpointProvider;
     readonly TimeProvider _timeProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="sendEndpointProvider">The send endpoint provider value.</param>
-    /// <param name="publishEndpoint">The publish endpoint value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="sendEndpointProvider">The send endpoint provider.</param>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public RoutingSlipExecutor(ISendEndpointProvider sendEndpointProvider, IPublishEndpoint publishEndpoint, TimeProvider? timeProvider = null)
     {
         _sendEndpointProvider = sendEndpointProvider;
@@ -28,12 +24,10 @@ public class RoutingSlipExecutor :
         _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="routingSlip">The routing slip value.</param>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="routingSlip">The routing slip.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(RoutingSlip routingSlip, CancellationToken cancellationToken = default)
     {
         if (routingSlip.RanToCompletion())

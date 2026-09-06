@@ -2,11 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a state machine schedule configurator implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures state machine schedule.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class StateMachineScheduleConfigurator<TInstance, TMessage> :
     IScheduleConfigurator<TInstance, TMessage>,
     ScheduleSettings<TInstance, TMessage>
@@ -15,30 +13,22 @@ public class StateMachineScheduleConfigurator<TInstance, TMessage> :
 {
     Action<IEventCorrelationConfigurator<TInstance, TMessage>> _received = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public StateMachineScheduleConfigurator()
     {
         Delay = TimeSpan.FromSeconds(30);
     }
 
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the settings.</summary>
     public ScheduleSettings<TInstance, TMessage> Settings => this;
 
-    /// <summary>
-    /// Gets or sets the delay value.
-    /// </summary>
+    /// <summary>Gets or sets the delay.</summary>
     public TimeSpan Delay
     {
         set { DelayProvider = _ => value; }
     }
 
-    /// <summary>
-    /// Gets or sets the delay provider value.
-    /// </summary>
+    /// <summary>Gets or sets the delay provider.</summary>
     public ScheduleDelayProvider<TInstance> DelayProvider { get; set; } = null!;
     Action<IEventCorrelationConfigurator<TInstance, TMessage>> IScheduleConfigurator<TInstance, TMessage>.Received
     {

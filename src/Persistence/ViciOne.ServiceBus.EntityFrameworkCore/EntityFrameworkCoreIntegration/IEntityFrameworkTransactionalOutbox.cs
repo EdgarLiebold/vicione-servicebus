@@ -7,33 +7,25 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// Explicit transactional messaging session bound to one bus and the caller's DbContext. Commit persists business
 /// changes and staged outbox records through that same DbContext; Abort detaches only this session's staged outbox records.
 /// </summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
+/// <typeparam name="TDbContext">The db context type.</typeparam>
 public interface IEntityFrameworkTransactionalOutbox<TBus, TDbContext>
     where TBus : class, IBus
     where TDbContext : DbContext
 {
-    /// <summary>
-    /// Gets the send endpoint provider value.
-    /// </summary>
+    /// <summary>Gets a send endpoint provider that stages messages in the bound DbContext.</summary>
     ISendEndpointProvider SendEndpointProvider { get; }
-    /// <summary>
-    /// Gets the publish endpoint value.
-    /// </summary>
+    /// <summary>Gets a publish endpoint that stages messages in the bound DbContext.</summary>
     IPublishEndpoint PublishEndpoint { get; }
-    /// <summary>
-    /// Gets the client factory value.
-    /// </summary>
+    /// <summary>Gets request clients whose outgoing messages use this transactional session.</summary>
     IScopedClientFactory ClientFactory { get; }
 
-    /// <summary>
-    /// Performs the commit operation.
-    /// </summary>
+    /// <summary>Saves business changes and staged outgoing messages through the bound DbContext.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task CommitAsync(CancellationToken cancellationToken = default);
-    /// <summary>
-    /// Performs the abort operation.
-    /// </summary>
+    /// <summary>Detaches this session's uncommitted outbox rows from the bound DbContext.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task AbortAsync(CancellationToken cancellationToken = default);
 }

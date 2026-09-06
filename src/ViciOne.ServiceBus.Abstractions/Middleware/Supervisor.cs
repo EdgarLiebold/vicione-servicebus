@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Supervises a set of agents, allowing for graceful Start, Stop, and Ready state management
-/// </summary>
+/// <summary>Supervises a set of agents, allowing for graceful Start, Stop, and Ready state management.</summary>
 public class Supervisor :
     Agent,
     ISupervisor
@@ -17,9 +15,7 @@ public class Supervisor :
     readonly Dictionary<long, IAgent> _agents;
     long _nextId;
 
-    /// <summary>
-    /// Creates a Supervisor
-    /// </summary>
+    /// <summary>Creates a Supervisor.</summary>
     public Supervisor()
     {
         _agents = new Dictionary<long, IAgent>();
@@ -87,11 +83,9 @@ public class Supervisor :
         return StopSupervisorAsync(new Context(context, agents));
     }
 
-    /// <summary>
-    /// Stops supervisor.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Stops supervisor.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected virtual async Task StopSupervisorAsync(StopSupervisorContext context)
     {
         switch (context.Agents.Length)

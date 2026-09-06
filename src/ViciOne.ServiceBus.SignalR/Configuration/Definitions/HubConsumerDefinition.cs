@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.SignalR.Consumers;
 
 namespace ViciOne.ServiceBus.SignalR.Configuration.Definitions;
 
-/// <summary>
-/// Provides a hub consumer definition implementation.
-/// </summary>
-/// <typeparam name="THub">The t hub type.</typeparam>
+/// <summary>Defines configuration for hub consumer.</summary>
+/// <typeparam name="THub">The hub type.</typeparam>
 public class HubConsumerDefinition<THub> :
     IEndpointDefinition<AllConsumer<THub>>,
     IEndpointDefinition<ConnectionConsumer<THub>>,
@@ -19,42 +17,30 @@ public class HubConsumerDefinition<THub> :
 {
     readonly Lazy<string> _hubName = new Lazy<string>(() => typeof(THub).Name.ToLower(CultureInfo.InvariantCulture));
 
-    /// <summary>
-    /// Gets the is temporary value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether temporary.</summary>
     public bool IsTemporary => true;
 
-    /// <summary>
-    /// Gets the prefetch count value.
-    /// </summary>
+    /// <summary>Gets the prefetch count.</summary>
     public int? PrefetchCount => default;
 
-    /// <summary>
-    /// Gets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets the concurrent message limit.</summary>
     public int? ConcurrentMessageLimit => default;
 
-    /// <summary>
-    /// Gets the configure consume topology value.
-    /// </summary>
+    /// <summary>Gets the configure consume topology.</summary>
     public bool ConfigureConsumeTopology => true;
 
-    /// <summary>
-    /// Gets endpoint name.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets endpoint name.</summary>
+    /// <param name="formatter">The formatter.</param>
+    /// <returns>The endpoint name.</returns>
     public string GetEndpointName(IEndpointNameFormatter formatter)
     {
         return formatter.TemporaryEndpoint($"signalr_{_hubName.Value}");
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public void Configure<T>(T configurator, IRegistrationContext? context)
         where T : IReceiveEndpointConfigurator
     {

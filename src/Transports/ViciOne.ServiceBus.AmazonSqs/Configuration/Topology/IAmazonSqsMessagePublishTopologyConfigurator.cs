@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Defines the contract for amazon sqs message publish topology configurator.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures the Amazon SNS topic used to publish a message type.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public interface IAmazonSqsMessagePublishTopologyConfigurator<TMessage> :
     IMessagePublishTopologyConfigurator<TMessage>,
     IAmazonSqsMessagePublishTopology<TMessage>,
@@ -13,9 +11,7 @@ public interface IAmazonSqsMessagePublishTopologyConfigurator<TMessage> :
 }
 
 
-/// <summary>
-/// Defines the contract for amazon sqs message publish topology configurator.
-/// </summary>
+/// <summary>Configures untyped Amazon SNS message publish topology and topic settings.</summary>
 public interface IAmazonSqsMessagePublishTopologyConfigurator :
     IMessagePublishTopologyConfigurator,
     IAmazonSqsMessagePublishTopology,

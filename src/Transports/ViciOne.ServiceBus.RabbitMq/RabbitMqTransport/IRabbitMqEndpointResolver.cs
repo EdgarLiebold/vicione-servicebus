@@ -3,14 +3,10 @@ using ViciOne.ServiceBus.RabbitMq.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for rabbit mq endpoint resolver.
-/// </summary>
+/// <summary>Resolves RabbitMQ cluster endpoints and exposes the last selected node.</summary>
 public interface IRabbitMqEndpointResolver :
     IEndpointResolver
 {
-    /// <summary>
-    /// Returns the last host selected by the selector
-    /// </summary>
+    /// <summary>Returns the last host selected by the selector.</summary>
     ClusterNode LastHost { get; }
 }

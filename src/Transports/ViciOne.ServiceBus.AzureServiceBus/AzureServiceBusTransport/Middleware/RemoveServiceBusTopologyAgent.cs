@@ -6,20 +6,16 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Middleware;
 
-/// <summary>
-/// Provides a remove service bus topology agent implementation.
-/// </summary>
+/// <summary>Removes queue-forwarding subscriptions when a temporary receive endpoint stops.</summary>
 public sealed class RemoveServiceBusTopologyAgent :
     Agent
 {
     readonly BrokerTopology _brokerTopology;
     readonly ConnectionContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="brokerTopology">The broker topology value.</param>
+    /// <summary>Initializes cleanup for a deployed endpoint topology.</summary>
+    /// <param name="context">The namespace connection used for subscription deletion.</param>
+    /// <param name="brokerTopology">The topology containing subscriptions to remove.</param>
     public RemoveServiceBusTopologyAgent(ConnectionContext context, BrokerTopology brokerTopology)
     {
         _brokerTopology = brokerTopology;
@@ -28,11 +24,9 @@ public sealed class RemoveServiceBusTopologyAgent :
         SetReady();
     }
 
-    /// <summary>
-    /// Stops agent.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Attempts to remove all queue-forwarding subscriptions before completing agent shutdown.</summary>
+    /// <param name="context">The agent stop context.</param>
+    /// <returns>A task that completes after cleanup and base shutdown.</returns>
     protected override async Task StopAgentAsync(StopContext context)
     {
         try

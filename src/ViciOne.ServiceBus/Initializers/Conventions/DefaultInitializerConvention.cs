@@ -10,11 +10,9 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.Conventions;
 
-/// <summary>
-/// Provides a default initializer convention implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Applies conventions for default initializer.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class DefaultInitializerConvention<TMessage, TInput> :
     IInitializerConvention<TMessage, TInput>
     where TMessage : class
@@ -23,21 +21,17 @@ public class DefaultInitializerConvention<TMessage, TInput> :
     readonly IReadOnlyDictionary<string, PropertyInfo> _inputProperties;
     readonly IPropertyProviderFactory<TInput> _providerFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public DefaultInitializerConvention()
     {
         _inputProperties = MessageTypeCache<TInput>.Properties.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
         _providerFactory = new PropertyProviderFactory<TInput>();
     }
 
-    /// <summary>
-    /// Attempts to get property initializer.
-    /// </summary>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get property initializer.</summary>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetPropertyInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IPropertyInitializer<TMessage, TInput>? initializer)
@@ -49,14 +43,14 @@ public class DefaultInitializerConvention<TMessage, TInput> :
             var propertyType = typeof(TProperty);
             var inputPropertyType = inputPropertyInfo.PropertyType;
 
-            // exactly the same type, we just copy it over unmodified
+            // Identical source and destination types require no conversion.
             if (inputPropertyType == propertyType)
             {
                 initializer = new CopyPropertyInitializer<TMessage, TInput, TProperty>(propertyInfo, inputPropertyInfo);
                 return true;
             }
 
-            // can only copy to object, no idea what the destination type would/could be
+            // An object destination preserves the runtime source type.
             if (propertyType == typeof(object))
             {
                 if (inputPropertyType.TryGetTaskResultType(out var taskType))
@@ -84,19 +78,17 @@ public class DefaultInitializerConvention<TMessage, TInput> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get header initializer.
-    /// </summary>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get header initializer.</summary>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeaderInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
     {
         var propertyName = propertyInfo?.Name ?? throw new ArgumentNullException(nameof(propertyInfo));
 
-        // headers use a double underscore prefix
+        // A double underscore identifies a header initializer property.
         var inputPropertyName = new StringBuilder(propertyName.Length + 2).Append("__").Append(propertyName).ToString();
 
         if (_inputProperties.TryGetValue(inputPropertyName, out var inputPropertyInfo))
@@ -104,7 +96,7 @@ public class DefaultInitializerConvention<TMessage, TInput> :
             var propertyType = typeof(TProperty);
             var inputPropertyType = inputPropertyInfo.PropertyType;
 
-            // exactly the same type, we just copy it over unmodified
+            // Identical source and destination types require no conversion.
             if (inputPropertyType == propertyType)
             {
                 initializer = new CopyHeaderInitializer<TMessage, TInput, TProperty>(propertyInfo, inputPropertyInfo);
@@ -122,12 +114,10 @@ public class DefaultInitializerConvention<TMessage, TInput> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get headers initializer.
-    /// </summary>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get headers initializer.</summary>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeadersInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
@@ -140,7 +130,7 @@ public class DefaultInitializerConvention<TMessage, TInput> :
 
             var inputPropertyType = propertyInfo.PropertyType;
 
-            // exactly the same type, we just copy it over unmodified
+            // A string property maps directly to the encoded header name.
             if (inputPropertyType == typeof(string))
             {
                 initializer = new SetStringHeaderInitializer<TMessage, TInput>(headerName, propertyInfo);
@@ -161,18 +151,14 @@ public class DefaultInitializerConvention<TMessage, TInput> :
 }
 
 
-/// <summary>
-/// Provides a default initializer convention implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Applies conventions for default initializer.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class DefaultInitializerConvention<TMessage> :
     InitializerConvention<TMessage>
     where TMessage : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="convention">The convention value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="convention">The convention.</param>
     public DefaultInitializerConvention(IInitializerConvention convention)
         : base(new CacheFactory(), convention)
     {
@@ -191,15 +177,11 @@ public class DefaultInitializerConvention<TMessage> :
 }
 
 
-/// <summary>
-/// Provides a default initializer convention implementation.
-/// </summary>
+/// <summary>Applies conventions for default initializer.</summary>
 public class DefaultInitializerConvention :
     InitializerConvention
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public DefaultInitializerConvention()
         : base(new CacheFactory())
     {

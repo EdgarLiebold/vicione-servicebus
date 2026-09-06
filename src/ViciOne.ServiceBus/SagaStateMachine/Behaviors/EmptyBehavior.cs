@@ -3,60 +3,48 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides an empty behavior implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Executes empty state-machine behavior.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class EmptyBehavior<TSaga> :
     IBehavior<TSaga>
     where TSaga : class, SagaStateMachineInstance
 {
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(BehaviorContext<TSaga> context)
     {
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context)
         where T : class
     {
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context)
         where T : class
         where TException : Exception
@@ -64,12 +52,10 @@ public class EmptyBehavior<TSaga> :
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context)
         where TException : Exception
     {
@@ -78,49 +64,39 @@ public class EmptyBehavior<TSaga> :
 }
 
 
-/// <summary>
-/// Provides an empty behavior implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Executes empty state-machine behavior.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class EmptyBehavior<TSaga, TMessage> :
     IBehavior<TSaga, TMessage>
     where TSaga : class, SagaStateMachineInstance
     where TMessage : class
 {
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context)
     {
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context)
         where TException : Exception
     {

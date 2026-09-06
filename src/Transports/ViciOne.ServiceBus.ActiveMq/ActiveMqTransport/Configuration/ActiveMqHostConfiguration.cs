@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.ActiveMq.Configuration;
 
-/// <summary>
-/// Provides an active mq host configuration implementation.
-/// </summary>
+/// <summary>Owns ActiveMQ host settings, topology, connection supervision, and receive endpoints.</summary>
 public class ActiveMqHostConfiguration :
     BaseHostConfiguration<IActiveMqReceiveEndpointConfiguration, IActiveMqReceiveEndpointConfigurator>,
     IActiveMqHostConfiguration
@@ -21,11 +19,9 @@ public class ActiveMqHostConfiguration :
     readonly IActiveMqBusTopology _topology;
     ActiveMqHostSettings? _hostSettings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="busConfiguration">The bus configuration value.</param>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Creates an ActiveMQ host configuration for a bus.</summary>
+    /// <param name="busConfiguration">The owning bus configuration.</param>
+    /// <param name="topologyConfiguration">The ActiveMQ topology configuration.</param>
     public ActiveMqHostConfiguration(IActiveMqBusConfiguration busConfiguration, IActiveMqTopologyConfiguration topologyConfiguration)
         : base(busConfiguration)
     {
@@ -45,42 +41,30 @@ public class ActiveMqHostConfiguration :
         _connectionContext = new Recycle<IConnectionContextSupervisor>(() => new ConnectionContextSupervisor(this, topologyConfiguration));
     }
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the configured ActiveMQ broker address.</summary>
     public override Uri HostAddress => Settings.HostAddress;
 
-    /// <summary>
-    /// Gets the receive transport retry policy value.
-    /// </summary>
+    /// <summary>Gets the retry policy for transient ActiveMQ receive failures.</summary>
     public override IRetryPolicy ReceiveTransportRetryPolicy { get; }
 
-    /// <summary>
-    /// Gets or sets the settings value.
-    /// </summary>
+    /// <summary>Gets or sets the required ActiveMQ host settings.</summary>
     public ActiveMqHostSettings Settings
     {
         get => _hostSettings ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("ActiveMQ", "unknown", "The ActiveMQ host was not configured.", "Correct the named configuration before starting the host"));
         set => _hostSettings = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    /// <summary>
-    /// Gets or sets the is artemis value.
-    /// </summary>
+    /// <summary>Gets or sets whether delayed delivery uses ActiveMQ Artemis scheduling headers.</summary>
     public bool IsArtemis { get; set; }
 
-    /// <summary>
-    /// Gets the connection context supervisor value.
-    /// </summary>
+    /// <summary>Gets the recyclable broker connection supervisor.</summary>
     public IConnectionContextSupervisor ConnectionContextSupervisor => _connectionContext.Supervisor;
 
     IActiveMqBusTopology IActiveMqHostConfiguration.Topology => _topology;
 
-    /// <summary>
-    /// Performs the apply endpoint definition operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="definition">The definition value.</param>
+    /// <summary>Applies an endpoint definition, including temporary-queue semantics.</summary>
+    /// <param name="configurator">The ActiveMQ endpoint configurator to update.</param>
+    /// <param name="definition">The endpoint definition to apply.</param>
     public void ApplyEndpointDefinition(IActiveMqReceiveEndpointConfigurator configurator, IEndpointDefinition definition)
     {
         if (definition.IsTemporary)
@@ -92,12 +76,10 @@ public class ActiveMqHostConfiguration :
         base.ApplyEndpointDefinition(configurator, definition);
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and registers a durable ActiveMQ receive-endpoint configuration.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configure">An optional callback that configures the endpoint.</param>
+    /// <returns>The registered receive-endpoint configuration.</returns>
     public IActiveMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
         Action<IActiveMqReceiveEndpointConfigurator>? configure)
     {
@@ -107,13 +89,11 @@ public class ActiveMqHostConfiguration :
         return CreateReceiveEndpointConfiguration(settings, endpointConfiguration, configure);
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates, observes, and registers a receive endpoint from explicit queue settings.</summary>
+    /// <param name="settings">The queue receive settings.</param>
+    /// <param name="endpointConfiguration">The endpoint's shared configuration.</param>
+    /// <param name="configure">An optional callback that configures the ActiveMQ endpoint.</param>
+    /// <returns>The registered receive-endpoint configuration.</returns>
     public IActiveMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(ActiveMqQueueReceiveSettings settings,
         IActiveMqEndpointConfiguration endpointConfiguration, Action<IActiveMqReceiveEndpointConfigurator>? configure)
     {
@@ -128,15 +108,11 @@ public class ActiveMqHostConfiguration :
         return configuration;
     }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the ActiveMQ bus topology.</summary>
     public override IBusTopology Topology => _topology;
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         if (_hostSettings == null)
@@ -146,12 +122,10 @@ public class ActiveMqHostConfiguration :
             yield return result;
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Adds a receive endpoint described by an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name.</param>
+    /// <param name="configureEndpoint">An optional callback that configures the ActiveMQ endpoint.</param>
     public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IActiveMqReceiveEndpointConfigurator>? configureEndpoint = null)
     {
@@ -164,32 +138,30 @@ public class ActiveMqHostConfiguration :
         });
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Adds a receive endpoint for an ActiveMQ queue.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configureEndpoint">An optional callback that configures the ActiveMQ endpoint.</param>
     public override void ReceiveEndpoint(string queueName, Action<IActiveMqReceiveEndpointConfigurator>? configureEndpoint)
     {
         CreateReceiveEndpointConfiguration(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and registers a transport-independent receive-endpoint configuration.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configure">An optional callback that configures the endpoint.</param>
+    /// <returns>The registered receive-endpoint configuration.</returns>
     public override IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
         Action<IReceiveEndpointConfigurator>? configure = null)
     {
-        return CreateReceiveEndpointConfiguration(queueName, configure);
+        Action<IActiveMqReceiveEndpointConfigurator>? configureEndpoint = configure == null
+            ? null
+            : endpoint => configure(endpoint);
+
+        return CreateReceiveEndpointConfiguration(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the ActiveMQ host and all registered receive endpoints.</summary>
+    /// <returns>The configured ActiveMQ host.</returns>
     public override IHost Build()
     {
         var host = new ActiveMqHost(this, _topology);

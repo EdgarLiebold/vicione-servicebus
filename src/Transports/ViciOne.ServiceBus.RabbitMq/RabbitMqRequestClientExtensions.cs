@@ -2,17 +2,13 @@ using ViciOne.ServiceBus.RabbitMq;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides extension methods for rabbit mq request client.
-/// </summary>
+/// <summary>Configures RabbitMQ direct-reply-to request clients.</summary>
 public static class RabbitMqRequestClientExtensions
 {
-    /// <summary>
-    /// Creates a new RPC client factory on RabbitMQ using the direct reply-to feature
-    /// </summary>
-    /// <param name="connector">The connector, typically the bus instance</param>
-    /// <param name="timeout">The default request timeout</param>
-    /// <returns></returns>
+    /// <summary>Creates a new RPC client factory on RabbitMQ using the direct reply-to feature.</summary>
+    /// <param name="connector">The connector, typically the bus instance.</param>
+    /// <param name="timeout">The default request timeout.</param>
+    /// <returns>A client factory backed by a direct-reply-to receive endpoint.</returns>
     public static IClientFactory CreateReplyToClientFactory(this IReceiveConnector connector, RequestTimeout timeout = default)
     {
         var endpointDefinition = new ReplyToEndpointDefinition(default, 1000);
@@ -22,10 +18,8 @@ public static class RabbitMqRequestClientExtensions
         return receiveEndpointHandle.CreateClientFactory(timeout);
     }
 
-    /// <summary>
-    /// Enables the RabbitMQ Reply-To response endpoint, which uses the AMQP reply-to header for replies without using the bus endpoint
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Enables the RabbitMQ Reply-To response endpoint, which uses the AMQP reply-to header for replies without using the bus endpoint.</summary>
+    /// <param name="configurator">The bus registration configurator.</param>
     public static void SetRabbitMqReplyToRequestClientFactory(this IBusRegistrationConfigurator configurator)
     {
         configurator.SetRequestClientFactory((bus, timeout) => CreateReplyToClientFactory(bus, timeout));

@@ -4,19 +4,15 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Defines the contract for query saga repository.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Stores and retrieves query saga data.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public interface IQuerySagaRepository<TSaga> :
     IProbeSite
     where TSaga : class, ISaga
 {
-    /// <summary>
-    /// Performs the find operation.
-    /// </summary>
-    /// <param name="query">The query value.</param>
+    /// <summary>Finds the matching value.</summary>
+    /// <param name="query">The query.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the matching value.</returns>
     Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default);
 }

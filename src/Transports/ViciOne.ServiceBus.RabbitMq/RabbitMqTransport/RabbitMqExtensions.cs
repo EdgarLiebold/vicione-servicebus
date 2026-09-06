@@ -7,18 +7,15 @@ using ViciOne.ServiceBus.RabbitMq.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides extension methods for rabbit mq.
-/// </summary>
+/// <summary>Cleans up RabbitMQ client resources and formats sanitized connection descriptions.</summary>
 public static class RabbitMqExtensions
 {
-    /// <summary>
-    /// Close and dispose of a RabbitMQ channel without throwing any exceptions
-    /// </summary>
-    /// <param name="channel">The channel (can be null)</param>
-    /// <param name="replyCode"></param>
-    /// <param name="message">Message for channel closure</param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Closes and disposes a RabbitMQ channel, logging and suppressing cleanup failures.</summary>
+    /// <param name="channel">The channel to clean up.</param>
+    /// <param name="replyCode">The AMQP close reply code.</param>
+    /// <param name="message">The AMQP close reason.</param>
+    /// <param name="cancellationToken">Cancellation for the close handshake.</param>
+    /// <returns>A task that completes after close and disposal have been attempted.</returns>
     public static async Task CleanupAsync(this IChannel channel, ushort replyCode = 200, string message = "Unknown",
         CancellationToken cancellationToken = default)
     {
@@ -31,15 +28,12 @@ public static class RabbitMqExtensions
             }
             catch (Exception exception)
             {
-                // Cleanup failures are recorded with their protocol context without replacing the
-                // primary failure that initiated cleanup.
+                // Closing is best effort; record protocol context and continue to disposal.
                 LogContext.Error?.Log(exception, "Closing the channel faulted, the primary failure is unaffected: {ReplyCode} {Message}",
                     replyCode, message);
             }
 
-            // Inside the guard, not beside it. Disposing a channel the broker has just closed
-            // throws, and this method promises in its own summary not to — so the promise was
-            // broken exactly when it mattered, on the failure path.
+            // Disposal is also best effort because the broker may already have closed the channel.
             try
             {
                 await channel.DisposeAsync().ConfigureAwait(false);
@@ -52,13 +46,12 @@ public static class RabbitMqExtensions
         }
     }
 
-    /// <summary>
-    /// Close and dispose of a RabbitMQ connection without throwing any exceptions
-    /// </summary>
-    /// <param name="connection">The channel (can be null)</param>
-    /// <param name="replyCode"></param>
-    /// <param name="message">Message for channel closure</param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Attempts to close a RabbitMQ connection, suppresses close failure, and then disposes it.</summary>
+    /// <param name="connection">The connection to clean up, or <see langword="null" />.</param>
+    /// <param name="replyCode">The AMQP close reply code.</param>
+    /// <param name="message">The AMQP close reason.</param>
+    /// <param name="cancellationToken">Cancellation for the close handshake.</param>
+    /// <returns>A task that completes after disposal; disposal failure is propagated.</returns>
     public static async Task CleanupAsync(this IConnection? connection, ushort replyCode = 200, string message = "Unknown",
         CancellationToken cancellationToken = default)
     {
@@ -77,11 +70,9 @@ public static class RabbitMqExtensions
         await connection.DisposeAsync().ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the to description operation.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats a connection description without including the password.</summary>
+    /// <param name="settings">The RabbitMQ host and authentication settings.</param>
+    /// <returns>The user, configured and selected host, port, and virtual host.</returns>
     public static string ToDescription(this RabbitMqHostSettings settings)
     {
         var sb = new StringBuilder();
@@ -107,12 +98,10 @@ public static class RabbitMqExtensions
         return sb.ToString();
     }
 
-    /// <summary>
-    /// Performs the to description operation.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="connectionFactory">The connection factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats a connection description using the credentials currently applied to a client factory.</summary>
+    /// <param name="settings">The RabbitMQ host settings.</param>
+    /// <param name="connectionFactory">The refreshed client factory supplying the current user name.</param>
+    /// <returns>The user, configured and selected host, port, and virtual host.</returns>
     public static string ToDescription(this RabbitMqHostSettings settings, ConnectionFactory connectionFactory)
     {
         var sb = new StringBuilder();

@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.SqlTransport.Middleware;
 
-/// <summary>
-/// Adds the service bus message scheduler filter
-/// </summary>
+/// <summary>Adds the service bus message scheduler filter.</summary>
 public class SqlMessageSchedulerFilter :
     IFilter<ConsumeContext>
 {

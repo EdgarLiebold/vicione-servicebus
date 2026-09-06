@@ -3,18 +3,14 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a cancel scheduled message consumer definition implementation.
-/// </summary>
+/// <summary>Partitions one-time and recurring cancellation commands by their Quartz trigger identity.</summary>
 public class CancelScheduledMessageConsumerDefinition :
     ConsumerDefinition<CancelScheduledMessageConsumer>
 {
     readonly QuartzEndpointDefinition _endpointDefinition;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="endpointDefinition">The endpoint definition value.</param>
+    /// <summary>Initializes the consumer definition with the shared scheduling endpoint definition.</summary>
+    /// <param name="endpointDefinition">The shared Quartz endpoint and partitioner definition.</param>
     public CancelScheduledMessageConsumerDefinition(QuartzEndpointDefinition endpointDefinition)
     {
         _endpointDefinition = endpointDefinition;
@@ -22,12 +18,10 @@ public class CancelScheduledMessageConsumerDefinition :
         EndpointDefinition = endpointDefinition;
     }
 
-    /// <summary>
-    /// Configures consumer.
-    /// </summary>
-    /// <param name="endpointConfigurator">The endpoint configurator value.</param>
-    /// <param name="consumerConfigurator">The consumer configurator value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Serializes cancellation commands that address the same trigger.</summary>
+    /// <param name="endpointConfigurator">The Quartz receive endpoint.</param>
+    /// <param name="consumerConfigurator">The cancellation consumer configuration.</param>
+    /// <param name="context">The active registration context.</param>
     protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator,
         IConsumerConfigurator<CancelScheduledMessageConsumer> consumerConfigurator, IRegistrationContext context)
     {

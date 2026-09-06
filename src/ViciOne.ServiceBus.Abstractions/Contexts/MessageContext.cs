@@ -2,9 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// The message context includes the headers that are transferred with the message
-/// </summary>
+/// <summary>The message context includes the headers that are transferred with the message.</summary>
 public interface MessageContext
 {
     /// <summary>
@@ -39,34 +37,22 @@ public interface MessageContext
     /// </summary>
     Guid? InitiatorId { get; }
 
-    /// <summary>
-    /// The expiration time of the message if it is not intended to last forever.
-    /// </summary>
+    /// <summary>The expiration time of the message if it is not intended to last forever.</summary>
     DateTimeOffset? ExpirationTime { get; }
 
-    /// <summary>
-    /// The address of the message producer that sent the message
-    /// </summary>
+    /// <summary>The address of the message producer that sent the message.</summary>
     Uri? SourceAddress { get; }
 
-    /// <summary>
-    /// The destination address of the message
-    /// </summary>
+    /// <summary>The destination address of the message.</summary>
     Uri? DestinationAddress { get; }
 
-    /// <summary>
-    /// The response address to which responses to the request should be sent
-    /// </summary>
+    /// <summary>The response address to which responses to the request should be sent.</summary>
     Uri? ResponseAddress { get; }
 
-    /// <summary>
-    /// The fault address to which fault events should be sent if the message consumer faults
-    /// </summary>
+    /// <summary>The fault address to which fault events should be sent if the message consumer faults.</summary>
     Uri? FaultAddress { get; }
 
-    /// <summary>
-    /// When the message was originally sent
-    /// </summary>
+    /// <summary>When the message was originally sent.</summary>
     DateTimeOffset? SentTime { get; }
 
     /// <summary>

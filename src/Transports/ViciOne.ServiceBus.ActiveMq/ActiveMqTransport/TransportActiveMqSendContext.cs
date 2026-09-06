@@ -5,46 +5,32 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides a transport active mq send context implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Stores framework and ActiveMQ-native settings for a message being sent.</summary>
+/// <typeparam name="T">The message type.</typeparam>
 public class TransportActiveMqSendContext<T> :
     MessageSendContext<T>,
     ActiveMqSendContext<T>
     where T : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates an ActiveMQ send context for a message.</summary>
+    /// <param name="message">The message to send.</param>
+    /// <param name="cancellationToken">The token associated with the send operation.</param>
     public TransportActiveMqSendContext(T message, CancellationToken cancellationToken)
         : base(message, cancellationToken)
     {
     }
 
-    /// <summary>
-    /// Gets or sets the group id value.
-    /// </summary>
+    /// <summary>Gets or sets the JMSX message-group identifier.</summary>
     public string? GroupId { get; set; }
-    /// <summary>
-    /// Gets or sets the group sequence value.
-    /// </summary>
+    /// <summary>Gets or sets the JMSX message-group sequence number.</summary>
     public int? GroupSequence { get; set; }
-    /// <summary>
-    /// Gets or sets the priority value.
-    /// </summary>
+    /// <summary>Gets or sets the Apache NMS message priority.</summary>
     public MsgPriority? Priority { get; set; }
-    /// <summary>
-    /// Gets or sets the reply destination value.
-    /// </summary>
+    /// <summary>Gets or sets the native reply destination.</summary>
     public IDestination? ReplyDestination { get; set; }
 
-    /// <summary>
-    /// Performs the read properties from operation.
-    /// </summary>
-    /// <param name="properties">The properties value.</param>
+    /// <summary>Restores ActiveMQ priority and message-group settings from transport properties.</summary>
+    /// <param name="properties">The transport-property snapshot.</param>
     public override void ReadPropertiesFrom(IReadOnlyDictionary<string, object> properties)
     {
         base.ReadPropertiesFrom(properties);
@@ -54,10 +40,8 @@ public class TransportActiveMqSendContext<T> :
         GroupSequence = ReadInt(properties, ActiveMqTransportPropertyNames.GroupSequence);
     }
 
-    /// <summary>
-    /// Performs the write properties to operation.
-    /// </summary>
-    /// <param name="properties">The properties value.</param>
+    /// <summary>Writes non-null ActiveMQ priority and message-group settings to transport properties.</summary>
+    /// <param name="properties">The transport-property destination.</param>
     public override void WritePropertiesTo(IDictionary<string, object> properties)
     {
         base.WritePropertiesTo(properties);

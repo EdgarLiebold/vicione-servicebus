@@ -6,7 +6,7 @@ public enum ReliableInboxStatus
     /// <summary>The record is owned by a fenced consumer attempt.</summary>
     Processing = 0,
 
-    /// <summary>The consumer transaction committed successfully.</summary>
+    /// <summary>Indicates consumed.</summary>
     Consumed = 1,
 
     /// <summary>A durable retry is waiting for its due time.</summary>

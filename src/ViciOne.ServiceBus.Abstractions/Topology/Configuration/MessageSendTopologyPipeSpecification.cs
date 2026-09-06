@@ -2,29 +2,23 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a message send topology pipe specification implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Describes requirements for message send topology pipe.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class MessageSendTopologyPipeSpecification<TMessage> :
     ISpecificationPipeSpecification<SendContext<TMessage>>
     where TMessage : class
 {
     readonly IMessageSendTopology<TMessage> _messageSendTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageSendTopology">The message send topology value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="messageSendTopology">The message send topology.</param>
     public MessageSendTopologyPipeSpecification(IMessageSendTopology<TMessage> messageSendTopology)
     {
         _messageSendTopology = messageSendTopology;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(ISpecificationPipeBuilder<SendContext<TMessage>> builder)
     {
         var typeBuilder = new Builder(builder);
@@ -32,10 +26,8 @@ public class MessageSendTopologyPipeSpecification<TMessage> :
         _messageSendTopology.Apply(typeBuilder);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;

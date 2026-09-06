@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a partitioner implementation.
-/// </summary>
+/// <summary>Partitions pipeline operations by their selected key.</summary>
 public class Partitioner :
     IPartitioner
 {
@@ -15,11 +13,9 @@ public class Partitioner :
     readonly int _partitionCount;
     readonly Partition[] _partitions;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="partitionCount">The partition count value.</param>
-    /// <param name="hashGenerator">The hash generator value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="partitionCount">The partition count.</param>
+    /// <param name="hashGenerator">The hash generator.</param>
     public Partitioner(int partitionCount, IHashGenerator hashGenerator)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(partitionCount, 1);
@@ -34,22 +30,18 @@ public class Partitioner :
             .ToArray();
     }
 
-    /// <summary>
-    /// Gets partitioner.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="keyProvider">The key provider value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets partitioner.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="keyProvider">The key provider.</param>
+    /// <returns>The partitioner.</returns>
     public IPartitioner<T> GetPartitioner<T>(PartitionKeyProvider<T> keyProvider)
         where T : class, PipeContext
     {
         return new ContextPartitioner<T>(this, keyProvider);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("partitioner");
@@ -60,10 +52,8 @@ public class Partitioner :
             partition.Probe(scope);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask DisposeAsync()
     {
         foreach (var partition in _partitions)

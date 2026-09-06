@@ -5,9 +5,9 @@ namespace ViciOne.ServiceBus.Scheduling;
 
 /// <summary>
 /// For transport-based schedulers, used to invoke the <see cref="SendContext{T}" /> pipe and
-/// manage the ScheduledMessageId, as well as set the transport delay property
+/// manage the ScheduledMessageId, as well as set the transport delay property.
 /// </summary>
-/// <typeparam name="TMessage">The message type</typeparam>
+/// <typeparam name="TMessage">The message type.</typeparam>
 public class ScheduleSendPipe<TMessage> :
     SendContextPipeAdapter<TMessage>
     where TMessage : class
@@ -18,23 +18,19 @@ public class ScheduleSendPipe<TMessage> :
 
     Guid? _scheduledMessageId;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="dueAt">The due at value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="dueAt">The due at.</param>
     public ScheduleSendPipe(IPipe<SendContext<TMessage>> pipe, DateTimeOffset dueAt)
         : base(pipe)
     {
         _dueAt = dueAt;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="dueAt">The due at value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="dueAt">The due at.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public ScheduleSendPipe(IPipe<SendContext<TMessage>> pipe, DateTimeOffset dueAt, TimeProvider timeProvider)
         : base(pipe)
     {
@@ -42,24 +38,18 @@ public class ScheduleSendPipe<TMessage> :
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
-    /// <summary>
-    /// Gets or sets the scheduled message id value.
-    /// </summary>
+    /// <summary>Gets or sets the scheduled message id.</summary>
     public Guid? ScheduledMessageId
     {
         get => _context?.ScheduledMessageId ?? _scheduledMessageId;
         set => _scheduledMessageId = value;
     }
 
-    /// <summary>
-    /// Gets the message id value.
-    /// </summary>
+    /// <summary>Gets the message id.</summary>
     public Guid? MessageId => _context?.MessageId;
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     protected override void Send(SendContext<TMessage> context)
     {
         _context = context;
@@ -75,11 +65,9 @@ public class ScheduleSendPipe<TMessage> :
             context.Headers.Set(MessageHeaders.SchedulingTokenId, ScheduledMessageId.Value.ToString("D"));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     protected override void Send<T>(SendContext<T> context)
     {
     }

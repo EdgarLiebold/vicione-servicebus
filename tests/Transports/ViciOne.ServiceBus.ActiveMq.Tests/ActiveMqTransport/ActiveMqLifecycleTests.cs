@@ -307,6 +307,68 @@ public sealed class ActiveMqLifecycleTests
                 : context.DeleteQueueAsync(name, cancellationToken);
     }
 
+    [Theory]
+    [InlineData("get-topic")]
+    [InlineData("ensure-topic")]
+    [InlineData("get-queue")]
+    [InlineData("get-destination")]
+    [InlineData("create-consumer")]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-CANCELLATION", "caller-token-propagates-through-session-executor")]
+    public async Task SessionOperation_CancelsWhileWaitingForBoundedExecutorCapacityAsync(string operation)
+    {
+        using var releaseWorker = new ManualResetEventSlim();
+        var workerStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        IQueue queue = QueueDestination("target");
+        ITopic topic = TopicDestination("target");
+        IMessageConsumer consumer = InterfaceProxy<IMessageConsumer>.Create((method, _) => Default(method.ReturnType));
+        IMessageProducer producer = InterfaceProxy<IMessageProducer>.Create((method, _) => Default(method.ReturnType));
+        ISession session = InterfaceProxy<ISession>.Create((method, args) => method.Name switch
+        {
+            nameof(ISession.GetQueue) => ResolveQueueForCancellation(
+                Assert.IsType<string>(args![0]),
+                workerStarted,
+                releaseWorker),
+            nameof(ISession.GetTopic) => topic,
+            nameof(ISession.CreateProducer) => producer,
+            nameof(ISession.CreateConsumerAsync) => Task.FromResult(consumer),
+            nameof(ISession.CloseAsync) => Task.CompletedTask,
+            _ => Default(method.ReturnType),
+        });
+        await using ActiveMqConnectionContext connectionContext = CreateConnectionContext(
+            InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
+            {
+                nameof(IConnection.CloseAsync) => Task.CompletedTask,
+                _ => Default(method.ReturnType),
+            }));
+        await using var context = new ActiveMqSessionContext(connectionContext, session, CancellationToken.None);
+
+        Task blocker = context.GetDestinationAsync("blocker", DestinationType.Queue, CancellationToken.None);
+        await workerStarted.Task;
+        Task[] queued = Enumerable.Range(0, 32)
+            .Select(index => (Task)context.GetDestinationAsync($"queued-{index}", DestinationType.Queue, CancellationToken.None))
+            .ToArray();
+        using var source = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        Task canceled = InvokeAsync(operation, source.Token);
+        Assert.False(canceled.IsCompleted);
+
+        source.Cancel();
+        releaseWorker.Set();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => canceled);
+        Assert.Equal(source.Token, exception.CancellationToken);
+        await Task.WhenAll(queued.Prepend(blocker));
+
+        Task InvokeAsync(string operationName, CancellationToken cancellationToken) => operationName switch
+        {
+            "get-topic" => context.GetTopicAsync(TopicTopology("target"), cancellationToken),
+            "ensure-topic" => context.EnsureTopicExistsAsync(TopicTopology("target"), cancellationToken),
+            "get-queue" => context.GetQueueAsync(QueueTopology("target"), cancellationToken),
+            "get-destination" => context.GetDestinationAsync("target", DestinationType.Queue, cancellationToken),
+            "create-consumer" => context.CreateMessageConsumerAsync(queue, null, false, cancellationToken: cancellationToken),
+            _ => throw new ArgumentOutOfRangeException(nameof(operationName), operationName, null),
+        };
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "auto-delete-cleanup-attempts-every-entity-after-failure")]
     public async Task AutoDeleteCleanup_AggregatesFailuresInStableOrderAndAttemptsEveryDistinctEntityAsync()
@@ -590,6 +652,20 @@ public sealed class ActiveMqLifecycleTests
         }
 
         return null;
+    }
+
+    private static IQueue ResolveQueueForCancellation(
+        string name,
+        TaskCompletionSource workerStarted,
+        ManualResetEventSlim releaseWorker)
+    {
+        if (name == "blocker")
+        {
+            workerStarted.TrySetResult();
+            releaseWorker.Wait(TestContext.Current.CancellationToken);
+        }
+
+        return QueueDestination(name);
     }
 
     private static IQueue QueueDestination(string name) =>

@@ -6,11 +6,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a job consumer message connector implementation.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
-/// <typeparam name="TJob">The t job type.</typeparam>
+/// <summary>Connects job consumer message to the service bus pipeline.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+/// <typeparam name="TJob">The job type.</typeparam>
 public class JobConsumerMessageConnector<TConsumer, TJob> :
     IConsumerMessageConnector<TConsumer>
     where TConsumer : class, IJobConsumer<TJob>
@@ -20,9 +18,7 @@ public class JobConsumerMessageConnector<TConsumer, TJob> :
     readonly IConsumerConnector _startJobConsumerConnector;
     readonly IConsumerConnector _submitJobConsumerConnector;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public JobConsumerMessageConnector()
     {
         _submitJobConsumerConnector = ConsumerConnectorCache<SubmitJobConsumer<TJob>>.Connector;
@@ -30,27 +26,21 @@ public class JobConsumerMessageConnector<TConsumer, TJob> :
         _finalizeJobConsumerConnector = ConsumerConnectorCache<FinalizeJobConsumer<TJob>>.Connector;
     }
 
-    /// <summary>
-    /// Gets the message type value.
-    /// </summary>
+    /// <summary>Gets the message type.</summary>
     public Type MessageType => typeof(TJob);
 
-    /// <summary>
-    /// Creates consumer message specification.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates consumer message specification.</summary>
+    /// <returns>The created consumer message specification.</returns>
     public IConsumerMessageSpecification<TConsumer> CreateConsumerMessageSpecification()
     {
         return new JobConsumerMessageSpecification<TConsumer, TJob>();
     }
 
-    /// <summary>
-    /// Connects consumer.
-    /// </summary>
-    /// <param name="consumePipe">The consume pipe value.</param>
-    /// <param name="consumerFactory">The consumer factory value.</param>
-    /// <param name="specification">The specification value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consumer.</summary>
+    /// <param name="consumePipe">The consume pipe.</param>
+    /// <param name="consumerFactory">The consumer factory.</param>
+    /// <param name="specification">The specification.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumer(IConsumePipeConnector consumePipe, IConsumerFactory<TConsumer> consumerFactory,
         IConsumerSpecification<TConsumer> specification)
     {

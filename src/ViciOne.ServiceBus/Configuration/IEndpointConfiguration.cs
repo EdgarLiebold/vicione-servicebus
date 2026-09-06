@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for endpoint configuration.
-/// </summary>
+/// <summary>Defines endpoint configuration.</summary>
 public interface IEndpointConfiguration :
     IConsumePipeConfigurator,
     ISendPipelineConfigurator,
@@ -10,40 +8,24 @@ public interface IEndpointConfiguration :
     IReceivePipelineConfigurator,
     ISpecification
 {
-    /// <summary>
-    /// Gets the is bus endpoint value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether bus endpoint.</summary>
     bool IsBusEndpoint { get; }
 
-    /// <summary>
-    /// Gets the consume value.
-    /// </summary>
+    /// <summary>Gets the consume.</summary>
     IConsumePipeConfiguration Consume { get; }
-    /// <summary>
-    /// Gets the send value.
-    /// </summary>
+    /// <summary>Gets the send.</summary>
     ISendPipeConfiguration Send { get; }
-    /// <summary>
-    /// Gets the publish value.
-    /// </summary>
+    /// <summary>Gets the publish.</summary>
     IPublishPipeConfiguration Publish { get; }
-    /// <summary>
-    /// Gets the receive value.
-    /// </summary>
+    /// <summary>Gets the receive.</summary>
     IReceivePipeConfiguration Receive { get; }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the topology.</summary>
     ITopologyConfiguration Topology { get; }
 
-    /// <summary>
-    /// Gets the serialization value.
-    /// </summary>
+    /// <summary>Gets the serialization.</summary>
     ISerializationConfiguration Serialization { get; }
 
-    /// <summary>
-    /// Gets the transport value.
-    /// </summary>
+    /// <summary>Gets the transport.</summary>
     ITransportConfiguration Transport { get; }
 }

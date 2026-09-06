@@ -8,43 +8,35 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for dependency injection future registration.
-/// </summary>
+/// <summary>Provides extension methods for dependency injection future registration.</summary>
 public static class DependencyInjectionFutureRegistrationExtensions
 {
-    /// <summary>
-    /// Performs the register future operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers future.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <returns>The future registration produced by the operation.</returns>
     public static IFutureRegistration RegisterFuture<T>(this IServiceCollection collection)
         where T : class, SagaStateMachine<FutureState>
     {
         return RegisterFuture<T, DefaultFutureDefinition<T>>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
-    /// <summary>
-    /// Performs the register future operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registrar">The registrar value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers future.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registrar">The registrar.</param>
+    /// <returns>The future registration produced by the operation.</returns>
     public static IFutureRegistration RegisterFuture<T>(this IServiceCollection collection, IContainerRegistrar registrar)
         where T : class, SagaStateMachine<FutureState>
     {
         return RegisterFuture<T, DefaultFutureDefinition<T>>(collection, registrar);
     }
 
-    /// <summary>
-    /// Performs the register future operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TDefinition">The t definition type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers future.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TDefinition">The definition type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <returns>The future registration produced by the operation.</returns>
     public static IFutureRegistration RegisterFuture<T, TDefinition>(this IServiceCollection collection)
         where T : class, SagaStateMachine<FutureState>
         where TDefinition : class, IFutureDefinition<T>
@@ -52,14 +44,12 @@ public static class DependencyInjectionFutureRegistrationExtensions
         return RegisterFuture<T, TDefinition>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
-    /// <summary>
-    /// Performs the register future operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TDefinition">The t definition type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registrar">The registrar value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers future.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TDefinition">The definition type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registrar">The registrar.</param>
+    /// <returns>The future registration produced by the operation.</returns>
     public static IFutureRegistration RegisterFuture<T, TDefinition>(this IServiceCollection collection, IContainerRegistrar registrar)
         where T : class, SagaStateMachine<FutureState>
         where TDefinition : class, IFutureDefinition<T>
@@ -67,27 +57,23 @@ public static class DependencyInjectionFutureRegistrationExtensions
         return new FutureDefinitionRegistrar<T, TDefinition>().Register(collection, registrar);
     }
 
-    /// <summary>
-    /// Performs the register future operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="futureDefinitionType">The future definition type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers future.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <param name="futureDefinitionType">The runtime future definition type used by the operation.</param>
+    /// <returns>The future registration produced by the operation.</returns>
     public static IFutureRegistration RegisterFuture<T>(this IServiceCollection collection, Type futureDefinitionType)
         where T : class, SagaStateMachine<FutureState>
     {
         return RegisterFuture<T>(collection, new DependencyInjectionContainerRegistrar(collection), futureDefinitionType);
     }
 
-    /// <summary>
-    /// Performs the register future operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registrar">The registrar value.</param>
-    /// <param name="futureDefinitionType">The future definition type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers future.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registrar">The registrar.</param>
+    /// <param name="futureDefinitionType">The runtime future definition type used by the operation.</param>
+    /// <returns>The future registration produced by the operation.</returns>
     public static IFutureRegistration RegisterFuture<T>(this IServiceCollection collection, IContainerRegistrar registrar, Type? futureDefinitionType)
         where T : class, SagaStateMachine<FutureState>
     {
@@ -105,14 +91,12 @@ public static class DependencyInjectionFutureRegistrationExtensions
         return register.Register(collection, registrar);
     }
 
-    /// <summary>
-    /// Performs the register future operation.
-    /// </summary>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registrar">The registrar value.</param>
-    /// <param name="futureType">The future type value.</param>
-    /// <param name="futureDefinitionType">The future definition type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers future.</summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registrar">The registrar.</param>
+    /// <param name="futureType">The runtime future type used by the operation.</param>
+    /// <param name="futureDefinitionType">The runtime future definition type used by the operation.</param>
+    /// <returns>The future registration produced by the operation.</returns>
     public static IFutureRegistration RegisterFuture(this IServiceCollection collection, IContainerRegistrar registrar, Type futureType,
         Type? futureDefinitionType = null)
     {

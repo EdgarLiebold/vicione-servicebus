@@ -7,25 +7,19 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides a message producer cache implementation.
-/// </summary>
+/// <summary>Caches Apache NMS message producers by destination and disposes them on shutdown.</summary>
 public class MessageProducerCache :
     Agent
 {
-    /// <summary>
-    /// Represents the method that handles message producer factory.
-    /// </summary>
-    /// <param name="destination">The destination value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a message producer for a native destination.</summary>
+    /// <param name="destination">The producer destination.</param>
+    /// <returns>A task that produces the native message producer.</returns>
     public delegate Task<IMessageProducer> MessageProducerFactory(IDestination destination);
 
 
     readonly KeyedResourceCache<IDestination, CachedMessageProducer> _cache;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Creates a producer cache with a ten-second minimum resource age.</summary>
     public MessageProducerCache()
     {
         var options = new ResourceCacheOptions(minAge: TimeSpan.FromSeconds(10));
@@ -33,13 +27,11 @@ public class MessageProducerCache :
         _cache = new KeyedResourceCache<IDestination, CachedMessageProducer>(x => x.Destination, options);
     }
 
-    /// <summary>
-    /// Gets message producer.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets an existing cached producer or creates one for a destination.</summary>
+    /// <param name="key">The native destination used as the cache key.</param>
+    /// <param name="factory">The asynchronous producer factory.</param>
+    /// <param name="cancellationToken">The token used to cancel cache lookup or creation.</param>
+    /// <returns>A task that produces the cached native message producer.</returns>
     public async Task<IMessageProducer> GetMessageProducerAsync(IDestination key, MessageProducerFactory factory, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(factory);
@@ -48,11 +40,9 @@ public class MessageProducerCache :
             async (destination, _) => new CachedMessageProducer(destination, await factory(destination).ConfigureAwait(false)), cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Stops agent.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Disposes all cached message producers when the cache agent stops.</summary>
+    /// <param name="context">The agent stop context.</param>
+    /// <returns>A task that completes when cache disposal has finished.</returns>
     protected override async Task StopAgentAsync(StopContext context)
     {
         await _cache.DisposeAsync().ConfigureAwait(false);

@@ -4,46 +4,42 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
-/// <summary>
-/// Caches InMemory transport instances so that they are only created and used once
-/// </summary>
+/// <summary>Hosts receive endpoints on a shared in-process message fabric.</summary>
 public class InMemoryHost :
     BaseHost,
     IInMemoryHost
 {
     readonly IInMemoryHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="busTopology">The bus topology value.</param>
+    /// <summary>Creates an in-memory host from its transport configuration and topology.</summary>
+    /// <param name="hostConfiguration">The configuration used to create endpoints and access the shared message fabric.</param>
+    /// <param name="busTopology">The in-memory topology used by the host.</param>
     public InMemoryHost(IInMemoryHostConfiguration hostConfiguration, IInMemoryBusTopology busTopology)
         : base(hostConfiguration, busTopology)
     {
         _hostConfiguration = hostConfiguration;
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a receive endpoint described by an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition that supplies the name and common settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null"/> to use the default formatter.</param>
+    /// <param name="configureEndpoint">An optional provider-neutral callback applied to the in-memory endpoint configuration.</param>
+    /// <returns>A handle that controls the connected receive endpoint.</returns>
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
-        return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
+        Action<IInMemoryReceiveEndpointConfigurator>? configure = configureEndpoint == null
+            ? null
+            : endpoint => configureEndpoint(endpoint);
+
+        return ConnectReceiveEndpoint(definition, endpointNameFormatter, configure);
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects an in-memory receive endpoint described by an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition that supplies the name and common settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null"/> to use the default formatter.</param>
+    /// <param name="configureEndpoint">An optional callback that applies in-memory-specific endpoint settings.</param>
+    /// <returns>A handle that controls the connected receive endpoint.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IInMemoryReceiveEndpointConfigurator>? configureEndpoint = null)
     {
@@ -56,23 +52,23 @@ public class InMemoryHost :
         });
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects an in-memory receive endpoint for a named queue.</summary>
+    /// <param name="queueName">The in-memory queue name.</param>
+    /// <param name="configureEndpoint">An optional provider-neutral callback applied to the in-memory endpoint configuration.</param>
+    /// <returns>A handle that controls the connected receive endpoint.</returns>
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
-        return ConnectReceiveEndpoint(queueName, configureEndpoint);
+        Action<IInMemoryReceiveEndpointConfigurator>? configure = configureEndpoint == null
+            ? null
+            : endpoint => configureEndpoint(endpoint);
+
+        return ConnectReceiveEndpoint(queueName, configure);
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates, validates, builds, and starts an in-memory receive endpoint.</summary>
+    /// <param name="queueName">The in-memory queue name.</param>
+    /// <param name="configure">An optional callback that applies in-memory-specific endpoint settings before validation.</param>
+    /// <returns>A handle that controls the started receive endpoint.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IInMemoryReceiveEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
@@ -88,15 +84,11 @@ public class InMemoryHost :
         return ReceiveEndpoints.Start(queueName);
     }
 
-    /// <summary>
-    /// Gets the delay provider value.
-    /// </summary>
+    /// <summary>Gets the delay provider used by the shared in-memory message fabric.</summary>
     public IInMemoryDelayProvider DelayProvider => _hostConfiguration.TransportProvider.MessageFabric.DelayProvider;
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds the in-memory host address and transport-provider state to a probe.</summary>
+    /// <param name="context">The probe context that receives the diagnostic values.</param>
     protected override void Probe(ProbeContext context)
     {
         context.Add("type", "InMemory");
@@ -105,10 +97,8 @@ public class InMemoryHost :
         _hostConfiguration.TransportProvider.Probe(context);
     }
 
-    /// <summary>
-    /// Gets agent handles.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the transport provider whose lifecycle is owned by the host.</summary>
+    /// <returns>The host-owned in-memory transport provider.</returns>
     protected override IAgent[] GetAgentHandles()
     {
         return [_hostConfiguration.TransportProvider];

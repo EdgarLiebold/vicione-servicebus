@@ -3,16 +3,12 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for receive endpoint configurator dependency.
-/// </summary>
+/// <summary>Provides extension methods for receive endpoint configurator dependency.</summary>
 public static class ReceiveEndpointConfiguratorDependencyExtensions
 {
-    /// <summary>
-    /// Adds dependency to the configuration.
-    /// </summary>
-    /// <param name="connector">The connector value.</param>
-    /// <param name="dependency">The dependency value.</param>
+    /// <summary>Adds dependency to the configuration.</summary>
+    /// <param name="connector">The connector.</param>
+    /// <param name="dependency">The dependency.</param>
     public static void AddDependency(this IReceiveEndpointConfigurator connector, IReceiveEndpointConfigurator dependency)
     {
         connector.AddDependency(new ReceiveEndpointDependency(dependency));

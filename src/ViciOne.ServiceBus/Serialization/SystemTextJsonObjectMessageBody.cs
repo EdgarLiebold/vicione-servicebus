@@ -6,9 +6,7 @@ using System.Text.Json;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a system text json object message body implementation.
-/// </summary>
+/// <summary>Carries system text json object message content.</summary>
 public class SystemTextJsonObjectMessageBody :
     MessageBody
 {
@@ -17,11 +15,9 @@ public class SystemTextJsonObjectMessageBody :
     byte[]? _bytes;
     string? _string;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <param name="options">The options that control the operation.</param>
     public SystemTextJsonObjectMessageBody(object value, JsonSerializerOptions options)
     {
         _value = value;
@@ -36,19 +32,15 @@ public class SystemTextJsonObjectMessageBody :
     /// </summary>
     public long? Length => GetBytes().LongLength;
 
-    /// <summary>
-    /// Gets stream.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets stream.</summary>
+    /// <returns>The stream.</returns>
     public Stream GetStream()
     {
         return new MemoryStream(GetBytes(), false);
     }
 
-    /// <summary>
-    /// Gets bytes.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets bytes.</summary>
+    /// <returns>The bytes.</returns>
     public byte[] GetBytes()
     {
         if (_bytes != null)
@@ -72,10 +64,8 @@ public class SystemTextJsonObjectMessageBody :
         }
     }
 
-    /// <summary>
-    /// Gets string.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets string.</summary>
+    /// <returns>The string.</returns>
     public string GetString()
     {
         if (_string != null)

@@ -2,10 +2,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Maintains the latest context to be passed through the filter
-/// </summary>
-/// <typeparam name="T"></typeparam>
+/// <summary>Maintains the latest context to be passed through the filter.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface ILatestFilter<T>
     where T : class, PipeContext
 {

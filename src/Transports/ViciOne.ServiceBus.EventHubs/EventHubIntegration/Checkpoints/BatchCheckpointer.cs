@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.EventHubs.Checkpoints;
 
-/// <summary>
-/// Provides a batch checkpointer implementation.
-/// </summary>
+/// <summary>Batches completed events and advances an Event Hubs partition checkpoint.</summary>
 public class BatchCheckpointer :
     ICheckpointer
 {
@@ -18,11 +16,9 @@ public class BatchCheckpointer :
     readonly ReceiveSettings _settings;
     readonly CancellationToken _cancellationToken;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Starts a bounded checkpoint worker using the configured batch size, interval, and backlog limit.</summary>
+    /// <param name="settings">The receive settings that control checkpoint batching.</param>
+    /// <param name="cancellationToken">Stops the checkpoint worker.</param>
     public BatchCheckpointer(ReceiveSettings settings, CancellationToken cancellationToken)
     {
         _settings = settings;
@@ -39,21 +35,17 @@ public class BatchCheckpointer :
         _checkpointTask = WaitForBatchAsync();
     }
 
-    /// <summary>
-    /// Performs the pending operation.
-    /// </summary>
-    /// <param name="confirmation">The confirmation value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Queues an event confirmation for ordered checkpoint processing.</summary>
+    /// <param name="confirmation">The event confirmation to enqueue.</param>
+    /// <param name="cancellationToken">Cancels waiting for capacity in the bounded queue.</param>
+    /// <returns>A task that completes when the confirmation has been queued.</returns>
     public async Task PendingAsync(IPendingConfirmation confirmation, CancellationToken cancellationToken = default)
     {
         await _channel.Writer.WriteAsync(confirmation, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes the queue and waits for the checkpoint worker to finish.</summary>
+    /// <returns>A task that completes after queued checkpoint work has stopped.</returns>
     public async ValueTask DisposeAsync()
     {
         _channel.Writer.TryComplete();

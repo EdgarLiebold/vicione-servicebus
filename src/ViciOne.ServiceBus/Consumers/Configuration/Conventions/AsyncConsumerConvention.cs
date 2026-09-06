@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an async consumer convention implementation.
-/// </summary>
+/// <summary>Applies conventions for async consumer.</summary>
 public class AsyncConsumerConvention :
     IConsumerConvention
 {

@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides an event hub producer provider implementation.
-/// </summary>
+/// <summary>Resolves, caches, observes, and disposes producers for Event Hubs endpoint addresses.</summary>
 public class EventHubProducerProvider :
     IEventHubProducerProvider,
     IAsyncDisposable
@@ -18,11 +16,9 @@ public class EventHubProducerProvider :
     readonly IEventHubHostConfiguration _hostConfiguration;
     readonly SendObservable _sendObservable;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="busInstance">The bus instance value.</param>
+    /// <summary>Creates a producer provider for an Event Hubs rider.</summary>
+    /// <param name="hostConfiguration">The Event Hubs host configuration used to build send transports.</param>
+    /// <param name="busInstance">The bus instance supplying host and topology services.</param>
     public EventHubProducerProvider(IEventHubHostConfiguration hostConfiguration, IBusInstance busInstance)
     {
         _hostConfiguration = hostConfiguration;
@@ -31,31 +27,25 @@ public class EventHubProducerProvider :
         _sendObservable = new SendObservable();
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Disposes the producer cache and all producers it owns.</summary>
+    /// <returns>A task that completes after cached producers are disposed.</returns>
     public ValueTask DisposeAsync()
     {
         return _cache.DisposeAsync();
     }
 
-    /// <summary>
-    /// Gets producer.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets or creates the cached producer for an Event Hubs endpoint address.</summary>
+    /// <param name="address">The endpoint address to normalize against the bus host.</param>
+    /// <param name="cancellationToken">Cancels cache lookup or producer creation.</param>
+    /// <returns>A task whose result is the endpoint producer.</returns>
     public Task<IEventHubProducer> GetProducerAsync(Uri address, CancellationToken cancellationToken = default)
     {
         return _cache.GetProducerAsync(address, CreateProducerAsync, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects an observer to producers created by this provider.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _sendObservable.Connect(observer);

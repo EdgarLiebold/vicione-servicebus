@@ -2,13 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.SignalR.Utils;
 
-/// <summary>
-/// Provides a vici one service bus feature implementation.
-/// </summary>
+/// <summary>Tracks service-bus SignalR group memberships for a connection.</summary>
 public class ViciOneServiceBusFeature : IViciOneServiceBusFeature
 {
-    /// <summary>
-    /// Gets the groups value.
-    /// </summary>
+    /// <summary>Gets the groups.</summary>
     public ConcurrentHashSet<string> Groups { get; } = new ConcurrentHashSet<string>(StringComparer.OrdinalIgnoreCase);
 }

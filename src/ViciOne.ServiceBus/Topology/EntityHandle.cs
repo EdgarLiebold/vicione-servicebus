@@ -1,12 +1,8 @@
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>
-/// Defines the contract for entity handle.
-/// </summary>
+/// <summary>Controls the lifetime of entity.</summary>
 public interface EntityHandle
 {
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the id.</summary>
     long Id { get; }
 }

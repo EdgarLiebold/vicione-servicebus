@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>
-/// Provides a consume context retry policy context implementation.
-/// </summary>
+/// <summary>Carries state for consume context retry policy operations.</summary>
 public class ConsumeContextRetryPolicyContext :
     RetryPolicyContext<ConsumeContext>
 {
@@ -15,11 +13,9 @@ public class ConsumeContextRetryPolicyContext :
     readonly RetryPolicyContext<ConsumeContext> _policyContext;
     readonly CancellationTokenRegistration _registration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="policyContext">The policy context value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="policyContext">The policy context.</param>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public ConsumeContextRetryPolicyContext(RetryPolicyContext<ConsumeContext> policyContext, RetryConsumeContext context,
         CancellationToken cancellationToken)
@@ -29,24 +25,18 @@ public class ConsumeContextRetryPolicyContext :
         _registration = cancellationToken.Register(static state => ((ConsumeContextRetryPolicyContext)state!).Cancel(), this);
     }
 
-    /// <summary>
-    /// Determines whether the current value can cel.
-    /// </summary>
+    /// <summary>Determines whether the current value can cel.</summary>
     public void Cancel()
     {
         _policyContext.Cancel();
     }
 
-    /// <summary>
-    /// Gets the context value.
-    /// </summary>
+    /// <summary>Gets the context.</summary>
     public ConsumeContext Context => _context;
 
-    /// <summary>
-    /// Determines whether the current value can retry.
-    /// </summary>
+    /// <summary>Determines whether the current value can retry.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="retryContext">The retry context value.</param>
+    /// <param name="retryContext">Receives the retry context produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool CanRetry(Exception exception, out RetryContext<ConsumeContext> retryContext)
     {
@@ -62,20 +52,16 @@ public class ConsumeContextRetryPolicyContext :
         return canRetry;
     }
 
-    /// <summary>
-    /// Performs the retry faulted operation.
-    /// </summary>
+    /// <summary>Reports that retry has faulted.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         return Task.WhenAll(_context.NotifyPendingFaultsAsync(cancellationToken: cancellationToken), _policyContext.RetryFaultedAsync(exception, cancellationToken: cancellationToken));
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         _registration.Dispose();
@@ -84,11 +70,9 @@ public class ConsumeContextRetryPolicyContext :
 }
 
 
-/// <summary>
-/// Provides a consume context retry policy context implementation.
-/// </summary>
-/// <typeparam name="TFilter">The t filter type.</typeparam>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Carries state for consume context retry policy operations.</summary>
+/// <typeparam name="TFilter">The filter type.</typeparam>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class ConsumeContextRetryPolicyContext<TFilter, TContext> :
     RetryPolicyContext<TFilter>
     where TFilter : class, PipeContext
@@ -98,11 +82,9 @@ public class ConsumeContextRetryPolicyContext<TFilter, TContext> :
     readonly RetryPolicyContext<TFilter> _policyContext;
     readonly CancellationTokenRegistration _registration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="policyContext">The policy context value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="policyContext">The policy context.</param>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public ConsumeContextRetryPolicyContext(RetryPolicyContext<TFilter> policyContext, TContext context, CancellationToken cancellationToken)
     {
@@ -111,24 +93,18 @@ public class ConsumeContextRetryPolicyContext<TFilter, TContext> :
         _registration = cancellationToken.Register(static state => ((ConsumeContextRetryPolicyContext<TFilter, TContext>)state!).Cancel(), this);
     }
 
-    /// <summary>
-    /// Determines whether the current value can cel.
-    /// </summary>
+    /// <summary>Determines whether the current value can cel.</summary>
     public void Cancel()
     {
         _policyContext.Cancel();
     }
 
-    /// <summary>
-    /// Gets the context value.
-    /// </summary>
+    /// <summary>Gets the context.</summary>
     public TFilter Context => _context;
 
-    /// <summary>
-    /// Determines whether the current value can retry.
-    /// </summary>
+    /// <summary>Determines whether the current value can retry.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="retryContext">The retry context value.</param>
+    /// <param name="retryContext">Receives the retry context produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool CanRetry(Exception exception, out RetryContext<TFilter> retryContext)
     {
@@ -145,20 +121,16 @@ public class ConsumeContextRetryPolicyContext<TFilter, TContext> :
         return canRetry;
     }
 
-    /// <summary>
-    /// Performs the retry faulted operation.
-    /// </summary>
+    /// <summary>Reports that retry has faulted.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         return Task.WhenAll(_context.NotifyPendingFaultsAsync(cancellationToken: cancellationToken), _policyContext.RetryFaultedAsync(exception, cancellationToken: cancellationToken));
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         _registration.Dispose();

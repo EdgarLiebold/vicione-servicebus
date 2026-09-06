@@ -1,50 +1,132 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides a batch entry implementation.
-/// </summary>
-/// <typeparam name="TEntry">The t entry type.</typeparam>
-public class BatchEntry<TEntry>
+sealed class BatchEntry<TEntry> :
+    IDisposable
 {
+    readonly CancellationToken _callerCancellationToken;
     readonly TaskCompletionSource<bool> _completed;
+    readonly object _lock = new();
+    CancellationTokenRegistration _cancellationRegistration;
+    EntryState _state;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="entry">The entry value.</param>
-    public BatchEntry(TEntry entry)
+    public BatchEntry(TEntry entry, CancellationToken callerCancellationToken)
     {
         Entry = entry;
+        _callerCancellationToken = callerCancellationToken;
         _completed = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        if (callerCancellationToken.CanBeCanceled)
+        {
+            CancellationTokenRegistration registration = callerCancellationToken.UnsafeRegister(
+                static state => ((BatchEntry<TEntry>)state!).CancelCaller(),
+                this);
+
+            var disposeRegistration = false;
+            lock (_lock)
+            {
+                _cancellationRegistration = registration;
+                disposeRegistration = _state is EntryState.CanceledBeforeDispatch or EntryState.Terminal;
+            }
+
+            if (disposeRegistration)
+                registration.Dispose();
+        }
     }
 
-    /// <summary>
-    /// Gets the entry value.
-    /// </summary>
     public TEntry Entry { get; }
 
-    /// <summary>
-    /// Gets the completed value.
-    /// </summary>
     public Task Completed => _completed.Task;
 
-    /// <summary>
-    /// Sets completed.
-    /// </summary>
-    public void SetCompleted()
+    public void Dispose()
     {
-        _completed.TrySetResult(true);
+        lock (_lock)
+            _state = EntryState.Terminal;
+
+        _cancellationRegistration.Dispose();
     }
 
-    /// <summary>
-    /// Sets faulted.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    public bool TryBeginDispatch()
+    {
+        lock (_lock)
+        {
+            if (_state != EntryState.Queued)
+                return false;
+
+            _state = EntryState.Dispatched;
+            return true;
+        }
+    }
+
+    public void SetCompleted()
+    {
+        bool completeCaller;
+        lock (_lock)
+        {
+            completeCaller = _state is EntryState.Queued or EntryState.Dispatched;
+            _state = EntryState.Terminal;
+        }
+
+        if (completeCaller)
+            _completed.TrySetResult(true);
+
+        _cancellationRegistration.Dispose();
+    }
+
     public void SetFaulted(Exception exception)
     {
-        _completed.TrySetException(exception);
+        bool faultCaller;
+        lock (_lock)
+        {
+            faultCaller = _state is EntryState.Queued or EntryState.Dispatched;
+            _state = EntryState.Terminal;
+        }
+
+        if (faultCaller)
+            _completed.TrySetException(exception);
+
+        _cancellationRegistration.Dispose();
+    }
+
+    public void SetCanceled(CancellationToken cancellationToken)
+    {
+        bool cancelCaller;
+        lock (_lock)
+        {
+            cancelCaller = _state is EntryState.Queued or EntryState.Dispatched;
+            _state = EntryState.Terminal;
+        }
+
+        if (cancelCaller)
+            _completed.TrySetCanceled(cancellationToken);
+
+        _cancellationRegistration.Dispose();
+    }
+
+    void CancelCaller()
+    {
+        lock (_lock)
+        {
+            if (_state == EntryState.Queued)
+                _state = EntryState.CanceledBeforeDispatch;
+            else if (_state == EntryState.Dispatched)
+                _state = EntryState.CallerCanceledAfterDispatch;
+            else
+                return;
+        }
+
+        _completed.TrySetCanceled(_callerCancellationToken);
+    }
+
+    enum EntryState
+    {
+        Queued,
+        Dispatched,
+        CanceledBeforeDispatch,
+        CallerCanceledAfterDispatch,
+        Terminal
     }
 }

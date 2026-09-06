@@ -5,38 +5,29 @@ using System.Runtime.Intrinsics.X86;
 
 namespace ViciOne.ServiceBus.NewIdFormatters;
 
-/// <summary>
-/// Provides a z base32 formatter implementation.
-/// </summary>
+/// <summary>Formats z base32 values.</summary>
 public class ZBase32Formatter : INewIdFormatter
 {
-    // taken from analysis done at http://philzimmermann.com/docs/human-oriented-base-32-encoding.txt
     const string LowerCaseChars = "ybndrfg8ejkmcpqxot1uwisza345h769";
     const string UpperCaseChars = "YBNDRFG8EJKMCPQXOT1UWISZA345H769";
 
     readonly string _chars;
     readonly bool _isUpper;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="upperCase">The upper case value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="upperCase">The upper case.</param>
     public ZBase32Formatter(bool upperCase = false)
     {
         _chars = upperCase ? UpperCaseChars : LowerCaseChars;
         _isUpper = upperCase;
     }
 
-    /// <summary>
-    /// Defines the lower case value.
-    /// </summary>
+    /// <summary>Exposes the lower case used by the containing type.</summary>
     public static readonly INewIdFormatter LowerCase = new ZBase32Formatter();
 
-    /// <summary>
-    /// Formats a canonical identifier representation.
-    /// </summary>
-    /// <param name="bytes">The canonical 16-byte identifier representation.</param>
-    /// <returns>The z-base-32-encoded identifier.</returns>
+    /// <summary>Formats a canonical identifier representation.</summary>
+    /// <param name="bytes">The bytes.</param>
+    /// <returns>The formatted value.</returns>
     /// <exception cref="ArgumentException"><paramref name="bytes" /> does not contain exactly 16 bytes.</exception>
     public string Format(ReadOnlySpan<byte> bytes)
     {
@@ -73,7 +64,6 @@ public class ZBase32Formatter : INewIdFormatter
     {
         for (var i = count - 1; i >= 0; i--)
         {
-            //30, 26, 25, 7, 24, 31, 4, 10, 23, 1, 2, 9, 17, 11, 4, 23, 7, 9, 16, 16, 15, 8, 16, 19, 2, 4,
             var index = (int)(value % 32);
             buffer[offset + i] = chars[index];
             value /= 32;

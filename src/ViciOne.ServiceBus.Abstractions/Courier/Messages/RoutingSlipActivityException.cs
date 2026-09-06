@@ -4,28 +4,22 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Courier.Messages;
 
-/// <summary>
-/// Represents an error related to routing slip activity.
-/// </summary>
+/// <summary>Represents an error related to routing slip activity.</summary>
 public class RoutingSlipActivityException :
     ActivityException
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public RoutingSlipActivityException()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="activityName">The activity name value.</param>
-    /// <param name="host">The host value.</param>
-    /// <param name="executionId">The execution id value.</param>
-    /// <param name="timestamp">The timestamp value.</param>
-    /// <param name="elapsed">The elapsed value.</param>
-    /// <param name="exceptionInfo">The exception info value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="activityName">The activity name.</param>
+    /// <param name="host">The host.</param>
+    /// <param name="executionId">The execution id.</param>
+    /// <param name="timestamp">The timestamp.</param>
+    /// <param name="elapsed">The elapsed.</param>
+    /// <param name="exceptionInfo">The exception info.</param>
     public RoutingSlipActivityException(string activityName, HostInfo host, Guid executionId, DateTimeOffset timestamp, TimeSpan elapsed,
         ExceptionInfo exceptionInfo)
     {
@@ -38,10 +32,8 @@ public class RoutingSlipActivityException :
         ExceptionInfo = exceptionInfo;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="activityException">The activity exception value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="activityException">The activity exception.</param>
     public RoutingSlipActivityException(ActivityException activityException)
     {
         if (string.IsNullOrEmpty(activityException.Name))
@@ -57,28 +49,16 @@ public class RoutingSlipActivityException :
         ExceptionInfo = activityException.ExceptionInfo;
     }
 
-    /// <summary>
-    /// Gets or sets the execution id value.
-    /// </summary>
+    /// <summary>Gets or sets the execution id.</summary>
     public Guid ExecutionId { get; set; }
-    /// <summary>
-    /// Gets or sets the timestamp value.
-    /// </summary>
+    /// <summary>Gets or sets the timestamp.</summary>
     public DateTimeOffset Timestamp { get; set; }
-    /// <summary>
-    /// Gets or sets the elapsed value.
-    /// </summary>
+    /// <summary>Gets or sets the elapsed.</summary>
     public TimeSpan Elapsed { get; set; }
-    /// <summary>
-    /// Gets or sets the name value.
-    /// </summary>
+    /// <summary>Gets or sets the name.</summary>
     public string Name { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the host value.
-    /// </summary>
+    /// <summary>Gets or sets the host.</summary>
     public HostInfo Host { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the exception info value.
-    /// </summary>
+    /// <summary>Gets or sets the exception info.</summary>
     public ExceptionInfo ExceptionInfo { get; set; } = null!;
 }

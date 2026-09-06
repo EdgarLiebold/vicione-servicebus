@@ -3,18 +3,12 @@ using ViciOne.ServiceBus.Contracts.JobService;
 
 namespace ViciOne.ServiceBus.JobService.Messages;
 
-/// <summary>
-/// Provides a job slot allocated response implementation.
-/// </summary>
+/// <summary>Carries the response for job slot allocated.</summary>
 public class JobSlotAllocatedResponse :
     JobSlotAllocated
 {
-    /// <summary>
-    /// Gets or sets the job id value.
-    /// </summary>
+    /// <summary>Gets or sets the job id.</summary>
     public Guid JobId { get; set; }
-    /// <summary>
-    /// Gets or sets the instance address value.
-    /// </summary>
+    /// <summary>Gets or sets the instance address.</summary>
     public Uri InstanceAddress { get; set; } = null!;
 }

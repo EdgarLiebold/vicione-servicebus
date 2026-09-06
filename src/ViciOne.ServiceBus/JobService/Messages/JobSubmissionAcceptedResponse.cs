@@ -3,14 +3,10 @@ using ViciOne.ServiceBus.Contracts.JobService;
 
 namespace ViciOne.ServiceBus.JobService.Messages;
 
-/// <summary>
-/// Provides a job submission accepted response implementation.
-/// </summary>
+/// <summary>Carries the response for job submission accepted.</summary>
 public class JobSubmissionAcceptedResponse :
     JobSubmissionAccepted
 {
-    /// <summary>
-    /// Gets or sets the job id value.
-    /// </summary>
+    /// <summary>Gets or sets the job id.</summary>
     public Guid JobId { get; set; }
 }

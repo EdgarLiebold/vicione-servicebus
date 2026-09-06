@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.Courier;
 
-/// <summary>
-/// Provides a compensate activity host implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TLog">The t log type.</typeparam>
+/// <summary>Represents the host for compensate activity.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TLog">The log type.</typeparam>
 public class CompensateActivityHost<TActivity, TLog> :
     IFilter<ConsumeContext<RoutingSlip>>
     where TActivity : class, ICompensateActivity<TLog>
@@ -17,21 +15,17 @@ public class CompensateActivityHost<TActivity, TLog> :
 {
     readonly IPipe<CompensateContext<TLog>> _compensatePipe;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="compensatePipe">The compensate pipe value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="compensatePipe">The compensate pipe.</param>
     public CompensateActivityHost(IPipe<CompensateContext<TLog>> compensatePipe)
     {
         _compensatePipe = compensatePipe;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ConsumeContext<RoutingSlip> context, IPipe<ConsumeContext<RoutingSlip>> next)
     {
         TimeProvider timeProvider = context.GetTimeProvider();
@@ -99,10 +93,8 @@ public class CompensateActivityHost<TActivity, TLog> :
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("compensateActivity");

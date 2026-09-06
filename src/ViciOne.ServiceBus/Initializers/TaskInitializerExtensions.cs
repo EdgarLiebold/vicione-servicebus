@@ -6,9 +6,12 @@ namespace ViciOne.ServiceBus.Initializers;
 public static class TaskInitializerExtensions
 {
     /// <summary>Awaits the source and projects its value, or returns no value for a null source.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <typeparam name="TSource">The source type.</typeparam>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
     /// <param name="source">The source used by the operation.</param>
     /// <param name="selector">The selector used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the selected value.</returns>
     public static async Task<TResult?> SelectAsync<TSource, TResult>(
         this Task<TSource> source,
         Func<TSource, TResult?> selector, CancellationToken cancellationToken = default)
@@ -22,10 +25,13 @@ public static class TaskInitializerExtensions
     /// Awaits the source and projects its value, using <paramref name="fallback"/> when either the
     /// source or the selected value is null.
     /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <typeparam name="TSource">The source type.</typeparam>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
     /// <param name="source">The source used by the operation.</param>
     /// <param name="selector">The selector used by the operation.</param>
     /// <param name="fallback">The fallback used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the selected value.</returns>
     public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
         this Task<TSource> source,
         Func<TSource, TResult?> selector,
@@ -60,10 +66,13 @@ public static class TaskInitializerExtensions
     /// Awaits the source and projects its value, invoking <paramref name="fallbackFactory"/> only
     /// when either the source or the selected value is null.
     /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <typeparam name="TSource">The source type.</typeparam>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
     /// <param name="source">The source used by the operation.</param>
     /// <param name="selector">The selector used by the operation.</param>
     /// <param name="fallbackFactory">The fallback factory used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the selected value.</returns>
     public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
         this Task<TSource> source,
         Func<TSource, TResult?> selector,
@@ -103,10 +112,13 @@ public static class TaskInitializerExtensions
     /// Awaits the source and projects its value, invoking and awaiting
     /// <paramref name="fallbackFactory"/> only when either the source or the selected value is null.
     /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <typeparam name="TSource">The source type.</typeparam>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
     /// <param name="source">The source used by the operation.</param>
     /// <param name="selector">The selector used by the operation.</param>
     /// <param name="fallbackFactory">The fallback factory used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the selected value.</returns>
     public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
         this Task<TSource> source,
         Func<TSource, TResult?> selector,

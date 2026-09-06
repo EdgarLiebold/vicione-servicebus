@@ -3,29 +3,23 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides a sns header value converter implementation.
-/// </summary>
+/// <summary>Converts allowed string headers to Amazon SNS message attributes.</summary>
 public class SnsHeaderValueConverter :
     IHeaderValueConverter<MessageAttributeValue>
 {
     readonly AllowTransportHeader _allowTransportHeader;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="allowTransportHeader">The allow transport header value.</param>
+    /// <summary>Initializes an Amazon SNS header converter.</summary>
+    /// <param name="allowTransportHeader">An optional predicate that filters string headers; all string headers are allowed by default.</param>
     public SnsHeaderValueConverter(AllowTransportHeader? allowTransportHeader = null)
     {
         _allowTransportHeader = allowTransportHeader ?? AlwaysCopy;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="headerValue">The header value value.</param>
-    /// <param name="result">The result value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Tries to convert an allowed string header to an Amazon SNS <c>String</c> message attribute.</summary>
+    /// <param name="headerValue">The transport header.</param>
+    /// <param name="result">The converted Amazon SNS message attribute when successful.</param>
+    /// <returns><see langword="true"/> when the header is a permitted string value; otherwise, <see langword="false"/>.</returns>
     public bool TryConvert(HeaderValue headerValue, out HeaderValue<MessageAttributeValue> result)
     {
         if (headerValue.IsStringValue(out HeaderValue<string> stringValue) && _allowTransportHeader(stringValue))
@@ -38,13 +32,11 @@ public class SnsHeaderValueConverter :
         return false;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="headerValue">The header value value.</param>
-    /// <param name="result">The result value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Tries to convert a typed header containing an allowed string value to an Amazon SNS message attribute.</summary>
+    /// <typeparam name="T">The declared header-value type.</typeparam>
+    /// <param name="headerValue">The typed transport header.</param>
+    /// <param name="result">The converted Amazon SNS message attribute when successful.</param>
+    /// <returns><see langword="true"/> when the header contains a permitted string value; otherwise, <see langword="false"/>.</returns>
     public bool TryConvert<T>(HeaderValue<T> headerValue, out HeaderValue<MessageAttributeValue> result)
     {
         if (headerValue.IsStringValue(out HeaderValue<string> stringValue) && _allowTransportHeader(stringValue))

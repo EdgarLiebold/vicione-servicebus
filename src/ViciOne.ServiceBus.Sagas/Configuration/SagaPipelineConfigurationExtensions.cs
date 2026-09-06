@@ -10,16 +10,12 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Sagas.Configuration;
 
-/// <summary>
-/// Configures middleware that is specific to saga pipelines.
-/// </summary>
+/// <summary>Configures middleware that is specific to saga pipelines.</summary>
 public static class SagaPipelineConfigurationExtensions
 {
-    /// <summary>
-    /// Limits the number of concurrently consumed saga messages.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga configurator.</param>
+    /// <summary>Limits the number of concurrently consumed saga messages.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     /// <param name="concurrentMessageLimit">The maximum number of concurrently consumed messages.</param>
     public static void UseConcurrentMessageLimit<TSaga>(this ISagaConfigurator<TSaga> configurator, int concurrentMessageLimit)
         where TSaga : class, ISaga
@@ -30,12 +26,10 @@ public static class SagaPipelineConfigurationExtensions
         configurator.ConnectSagaConfigurationObserver(observer);
     }
 
-    /// <summary>
-    /// Limits the number of concurrently consumed saga messages and exposes runtime limit management.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga configurator.</param>
-    /// <param name="concurrentMessageLimit">The initial concurrency limit.</param>
+    /// <summary>Limits the number of concurrently consumed saga messages and exposes runtime limit management.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="concurrentMessageLimit">The concurrent message limit.</param>
     /// <param name="managementEndpointConfigurator">The management endpoint configurator.</param>
     /// <param name="id">The optional identifier used to select the limit at runtime.</param>
     public static void UseConcurrentMessageLimit<TSaga>(this ISagaConfigurator<TSaga> configurator, int concurrentMessageLimit,
@@ -55,12 +49,10 @@ public static class SagaPipelineConfigurationExtensions
         });
     }
 
-    /// <summary>
-    /// Configures delayed redelivery for every message handled by a saga.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga configurator.</param>
-    /// <param name="configure">The redelivery policy callback.</param>
+    /// <summary>Configures delayed redelivery for every message handled by a saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseDelayedRedelivery<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<IRedeliveryConfigurator> configure)
         where TSaga : class, ISaga
     {
@@ -71,13 +63,11 @@ public static class SagaPipelineConfigurationExtensions
         configurator.ConnectSagaConfigurationObserver(observer);
     }
 
-    /// <summary>
-    /// Adds an in-memory outbox to a saga pipeline using the supplied registration context.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga configurator.</param>
-    /// <param name="context">The registration context.</param>
-    /// <param name="configure">The optional outbox callback.</param>
+    /// <summary>Adds an in-memory outbox to a saga pipeline using the supplied registration context.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseVolatileOutbox<TSaga>(this ISagaConfigurator<TSaga> configurator, IRegistrationContext context,
         Action<IOutboxConfigurator>? configure = null)
         where TSaga : class, ISaga
@@ -89,12 +79,10 @@ public static class SagaPipelineConfigurationExtensions
         configurator.ConnectSagaConfigurationObserver(observer);
     }
 
-    /// <summary>
-    /// Adds an in-memory outbox to a saga pipeline.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga configurator.</param>
-    /// <param name="configure">The optional outbox callback.</param>
+    /// <summary>Adds an in-memory outbox to a saga pipeline.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseVolatileOutbox<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<IOutboxConfigurator>? configure = null)
         where TSaga : class, ISaga
     {
@@ -104,12 +92,10 @@ public static class SagaPipelineConfigurationExtensions
         configurator.ConnectSagaConfigurationObserver(observer);
     }
 
-    /// <summary>
-    /// Configures retry for every message handled by a saga.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga configurator.</param>
-    /// <param name="configure">The retry policy callback.</param>
+    /// <summary>Configures retry for every message handled by a saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseMessageRetry<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<IRetryConfigurator> configure)
         where TSaga : class, ISaga
     {
@@ -120,13 +106,11 @@ public static class SagaPipelineConfigurationExtensions
         configurator.ConnectSagaConfigurationObserver(observer);
     }
 
-    /// <summary>
-    /// Configures retry for every message handled by a saga and cancels retry waits when the bus stops.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga configurator.</param>
+    /// <summary>Configures retry for every message handled by a saga and cancels retry waits when the bus stops.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     /// <param name="busFactoryConfigurator">The bus configurator that supplies the stopping signal.</param>
-    /// <param name="configure">The retry policy callback.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseMessageRetry<TSaga>(this ISagaConfigurator<TSaga> configurator, IBusFactoryConfigurator busFactoryConfigurator,
         Action<IRetryConfigurator> configure)
         where TSaga : class, ISaga
@@ -142,12 +126,10 @@ public static class SagaPipelineConfigurationExtensions
         configurator.ConnectSagaConfigurationObserver(observer);
     }
 
-    /// <summary>
-    /// Adds retry middleware inside a saga repository pipeline.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga pipe configurator.</param>
-    /// <param name="configure">The retry policy callback.</param>
+    /// <summary>Adds retry middleware inside a saga repository pipeline.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseMessageRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator,
         Action<IRetryConfigurator> configure)
         where TSaga : class, ISaga
@@ -161,13 +143,11 @@ public static class SagaPipelineConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Adds retry middleware inside a saga repository pipeline and cancels retry waits when the bus stops.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga pipe configurator.</param>
+    /// <summary>Adds retry middleware inside a saga repository pipeline and cancels retry waits when the bus stops.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     /// <param name="connector">The bus configurator that supplies the stopping signal.</param>
-    /// <param name="configure">The retry policy callback.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseMessageRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator,
         IBusFactoryConfigurator connector, Action<IRetryConfigurator> configure)
         where TSaga : class, ISaga
@@ -186,12 +166,10 @@ public static class SagaPipelineConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Configures scheduled redelivery for every message handled by a saga.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga configurator.</param>
-    /// <param name="configure">The redelivery policy callback.</param>
+    /// <summary>Configures scheduled redelivery for every message handled by a saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseScheduledRedelivery<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<IRetryConfigurator> configure)
         where TSaga : class, ISaga
     {
@@ -202,12 +180,10 @@ public static class SagaPipelineConfigurationExtensions
         configurator.ConnectSagaConfigurationObserver(observer);
     }
 
-    /// <summary>
-    /// Applies a timeout to every message handled by a saga.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga configurator.</param>
-    /// <param name="configure">The timeout callback.</param>
+    /// <summary>Applies a timeout to every message handled by a saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseTimeout<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<ITimeoutConfigurator> configure)
         where TSaga : class, ISaga
     {
@@ -218,13 +194,11 @@ public static class SagaPipelineConfigurationExtensions
         configurator.ConnectSagaConfigurationObserver(observer);
     }
 
-    /// <summary>
-    /// Routes exceptions from a saga pipeline through the supplied rescue pipe.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga pipe configurator.</param>
-    /// <param name="rescuePipe">The exception pipe.</param>
-    /// <param name="configure">The optional rescue callback.</param>
+    /// <summary>Routes exceptions from a saga pipeline through the supplied rescue pipe.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="rescuePipe">The rescue pipe.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseRescue<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator,
         IPipe<ExceptionSagaConsumeContext<TSaga>> rescuePipe, Action<IExceptionConfigurator>? configure = null)
         where TSaga : class, ISaga
@@ -237,13 +211,11 @@ public static class SagaPipelineConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Partitions saga messages by a <see cref="Guid" /> key.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga pipe configurator.</param>
-    /// <param name="partitionCount">The number of partitions.</param>
-    /// <param name="keyProvider">The partition-key provider.</param>
+    /// <summary>Partitions saga messages by a <see cref="Guid" /> key.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="partitionCount">The partition count.</param>
+    /// <param name="keyProvider">The key provider.</param>
     public static void UsePartitioner<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator,
         int partitionCount, Func<SagaConsumeContext<TSaga>, Guid> keyProvider)
         where TSaga : class, ISaga
@@ -254,13 +226,11 @@ public static class SagaPipelineConfigurationExtensions
         ConfigurePartitioner(configurator, partitionCount, context => keyProvider(context).ToByteArray());
     }
 
-    /// <summary>
-    /// Partitions saga messages by a text key.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The saga pipe configurator.</param>
-    /// <param name="partitionCount">The number of partitions.</param>
-    /// <param name="keyProvider">The partition-key provider.</param>
+    /// <summary>Partitions saga messages by a text key.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="partitionCount">The partition count.</param>
+    /// <param name="keyProvider">The key provider.</param>
     /// <param name="encoding">The optional key encoding; UTF-8 is used by default.</param>
     public static void UsePartitioner<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator,
         int partitionCount, Func<SagaConsumeContext<TSaga>, string> keyProvider, Encoding? encoding = null)
@@ -278,12 +248,10 @@ public static class SagaPipelineConfigurationExtensions
         });
     }
 
-    /// <summary>
-    /// Configures a registered saga by runtime type on a receive endpoint.
-    /// </summary>
-    /// <param name="configurator">The receive endpoint configurator.</param>
-    /// <param name="registration">The registration context.</param>
-    /// <param name="sagaType">The saga type.</param>
+    /// <summary>Configures a registered saga by runtime type on a receive endpoint.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="registration">The registration.</param>
+    /// <param name="sagaType">The runtime saga type used by the operation.</param>
     public static void ConfigureSaga(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration, Type sagaType)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -293,13 +261,11 @@ public static class SagaPipelineConfigurationExtensions
         registration.ConfigureSaga(sagaType, configurator);
     }
 
-    /// <summary>
-    /// Configures a registered saga on a receive endpoint.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type.</typeparam>
-    /// <param name="configurator">The receive endpoint configurator.</param>
-    /// <param name="registration">The registration context.</param>
-    /// <param name="configure">The optional saga callback.</param>
+    /// <summary>Configures a registered saga on a receive endpoint.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="registration">The registration.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void ConfigureSaga<TSaga>(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration,
         Action<ISagaConfigurator<TSaga>>? configure = null)
         where TSaga : class, ISaga
@@ -310,11 +276,9 @@ public static class SagaPipelineConfigurationExtensions
         registration.ConfigureSaga(configurator, configure);
     }
 
-    /// <summary>
-    /// Configures every registered saga on a receive endpoint.
-    /// </summary>
-    /// <param name="configurator">The receive endpoint configurator.</param>
-    /// <param name="registration">The registration context.</param>
+    /// <summary>Configures every registered saga on a receive endpoint.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="registration">The registration.</param>
     public static void ConfigureSagas(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -323,13 +287,11 @@ public static class SagaPipelineConfigurationExtensions
         registration.ConfigureSagas(configurator);
     }
 
-    /// <summary>
-    /// Registers a state-machine event observer.
-    /// </summary>
-    /// <typeparam name="TInstance">The state-machine instance type.</typeparam>
+    /// <summary>Registers a state-machine event observer.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
     /// <typeparam name="TObserver">The observer type.</typeparam>
-    /// <param name="services">The service collection.</param>
-    /// <returns>The service collection.</returns>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddEventObserver<TInstance, TObserver>(this IServiceCollection services)
         where TInstance : class, SagaStateMachineInstance
         where TObserver : class, IEventObserver<TInstance>
@@ -340,14 +302,12 @@ public static class SagaPipelineConfigurationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Registers a state-machine event observer created by a factory.
-    /// </summary>
-    /// <typeparam name="TInstance">The state-machine instance type.</typeparam>
+    /// <summary>Registers a state-machine event observer created by a factory.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
     /// <typeparam name="TObserver">The observer type.</typeparam>
-    /// <param name="services">The service collection.</param>
-    /// <param name="factory">The observer factory.</param>
-    /// <returns>The service collection.</returns>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddEventObserver<TInstance, TObserver>(this IServiceCollection services,
         Func<IServiceProvider, TObserver> factory)
         where TInstance : class, SagaStateMachineInstance
@@ -360,13 +320,11 @@ public static class SagaPipelineConfigurationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Registers a state-machine state observer.
-    /// </summary>
-    /// <typeparam name="TInstance">The state-machine instance type.</typeparam>
+    /// <summary>Registers a state-machine state observer.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
     /// <typeparam name="TObserver">The observer type.</typeparam>
-    /// <param name="services">The service collection.</param>
-    /// <returns>The service collection.</returns>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddStateObserver<TInstance, TObserver>(this IServiceCollection services)
         where TInstance : class, SagaStateMachineInstance
         where TObserver : class, IStateObserver<TInstance>
@@ -377,14 +335,12 @@ public static class SagaPipelineConfigurationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Registers a state-machine state observer created by a factory.
-    /// </summary>
-    /// <typeparam name="TInstance">The state-machine instance type.</typeparam>
+    /// <summary>Registers a state-machine state observer created by a factory.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
     /// <typeparam name="TObserver">The observer type.</typeparam>
-    /// <param name="services">The service collection.</param>
-    /// <param name="factory">The observer factory.</param>
-    /// <returns>The service collection.</returns>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddStateObserver<TInstance, TObserver>(this IServiceCollection services,
         Func<IServiceProvider, TObserver> factory)
         where TInstance : class, SagaStateMachineInstance

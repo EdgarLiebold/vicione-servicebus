@@ -1,13 +1,9 @@
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Defines the contract for active mq queue binding configurator.
-/// </summary>
+/// <summary>Configures an ActiveMQ queue binding and its message selector.</summary>
 public interface IActiveMqQueueBindingConfigurator :
     IActiveMqQueueConfigurator
 {
-    /// <summary>
-    /// A routing key for the exchange binding
-    /// </summary>
+    /// <summary>Sets the Apache NMS message selector applied to the queue consumer.</summary>
     string? Selector { set; }
 }

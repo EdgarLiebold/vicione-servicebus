@@ -1,25 +1,21 @@
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Represents the method that handles event message factory.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="T">The t type.</typeparam>
-/// <param name="context">The operation context.</param>
-/// <returns>The result of the operation.</returns>
+/// <summary>Represents the method that handles event message factory.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="T">The value type.</typeparam>
+/// <param name="context">The context associated with the operation.</param>
+/// <returns>The value produced by the operation.</returns>
 public delegate T EventMessageFactory<TSaga, out T>(BehaviorContext<TSaga> context)
     where TSaga : class, SagaStateMachineInstance
     where T : class;
 
 
-/// <summary>
-/// Represents the method that handles event message factory.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
-/// <typeparam name="T">The t type.</typeparam>
-/// <param name="context">The operation context.</param>
-/// <returns>The result of the operation.</returns>
+/// <summary>Represents the method that handles event message factory.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="T">The value type.</typeparam>
+/// <param name="context">The context associated with the operation.</param>
+/// <returns>The value produced by the operation.</returns>
 public delegate T EventMessageFactory<TInstance, in TMessage, out T>(BehaviorContext<TInstance, TMessage> context)
     where TInstance : class, SagaStateMachineInstance
     where TMessage : class

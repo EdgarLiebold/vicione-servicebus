@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus message publish topology configurator.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures the Azure Service Bus topic used to publish a message contract.</summary>
+/// <typeparam name="TMessage">The published message contract.</typeparam>
 public interface IServiceBusMessagePublishTopologyConfigurator<TMessage> :
     IServiceBusMessagePublishTopologyConfigurator,
     IMessagePublishTopologyConfigurator<TMessage>,
@@ -13,9 +11,7 @@ public interface IServiceBusMessagePublishTopologyConfigurator<TMessage> :
 }
 
 
-/// <summary>
-/// Defines the contract for service bus message publish topology configurator.
-/// </summary>
+/// <summary>Configures a runtime-typed Azure Service Bus publish topic.</summary>
 public interface IServiceBusMessagePublishTopologyConfigurator :
     IMessagePublishTopologyConfigurator,
     IServiceBusTopicConfigurator

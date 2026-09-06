@@ -5,57 +5,39 @@ using ViciOne.ServiceBus.AzureServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus subscription configurator implementation.
-/// </summary>
+/// <summary>Builds and validates the Azure Service Bus creation options for a topic subscription.</summary>
 public class ServiceBusSubscriptionConfigurator :
     ServiceBusEndpointEntityConfigurator,
     IServiceBusSubscriptionConfigurator
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="topicPath">The topic path value.</param>
+    /// <summary>Initializes configuration for a named subscription on a topic.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="topicPath">The topic path.</param>
     public ServiceBusSubscriptionConfigurator(string subscriptionName, string topicPath)
     {
         TopicPath = topicPath;
         SubscriptionName = subscriptionName;
     }
 
-    /// <summary>
-    /// Gets or sets the enable dead lettering on filter evaluation exceptions value.
-    /// </summary>
+    /// <summary>Gets or sets whether filter evaluation failures are dead-lettered.</summary>
     public bool? EnableDeadLetteringOnFilterEvaluationExceptions { private get; set; }
 
-    /// <summary>
-    /// Gets or sets the filter value.
-    /// </summary>
+    /// <summary>Gets or sets the filter for the subscription's default rule.</summary>
     public RuleFilter? Filter { get; set; }
-    /// <summary>
-    /// Gets or sets the rule value.
-    /// </summary>
+    /// <summary>Gets or sets the complete rule created with the subscription.</summary>
     public CreateRuleOptions? Rule { get; set; }
 
-    /// <summary>
-    /// Gets or sets the forward to value.
-    /// </summary>
+    /// <summary>Gets or sets the entity path to which active messages are forwarded.</summary>
     public string? ForwardTo { private get; set; }
 
-    /// <summary>
-    /// Gets the topic path value.
-    /// </summary>
+    /// <summary>Gets the source topic path.</summary>
     public string TopicPath { get; }
 
-    /// <summary>
-    /// Gets the subscription name value.
-    /// </summary>
+    /// <summary>Gets the subscription name beneath the topic.</summary>
     public string SubscriptionName { get; }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates entity names, idle deletion, and mutually exclusive rule configuration.</summary>
+    /// <returns>The subscription configuration failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (!ServiceBusEntityNameValidator.Validator.IsValidEntityName(TopicPath))
@@ -71,10 +53,8 @@ public class ServiceBusSubscriptionConfigurator :
             yield return this.Failure("Rule/Filter", "only a rule or a filter may be specified");
     }
 
-    /// <summary>
-    /// Gets create subscription options.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Projects the configured values into Azure SDK subscription-creation options.</summary>
+    /// <returns>The SDK options for creating or comparing the subscription.</returns>
     public CreateSubscriptionOptions GetCreateSubscriptionOptions()
     {
         var options = new CreateSubscriptionOptions(TopicPath, SubscriptionName);

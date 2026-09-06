@@ -1,17 +1,13 @@
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>
-/// Defines the contract for filter scope provider.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Provides filter scope services.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public interface IFilterScopeProvider<TContext> :
     IProbeSite
     where TContext : class, PipeContext
 {
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The newly created instance.</returns>
     IFilterScopeContext<TContext> Create(TContext context);
 }

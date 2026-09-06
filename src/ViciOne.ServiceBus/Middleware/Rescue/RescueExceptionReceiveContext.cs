@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Middleware.Rescue;
 
-/// <summary>
-/// Provides a rescue exception receive context implementation.
-/// </summary>
+/// <summary>Carries state for rescue exception receive operations.</summary>
 public class RescueExceptionReceiveContext :
     ReceiveContextProxy,
     ExceptionReceiveContext
@@ -15,10 +13,8 @@ public class RescueExceptionReceiveContext :
     readonly DictionarySendHeaders _headers;
     ExceptionInfo _exceptionInfo = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     public RescueExceptionReceiveContext(ReceiveContext context, Exception exception)
         : base(context)
@@ -31,25 +27,17 @@ public class RescueExceptionReceiveContext :
         _headers.SetExceptionHeaders(this);
     }
 
-    /// <summary>
-    /// Gets the exception value.
-    /// </summary>
+    /// <summary>Gets the exception.</summary>
     public Exception Exception { get; }
-    /// <summary>
-    /// Gets the exception timestamp value.
-    /// </summary>
+    /// <summary>Gets the exception timestamp.</summary>
     public DateTimeOffset ExceptionTimestamp { get; }
 
-    /// <summary>
-    /// Gets the exception info value.
-    /// </summary>
+    /// <summary>Gets the exception info.</summary>
     public ExceptionInfo ExceptionInfo
     {
         get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
     }
 
-    /// <summary>
-    /// Gets the exception headers value.
-    /// </summary>
+    /// <summary>Gets the exception headers.</summary>
     public SendHeaders ExceptionHeaders => _headers;
 }

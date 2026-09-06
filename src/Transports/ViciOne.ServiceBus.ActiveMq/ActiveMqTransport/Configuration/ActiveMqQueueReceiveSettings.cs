@@ -2,42 +2,32 @@ using System;
 
 namespace ViciOne.ServiceBus.ActiveMq.Configuration;
 
-/// <summary>
-/// Provides an active mq queue receive settings implementation.
-/// </summary>
+/// <summary>Defines queue, selector, prefetch, and concurrency settings for an ActiveMQ receive endpoint.</summary>
 public class ActiveMqQueueReceiveSettings :
     ActiveMqQueueBindingConfigurator,
     ReceiveSettings
 {
     readonly IActiveMqEndpointConfiguration _configuration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configuration">The configuration callback.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
+    /// <summary>Creates receive settings for an ActiveMQ queue.</summary>
+    /// <param name="configuration">The endpoint configuration supplying transport limits.</param>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="durable">Whether the queue persists across broker restarts.</param>
+    /// <param name="autoDelete">Whether the broker removes the queue when it is no longer used.</param>
     public ActiveMqQueueReceiveSettings(IActiveMqEndpointConfiguration configuration, string queueName, bool durable, bool autoDelete)
         : base(queueName, durable, autoDelete)
     {
         _configuration = configuration;
     }
 
-    /// <summary>
-    /// Gets the prefetch count value.
-    /// </summary>
+    /// <summary>Gets the configured broker prefetch count.</summary>
     public int PrefetchCount => _configuration.Transport.PrefetchCount;
-    /// <summary>
-    /// Gets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets the effective concurrent-message limit.</summary>
     public int ConcurrentMessageLimit => _configuration.Transport.GetConcurrentMessageLimit();
 
-    /// <summary>
-    /// Gets input address.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the endpoint input address against a broker host.</summary>
+    /// <param name="hostAddress">The configured broker host address.</param>
+    /// <returns>The absolute queue input address.</returns>
     public Uri GetInputAddress(Uri hostAddress)
     {
         return GetEndpointAddress(hostAddress);

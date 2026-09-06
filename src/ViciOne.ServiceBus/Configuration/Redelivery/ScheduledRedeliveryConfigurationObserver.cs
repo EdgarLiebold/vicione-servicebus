@@ -2,9 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a scheduled redelivery configuration observer implementation.
-/// </summary>
+/// <summary>Observes scheduled redelivery configuration events.</summary>
 public class ScheduledRedeliveryConfigurationObserver :
     ConfigurationObserver,
     IMessageConfigurationObserver
@@ -12,11 +10,9 @@ public class ScheduledRedeliveryConfigurationObserver :
     readonly IConsumePipeConfigurator _configurator;
     readonly Action<IRedeliveryConfigurator> _configure;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public ScheduledRedeliveryConfigurationObserver(IConsumePipeConfigurator configurator, Action<IRedeliveryConfigurator> configure)
         : base(configurator)
     {
@@ -26,11 +22,9 @@ public class ScheduledRedeliveryConfigurationObserver :
         Connect(this);
     }
 
-    /// <summary>
-    /// Performs the message configured operation.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that message has been configured.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
         where TMessage : class
     {
@@ -46,24 +40,20 @@ public class ScheduledRedeliveryConfigurationObserver :
         configurator.AddPipeSpecification(retrySpecification);
     }
 
-    /// <summary>
-    /// Performs the batch consumer configured operation.
-    /// </summary>
-    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that batch consumer has been configured.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
     {
         MessageConfigured<TMessage>(_configurator);
     }
 
-    /// <summary>
-    /// Performs the activity configured operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="compensateAddress">The compensate address value.</param>
+    /// <summary>Reports that activity has been configured.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="compensateAddress">The compensate address.</param>
     public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
     {
         base.ActivityConfigured(configurator, compensateAddress);
@@ -75,12 +65,10 @@ public class ScheduledRedeliveryConfigurationObserver :
         configurator.Arguments(x => x.AddPipeSpecification(specification));
     }
 
-    /// <summary>
-    /// Performs the execute activity configured operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that execute activity has been configured.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
     {
         base.ExecuteActivityConfigured(configurator);
@@ -92,12 +80,10 @@ public class ScheduledRedeliveryConfigurationObserver :
         configurator.Arguments(x => x.AddPipeSpecification(specification));
     }
 
-    /// <summary>
-    /// Performs the compensate activity configured operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that compensate activity has been configured.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
     {
         base.CompensateActivityConfigured(configurator);
@@ -109,12 +95,10 @@ public class ScheduledRedeliveryConfigurationObserver :
         configurator.Log(x => x.AddPipeSpecification(specification));
     }
 
-    /// <summary>
-    /// Adds redelivery pipe specification to the configuration.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds redelivery pipe specification to the configuration.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <returns>The redelivery pipe specification produced by the operation.</returns>
     protected virtual IRedeliveryPipeSpecification AddRedeliveryPipeSpecification<TMessage>(IConsumePipeConfigurator configurator)
         where TMessage : class
     {

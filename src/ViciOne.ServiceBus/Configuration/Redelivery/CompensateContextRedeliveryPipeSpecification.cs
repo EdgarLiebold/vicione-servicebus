@@ -7,10 +7,8 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a compensate context redelivery pipe specification implementation.
-/// </summary>
-/// <typeparam name="TLog">The t log type.</typeparam>
+/// <summary>Describes requirements for compensate context redelivery pipe.</summary>
+/// <typeparam name="TLog">The log type.</typeparam>
 public class CompensateContextRedeliveryPipeSpecification<TLog> :
     ExceptionSpecification,
     IRedeliveryConfigurator,
@@ -20,18 +18,14 @@ public class CompensateContextRedeliveryPipeSpecification<TLog> :
     readonly RetryObservable _observers;
     RetryPolicyFactory _policyFactory = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public CompensateContextRedeliveryPipeSpecification()
     {
         _observers = new RetryObservable();
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPipeBuilder<CompensateContext<TLog>> builder)
     {
         var retryPolicy = _policyFactory(Filter);
@@ -41,20 +35,16 @@ public class CompensateContextRedeliveryPipeSpecification<TLog> :
         builder.AddFilter(new ActivityRedeliveryRetryFilter<CompensateContext<TLog>>(policy, _observers));
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_policyFactory == null)
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
-    /// <summary>
-    /// Sets retry policy.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Sets retry policy.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         _policyFactory = factory;
@@ -65,9 +55,7 @@ public class CompensateContextRedeliveryPipeSpecification<TLog> :
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Gets or sets the replace message id value.
-    /// </summary>
+    /// <summary>Gets or sets the replace message id.</summary>
     public bool ReplaceMessageId { get; set; }
 
     static RetryCompensateContext<TLog> Factory(CompensateContext<TLog> context, IRetryPolicy retryPolicy, RetryContext? retryContext)

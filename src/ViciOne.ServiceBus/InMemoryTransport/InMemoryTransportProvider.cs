@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
-/// <summary>
-/// Provides an in memory transport provider implementation.
-/// </summary>
+/// <summary>Provides in memory transport services.</summary>
 public sealed class InMemoryTransportProvider :
     Agent,
     IInMemoryTransportProvider
@@ -18,11 +16,9 @@ public sealed class InMemoryTransportProvider :
     readonly IMessageFabric<InMemoryTransportContext, InMemoryTransportMessage> _messageFabric;
     readonly IInMemoryTopologyConfiguration _topologyConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="topologyConfiguration">The topology configuration.</param>
     public InMemoryTransportProvider(IInMemoryHostConfiguration hostConfiguration, IInMemoryTopologyConfiguration topologyConfiguration)
     {
         _hostConfiguration = hostConfiguration;
@@ -33,18 +29,14 @@ public sealed class InMemoryTransportProvider :
         SetReady();
     }
 
-    /// <summary>
-    /// Gets the message fabric value.
-    /// </summary>
+    /// <summary>Gets the message fabric.</summary>
     public IMessageFabric<InMemoryTransportContext, InMemoryTransportMessage> MessageFabric => _messageFabric;
 
-    /// <summary>
-    /// Creates send transport.
-    /// </summary>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="address">The address value.</param>
+    /// <summary>Creates send transport.</summary>
+    /// <param name="receiveEndpointContext">The receive endpoint context.</param>
+    /// <param name="address">The address.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the created value.</returns>
     public async Task<ISendTransport> CreateSendTransportAsync(ReceiveEndpointContext receiveEndpointContext, Uri address, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
@@ -60,24 +52,20 @@ public sealed class InMemoryTransportProvider :
         return new SendTransport<PipeContext>(context);
     }
 
-    /// <summary>
-    /// Performs the normalize address operation.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Normalizes address.</summary>
+    /// <param name="address">The address.</param>
+    /// <returns>The uri produced by the operation.</returns>
     public Uri NormalizeAddress(Uri address)
     {
         return new InMemoryEndpointAddress(_hostConfiguration.HostAddress, address);
     }
 
-    /// <summary>
-    /// Creates publish transport.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="publishAddress">The publish address value.</param>
+    /// <summary>Creates publish transport.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="receiveEndpointContext">The receive endpoint context.</param>
+    /// <param name="publishAddress">The publish address.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the created value.</returns>
     public Task<ISendTransport> CreatePublishTransportAsync<T>(ReceiveEndpointContext receiveEndpointContext, Uri publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -88,20 +76,16 @@ public sealed class InMemoryTransportProvider :
         return CreateSendTransportAsync(receiveEndpointContext, publishAddress, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         _messageFabric.Probe(context);
     }
 
-    /// <summary>
-    /// Stops agent.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Stops agent.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected override async Task StopAgentAsync(StopContext context)
     {
         await base.StopAgentAsync(context).ConfigureAwait(false);

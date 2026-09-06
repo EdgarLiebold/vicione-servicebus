@@ -6,27 +6,21 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Generates and publishes a <see cref="Fault" /> event for the exception
-/// </summary>
+/// <summary>Generates and publishes a <see cref="Fault" /> event for the exception.</summary>
 public class GenerateFaultFilter :
     IFilter<ExceptionReceiveContext>
 {
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateFilterScope("generateFault");
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
     {
         if (!context.IsFaulted)

@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>
-/// Provides a metric implementation.
-/// </summary>
+/// <summary>Tracks a numeric message-fabric measurement.</summary>
 public abstract class Metric
 {
 }

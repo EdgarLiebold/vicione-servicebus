@@ -5,18 +5,14 @@ using ViciOne.ServiceBus.Agents;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for supervisor.
-/// </summary>
+/// <summary>Provides extension methods for supervisor.</summary>
 public static class SupervisorExtensions
 {
-    /// <summary>
-    /// Adds a context to the supervisor as an agent, which can be stopped by the supervisor.
-    /// </summary>
-    /// <param name="supervisor">The supervisor</param>
-    /// <param name="context">The context</param>
-    /// <typeparam name="T">The context type</typeparam>
-    /// <returns>A context handle</returns>
+    /// <summary>Adds a context to the supervisor as an agent, which can be stopped by the supervisor.</summary>
+    /// <typeparam name="T">The context type.</typeparam>
+    /// <param name="supervisor">The supervisor.</param>
+    /// <param name="context">The context.</param>
+    /// <returns>A context handle.</returns>
     public static IPipeContextAgent<T> AddContext<T>(this ISupervisor supervisor, T context)
         where T : class, PipeContext
     {
@@ -32,13 +28,11 @@ public static class SupervisorExtensions
         return contextAgent;
     }
 
-    /// <summary>
-    /// Adds a context to the supervisor as an agent, which can be stopped by the supervisor.
-    /// </summary>
-    /// <param name="supervisor">The supervisor</param>
-    /// <param name="context">The context</param>
-    /// <typeparam name="T">The context type</typeparam>
-    /// <returns>A context handle</returns>
+    /// <summary>Adds a context to the supervisor as an agent, which can be stopped by the supervisor.</summary>
+    /// <typeparam name="T">The context type.</typeparam>
+    /// <param name="supervisor">The supervisor.</param>
+    /// <param name="context">The context.</param>
+    /// <returns>A context handle.</returns>
     public static IPipeContextAgent<T> AddContext<T>(this ISupervisor supervisor, Task<T> context)
         where T : class, PipeContext
     {
@@ -54,14 +48,12 @@ public static class SupervisorExtensions
         return contextAgent;
     }
 
-    /// <summary>
-    /// Adds a context to the supervisor as an agent, which can be stopped by the supervisor.
-    /// </summary>
-    /// <param name="supervisor">The supervisor</param>
-    /// <param name="contextHandle">The actual context handle</param>
-    /// <param name="context">The active context</param>
-    /// <typeparam name="T">The context type</typeparam>
-    /// <returns>A context handle</returns>
+    /// <summary>Adds a context to the supervisor as an agent, which can be stopped by the supervisor.</summary>
+    /// <typeparam name="T">The context type.</typeparam>
+    /// <param name="supervisor">The supervisor.</param>
+    /// <param name="contextHandle">The actual context handle.</param>
+    /// <param name="context">The active context.</param>
+    /// <returns>A context handle.</returns>
     public static IActivePipeContextAgent<T> AddActiveContext<T>(this ISupervisor supervisor, PipeContextHandle<T> contextHandle, Task<T> context)
         where T : class, PipeContext
     {
@@ -79,14 +71,12 @@ public static class SupervisorExtensions
         return contextAgent;
     }
 
-    /// <summary>
-    /// Adds a context to the supervisor as an agent, which can be stopped by the supervisor.
-    /// </summary>
-    /// <param name="supervisor">The supervisor</param>
-    /// <param name="contextHandle">The actual context handle</param>
-    /// <param name="context">The active context</param>
-    /// <typeparam name="T">The context type</typeparam>
-    /// <returns>A context handle</returns>
+    /// <summary>Adds a context to the supervisor as an agent, which can be stopped by the supervisor.</summary>
+    /// <typeparam name="T">The context type.</typeparam>
+    /// <param name="supervisor">The supervisor.</param>
+    /// <param name="contextHandle">The actual context handle.</param>
+    /// <param name="context">The active context.</param>
+    /// <returns>A context handle.</returns>
     public static IActivePipeContextAgent<T> AddActiveContext<T>(this ISupervisor supervisor, PipeContextHandle<T> contextHandle, T context)
         where T : class, PipeContext
     {
@@ -104,12 +94,10 @@ public static class SupervisorExtensions
         return contextAgent;
     }
 
-    /// <summary>
-    /// Adds a context to the supervisor as an agent, which can be stopped by the supervisor.
-    /// </summary>
-    /// <param name="supervisor">The supervisor</param>
-    /// <typeparam name="T">The context type</typeparam>
-    /// <returns>A context handle</returns>
+    /// <summary>Adds a context to the supervisor as an agent, which can be stopped by the supervisor.</summary>
+    /// <typeparam name="T">The context type.</typeparam>
+    /// <param name="supervisor">The supervisor.</param>
+    /// <returns>A context handle.</returns>
     public static IAsyncPipeContextAgent<T> AddAsyncContext<T>(this ISupervisor supervisor)
         where T : class, PipeContext
     {
@@ -128,10 +116,12 @@ public static class SupervisorExtensions
     /// than the mirror task returned by <see cref="CreateAgentAsync{T,TAgent}"/>. The mirror outcome is
     /// observed here; creation cancellation and failure are transferred to <paramref name="asyncContext"/>.
     /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TAgent">The agent type.</typeparam>
     /// <param name="supervisor">The supervisor used by the operation.</param>
-    /// <param name="agentFactory">The agent factory used by the operation.</param>
     /// <param name="asyncContext">The async context used by the operation.</param>
+    /// <param name="agentFactory">The agent factory used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static void StartAgent<T, TAgent>(this ISupervisor<T> supervisor, IAsyncPipeContextAgent<TAgent> asyncContext,
         Func<T, CancellationToken, Task<TAgent>> agentFactory, CancellationToken cancellationToken)
         where T : class, PipeContext
@@ -153,16 +143,14 @@ public static class SupervisorExtensions
         });
     }
 
-    /// <summary>
-    /// Creates agent.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TAgent">The t agent type.</typeparam>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="asyncContext">The async context value.</param>
-    /// <param name="agentFactory">The agent factory value.</param>
+    /// <summary>Creates agent.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TAgent">The agent type.</typeparam>
+    /// <param name="supervisor">The supervisor.</param>
+    /// <param name="asyncContext">The async context.</param>
+    /// <param name="agentFactory">The agent factory.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the created value.</returns>
     public static async Task<TAgent> CreateAgentAsync<T, TAgent>(this ISupervisor<T> supervisor, IAsyncPipeContextAgent<TAgent> asyncContext,
         Func<T, CancellationToken, Task<TAgent>> agentFactory, CancellationToken cancellationToken)
         where T : class, PipeContext

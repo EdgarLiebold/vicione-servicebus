@@ -4,19 +4,15 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides an amazon sqs publish topology implementation.
-/// </summary>
+/// <summary>Configures Amazon SNS topics for published message types.</summary>
 public class AmazonSqsPublishTopology :
     PublishTopology,
     IAmazonSqsPublishTopologyConfigurator
 {
     readonly IMessageTopology _messageTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Initializes Amazon SNS publish topology.</summary>
+    /// <param name="messageTopology">The message-topology convention source.</param>
     public AmazonSqsPublishTopology(IMessageTopology messageTopology)
     {
         _messageTopology = messageTopology;
@@ -26,17 +22,11 @@ public class AmazonSqsPublishTopology :
         TopicTags = new Dictionary<string, string>();
     }
 
-    /// <summary>
-    /// Gets or sets the topic attributes value.
-    /// </summary>
+    /// <summary>Gets the default Amazon SNS topic attributes.</summary>
     public IDictionary<string, object> TopicAttributes { get; private set; }
-    /// <summary>
-    /// Gets or sets the topic subscription attributes value.
-    /// </summary>
+    /// <summary>Gets the default Amazon SNS subscription attributes.</summary>
     public IDictionary<string, object> TopicSubscriptionAttributes { get; private set; }
-    /// <summary>
-    /// Gets or sets the topic tags value.
-    /// </summary>
+    /// <summary>Gets the default tags applied to Amazon SNS topics.</summary>
     public IDictionary<string, string> TopicTags { get; private set; }
 
     IAmazonSqsMessagePublishTopology<T> IAmazonSqsPublishTopology.GetMessageTopology<T>()
@@ -49,10 +39,8 @@ public class AmazonSqsPublishTopology :
         return (GetMessageTopology(messageType) as IAmazonSqsMessagePublishTopologyConfigurator)!;
     }
 
-    /// <summary>
-    /// Gets publish broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the combined broker topology for all configured message publish types.</summary>
+    /// <returns>The aggregate Amazon SNS publish topology.</returns>
     public BrokerTopology GetPublishBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder();
@@ -72,11 +60,9 @@ public class AmazonSqsPublishTopology :
         return (GetMessageTopology<T>() as IAmazonSqsMessagePublishTopologyConfigurator<T>)!;
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and announces Amazon SNS publish topology for a message type.</summary>
+    /// <typeparam name="T">The published message type.</typeparam>
+    /// <returns>The message publish-topology configurator.</returns>
     protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()
     {
         var messageTopology = new AmazonSqsMessagePublishTopology<T>(this, _messageTopology.GetMessageTopology<T>());

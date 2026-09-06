@@ -3,27 +3,21 @@ using System.Text;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 
-/// <summary>
-/// Provides a bytes message body implementation.
-/// </summary>
+/// <summary>Carries bytes message content.</summary>
 public class BytesMessageBody :
     MessageBody
 {
     readonly byte[] _bytes;
     string? _string;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="bytes">The bytes value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="bytes">The bytes.</param>
     public BytesMessageBody(byte[]? bytes)
     {
         _bytes = bytes ?? [];
     }
 
-    /// <summary>
-    /// Gets the length value.
-    /// </summary>
+    /// <summary>Gets the length.</summary>
     public long? Length => _bytes.Length;
 
     /// <summary>
@@ -32,24 +26,21 @@ public class BytesMessageBody :
     /// constructor takes a caller's array and <see cref="GetBytes" /> hands it straight back, so
     /// this body is not immutable and is not claimed to be.
     /// </summary>
+    /// <returns>The stream.</returns>
     public Stream GetStream()
     {
         return new MemoryStream(_bytes, false);
     }
 
-    /// <summary>
-    /// Gets bytes.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets bytes.</summary>
+    /// <returns>The bytes.</returns>
     public byte[] GetBytes()
     {
         return _bytes;
     }
 
-    /// <summary>
-    /// Gets string.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets string.</summary>
+    /// <returns>The string.</returns>
     public string GetString()
     {
         return _string ??= Encoding.UTF8.GetString(_bytes);

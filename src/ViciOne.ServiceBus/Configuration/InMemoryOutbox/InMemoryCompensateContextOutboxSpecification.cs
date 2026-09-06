@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an in memory compensate context outbox specification implementation.
-/// </summary>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Describes requirements for in memory compensate context outbox.</summary>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class InMemoryCompensateContextOutboxSpecification<TArguments> :
     IPipeSpecification<CompensateContext<TArguments>>,
     IOutboxConfigurator
@@ -16,33 +14,25 @@ public class InMemoryCompensateContextOutboxSpecification<TArguments> :
 {
     readonly ISetScopedConsumeContext? _setter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public InMemoryCompensateContextOutboxSpecification(IRegistrationContext context)
         : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)))
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="setter">The setter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="setter">The setter.</param>
     public InMemoryCompensateContextOutboxSpecification(ISetScopedConsumeContext? setter)
     {
         _setter = setter;
     }
 
-    /// <summary>
-    /// Gets or sets the concurrent message delivery value.
-    /// </summary>
+    /// <summary>Gets or sets the concurrent message delivery.</summary>
     public bool ConcurrentMessageDelivery { get; set; }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPipeBuilder<CompensateContext<TArguments>> builder)
     {
         builder.AddFilter(
@@ -50,10 +40,8 @@ public class InMemoryCompensateContextOutboxSpecification<TArguments> :
                 ConcurrentMessageDelivery));
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;

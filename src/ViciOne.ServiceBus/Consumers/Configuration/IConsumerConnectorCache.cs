@@ -1,12 +1,8 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for consumer connector cache.
-/// </summary>
+/// <summary>Provides cached access to consumer connector data.</summary>
 public interface IConsumerConnectorCache
 {
-    /// <summary>
-    /// Gets the connector value.
-    /// </summary>
+    /// <summary>Gets the connector.</summary>
     IConsumerConnector Connector { get; }
 }

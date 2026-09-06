@@ -3,20 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.MessageJournal;
-/// <summary>
-/// Dedicated bounded message-journal context. It is not a ViciOne Suite audit context.
-/// </summary>
+/// <summary>Dedicated bounded message-journal context. It is not a ViciOne Suite audit context.</summary>
 public sealed class MessageJournalDbContext : DbContext
 {
     private readonly string? _schemaName;
     private readonly string _tableName;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <param name="tableName">The table name value.</param>
-    /// <param name="schemaName">The schema name value.</param>
+    /// <summary>Initializes a journal context for an explicitly selected table.</summary>
+    /// <param name="options">The configured relational provider options.</param>
+    /// <param name="tableName">The table that stores journal entries.</param>
+    /// <param name="schemaName">The schema, or <see langword="null"/> to use the provider default.</param>
     public MessageJournalDbContext(
         DbContextOptions options,
         string tableName,
@@ -32,28 +28,22 @@ public sealed class MessageJournalDbContext : DbContext
         _schemaName = schemaName;
     }
 
-    /// <summary>
-    /// Gets the entries value.
-    /// </summary>
+    /// <summary>Gets the persisted sanitized journal entries.</summary>
     public DbSet<MessageJournalRecord> Entries => Set<MessageJournalRecord>();
 
     internal string? SchemaName => _schemaName;
 
     internal string TableName => _tableName;
 
-    /// <summary>
-    /// Performs the on configuring operation.
-    /// </summary>
-    /// <param name="optionsBuilder">The options builder value.</param>
+    /// <summary>Installs a model-cache key that includes the selected table and schema.</summary>
+    /// <param name="optionsBuilder">The context options being configured.</param>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.ReplaceService<IModelCacheKeyFactory, MessageJournalModelCacheKeyFactory>();
     }
 
-    /// <summary>
-    /// Performs the on model creating operation.
-    /// </summary>
-    /// <param name="modelBuilder">The model builder value.</param>
+    /// <summary>Maps the journal record to the selected table and schema.</summary>
+    /// <param name="modelBuilder">The model builder to configure.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new MessageJournalMapping(_tableName, _schemaName));

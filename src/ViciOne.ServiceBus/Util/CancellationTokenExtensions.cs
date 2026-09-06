@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Util;
 
-/// <summary>
-/// Provides extension methods for cancellation token.
-/// </summary>
+/// <summary>Provides extension methods for cancellation token.</summary>
 public static class CancellationTokenExtensions
 {
     /// <summary>
@@ -15,6 +13,7 @@ public static class CancellationTokenExtensions
     /// </summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="cancelTask">The cancel task used by the operation.</param>
+    /// <returns>The cancellation token registration produced by the operation.</returns>
     public static CancellationTokenRegistration RegisterTask(this CancellationToken cancellationToken, out Task cancelTask)
     {
         if (!cancellationToken.CanBeCanceled)
@@ -25,12 +24,10 @@ public static class CancellationTokenExtensions
         return cancellationToken.Register(static state => ((TaskCompletionSource)state!).TrySetResult(), source);
     }
 
-    /// <summary>
-    /// Performs the register if can be canceled operation.
-    /// </summary>
+    /// <summary>Registers if can be canceled.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="source">The source value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The cancellation token registration produced by the operation.</returns>
     public static CancellationTokenRegistration RegisterIfCanBeCanceled(this CancellationToken cancellationToken, CancellationTokenSource source)
     {
         ArgumentNullException.ThrowIfNull(source);

@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a receive endpoint configuration implementation.
-/// </summary>
+/// <summary>Stores and validates receive endpoint configuration.</summary>
 public abstract class ReceiveEndpointConfiguration :
     EndpointConfiguration,
     IReceiveEndpointConfiguration
@@ -21,11 +19,9 @@ public abstract class ReceiveEndpointConfiguration :
     readonly List<IReceiveEndpointSpecification> _specifications;
     IReceiveEndpoint _receiveEndpoint = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="endpointConfiguration">The endpoint configuration.</param>
     protected ReceiveEndpointConfiguration(IHostConfiguration hostConfiguration, IEndpointConfiguration endpointConfiguration)
         : base(endpointConfiguration)
     {
@@ -48,51 +44,35 @@ public abstract class ReceiveEndpointConfiguration :
         ConnectActivityConfigurationObserver(hostConfiguration.BusConfiguration);
     }
 
-    /// <summary>
-    /// Gets the endpoint observers value.
-    /// </summary>
+    /// <summary>Gets the endpoint observers.</summary>
     public ReceiveEndpointObservable EndpointObservers { get; }
-    /// <summary>
-    /// Gets the receive observers value.
-    /// </summary>
+    /// <summary>Gets the receive observers.</summary>
     public ReceiveObservable ReceiveObservers { get; }
-    /// <summary>
-    /// Gets the transport observers value.
-    /// </summary>
+    /// <summary>Gets the transport observers.</summary>
     public ReceiveTransportObservable TransportObservers { get; }
 
-    /// <summary>
-    /// Gets or sets the configure consume topology value.
-    /// </summary>
+    /// <summary>Gets or sets the configure consume topology.</summary>
     public bool ConfigureConsumeTopology { get; set; }
-    /// <summary>
-    /// Gets or sets the publish faults value.
-    /// </summary>
+    /// <summary>Gets or sets the publish faults.</summary>
     public bool PublishFaults { get; set; }
 
-    /// <summary>
-    /// Connects receive endpoint observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive endpoint observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
     {
         return EndpointObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Adds dependent to the configuration.
-    /// </summary>
-    /// <param name="dependent">The dependent value.</param>
+    /// <summary>Adds dependent to the configuration.</summary>
+    /// <param name="dependent">The dependent.</param>
     public void AddDependent(IReceiveEndpointDependent dependent)
     {
         _dependents.Add(dependent);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         foreach (var result in _specifications.SelectMany(x => x.Validate()))
@@ -105,23 +85,15 @@ public abstract class ReceiveEndpointConfiguration :
             yield return result;
     }
 
-    /// <summary>
-    /// Gets the consume pipe value.
-    /// </summary>
+    /// <summary>Gets the consume pipe.</summary>
     public IConsumePipe ConsumePipe => _consumePipe.Value;
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the host address.</summary>
     public abstract Uri HostAddress { get; }
-    /// <summary>
-    /// Gets the input address value.
-    /// </summary>
+    /// <summary>Gets the input address.</summary>
     public abstract Uri InputAddress { get; }
 
-    /// <summary>
-    /// Gets or sets the receive endpoint value.
-    /// </summary>
+    /// <summary>Gets or sets the receive endpoint.</summary>
     public virtual IReceiveEndpoint ReceiveEndpoint
     {
         get
@@ -135,102 +107,78 @@ public abstract class ReceiveEndpointConfiguration :
         protected set => _receiveEndpoint = value;
     }
 
-    /// <summary>
-    /// Creates receive pipe.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates receive pipe.</summary>
+    /// <returns>The created receive pipe.</returns>
     public virtual IReceivePipe CreateReceivePipe()
     {
         return Receive.CreatePipe(CreateConsumePipe(), Serialization.CreateSerializerCollection());
     }
 
-    /// <summary>
-    /// Creates receive endpoint context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates receive endpoint context.</summary>
+    /// <returns>The created receive endpoint context.</returns>
     public abstract ReceiveEndpointContext CreateReceiveEndpointContext();
 
-    /// <summary>
-    /// Gets the dependencies ready value.
-    /// </summary>
+    /// <summary>Gets the dependencies ready.</summary>
     public Task DependenciesReady => Task.WhenAll(_dependencies.Select(x => x.Ready));
 
-    /// <summary>
-    /// Gets the dependents completed value.
-    /// </summary>
+    /// <summary>Gets the dependents completed.</summary>
     public Task DependentsCompleted => Task.WhenAll(_dependents.Select(x => x.Completed));
 
-    /// <summary>
-    /// Configures message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="enabled">The enabled value.</param>
+    /// <summary>Configures message topology.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="enabled">The enabled.</param>
     public void ConfigureMessageTopology<T>(bool enabled = true)
         where T : class
     {
         Topology.Consume.GetMessageTopology<T>().ConfigureConsumeTopology = enabled;
     }
 
-    /// <summary>
-    /// Configures message topology.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="enabled">The enabled value.</param>
+    /// <summary>Configures message topology.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="enabled">The enabled.</param>
     public void ConfigureMessageTopology(Type messageType, bool enabled = true)
     {
         Topology.Consume.GetMessageTopology(messageType).ConfigureConsumeTopology = enabled;
     }
 
-    /// <summary>
-    /// Adds dependency to the configuration.
-    /// </summary>
-    /// <param name="dependency">The dependency value.</param>
+    /// <summary>Adds dependency to the configuration.</summary>
+    /// <param name="dependency">The dependency.</param>
     public void AddDependency(IReceiveEndpointDependency dependency)
     {
         _dependencies.Add(dependency);
     }
 
-    /// <summary>
-    /// Performs the apply specifications operation.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies specifications.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     protected void ApplySpecifications(IReceiveEndpointBuilder builder)
     {
         for (var i = 0; i < _specifications.Count; i++)
             _specifications[i].Configure(builder);
     }
 
-    /// <summary>
-    /// Adds endpoint specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds endpoint specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddEndpointSpecification(IReceiveEndpointSpecification specification)
     {
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Creates consume pipe.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates consume pipe.</summary>
+    /// <returns>The created consume pipe.</returns>
     protected virtual IConsumePipe CreateConsumePipe()
     {
         return _consumePipe.Value;
     }
 
-    /// <summary>
-    /// Performs the changed operation.
-    /// </summary>
-    /// <param name="key">The key value.</param>
+    /// <summary>Changes d.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
     protected void Changed(string key)
     {
         if (IsAlreadyConfigured())
             _lateConfigurationKeys.Add(key);
     }
 
-    /// <summary>
-    /// Determines whether already configured.
-    /// </summary>
+    /// <summary>Determines whether already configured.</summary>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     protected virtual bool IsAlreadyConfigured()
     {

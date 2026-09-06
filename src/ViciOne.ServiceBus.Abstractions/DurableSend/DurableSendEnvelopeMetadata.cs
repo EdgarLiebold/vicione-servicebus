@@ -11,8 +11,6 @@ public sealed class DurableSendEnvelopeMetadata
     {
     }
 
-    /// <summary>
-    /// Gets the instance value.
-    /// </summary>
+    /// <summary>Gets the instance.</summary>
     public static DurableSendEnvelopeMetadata Instance { get; } = new();
 }

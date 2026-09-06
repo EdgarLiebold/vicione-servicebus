@@ -2,23 +2,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for publish pipe configuration.
-/// </summary>
+/// <summary>Defines publish pipe configuration.</summary>
 public interface IPublishPipeConfiguration
 {
-    /// <summary>
-    /// Gets the specification value.
-    /// </summary>
+    /// <summary>Gets the specification.</summary>
     IPublishPipeSpecification Specification { get; }
-    /// <summary>
-    /// Gets the configurator value.
-    /// </summary>
+    /// <summary>Gets the configurator.</summary>
     IPublishPipeConfigurator Configurator { get; }
 
-    /// <summary>
-    /// Creates pipe.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates pipe.</summary>
+    /// <returns>The created pipe.</returns>
     IPublishPipe CreatePipe();
 }

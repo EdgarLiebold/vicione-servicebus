@@ -2,75 +2,46 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus endpoint configurator.
-/// </summary>
+/// <summary>Configures Azure Service Bus entity and processor properties shared by queue and subscription endpoints.</summary>
 public interface IServiceBusEndpointConfigurator
 {
 
-    /// <summary>
-    /// If specified, the queue/subscription will be automatically removed after no consumer activity within the specific idle period
-    /// </summary>
+    /// <summary>Sets the idle duration after which Azure Service Bus deletes the queue or subscription.</summary>
     TimeSpan AutoDeleteOnIdle { set; }
 
-    /// <summary>
-    /// Set the default message time to live in the queue
-    /// </summary>
+    /// <summary>Sets the default lifetime of messages in the entity.</summary>
     TimeSpan DefaultMessageTimeToLive { set; }
 
-    /// <summary>
-    /// Sets a value that indicates whether server-side batched operations are enabled
-    /// </summary>
+    /// <summary>Sets a value that indicates whether server-side batched operations are enabled.</summary>
     bool EnableBatchedOperations { set; }
 
-    /// <summary>
-    /// Move messages to the dead letter queue on expiration (time to live exceeded)
-    /// </summary>
+    /// <summary>Sets whether expired messages are moved to the entity's dead-letter subqueue.</summary>
     bool EnableDeadLetteringOnMessageExpiration { set; }
 
-    /// <summary>
-    /// Sets the path to the recipient to which the dead lettered message is forwarded.
-    /// </summary>
+    /// <summary>Sets the path to the recipient to which the dead lettered message is forwarded.</summary>
     string ForwardDeadLetteredMessagesTo { set; }
 
-    /// <summary>
-    /// Specify the lock duration for messages read from the queue
-    /// </summary>
-    /// <value></value>
+    /// <summary>Sets the initial lock duration for received messages.</summary>
     TimeSpan LockDuration { set; }
 
-    /// <summary>
-    /// Sets the maximum delivery count. A message is automatically dead-lettered after this number of deliveries.
-    /// </summary>
+    /// <summary>Sets the maximum delivery count. A message is automatically dead-lettered after this number of deliveries.</summary>
     int MaxDeliveryCount { set; }
 
-    /// <summary>
-    /// Sets the queue in session mode, requiring a session for inbound messages
-    /// </summary>
+    /// <summary>Sets whether the entity requires sessions for inbound messages.</summary>
     bool RequiresSession { set; }
 
-    /// <summary>
-    /// If session is required, sets the maximum concurrent sessions (defaults to 1)
-    /// </summary>
+    /// <summary>Sets the maximum number of sessions processed concurrently.</summary>
     int MaxConcurrentSessions { set; }
 
-    /// <summary>
-    /// If session is required, sets the maximum concurrent calls per session (defaults to 1)
-    /// </summary>
+    /// <summary>Sets the maximum number of concurrent message callbacks for each session.</summary>
     int MaxConcurrentCallsPerSession { set; }
 
-    /// <summary>
-    /// Sets the user metadata.
-    /// </summary>
+    /// <summary>Sets application-defined metadata stored with the entity.</summary>
     string UserMetadata { set; }
 
-    /// <summary>
-    /// Sets the message session idle timeout period
-    /// </summary>
+    /// <summary>Sets the maximum idle time to wait for a message from an accepted session.</summary>
     TimeSpan? SessionIdleTimeout { set; }
 
-    /// <summary>
-    /// Sets the maximum time for locks/sessions to be automatically renewed
-    /// </summary>
+    /// <summary>Sets the maximum duration for automatic message- or session-lock renewal.</summary>
     TimeSpan MaxAutoRenewDuration { set; }
 }

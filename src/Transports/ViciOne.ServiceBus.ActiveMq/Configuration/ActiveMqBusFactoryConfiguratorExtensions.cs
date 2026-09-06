@@ -6,24 +6,21 @@ using ViciOne.ServiceBus.ActiveMq.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for active mq bus factory configurator.
-/// </summary>
+/// <summary>Selects and registers ActiveMQ as a service-bus transport.</summary>
 public static class ActiveMqBusFactoryConfiguratorExtensions
 {
-    /// <summary>
-    /// Select ActiveMQ as the transport for the service bus
-    /// </summary>
+    /// <summary>Creates a service bus that uses ActiveMQ.</summary>
+    /// <param name="selector">The transport selector.</param>
+    /// <param name="configure">The callback that configures the ActiveMQ bus.</param>
+    /// <returns>The configured bus control.</returns>
     public static IBusControl CreateUsingActiveMq(this IBusFactorySelector selector, Action<IActiveMqBusFactoryConfigurator> configure)
     {
         return ActiveMqBusFactory.Create(configure);
     }
 
-    /// <summary>
-    /// Configure ViciOne.ServiceBus to use ActiveMQ for the transport.
-    /// </summary>
-    /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus)</param>
-    /// <param name="configure">The configuration callback for the bus factory</param>
+    /// <summary>Registers ActiveMQ transport services and a bus factory.</summary>
+    /// <param name="configurator">The service-bus registration configurator.</param>
+    /// <param name="configure">An optional callback that configures the bus with its registration context.</param>
     public static void UsingActiveMq(this IBusRegistrationConfigurator configurator,
         Action<IBusRegistrationContext, IActiveMqBusFactoryConfigurator>? configure = null)
     {

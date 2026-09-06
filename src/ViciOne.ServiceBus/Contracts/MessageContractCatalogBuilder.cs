@@ -6,40 +6,32 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Bootstrap-only builder for the immutable message contract catalog.
-/// </summary>
+/// <summary>Bootstrap-only builder for the immutable message contract catalog.</summary>
 public sealed class MessageContractCatalogBuilder
 {
     private readonly Dictionary<Type, MessageContractIdentity> _byType = new();
     private readonly Dictionary<MessageContractIdentity, Type> _byIdentity = new();
     private bool _built;
 
-    /// <summary>
-    /// Performs the register operation.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="name">The name value.</param>
-    /// <param name="majorVersion">The major version value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers the supplied component.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="name">The name.</param>
+    /// <param name="majorVersion">The major version.</param>
+    /// <returns>The message contract catalog builder produced by the operation.</returns>
     public MessageContractCatalogBuilder Register<TMessage>(string name, int majorVersion = 1)
         where TMessage : class
         => Register(typeof(TMessage), new MessageContractIdentity(name, majorVersion));
 
-    /// <summary>
-    /// Performs the register operation.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers the supplied component.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <returns>The message contract catalog builder produced by the operation.</returns>
     public MessageContractCatalogBuilder Register<TMessage>()
         where TMessage : class
         => Register(typeof(TMessage));
 
-    /// <summary>
-    /// Performs the register operation.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers the supplied component.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <returns>The message contract catalog builder produced by the operation.</returns>
     public MessageContractCatalogBuilder Register(Type messageType)
     {
         ArgumentNullException.ThrowIfNull(messageType);
@@ -59,12 +51,10 @@ public sealed class MessageContractCatalogBuilder
         return Register(messageType, new MessageContractIdentity(attribute.Name, attribute.MajorVersion));
     }
 
-    /// <summary>
-    /// Performs the register operation.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="identity">The identity value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers the supplied component.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="identity">The identity.</param>
+    /// <returns>The message contract catalog builder produced by the operation.</returns>
     public MessageContractCatalogBuilder Register(Type messageType, MessageContractIdentity identity)
     {
         ArgumentNullException.ThrowIfNull(messageType);
@@ -107,10 +97,8 @@ public sealed class MessageContractCatalogBuilder
         return this;
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the configured component.</summary>
+    /// <returns>The configured component.</returns>
     public IMessageContractCatalog Build()
     {
         ThrowIfBuilt();

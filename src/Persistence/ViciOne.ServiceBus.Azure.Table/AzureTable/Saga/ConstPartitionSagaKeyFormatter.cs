@@ -2,30 +2,24 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureTable.Saga;
 
-/// <summary>
-/// Provides a const partition saga key formatter implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Stores every saga of one type in a fixed Azure Table partition and uses its correlation identifier as the row key.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class ConstPartitionSagaKeyFormatter<TSaga> :
     ISagaKeyFormatter<TSaga>
     where TSaga : class, ISaga
 {
     readonly string _partitionKey;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="partitionKey">The partition key value.</param>
+    /// <summary>Creates a formatter with a validated constant partition key.</summary>
+    /// <param name="partitionKey">The Azure Table partition shared by the sagas.</param>
     public ConstPartitionSagaKeyFormatter(string partitionKey)
     {
         _partitionKey = AzureTableKeyValidator.Validate(partitionKey, nameof(partitionKey));
     }
 
-    /// <summary>
-    /// Performs the format operation.
-    /// </summary>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Uses the configured partition and the canonical correlation identifier as the row key.</summary>
+    /// <param name="correlationId">The non-empty saga correlation identifier.</param>
+    /// <returns>The constant partition key and correlation-identifier row key.</returns>
     public (string partitionKey, string rowKey) Format(Guid correlationId)
     {
         AzureTableKeyValidator.ValidateCorrelationId(correlationId, nameof(correlationId));

@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Defines the contract for active mq message send topology configurator.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures ActiveMQ send topology for one message type.</summary>
+/// <typeparam name="TMessage">The sent message type.</typeparam>
 public interface IActiveMqMessageSendTopologyConfigurator<TMessage> :
     IMessageSendTopologyConfigurator<TMessage>,
     IActiveMqMessageSendTopology<TMessage>,
@@ -13,9 +11,7 @@ public interface IActiveMqMessageSendTopologyConfigurator<TMessage> :
 }
 
 
-/// <summary>
-/// Defines the contract for active mq message send topology configurator.
-/// </summary>
+/// <summary>Configures untyped ActiveMQ message send topology.</summary>
 public interface IActiveMqMessageSendTopologyConfigurator :
     IMessageSendTopologyConfigurator
 {

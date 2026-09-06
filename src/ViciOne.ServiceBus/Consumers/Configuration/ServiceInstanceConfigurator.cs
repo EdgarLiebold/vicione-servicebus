@@ -3,22 +3,18 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service instance configurator implementation.
-/// </summary>
-/// <typeparam name="TEndpointConfigurator">The t endpoint configurator type.</typeparam>
+/// <summary>Configures service instance.</summary>
+/// <typeparam name="TEndpointConfigurator">The endpoint configurator type.</typeparam>
 public class ServiceInstanceConfigurator<TEndpointConfigurator> :
     IServiceInstanceConfigurator<TEndpointConfigurator>
     where TEndpointConfigurator : IReceiveEndpointConfigurator
 {
     readonly ServiceInstanceOptions _options;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="instanceEndpointConfigurator">The instance endpoint configurator value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="instanceEndpointConfigurator">The instance endpoint configurator.</param>
     public ServiceInstanceConfigurator(IReceiveConfigurator<TEndpointConfigurator> configurator, ServiceInstanceOptions options,
         TEndpointConfigurator instanceEndpointConfigurator)
     {
@@ -30,67 +26,51 @@ public class ServiceInstanceConfigurator<TEndpointConfigurator> :
         _options = options;
     }
 
-    /// <summary>
-    /// Gets the instance address value.
-    /// </summary>
+    /// <summary>Gets the instance address.</summary>
     public Uri InstanceAddress => InstanceEndpointConfigurator.InputAddress;
 
     IReceiveConfigurator IServiceInstanceConfigurator.BusConfigurator => BusConfigurator;
     IReceiveEndpointConfigurator IServiceInstanceConfigurator.InstanceEndpointConfigurator => InstanceEndpointConfigurator;
 
-    /// <summary>
-    /// Gets the bus configurator value.
-    /// </summary>
+    /// <summary>Gets the bus configurator.</summary>
     public IReceiveConfigurator<TEndpointConfigurator> BusConfigurator { get; }
-    /// <summary>
-    /// Gets the instance endpoint configurator value.
-    /// </summary>
+    /// <summary>Gets the instance endpoint configurator.</summary>
     public TEndpointConfigurator InstanceEndpointConfigurator { get; }
 
-    /// <summary>
-    /// Adds specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddSpecification(ISpecification specification)
     {
         InstanceEndpointConfigurator.AddEndpointSpecification(new ValidateSpecification(specification));
     }
 
-    /// <summary>
-    /// Gets the endpoint name formatter value.
-    /// </summary>
+    /// <summary>Gets the endpoint name formatter.</summary>
     public IEndpointNameFormatter EndpointNameFormatter => _options.EndpointNameFormatter;
 
-    /// <summary>
-    /// Performs the options operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Applies the configured options.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The t produced by the operation.</returns>
     public T Options<T>(Action<T>? configure = null)
         where T : IOptions, new()
     {
         return _options.Options(configure);
     }
 
-    /// <summary>
-    /// Performs the options operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="options">The options value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Applies the configured options.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The t produced by the operation.</returns>
     public T Options<T>(T options, Action<T>? configure = null)
         where T : IOptions
     {
         return _options.Options(options, configure);
     }
 
-    /// <summary>
-    /// Attempts to get options.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="options">The options value.</param>
+    /// <summary>Attempts to get options.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="options">Receives the options produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetOptions<T>(out T options)
         where T : IOptions
@@ -98,11 +78,9 @@ public class ServiceInstanceConfigurator<TEndpointConfigurator> :
         return _options.TryGetOptions(out options);
     }
 
-    /// <summary>
-    /// Performs the select options operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Selects options.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The selected options.</returns>
     public IEnumerable<T> SelectOptions<T>()
         where T : class
     {
@@ -115,12 +93,10 @@ public class ServiceInstanceConfigurator<TEndpointConfigurator> :
         ReceiveEndpoint(definition, endpointNameFormatter, x => configureEndpoint?.Invoke(x));
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Applies the receive-endpoint configuration.</summary>
+    /// <param name="definition">The definition.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
+    /// <param name="configureEndpoint">The configure endpoint.</param>
     public void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<TEndpointConfigurator>? configureEndpoint)
     {
@@ -139,11 +115,9 @@ public class ServiceInstanceConfigurator<TEndpointConfigurator> :
         ReceiveEndpoint(queueName, x => configureEndpoint(x));
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Applies the receive-endpoint configuration.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configureEndpoint">The configure endpoint.</param>
     public void ReceiveEndpoint(string queueName, Action<TEndpointConfigurator>? configureEndpoint)
     {
         BusConfigurator.ReceiveEndpoint(queueName, endpointConfigurator =>
@@ -154,11 +128,9 @@ public class ServiceInstanceConfigurator<TEndpointConfigurator> :
         });
     }
 
-    /// <summary>
-    /// Connects endpoint configuration observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects endpoint configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectEndpointConfigurationObserver(IEndpointConfigurationObserver observer)
     {
         return BusConfigurator.ConnectEndpointConfigurationObserver(observer);

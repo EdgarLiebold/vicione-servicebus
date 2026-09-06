@@ -6,9 +6,7 @@ using Quartz.Extensibility;
 
 namespace ViciOne.ServiceBus.Quartz;
 
-/// <summary>
-/// Provides a vici one service bus job factory implementation.
-/// </summary>
+/// <summary>Creates scheduled-message jobs for dependency-injected or standalone Quartz schedulers.</summary>
 public class ViciOneServiceBusJobFactory :
     IJobFactory
 {
@@ -23,11 +21,9 @@ public class ViciOneServiceBusJobFactory :
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Creates a factory that supplies explicit dependencies to every scheduled-message job.</summary>
+    /// <param name="bus">The bus used to resolve destination endpoints.</param>
+    /// <param name="timeProvider">The clock used to derive remaining message time to live.</param>
     public ViciOneServiceBusJobFactory(IBus bus, TimeProvider timeProvider)
     {
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
@@ -44,12 +40,11 @@ public class ViciOneServiceBusJobFactory :
         return ReturnJobAsync(scope, cancellationToken);
     }
 
-    /// <summary>
-    /// Creates the job scope used to execute a scheduled message.
-    /// </summary>
-    /// <param name="bundle">The bundle used by the operation.</param>
-    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <summary>Creates the job scope used to execute a scheduled message.</summary>
+    /// <param name="bundle">The fired-trigger bundle; job construction does not inspect it.</param>
+    /// <param name="scheduler">The active scheduler; standalone jobs later resolve dependencies from its context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A completed value task containing the scheduled-message job scope.</returns>
     public ValueTask<JobScope> CreateJobAsync(TriggerFiredBundle bundle, IScheduler scheduler, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(bundle);
@@ -63,11 +58,10 @@ public class ViciOneServiceBusJobFactory :
         return ValueTask.FromResult(new JobScope(job, state: null));
     }
 
-    /// <summary>
-    /// Releases a job scope after execution.
-    /// </summary>
-    /// <param name="scope">The scope used by the operation.</param>
+    /// <summary>Releases a job scope after execution.</summary>
+    /// <param name="scope">The completed Quartz job scope.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask ReturnJobAsync(JobScope scope, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();

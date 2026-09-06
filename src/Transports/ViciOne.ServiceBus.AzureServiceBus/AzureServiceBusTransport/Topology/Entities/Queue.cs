@@ -2,13 +2,9 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// The queue details used to declare the queue to Azure Service Bus
-/// </summary>
+/// <summary>Describes an Azure Service Bus queue declaration.</summary>
 public interface Queue
 {
-    /// <summary>
-    /// Gets the create queue options value.
-    /// </summary>
+    /// <summary>Gets the Azure queue declaration options.</summary>
     CreateQueueOptions CreateQueueOptions { get; }
 }

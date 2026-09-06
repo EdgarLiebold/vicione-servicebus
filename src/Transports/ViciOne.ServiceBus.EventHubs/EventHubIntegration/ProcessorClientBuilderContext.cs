@@ -3,23 +3,17 @@ using Azure.Messaging.EventHubs.Processor;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Defines the contract for processor client builder context.
-/// </summary>
+/// <summary>Receives partition lifecycle callbacks used to maintain checkpoint state around an Event Hubs processor client.</summary>
 public interface ProcessorClientBuilderContext
 {
-    /// <summary>
-    /// Performs the on partition initializing operation.
-    /// </summary>
-    /// <param name="eventArgs">The event args value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Initializes local state before the processor begins reading a partition.</summary>
+    /// <param name="eventArgs">The Azure SDK partition-initializing arguments.</param>
+    /// <param name="cancellationToken">Cancels partition initialization.</param>
+    /// <returns>A task that completes after partition state is initialized.</returns>
     Task OnPartitionInitializingAsync(PartitionInitializingEventArgs eventArgs, CancellationToken cancellationToken = default);
-    /// <summary>
-    /// Performs the on partition closing operation.
-    /// </summary>
-    /// <param name="eventArgs">The event args value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Closes local checkpoint state after the processor stops reading a partition.</summary>
+    /// <param name="eventArgs">The Azure SDK partition-closing arguments.</param>
+    /// <param name="cancellationToken">Cancels partition-state closure.</param>
+    /// <returns>A task that completes after partition state is closed.</returns>
     Task OnPartitionClosingAsync(PartitionClosingEventArgs eventArgs, CancellationToken cancellationToken = default);
 }

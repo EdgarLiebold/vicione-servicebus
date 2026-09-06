@@ -2,13 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
-/// <summary>
-/// Defines the contract for job slot wait elapsed.
-/// </summary>
+/// <summary>Defines the operations required by job slot wait elapsed.</summary>
 public interface JobSlotWaitElapsed
 {
-    /// <summary>
-    /// Gets the job id value.
-    /// </summary>
+    /// <summary>Gets the job id.</summary>
     Guid JobId { get; }
 }

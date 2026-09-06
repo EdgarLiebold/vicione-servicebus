@@ -4,30 +4,24 @@ using RabbitMQ.Client;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides extension methods for rabbit mq send context.
-/// </summary>
+/// <summary>Configures RabbitMQ-specific headers, priority, filtering, and publisher-confirm behavior on send contexts.</summary>
 public static class RabbitMqSendContextExtensions
 {
     const string StreamFilterValueHeaderName = "x-stream-filter-value";
 
-    /// <summary>
-    /// Sets transport header.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets an AMQP transport header on a RabbitMQ send context.</summary>
+    /// <param name="context">The RabbitMQ send context.</param>
+    /// <param name="key">The AMQP header key.</param>
+    /// <param name="value">The header value.</param>
     public static void SetTransportHeader(this RabbitMqSendContext context, string key, object value)
     {
         SetHeader(context.BasicProperties, key, value);
     }
 
-    /// <summary>
-    /// Sets header.
-    /// </summary>
-    /// <param name="basicProperties">The basic properties value.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets an AMQP header, formatting date values with the round-trip format.</summary>
+    /// <param name="basicProperties">The message properties that own the header table.</param>
+    /// <param name="key">The AMQP header key.</param>
+    /// <param name="value">The header value; <see langword="null" /> is ignored.</param>
     public static void SetHeader(this IBasicProperties basicProperties, string key, object value)
     {
         if (value == null)
@@ -43,11 +37,9 @@ public static class RabbitMqSendContextExtensions
         };
     }
 
-    /// <summary>
-    /// Sets the priority of a message sent to the broker
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="priority"></param>
+    /// <summary>Sets the priority of a message sent to the broker.</summary>
+    /// <param name="context">The send context carrying RabbitMQ transport state.</param>
+    /// <param name="priority">The AMQP message priority.</param>
     public static void SetPriority(this SendContext context, byte priority)
     {
         if (!context.TryGetPayload(out RabbitMqSendContext? sendContext))
@@ -56,11 +48,10 @@ public static class RabbitMqSendContextExtensions
         sendContext.BasicProperties.Priority = priority;
     }
 
-    /// <summary>
-    /// Sets the priority of a message sent to the broker
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="priority"></param>
+    /// <summary>Sets the priority of a message sent to the broker.</summary>
+    /// <param name="context">The send context that may carry RabbitMQ transport state.</param>
+    /// <param name="priority">The AMQP message priority.</param>
+    /// <returns><see langword="true" /> when a RabbitMQ send context was available and updated.</returns>
     public static bool TrySetPriority(this SendContext context, byte priority)
     {
         if (!context.TryGetPayload(out RabbitMqSendContext? sendContext))
@@ -71,11 +62,11 @@ public static class RabbitMqSendContextExtensions
     }
 
     /// <summary>
-    /// Sets whether the send should wait for the ack from the broker, or if it should
-    /// return immediately after the message is sent by the client.
+    /// Sets whether the caller waits for the RabbitMQ client publish task, including publisher confirmation when enabled.
+    /// When disabled, the caller returns after publish initiation while the transport continues to observe the task and hold its channel lease.
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="awaitAck"></param>
+    /// <param name="context">The send context carrying RabbitMQ transport state.</param>
+    /// <param name="awaitAck"><see langword="true"/> to propagate the publish outcome to the caller; <see langword="false"/> to observe it only internally.</param>
     public static void SetAwaitAck(this SendContext context, bool awaitAck)
     {
         if (!context.TryGetPayload(out RabbitMqSendContext? sendContext))
@@ -85,11 +76,12 @@ public static class RabbitMqSendContextExtensions
     }
 
     /// <summary>
-    /// Sets whether the send should wait for the ack from the broker, or if it should
-    /// return immediately after the message is sent by the client.
+    /// Attempts to set whether the caller waits for the RabbitMQ client publish task, including publisher confirmation when enabled.
+    /// When disabled, the caller returns after publish initiation while the transport continues to observe the task and hold its channel lease.
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="awaitAck"></param>
+    /// <param name="context">The send context that may carry RabbitMQ transport state.</param>
+    /// <param name="awaitAck"><see langword="true"/> to propagate the publish outcome to the caller; <see langword="false"/> to observe it only internally.</param>
+    /// <returns><see langword="true"/> when the RabbitMQ send context was available and updated.</returns>
     public static bool TrySetAwaitAck(this SendContext context, bool awaitAck)
     {
         if (!context.TryGetPayload(out RabbitMqSendContext? sendContext))
@@ -99,11 +91,9 @@ public static class RabbitMqSendContextExtensions
         return true;
     }
 
-    /// <summary>
-    /// Sets the filter value used for server-side streams filtering.
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="value"></param>
+    /// <summary>Sets the filter value used for server-side streams filtering.</summary>
+    /// <param name="context">The send context carrying RabbitMQ transport state.</param>
+    /// <param name="value">The stream filter value written to the transport header.</param>
     public static void SetStreamFilterValue(this SendContext context, string value)
     {
         if (!context.TryGetPayload(out RabbitMqSendContext? sendContext))
@@ -112,11 +102,10 @@ public static class RabbitMqSendContextExtensions
         sendContext.Headers.Set(StreamFilterValueHeaderName, value);
     }
 
-    /// <summary>
-    /// Sets the filter value used for server-side streams filtering.
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="value"></param>
+    /// <summary>Sets the filter value used for server-side streams filtering.</summary>
+    /// <param name="context">The send context that may carry RabbitMQ transport state.</param>
+    /// <param name="value">The stream filter value written to the transport header.</param>
+    /// <returns><see langword="true" /> when a RabbitMQ send context was available and updated.</returns>
     public static bool TrySetStreamFilterValue(this SendContext context, string value)
     {
         if (!context.TryGetPayload(out RabbitMqSendContext? sendContext))

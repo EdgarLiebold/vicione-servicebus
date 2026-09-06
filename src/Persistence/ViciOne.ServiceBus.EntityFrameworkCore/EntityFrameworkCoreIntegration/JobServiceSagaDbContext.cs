@@ -3,24 +3,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides a job service saga db context implementation.
-/// </summary>
+/// <summary>EF Core context containing pessimistic-concurrency mappings for all job-service sagas.</summary>
 public class JobServiceSagaDbContext :
     SagaDbContext
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes the pessimistic job-service saga DbContext.</summary>
+    /// <param name="options">The options for this context type.</param>
     public JobServiceSagaDbContext(DbContextOptions<JobServiceSagaDbContext> options)
         : base(options)
     {
     }
 
-    /// <summary>
-    /// Gets the configurations value.
-    /// </summary>
+    /// <summary>Gets mappings for job type, job, and job-attempt saga state.</summary>
     protected override IEnumerable<ISagaClassMap> Configurations
     {
         get

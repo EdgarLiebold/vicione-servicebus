@@ -14,9 +14,7 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Quartz;
 
-/// <summary>
-/// Provides a schedule message consumer implementation.
-/// </summary>
+/// <summary>Creates or replaces Quartz triggers that forward serialized messages at their due times.</summary>
 public class ScheduleMessageConsumer :
     IConsumer<ScheduleMessage>,
     IConsumer<ScheduleRecurringMessage>
@@ -26,20 +24,16 @@ public class ScheduleMessageConsumer :
     readonly ISchedulerFactory _schedulerFactory;
     readonly Func<string, TimeZoneInfo?>? _timeZoneResolver;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="schedulerFactory">The scheduler factory value.</param>
+    /// <summary>Initializes the scheduling consumer with the active scheduler factory.</summary>
+    /// <param name="schedulerFactory">The factory that resolves the active Quartz scheduler.</param>
     public ScheduleMessageConsumer(ISchedulerFactory schedulerFactory)
         : this(schedulerFactory, (Func<string, TimeZoneInfo?>?)null)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="schedulerFactory">The scheduler factory value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes the scheduling consumer with scheduler and endpoint options.</summary>
+    /// <param name="schedulerFactory">The factory that resolves the active Quartz scheduler.</param>
+    /// <param name="options">Endpoint options containing an optional time-zone resolver.</param>
     public ScheduleMessageConsumer(ISchedulerFactory schedulerFactory, IOptions<QuartzEndpointOptions> options)
         : this(schedulerFactory, options?.Value.TimeZoneResolver)
     {
@@ -51,11 +45,9 @@ public class ScheduleMessageConsumer :
         _timeZoneResolver = timeZoneResolver;
     }
 
-    /// <summary>
-    /// Consumes the message provided by the context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates or replaces a one-time trigger identified by the scheduling token.</summary>
+    /// <param name="context">The one-time scheduling command context.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ConsumeAsync(ConsumeContext<ScheduleMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -85,11 +77,9 @@ public class ScheduleMessageConsumer :
         LogContext.Debug?.Log("Scheduled: {Key} {Schedule}", trigger.Key, trigger.NextFireTimeUtc);
     }
 
-    /// <summary>
-    /// Consumes the message provided by the context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates or replaces a cron trigger identified by schedule group and identifier.</summary>
+    /// <param name="context">The recurring scheduling command context.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ConsumeAsync(ConsumeContext<ScheduleRecurringMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);

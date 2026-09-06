@@ -5,10 +5,7 @@ using MessagePack.Resolvers;
 
 namespace ViciOne.ServiceBus.Serialization;
 /// <summary>
-/// The only type in this module that names <see cref="MessagePackSerializer" />. Every other call site
-/// goes through the members below, so a caller cannot end up on the global default option set by
-/// leaving an argument out; there is no argument to leave out. Centralizing the boundary prevents
-/// call sites from accidentally omitting the required option set.
+/// Centralizes MessagePack serialization through the module's resolver chain and security options.
 /// </summary>
 static class InternalMessagePackResolver
 {
@@ -19,14 +16,11 @@ static class InternalMessagePackResolver
             DynamicGenericResolver.Instance);
 
     /// <summary>
-    /// Everything arriving from a broker crosses a trust boundary, even over authenticated TLS: a
-    /// credential or an authorised node can be compromised.
+    /// Gets the shared serializer options used for every MessagePack payload in this module.
     /// <para>
-    /// UntrustedData is defense in depth against selected attacks, chiefly forced hash collisions in
-    /// keyed collections. It is not authentication, and it is not a general bound on what a hostile
-    /// payload can make the deserializer allocate or construct; it and the default both stop at the
-    /// same object graph depth. It sits on the one option set so that no call site can end up hardened
-    /// while another is not.
+    /// The resolver supports native date/time values, private contractless members, ViciOne contract
+    /// mappings, and generic collection shapes. <see cref="MessagePackSecurity.UntrustedData" /> applies
+    /// defensive collection handling to payloads received across the broker trust boundary.
     /// </para>
     /// </summary>
     public static MessagePackSerializerOptions Options { get; } = MessagePackSerializerOptions.Standard
@@ -54,9 +48,11 @@ static class InternalMessagePackResolver
     }
 
     /// <summary>
-    /// Nullable, because a payload is allowed to be nil on the wire and the caller decides what that
-    /// means. Declaring it as never null here would only have moved the question out of sight.
+    /// Deserializes a payload using a message type selected at runtime.
     /// </summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="buffer">The MessagePack payload bytes.</param>
+    /// <returns>The deserialized message, or <see langword="null" /> when the wire payload is nil.</returns>
     public static object? Deserialize(Type messageType, byte[] buffer)
     {
         return MessagePackSerializer.Deserialize(messageType, buffer, Options);

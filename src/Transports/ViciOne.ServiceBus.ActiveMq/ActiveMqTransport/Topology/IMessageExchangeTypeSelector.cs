@@ -1,21 +1,15 @@
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Used to select the exchange type for a published message
-/// </summary>
-/// <typeparam name="TMessage">The message type</typeparam>
+/// <summary>Selects the provider destination type for a published message.</summary>
+/// <typeparam name="TMessage">The message type.</typeparam>
 public interface IMessageExchangeTypeSelector<in TMessage>
     where TMessage : class
 {
-    /// <summary>
-    /// The default exchange type
-    /// </summary>
+    /// <summary>Gets the default provider destination type.</summary>
     string DefaultExchangeType { get; }
 
-    /// <summary>
-    /// Returns the exchange type for the message type
-    /// </summary>
-    /// <param name="exchangeName">The exchange name</param>
-    /// <returns>The exchange type for the send</returns>
+    /// <summary>Returns the provider destination type for the named topic.</summary>
+    /// <param name="exchangeName">The topic name.</param>
+    /// <returns>The provider destination type used for sending.</returns>
     string GetExchangeType(string exchangeName);
 }

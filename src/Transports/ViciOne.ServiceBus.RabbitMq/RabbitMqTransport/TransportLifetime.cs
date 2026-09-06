@@ -10,25 +10,9 @@ using RabbitMQ.Client.Exceptions;
 namespace ViciOne.ServiceBus.RabbitMq;
 
 /// <summary>
-/// Owns one channel or one connection and separates saying it is finished from taking it away.
-/// <para>
-/// The two must not be the same act, or the broker's answer is lost. When RabbitMQ refuses an
-/// operation it completes that operation's continuation first — with the real reply code — and only
-/// then raises its shutdown notification. Disposing from inside that notification runs while the
-/// refused caller is still unwinding and has yet to release the client's own RPC semaphore in its
-/// finally: it turns the broker's answer into an ObjectDisposedException and makes a permanent
-/// refusal look like a hiccup worth retrying.
-/// </para>
-/// <para>
-/// So an operation takes a lease for as long as it runs, invalidation is immediate and never waits,
-/// and the subject is disposed only once the last lease is gone — after the finally blocks that
-/// still touch it. Callers arriving after invalidation are told the reason it closed, unaltered and
-/// typed, rather than being handed something that is about to vanish.
-/// </para>
-/// <para>
-/// One type serves both channel and connection deliberately. Two ownership models that differ in
-/// their details are two chances to get the order wrong, and the order is the entire subject here.
-/// </para>
+/// Coordinates the lifetime of a RabbitMQ channel or connection with its active operations.
+/// Invalidation rejects new leases immediately, retains the broker close reason, and schedules
+/// disposal only after the final active lease has been released.
 /// </summary>
 internal sealed class TransportLifetime :
     IAsyncDisposable
@@ -39,15 +23,8 @@ internal sealed class TransportLifetime :
     readonly string _subject;
 
     /// <summary>
-    /// The one authoritative completion: it completes when the subject is really gone, carrying the
-    /// disposal's failure if it had one and null if it did not. Everything that waits waits on this,
-    /// and there is deliberately no second representation of the same fact to disagree with it.
-    /// <para>
-    /// A result rather than a faulted task on purpose: disposal is started by whoever released the
-    /// last lease, which is usually nobody who will ever await it, and a faulted task nobody awaits
-    /// is an unobserved exception waiting to surface somewhere unrelated. The failure is logged
-    /// where it happens and rethrown, with its stack, to an owner that asks.
-    /// </para>
+    /// Completes once subject disposal finishes. The result carries any disposal exception so the
+    /// scheduled disposal task itself cannot become faulted and an awaiting owner can rethrow it.
     /// </summary>
     readonly TaskCompletionSource<Exception?> _disposed =
         new TaskCompletionSource<Exception?>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -57,13 +34,9 @@ internal sealed class TransportLifetime :
     int _disposeStarted;
     bool _invalidated;
 
-    /// <summary>
-    /// The disposal is injected rather than performed here, so the ownership rules can be proved
-    /// deterministically without standing up a broker: a probe records when disposal starts, how
-    /// often, and what happens when it fails, which is exactly what these rules are about.
-    /// </summary>
-    /// <param name="subject">What is owned — used only to say honestly what is no longer available.</param>
-    /// <param name="disposeSubject">Disposes the owned subject, exactly once, once nothing holds it.</param>
+    /// <summary>Creates lifetime coordination for an owned channel or connection.</summary>
+    /// <param name="subject">The subject description used when no broker close reason is available.</param>
+    /// <param name="disposeSubject">The asynchronous operation that disposes the subject.</param>
     public TransportLifetime(string subject, Func<Task> disposeSubject)
         : this(subject, disposeSubject, QueueSubjectDisposal)
     {
@@ -76,7 +49,7 @@ internal sealed class TransportLifetime :
         _scheduleSubjectDisposal = scheduleSubjectDisposal ?? throw new ArgumentNullException(nameof(scheduleSubjectDisposal));
     }
 
-    /// <summary>The broker's own reason for closing, or null while the subject is open.</summary>
+    /// <summary>Gets the first broker close reason supplied during invalidation, if any.</summary>
     public ShutdownEventArgs? CloseReason
     {
         get
@@ -86,13 +59,9 @@ internal sealed class TransportLifetime :
         }
     }
 
-    /// <summary>
-    /// Takes a lease for one operation, or refuses because the subject is finished.
-    /// <para>
-    /// Refusal is not an error of this method: the caller decides what to do, and for a real
-    /// operation that means reporting the stored close reason rather than inventing one.
-    /// </para>
-    /// </summary>
+    /// <summary>Attempts to acquire an operation lease before invalidation or disposal begins.</summary>
+    /// <param name="lease">Receives a lease that must be disposed after the operation finishes.</param>
+    /// <returns><see langword="true"/> when a lease was acquired; otherwise, <see langword="false"/>.</returns>
     public bool TryLease([NotNullWhen(true)] out Lease? lease)
     {
         lock (_lock)
@@ -110,10 +79,8 @@ internal sealed class TransportLifetime :
         return true;
     }
 
-    /// <summary>
-    /// The exception a caller gets when the subject is finished: the broker's own answer if there is
-    /// one, and otherwise this transport's own, which says only what it can honestly say.
-    /// </summary>
+    /// <summary>Creates an interruption exception from the retained broker close reason or a transport-generated fallback.</summary>
+    /// <returns>An exception describing why the channel or connection is unavailable.</returns>
     public OperationInterruptedException NotAvailable()
     {
         var reason = CloseReason;
@@ -124,11 +91,8 @@ internal sealed class TransportLifetime :
                 new ShutdownEventArgs(ShutdownInitiator.Library, 491, $"The {_subject} is no longer available"));
     }
 
-    /// <summary>
-    /// Marks the subject finished and keeps the reason. Never blocks and never disposes inline: this
-    /// is called from the client's shutdown notification, and waiting there would hold the very
-    /// callback the disposal is waiting on.
-    /// </summary>
+    /// <summary>Rejects new leases, retains the first close reason, and schedules disposal when no leases remain.</summary>
+    /// <param name="reason">The broker close reason, or <see langword="null"/> for owner-initiated disposal.</param>
     public void Invalidate(ShutdownEventArgs? reason)
     {
         bool idle;
@@ -146,11 +110,8 @@ internal sealed class TransportLifetime :
             ScheduleDispose();
     }
 
-    /// <summary>
-    /// Invalidates and then waits for the subject to be really gone, rethrowing a disposal failure
-    /// to the owner that asked for it. Used by the owner's own disposal, where waiting is correct —
-    /// unlike in the shutdown notification.
-    /// </summary>
+    /// <summary>Invalidates the subject, waits for its scheduled disposal, and rethrows any disposal failure.</summary>
+    /// <returns>A value task that completes when the subject has been disposed.</returns>
     public async ValueTask DisposeAsync()
     {
         Invalidate(null);
@@ -180,24 +141,15 @@ internal sealed class TransportLifetime :
         if (Interlocked.Exchange(ref _disposeStarted, 1) != 0)
             return;
 
-        // Off the caller's thread on purpose: when this comes from the client's shutdown
-        // notification, the notification has to return before anything disposes the subject it is
-        // notifying about.
-        //
-        // The task is discarded explicitly rather than by accident. DisposeSubject catches every
-        // exception and reports the outcome through _disposed, which DisposeAsync awaits and
-        // rethrows from, so the discarded task carries no outcome that awaiting could recover.
+        // Schedule disposal outside the shutdown callback; _disposed remains the single completion contract.
         _scheduleSubjectDisposal(DisposeSubjectAsync);
     }
 
     static void QueueSubjectDisposal(Func<Task> disposeSubject) =>
         ThreadPool.QueueUserWorkItem(state => { _ = disposeSubject(); });
 
-    /// <summary>
-    /// Disposes the subject once and reports the outcome through <see cref="_disposed" />. It catches
-    /// everything on purpose: nothing awaits the task this returns, so a failure left in it would be
-    /// an unobserved exception rather than a report.
-    /// </summary>
+    /// <summary>Disposes the subject once and records success or failure in <see cref="_disposed"/>.</summary>
+    /// <returns>A task that completes after the disposal outcome has been recorded.</returns>
     async Task DisposeSubjectAsync()
     {
         Exception? failure = null;
@@ -217,12 +169,7 @@ internal sealed class TransportLifetime :
     }
 
 
-    /// <summary>
-    /// One running operation's claim on the subject, released exactly once however often it is
-    /// disposed. A class rather than a struct because a struct is copied silently, and a copy
-    /// released twice would take the active count below zero and let disposal begin underneath an
-    /// operation that is still running — the very defect this type exists to prevent.
-    /// </summary>
+    /// <summary>Represents one active operation and releases its lifetime claim at most once.</summary>
     public sealed class Lease :
         IDisposable
     {

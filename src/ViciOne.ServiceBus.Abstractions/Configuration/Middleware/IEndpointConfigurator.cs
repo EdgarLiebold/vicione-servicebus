@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for endpoint configurator.
-/// </summary>
+/// <summary>Configures endpoint.</summary>
 public interface IEndpointConfigurator :
     IConsumePipeConfigurator,
     ISendPipelineConfigurator,

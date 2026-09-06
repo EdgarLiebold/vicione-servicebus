@@ -2,14 +2,10 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Defines the contract for queue handle.
-/// </summary>
+/// <summary>Identifies an Amazon SQS queue within a broker-topology builder.</summary>
 public interface QueueHandle :
     EntityHandle
 {
-    /// <summary>
-    /// Gets the queue value.
-    /// </summary>
+    /// <summary>Gets the queue declaration represented by the handle.</summary>
     Queue Queue { get; }
 }

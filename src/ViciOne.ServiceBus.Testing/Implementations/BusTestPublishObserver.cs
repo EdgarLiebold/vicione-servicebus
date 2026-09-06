@@ -4,33 +4,27 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
-/// <summary>
-/// Provides a bus test publish observer implementation.
-/// </summary>
+/// <summary>Observes bus test publish events.</summary>
 public class BusTestPublishObserver :
     InactivityTestObserver,
     IPublishObserver
 {
     readonly PublishedMessageList _messages;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="inactivityTimout">The inactivity timout value.</param>
-    /// <param name="testCompleted">The test completed value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="inactivityTimout">The inactivity timout.</param>
+    /// <param name="testCompleted">The test completed.</param>
     public BusTestPublishObserver(TimeSpan timeout, TimeSpan inactivityTimout, CancellationToken testCompleted = default)
         : this(timeout, inactivityTimout, testCompleted, TimeProvider.System)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="inactivityTimout">The inactivity timout value.</param>
-    /// <param name="testCompleted">The test completed value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="inactivityTimout">The inactivity timout.</param>
+    /// <param name="testCompleted">The test completed.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public BusTestPublishObserver(TimeSpan timeout, TimeSpan inactivityTimout, CancellationToken testCompleted, TimeProvider timeProvider)
         : base(timeProvider)
     {
@@ -39,9 +33,7 @@ public class BusTestPublishObserver :
         StartTimer(inactivityTimout);
     }
 
-    /// <summary>
-    /// Gets the messages value.
-    /// </summary>
+    /// <summary>Gets the messages.</summary>
     public IPublishedMessageList Messages => _messages;
 
     Task IPublishObserver.PrePublishAsync<T>(PublishContext<T> context)

@@ -4,9 +4,7 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>
-/// Provides an exponential retry policy implementation.
-/// </summary>
+/// <summary>Defines policy for exponential retry.</summary>
 public class ExponentialRetryPolicy :
     IRetryPolicy
 {
@@ -17,14 +15,12 @@ public class ExponentialRetryPolicy :
     readonly int _maxInterval;
     readonly int _minInterval;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
-    /// <param name="retryLimit">The retry limit value.</param>
-    /// <param name="minInterval">The min interval value.</param>
-    /// <param name="maxInterval">The max interval value.</param>
-    /// <param name="intervalDelta">The interval delta value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="retryLimit">The retry limit.</param>
+    /// <param name="minInterval">The min interval.</param>
+    /// <param name="maxInterval">The max interval.</param>
+    /// <param name="intervalDelta">The interval delta.</param>
     public ExponentialRetryPolicy(IExceptionFilter filter, int retryLimit, TimeSpan minInterval, TimeSpan maxInterval, TimeSpan intervalDelta)
     {
         ArgumentNullException.ThrowIfNull(filter);
@@ -51,9 +47,7 @@ public class ExponentialRetryPolicy :
         _intervals = CalculateIntervals().ToArray();
     }
 
-    /// <summary>
-    /// Gets the retry limit value.
-    /// </summary>
+    /// <summary>Gets the retry limit.</summary>
     public int RetryLimit { get; }
 
     void IProbeSite.Probe(ProbeContext context)
@@ -76,9 +70,7 @@ public class ExponentialRetryPolicy :
         return new ExponentialRetryPolicyContext<T>(this, context);
     }
 
-    /// <summary>
-    /// Determines whether handled.
-    /// </summary>
+    /// <summary>Determines whether handled.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)
@@ -86,11 +78,9 @@ public class ExponentialRetryPolicy :
         return _filter.Match(exception);
     }
 
-    /// <summary>
-    /// Gets retry interval.
-    /// </summary>
-    /// <param name="retryCount">The retry count value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets retry interval.</summary>
+    /// <param name="retryCount">The retry count.</param>
+    /// <returns>The retry interval.</returns>
     public TimeSpan GetRetryInterval(int retryCount)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(retryCount);
@@ -114,10 +104,8 @@ public class ExponentialRetryPolicy :
         }
     }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the string representation of this instance.</summary>
+    /// <returns>The converted string.</returns>
     public override string ToString()
     {
         return $"Exponential (limit {RetryLimit}, min {_minInterval}ms, max {_maxInterval}ms)";

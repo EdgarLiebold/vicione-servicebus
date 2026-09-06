@@ -9,18 +9,14 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.JobService;
 
-/// <summary>
-/// Provides extension methods for job service.
-/// </summary>
+/// <summary>Provides extension methods for job service.</summary>
 public static class JobServiceExtensions
 {
-    /// <summary>
-    /// Requests the job state for the specified <paramref name="jobId" /> using the request client
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="jobId"></param>
-    /// <returns></returns>
+    /// <summary>Requests the job state for the specified <paramref name="jobId" /> using the request client.</summary>
+    /// <param name="client">The client.</param>
+    /// <param name="jobId">The job id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the requested value.</returns>
     public static async Task<JobState> GetJobStateAsync(this IRequestClient<GetJobState> client, Guid jobId, CancellationToken cancellationToken = default)
     {
         Response<JobState> response = await client.GetResponseAsync<JobState>(new GetJobStateRequest { JobId = jobId }, cancellationToken: cancellationToken);
@@ -28,13 +24,12 @@ public static class JobServiceExtensions
         return response.Message;
     }
 
-    /// <summary>
-    /// Requests the job state for the specified <paramref name="jobId" /> using the request client
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="jobId"></param>
-    /// <returns></returns>
+    /// <summary>Requests the job state for the specified <paramref name="jobId" /> using the request client.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">The client.</param>
+    /// <param name="jobId">The job id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the requested value.</returns>
     public static async Task<JobState<T>> GetJobStateAsync<T>(this IRequestClient<GetJobState> client, Guid jobId, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -46,29 +41,25 @@ public static class JobServiceExtensions
         return new JobStateResponse<T>(response.Message);
     }
 
-    /// <summary>
-    /// Submits a job, returning the generated jobId
-    /// </summary>
-    /// <param name="publishEndpoint"></param>
-    /// <param name="job"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the generated jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static Task<Guid> SubmitJobAsync<T>(this IPublishEndpoint publishEndpoint, T job, CancellationToken cancellationToken = default)
         where T : class
     {
         return SubmitJobAsync(publishEndpoint, NewId.NextGuid(), job, null, cancellationToken);
     }
 
-    /// <summary>
-    /// Submits a job, returning the generated jobId
-    /// </summary>
-    /// <param name="publishEndpoint"></param>
-    /// <param name="job"></param>
-    /// <param name="setJobProperties"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the generated jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="setJobProperties">The set job properties.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static Task<Guid> SubmitJobAsync<T>(this IPublishEndpoint publishEndpoint, T job, Action<ISetPropertyCollection>? setJobProperties = null,
         CancellationToken cancellationToken = default)
         where T : class
@@ -76,16 +67,14 @@ public static class JobServiceExtensions
         return SubmitJobAsync(publishEndpoint, NewId.NextGuid(), job, setJobProperties, cancellationToken);
     }
 
-    /// <summary>
-    /// Submits a job, returning the generated jobId
-    /// </summary>
-    /// <param name="publishEndpoint"></param>
-    /// <param name="jobId">A unique job id</param>
-    /// <param name="job"></param>
-    /// <param name="setJobProperties"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the generated jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
+    /// <param name="jobId">A unique job id.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="setJobProperties">The set job properties.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static async Task<Guid> SubmitJobAsync<T>(this IPublishEndpoint publishEndpoint, Guid jobId, T job, Action<ISetPropertyCollection>?
         setJobProperties = null, CancellationToken cancellationToken = default)
         where T : class
@@ -119,29 +108,25 @@ public static class JobServiceExtensions
         return command;
     }
 
-    /// <summary>
-    /// Submits a job, returning the generated jobId
-    /// </summary>
-    /// <param name="publishEndpoint"></param>
-    /// <param name="job"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the generated jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static Task<Guid> SubmitJobAsync<T>(this IPublishEndpoint publishEndpoint, object job, CancellationToken cancellationToken = default)
         where T : class
     {
         return SubmitJobAsync<T>(publishEndpoint, NewId.NextGuid(), job, null, cancellationToken);
     }
 
-    /// <summary>
-    /// Submits a job, returning the generated jobId
-    /// </summary>
-    /// <param name="publishEndpoint"></param>
-    /// <param name="job"></param>
-    /// <param name="setJobProperties"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the generated jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="setJobProperties">The set job properties.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static Task<Guid> SubmitJobAsync<T>(this IPublishEndpoint publishEndpoint, object job, Action<ISetPropertyCollection>? setJobProperties = null,
         CancellationToken cancellationToken = default)
         where T : class
@@ -149,16 +134,14 @@ public static class JobServiceExtensions
         return SubmitJobAsync<T>(publishEndpoint, NewId.NextGuid(), job, setJobProperties, cancellationToken);
     }
 
-    /// <summary>
-    /// Submits a job, returning the generated jobId
-    /// </summary>
-    /// <param name="publishEndpoint"></param>
-    /// <param name="jobId">A unique job id</param>
-    /// <param name="job"></param>
-    /// <param name="setJobProperties"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the generated jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
+    /// <param name="jobId">A unique job id.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="setJobProperties">The set job properties.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static async Task<Guid> SubmitJobAsync<T>(this IPublishEndpoint publishEndpoint, Guid jobId, object job, Action<ISetPropertyCollection>?
         setJobProperties = null, CancellationToken cancellationToken = default)
         where T : class
@@ -174,29 +157,25 @@ public static class JobServiceExtensions
         return jobId;
     }
 
-    /// <summary>
-    /// Submits a job, returning the accepted jobId
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="job"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the accepted jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">The client.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static Task<Guid> SubmitJobAsync<T>(this IRequestClient<SubmitJob<T>> client, T job, CancellationToken cancellationToken = default)
         where T : class
     {
         return SubmitJobAsync(client, NewId.NextGuid(), job, null, cancellationToken);
     }
 
-    /// <summary>
-    /// Submits a job, returning the accepted jobId
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="job"></param>
-    /// <param name="setJobProperties"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the accepted jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">The client.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="setJobProperties">The set job properties.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static Task<Guid> SubmitJobAsync<T>(this IRequestClient<SubmitJob<T>> client, T job, Action<ISetPropertyCollection>? setJobProperties = null,
         CancellationToken cancellationToken = default)
         where T : class
@@ -204,16 +183,14 @@ public static class JobServiceExtensions
         return SubmitJobAsync(client, NewId.NextGuid(), job, setJobProperties, cancellationToken);
     }
 
-    /// <summary>
-    /// Submits a job, returning the accepted jobId
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="jobId">A unique job id</param>
-    /// <param name="job"></param>
-    /// <param name="setJobProperties"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the accepted jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">The client.</param>
+    /// <param name="jobId">A unique job id.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="setJobProperties">The set job properties.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static async Task<Guid> SubmitJobAsync<T>(this IRequestClient<SubmitJob<T>> client, Guid jobId, T job,
         Action<ISetPropertyCollection>? setJobProperties = null, CancellationToken cancellationToken = default)
         where T : class
@@ -227,29 +204,25 @@ public static class JobServiceExtensions
         return response.Message.JobId;
     }
 
-    /// <summary>
-    /// Submits a job, returning the accepted jobId
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="job"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the accepted jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">The client.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static Task<Guid> SubmitJobAsync<T>(this IRequestClient<SubmitJob<T>> client, object job, CancellationToken cancellationToken = default)
         where T : class
     {
         return SubmitJobAsync(client, NewId.NextGuid(), job, null, cancellationToken);
     }
 
-    /// <summary>
-    /// Submits a job, returning the accepted jobId
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="job"></param>
-    /// <param name="setJobProperties"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the accepted jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">The client.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="setJobProperties">The set job properties.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static Task<Guid> SubmitJobAsync<T>(this IRequestClient<SubmitJob<T>> client, object job, Action<ISetPropertyCollection>? setJobProperties = null,
         CancellationToken cancellationToken = default)
         where T : class
@@ -257,16 +230,14 @@ public static class JobServiceExtensions
         return SubmitJobAsync(client, NewId.NextGuid(), job, setJobProperties, cancellationToken);
     }
 
-    /// <summary>
-    /// Submits a job, returning the accepted jobId
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="jobId">Specify an explicit jobId for the job</param>
-    /// <param name="job"></param>
-    /// <param name="setJobProperties"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the accepted jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">The client.</param>
+    /// <param name="jobId">Specify an explicit jobId for the job.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="setJobProperties">The set job properties.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static async Task<Guid> SubmitJobAsync<T>(this IRequestClient<SubmitJob<T>> client, Guid jobId, object job,
         Action<ISetPropertyCollection>? setJobProperties = null, CancellationToken cancellationToken = default)
         where T : class
@@ -279,14 +250,12 @@ public static class JobServiceExtensions
         return response.Message.JobId;
     }
 
-    /// <summary>
-    /// Submits a job, returning the accepted jobId
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="job"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the accepted jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">The client.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static async Task<Guid> SubmitJobAsync<T>(this IRequestClient<T> client, T job, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -295,14 +264,12 @@ public static class JobServiceExtensions
         return response.Message.JobId;
     }
 
-    /// <summary>
-    /// Submits a job, returning the accepted jobId
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="job"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the accepted jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">The client.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the submit job outcome.</returns>
     public static async Task<Guid> SubmitJobAsync<T>(this IRequestClient<T> client, object job, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -313,14 +280,12 @@ public static class JobServiceExtensions
         return response.Message.JobId;
     }
 
-    /// <summary>
-    /// Cancel a job if the job exists and is in a state that can be canceled.
-    /// </summary>
-    /// <param name="publishEndpoint"></param>
-    /// <param name="jobId"></param>
-    /// <param name="reason"></param>
-    /// <returns></returns>
+    /// <summary>Cancel a job if the job exists and is in a state that can be canceled.</summary>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
+    /// <param name="jobId">The job id.</param>
+    /// <param name="reason">The reason.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task CancelJobAsync(this IPublishEndpoint publishEndpoint, Guid jobId, string? reason = null, CancellationToken cancellationToken = default)
     {
         return publishEndpoint.PublishAsync<CancelJob>(new CancelJobCommand
@@ -330,25 +295,21 @@ public static class JobServiceExtensions
         }, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Retry a job if the job exists and is in a state that can be retried.
-    /// </summary>
-    /// <param name="publishEndpoint"></param>
-    /// <param name="jobId"></param>
-    /// <returns></returns>
+    /// <summary>Retry a job if the job exists and is in a state that can be retried.</summary>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
+    /// <param name="jobId">The job id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task RetryJobAsync(this IPublishEndpoint publishEndpoint, Guid jobId, CancellationToken cancellationToken = default)
     {
         return publishEndpoint.PublishAsync<RetryJob>(new RetryJobCommand { JobId = jobId }, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Finalize a job, removing any faulted job attempts, so that it can be removed from the saga repository
-    /// </summary>
-    /// <param name="publishEndpoint"></param>
-    /// <param name="jobId"></param>
-    /// <returns></returns>
+    /// <summary>Finalize a job, removing any faulted job attempts, so that it can be removed from the saga repository.</summary>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
+    /// <param name="jobId">The job id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task FinalizeJobAsync(this IPublishEndpoint publishEndpoint, Guid jobId, CancellationToken cancellationToken = default)
     {
         return publishEndpoint.PublishAsync<FinalizeJob>(new FinalizeJobCommand { JobId = jobId }, cancellationToken: cancellationToken);

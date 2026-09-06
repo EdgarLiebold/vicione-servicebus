@@ -3,17 +3,13 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for inline filter configuration.
-/// </summary>
+/// <summary>Provides extension methods for inline filter configuration.</summary>
 public static class InlineFilterConfigurationExtensions
 {
-    /// <summary>
-    /// Creates an inline filter using a simple async method
-    /// </summary>
-    /// <typeparam name="T">The context type</typeparam>
-    /// <param name="configurator">The pipe configurator</param>
-    /// <param name="inlineFilterMethod">The inline filter delegate</param>
+    /// <summary>Creates an inline filter using a simple async method.</summary>
+    /// <typeparam name="T">The context type.</typeparam>
+    /// <param name="configurator">The pipe configurator.</param>
+    /// <param name="inlineFilterMethod">The inline filter delegate.</param>
     public static void UseInlineFilter<T>(this IPipeConfigurator<T> configurator, InlineFilterMethod<T> inlineFilterMethod)
         where T : class, PipeContext
     {

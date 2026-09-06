@@ -2,15 +2,11 @@ using ViciOne.ServiceBus.AzureServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides extension methods for service bus broker topology.
-/// </summary>
+/// <summary>Logs the topics and subscriptions contained in an Azure Service Bus topology.</summary>
 public static class ServiceBusBrokerTopologyExtensions
 {
-    /// <summary>
-    /// Performs the log result operation.
-    /// </summary>
-    /// <param name="topology">The topology value.</param>
+    /// <summary>Writes one informational log entry for every topic and subscription.</summary>
+    /// <param name="topology">The topology to describe.</param>
     public static void LogResult(this BrokerTopology topology)
     {
         foreach (var topic in topology.Topics)

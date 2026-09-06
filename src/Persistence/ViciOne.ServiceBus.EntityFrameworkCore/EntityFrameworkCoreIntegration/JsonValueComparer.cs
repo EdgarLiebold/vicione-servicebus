@@ -5,17 +5,13 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides a json value comparer implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Provides EF Core snapshots, hashes, and equality for a JSON-converted reference type.</summary>
+/// <typeparam name="T">The reference type converted to JSON.</typeparam>
 public class JsonValueComparer<T> :
     ValueComparer<T>
     where T : class?
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a comparer that prefers cloning and typed equality before JSON fallbacks.</summary>
     public JsonValueComparer()
         : base((t1, t2) => DoEquals(t1, t2), t => DoGetHashCode(t), t => DoGetSnapshot(t)!)
     {

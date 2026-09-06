@@ -9,28 +9,22 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides a connection context factory implementation.
-/// </summary>
+/// <summary>Creates shared and operation-scoped Amazon connection contexts.</summary>
 public class ConnectionContextFactory :
     IPipeContextFactory<ConnectionContext>
 {
     readonly IAmazonSqsHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <summary>Initializes a connection-context factory.</summary>
+    /// <param name="hostConfiguration">The host configuration used to create and retry connections.</param>
     public ConnectionContextFactory(IAmazonSqsHostConfiguration hostConfiguration)
     {
         _hostConfiguration = hostConfiguration;
     }
 
-    /// <summary>
-    /// Creates context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Starts asynchronous connection creation under a supervisor.</summary>
+    /// <param name="supervisor">The supervisor that owns the connection context.</param>
+    /// <returns>The new connection-context agent.</returns>
     public IPipeContextAgent<ConnectionContext> CreateContext(ISupervisor supervisor)
     {
         Task<ConnectionContext> context = Task.Run(() => CreateConnectionAsync(supervisor), supervisor.Stopped);
@@ -40,13 +34,11 @@ public class ConnectionContextFactory :
         return contextHandle;
     }
 
-    /// <summary>
-    /// Creates active context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an operation-scoped connection context from a shared context handle.</summary>
+    /// <param name="supervisor">The supervisor that owns the active context.</param>
+    /// <param name="context">The shared connection-context handle.</param>
+    /// <param name="cancellationToken">The operation cancellation token assigned to the scoped context.</param>
+    /// <returns>The active scoped-context agent.</returns>
     public IActivePipeContextAgent<ConnectionContext> CreateActiveContext(ISupervisor supervisor,
         PipeContextHandle<ConnectionContext> context, CancellationToken cancellationToken)
     {

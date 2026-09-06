@@ -2,18 +2,12 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced.Observers;
 
-/// <summary>
-/// Defines the contract for receive transport faulted.
-/// </summary>
+/// <summary>Defines the operations required by receive transport faulted.</summary>
 public interface ReceiveTransportFaulted :
     ReceiveTransportEvent
 {
-    /// <summary>
-    /// Gets the exception value.
-    /// </summary>
+    /// <summary>Gets the exception.</summary>
     Exception Exception { get; }
-    /// <summary>
-    /// Gets the is terminal value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether terminal.</summary>
     bool IsTerminal { get; }
 }

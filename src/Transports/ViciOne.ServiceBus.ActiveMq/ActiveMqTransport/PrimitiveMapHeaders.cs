@@ -6,28 +6,22 @@ using Apache.NMS;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides a primitive map headers implementation.
-/// </summary>
+/// <summary>Adapts an Apache NMS primitive map to mutable send headers.</summary>
 public class PrimitiveMapHeaders :
     SendHeaders
 {
     readonly IPrimitiveMap _properties;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="properties">The properties value.</param>
+    /// <summary>Creates a header adapter over a native message-property map.</summary>
+    /// <param name="properties">The native property map to read and update.</param>
     public PrimitiveMapHeaders(IPrimitiveMap properties)
     {
         _properties = properties;
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets or removes a string property.</summary>
+    /// <param name="key">The property name.</param>
+    /// <param name="value">The value to set, or <see langword="null" /> to remove the property.</param>
     public void Set(string key, string? value)
     {
         if (key == null)
@@ -39,12 +33,10 @@ public class PrimitiveMapHeaders :
             _properties[key] = value;
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <param name="overwrite">The overwrite value.</param>
+    /// <summary>Sets or removes a property, optionally preserving an existing value.</summary>
+    /// <param name="key">The property name.</param>
+    /// <param name="value">The value to set, or <see langword="null" /> to remove an overwritten property.</param>
+    /// <param name="overwrite">Whether an existing property may be changed or removed.</param>
     public void Set(string key, object? value, bool overwrite)
     {
         if (key == null)
@@ -61,12 +53,10 @@ public class PrimitiveMapHeaders :
             _properties[key] = value;
     }
 
-    /// <summary>
-    /// Attempts to get header.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Tries to read a non-null native message property.</summary>
+    /// <param name="key">The property name.</param>
+    /// <param name="value">The property value, when available.</param>
+    /// <returns><see langword="true" /> when a non-null value is present; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         var found = _properties.Contains(key);
@@ -80,10 +70,8 @@ public class PrimitiveMapHeaders :
         return false;
     }
 
-    /// <summary>
-    /// Gets all.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Enumerates all non-null native message properties.</summary>
+    /// <returns>The available property name/value pairs.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
         foreach (string key in _properties.Keys)
@@ -95,36 +83,30 @@ public class PrimitiveMapHeaders :
         }
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Rejects object-based reference-type retrieval, which native primitive headers do not support.</summary>
+    /// <typeparam name="T">The requested reference type.</typeparam>
+    /// <param name="key">The property name; object-based retrieval is unsupported for every key.</param>
+    /// <param name="defaultValue">The unused fallback value.</param>
+    /// <returns>This method does not return.</returns>
     public T Get<T>(string key, T? defaultValue)
         where T : class
     {
         throw new NotSupportedException("Primitive ActiveMQ headers do not support object-based retrieval.");
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Rejects object-based value-type retrieval, which native primitive headers do not support.</summary>
+    /// <typeparam name="T">The requested value type.</typeparam>
+    /// <param name="key">The property name; object-based retrieval is unsupported for every key.</param>
+    /// <param name="defaultValue">The unused fallback value.</param>
+    /// <returns>This method does not return.</returns>
     public T? Get<T>(string key, T? defaultValue)
         where T : struct
     {
         throw new NotSupportedException("Primitive ActiveMQ headers do not support object-based retrieval.");
     }
 
-    /// <summary>
-    /// Gets enumerator.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Enumerates all non-null properties as header values.</summary>
+    /// <returns>An enumerator over the native properties.</returns>
     public IEnumerator<HeaderValue> GetEnumerator()
     {
         foreach (string key in _properties.Keys)

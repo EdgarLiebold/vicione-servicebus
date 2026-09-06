@@ -10,9 +10,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides an active mq send transport context implementation.
-/// </summary>
+/// <summary>Creates and sends Apache NMS messages for one ActiveMQ destination.</summary>
 public class ActiveMqSendTransportContext :
     BaseSendTransportContext,
     SendTransportContext<SessionContext>
@@ -22,15 +20,13 @@ public class ActiveMqSendTransportContext :
     readonly IActiveMqHostConfiguration _hostConfiguration;
     readonly ISessionContextSupervisor _supervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="configureTopologyPipe">The configure topology pipe value.</param>
-    /// <param name="entityName">The entity name value.</param>
-    /// <param name="destinationType">The destination type value.</param>
+    /// <summary>Creates a send-transport context for an ActiveMQ entity.</summary>
+    /// <param name="hostConfiguration">The ActiveMQ host configuration.</param>
+    /// <param name="receiveEndpointContext">The endpoint context supplying serialization settings.</param>
+    /// <param name="supervisor">The session supervisor used for sends.</param>
+    /// <param name="configureTopologyPipe">The pipeline that provisions required broker topology.</param>
+    /// <param name="entityName">The destination entity name.</param>
+    /// <param name="destinationType">The Apache NMS destination type.</param>
     public ActiveMqSendTransportContext(IActiveMqHostConfiguration hostConfiguration, ReceiveEndpointContext receiveEndpointContext,
         ISessionContextSupervisor supervisor, IPipe<SessionContext> configureTopologyPipe, string entityName, DestinationType destinationType)
         : base(hostConfiguration, receiveEndpointContext.Serialization)
@@ -43,44 +39,34 @@ public class ActiveMqSendTransportContext :
         EntityName = entityName;
     }
 
-    /// <summary>
-    /// Gets the entity name value.
-    /// </summary>
+    /// <summary>Gets the destination entity name.</summary>
     public override string EntityName { get; }
-    /// <summary>
-    /// Gets the activity system value.
-    /// </summary>
+    /// <summary>Gets the OpenTelemetry messaging-system identifier.</summary>
     public override string ActivitySystem => "activemq";
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Executes a session pipeline with the configured host retry policy.</summary>
+    /// <param name="pipe">The session pipeline to execute.</param>
+    /// <param name="cancellationToken">The token used to cancel retries and sending.</param>
+    /// <returns>A task that completes when the pipeline has completed.</returns>
     public Task SendAsync(IPipe<SessionContext> pipe, CancellationToken cancellationToken = default)
     {
         return _hostConfiguration.RetryAsync(() => _supervisor.SendAsync(pipe, cancellationToken),
             stoppingToken: _supervisor.SendStopping, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The probe context to populate.</param>
     public void Probe(ProbeContext context)
     {
         _supervisor.Probe(context);
     }
 
-    /// <summary>
-    /// Creates send context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and configures an ActiveMQ send context for a message.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="message">The message to send.</param>
+    /// <param name="pipe">The pipeline that configures the send context.</param>
+    /// <param name="cancellationToken">The token associated with the send.</param>
+    /// <returns>A task that produces the configured send context.</returns>
     public override async Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
     {
         var sendContext = new TransportActiveMqSendContext<T>(message, cancellationToken);
@@ -90,24 +76,20 @@ public class ActiveMqSendTransportContext :
         return sendContext;
     }
 
-    /// <summary>
-    /// Gets agent handles.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the session supervisor used by this transport.</summary>
+    /// <returns>The transport's supervised session agent.</returns>
     public override IEnumerable<IAgent> GetAgentHandles()
     {
         return new IAgent[] { _supervisor };
     }
 
-    /// <summary>
-    /// Creates send context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="sessionContext">The session context value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and configures an ActiveMQ send context within a session pipeline.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="sessionContext">The active session context; creation itself does not require native session state.</param>
+    /// <param name="message">The message to send.</param>
+    /// <param name="pipe">The pipeline that configures the send context.</param>
+    /// <param name="cancellationToken">The token associated with the send.</param>
+    /// <returns>A task that produces the configured send context.</returns>
     public Task<SendContext<T>> CreateSendContextAsync<T>(SessionContext sessionContext, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
@@ -115,14 +97,12 @@ public class ActiveMqSendTransportContext :
         return CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="sessionContext">The session context value.</param>
-    /// <param name="sendContext">The send context value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Serializes and sends a message through an Apache NMS session.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="sessionContext">The native session context.</param>
+    /// <param name="sendContext">The configured ActiveMQ send context.</param>
+    /// <param name="cancellationToken">The token used while resolving the destination.</param>
+    /// <returns>A task that completes when the native send completes.</returns>
     public async Task SendAsync<T>(SessionContext sessionContext, SendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class
     {

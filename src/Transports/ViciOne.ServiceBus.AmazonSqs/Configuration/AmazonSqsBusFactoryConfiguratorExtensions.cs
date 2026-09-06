@@ -9,24 +9,21 @@ using ViciOne.ServiceBus.AmazonSqs.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for amazon sqs bus factory configurator.
-/// </summary>
+/// <summary>Provides transport-selection and default-host extensions for Amazon SQS.</summary>
 public static class AmazonSqsBusFactoryConfiguratorExtensions
 {
-    /// <summary>
-    /// Select AmazonSQS as the transport for the service bus
-    /// </summary>
+    /// <summary>Creates a bus that uses Amazon SQS queues and Amazon SNS topics.</summary>
+    /// <param name="selector">The bus-factory transport selector.</param>
+    /// <param name="configure">The callback that configures the Amazon SQS bus.</param>
+    /// <returns>The configured bus control.</returns>
     public static IBusControl CreateUsingAmazonSqs(this IBusFactorySelector selector, Action<IAmazonSqsBusFactoryConfigurator> configure)
     {
         return AmazonSqsBusFactory.Create(configure);
     }
 
-    /// <summary>
-    /// Configure ViciOne.ServiceBus to use Amazon SQS for the transport.
-    /// </summary>
-    /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus)</param>
-    /// <param name="configure">The configuration callback for the bus factory</param>
+    /// <summary>Registers Amazon SQS as the transport for a dependency-injection bus.</summary>
+    /// <param name="configurator">The bus registration configurator.</param>
+    /// <param name="configure">An optional callback that configures the bus factory.</param>
     public static void UsingAmazonSqs(this IBusRegistrationConfigurator configurator,
         Action<IBusRegistrationContext, IAmazonSqsBusFactoryConfigurator>? configure = null)
     {
@@ -45,22 +42,18 @@ public static class AmazonSqsBusFactoryConfiguratorExtensions
         configurator.SetBusFactory(new AmazonSqsRegistrationBusFactory(configure));
     }
 
-    /// <summary>
-    /// Configure the default Amazon SQS Host, using the FallbackRegionFactory and FallbackCredentialsFactory
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
+    /// <summary>Configures the default host using the AWS SDK fallback region and credential resolution.</summary>
+    /// <param name="configurator">The Amazon SQS bus configurator.</param>
+    /// <param name="configure">An optional callback that further configures the host.</param>
     public static void UseDefaultHost(this IAmazonSqsBusFactoryConfigurator configurator, Action<IAmazonSqsHostConfigurator>? configure = null)
     {
         configurator.UseDefaultHost(FallbackRegionFactory.GetRegionEndpoint(), configure);
     }
 
-    /// <summary>
-    /// Configure the default Amazon SQS Host, using the FallbackCredentialsFactory with the specified region
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="endpoint">The region for the host</param>
-    /// <param name="configure"></param>
+    /// <summary>Configures the default host for a region using the AWS SDK credential chain.</summary>
+    /// <param name="configurator">The Amazon SQS bus configurator.</param>
+    /// <param name="endpoint">The AWS region endpoint.</param>
+    /// <param name="configure">An optional callback that further configures the host.</param>
     public static void UseDefaultHost(this IAmazonSqsBusFactoryConfigurator configurator, RegionEndpoint endpoint,
         Action<IAmazonSqsHostConfigurator>? configure = null)
     {

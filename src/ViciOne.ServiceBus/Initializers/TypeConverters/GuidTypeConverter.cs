@@ -2,20 +2,16 @@ using System;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>
-/// Provides a guid type converter implementation.
-/// </summary>
+/// <summary>Converts guid type values.</summary>
 public class GuidTypeConverter :
     ITypeConverter<string, Guid>,
     ITypeConverter<Guid, string>,
     ITypeConverter<Guid, NewId>,
     ITypeConverter<Guid, object>
 {
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(NewId input, out Guid result)
     {
@@ -24,11 +20,9 @@ public class GuidTypeConverter :
         return true;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(object? input, out Guid result)
     {
@@ -51,22 +45,18 @@ public class GuidTypeConverter :
         }
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(string? input, out Guid result)
     {
         return Guid.TryParse(input, out result);
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(Guid input, out string result)
     {

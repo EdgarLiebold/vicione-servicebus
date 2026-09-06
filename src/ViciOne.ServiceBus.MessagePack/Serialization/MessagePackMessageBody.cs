@@ -5,26 +5,20 @@ using MessagePack;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a message pack message body implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Lazily serializes a message or transport envelope into MessagePack bytes.</summary>
+/// <typeparam name="TMessage">The message contract contained by the body.</typeparam>
 public class MessagePackMessageBody<TMessage> :
     MessageBody
     where TMessage : class
 {
-    /// <summary>
-    /// Gets the length value.
-    /// </summary>
+    /// <summary>Gets the serialized byte length, materializing the lazy body when first accessed.</summary>
     public long? Length => _lazyMessagePackSerializedObject.Value.Length;
 
     readonly Lazy<byte[]> _lazyMessagePackSerializedObject;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="envelope">The envelope value.</param>
+    /// <summary>Creates a lazy MessagePack transport envelope for a send context.</summary>
+    /// <param name="context">The send context that supplies message content and transport metadata.</param>
+    /// <param name="envelope">An optional prebuilt envelope whose message body is replaced after payload admission.</param>
     public MessagePackMessageBody(SendContext<TMessage> context, MessagePackEnvelope? envelope = null)
     {
         _lazyMessagePackSerializedObject = new Lazy<byte[]>(() =>
@@ -63,37 +57,29 @@ public class MessagePackMessageBody<TMessage> :
         });
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Creates a lazy MessagePack body containing only the supplied message.</summary>
+    /// <param name="message">The message serialized when the body is first accessed.</param>
     public MessagePackMessageBody(TMessage message)
     {
         _lazyMessagePackSerializedObject = new Lazy<byte[]>(() => InternalMessagePackResolver.Serialize(message));
     }
 
-    /// <summary>
-    /// Gets stream.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Opens a non-writable stream over the serialized MessagePack bytes.</summary>
+    /// <returns>A readable stream positioned at the beginning of the serialized body.</returns>
     public Stream GetStream()
     {
         return new MemoryStream(_lazyMessagePackSerializedObject.Value, false);
     }
 
-    /// <summary>
-    /// Gets bytes.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the lazily serialized MessagePack byte array.</summary>
+    /// <returns>The serialized body bytes retained by this instance.</returns>
     public byte[] GetBytes()
     {
         return _lazyMessagePackSerializedObject.Value;
     }
 
-    /// <summary>
-    /// Gets string.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the serialized MessagePack bytes encoded as Base64 text.</summary>
+    /// <returns>The Base64 representation of the serialized body.</returns>
     public string GetString()
     {
         return Convert.ToBase64String(_lazyMessagePackSerializedObject.Value);

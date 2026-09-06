@@ -8,19 +8,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Configuration;
 
-/// <summary>
-/// Provides an amazon sqs registration bus factory implementation.
-/// </summary>
+/// <summary>Creates Amazon SQS bus instances from dependency-injection registrations and named transport options.</summary>
 public class AmazonSqsRegistrationBusFactory :
     TransportRegistrationBusFactory<IAmazonSqsReceiveEndpointConfigurator>
 {
     readonly AmazonSqsBusConfiguration _busConfiguration;
     readonly Action<IBusRegistrationContext, IAmazonSqsBusFactoryConfigurator>? _configure;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Initializes a registration-based Amazon SQS bus factory.</summary>
+    /// <param name="configure">An optional callback that configures each created bus.</param>
     public AmazonSqsRegistrationBusFactory(Action<IBusRegistrationContext, IAmazonSqsBusFactoryConfigurator>? configure)
         : this(new AmazonSqsBusConfiguration(new AmazonSqsTopologyConfiguration(AmazonSqsBusFactory.CreateMessageTopology())), configure)
     {
@@ -35,13 +31,11 @@ public class AmazonSqsRegistrationBusFactory :
         _busConfiguration = busConfiguration;
     }
 
-    /// <summary>
-    /// Creates bus.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="specifications">The specifications value.</param>
-    /// <param name="busName">The bus name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a bus using its named region and scope options, registrations, and endpoint specifications.</summary>
+    /// <param name="context">The bus registration context.</param>
+    /// <param name="specifications">The specifications applied to the bus instance.</param>
+    /// <param name="busName">The name used to resolve transport options.</param>
+    /// <returns>The configured bus instance.</returns>
     public override IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
     {
         var configurator = new AmazonSqsBusFactoryConfigurator(_busConfiguration);

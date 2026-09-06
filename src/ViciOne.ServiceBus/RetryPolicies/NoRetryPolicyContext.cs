@@ -3,29 +3,23 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>
-/// Provides a no retry policy context implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Carries state for no retry policy operations.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class NoRetryPolicyContext<TContext> :
     BaseRetryPolicyContext<TContext>
     where TContext : class, PipeContext
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="policy">The policy value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="policy">The policy.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public NoRetryPolicyContext(IRetryPolicy policy, TContext context)
         : base(policy, context)
     {
     }
 
-    /// <summary>
-    /// Determines whether the current value can retry.
-    /// </summary>
+    /// <summary>Determines whether the current value can retry.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="retryContext">The retry context value.</param>
+    /// <param name="retryContext">Receives the retry context produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool CanRetry(Exception exception, out RetryContext<TContext> retryContext)
     {
@@ -34,12 +28,10 @@ public class NoRetryPolicyContext<TContext> :
         return false;
     }
 
-    /// <summary>
-    /// Creates retry context.
-    /// </summary>
+    /// <summary>Creates retry context.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The created retry context.</returns>
     protected override RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken)
     {
         return new NoRetryContext<TContext>(Context, exception, cancellationToken);

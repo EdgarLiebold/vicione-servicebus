@@ -5,19 +5,15 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>
-/// Provides a sql message send context implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Carries state for sql message send operations.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class SqlMessageSendContext<T> :
     MessageSendContext<T>,
     SqlSendContext<T>
     where T : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public SqlMessageSendContext(T message, CancellationToken cancellationToken)
         : base(message, cancellationToken)
@@ -25,28 +21,18 @@ public class SqlMessageSendContext<T> :
         TransportMessageId = NewId.NextGuid();
     }
 
-    /// <summary>
-    /// Gets the transport message id value.
-    /// </summary>
+    /// <summary>Gets the transport message id.</summary>
     public Guid TransportMessageId { get; }
 
-    /// <summary>
-    /// Gets or sets the partition key value.
-    /// </summary>
+    /// <summary>Gets or sets the partition key.</summary>
     public string? PartitionKey { get; set; }
-    /// <summary>
-    /// Gets or sets the priority value.
-    /// </summary>
+    /// <summary>Gets or sets the priority.</summary>
     public short? Priority { get; set; }
-    /// <summary>
-    /// Gets or sets the routing key value.
-    /// </summary>
+    /// <summary>Gets or sets the routing key.</summary>
     public string? RoutingKey { get; set; }
 
-    /// <summary>
-    /// Performs the read properties from operation.
-    /// </summary>
-    /// <param name="properties">The properties value.</param>
+    /// <summary>Reads properties from.</summary>
+    /// <param name="properties">The properties.</param>
     public override void ReadPropertiesFrom(IReadOnlyDictionary<string, object> properties)
     {
         base.ReadPropertiesFrom(properties);
@@ -56,10 +42,8 @@ public class SqlMessageSendContext<T> :
         RoutingKey = ReadString(properties, SqlTransportPropertyNames.RoutingKey);
     }
 
-    /// <summary>
-    /// Performs the write properties to operation.
-    /// </summary>
-    /// <param name="properties">The properties value.</param>
+    /// <summary>Writes properties to.</summary>
+    /// <param name="properties">The properties.</param>
     public override void WritePropertiesTo(IDictionary<string, object> properties)
     {
         base.WritePropertiesTo(properties);

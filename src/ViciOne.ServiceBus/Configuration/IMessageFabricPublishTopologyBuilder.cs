@@ -2,24 +2,16 @@ using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for message fabric publish topology builder.
-/// </summary>
+/// <summary>Builds message fabric publish topology components.</summary>
 public interface IMessageFabricPublishTopologyBuilder :
     IMessageFabricTopologyBuilder
 {
-    /// <summary>
-    /// Gets or sets the exchange name value.
-    /// </summary>
+    /// <summary>Gets or sets the exchange name.</summary>
     string ExchangeName { get; set; }
-    /// <summary>
-    /// Gets or sets the exchange type value.
-    /// </summary>
+    /// <summary>Gets or sets the exchange type.</summary>
     ExchangeType ExchangeType { get; set; }
 
-    /// <summary>
-    /// Creates implemented builder.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates implemented builder.</summary>
+    /// <returns>The created implemented builder.</returns>
     IMessageFabricPublishTopologyBuilder CreateImplementedBuilder();
 }

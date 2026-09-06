@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Consumes a message via a message handler and reports the message as consumed or faulted
-/// </summary>
-/// <typeparam name="TMessage"></typeparam>
+/// <summary>Consumes a message via a message handler and reports the message as consumed or faulted.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class ObserverMessageFilter<TMessage> :
     IFilter<ConsumeContext<TMessage>>
     where TMessage : class
@@ -15,10 +13,8 @@ public class ObserverMessageFilter<TMessage> :
     readonly IObserver<ConsumeContext<TMessage>> _observer;
     readonly string _observerType;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="observer">The observer to connect.</param>
     public ObserverMessageFilter(IObserver<ConsumeContext<TMessage>> observer)
     {
         if (observer == null)

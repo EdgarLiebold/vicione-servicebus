@@ -3,16 +3,12 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for message scheduler.
-/// </summary>
+/// <summary>Provides extension methods for message scheduler.</summary>
 public static class MessageSchedulerExtensions
 {
-    /// <summary>
-    /// Specify an endpoint to use for message scheduling
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="schedulerAddress"></param>
+    /// <summary>Specify an endpoint to use for message scheduling.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="schedulerAddress">The scheduler address.</param>
     public static void ConfigureMessageScheduler(this IConsumePipeConfigurator configurator, Uri schedulerAddress)
     {
         if (configurator == null)
@@ -28,7 +24,7 @@ public static class MessageSchedulerExtensions
     /// queue should be used to schedule all messages. If multiple instances are running, they should be on the same Quartz
     /// cluster.
     /// </summary>
-    /// <param name="configurator"></param>
+    /// <param name="configurator">The configurator to update.</param>
     public static void ConfigurePublishMessageScheduler(this IConsumePipeConfigurator configurator)
     {
         if (configurator == null)

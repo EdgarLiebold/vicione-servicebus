@@ -1,17 +1,13 @@
 namespace ViciOne.ServiceBus.Courier;
 
-/// <summary>
-/// Provides a default constructor execute activity factory implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Creates default constructor execute activity instances.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public static class DefaultConstructorExecuteActivityFactory<TActivity, TArguments>
     where TActivity : class, IExecuteActivity<TArguments>, new()
     where TArguments : class
 {
-    /// <summary>
-    /// Gets the execute factory value.
-    /// </summary>
+    /// <summary>Gets the execute factory.</summary>
     public static IExecuteActivityFactory<TActivity, TArguments> ExecuteFactory => ActivityFactoryCache.Factory;
 
 

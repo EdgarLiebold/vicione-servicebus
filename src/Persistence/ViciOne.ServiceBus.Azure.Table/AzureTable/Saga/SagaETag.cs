@@ -1,21 +1,15 @@
 namespace ViciOne.ServiceBus.AzureTable.Saga;
 
-/// <summary>
-/// Provides a saga e tag implementation.
-/// </summary>
+/// <summary>Represents the Azure Table ETag associated with a persisted saga.</summary>
 public class SagaETag
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="eTag">The e tag value.</param>
+    /// <summary>Captures the Azure Table entity tag loaded with a saga instance.</summary>
+    /// <param name="eTag">The entity tag used for optimistic update and delete operations.</param>
     public SagaETag(string eTag)
     {
         ETag = eTag;
     }
 
-    /// <summary>
-    /// Gets the e tag value.
-    /// </summary>
+    /// <summary>Gets the Azure Table entity tag.</summary>
     public string ETag { get; }
 }

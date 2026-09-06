@@ -3,33 +3,23 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Defines the contract for host rider handle.
-/// </summary>
+/// <summary>Controls the lifetime of host rider.</summary>
 public interface HostRiderHandle
 {
-    /// <summary>
-    /// Gets the rider value.
-    /// </summary>
+    /// <summary>Gets the rider.</summary>
     IRider Rider { get; }
 
-    /// <summary>
-    /// Gets the ready value.
-    /// </summary>
+    /// <summary>Gets the ready.</summary>
     Task<RiderReady> Ready { get; }
 
-    /// <summary>
-    /// Stops the configured component.
-    /// </summary>
+    /// <summary>Stops the configured component.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task StopAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Stops the configured component.
-    /// </summary>
-    /// <param name="remove">The remove value.</param>
+    /// <summary>Stops the configured component.</summary>
+    /// <param name="remove">The remove.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task StopAsync(bool remove, CancellationToken cancellationToken = default);
 }

@@ -12,9 +12,7 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Serialization.JsonConverters;
 
-/// <summary>
-/// Provides a system text json converter factory implementation.
-/// </summary>
+/// <summary>Creates system text json converter instances.</summary>
 public class SystemTextJsonConverterFactory :
     JsonConverterFactory
 {
@@ -35,10 +33,8 @@ public class SystemTextJsonConverterFactory :
         JsonMessageTypeMappingRegistry.Register<MessageEnvelope, JsonMessageEnvelope>();
     }
 
-    /// <summary>
-    /// Determines whether the current value can convert.
-    /// </summary>
-    /// <param name="typeToConvert">The type to convert value.</param>
+    /// <summary>Determines whether the current value can convert.</summary>
+    /// <param name="typeToConvert">The type to convert.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool CanConvert(Type typeToConvert)
     {
@@ -76,12 +72,10 @@ public class SystemTextJsonConverterFactory :
         return false;
     }
 
-    /// <summary>
-    /// Creates converter.
-    /// </summary>
-    /// <param name="typeToConvert">The type to convert value.</param>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates converter.</summary>
+    /// <param name="typeToConvert">The type to convert.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <returns>The created converter.</returns>
     public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
         if (JsonMessageTypeMappingRegistry.TryCreateConverter(typeToConvert, out JsonConverter? mappedConverter))

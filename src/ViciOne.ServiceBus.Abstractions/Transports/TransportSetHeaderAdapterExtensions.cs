@@ -3,21 +3,17 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides extension methods for transport set header adapter.
-/// </summary>
+/// <summary>Provides extension methods for transport set header adapter.</summary>
 public static class TransportSetHeaderAdapterExtensions
 {
     static readonly ITransportSetHeaderAdapter<object> _adapter = new DictionaryTransportSetHeaderAdapter(new StringHeaderValueConverter());
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <typeparam name="TValueType">The t value type type.</typeparam>
-    /// <param name="adapter">The adapter value.</param>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <typeparam name="TValueType">The value type type.</typeparam>
+    /// <param name="adapter">The adapter.</param>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">The value to process.</param>
     public static void Set<TValueType>(this ITransportSetHeaderAdapter<TValueType> adapter, IDictionary<string, TValueType> dictionary, string key,
         string? value)
     {
@@ -25,14 +21,12 @@ public static class TransportSetHeaderAdapterExtensions
             adapter.Set(dictionary, new HeaderValue<string>(key, value!));
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <typeparam name="TValueType">The t value type type.</typeparam>
-    /// <param name="adapter">The adapter value.</param>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <typeparam name="TValueType">The value type type.</typeparam>
+    /// <param name="adapter">The adapter.</param>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">The value to process.</param>
     public static void Set<TValueType>(this ITransportSetHeaderAdapter<TValueType> adapter, IDictionary<string, TValueType> dictionary, string key,
         Uri? value)
     {
@@ -40,14 +34,12 @@ public static class TransportSetHeaderAdapterExtensions
             adapter.Set(dictionary, new HeaderValue<string>(key, value.ToString()));
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <typeparam name="TValueType">The t value type type.</typeparam>
-    /// <param name="adapter">The adapter value.</param>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <typeparam name="TValueType">The value type type.</typeparam>
+    /// <param name="adapter">The adapter.</param>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">The value to process.</param>
     public static void Set<TValueType>(this ITransportSetHeaderAdapter<TValueType> adapter, IDictionary<string, TValueType> dictionary, string key,
         Guid? value)
     {
@@ -55,15 +47,13 @@ public static class TransportSetHeaderAdapterExtensions
             adapter.Set(dictionary, new HeaderValue<string>(key, ToString(value.Value)));
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <typeparam name="TValueType">The t value type type.</typeparam>
-    /// <param name="adapter">The adapter value.</param>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <param name="formatter">The formatter value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <typeparam name="TValueType">The value type type.</typeparam>
+    /// <param name="adapter">The adapter.</param>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">The value to process.</param>
+    /// <param name="formatter">The formatter.</param>
     public static void Set<TValueType>(this ITransportSetHeaderAdapter<TValueType> adapter, IDictionary<string, TValueType> dictionary, string key,
         Guid? value, Func<Guid, string> formatter)
     {
@@ -71,14 +61,12 @@ public static class TransportSetHeaderAdapterExtensions
             adapter.Set(dictionary, new HeaderValue<string>(key, formatter(value.Value)));
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <typeparam name="TValueType">The t value type type.</typeparam>
-    /// <param name="adapter">The adapter value.</param>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <typeparam name="TValueType">The value type type.</typeparam>
+    /// <param name="adapter">The adapter.</param>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">The value to process.</param>
     public static void Set<TValueType>(this ITransportSetHeaderAdapter<TValueType> adapter, IDictionary<string, TValueType> dictionary, string key,
         int? value)
     {
@@ -86,15 +74,13 @@ public static class TransportSetHeaderAdapterExtensions
             adapter.Set(dictionary, new HeaderValue<string>(key, ToString(value.Value)));
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <typeparam name="TValueType">The t value type type.</typeparam>
-    /// <param name="adapter">The adapter value.</param>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <param name="formatter">The formatter value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <typeparam name="TValueType">The value type type.</typeparam>
+    /// <param name="adapter">The adapter.</param>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">The value to process.</param>
+    /// <param name="formatter">The formatter.</param>
     public static void Set<TValueType>(this ITransportSetHeaderAdapter<TValueType> adapter, IDictionary<string, TValueType> dictionary, string key,
         int? value, Func<int, string> formatter)
     {
@@ -102,14 +88,12 @@ public static class TransportSetHeaderAdapterExtensions
             adapter.Set(dictionary, new HeaderValue<string>(key, formatter(value.Value)));
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <typeparam name="TValueType">The t value type type.</typeparam>
-    /// <param name="adapter">The adapter value.</param>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <typeparam name="TValueType">The value type type.</typeparam>
+    /// <param name="adapter">The adapter.</param>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">The value to process.</param>
     public static void Set<TValueType>(this ITransportSetHeaderAdapter<TValueType> adapter, IDictionary<string, TValueType> dictionary, string key,
         TimeSpan? value)
     {
@@ -117,15 +101,13 @@ public static class TransportSetHeaderAdapterExtensions
             adapter.Set(dictionary, new HeaderValue<string>(key, ToString(value.Value)));
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <typeparam name="TValueType">The t value type type.</typeparam>
-    /// <param name="adapter">The adapter value.</param>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <param name="formatter">The formatter value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <typeparam name="TValueType">The value type type.</typeparam>
+    /// <param name="adapter">The adapter.</param>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">The value to process.</param>
+    /// <param name="formatter">The formatter.</param>
     public static void Set<TValueType>(this ITransportSetHeaderAdapter<TValueType> adapter, IDictionary<string, TValueType> dictionary, string key,
         TimeSpan? value, Func<TimeSpan, string> formatter)
     {
@@ -133,14 +115,12 @@ public static class TransportSetHeaderAdapterExtensions
             adapter.Set(dictionary, new HeaderValue<string>(key, formatter(value.Value)));
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <typeparam name="TValueType">The t value type type.</typeparam>
-    /// <param name="adapter">The adapter value.</param>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <typeparam name="TValueType">The value type type.</typeparam>
+    /// <param name="adapter">The adapter.</param>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">The value to process.</param>
     public static void Set<TValueType>(this ITransportSetHeaderAdapter<TValueType> adapter, IDictionary<string, TValueType> dictionary, string key,
         DateTimeOffset? value)
     {
@@ -148,15 +128,13 @@ public static class TransportSetHeaderAdapterExtensions
             adapter.Set(dictionary, new HeaderValue<string>(key, ToString(value.Value)));
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <typeparam name="TValueType">The t value type type.</typeparam>
-    /// <param name="adapter">The adapter value.</param>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <param name="formatter">The formatter value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <typeparam name="TValueType">The value type type.</typeparam>
+    /// <param name="adapter">The adapter.</param>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">The value to process.</param>
+    /// <param name="formatter">The formatter.</param>
     public static void Set<TValueType>(this ITransportSetHeaderAdapter<TValueType> adapter, IDictionary<string, TValueType> dictionary, string key,
         DateTimeOffset? value, Func<DateTimeOffset, string> formatter)
     {
@@ -164,13 +142,11 @@ public static class TransportSetHeaderAdapterExtensions
             adapter.Set(dictionary, new HeaderValue<string>(key, formatter(value.Value)));
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <typeparam name="TValueType">The t value type type.</typeparam>
-    /// <param name="adapter">The adapter value.</param>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="headerValues">The header values value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <typeparam name="TValueType">The value type type.</typeparam>
+    /// <param name="adapter">The adapter.</param>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="headerValues">The header values.</param>
     public static void Set<TValueType>(this ITransportSetHeaderAdapter<TValueType> adapter, IDictionary<string, TValueType> dictionary,
         IEnumerable<HeaderValue> headerValues)
     {
@@ -178,23 +154,19 @@ public static class TransportSetHeaderAdapterExtensions
             adapter.Set(dictionary, header);
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="headerValues">The header values value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="headerValues">The header values.</param>
     public static void Set(this IDictionary<string, object> dictionary, IEnumerable<HeaderValue> headerValues)
     {
         foreach (var header in headerValues)
             _adapter.Set(dictionary, header);
     }
 
-    /// <summary>
-    /// Attempts to get int.
-    /// </summary>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Attempts to get int.</summary>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">Receives the value produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool TryGetInt(this IDictionary<string, string> dictionary, string key, out int value)
     {
@@ -205,11 +177,9 @@ public static class TransportSetHeaderAdapterExtensions
         return false;
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <param name="headerValues">The header values value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="headerValues">The header values.</param>
     public static void Set(this IDictionary<string, object> dictionary, params HeaderValue[] headerValues)
     {
         foreach (var header in headerValues)

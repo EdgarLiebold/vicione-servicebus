@@ -1,32 +1,24 @@
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides a publish endpoint broker topology builder implementation.
-/// </summary>
+/// <summary>Builds ActiveMQ publish topics with optional implemented-message hierarchy.</summary>
 public class PublishEndpointBrokerTopologyBuilder :
     BrokerTopologyBuilder,
     IPublishEndpointBrokerTopologyBuilder
 {
     readonly PublishBrokerTopologyOptions _options;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Creates a publish-topology builder.</summary>
+    /// <param name="options">Options controlling implemented-message hierarchy.</param>
     public PublishEndpointBrokerTopologyBuilder(PublishBrokerTopologyOptions options = PublishBrokerTopologyOptions.FlattenHierarchy)
     {
         _options = options;
     }
 
-    /// <summary>
-    /// The exchange to which the published message is sent
-    /// </summary>
+    /// <summary>Gets the topic to which the message is published.</summary>
     public TopicHandle? Topic { get; set; }
 
-    /// <summary>
-    /// Creates implemented builder.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the builder scope used for an implemented message contract.</summary>
+    /// <returns>A nested builder when hierarchy is maintained; otherwise, this builder.</returns>
     public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
     {
         if (_options.HasFlag(PublishBrokerTopologyOptions.MaintainHierarchy))
@@ -35,10 +27,8 @@ public class PublishEndpointBrokerTopologyBuilder :
         return this;
     }
 
-    /// <summary>
-    /// Performs the build broker topology operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an immutable snapshot of the accumulated publish topology.</summary>
+    /// <returns>The configured ActiveMQ broker topology.</returns>
     public BrokerTopology BuildBrokerTopology()
     {
         return new ActiveMqBrokerTopology(Topics, Queues, Consumers);

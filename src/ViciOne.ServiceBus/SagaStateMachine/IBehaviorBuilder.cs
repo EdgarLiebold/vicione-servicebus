@@ -1,15 +1,11 @@
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Defines the contract for behavior builder.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <summary>Builds behavior components.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
 public interface IBehaviorBuilder<TInstance>
     where TInstance : class, SagaStateMachineInstance
 {
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="activity">The activity value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="activity">The activity.</param>
     void Add(IStateMachineActivity<TInstance> activity);
 }

@@ -4,9 +4,7 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Bus-owned message routes that are mutable only during bus configuration.
-/// </summary>
+/// <summary>Bus-owned message routes that are mutable only during bus configuration.</summary>
 public sealed class MessageRouteTable :
     IMessageRouteTable
 {
@@ -23,11 +21,9 @@ public sealed class MessageRouteTable :
         return table;
     }
 
-    /// <summary>
-    /// Attempts to get destination address.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="destinationAddress">The destination address value.</param>
+    /// <summary>Attempts to get destination address.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="destinationAddress">Receives the destination address produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetDestinationAddress<T>(out Uri destinationAddress)
         where T : class
@@ -35,11 +31,9 @@ public sealed class MessageRouteTable :
         return TryGetDestinationAddress(typeof(T), out destinationAddress);
     }
 
-    /// <summary>
-    /// Attempts to get destination address.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="destinationAddress">The destination address value.</param>
+    /// <summary>Attempts to get destination address.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="destinationAddress">Receives the destination address produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetDestinationAddress(Type messageType, out Uri destinationAddress)
     {

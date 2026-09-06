@@ -10,9 +10,7 @@ using Microsoft.Extensions.Options;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides an azure service bus test harness hosted service implementation.
-/// </summary>
+/// <summary>Optionally cleans the configured Azure Service Bus namespace when the host starts.</summary>
 public class AzureServiceBusTestHarnessHostedService :
     IHostedService
 {
@@ -20,12 +18,10 @@ public class AzureServiceBusTestHarnessHostedService :
     readonly AzureServiceBusTestHarnessOptions _testOptions;
     readonly AzureServiceBusTransportOptions _transportOptions;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="transportOptions">The transport options value.</param>
-    /// <param name="testOptions">The test options value.</param>
-    /// <param name="logger">The logger value.</param>
+    /// <summary>Initializes the hosted service from transport and test-harness options.</summary>
+    /// <param name="transportOptions">The options containing the namespace connection string.</param>
+    /// <param name="testOptions">The options that control startup cleanup.</param>
+    /// <param name="logger">The logger used to report deleted entities.</param>
     public AzureServiceBusTestHarnessHostedService(IOptions<AzureServiceBusTransportOptions> transportOptions,
         IOptions<AzureServiceBusTestHarnessOptions> testOptions, ILogger<AzureServiceBusTestHarnessHostedService> logger)
     {
@@ -34,22 +30,18 @@ public class AzureServiceBusTestHarnessHostedService :
         _testOptions = testOptions.Value;
     }
 
-    /// <summary>
-    /// Starts the configured component.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Cleans the namespace when startup cleanup is enabled.</summary>
+    /// <param name="cancellationToken">The host-start cancellation token, checked before cleanup begins.</param>
+    /// <returns>A task that completes after optional namespace cleanup.</returns>
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested(); if (_testOptions.CleanNamespace)
             await CleanAsync();
     }
 
-    /// <summary>
-    /// Stops the configured component.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes immediately because the hosted service owns no running background operation.</summary>
+    /// <param name="cancellationToken">The host-stop cancellation token.</param>
+    /// <returns>A completed task, or a canceled task when cancellation was already requested.</returns>
     public Task StopAsync(CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;

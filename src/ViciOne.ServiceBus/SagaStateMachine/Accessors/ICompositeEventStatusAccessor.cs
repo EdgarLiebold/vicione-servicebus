@@ -1,23 +1,17 @@
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Defines the contract for composite event status accessor.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Defines the operations required by composite event status accessor.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public interface ICompositeEventStatusAccessor<in TSaga> :
     IProbeSite
 {
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Retrieves the requested value.</summary>
+    /// <param name="instance">The instance.</param>
+    /// <returns>The requested value.</returns>
     CompositeEventStatus Get(TSaga instance);
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
-    /// <param name="status">The status value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <param name="instance">The instance.</param>
+    /// <param name="status">The status.</param>
     void Set(TSaga instance, CompositeEventStatus status);
 }

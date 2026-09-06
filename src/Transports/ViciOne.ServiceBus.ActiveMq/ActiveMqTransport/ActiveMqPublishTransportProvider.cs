@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides an active mq publish transport provider implementation.
-/// </summary>
+/// <summary>Resolves ActiveMQ publish transports for a receive endpoint.</summary>
 public class ActiveMqPublishTransportProvider :
     IPublishTransportProvider
 {
@@ -14,11 +12,9 @@ public class ActiveMqPublishTransportProvider :
     readonly ActiveMqReceiveEndpointContext _context;
     readonly ISessionContextSupervisor _supervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionContextSupervisor">The connection context supervisor value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Creates a provider backed by an ActiveMQ connection and endpoint session.</summary>
+    /// <param name="connectionContextSupervisor">The broker connection supervisor.</param>
+    /// <param name="context">The receive-endpoint context supplying the session supervisor.</param>
     public ActiveMqPublishTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, ActiveMqReceiveEndpointContext context)
     {
         _connectionContextSupervisor = connectionContextSupervisor;
@@ -26,13 +22,11 @@ public class ActiveMqPublishTransportProvider :
         _supervisor = context.SessionContextSupervisor;
     }
 
-    /// <summary>
-    /// Gets publish transport.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="publishAddress">The publish address value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the publish transport for a message type.</summary>
+    /// <typeparam name="T">The published message type.</typeparam>
+    /// <param name="publishAddress">An optional address supplied by the caller; ActiveMQ topology determines the actual publish destination.</param>
+    /// <param name="cancellationToken">The token used to cancel transport creation.</param>
+    /// <returns>A task that produces the publish transport.</returns>
     public Task<ISendTransport> GetPublishTransportAsync<T>(Uri? publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {

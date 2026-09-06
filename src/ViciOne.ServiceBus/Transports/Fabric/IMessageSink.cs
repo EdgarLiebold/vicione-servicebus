@@ -2,19 +2,15 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>
-/// Defines the contract for message sink.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Defines the operations required by message sink.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface IMessageSink<T> :
     IProbeSite
     where T : class
 {
-    /// <summary>
-    /// Performs the deliver operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Delivers the current message.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task DeliverAsync(DeliveryContext<T> context, CancellationToken cancellationToken = default);
 }

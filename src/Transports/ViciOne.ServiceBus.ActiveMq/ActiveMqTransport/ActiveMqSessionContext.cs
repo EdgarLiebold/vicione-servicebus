@@ -12,9 +12,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides an active mq session context implementation.
-/// </summary>
+/// <summary>Serializes access to an Apache NMS session and caches its message producers.</summary>
 public class ActiveMqSessionContext :
     ScopePipeContext,
     SessionContext,
@@ -24,12 +22,10 @@ public class ActiveMqSessionContext :
     readonly MessageProducerCache _messageProducerCache;
     readonly ISession _session;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionContext">The connection context value.</param>
-    /// <param name="session">The session value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a context that owns an Apache NMS session.</summary>
+    /// <param name="connectionContext">The owning broker connection context.</param>
+    /// <param name="session">The native session owned by the context.</param>
+    /// <param name="cancellationToken">The token that signals session-context shutdown.</param>
     public ActiveMqSessionContext(ConnectionContext connectionContext, ISession session, CancellationToken cancellationToken)
         : base(connectionContext)
     {
@@ -42,10 +38,8 @@ public class ActiveMqSessionContext :
         _messageProducerCache = new MessageProducerCache();
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that completes after producer, session, and executor cleanup.</returns>
     public async ValueTask DisposeAsync()
     {
         var failures = new ActiveMqCleanupFailures();
@@ -81,101 +75,98 @@ public class ActiveMqSessionContext :
         }
     }
 
-    /// <summary>
-    /// Gets the cancellation token value.
-    /// </summary>
+    /// <summary>Gets the token that signals session-context shutdown.</summary>
     public override CancellationToken CancellationToken { get; }
 
-    /// <summary>
-    /// Gets the session value.
-    /// </summary>
+    /// <summary>Gets the underlying Apache NMS session.</summary>
     public ISession Session => _session;
 
-    /// <summary>
-    /// Gets the connection context value.
-    /// </summary>
+    /// <summary>Gets the owning ActiveMQ connection context.</summary>
     public ConnectionContext ConnectionContext { get; }
 
-    /// <summary>
-    /// Gets topic.
-    /// </summary>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Resolves a native topic, using a cached temporary topic when required by the topology.</summary>
+    /// <param name="topic">The configured broker topic.</param>
+    /// <param name="cancellationToken">The token used to cancel queued topic resolution.</param>
+    /// <returns>A task that produces the native topic destination.</returns>
     public Task<ITopic> GetTopicAsync(Topic topic, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Apache.NMS.ITopic>(cancellationToken); return _executor.ExecuteAsync(() =>
-                {
-                    var topicName = topic.EntityName.Split('?')[0];
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<ITopic>(cancellationToken);
 
-                    if (!topic.Durable && topic.AutoDelete
-                        && topic.EntityName.StartsWith(ConnectionContext.Topology.PublishTopology.VirtualTopicPrefix, StringComparison.InvariantCulture))
-                        return ConnectionContext.GetTemporaryTopic(_session, topicName);
+        return _executor.ExecuteAsync(() =>
+        {
+            var topicName = topic.EntityName.Split('?')[0];
 
-                    return SessionUtil.GetTopic(_session, topicName);
-                }, CancellationToken);
+            if (!topic.Durable && topic.AutoDelete
+                && topic.EntityName.StartsWith(ConnectionContext.Topology.PublishTopology.VirtualTopicPrefix, StringComparison.InvariantCulture))
+                return ConnectionContext.GetTemporaryTopic(_session, topicName);
+
+            return SessionUtil.GetTopic(_session, topicName);
+        }, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the ensure topic exists operation.
-    /// </summary>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Forces broker-side topic resolution by opening and closing a short-lived producer.</summary>
+    /// <param name="topic">The broker topic to resolve.</param>
+    /// <param name="cancellationToken">The token used to cancel queued broker-side resolution.</param>
+    /// <returns>A task that completes when broker-side resolution has finished.</returns>
     public Task EnsureTopicExistsAsync(Topic topic, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return _executor.ExecuteAsync(() =>
-                {
-                    // Resolution and the short lived producer belong together and belong here: both touch
-                    // the session, which is not thread safe, and this runs while the endpoint is starting.
-                    var topicName = topic.EntityName.Split('?')[0];
-                    ITopic destination = SessionUtil.GetTopic(_session, topicName);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
 
-                    IMessageProducer producer = _session.CreateProducer(destination);
-                    try
-                    {
-                        producer.Close();
-                    }
-                    finally
-                    {
-                        // A producer whose close threw is still a producer this session holds.
-                        producer.Dispose();
-                    }
-                }, CancellationToken);
+        return _executor.ExecuteAsync(() =>
+        {
+            // Topic resolution and producer creation share the serialized executor because Apache NMS sessions are not thread safe.
+            var topicName = topic.EntityName.Split('?')[0];
+            ITopic destination = SessionUtil.GetTopic(_session, topicName);
+
+            IMessageProducer producer = _session.CreateProducer(destination);
+            try
+            {
+                producer.Close();
+            }
+            finally
+            {
+                // Dispose also runs when Close fails so the session does not retain the short-lived producer.
+                producer.Dispose();
+            }
+        }, cancellationToken);
     }
 
-    /// <summary>
-    /// Gets queue.
-    /// </summary>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Resolves a native queue, using a cached temporary queue when required by the topology.</summary>
+    /// <param name="queue">The configured broker queue.</param>
+    /// <param name="cancellationToken">The token used to cancel queued queue resolution.</param>
+    /// <returns>A task that produces the native queue destination.</returns>
     public Task<IQueue> GetQueueAsync(Queue queue, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Apache.NMS.IQueue>(cancellationToken); return _executor.ExecuteAsync(() =>
-                {
-                    if (!queue.Durable && queue.AutoDelete && !ConnectionContext.IsVirtualTopicConsumer(queue.EntityName))
-                        return ConnectionContext.GetTemporaryQueue(_session, queue.EntityName);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<IQueue>(cancellationToken);
 
-                    return SessionUtil.GetQueue(_session, queue.EntityName);
-                }, CancellationToken);
+        return _executor.ExecuteAsync(() =>
+        {
+            if (!queue.Durable && queue.AutoDelete && !ConnectionContext.IsVirtualTopicConsumer(queue.EntityName))
+                return ConnectionContext.GetTemporaryQueue(_session, queue.EntityName);
+
+            return SessionUtil.GetQueue(_session, queue.EntityName);
+        }, cancellationToken);
     }
 
-    /// <summary>
-    /// Gets destination.
-    /// </summary>
-    /// <param name="destinationName">The destination name value.</param>
-    /// <param name="destinationType">The destination type value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Resolves a cached temporary destination or creates a native destination.</summary>
+    /// <param name="destinationName">The destination name.</param>
+    /// <param name="destinationType">The Apache NMS destination type.</param>
+    /// <param name="cancellationToken">The token used to cancel queued destination resolution.</param>
+    /// <returns>A task that produces the native destination.</returns>
     public Task<IDestination> GetDestinationAsync(string destinationName, DestinationType destinationType, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Apache.NMS.IDestination>(cancellationToken); if (ConnectionContext.TryGetTemporaryEntity(destinationName, out var destination)
-                    && destination != null
-                    && DestinationTypeMatches(destination, destinationType))
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<IDestination>(cancellationToken);
+
+        if (ConnectionContext.TryGetTemporaryEntity(destinationName, out var destination)
+            && destination != null
+            && DestinationTypeMatches(destination, destinationType))
             return Task.FromResult(destination);
 
-        return _executor.ExecuteAsync(() => SessionUtil.GetDestination(_session, destinationName, destinationType), CancellationToken);
+        return _executor.ExecuteAsync(() => SessionUtil.GetDestination(_session, destinationName, destinationType), cancellationToken);
     }
 
     bool DestinationTypeMatches(IDestination destination, DestinationType destinationType)
@@ -194,49 +185,48 @@ public class ActiveMqSessionContext :
         };
     }
 
-    /// <summary>
-    /// Creates message consumer.
-    /// </summary>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="selector">The selector value.</param>
-    /// <param name="noLocal">The no local value.</param>
-    /// <param name="consumerName">The consumer name value.</param>
-    /// <param name="shared">The shared value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a native queue consumer or an appropriately shared and durable topic consumer.</summary>
+    /// <param name="destination">The native destination to consume.</param>
+    /// <param name="selector">An optional Apache NMS message selector.</param>
+    /// <param name="noLocal">Whether messages produced by this connection must be excluded.</param>
+    /// <param name="consumerName">The subscription name for a topic consumer.</param>
+    /// <param name="shared">Whether a named Artemis AMQP topic subscription is shared.</param>
+    /// <param name="durable">Whether a named topic subscription is durable.</param>
+    /// <param name="cancellationToken">The token used to cancel queued consumer creation.</param>
+    /// <returns>A task that produces the native message consumer.</returns>
     public Task<IMessageConsumer> CreateMessageConsumerAsync(IDestination destination, string? selector, bool noLocal, string? consumerName = null,
         bool shared = false, bool durable = true, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Apache.NMS.IMessageConsumer>(cancellationToken); return _executor.ExecuteAsync(() =>
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<IMessageConsumer>(cancellationToken);
+
+        return _executor.ExecuteAsync(() =>
+        {
+            if (destination.IsTopic && !string.IsNullOrEmpty(consumerName))
+            {
+                if (shared)
                 {
-                    if (destination.IsTopic && !string.IsNullOrEmpty(consumerName))
-                    {
-                        if (shared)
-                        {
-                            if (_session is not NmsSession)
-                                throw new NotSupportedException("Shared consumers are supported only on ActiveMQ Artemis broker and with AMQP communication.");
+                    if (_session is not NmsSession)
+                        throw new NotSupportedException("Shared consumers are supported only on ActiveMQ Artemis broker and with AMQP communication.");
 
-                            return durable
-                                ? _session.CreateSharedDurableConsumerAsync((ITopic)destination, consumerName, selector)
-                                : _session.CreateSharedConsumerAsync((ITopic)destination, consumerName, selector);
-                        }
+                    return durable
+                        ? _session.CreateSharedDurableConsumerAsync((ITopic)destination, consumerName, selector)
+                        : _session.CreateSharedConsumerAsync((ITopic)destination, consumerName, selector);
+                }
 
-                        if (durable)
-                            return _session.CreateDurableConsumerAsync((ITopic)destination, consumerName, selector);
-                    }
+                if (durable)
+                    return _session.CreateDurableConsumerAsync((ITopic)destination, consumerName, selector);
+            }
 
-                    return _session.CreateConsumerAsync(destination, selector, noLocal);
-                }, CancellationToken);
+            return _session.CreateConsumerAsync(destination, selector, noLocal);
+        }, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a native message through the cached producer for a destination.</summary>
+    /// <param name="destination">The native destination.</param>
+    /// <param name="message">The Apache NMS message to send.</param>
+    /// <param name="cancellationToken">The token used to cancel producer acquisition and sending.</param>
+    /// <returns>A task that completes when the native send completes.</returns>
     public async Task SendAsync(IDestination destination, IMessage message, CancellationToken cancellationToken)
     {
         var producer = await _messageProducerCache.GetMessageProducerAsync(destination,
@@ -246,41 +236,33 @@ public class ActiveMqSessionContext :
             .OrCanceledAsync(cancellationToken), cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Creates bytes message.
-    /// </summary>
-    /// <param name="content">The content value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a native byte message in this session.</summary>
+    /// <param name="content">The message body bytes.</param>
+    /// <returns>The created Apache NMS byte message.</returns>
     public IBytesMessage CreateBytesMessage(byte[] content)
     {
         return _session.CreateBytesMessage(content);
     }
 
-    /// <summary>
-    /// Creates text message.
-    /// </summary>
-    /// <param name="content">The content value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a native text message in this session.</summary>
+    /// <param name="content">The message body text.</param>
+    /// <returns>The created Apache NMS text message.</returns>
     public ITextMessage CreateTextMessage(string content)
     {
         return _session.CreateTextMessage(content);
     }
 
-    /// <summary>
-    /// Creates message.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a native message without a typed body in this session.</summary>
+    /// <returns>The created Apache NMS message.</returns>
     public IMessage CreateMessage()
     {
         return _session.CreateMessage();
     }
 
-    /// <summary>
-    /// Performs the delete topic operation.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deletes a cached temporary topic or a named broker topic.</summary>
+    /// <param name="topicName">The topic name.</param>
+    /// <param name="cancellationToken">The token used to cancel deletion.</param>
+    /// <returns>A task that completes when deletion has finished.</returns>
     public Task DeleteTopicAsync(string topicName, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
@@ -295,12 +277,10 @@ public class ActiveMqSessionContext :
         }, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the delete queue operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deletes a cached temporary queue or a named broker queue.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="cancellationToken">The token used to cancel deletion.</param>
+    /// <returns>A task that completes when deletion has finished.</returns>
     public Task DeleteQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
@@ -315,11 +295,9 @@ public class ActiveMqSessionContext :
         }, cancellationToken);
     }
 
-    /// <summary>
-    /// Gets temporary destination.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets a cached temporary destination by name.</summary>
+    /// <param name="name">The destination name.</param>
+    /// <returns>The cached destination, or <see langword="null" /> when it is not registered.</returns>
     public IDestination? GetTemporaryDestination(string name)
     {
         return ConnectionContext.TryGetTemporaryEntity(name, out var destination) ? destination : null;

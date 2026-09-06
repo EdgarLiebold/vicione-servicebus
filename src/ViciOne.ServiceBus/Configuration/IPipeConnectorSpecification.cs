@@ -2,15 +2,11 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for pipe connector specification.
-/// </summary>
+/// <summary>Describes requirements for pipe connector.</summary>
 public interface IPipeConnectorSpecification :
     ISpecification
 {
-    /// <summary>
-    /// Performs the connect operation.
-    /// </summary>
-    /// <param name="connector">The connector value.</param>
+    /// <summary>Connects the configured observer or endpoint.</summary>
+    /// <param name="connector">The connector.</param>
     void Connect(IPipeConnector connector);
 }

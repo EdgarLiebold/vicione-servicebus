@@ -9,6 +9,23 @@ Copyright 2007-2024 Chris Patterson
 ViciOne.ServiceBus
 Copyright 2026 Edgar Liebold
 
+The implementation in src/ViciOne.ServiceBus.SignalR/Utils/ConcurrentHashSet.cs
+retains source provenance from https://stackoverflow.com/a/11034999/6558597.
+
+The z-base-32 alphabet in
+src/ViciOne.ServiceBus.Abstractions/NewId/NewIdFormatters/ZBase32Formatter.cs
+follows the design published at
+http://philzimmermann.com/docs/human-oriented-base-32-encoding.txt.
+
+The span-based line enumerator in
+src/ViciOne.ServiceBus/Internals/Extensions/StringExtensions.cs retains source
+provenance from
+https://www.meziantou.net/split-a-string-into-lines-without-allocation.htm.
+
+The text-table implementation in src/ViciOne.ServiceBus/Util/TextTable.cs
+retains inspiration attribution to
+https://github.com/khalidabuhakmeh/ConsoleTables.
+
 ViciOne modification: WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03, 2026-08-18.
 The Apache License, Version 2.0 text is unchanged and is carried as LICENSE.txt; only its
 file name changed, from LICENSE, to match the repository structure this product requires.

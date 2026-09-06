@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
-/// <summary>
-/// Provides a bus activity consume indicator implementation.
-/// </summary>
+/// <summary>Tracks bus activity consume activity.</summary>
 public class BusActivityConsumeIndicator : BaseBusActivityIndicatorConnectable,
     ISignalResource,
     IConsumeObserver
@@ -14,27 +12,21 @@ public class BusActivityConsumeIndicator : BaseBusActivityIndicatorConnectable,
     readonly ISignalResource? _signalResource;
     int _messagesInFlight;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="signalResource">The signal resource value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="signalResource">The signal resource.</param>
     public BusActivityConsumeIndicator(ISignalResource? signalResource)
     {
         _signalResource = signalResource;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public BusActivityConsumeIndicator()
         :
         this(null)
     {
     }
 
-    /// <summary>
-    /// Gets the is met value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether met.</summary>
     public override bool IsMet => Interlocked.CompareExchange(ref _messagesInFlight, int.MinValue, int.MinValue) == 0;
 
     Task IConsumeObserver.PreConsumeAsync<T>(ConsumeContext<T> context)
@@ -57,9 +49,7 @@ public class BusActivityConsumeIndicator : BaseBusActivityIndicatorConnectable,
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the signal operation.
-    /// </summary>
+    /// <summary>Signals the configured condition.</summary>
     public void Signal()
     {
         _signalResource?.Signal();

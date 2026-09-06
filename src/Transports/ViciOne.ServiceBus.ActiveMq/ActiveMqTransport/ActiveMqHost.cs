@@ -4,20 +4,16 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides an active mq host implementation.
-/// </summary>
+/// <summary>Hosts ActiveMQ receive endpoints and the connection resources they share.</summary>
 public class ActiveMqHost :
     BaseHost,
     IActiveMqHost
 {
     readonly IActiveMqHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="busTopology">The bus topology value.</param>
+    /// <summary>Creates an ActiveMQ host from its validated transport configuration and topology.</summary>
+    /// <param name="hostConfiguration">The configuration used to create endpoints and supervise the broker connection.</param>
+    /// <param name="busTopology">The ActiveMQ topology exposed by the host.</param>
     public ActiveMqHost(IActiveMqHostConfiguration hostConfiguration, IActiveMqBusTopology busTopology)
         : base(hostConfiguration, busTopology)
     {
@@ -25,42 +21,42 @@ public class ActiveMqHost :
         Topology = busTopology;
     }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the ActiveMQ topology associated with this host.</summary>
     public new IActiveMqBusTopology Topology { get; }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a receive endpoint described by an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition that supplies the name and common settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null"/> to use the default formatter.</param>
+    /// <param name="configureEndpoint">An optional provider-neutral callback applied to the ActiveMQ endpoint configuration.</param>
+    /// <returns>A handle that controls the connected receive endpoint.</returns>
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
-        return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
+        Action<IActiveMqReceiveEndpointConfigurator>? configure = configureEndpoint == null
+            ? null
+            : endpoint => configureEndpoint(endpoint);
+
+        return ConnectReceiveEndpoint(definition, endpointNameFormatter, configure);
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects an ActiveMQ receive endpoint for a named queue.</summary>
+    /// <param name="queueName">The ActiveMQ queue name.</param>
+    /// <param name="configureEndpoint">An optional provider-neutral callback applied to the ActiveMQ endpoint configuration.</param>
+    /// <returns>A handle that controls the connected receive endpoint.</returns>
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
-        return ConnectReceiveEndpoint(queueName, configureEndpoint);
+        Action<IActiveMqReceiveEndpointConfigurator>? configure = configureEndpoint == null
+            ? null
+            : endpoint => configureEndpoint(endpoint);
+
+        return ConnectReceiveEndpoint(queueName, configure);
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects an ActiveMQ receive endpoint described by an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition that supplies the name and common settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null"/> to use the default formatter.</param>
+    /// <param name="configureEndpoint">An optional callback that applies ActiveMQ-specific endpoint settings.</param>
+    /// <returns>A handle that controls the connected receive endpoint.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
         Action<IActiveMqReceiveEndpointConfigurator>? configureEndpoint = null)
     {
@@ -73,12 +69,10 @@ public class ActiveMqHost :
         });
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates, validates, builds, and starts an ActiveMQ receive endpoint.</summary>
+    /// <param name="queueName">The ActiveMQ queue name.</param>
+    /// <param name="configure">An optional callback that applies ActiveMQ-specific endpoint settings before validation.</param>
+    /// <returns>A handle that controls the started receive endpoint.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IActiveMqReceiveEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
@@ -94,10 +88,8 @@ public class ActiveMqHost :
         return ReceiveEndpoints.Start(queueName);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds the non-secret ActiveMQ connection settings and connection-supervisor state to a probe.</summary>
+    /// <param name="context">The probe context that receives the diagnostic values.</param>
     protected override void Probe(ProbeContext context)
     {
         context.Set(new
@@ -112,10 +104,8 @@ public class ActiveMqHost :
         _hostConfiguration.ConnectionContextSupervisor.Probe(context);
     }
 
-    /// <summary>
-    /// Gets agent handles.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the connection supervisor whose lifecycle is owned by the host.</summary>
+    /// <returns>The host-owned connection supervisor.</returns>
     protected override IAgent[] GetAgentHandles()
     {
         return new IAgent[] { _hostConfiguration.ConnectionContextSupervisor };

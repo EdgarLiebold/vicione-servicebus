@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Defines the contract for amazon sqs queue subscription configurator.
-/// </summary>
+/// <summary>Configures the Amazon SQS queue side of an Amazon SNS subscription.</summary>
 public interface IAmazonSqsQueueSubscriptionConfigurator :
     IAmazonSqsQueueConfigurator
 {

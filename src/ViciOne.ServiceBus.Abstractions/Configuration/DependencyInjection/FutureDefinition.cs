@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// A future definition defines the configuration for a future, which can be used by the automatic registration code to
 /// configure the consumer on a receive endpoint.
 /// </summary>
-/// <typeparam name="TFuture"></typeparam>
+/// <typeparam name="TFuture">The future type.</typeparam>
 public class FutureDefinition<TFuture> :
     IFutureDefinition<TFuture>
     where TFuture : class, SagaStateMachine<FutureState>
@@ -15,9 +15,7 @@ public class FutureDefinition<TFuture> :
     int? _concurrentMessageLimit;
     string? _endpointName;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     protected FutureDefinition()
     {
     }
@@ -31,9 +29,7 @@ public class FutureDefinition<TFuture> :
         set => _endpointName = value;
     }
 
-    /// <summary>
-    /// Gets or sets the endpoint definition value.
-    /// </summary>
+    /// <summary>Gets or sets the endpoint definition.</summary>
     public IEndpointDefinition<TFuture>? EndpointDefinition { get; set; }
 
     IEndpointDefinition? IFutureDefinition.EndpointDefinition => EndpointDefinition;
@@ -69,18 +65,16 @@ public class FutureDefinition<TFuture> :
     /// Called when configuring the saga on the endpoint. Configuration only applies to this saga, and does not apply to
     /// the endpoint.
     /// </summary>
-    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer</param>
-    /// <param name="sagaConfigurator">The saga configurator</param>
-    /// <param name="context"></param>
+    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer.</param>
+    /// <param name="sagaConfigurator">The saga configurator.</param>
+    /// <param name="context">The context associated with the operation.</param>
     protected virtual void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<FutureState> sagaConfigurator,
         IRegistrationContext context)
     {
     }
 
-    /// <summary>
-    /// Configure the saga endpoint
-    /// </summary>
-    /// <param name="configure"></param>
+    /// <summary>Configure the saga endpoint.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     protected void Endpoint(Action<IEndpointRegistrationConfigurator>? configure = null)
     {
         var configurator = new EndpointRegistrationConfigurator<TFuture>();

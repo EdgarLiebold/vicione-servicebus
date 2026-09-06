@@ -1,15 +1,11 @@
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Defines the contract for active mq consumer endpoint queue name formatter.
-/// </summary>
+/// <summary>Formats consumer queue or subscription names for ActiveMQ virtual topics.</summary>
 public interface IActiveMqConsumerEndpointQueueNameFormatter
 {
-    /// <summary>
-    /// Performs the format operation.
-    /// </summary>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="endpointName">The endpoint name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Combines a topic and receive endpoint into a broker consumer name.</summary>
+    /// <param name="topic">The virtual-topic name.</param>
+    /// <param name="endpointName">The receive-endpoint name.</param>
+    /// <returns>The queue or subscription name.</returns>
     public string Format(string topic, string endpointName);
 }

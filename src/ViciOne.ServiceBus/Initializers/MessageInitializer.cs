@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Initializers;
 
-/// <summary>
-/// Provides a message initializer implementation.
-/// </summary>
+/// <summary>Initializes message values.</summary>
 public static class MessageInitializer
 {
     static readonly InitializerConventionRegistry _conventions;
@@ -24,15 +22,11 @@ public static class MessageInitializer
         });
     }
 
-    /// <summary>
-    /// Gets the conventions value.
-    /// </summary>
+    /// <summary>Gets the conventions.</summary>
     public static IReadOnlyList<IInitializerConvention> Conventions => _conventions.Conventions;
 
-    /// <summary>
-    /// Adds convention to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Adds convention to the configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     public static void AddConvention<T>()
         where T : IInitializerConvention, new()
     {
@@ -41,11 +35,9 @@ public static class MessageInitializer
 }
 
 
-/// <summary>
-/// Initializes a message using the input, which can include message properties, headers, etc.
-/// </summary>
-/// <typeparam name="TMessage">The message type</typeparam>
-/// <typeparam name="TInput">The input type</typeparam>
+/// <summary>Initializes a message using the input, which can include message properties, headers, etc.</summary>
+/// <typeparam name="TMessage">The message type.</typeparam>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class MessageInitializer<TMessage, TInput> :
     IMessageInitializer<TMessage>
     where TMessage : class
@@ -55,12 +47,10 @@ public class MessageInitializer<TMessage, TInput> :
     readonly IHeaderInitializer<TMessage, TInput>[] _headerInitializers;
     readonly IPropertyInitializer<TMessage, TInput>[] _initializers;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="initializers">The initializers value.</param>
-    /// <param name="headerInitializers">The header initializers value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="initializers">The initializers.</param>
+    /// <param name="headerInitializers">The header initializers.</param>
     public MessageInitializer(IMessageFactory<TMessage> factory, IEnumerable<IPropertyInitializer<TMessage, TInput>> initializers,
         IEnumerable<IHeaderInitializer<TMessage, TInput>> headerInitializers)
     {
@@ -69,11 +59,9 @@ public class MessageInitializer<TMessage, TInput> :
         _headerInitializers = headerInitializers.ToArray();
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public InitializeContext<TMessage> Create(PipeContext context)
     {
         var baseContext = new ScopeInitializeContext(context);
@@ -81,11 +69,9 @@ public class MessageInitializer<TMessage, TInput> :
         return _factory.Create(baseContext);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
+    /// <summary>Creates the requested value.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The newly created instance.</returns>
     public InitializeContext<TMessage> Create(CancellationToken cancellationToken)
     {
         var baseContext = new BaseInitializeContext(cancellationToken);
@@ -93,63 +79,53 @@ public class MessageInitializer<TMessage, TInput> :
         return _factory.Create(baseContext);
     }
 
-    /// <summary>
-    /// Performs the initialize operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
+    /// <summary>Initializes the target component.</summary>
+    /// <param name="input">The input.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the initialize outcome.</returns>
     public Task<InitializeContext<TMessage>> InitializeAsync(object input, CancellationToken cancellationToken)
     {
         return InitializeMessageAsync((TInput)input, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the initialize operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="input">The input value.</param>
+    /// <summary>Initializes the target component.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="input">The input.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the initialize outcome.</returns>
     public Task<InitializeContext<TMessage>> InitializeAsync(InitializeContext<TMessage> context, object input, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Initializers.InitializeContext<TMessage>>(cancellationToken); return InitializeMessageAsync(context, (TInput)input);
     }
 
-    /// <summary>
-    /// Performs the initialize message operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="input">The input value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Initializes message.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="input">The input.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the initialize message outcome.</returns>
     public Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object input, IPipe<SendContext<TMessage>>? pipe, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>(cancellationToken); return PrepareInitializedMessageAsync(Create(context), (TInput)input, pipe);
     }
 
-    /// <summary>
-    /// Performs the initialize message operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Initializes message.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the initialize message outcome.</returns>
     public Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(object input, IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken)
     {
         return PrepareInitializedMessageAsync(Create(cancellationToken), (TInput)input, pipe);
     }
 
-    /// <summary>
-    /// Performs the initialize message operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="input">The input value.</param>
-    /// <param name="moreInputs">The more inputs value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Initializes message.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="input">The input.</param>
+    /// <param name="moreInputs">The more inputs.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the initialize message outcome.</returns>
     public async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object input, object?[] moreInputs, IPipe<SendContext<TMessage>>? pipe, CancellationToken cancellationToken = default)
     {
         InitializeContext<TMessage> initializeContext = Create(context);

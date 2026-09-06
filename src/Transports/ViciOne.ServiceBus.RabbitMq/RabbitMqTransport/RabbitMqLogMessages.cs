@@ -4,38 +4,26 @@ using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq log messages implementation.
-/// </summary>
+/// <summary>Defines strongly typed log messages emitted by the RabbitMQ transport.</summary>
 public static class RabbitMqLogMessages
 {
-    /// <summary>
-    /// Defines the bind to exchange value.
-    /// </summary>
+    /// <summary>Logs an exchange-to-exchange binding.</summary>
     public static readonly LogMessage<ExchangeToExchangeBinding> BindToExchange = LogContext.Define<ExchangeToExchangeBinding>(LogLevel.Debug,
         "Bind exchange: {ExchangeBinding}");
 
-    /// <summary>
-    /// Defines the bind to queue value.
-    /// </summary>
+    /// <summary>Logs an exchange-to-queue binding.</summary>
     public static readonly LogMessage<ExchangeToQueueBinding> BindToQueue = LogContext.Define<ExchangeToQueueBinding>(LogLevel.Debug,
         "Bind queue: {QueueBinding}");
 
-    /// <summary>
-    /// Defines the declare exchange value.
-    /// </summary>
+    /// <summary>Logs an exchange declaration.</summary>
     public static readonly LogMessage<Exchange> DeclareExchange = LogContext.Define<Exchange>(LogLevel.Debug,
         "Declare exchange: {Exchange}");
 
-    /// <summary>
-    /// Defines the declare queue value.
-    /// </summary>
+    /// <summary>Logs a queue declaration and its current broker counts.</summary>
     public static readonly LogMessage<Queue, uint, uint> DeclareQueue = LogContext.Define<Queue, uint, uint>(LogLevel.Debug,
         "Declare queue: {Queue}, consumer-count: {ConsumerCount} message-count: {MessageCount}");
 
-    /// <summary>
-    /// Defines the prefetch count value.
-    /// </summary>
+    /// <summary>Logs a consumer prefetch update.</summary>
     public static readonly LogMessage<ushort> PrefetchCount = LogContext.Define<ushort>(LogLevel.Debug,
         "Set Prefetch Count: {PrefetchCount}");
 }

@@ -6,20 +6,16 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a shared send endpoint context implementation.
-/// </summary>
+/// <summary>Leases a send-endpoint context and links each send operation to the lease lifetime.</summary>
 public class SharedSendEndpointContext :
     ProxyPipeContext,
     SendEndpointContext
 {
     readonly SendEndpointContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Initializes a lease over an existing send-endpoint context.</summary>
+    /// <param name="context">The shared send-endpoint context.</param>
+    /// <param name="cancellationToken">The token that bounds this lease.</param>
     public SharedSendEndpointContext(SendEndpointContext context, CancellationToken cancellationToken)
         : base(context)
     {
@@ -28,27 +24,19 @@ public class SharedSendEndpointContext :
         CancellationToken = cancellationToken;
     }
 
-    /// <summary>
-    /// Gets the cancellation token value.
-    /// </summary>
+    /// <summary>Gets the token that bounds this lease.</summary>
     public override CancellationToken CancellationToken { get; }
 
-    /// <summary>
-    /// Gets the connection context value.
-    /// </summary>
+    /// <summary>Gets the namespace connection that owns the sender.</summary>
     public ConnectionContext ConnectionContext => _context.ConnectionContext;
 
-    /// <summary>
-    /// Gets the entity path value.
-    /// </summary>
+    /// <summary>Gets the destination entity path.</summary>
     public string EntityPath => _context.EntityPath;
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message using cancellation linked to this endpoint lease.</summary>
+    /// <param name="message">The Azure Service Bus message to send.</param>
+    /// <param name="cancellationToken">The caller's cancellation token.</param>
+    /// <returns>A task that completes when the SDK send completes.</returns>
     public async Task SendAsync(ServiceBusMessage message, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
@@ -56,13 +44,11 @@ public class SharedSendEndpointContext :
         await _context.SendAsync(message, tokenSource.Token).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Schedules send.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="scheduleEnqueueTimeUtc">The schedule enqueue time utc value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Schedules a message using cancellation linked to this endpoint lease.</summary>
+    /// <param name="message">The Azure Service Bus message to schedule.</param>
+    /// <param name="scheduleEnqueueTimeUtc">The UTC enqueue time.</param>
+    /// <param name="cancellationToken">The caller's cancellation token.</param>
+    /// <returns>A task that produces the broker sequence number.</returns>
     public async Task<long> ScheduleSendAsync(ServiceBusMessage message, DateTimeOffset scheduleEnqueueTimeUtc, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
@@ -70,12 +56,10 @@ public class SharedSendEndpointContext :
         return await _context.ScheduleSendAsync(message, scheduleEnqueueTimeUtc, tokenSource.Token).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Determines whether the current value can cel scheduled send.
-    /// </summary>
-    /// <param name="sequenceNumber">The sequence number value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Cancels a scheduled message using cancellation linked to this endpoint lease.</summary>
+    /// <param name="sequenceNumber">The broker sequence number returned by scheduling.</param>
+    /// <param name="cancellationToken">The caller's cancellation token.</param>
+    /// <returns>A task that completes when the broker accepts the cancellation.</returns>
     public async Task CancelScheduledSendAsync(long sequenceNumber, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);

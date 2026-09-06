@@ -6,9 +6,7 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides a new id generator implementation.
-/// </summary>
+/// <summary>Generates new id values.</summary>
 public class NewIdGenerator :
     INewIdGenerator
 {
@@ -24,13 +22,11 @@ public class NewIdGenerator :
 
     SpinLock _spinLock;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="tickProvider">The tick provider value.</param>
-    /// <param name="workerIdProvider">The worker id provider value.</param>
-    /// <param name="processIdProvider">The process id provider value.</param>
-    /// <param name="workerIndex">The worker index value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="tickProvider">The tick provider.</param>
+    /// <param name="workerIdProvider">The worker id provider.</param>
+    /// <param name="processIdProvider">The process id provider.</param>
+    /// <param name="workerIndex">The worker index.</param>
     public NewIdGenerator(ITickProvider tickProvider, IWorkerIdProvider workerIdProvider, IProcessIdProvider? processIdProvider = null, int workerIndex = 0)
     {
         _tickProvider = tickProvider;
@@ -53,10 +49,8 @@ public class NewIdGenerator :
         _gc = (short)(_c >> 16);
     }
 
-    /// <summary>
-    /// Performs the next operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Advances to the next value.</summary>
+    /// <returns>The new id produced by the operation.</returns>
     public NewId Next()
     {
         var ticks = _tickProvider.Ticks;
@@ -80,10 +74,8 @@ public class NewIdGenerator :
         return new NewId(a, b, _c, _d | sequence);
     }
 
-    /// <summary>
-    /// Performs the next guid operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Generates the next ordered identifier.</summary>
+    /// <returns>The guid produced by the operation.</returns>
     public Guid NextGuid()
     {
         var ticks = _tickProvider.Ticks;
@@ -104,7 +96,7 @@ public class NewIdGenerator :
         if (lockTaken)
             _spinLock.Exit();
 
-        // swapping high and low byte, because SQL-server is doing the wrong ordering otherwise
+        // SQL Server's uniqueidentifier ordering requires the sequence bytes in big-endian order.
         var sequenceSwapped = ((sequence << 8) | ((sequence >> 8) & 0x00FF)) & 0xFFFF;
 
         if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
@@ -126,10 +118,8 @@ public class NewIdGenerator :
         return new Guid(_d | sequenceSwapped, _gb, _gc, d, e, f, g, h, i, j, k);
     }
 
-    /// <summary>
-    /// Performs the next sequential guid operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Generates the next sequential identifier.</summary>
+    /// <returns>The guid produced by the operation.</returns>
     public Guid NextSequentialGuid()
     {
         var ticks = _tickProvider.Ticks;
@@ -152,7 +142,7 @@ public class NewIdGenerator :
         if (lockTaken)
             _spinLock.Exit();
 
-        // swapping high and low byte, because SQL-server is doing the wrong ordering otherwise
+        // SQL Server's uniqueidentifier ordering requires the sequence bytes in big-endian order.
         var sequenceSwapped = ((sequence << 8) | ((sequence >> 8) & 0x00FF)) & 0xFFFF;
 
         if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
@@ -175,13 +165,11 @@ public class NewIdGenerator :
         return new Guid(a, b, c, d, e, f, g, h, i, j, k);
     }
 
-    /// <summary>
-    /// Performs the next operation.
-    /// </summary>
-    /// <param name="ids">The ids value.</param>
-    /// <param name="index">The index value.</param>
-    /// <param name="count">The count value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Advances to the next value.</summary>
+    /// <param name="ids">The ids.</param>
+    /// <param name="index">The index.</param>
+    /// <param name="count">The count.</param>
+    /// <returns>The array segment produced by the operation.</returns>
     public ArraySegment<NewId> Next(NewId[] ids, int index, int count)
     {
         if (index + count > ids.Length)
@@ -210,13 +198,11 @@ public class NewIdGenerator :
         return new ArraySegment<NewId>(ids, index, count);
     }
 
-    /// <summary>
-    /// Performs the next guid operation.
-    /// </summary>
-    /// <param name="ids">The ids value.</param>
-    /// <param name="index">The index value.</param>
-    /// <param name="count">The count value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Generates the next ordered identifier.</summary>
+    /// <param name="ids">The ids.</param>
+    /// <param name="index">The index.</param>
+    /// <param name="count">The count.</param>
+    /// <returns>The array segment produced by the operation.</returns>
     public ArraySegment<Guid> NextGuid(Guid[] ids, int index, int count)
     {
         if (index + count > ids.Length)
@@ -270,7 +256,7 @@ public class NewIdGenerator :
 
             var sequence = _sequence++;
 
-            // swapping high and low byte, because SQL-server is doing the wrong ordering otherwise
+            // SQL Server's uniqueidentifier ordering requires the sequence bytes in big-endian order.
             var sequenceSwapped = ((sequence << 8) | ((sequence >> 8) & 0x00FF)) & 0xFFFF;
 
             if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
@@ -290,13 +276,11 @@ public class NewIdGenerator :
         return new ArraySegment<Guid>(ids, index, count);
     }
 
-    /// <summary>
-    /// Performs the next sequential guid operation.
-    /// </summary>
-    /// <param name="ids">The ids value.</param>
-    /// <param name="index">The index value.</param>
-    /// <param name="count">The count value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Generates the next sequential identifier.</summary>
+    /// <param name="ids">The ids.</param>
+    /// <param name="index">The index.</param>
+    /// <param name="count">The count.</param>
+    /// <returns>The array segment produced by the operation.</returns>
     public ArraySegment<Guid> NextSequentialGuid(Guid[] ids, int index, int count)
     {
         if (index + count > ids.Length)
@@ -335,7 +319,7 @@ public class NewIdGenerator :
 
             var sequence = _sequence++;
 
-            // swapping high and low byte, because SQL-server is doing the wrong ordering otherwise
+            // SQL Server's uniqueidentifier ordering requires the sequence bytes in big-endian order.
             var sequenceSwapped = ((sequence << 8) | ((sequence >> 8) & 0x00FF)) & 0xFFFF;
 
             if (Ssse3.IsSupported && BitConverter.IsLittleEndian)

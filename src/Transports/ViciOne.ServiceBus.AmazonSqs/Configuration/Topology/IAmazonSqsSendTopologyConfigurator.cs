@@ -2,19 +2,13 @@ using System;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Defines the contract for amazon sqs send topology configurator.
-/// </summary>
+/// <summary>Configures Amazon SQS queue topology for send, error, and skipped-message destinations.</summary>
 public interface IAmazonSqsSendTopologyConfigurator :
     ISendTopologyConfigurator,
     IAmazonSqsSendTopology
 {
-    /// <summary>
-    /// Gets or sets the configure error settings value.
-    /// </summary>
+    /// <summary>Sets the callback applied to generated error-queue settings.</summary>
     Action<IAmazonSqsQueueConfigurator>? ConfigureErrorSettings { set; }
-    /// <summary>
-    /// Gets or sets the configure dead letter settings value.
-    /// </summary>
+    /// <summary>Sets the callback applied to generated skipped-message queue settings.</summary>
     Action<IAmazonSqsQueueConfigurator>? ConfigureDeadLetterSettings { set; }
 }

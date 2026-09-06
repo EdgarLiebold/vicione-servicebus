@@ -3,12 +3,10 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an activity definition implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
-/// <typeparam name="TLog">The t log type.</typeparam>
+/// <summary>Defines configuration for activity.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
+/// <typeparam name="TLog">The log type.</typeparam>
 public class ActivityDefinition<TActivity, TArguments, TLog> :
     ExecuteActivityDefinition<TActivity, TArguments>,
     IActivityDefinition<TActivity, TArguments, TLog>
@@ -28,9 +26,7 @@ public class ActivityDefinition<TActivity, TArguments, TLog> :
         set => _compensateEndpointName = value;
     }
 
-    /// <summary>
-    /// Gets or sets the compensate endpoint definition value.
-    /// </summary>
+    /// <summary>Gets or sets the compensate endpoint definition.</summary>
     public IEndpointDefinition<ICompensateActivity<TLog>>? CompensateEndpointDefinition { get; set; }
 
     IEndpointDefinition? IActivityDefinition.CompensateEndpointDefinition => CompensateEndpointDefinition;
@@ -52,10 +48,8 @@ public class ActivityDefinition<TActivity, TArguments, TLog> :
 
     Type IActivityDefinition.LogType => typeof(TLog);
 
-    /// <summary>
-    /// Configure the compensate endpoint
-    /// </summary>
-    /// <param name="configure"></param>
+    /// <summary>Configure the compensate endpoint.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     protected void CompensateEndpoint(Action<IEndpointRegistrationConfigurator>? configure = null)
     {
         var configurator = new EndpointRegistrationConfigurator<ICompensateActivity<TLog>> { ConfigureConsumeTopology = false };
@@ -65,12 +59,10 @@ public class ActivityDefinition<TActivity, TArguments, TLog> :
         CompensateEndpointDefinition = new CompensateActivityEndpointDefinition<TActivity, TLog>(configurator.Settings);
     }
 
-    /// <summary>
-    /// Called when the compensate activity is being configured on the endpoint.
-    /// </summary>
-    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer</param>
-    /// <param name="compensateActivityConfigurator"></param>
-    /// <param name="context"></param>
+    /// <summary>Called when the compensate activity is being configured on the endpoint.</summary>
+    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer.</param>
+    /// <param name="compensateActivityConfigurator">The compensate activity configurator.</param>
+    /// <param name="context">The context associated with the operation.</param>
     protected virtual void ConfigureCompensateActivity(IReceiveEndpointConfigurator endpointConfigurator,
         ICompensateActivityConfigurator<TActivity, TLog> compensateActivityConfigurator, IRegistrationContext context)
     {

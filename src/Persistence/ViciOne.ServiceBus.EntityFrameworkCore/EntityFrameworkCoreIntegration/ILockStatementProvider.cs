@@ -2,40 +2,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Defines the contract for lock statement provider.
-/// </summary>
+/// <summary>Resolves EF Core model mappings and returns provider-specific locking SQL.</summary>
 public interface ILockStatementProvider
 {
-    /// <summary>
-    /// Gets row lock statement.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds a row-lock query using the mapped <c>CorrelationId</c> property.</summary>
+    /// <typeparam name="T">The mapped entity type.</typeparam>
+    /// <param name="context">The DbContext whose model supplies table and column names.</param>
+    /// <returns>Parameterized provider-specific SQL.</returns>
     string GetRowLockStatement<T>(DbContext context)
         where T : class;
 
-    /// <summary>
-    /// Returns the lock statement for the specified property (usable for any set)
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="propertyNames">One or more property names</param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Returns the lock statement for the specified property (usable for any set).</summary>
+    /// <typeparam name="T">The mapped entity type.</typeparam>
+    /// <param name="context">The DbContext whose model supplies table and column names.</param>
+    /// <param name="propertyNames">One or more mapped properties used as equality predicates.</param>
+    /// <returns>Parameterized provider-specific SQL.</returns>
     string GetRowLockStatement<T>(DbContext context, params string[] propertyNames)
         where T : class;
 
-    /// <summary>
-    /// Gets outbox statement.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds a query that locks the next due outbox row for one bus.</summary>
+    /// <param name="context">The DbContext whose model supplies outbox mappings.</param>
+    /// <returns>Parameterized provider-specific SQL.</returns>
     string GetOutboxStatement(DbContext context);
-    /// <summary>
-    /// Gets inbox cleanup lock statement.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds a transaction-scoped, non-blocking ownership query for inbox cleanup.</summary>
+    /// <param name="context">The DbContext whose model supplies inbox mappings.</param>
+    /// <returns>Provider-specific SQL that returns one when ownership is acquired.</returns>
     string GetInboxCleanupLockStatement(DbContext context);
 }

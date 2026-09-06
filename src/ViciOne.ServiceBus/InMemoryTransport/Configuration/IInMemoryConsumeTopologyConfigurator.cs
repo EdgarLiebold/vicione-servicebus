@@ -3,32 +3,24 @@ using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Defines the contract for in memory consume topology configurator.
-/// </summary>
+/// <summary>Configures in memory consume topology.</summary>
 public interface IInMemoryConsumeTopologyConfigurator :
     IConsumeTopologyConfigurator,
     IInMemoryConsumeTopology
 {
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message topology.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The message topology.</returns>
     new IInMemoryMessageConsumeTopologyConfigurator<T> GetMessageTopology<T>()
         where T : class;
 
-    /// <summary>
-    /// Adds specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     void AddSpecification(IInMemoryConsumeTopologySpecification specification);
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="exchangeType">The exchange type value.</param>
-    /// <param name="routingKey">The routing key value.</param>
+    /// <summary>Binds the configured entities.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
+    /// <param name="routingKey">The routing key.</param>
     void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default);
 }

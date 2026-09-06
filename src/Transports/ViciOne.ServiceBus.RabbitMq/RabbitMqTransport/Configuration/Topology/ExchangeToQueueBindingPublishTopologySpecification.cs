@@ -3,21 +3,17 @@ using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Used to declare an exchange and queue, and bind them together.
-/// </summary>
+/// <summary>Declares and binds an auxiliary exchange and queue in publish topology.</summary>
 public class ExchangeToQueueBindingPublishTopologySpecification :
     QueueBindingConfigurator,
     IRabbitMqPublishTopologySpecification
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="exchangeType">The exchange type value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
+    /// <summary>Creates auxiliary queue-binding settings.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="exchangeType">The RabbitMQ exchange type.</param>
+    /// <param name="queueName">The queue name, or the exchange name when omitted.</param>
+    /// <param name="durable">Whether the queue and exchange survive broker restarts.</param>
+    /// <param name="autoDelete">Whether RabbitMQ auto-deletes the exchange when unused and the queue after its last consumer is gone.</param>
     public ExchangeToQueueBindingPublishTopologySpecification(string exchangeName, string exchangeType, string? queueName = null, bool durable = true,
         bool autoDelete = false)
         : base(queueName ?? exchangeName, exchangeType, durable, autoDelete)
@@ -25,19 +21,15 @@ public class ExchangeToQueueBindingPublishTopologySpecification :
         ExchangeName = exchangeName;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports no additional validation failures for this declarative topology fragment.</summary>
+    /// <returns>An empty sequence.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Declares the auxiliary exchange and queue and binds the exchange to the queue.</summary>
+    /// <param name="builder">The publish-endpoint topology builder.</param>
     public void Apply(IPublishEndpointBrokerTopologyBuilder builder)
     {
         var exchangeHandle = builder.ExchangeDeclare(ExchangeName, ExchangeType, Durable, AutoDelete, ExchangeArguments);

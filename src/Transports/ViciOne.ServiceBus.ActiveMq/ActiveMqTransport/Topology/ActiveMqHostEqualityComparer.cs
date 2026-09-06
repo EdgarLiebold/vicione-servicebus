@@ -3,23 +3,17 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides an active mq host equality comparer implementation.
-/// </summary>
+/// <summary>Compares ActiveMQ hosts by case-insensitive host name and port.</summary>
 public sealed class ActiveMqHostEqualityComparer :
     IEqualityComparer<ActiveMqHostSettings>
 {
-    /// <summary>
-    /// Gets the default value.
-    /// </summary>
+    /// <summary>Gets the shared host comparer.</summary>
     public static IEqualityComparer<ActiveMqHostSettings> Default { get; } = new ActiveMqHostEqualityComparer();
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="x">The x value.</param>
-    /// <param name="y">The y value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether two host settings address the same host name and port.</summary>
+    /// <param name="x">The first host settings.</param>
+    /// <param name="y">The second host settings.</param>
+    /// <returns><see langword="true" /> when both settings address the same host and port; otherwise, <see langword="false" />.</returns>
     public bool Equals(ActiveMqHostSettings? x, ActiveMqHostSettings? y)
     {
         if (ReferenceEquals(x, y))
@@ -34,16 +28,14 @@ public sealed class ActiveMqHostEqualityComparer :
         return string.Equals(x.Host, y.Host, StringComparison.OrdinalIgnoreCase) && x.Port == y.Port;
     }
 
-    /// <summary>
-    /// Gets hash code.
-    /// </summary>
-    /// <param name="obj">The obj value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Computes a hash code from a host name and port.</summary>
+    /// <param name="obj">The host settings.</param>
+    /// <returns>The host-and-port hash code.</returns>
     public int GetHashCode(ActiveMqHostSettings obj)
     {
         unchecked
         {
-            var hashCode = obj.Host?.GetHashCode() ?? 0;
+            var hashCode = obj.Host is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Host);
             hashCode = (hashCode * 397) ^ obj.Port;
             return hashCode;
         }

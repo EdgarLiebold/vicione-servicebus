@@ -4,20 +4,16 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides a shared connection context implementation.
-/// </summary>
+/// <summary>Projects a shared Event Hubs connection context onto a caller-specific cancellation token.</summary>
 public class SharedConnectionContext :
     ProxyPipeContext,
     ConnectionContext
 {
     readonly ConnectionContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a proxy over a shared connection context.</summary>
+    /// <param name="context">The shared connection context.</param>
+    /// <param name="cancellationToken">The cancellation token exposed by this proxy.</param>
     public SharedConnectionContext(ConnectionContext context, CancellationToken cancellationToken)
         : base(context)
     {
@@ -25,16 +21,12 @@ public class SharedConnectionContext :
         CancellationToken = cancellationToken;
     }
 
-    /// <summary>
-    /// Gets the cancellation token value.
-    /// </summary>
+    /// <summary>Gets the cancellation token.</summary>
     public override CancellationToken CancellationToken { get; }
 
-    /// <summary>
-    /// Creates event hub client.
-    /// </summary>
-    /// <param name="eventHubName">The event hub name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a producer client through the shared connection context.</summary>
+    /// <param name="eventHubName">The Event Hub entity name.</param>
+    /// <returns>The producer client for the entity.</returns>
     public EventHubProducerClient CreateEventHubClient(string eventHubName)
     {
         return _context.CreateEventHubClient(eventHubName);

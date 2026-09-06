@@ -6,10 +6,8 @@ using System.Text.Json;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a system text json raw message body implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Carries system text json raw message content.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class SystemTextJsonRawMessageBody<TMessage> :
     MessageBody
     where TMessage : class
@@ -20,12 +18,10 @@ public class SystemTextJsonRawMessageBody<TMessage> :
     byte[]? _bytes;
     string? _string;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="message">The message value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="message">The message to process.</param>
     public SystemTextJsonRawMessageBody(SendContext<TMessage> context, JsonSerializerOptions options, object? message = null)
     {
         _context = context;
@@ -41,19 +37,15 @@ public class SystemTextJsonRawMessageBody<TMessage> :
     /// </summary>
     public long? Length => GetBytes().LongLength;
 
-    /// <summary>
-    /// Gets stream.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets stream.</summary>
+    /// <returns>The stream.</returns>
     public Stream GetStream()
     {
         return new MemoryStream(GetBytes(), false);
     }
 
-    /// <summary>
-    /// Gets bytes.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets bytes.</summary>
+    /// <returns>The bytes.</returns>
     public byte[] GetBytes()
     {
         if (_bytes != null)
@@ -100,10 +92,8 @@ public class SystemTextJsonRawMessageBody<TMessage> :
         }
     }
 
-    /// <summary>
-    /// Gets string.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets string.</summary>
+    /// <returns>The string.</returns>
     public string GetString()
     {
         if (_string != null)

@@ -8,39 +8,33 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// Publishes the <see cref="RequestCompleted" /> event, used by the request state machine to track
 /// pending requests for a saga instance.
 /// </summary>
-/// <typeparam name="TSaga"></typeparam>
-/// <typeparam name="TMessage"></typeparam>
-/// <typeparam name="TRequest"></typeparam>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TRequest">The request type.</typeparam>
 public class RequestFaultedActivity<TSaga, TMessage, TRequest> :
     IStateMachineActivity<TSaga, TMessage>
     where TSaga : class, SagaStateMachineInstance
     where TMessage : class
     where TRequest : class
 {
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateScope("requestFaulted");
     }
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         var payload = context.Message as Fault
@@ -63,13 +57,11 @@ public class RequestFaultedActivity<TSaga, TMessage, TRequest> :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {

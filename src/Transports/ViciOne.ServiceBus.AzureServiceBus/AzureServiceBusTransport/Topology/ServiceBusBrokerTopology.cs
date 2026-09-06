@@ -3,20 +3,16 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a service bus broker topology implementation.
-/// </summary>
+/// <summary>Provides an immutable snapshot of Azure Service Bus entity declarations and relationships.</summary>
 public class ServiceBusBrokerTopology :
     BrokerTopology
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topics">The topics value.</param>
-    /// <param name="subscriptions">The subscriptions value.</param>
-    /// <param name="queues">The queues value.</param>
-    /// <param name="queueSubscriptions">The queue subscriptions value.</param>
-    /// <param name="topicSubscriptions">The topic subscriptions value.</param>
+    /// <summary>Materializes each topology collection.</summary>
+    /// <param name="topics">The topic declarations.</param>
+    /// <param name="subscriptions">The consumer subscription declarations.</param>
+    /// <param name="queues">The queue declarations.</param>
+    /// <param name="queueSubscriptions">The topic-to-queue forwarding relationships.</param>
+    /// <param name="topicSubscriptions">The topic-to-topic forwarding relationships.</param>
     public ServiceBusBrokerTopology(IEnumerable<Topic> topics, IEnumerable<Subscription> subscriptions, IEnumerable<Queue> queues,
         IEnumerable<QueueSubscription> queueSubscriptions, IEnumerable<TopicSubscription> topicSubscriptions)
     {
@@ -27,25 +23,15 @@ public class ServiceBusBrokerTopology :
         TopicSubscriptions = topicSubscriptions.ToArray();
     }
 
-    /// <summary>
-    /// Gets the topics value.
-    /// </summary>
+    /// <summary>Gets the topic declarations.</summary>
     public Topic[] Topics { get; }
-    /// <summary>
-    /// Gets the queues value.
-    /// </summary>
+    /// <summary>Gets the queue declarations.</summary>
     public Queue[] Queues { get; }
-    /// <summary>
-    /// Gets the subscriptions value.
-    /// </summary>
+    /// <summary>Gets the consumer subscription declarations.</summary>
     public Subscription[] Subscriptions { get; }
-    /// <summary>
-    /// Gets the queue subscriptions value.
-    /// </summary>
+    /// <summary>Gets the topic-to-queue forwarding relationships.</summary>
     public QueueSubscription[] QueueSubscriptions { get; }
-    /// <summary>
-    /// Gets the topic subscriptions value.
-    /// </summary>
+    /// <summary>Gets the topic-to-topic forwarding relationships.</summary>
     public TopicSubscription[] TopicSubscriptions { get; }
 
     void IProbeSite.Probe(ProbeContext context)

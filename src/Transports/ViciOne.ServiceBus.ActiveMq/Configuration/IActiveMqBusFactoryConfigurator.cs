@@ -4,76 +4,56 @@ using ViciOne.ServiceBus.ActiveMq.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Defines the contract for active mq bus factory configurator.
-/// </summary>
+/// <summary>Configures an ActiveMQ bus, its endpoints, and transport topology.</summary>
 public interface IActiveMqBusFactoryConfigurator :
     IBusFactoryConfigurator<IActiveMqReceiveEndpointConfigurator>,
     IActiveMqQueueEndpointConfigurator
 {
-    /// <summary>
-    /// Gets the send topology value.
-    /// </summary>
+    /// <summary>Gets the ActiveMQ send-topology configurator.</summary>
     new IActiveMqSendTopologyConfigurator SendTopology { get; }
 
-    /// <summary>
-    /// Gets the publish topology value.
-    /// </summary>
+    /// <summary>Gets the ActiveMQ publish-topology configurator.</summary>
     new IActiveMqPublishTopologyConfigurator PublishTopology { get; }
 
-    /// <summary>
-    /// Configure the send topology of the message type
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="configureTopology"></param>
+    /// <summary>Configures send topology for a message type.</summary>
+    /// <typeparam name="T">The sent message type.</typeparam>
+    /// <param name="configureTopology">The message send-topology callback.</param>
     void Send<T>(Action<IActiveMqMessageSendTopologyConfigurator<T>> configureTopology)
         where T : class;
 
-    /// <summary>
-    /// Configure the send topology of the message type
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="configureTopology"></param>
+    /// <summary>Configures publish topology for a message type.</summary>
+    /// <typeparam name="T">The published message type.</typeparam>
+    /// <param name="configureTopology">An optional message publish-topology callback.</param>
     void Publish<T>(Action<IActiveMqMessagePublishTopologyConfigurator<T>>? configureTopology = null)
         where T : class;
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="configure">An optional callback that configures the message's publish topology.</param>
     void Publish(Type messageType, Action<IActiveMqMessagePublishTopologyConfigurator>? configure = null);
 
     /// <summary>
-    /// Configure a Host that can be connected. If only one host is specified, it is used as the default
-    /// host for receive endpoints.
+    /// Configures the ActiveMQ host used by the bus and its receive endpoints.
     /// </summary>
-    /// <param name="settings"></param>
-    /// <returns></returns>
+    /// <param name="settings">The complete broker connection settings.</param>
     void Host(ActiveMqHostSettings settings);
 
-    /// <summary>
-    /// Configure the consumer topology so that it is compatible for the format required for ActiveMQ Artemis
-    /// </summary>
+    /// <summary>Enables ActiveMQ Artemis naming and AMQP delivery-delay behavior.</summary>
     void EnableArtemisCompatibility();
 
-    /// <summary>
-    /// Specify the prefix to be added to temporary queue names, including the bus endpoint
-    /// </summary>
-    /// <param name="prefix"></param>
+    /// <summary>Sets a prefix for generated temporary queue names, including the bus endpoint.</summary>
+    /// <param name="prefix">The prefix, or a blank value to restore generated names.</param>
     void SetTemporaryQueueNamePrefix(string prefix);
 
     /// <summary>
-    /// Specify a consumer endpoint queue name formatter. Generate name for consumer queue using
-    /// topic and endpoint name
+    /// Sets the formatter for virtual-topic consumer queue or subscription names.
     /// </summary>
-    /// <param name="formatter"></param>
+    /// <param name="formatter">The consumer name formatter.</param>
     public void SetConsumerEndpointQueueNameFormatter(IActiveMqConsumerEndpointQueueNameFormatter formatter);
 
     /// <summary>
-    /// Specify a temporary queue name formatter. Allows for the transformation of vicione-servicebus generated temporary queue names
-    /// e.g. adding a prefix
+    /// Sets a formatter that transforms generated temporary queue names.
     /// </summary>
-    /// <param name="formatter"></param>
+    /// <param name="formatter">The formatter, or <see langword="null" /> to restore generated names.</param>
     public void SetTemporaryQueueNameFormatter(IActiveMqTemporaryQueueNameFormatter? formatter);
 }

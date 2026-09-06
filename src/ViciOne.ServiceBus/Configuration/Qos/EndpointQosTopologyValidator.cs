@@ -12,11 +12,9 @@ namespace ViciOne.ServiceBus.Advanced.Topology;
 /// </summary>
 public sealed class EndpointQosTopologyValidator
 {
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <param name="declarations">The declarations value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <param name="declarations">The declarations.</param>
+    /// <returns>The validation failures.</returns>
     public FrozenDictionary<string, EndpointTransportQos> Validate(IEnumerable<EndpointQosDeclaration> declarations)
     {
         ArgumentNullException.ThrowIfNull(declarations);

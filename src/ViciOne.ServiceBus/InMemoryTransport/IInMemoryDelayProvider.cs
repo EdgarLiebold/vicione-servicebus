@@ -4,34 +4,24 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
-/// <summary>
-/// Defines the contract for in memory delay provider.
-/// </summary>
+/// <summary>Provides in memory delay services.</summary>
 public interface IInMemoryDelayProvider
 {
-    /// <summary>
-    /// Gets the utc now value.
-    /// </summary>
+    /// <summary>Gets the utc now.</summary>
     DateTimeOffset UtcNow { get; }
 
-    /// <summary>
-    /// Performs the delay operation.
-    /// </summary>
-    /// <param name="delay">The delay value.</param>
+    /// <summary>Delays the operation for the configured duration.</summary>
+    /// <param name="delay">The delay before the operation is attempted.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken = default);
-    /// <summary>
-    /// Performs the delay operation.
-    /// </summary>
-    /// <param name="delayUntil">The delay until value.</param>
+    /// <summary>Delays the operation for the configured duration.</summary>
+    /// <param name="delayUntil">The delay until.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task DelayAsync(DateTimeOffset delayUntil, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the advance operation.
-    /// </summary>
-    /// <param name="duration">The duration value.</param>
+    /// <summary>Advances the current state.</summary>
+    /// <param name="duration">The duration.</param>
     void Advance(TimeSpan duration);
 }

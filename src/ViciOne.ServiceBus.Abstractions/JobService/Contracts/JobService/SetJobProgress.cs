@@ -2,33 +2,21 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
-/// <summary>
-/// Defines the contract for set job progress.
-/// </summary>
+/// <summary>Defines the operations required by set job progress.</summary>
 public interface SetJobProgress
 {
-    /// <summary>
-    /// Gets the job id value.
-    /// </summary>
+    /// <summary>Gets the job id.</summary>
     Guid JobId { get; }
 
-    /// <summary>
-    /// Gets the attempt id value.
-    /// </summary>
+    /// <summary>Gets the attempt id.</summary>
     Guid AttemptId { get; }
 
-    /// <summary>
-    /// Gets the sequence number value.
-    /// </summary>
+    /// <summary>Gets the sequence number.</summary>
     long SequenceNumber { get; }
 
-    /// <summary>
-    /// The current job progress value
-    /// </summary>
+    /// <summary>The current job progress value.</summary>
     long Value { get; }
 
-    /// <summary>
-    /// The maximum value of job progress (optional)
-    /// </summary>
+    /// <summary>The maximum value of job progress (optional).</summary>
     long? Limit { get; }
 }

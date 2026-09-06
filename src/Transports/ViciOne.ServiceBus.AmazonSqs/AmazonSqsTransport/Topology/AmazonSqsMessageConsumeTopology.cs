@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.AmazonSqs.Configuration;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides an amazon sqs message consume topology implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures the Amazon SNS topic subscription used to consume a message type from an Amazon SQS queue.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class AmazonSqsMessageConsumeTopology<TMessage> :
     MessageConsumeTopology<TMessage>,
     IAmazonSqsMessageConsumeTopologyConfigurator<TMessage>,
@@ -20,11 +18,9 @@ public class AmazonSqsMessageConsumeTopology<TMessage> :
     readonly IAmazonSqsPublishTopology _publishTopology;
     readonly IList<IAmazonSqsConsumeTopologySpecification> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
-    /// <param name="publishTopology">The publish topology value.</param>
+    /// <summary>Initializes consume topology for a message type.</summary>
+    /// <param name="messageTopology">The message topology used to determine whether the type is bindable.</param>
+    /// <param name="publishTopology">The Amazon SNS publish topology used to resolve the source topic.</param>
     public AmazonSqsMessageConsumeTopology(IMessageTopology<TMessage> messageTopology, IAmazonSqsPublishTopology publishTopology)
     {
         _messageTopology = messageTopology;
@@ -34,20 +30,16 @@ public class AmazonSqsMessageConsumeTopology<TMessage> :
         _specifications = new List<IAmazonSqsConsumeTopologySpecification>();
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies all message-specific subscription specifications to a receive-endpoint builder.</summary>
+    /// <param name="builder">The receive-endpoint broker-topology builder.</param>
     public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
     {
         foreach (var specification in _specifications)
             specification.Apply(builder);
     }
 
-    /// <summary>
-    /// Performs the subscribe operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Subscribes the receive queue to the Amazon SNS topic for this message type.</summary>
+    /// <param name="configure">An optional callback that configures the topic subscription.</param>
     public void Subscribe(Action<IAmazonSqsTopicSubscriptionConfigurator>? configure = null)
     {
         if (!IsBindableMessageType)
@@ -63,10 +55,8 @@ public class AmazonSqsMessageConsumeTopology<TMessage> :
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the message topology and its subscription specifications.</summary>
+    /// <returns>All detected validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));

@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus receive context implementation.
-/// </summary>
+/// <summary>Projects an Azure Service Bus delivery into the transport receive-context abstractions.</summary>
 public sealed class ServiceBusReceiveContext :
     BaseReceiveContext,
     ServiceBusMessageContext,
@@ -19,12 +17,10 @@ public sealed class ServiceBusReceiveContext :
     readonly MessageBody _body;
     readonly ServiceBusReceivedMessage _message;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="payloads">The payloads value.</param>
+    /// <summary>Initializes a receive context and marks redeliveries from the broker delivery count.</summary>
+    /// <param name="message">The received Azure Service Bus message.</param>
+    /// <param name="receiveEndpointContext">The endpoint that received the message.</param>
+    /// <param name="payloads">Additional transport payloads exposed through the context.</param>
     public ServiceBusReceiveContext(ServiceBusReceivedMessage message, ReceiveEndpointContext receiveEndpointContext, params object[] payloads)
         : base(message.DeliveryCount > 1, receiveEndpointContext, payloads)
     {
@@ -33,116 +29,72 @@ public sealed class ServiceBusReceiveContext :
         _body = new ServiceBusMessageBody(message.Body);
     }
 
-    /// <summary>
-    /// Gets the header provider value.
-    /// </summary>
+    /// <summary>Gets a header provider over the received message.</summary>
     protected override IHeaderProvider HeaderProvider => new ServiceBusHeaderProvider(_message);
 
-    /// <summary>
-    /// Gets the body value.
-    /// </summary>
+    /// <summary>Gets the received body after enforcing endpoint message-size limits.</summary>
     public override MessageBody Body => EnforceMessageLimits(_body);
 
     ulong? ITransportSequenceNumber.SequenceNumber => (ulong)SequenceNumber;
 
-    /// <summary>
-    /// Gets the message id value.
-    /// </summary>
+    /// <summary>Gets the broker message identifier.</summary>
     public string MessageId => _message.MessageId;
 
-    /// <summary>
-    /// Gets the correlation id value.
-    /// </summary>
+    /// <summary>Gets the application correlation identifier.</summary>
     public string CorrelationId => _message.CorrelationId;
 
-    /// <summary>
-    /// Gets the time to live value.
-    /// </summary>
+    /// <summary>Gets the message time-to-live duration.</summary>
     public TimeSpan TimeToLive => _message.TimeToLive;
 
-    /// <summary>
-    /// Gets the expires at value.
-    /// </summary>
+    /// <summary>Gets the UTC expiration time calculated by Azure Service Bus.</summary>
     public DateTimeOffset ExpiresAt => _message.ExpiresAt.UtcDateTime;
 
-    /// <summary>
-    /// Gets the properties value.
-    /// </summary>
+    /// <summary>Gets the application-defined message properties.</summary>
     public IReadOnlyDictionary<string, object> Properties => _message.ApplicationProperties;
 
-    /// <summary>
-    /// Gets the delivery count value.
-    /// </summary>
+    /// <summary>Gets the number of broker delivery attempts.</summary>
     public int DeliveryCount => _message.DeliveryCount;
 
-    /// <summary>
-    /// Gets the label value.
-    /// </summary>
+    /// <summary>Gets the message subject exposed as the transport label.</summary>
     public string Label => _message.Subject;
-    /// <summary>
-    /// Gets the sequence number value.
-    /// </summary>
+    /// <summary>Gets the broker-assigned message sequence number.</summary>
     public long SequenceNumber => _message.SequenceNumber;
 
-    /// <summary>
-    /// Gets the enqueued sequence number value.
-    /// </summary>
+    /// <summary>Gets the original sequence number retained for an auto-forwarded message.</summary>
     public long EnqueuedSequenceNumber => _message.EnqueuedSequenceNumber;
 
-    /// <summary>
-    /// Gets the lock token value.
-    /// </summary>
+    /// <summary>Gets the token that identifies this peek-lock delivery.</summary>
     public string LockToken => _message.LockToken;
 
-    /// <summary>
-    /// Gets the locked until value.
-    /// </summary>
+    /// <summary>Gets the UTC time at which the current message lock expires.</summary>
     public DateTimeOffset LockedUntil => _message.LockedUntil.UtcDateTime;
 
-    /// <summary>
-    /// Gets the session id value.
-    /// </summary>
+    /// <summary>Gets the session identifier used for ordered session delivery.</summary>
     public string SessionId => _message.SessionId;
 
-    /// <summary>
-    /// Gets the size value.
-    /// </summary>
+    /// <summary>Gets the received body length in bytes.</summary>
     public long Size => _message.Body?.ToMemory().Length ?? 0;
 
-    /// <summary>
-    /// Gets the to value.
-    /// </summary>
+    /// <summary>Gets the application destination address carried by the message.</summary>
     public string To => _message.To;
 
-    /// <summary>
-    /// Gets the reply to session id value.
-    /// </summary>
+    /// <summary>Gets the session identifier expected on replies.</summary>
     public string ReplyToSessionId => _message.ReplyToSessionId;
 
-    /// <summary>
-    /// Gets the partition key value.
-    /// </summary>
+    /// <summary>Gets the key used to select a broker partition.</summary>
     public string PartitionKey => _message.PartitionKey;
 
-    /// <summary>
-    /// Gets the reply to value.
-    /// </summary>
+    /// <summary>Gets the reply destination carried by the message.</summary>
     public string ReplyTo => _message.ReplyTo;
 
-    /// <summary>
-    /// Gets the enqueued time value.
-    /// </summary>
+    /// <summary>Gets the UTC time at which Azure Service Bus accepted the message.</summary>
     public DateTimeOffset EnqueuedTime => _message.EnqueuedTime.UtcDateTime;
 
-    /// <summary>
-    /// Gets the scheduled enqueue time value.
-    /// </summary>
+    /// <summary>Gets the UTC time at which the broker scheduled the message for enqueue.</summary>
     public DateTimeOffset ScheduledEnqueueTime => _message.ScheduledEnqueueTime.UtcDateTime;
 
-    /// <summary>
-    /// Gets transport properties.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Captures non-empty provider-specific routing metadata for message movement or persistence.</summary>
+    /// <returns>The transport property bag, or <see langword="null"/> when no provider-specific values are present.</returns>
     public IDictionary<string, object>? GetTransportProperties()
     {
         var properties = new Lazy<Dictionary<string, object>>(() => new Dictionary<string, object>());
@@ -159,10 +111,8 @@ public sealed class ServiceBusReceiveContext :
         return properties.IsValueCreated ? properties.Value : null;
     }
 
-    /// <summary>
-    /// Gets content type.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Parses the broker content type and falls back to base receive-context detection.</summary>
+    /// <returns>The effective message content type.</returns>
     protected override ContentType GetContentType()
     {
         ContentType? contentType = null;

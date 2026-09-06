@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
-/// <summary>
-/// Provides a sql host configuration implementation.
-/// </summary>
+/// <summary>Owns SQL transport host settings, topology, endpoint registrations, and connection supervision.</summary>
 public class SqlHostConfiguration :
     BaseHostConfiguration<ISqlReceiveEndpointConfiguration, ISqlReceiveEndpointConfigurator>,
     ISqlHostConfiguration
@@ -20,11 +18,9 @@ public class SqlHostConfiguration :
     readonly ISqlBusTopology _topology;
     SqlHostSettings? _hostSettings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="busConfiguration">The bus configuration value.</param>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Creates a SQL transport host configuration with retry and recyclable connection supervision.</summary>
+    /// <param name="busConfiguration">The bus configuration that creates endpoint-level configuration.</param>
+    /// <param name="topologyConfiguration">The topology configuration shared by endpoints and database connections.</param>
     public SqlHostConfiguration(ISqlBusConfiguration busConfiguration, ISqlTopologyConfiguration topologyConfiguration)
         : base(busConfiguration)
     {
@@ -44,42 +40,30 @@ public class SqlHostConfiguration :
             new ConnectionContextSupervisor(this, topologyConfiguration, _hostSettings!.CreateConnectionContextFactory(this)));
     }
 
-    /// <summary>
-    /// Gets the connection context supervisor value.
-    /// </summary>
+    /// <summary>Gets the recyclable supervisor for the shared database connection context.</summary>
     public IConnectionContextSupervisor ConnectionContextSupervisor => _connectionContext.Supervisor;
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the address of the configured SQL transport host.</summary>
     public override Uri HostAddress => _hostSettings?.HostAddress ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("SQL transport", "unknown", "The host was not configured.", "Correct the named configuration before starting the host"));
 
     ISqlBusTopology ISqlHostConfiguration.Topology => _topology;
 
-    /// <summary>
-    /// Gets the receive transport retry policy value.
-    /// </summary>
+    /// <summary>Gets the policy used to retry transient receive-transport connection failures.</summary>
     public override IRetryPolicy ReceiveTransportRetryPolicy { get; }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the SQL transport bus topology.</summary>
     public override IBusTopology Topology => _topology;
 
-    /// <summary>
-    /// Gets or sets the settings value.
-    /// </summary>
+    /// <summary>Gets or sets the required SQL transport host settings.</summary>
     public SqlHostSettings Settings
     {
         get => _hostSettings ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("SQL transport", "unknown", "The host was not configured.", "Correct the named configuration before starting the host"));
         set => _hostSettings = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    /// <summary>
-    /// Performs the apply endpoint definition operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="definition">The definition value.</param>
+    /// <summary>Applies common endpoint settings and assigns the standard idle expiry to temporary SQL queues.</summary>
+    /// <param name="configurator">The SQL receive endpoint configurator to update.</param>
+    /// <param name="definition">The endpoint definition whose settings are applied.</param>
     public void ApplyEndpointDefinition(ISqlReceiveEndpointConfigurator configurator, IEndpointDefinition definition)
     {
         if (definition.IsTemporary)
@@ -88,12 +72,10 @@ public class SqlHostConfiguration :
         base.ApplyEndpointDefinition(configurator, definition);
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and registers a SQL-backed receive endpoint with a new endpoint configuration.</summary>
+    /// <param name="queueName">The logical SQL queue name.</param>
+    /// <param name="configure">An optional callback applied before observers are notified and the endpoint is registered.</param>
+    /// <returns>The registered SQL receive endpoint configuration.</returns>
     public ISqlReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
         Action<ISqlReceiveEndpointConfigurator>? configure)
     {
@@ -103,13 +85,11 @@ public class SqlHostConfiguration :
         return CreateReceiveEndpointConfiguration(settings, endpointConfiguration, configure);
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and registers a SQL-backed receive endpoint from explicit queue and endpoint settings.</summary>
+    /// <param name="settings">The SQL queue settings used by the receive endpoint.</param>
+    /// <param name="endpointConfiguration">The shared endpoint pipeline and serialization configuration.</param>
+    /// <param name="configure">An optional callback applied before observers are notified and the endpoint is registered.</param>
+    /// <returns>The registered SQL receive endpoint configuration.</returns>
     public ISqlReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(SqlReceiveSettings settings,
         ISqlEndpointConfiguration endpointConfiguration, Action<ISqlReceiveEndpointConfigurator>? configure)
     {
@@ -129,12 +109,10 @@ public class SqlHostConfiguration :
         return configuration;
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Registers a SQL-backed receive endpoint described by an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition that supplies the name and common settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null"/> to use the default formatter.</param>
+    /// <param name="configureEndpoint">An optional callback that applies SQL-transport-specific settings after the definition.</param>
     public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<ISqlReceiveEndpointConfigurator>? configureEndpoint = null)
     {
@@ -147,20 +125,16 @@ public class SqlHostConfiguration :
         });
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Creates and registers a SQL-backed receive endpoint for a named queue.</summary>
+    /// <param name="queueName">The logical SQL queue name.</param>
+    /// <param name="configureEndpoint">The callback applied before the endpoint is registered.</param>
     public override void ReceiveEndpoint(string queueName, Action<ISqlReceiveEndpointConfigurator> configureEndpoint)
     {
         CreateReceiveEndpointConfiguration(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the host settings and yields all inherited endpoint failures.</summary>
+    /// <returns>The failures that prevent the SQL transport host from being built.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         if (_hostSettings == null)
@@ -176,22 +150,22 @@ public class SqlHostConfiguration :
             yield return result;
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a SQL endpoint while exposing it through the provider-neutral host contract.</summary>
+    /// <param name="queueName">The logical SQL queue name.</param>
+    /// <param name="configure">An optional provider-neutral callback adapted to the SQL configurator.</param>
+    /// <returns>The registered SQL receive endpoint configuration.</returns>
     public override IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
         Action<IReceiveEndpointConfigurator>? configure)
     {
-        return CreateReceiveEndpointConfiguration(queueName, configure);
+        Action<ISqlReceiveEndpointConfigurator>? configureEndpoint = configure == null
+            ? null
+            : endpoint => configure(endpoint);
+
+        return CreateReceiveEndpointConfiguration(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the SQL transport host and attaches every registered receive endpoint.</summary>
+    /// <returns>The configured SQL transport host.</returns>
     public override IHost Build()
     {
         var host = new SqlHost(this, _topology);

@@ -1,14 +1,10 @@
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>
-/// Provides extension methods for topology layout.
-/// </summary>
+/// <summary>Provides extension methods for topology layout.</summary>
 public static class TopologyLayoutExtensions
 {
-    /// <summary>
-    /// Performs the log result operation.
-    /// </summary>
-    /// <param name="layout">The layout value.</param>
+    /// <summary>Logs result.</summary>
+    /// <param name="layout">The layout.</param>
     public static void LogResult(this BrokerTopology layout)
     {
         foreach (var topic in layout.Topics)

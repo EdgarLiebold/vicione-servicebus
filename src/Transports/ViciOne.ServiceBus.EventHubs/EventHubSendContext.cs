@@ -1,23 +1,17 @@
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Defines the contract for event hub send context.
-/// </summary>
+/// <summary>Provides Event Hubs routing metadata for an outgoing message.</summary>
 public interface EventHubSendContext :
     SendContext,
     PartitionKeySendContext
 {
-    /// <summary>
-    /// Gets or sets the partition id value.
-    /// </summary>
+    /// <summary>Gets or sets the target partition identifier.</summary>
     string? PartitionId { get; set; }
 }
 
 
-/// <summary>
-/// Defines the contract for event hub send context.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Provides message data and Event Hubs routing metadata for an outgoing message.</summary>
+/// <typeparam name="T">The message type.</typeparam>
 public interface EventHubSendContext<out T> :
     SendContext<T>,
     EventHubSendContext

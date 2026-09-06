@@ -564,7 +564,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
             }
         }
 
-        // V4 invariant: unknown failures are never guessed transient.
+        // Unknown failures are never guessed transient.
         return DurableSendFailureKind.Unclassified;
     }
 

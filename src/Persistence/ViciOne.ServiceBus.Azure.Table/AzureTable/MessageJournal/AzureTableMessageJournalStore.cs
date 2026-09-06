@@ -18,11 +18,9 @@ public sealed class AzureTableMessageJournalStore : IMessageJournalStore
     private readonly string _partitionKey;
     private readonly TableClient _table;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="table">The table value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Creates a bounded message journal in the configured Azure Table partition.</summary>
+    /// <param name="table">The caller-owned table client used for reads and atomic entity-group transactions.</param>
+    /// <param name="options">The partition and finite journal limits.</param>
     public AzureTableMessageJournalStore(
         TableClient table,
         AzureTableMessageJournalStoreOptions options)
@@ -35,17 +33,13 @@ public sealed class AzureTableMessageJournalStore : IMessageJournalStore
         Limits = options.Limits;
     }
 
-    /// <summary>
-    /// Gets the limits value.
-    /// </summary>
+    /// <summary>Gets the capacity, entry-size, and retention limits enforced by this store.</summary>
     public MessageJournalStoreLimits Limits { get; }
 
-    /// <summary>
-    /// Performs the append operation.
-    /// </summary>
-    /// <param name="entry">The entry value.</param>
+    /// <summary>Prunes expired or excess rows and appends one sanitized journal entry in a single partition transaction.</summary>
+    /// <param name="entry">The sanitized journal entry to persist.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that completes when Azure Table commits the lease update, removals, and new entry atomically.</returns>
     public async ValueTask AppendAsync(MessageJournalEntry entry, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(entry);

@@ -2,39 +2,31 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.RabbitMq.Middleware;
 
-/// <summary>
-/// Purges the queue on startup, only once per filter instance
-/// </summary>
+/// <summary>Purges the queue on startup, only once per filter instance.</summary>
 public class PurgeOnStartupFilter :
     IFilter<ChannelContext>
 {
     readonly string _queueName;
     bool _queueAlreadyPurged;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
+    /// <summary>Creates a one-time purge filter for a receive queue.</summary>
+    /// <param name="queueName">The queue to inspect and optionally purge.</param>
     public PurgeOnStartupFilter(string queueName)
     {
         _queueName = queueName;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds the one-time startup-purge filter to the diagnostic probe.</summary>
+    /// <param name="context">The probe context that receives the filter scope.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateFilterScope("purgeOnStartup");
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Purges a nonempty queue with no active consumers once, then continues the channel pipeline.</summary>
+    /// <param name="context">The active RabbitMQ channel context.</param>
+    /// <param name="next">The remainder of the channel pipeline.</param>
+    /// <returns>A task that completes with the remaining pipeline.</returns>
     public async Task SendAsync(ChannelContext context, IPipe<ChannelContext> next)
     {
         var queueOk = await context.QueueDeclarePassiveAsync(_queueName, context.CancellationToken).ConfigureAwait(false);

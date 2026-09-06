@@ -2,28 +2,18 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Defines the contract for entity settings.
-/// </summary>
+/// <summary>Defines common naming, lifetime, and tagging settings for an Amazon SQS queue or Amazon SNS topic.</summary>
 public interface EntitySettings
 {
-    /// <summary>
-    /// The entity name (either a topic or a queue)
-    /// </summary>
+    /// <summary>Gets the queue or topic name.</summary>
     string EntityName { get; }
 
-    /// <summary>
-    /// True if messages should be persisted to disk for the queue
-    /// </summary>
+    /// <summary>Gets whether the transport retains the entity when its endpoint stops.</summary>
     bool Durable { get; }
 
-    /// <summary>
-    /// True if the queue/exchange should automatically be deleted
-    /// </summary>
+    /// <summary>Gets whether the transport deletes the queue or topic when the bus stops.</summary>
     bool AutoDelete { get; }
 
-    /// <summary>
-    /// Collection of tags to assign to queue when created.
-    /// </summary>
+    /// <summary>Gets the tags assigned to the queue or topic when it is created.</summary>
     IDictionary<string, string> Tags { get; }
 }

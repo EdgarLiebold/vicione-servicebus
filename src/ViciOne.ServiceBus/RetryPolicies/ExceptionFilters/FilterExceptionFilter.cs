@@ -2,20 +2,16 @@ using System;
 
 namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
 
-/// <summary>
-/// Provides a filter exception filter implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Processes filter exception pipeline stages.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class FilterExceptionFilter<T> :
     IExceptionFilter
     where T : Exception
 {
     readonly Func<T, bool> _filter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public FilterExceptionFilter(Func<T, bool> filter)
     {
         _filter = filter;

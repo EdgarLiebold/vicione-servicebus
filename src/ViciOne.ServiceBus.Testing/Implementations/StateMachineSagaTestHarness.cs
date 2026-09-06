@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
-/// <summary>
-/// Provides a state machine saga test harness implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TStateMachine">The t state machine type.</typeparam>
+/// <summary>Provides a test harness for state machine saga test.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TStateMachine">The state machine type.</typeparam>
 public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
     SagaTestHarness<TInstance>,
     ISagaStateMachineTestHarness<TStateMachine, TInstance>
@@ -21,15 +19,13 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
     readonly IDisposable _eventObserverHandle;
     readonly IDisposable _stateObserverHandle;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="testHarness">The test harness value.</param>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="querySagaRepository">The query saga repository value.</param>
-    /// <param name="loadSagaRepository">The load saga repository value.</param>
-    /// <param name="stateMachine">The state machine value.</param>
-    /// <param name="queueName">The queue name value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="testHarness">The test harness.</param>
+    /// <param name="repository">The repository.</param>
+    /// <param name="querySagaRepository">The query saga repository.</param>
+    /// <param name="loadSagaRepository">The load saga repository.</param>
+    /// <param name="stateMachine">The state machine.</param>
+    /// <param name="queueName">The queue name.</param>
     public StateMachineSagaTestHarness(BusTestHarness testHarness, ISagaRepository<TInstance> repository,
         IQuerySagaRepository<TInstance>? querySagaRepository, ILoadSagaRepository<TInstance>? loadSagaRepository, TStateMachine stateMachine,
         string? queueName)
@@ -41,37 +37,27 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
         _stateObserverHandle = StateMachine.ConnectStateObserver(_observations);
     }
 
-    /// <summary>
-    /// Gets the state machine value.
-    /// </summary>
+    /// <summary>Gets the state machine.</summary>
     public TStateMachine StateMachine { get; }
 
-    /// <summary>
-    /// Gets the events value.
-    /// </summary>
+    /// <summary>Gets the events.</summary>
     public IReadOnlyList<StateMachineEventObservation> Events => _observations.Events;
-    /// <summary>
-    /// Gets the state changes value.
-    /// </summary>
+    /// <summary>Gets the state changes.</summary>
     public IReadOnlyList<StateMachineStateChange> StateChanges => _observations.StateChanges;
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         _stateObserverHandle.Dispose();
         _eventObserverHandle.Dispose();
     }
 
-    /// <summary>
-    /// Waits until a saga exists with the specified correlationId in the specified state
-    /// </summary>
-    /// <param name="correlationId"></param>
-    /// <param name="stateSelector"></param>
-    /// <param name="timeout"></param>
-    /// <returns></returns>
+    /// <summary>Waits until a saga exists with the specified correlationId in the specified state.</summary>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="stateSelector">The state selector.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the exists outcome.</returns>
     public Task<Guid?> ExistsAsync(Guid correlationId, Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         var state = stateSelector(StateMachine);
@@ -79,14 +65,12 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
         return ExistsAsync(correlationId, state, timeout, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Waits until a saga exists with the specified correlationId in the specified state
-    /// </summary>
-    /// <param name="correlationId"></param>
-    /// <param name="state">The expected state</param>
-    /// <param name="timeout"></param>
-    /// <returns></returns>
+    /// <summary>Waits until a saga exists with the specified correlationId in the specified state.</summary>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="state">The expected state.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the exists outcome.</returns>
     public async Task<Guid?> ExistsAsync(Guid correlationId, State state, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         if (QuerySagaRepository == null)
@@ -101,14 +85,12 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
             timeout).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Waits until a saga exists with the specified correlationId in the specified state
-    /// </summary>
-    /// <param name="expression"></param>
-    /// <param name="stateSelector"></param>
-    /// <param name="timeout"></param>
-    /// <returns></returns>
+    /// <summary>Waits until a saga exists with the specified correlationId in the specified state.</summary>
+    /// <param name="expression">The expression.</param>
+    /// <param name="stateSelector">The state selector.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the exists outcome.</returns>
     public Task<IList<Guid>> ExistsAsync(Expression<Func<TInstance, bool>> expression, Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         var state = stateSelector(StateMachine);
@@ -116,14 +98,12 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
         return ExistsAsync(expression, state, timeout, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Waits until a saga exists with the specified correlationId in the specified state
-    /// </summary>
-    /// <param name="expression"></param>
-    /// <param name="state">The expected state</param>
-    /// <param name="timeout"></param>
-    /// <returns></returns>
+    /// <summary>Waits until a saga exists with the specified correlationId in the specified state.</summary>
+    /// <param name="expression">The expression.</param>
+    /// <param name="state">The expected state.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the exists outcome.</returns>
     public async Task<IList<Guid>> ExistsAsync(Expression<Func<TInstance, bool>> expression, State state, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         if (QuerySagaRepository == null)
@@ -138,20 +118,16 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
             timeout).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Configures receive endpoint.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Configures receive endpoint.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     protected override void ConfigureReceiveEndpoint(IReceiveEndpointConfigurator configurator)
     {
         configurator.StateMachineSaga(StateMachine, TestRepository);
     }
 
-    /// <summary>
-    /// Configures named receive endpoint.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="queueName">The queue name value.</param>
+    /// <summary>Configures named receive endpoint.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="queueName">The queue name.</param>
     protected override void ConfigureNamedReceiveEndpoint(IBusFactoryConfigurator configurator, string queueName)
     {
         configurator.ReceiveEndpoint(queueName, x =>

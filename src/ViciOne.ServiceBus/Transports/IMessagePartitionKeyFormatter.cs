@@ -1,16 +1,12 @@
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Defines the contract for message partition key formatter.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Formats message partition key values.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public interface IMessagePartitionKeyFormatter<in TMessage>
     where TMessage : class
 {
-    /// <summary>
-    /// Performs the format partition key operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats partition key.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The formatted partition key.</returns>
     string FormatPartitionKey(SendContext<TMessage> context);
 }

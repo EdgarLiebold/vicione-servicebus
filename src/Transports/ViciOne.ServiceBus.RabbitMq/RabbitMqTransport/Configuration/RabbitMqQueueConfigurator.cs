@@ -5,21 +5,17 @@ using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Provides a rabbit mq queue configurator implementation.
-/// </summary>
+/// <summary>Stores a RabbitMQ queue declaration together with its same-name exchange declaration.</summary>
 public class RabbitMqQueueConfigurator :
     RabbitMqExchangeConfigurator,
     IRabbitMqQueueConfigurator,
     Queue
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="exchangeType">The exchange type value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
+    /// <summary>Creates matching queue and exchange settings.</summary>
+    /// <param name="queueName">The queue and exchange name.</param>
+    /// <param name="exchangeType">The RabbitMQ exchange type.</param>
+    /// <param name="durable">Whether the queue and exchange survive broker restarts.</param>
+    /// <param name="autoDelete">Whether RabbitMQ deletes the queue and exchange when unused.</param>
     protected RabbitMqQueueConfigurator(string queueName, string exchangeType, bool durable, bool autoDelete)
         : base(queueName, exchangeType, durable, autoDelete)
     {
@@ -28,10 +24,8 @@ public class RabbitMqQueueConfigurator :
         QueueName = queueName;
     }
 
-    /// <summary>
-    /// Sets quorum queue.
-    /// </summary>
-    /// <param name="replicationFactor">The replication factor value.</param>
+    /// <summary>Configures a non-exclusive quorum queue and removes incompatible priority settings.</summary>
+    /// <param name="replicationFactor">The optional initial quorum-group size.</param>
     public void SetQuorumQueue(int? replicationFactor)
     {
         SetQueueArgument(RabbitMQ.Client.Headers.XQueueType, "quorum");
@@ -48,9 +42,7 @@ public class RabbitMqQueueConfigurator :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the single active consumer value.
-    /// </summary>
+    /// <summary>Sets or removes RabbitMQ single-active-consumer behavior.</summary>
     public bool SingleActiveConsumer
     {
         set
@@ -62,11 +54,9 @@ public class RabbitMqQueueConfigurator :
         }
     }
 
-    /// <summary>
-    /// Sets queue argument.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets a queue argument, or removes it when the value is <see langword="null" />.</summary>
+    /// <param name="key">The RabbitMQ queue-argument key.</param>
+    /// <param name="value">The argument value.</param>
     public void SetQueueArgument(string key, object? value)
     {
         if (key == null)
@@ -78,11 +68,9 @@ public class RabbitMqQueueConfigurator :
             QueueArguments[key] = value;
     }
 
-    /// <summary>
-    /// Sets queue argument.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets a queue argument from a duration converted to whole milliseconds.</summary>
+    /// <param name="key">The RabbitMQ queue-argument key.</param>
+    /// <param name="value">The duration to convert.</param>
     public void SetQueueArgument(string key, TimeSpan value)
     {
         var milliseconds = (int)value.TotalMilliseconds;
@@ -90,31 +78,23 @@ public class RabbitMqQueueConfigurator :
         SetQueueArgument(key, milliseconds);
     }
 
-    /// <summary>
-    /// Gets or sets the lazy value.
-    /// </summary>
+    /// <summary>Sets RabbitMQ queue mode to <c>lazy</c> or <c>default</c>.</summary>
     public bool Lazy
     {
         set => SetQueueArgument(RabbitMQ.Client.Headers.XQueueMode, value ? "lazy" : "default");
     }
 
-    /// <summary>
-    /// Performs the enable priority operation.
-    /// </summary>
-    /// <param name="maxPriority">The max priority value.</param>
+    /// <summary>Enables queue priority delivery.</summary>
+    /// <param name="maxPriority">The highest accepted message priority.</param>
     public void EnablePriority(byte maxPriority)
     {
         QueueArguments[RabbitMQ.Client.Headers.XMaxPriority] = (int)maxPriority;
     }
 
-    /// <summary>
-    /// Gets or sets the exclusive value.
-    /// </summary>
+    /// <summary>Gets or sets whether the queue is exclusive to its declaring connection.</summary>
     public bool Exclusive { get; set; }
 
-    /// <summary>
-    /// Gets or sets the queue expiration value.
-    /// </summary>
+    /// <summary>Gets or sets how long an unused queue may remain before RabbitMQ deletes it.</summary>
     public TimeSpan? QueueExpiration
     {
         get
@@ -133,20 +113,14 @@ public class RabbitMqQueueConfigurator :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the queue name value.
-    /// </summary>
+    /// <summary>Gets or sets the queue name.</summary>
     public string QueueName { get; set; }
-    /// <summary>
-    /// Gets the queue arguments value.
-    /// </summary>
+    /// <summary>Gets the queue arguments.</summary>
     public IDictionary<string, object?> QueueArguments { get; }
 
-    /// <summary>
-    /// Gets endpoint address.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an exchange endpoint address from the queue's same-name exchange settings.</summary>
+    /// <param name="hostAddress">The RabbitMQ host and virtual-host address.</param>
+    /// <returns>The normalized exchange endpoint address.</returns>
     public override RabbitMqEndpointAddress GetEndpointAddress(Uri hostAddress)
     {
         return new RabbitMqEndpointAddress(hostAddress, string.IsNullOrWhiteSpace(ExchangeName) ? QueueName : ExchangeName, ExchangeType, Durable, AutoDelete);

@@ -8,24 +8,20 @@ using ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides a retry implementation.
-/// </summary>
+/// <summary>Provides retry policies and retry-pipeline configuration.</summary>
 public static class Retry
 {
     static readonly IExceptionFilter _all = new AllExceptionFilter();
 
-    /// <summary>
-    /// Create a policy that does not retry any messages
-    /// </summary>
+    /// <summary>Create a policy that does not retry any messages.</summary>
     public static IRetryPolicy None { get; } = new NoRetryPolicy(new AllExceptionFilter());
 
     /// <summary>
     /// Create an immediate retry policy with the specified number of retries, with no
     /// delay between attempts.
     /// </summary>
-    /// <param name="retryLimit">The number of retries to attempt</param>
-    /// <returns></returns>
+    /// <param name="retryLimit">The number of retries to attempt.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Immediate(int retryLimit)
     {
         return new ImmediateRetryPolicy(All(), retryLimit);
@@ -35,9 +31,9 @@ public static class Retry
     /// Create an immediate retry policy with the specified number of retries, with no
     /// delay between attempts.
     /// </summary>
-    /// <param name="filter"></param>
-    /// <param name="retryLimit">The number of retries to attempt</param>
-    /// <returns></returns>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="retryLimit">The number of retries to attempt.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Immediate(this IExceptionFilter filter, int retryLimit)
     {
         return new ImmediateRetryPolicy(filter, retryLimit);
@@ -45,10 +41,10 @@ public static class Retry
 
     /// <summary>
     /// Create an interval retry policy with the specified intervals. The retry count equals
-    /// the number of intervals provided
+    /// the number of intervals provided.
     /// </summary>
-    /// <param name="intervals">The intervals before each subsequent retry attempt</param>
-    /// <returns></returns>
+    /// <param name="intervals">The intervals before each subsequent retry attempt.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Intervals(params TimeSpan[] intervals)
     {
         return new IntervalRetryPolicy(All(), intervals);
@@ -56,11 +52,11 @@ public static class Retry
 
     /// <summary>
     /// Create an interval retry policy with the specified intervals. The retry count equals
-    /// the number of intervals provided
+    /// the number of intervals provided.
     /// </summary>
-    /// <param name="filter"></param>
-    /// <param name="intervals">The intervals before each subsequent retry attempt</param>
-    /// <returns></returns>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="intervals">The intervals before each subsequent retry attempt.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Intervals(this IExceptionFilter filter, params TimeSpan[] intervals)
     {
         return new IntervalRetryPolicy(filter, intervals);
@@ -68,10 +64,10 @@ public static class Retry
 
     /// <summary>
     /// Create an interval retry policy with the specified intervals. The retry count equals
-    /// the number of intervals provided
+    /// the number of intervals provided.
     /// </summary>
-    /// <param name="intervals">The intervals before each subsequent retry attempt</param>
-    /// <returns></returns>
+    /// <param name="intervals">The intervals before each subsequent retry attempt.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Intervals(params int[] intervals)
     {
         return new IntervalRetryPolicy(All(), intervals);
@@ -79,45 +75,39 @@ public static class Retry
 
     /// <summary>
     /// Create an interval retry policy with the specified intervals. The retry count equals
-    /// the number of intervals provided
+    /// the number of intervals provided.
     /// </summary>
-    /// <param name="filter"></param>
-    /// <param name="intervals">The intervals before each subsequent retry attempt</param>
-    /// <returns></returns>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="intervals">The intervals before each subsequent retry attempt.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Intervals(this IExceptionFilter filter, params int[] intervals)
     {
         return new IntervalRetryPolicy(filter, intervals);
     }
 
-    /// <summary>
-    /// Create an interval retry policy with the specified number of retries at a fixed interval
-    /// </summary>
-    /// <param name="retryCount">The number of retry attempts</param>
-    /// <param name="interval">The interval between each retry attempt</param>
-    /// <returns></returns>
+    /// <summary>Create an interval retry policy with the specified number of retries at a fixed interval.</summary>
+    /// <param name="retryCount">The number of retry attempts.</param>
+    /// <param name="interval">The interval between each retry attempt.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Interval(int retryCount, TimeSpan interval)
     {
         return new IntervalRetryPolicy(All(), Enumerable.Repeat(interval, retryCount).ToArray());
     }
 
-    /// <summary>
-    /// Create an interval retry policy with the specified number of retries at a fixed interval
-    /// </summary>
-    /// <param name="retryCount">The number of retry attempts</param>
-    /// <param name="interval">The interval between each retry attempt</param>
-    /// <returns></returns>
+    /// <summary>Create an interval retry policy with the specified number of retries at a fixed interval.</summary>
+    /// <param name="retryCount">The number of retry attempts.</param>
+    /// <param name="interval">The interval between each retry attempt.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Interval(int retryCount, int interval)
     {
         return new IntervalRetryPolicy(All(), Enumerable.Repeat(interval, retryCount).ToArray());
     }
 
-    /// <summary>
-    /// Create an interval retry policy with the specified number of retries at a fixed interval
-    /// </summary>
-    /// <param name="filter"></param>
-    /// <param name="retryCount">The number of retry attempts</param>
-    /// <param name="interval">The interval between each retry attempt</param>
-    /// <returns></returns>
+    /// <summary>Create an interval retry policy with the specified number of retries at a fixed interval.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="retryCount">The number of retry attempts.</param>
+    /// <param name="interval">The interval between each retry attempt.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Interval(this IExceptionFilter filter, int retryCount, TimeSpan interval)
     {
         return new IntervalRetryPolicy(filter, Enumerable.Repeat(interval, retryCount).ToArray());
@@ -125,13 +115,13 @@ public static class Retry
 
     /// <summary>
     /// Create an exponential retry policy with the specified number of retries at exponential
-    /// intervals
+    /// intervals.
     /// </summary>
-    /// <param name="retryLimit"></param>
-    /// <param name="minInterval"></param>
-    /// <param name="maxInterval"></param>
-    /// <param name="intervalDelta"></param>
-    /// <returns></returns>
+    /// <param name="retryLimit">The retry limit.</param>
+    /// <param name="minInterval">The min interval.</param>
+    /// <param name="maxInterval">The max interval.</param>
+    /// <param name="intervalDelta">The interval delta.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Exponential(int retryLimit, TimeSpan minInterval, TimeSpan maxInterval,
         TimeSpan intervalDelta)
     {
@@ -140,12 +130,12 @@ public static class Retry
 
     /// <summary>
     /// Create an exponential retry policy that never gives up
-    /// intervals
+    /// intervals.
     /// </summary>
-    /// <param name="minInterval"></param>
-    /// <param name="maxInterval"></param>
-    /// <param name="intervalDelta"></param>
-    /// <returns></returns>
+    /// <param name="minInterval">The min interval.</param>
+    /// <param name="maxInterval">The max interval.</param>
+    /// <param name="intervalDelta">The interval delta.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Exponential(TimeSpan minInterval, TimeSpan maxInterval, TimeSpan intervalDelta)
     {
         return new ExponentialRetryPolicy(All(), int.MaxValue, minInterval, maxInterval, intervalDelta);
@@ -153,14 +143,14 @@ public static class Retry
 
     /// <summary>
     /// Create an exponential retry policy with the specified number of retries at exponential
-    /// intervals
+    /// intervals.
     /// </summary>
-    /// <param name="filter"></param>
-    /// <param name="retryLimit"></param>
-    /// <param name="minInterval"></param>
-    /// <param name="maxInterval"></param>
-    /// <param name="intervalDelta"></param>
-    /// <returns></returns>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="retryLimit">The retry limit.</param>
+    /// <param name="minInterval">The min interval.</param>
+    /// <param name="maxInterval">The max interval.</param>
+    /// <param name="intervalDelta">The interval delta.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Exponential(this IExceptionFilter filter, int retryLimit,
         TimeSpan minInterval, TimeSpan maxInterval,
         TimeSpan intervalDelta)
@@ -170,12 +160,12 @@ public static class Retry
 
     /// <summary>
     /// Create an incremental retry policy with the specified number of retry attempts with an incrementing
-    /// interval between retries
+    /// interval between retries.
     /// </summary>
-    /// <param name="retryLimit">The number of retry attempts</param>
-    /// <param name="initialInterval">The initial retry interval</param>
-    /// <param name="intervalIncrement">The interval to add to the retry interval with each subsequent retry</param>
-    /// <returns></returns>
+    /// <param name="retryLimit">The number of retry attempts.</param>
+    /// <param name="initialInterval">The initial retry interval.</param>
+    /// <param name="intervalIncrement">The interval to add to the retry interval with each subsequent retry.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Incremental(int retryLimit, TimeSpan initialInterval,
         TimeSpan intervalIncrement)
     {
@@ -184,13 +174,13 @@ public static class Retry
 
     /// <summary>
     /// Create an incremental retry policy with the specified number of retry attempts with an incrementing
-    /// interval between retries
+    /// interval between retries.
     /// </summary>
-    /// <param name="filter"></param>
-    /// <param name="retryLimit">The number of retry attempts</param>
-    /// <param name="initialInterval">The initial retry interval</param>
-    /// <param name="intervalIncrement">The interval to add to the retry interval with each subsequent retry</param>
-    /// <returns></returns>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="retryLimit">The number of retry attempts.</param>
+    /// <param name="initialInterval">The initial retry interval.</param>
+    /// <param name="intervalIncrement">The interval to add to the retry interval with each subsequent retry.</param>
+    /// <returns>The retry policy produced by the operation.</returns>
     public static IRetryPolicy Incremental(this IExceptionFilter filter, int retryLimit,
         TimeSpan initialInterval,
         TimeSpan intervalIncrement)
@@ -198,11 +188,9 @@ public static class Retry
         return new IncrementalRetryPolicy(filter, retryLimit, initialInterval, intervalIncrement);
     }
 
-    /// <summary>
-    /// Creates policy.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates policy.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The created policy.</returns>
     public static IRetryPolicy CreatePolicy(Action<IRetryConfigurator> configure)
     {
         var configurator = new RetryConfigurator();
@@ -212,95 +200,87 @@ public static class Retry
         return configurator.Build();
     }
 
-    /// <summary>
-    /// Retry all exceptions except for the exception types specified
-    /// </summary>
-    /// <param name="exceptionTypes"></param>
-    /// <returns></returns>
+    /// <summary>Retry all exceptions except for the exception types specified.</summary>
+    /// <param name="exceptionTypes">The exception types.</param>
+    /// <returns>The exception filter produced by the operation.</returns>
     public static IExceptionFilter Except(params Type[] exceptionTypes)
     {
         return new IgnoreExceptionFilter(exceptionTypes);
     }
 
-    /// <summary>
-    /// Retry all exceptions except for the exception types specified
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Retry all exceptions except for the exception types specified.</summary>
+    /// <typeparam name="T1">The 1 type.</typeparam>
+    /// <returns>The exception filter produced by the operation.</returns>
     public static IExceptionFilter Except<T1>()
     {
         return new IgnoreExceptionFilter(typeof(T1));
     }
 
-    /// <summary>
-    /// Retry all exceptions except for the exception types specified
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Retry all exceptions except for the exception types specified.</summary>
+    /// <typeparam name="T1">The 1 type.</typeparam>
+    /// <typeparam name="T2">The 2 type.</typeparam>
+    /// <returns>The exception filter produced by the operation.</returns>
     public static IExceptionFilter Except<T1, T2>()
     {
         return new IgnoreExceptionFilter(typeof(T1), typeof(T2));
     }
 
-    /// <summary>
-    /// Retry all exceptions except for the exception types specified
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Retry all exceptions except for the exception types specified.</summary>
+    /// <typeparam name="T1">The 1 type.</typeparam>
+    /// <typeparam name="T2">The 2 type.</typeparam>
+    /// <typeparam name="T3">The 3 type.</typeparam>
+    /// <returns>The exception filter produced by the operation.</returns>
     public static IExceptionFilter Except<T1, T2, T3>()
     {
         return new IgnoreExceptionFilter(typeof(T1), typeof(T2), typeof(T3));
     }
 
-    /// <summary>
-    /// Retry only the exception types specified
-    /// </summary>
-    /// <param name="exceptionTypes"></param>
-    /// <returns></returns>
+    /// <summary>Retry only the exception types specified.</summary>
+    /// <param name="exceptionTypes">The exception types.</param>
+    /// <returns>The exception filter produced by the operation.</returns>
     public static IExceptionFilter Selected(params Type[] exceptionTypes)
     {
         return new HandleExceptionFilter(exceptionTypes);
     }
 
-    /// <summary>
-    /// Retry only the exception types specified
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Retry only the exception types specified.</summary>
+    /// <typeparam name="T1">The 1 type.</typeparam>
+    /// <returns>The exception filter produced by the operation.</returns>
     public static IExceptionFilter Selected<T1>()
     {
         return new HandleExceptionFilter(typeof(T1));
     }
 
-    /// <summary>
-    /// Retry only the exception types specified
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Retry only the exception types specified.</summary>
+    /// <typeparam name="T1">The 1 type.</typeparam>
+    /// <typeparam name="T2">The 2 type.</typeparam>
+    /// <returns>The exception filter produced by the operation.</returns>
     public static IExceptionFilter Selected<T1, T2>()
     {
         return new HandleExceptionFilter(typeof(T1), typeof(T2));
     }
 
-    /// <summary>
-    /// Retry only the exception types specified
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Retry only the exception types specified.</summary>
+    /// <typeparam name="T1">The 1 type.</typeparam>
+    /// <typeparam name="T2">The 2 type.</typeparam>
+    /// <typeparam name="T3">The 3 type.</typeparam>
+    /// <returns>The exception filter produced by the operation.</returns>
     public static IExceptionFilter Selected<T1, T2, T3>()
     {
         return new HandleExceptionFilter(typeof(T1), typeof(T2), typeof(T3));
     }
 
-    /// <summary>
-    /// Retry all exceptions
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Retry all exceptions.</summary>
+    /// <returns>The exception filter produced by the operation.</returns>
     public static IExceptionFilter All()
     {
         return _all;
     }
 
-    /// <summary>
-    /// Filter an exception type
-    /// </summary>
-    /// <typeparam name="T">The exception type</typeparam>
-    /// <param name="filter">The filter expression</param>
-    /// <returns>True if the exception should be retried, otherwise false</returns>
+    /// <summary>Filter an exception type.</summary>
+    /// <typeparam name="T">The exception type.</typeparam>
+    /// <param name="filter">The filter expression.</param>
+    /// <returns>True if the exception should be retried, otherwise false.</returns>
     public static IExceptionFilter Filter<T>(Func<T, bool> filter)
         where T : Exception
     {

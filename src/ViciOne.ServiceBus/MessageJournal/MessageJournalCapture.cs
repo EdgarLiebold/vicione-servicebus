@@ -4,9 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ViciOne.ServiceBus.MessageJournal;
-/// <summary>
-/// Immutable raw observation presented only to the explicitly configured journal policy.
-/// </summary>
+/// <summary>Immutable raw observation presented only to the explicitly configured journal policy.</summary>
 /// <remarks>
 /// A capture may contain sensitive payload and header data. It is never passed to a persistence
 /// provider. The policy must return a sanitized <see cref="MessageJournalProjection"/> or reject
@@ -34,39 +32,25 @@ public sealed class MessageJournalCapture
         _body = body.ToArray();
     }
 
-    /// <summary>
-    /// Gets the operation value.
-    /// </summary>
+    /// <summary>Gets the operation.</summary>
     public MessageJournalOperation Operation { get; }
 
-    /// <summary>
-    /// Gets the outcome value.
-    /// </summary>
+    /// <summary>Gets the outcome.</summary>
     public MessageJournalOutcome Outcome { get; }
 
-    /// <summary>
-    /// Gets the content type value.
-    /// </summary>
+    /// <summary>Gets the content type.</summary>
     public string? ContentType { get; }
 
-    /// <summary>
-    /// Gets the message types value.
-    /// </summary>
+    /// <summary>Gets the message types.</summary>
     public IReadOnlyList<string> MessageTypes { get; }
 
-    /// <summary>
-    /// Gets the metadata value.
-    /// </summary>
+    /// <summary>Gets the metadata.</summary>
     public IReadOnlyDictionary<string, string> Metadata { get; }
 
-    /// <summary>
-    /// Gets the headers value.
-    /// </summary>
+    /// <summary>Gets the headers.</summary>
     public IReadOnlyDictionary<string, string> Headers { get; }
 
-    /// <summary>
-    /// Gets the body value.
-    /// </summary>
+    /// <summary>Gets the body.</summary>
     public ReadOnlyMemory<byte> Body => _body.ToArray();
 
     private static IReadOnlyDictionary<string, string> Snapshot(IReadOnlyDictionary<string, string> source)

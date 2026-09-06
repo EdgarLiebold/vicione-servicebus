@@ -2,15 +2,11 @@ using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Defines the contract for rabbit mq consume topology specification.
-/// </summary>
+/// <summary>Applies and validates one RabbitMQ consume-topology fragment.</summary>
 public interface IRabbitMqConsumeTopologySpecification :
     ISpecification
 {
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Adds this consume-topology fragment to a broker-topology builder.</summary>
+    /// <param name="builder">The receive-endpoint topology builder.</param>
     void Apply(IReceiveEndpointBrokerTopologyBuilder builder);
 }

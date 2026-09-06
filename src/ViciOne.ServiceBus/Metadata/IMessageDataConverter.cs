@@ -4,17 +4,13 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>
-/// Defines the contract for message data converter.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Defines the operations required by message data converter.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface IMessageDataConverter<T>
 {
-    /// <summary>
-    /// Performs the convert operation.
-    /// </summary>
-    /// <param name="stream">The stream value.</param>
+    /// <summary>Converts the supplied value.</summary>
+    /// <param name="stream">The stream.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the converted value.</returns>
     Task<T?> ConvertAsync(Stream stream, CancellationToken cancellationToken);
 }

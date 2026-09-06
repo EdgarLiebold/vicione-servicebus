@@ -4,110 +4,80 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for service bus host configuration.
-/// </summary>
+/// <summary>Configures an Azure Service Bus namespace and the receive endpoints hosted in it.</summary>
 public interface IServiceBusHostConfiguration :
     IHostConfiguration,
     IReceiveConfigurator<IServiceBusReceiveEndpointConfigurator>
 {
-    /// <summary>
-    /// Gets or sets the settings value.
-    /// </summary>
+    /// <summary>Gets or sets the resolved namespace settings.</summary>
     ServiceBusHostSettings Settings { get; set; }
 
-    /// <summary>
-    /// Gets the base path value.
-    /// </summary>
+    /// <summary>Gets the namespace-relative base path applied to entity addresses.</summary>
     string BasePath { get; }
 
-    /// <summary>
-    /// Gets the connection context supervisor value.
-    /// </summary>
+    /// <summary>Gets the supervisor that owns the shared namespace connection.</summary>
     IConnectionContextSupervisor ConnectionContextSupervisor { get; }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the bus topology for the configured namespace.</summary>
     new IServiceBusBusTopology Topology { get; }
 
-    /// <summary>
-    /// Apply the endpoint definition to the receive endpoint configurator
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="definition"></param>
+    /// <summary>Applies a transport-independent endpoint definition to an Azure Service Bus endpoint configurator.</summary>
+    /// <param name="configurator">The receive-endpoint configurator to update.</param>
+    /// <param name="definition">The endpoint definition to apply.</param>
     void ApplyEndpointDefinition(IServiceBusReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a receive-endpoint configuration for a queue name.</summary>
+    /// <param name="queueName">The queue name relative to the namespace.</param>
+    /// <param name="configure">An optional callback that configures the queue endpoint.</param>
+    /// <returns>The configured queue receive endpoint.</returns>
     IServiceBusReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
         Action<IServiceBusReceiveEndpointConfigurator>? configure = null);
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a queue receive endpoint from precomputed entity and endpoint settings.</summary>
+    /// <param name="settings">The queue and processor settings.</param>
+    /// <param name="endpointConfiguration">The endpoint-level pipeline and topology configuration.</param>
+    /// <param name="configure">An optional callback that further configures the queue endpoint.</param>
+    /// <returns>The configured queue receive endpoint.</returns>
     IServiceBusReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(ReceiveEndpointSettings settings, IServiceBusEndpointConfiguration
         endpointConfiguration, Action<IServiceBusReceiveEndpointConfigurator>? configure = null);
 
-    /// <summary>
-    /// Performs the subscription endpoint operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Creates and registers a subscription endpoint for the topic associated with a message type.</summary>
+    /// <typeparam name="T">The message type whose publish topology supplies the topic.</typeparam>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="configure">An optional callback that configures the subscription endpoint.</param>
     void SubscriptionEndpoint<T>(string subscriptionName, Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
         where T : class;
 
-    /// <summary>
-    /// Performs the subscription endpoint operation.
-    /// </summary>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="topicPath">The topic path value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Creates and registers a subscription endpoint for an explicit topic path.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="topicPath">The topic path.</param>
+    /// <param name="configure">An optional callback that configures the subscription endpoint.</param>
     void SubscriptionEndpoint(string subscriptionName, string topicPath, Action<IServiceBusSubscriptionEndpointConfigurator>? configure);
 
-    /// <summary>
-    /// Sets namespace separator to tilde.
-    /// </summary>
+    /// <summary>Uses a tilde when formatting namespace segments in entity names.</summary>
     void SetNamespaceSeparatorToTilde();
 
-    /// <summary>
-    /// Sets namespace separator to underscore.
-    /// </summary>
+    /// <summary>Uses an underscore when formatting namespace segments in entity names.</summary>
     void SetNamespaceSeparatorToUnderscore();
 
-    /// <summary>
-    /// Sets namespace separator to.
-    /// </summary>
-    /// <param name="separator">The separator value.</param>
+    /// <summary>Uses the specified separator when formatting namespace segments in entity names.</summary>
+    /// <param name="separator">The separator inserted between namespace segments.</param>
     void SetNamespaceSeparatorTo(string separator);
 
-    /// <summary>
-    /// Creates subscription endpoint configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a subscription-endpoint configuration for the topic associated with a message type.</summary>
+    /// <typeparam name="T">The message type whose publish topology supplies the topic.</typeparam>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="configure">An optional callback that configures the subscription endpoint.</param>
+    /// <returns>The configured subscription receive endpoint.</returns>
     IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration<T>(string subscriptionName,
         Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
         where T : class;
 
-    /// <summary>
-    /// Creates subscription endpoint configuration.
-    /// </summary>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="topicPath">The topic path value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a subscription-endpoint configuration for an explicit topic path.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="topicPath">The topic path.</param>
+    /// <param name="configure">An optional callback that configures the subscription endpoint.</param>
+    /// <returns>The configured subscription receive endpoint.</returns>
     IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration(string subscriptionName, string topicPath,
         Action<IServiceBusSubscriptionEndpointConfigurator>? configure);
 }

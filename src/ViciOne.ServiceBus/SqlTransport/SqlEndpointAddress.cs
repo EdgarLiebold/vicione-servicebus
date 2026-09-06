@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Represents a sql endpoint address value.
-/// </summary>
+/// <summary>Represents a sql endpoint address.</summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct SqlEndpointAddress
 {
@@ -18,68 +16,42 @@ public readonly struct SqlEndpointAddress
     const string TypeKey = "type";
 
 
-    /// <summary>
-    /// Specifies the available address type values.
-    /// </summary>
+    /// <summary>Specifies the available address type values.</summary>
     public enum AddressType
     {
-        /// <summary>
-        /// Indicates queue.
-        /// </summary>
+        /// <summary>Indicates queue.</summary>
         Queue = 0,
-        /// <summary>
-        /// Indicates topic.
-        /// </summary>
+        /// <summary>Indicates topic.</summary>
         Topic = 1
     }
 
 
     static readonly ITypeConverter<AddressType, string> _parseConverter = new EnumTypeConverter<AddressType>();
 
-    /// <summary>
-    /// Defines the scheme value.
-    /// </summary>
+    /// <summary>Exposes the scheme used by the containing type.</summary>
     public readonly string Scheme;
-    /// <summary>
-    /// Defines the host value.
-    /// </summary>
+    /// <summary>Exposes the host used by the containing type.</summary>
     public readonly string Host;
-    /// <summary>
-    /// Defines the instance name value.
-    /// </summary>
+    /// <summary>Exposes the instance name used by the containing type.</summary>
     public readonly string? InstanceName;
-    /// <summary>
-    /// Defines the port value.
-    /// </summary>
+    /// <summary>Exposes the port used by the containing type.</summary>
     public readonly int? Port;
-    /// <summary>
-    /// Defines the virtual host value.
-    /// </summary>
+    /// <summary>Exposes the virtual host used by the containing type.</summary>
     public readonly string VirtualHost;
-    /// <summary>
-    /// Defines the area value.
-    /// </summary>
+    /// <summary>Exposes the area used by the containing type.</summary>
     public readonly string? Area;
-    /// <summary>
-    /// Defines the name value.
-    /// </summary>
+    /// <summary>Exposes the name used by the containing type.</summary>
     public readonly string Name;
 
-    /// <summary>
-    /// Defines the auto delete on idle value.
-    /// </summary>
+    /// <summary>Exposes the auto delete on idle used by the containing type.</summary>
     public readonly TimeSpan? AutoDeleteOnIdle;
-    /// <summary>
-    /// Defines the type value.
-    /// </summary>
+    /// <summary>Exposes the type used by the containing type.</summary>
     public readonly AddressType Type;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="address">The address value.</param>
-    /// <param name="type">The type value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostAddress">The host address.</param>
+    /// <param name="address">The address.</param>
+    /// <param name="type">The runtime type to inspect or use.</param>
     public SqlEndpointAddress(Uri hostAddress, Uri address, AddressType type = AddressType.Queue)
     {
         Port = default;
@@ -132,13 +104,11 @@ public readonly struct SqlEndpointAddress
             AutoDeleteOnIdle = null;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="autoDeleteOnIdle">The auto delete on idle value.</param>
-    /// <param name="type">The type value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostAddress">The host address.</param>
+    /// <param name="name">The name.</param>
+    /// <param name="autoDeleteOnIdle">The auto delete on idle.</param>
+    /// <param name="type">The runtime type to inspect or use.</param>
     public SqlEndpointAddress(Uri hostAddress, string name, TimeSpan? autoDeleteOnIdle = null, AddressType type = AddressType.Queue)
     {
         ParseLeft(hostAddress, out Scheme, out Host, out InstanceName, out Port, out VirtualHost, out Area);
@@ -165,11 +135,9 @@ public readonly struct SqlEndpointAddress
         area = hostAddress.Area;
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts a value to <see cref="Uri" />.</summary>
+    /// <param name="address">The address.</param>
+    /// <returns>The value produced by the operation.</returns>
     public static implicit operator Uri(in SqlEndpointAddress address)
     {
         var path = address.VirtualHost == "/" ? "/" : Uri.EscapeDataString(address.VirtualHost);

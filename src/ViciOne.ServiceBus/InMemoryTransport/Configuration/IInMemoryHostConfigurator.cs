@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Defines the contract for in memory host configurator.
-/// </summary>
+/// <summary>Configures in memory host.</summary>
 public interface IInMemoryHostConfigurator
 {
     /// <summary>

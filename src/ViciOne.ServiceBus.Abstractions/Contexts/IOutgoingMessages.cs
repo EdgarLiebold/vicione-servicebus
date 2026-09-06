@@ -1,42 +1,50 @@
 namespace ViciOne.ServiceBus;
 
-/// <summary>
-/// Exposes application-level outgoing operations bound to the active consume scope and its configured outbox.
-/// </summary>
+/// <summary>Exposes application-level outgoing operations bound to the active consume scope and its configured outbox.</summary>
 public interface IOutgoingMessages
 {
     /// <summary>Sends a message using its configured route.</summary>
-    /// <param name="message">The message processed by the operation.</param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task SendAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>Sends a message to an explicit destination with application-level options.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="message">The message to process.</param>
     /// <param name="options">The options used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task SendAsync<T>(Uri destination, T message, SendOptions options, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>Publishes a message.</summary>
-    /// <param name="message">The message processed by the operation.</param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task PublishAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>Publishes a message with application-level options.</summary>
-    /// <param name="message">The message processed by the operation.</param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
     /// <param name="options">The options used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task PublishAsync<T>(T message, PublishOptions options, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>Schedules a message for delivery to an explicit destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     /// <param name="destination">The destination used by the operation.</param>
     /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the schedule send outcome.</returns>
     Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, T message,
         CancellationToken cancellationToken = default)
         where T : class;

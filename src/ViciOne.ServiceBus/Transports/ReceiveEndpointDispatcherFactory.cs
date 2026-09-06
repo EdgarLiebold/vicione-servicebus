@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a receive endpoint dispatcher factory implementation.
-/// </summary>
+/// <summary>Creates receive endpoint dispatcher instances.</summary>
 public class ReceiveEndpointDispatcherFactory :
     IReceiveEndpointDispatcherFactory
 {
@@ -18,11 +16,9 @@ public class ReceiveEndpointDispatcherFactory :
     readonly IHostConfiguration _hostConfiguration;
     readonly IBusRegistrationContext _registration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="registration">The registration value.</param>
-    /// <param name="busInstance">The bus instance value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="registration">The registration.</param>
+    /// <param name="busInstance">The bus instance.</param>
     public ReceiveEndpointDispatcherFactory(IBusRegistrationContext registration, IBusInstance busInstance)
     {
         _hostConfiguration = busInstance.HostConfiguration;
@@ -31,11 +27,9 @@ public class ReceiveEndpointDispatcherFactory :
         _dispatchers = new ConcurrentDictionary<string, Lazy<IReceiveEndpointDispatcher>>();
     }
 
-    /// <summary>
-    /// Creates receiver.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates receiver.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <returns>The created receiver.</returns>
     public IReceiveEndpointDispatcher CreateReceiver(string queueName)
     {
         return CreateMessageReceiver(queueName, _registration.ConfigureConsumerKinds);
@@ -77,10 +71,8 @@ public class ReceiveEndpointDispatcherFactory :
         return CreateMessageReceiver(queueName, endpoint => configure(endpoint, _registration));
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         IEnumerable<IReceiveEndpointDispatcher> dispatchers = _dispatchers.Values.Where(x => x.IsValueCreated).Select(x => x.Value);

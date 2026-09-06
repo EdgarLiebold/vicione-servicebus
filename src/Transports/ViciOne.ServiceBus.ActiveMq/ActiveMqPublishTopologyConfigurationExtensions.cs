@@ -4,30 +4,25 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides extension methods for active mq publish topology configuration.
-/// </summary>
+/// <summary>Configures ActiveMQ publish topology by scanning or enumerating message types.</summary>
 public static class ActiveMqPublishTopologyConfigurationExtensions
 {
-    /// <summary>
-    /// Adds any valid message types found in the specified namespace to the publish topology
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <param name="filter"></param>
+    /// <summary>Adds any valid message types found in the specified namespace to the publish topology.</summary>
+    /// <typeparam name="T">A marker type whose assembly and namespace are scanned.</typeparam>
+    /// <param name="configurator">The ActiveMQ bus configurator.</param>
+    /// <param name="configure">An optional callback that configures each discovered message type.</param>
+    /// <param name="filter">An optional predicate that selects discovered message types.</param>
     public static void AddPublishMessageTypesFromNamespaceContaining<T>(this IActiveMqBusFactoryConfigurator configurator,
         Action<IActiveMqMessagePublishTopologyConfigurator, Type>? configure = null, Func<Type, bool>? filter = null)
     {
         AddPublishMessageTypesFromNamespaceContaining(configurator, typeof(T), configure, filter);
     }
 
-    /// <summary>
-    /// Adds any valid message types found in the specified namespace to the publish topology
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="type">The type to use to identify the assembly and namespace to scan</param>
-    /// <param name="configure"></param>
-    /// <param name="filter"></param>
+    /// <summary>Adds any valid message types found in the specified namespace to the publish topology.</summary>
+    /// <param name="configurator">The ActiveMQ bus configurator.</param>
+    /// <param name="type">The type to use to identify the assembly and namespace to scan.</param>
+    /// <param name="configure">An optional callback that configures each discovered message type.</param>
+    /// <param name="filter">An optional predicate that selects discovered message types.</param>
     public static void AddPublishMessageTypesFromNamespaceContaining(this IActiveMqBusFactoryConfigurator configurator, Type type,
         Action<IActiveMqMessagePublishTopologyConfigurator, Type>? configure = null, Func<Type, bool>? filter = null)
     {
@@ -58,12 +53,10 @@ public static class ActiveMqPublishTopologyConfigurationExtensions
             configurator.Publish(messageType, x => configure?.Invoke(x, messageType));
     }
 
-    /// <summary>
-    /// Adds the specified message types to the publish topology
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="messageTypes"></param>
-    /// <param name="configure"></param>
+    /// <summary>Adds the specified message types to the publish topology.</summary>
+    /// <param name="configurator">The ActiveMQ bus configurator.</param>
+    /// <param name="messageTypes">The message types to add.</param>
+    /// <param name="configure">An optional callback that configures each supplied message type.</param>
     public static void AddPublishMessageTypes(this IActiveMqBusFactoryConfigurator configurator, IEnumerable<Type> messageTypes,
         Action<IActiveMqMessagePublishTopologyConfigurator, Type>? configure = null)
     {

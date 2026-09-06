@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Mediator;
 
-/// <summary>
-/// Defines the contract for mediator.
-/// </summary>
+/// <summary>Defines the operations required by mediator.</summary>
 public interface IMediator :
     ISendEndpoint,
     IPublishEndpoint,

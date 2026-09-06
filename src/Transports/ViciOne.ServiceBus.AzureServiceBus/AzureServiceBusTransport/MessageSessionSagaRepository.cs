@@ -2,16 +2,12 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a message session saga repository implementation.
-/// </summary>
+/// <summary>Creates saga repositories that store one saga state in the active Azure Service Bus session.</summary>
 public static class MessageSessionSagaRepository
 {
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a session-backed repository for a saga state type.</summary>
+    /// <typeparam name="T">The saga state type.</typeparam>
+    /// <returns>The session-backed saga repository.</returns>
     public static ISagaRepository<T> Create<T>()
         where T : class, ISaga
     {

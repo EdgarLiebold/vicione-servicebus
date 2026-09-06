@@ -9,11 +9,9 @@ namespace ViciOne.ServiceBus.Advanced.Topology;
 public class MessageUrnEntityNameFormatter :
     IEntityNameFormatter
 {
-    /// <summary>
-    /// Performs the format entity name operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats entity name.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The formatted entity name.</returns>
     public string FormatEntityName<T>()
     {
         return MessageUrn.ForTypeString<T>();

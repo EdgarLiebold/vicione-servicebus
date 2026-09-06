@@ -1,15 +1,11 @@
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Defines the contract for type receive endpoint dispatcher factory.
-/// </summary>
+/// <summary>Creates type receive endpoint dispatcher instances.</summary>
 public interface ITypeReceiveEndpointDispatcherFactory
 {
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="formatter">The formatter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="formatter">The formatter.</param>
+    /// <returns>The newly created instance.</returns>
     IReceiveEndpointDispatcher Create(IReceiveEndpointDispatcherFactory factory, IEndpointNameFormatter formatter);
 }

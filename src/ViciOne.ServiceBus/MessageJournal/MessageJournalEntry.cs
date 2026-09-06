@@ -6,9 +6,7 @@ using System.Text;
 using System.Text.Json;
 
 namespace ViciOne.ServiceBus.MessageJournal;
-/// <summary>
-/// Immutable, sanitized message-journal entry delivered to a persistence provider.
-/// </summary>
+/// <summary>Immutable, sanitized message-journal entry delivered to a persistence provider.</summary>
 public sealed class MessageJournalEntry
 {
     private readonly byte[] _body;
@@ -33,59 +31,37 @@ public sealed class MessageJournalEntry
         ContentSizeInBytes = CalculateContentSize();
     }
 
-    /// <summary>
-    /// Gets the entry id value.
-    /// </summary>
+    /// <summary>Gets the entry id.</summary>
     public Guid EntryId { get; }
 
-    /// <summary>
-    /// Gets the observed at value.
-    /// </summary>
+    /// <summary>Gets the observed at.</summary>
     public DateTimeOffset ObservedAt { get; }
 
-    /// <summary>
-    /// Gets the operation value.
-    /// </summary>
+    /// <summary>Gets the operation.</summary>
     public MessageJournalOperation Operation { get; }
 
-    /// <summary>
-    /// Gets the outcome value.
-    /// </summary>
+    /// <summary>Gets the outcome.</summary>
     public MessageJournalOutcome Outcome { get; }
 
-    /// <summary>
-    /// Gets the data classification value.
-    /// </summary>
+    /// <summary>Gets the data classification.</summary>
     public MessageJournalDataClassification DataClassification { get; }
 
-    /// <summary>
-    /// Gets the content type value.
-    /// </summary>
+    /// <summary>Gets the content type.</summary>
     public string? ContentType { get; }
 
-    /// <summary>
-    /// Gets the message types value.
-    /// </summary>
+    /// <summary>Gets the message types.</summary>
     public IReadOnlyList<string> MessageTypes { get; }
 
-    /// <summary>
-    /// Gets the metadata value.
-    /// </summary>
+    /// <summary>Gets the metadata.</summary>
     public IReadOnlyDictionary<string, string> Metadata { get; }
 
-    /// <summary>
-    /// Gets the headers value.
-    /// </summary>
+    /// <summary>Gets the headers.</summary>
     public IReadOnlyDictionary<string, string> Headers { get; }
 
-    /// <summary>
-    /// Gets the body value.
-    /// </summary>
+    /// <summary>Gets the body.</summary>
     public ReadOnlyMemory<byte> Body => _body.ToArray();
 
-    /// <summary>
-    /// Conservative UTF-8 content size used for the store's fail-closed entry-size boundary.
-    /// </summary>
+    /// <summary>Conservative UTF-8 content size used for the store's fail-closed entry-size boundary.</summary>
     public int ContentSizeInBytes { get; }
 
     private int CalculateContentSize()

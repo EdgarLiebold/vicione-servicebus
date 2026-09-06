@@ -11,11 +11,9 @@ internal static class TypeExtensions
 {
     static readonly TypeNameFormatter _typeNameFormatter = new TypeNameFormatter();
 
-    /// <summary>
-    /// Returns an easy-to-read type name from the specified Type
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
+    /// <summary>Returns an easy-to-read type name from the specified Type.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns>The type name.</returns>
     public static string GetTypeName(this Type type)
     {
         return _typeNameFormatter.GetTypeName(type);
@@ -119,10 +117,8 @@ internal static class TypeExtensions
         return type.AssemblyQualifiedName ?? type.FullName ?? type.Name;
     }
 
-    /// <summary>
-    /// Determines if a type is neither abstract nor an interface and can be constructed.
-    /// </summary>
-    /// <param name="type">The type to check</param>
+    /// <summary>Determines if a type is neither abstract nor an interface and can be constructed.</summary>
+    /// <param name="type">The type to check.</param>
     /// <returns>True if the type can be constructed, otherwise false.</returns>
     public static bool IsConcrete(this Type type)
     {
@@ -141,11 +137,9 @@ internal static class TypeExtensions
     /// Determines if a type can be constructed, and if it can, additionally determines
     /// if the type can be assigned to the specified type.
     /// </summary>
-    /// <param name="type">The type to evaluate</param>
-    /// <param name="assignableType">The type to which the subject type should be checked against</param>
-    /// <returns>
-    /// True if the type is concrete and can be assigned to the assignableType, otherwise false.
-    /// </returns>
+    /// <param name="type">The type to evaluate.</param>
+    /// <param name="assignableType">The type to which the subject type should be checked against.</param>
+    /// <returns>True if the type is concrete and can be assigned to the assignableType, otherwise false.</returns>
     public static bool IsConcreteAndAssignableTo(this Type type, Type assignableType)
     {
         return IsConcrete(type) && assignableType.IsAssignableFrom(type);
@@ -155,22 +149,18 @@ internal static class TypeExtensions
     /// Determines if a type can be constructed, and if it can, additionally determines
     /// if the type can be assigned to the specified type.
     /// </summary>
-    /// <param name="type">The type to evaluate</param>
-    /// <typeparam name="T">The type to which the subject type should be checked against</typeparam>
-    /// <returns>
-    /// True if the type is concrete and can be assigned to the assignableType, otherwise false.
-    /// </returns>
+    /// <typeparam name="T">The type to which the subject type should be checked against.</typeparam>
+    /// <param name="type">The type to evaluate.</param>
+    /// <returns>True if the type is concrete and can be assigned to the assignableType, otherwise false.</returns>
     public static bool IsConcreteAndAssignableTo<T>(this Type type)
     {
         return IsConcrete(type) && typeof(T).IsAssignableFrom(type);
     }
 
-    /// <summary>
-    /// Determines if the type is a nullable type
-    /// </summary>
-    /// <param name="type">The type</param>
-    /// <param name="underlyingType">The underlying type of the nullable</param>
-    /// <returns>True if the type can be null</returns>
+    /// <summary>Determines if the type is a nullable type.</summary>
+    /// <param name="type">The type.</param>
+    /// <param name="underlyingType">The underlying type of the nullable.</param>
+    /// <returns>True if the type can be null.</returns>
     public static bool IsNullable(this Type type, [NotNullWhen(true)] out Type? underlyingType)
     {
         var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
@@ -179,21 +169,17 @@ internal static class TypeExtensions
         return isNullable;
     }
 
-    /// <summary>
-    /// Determines if the type is an open generic with at least one unspecified generic argument
-    /// </summary>
-    /// <param name="type">The type</param>
-    /// <returns>True if the type is an open generic</returns>
+    /// <summary>Determines if the type is an open generic with at least one unspecified generic argument.</summary>
+    /// <param name="type">The type.</param>
+    /// <returns>True if the type is an open generic.</returns>
     public static bool IsOpenGeneric(this Type type)
     {
         return type.IsGenericTypeDefinition || type.ContainsGenericParameters;
     }
 
-    /// <summary>
-    /// Determines if a type can be null
-    /// </summary>
-    /// <param name="type">The type</param>
-    /// <returns>True if the type can be null</returns>
+    /// <summary>Determines if a type can be null.</summary>
+    /// <param name="type">The type.</param>
+    /// <returns>True if the type can be null.</returns>
     public static bool CanBeNull(this Type type)
     {
         return !type.IsValueType
@@ -201,12 +187,10 @@ internal static class TypeExtensions
             || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>));
     }
 
-    /// <summary>
-    /// Returns the first attribute of the specified type for the object specified
-    /// </summary>
-    /// <typeparam name="T">The type of attribute</typeparam>
+    /// <summary>Returns the first attribute of the specified type for the object specified.</summary>
+    /// <typeparam name="T">The type of attribute.</typeparam>
     /// <param name="provider">An attribute provider, which can be a MethodInfo, PropertyInfo, Type, etc.</param>
-    /// <returns>The attribute instance if found, or null</returns>
+    /// <returns>The attribute instance if found, or null.</returns>
     public static IEnumerable<T> GetAttribute<T>(this ICustomAttributeProvider provider)
         where T : Attribute
     {
@@ -214,33 +198,27 @@ internal static class TypeExtensions
             .Cast<T>();
     }
 
-    /// <summary>
-    /// Determines if the target has the specified attribute
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="provider"></param>
-    /// <returns></returns>
+    /// <summary>Determines if the target has the specified attribute.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool HasAttribute<T>(this ICustomAttributeProvider provider)
         where T : Attribute
     {
         return provider.GetAttribute<T>().Any();
     }
 
-    /// <summary>
-    /// Returns true if the type is an anonymous type
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
+    /// <summary>Returns true if the type is an anonymous type.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsAnonymousType(this Type type)
     {
         return type.FullName != null && type.HasAttribute<CompilerGeneratedAttribute>() && type.FullName.Contains("AnonymousType");
     }
 
-    /// <summary>
-    /// Returns true if the type is an FSharp type (maybe?)
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
+    /// <summary>Returns true if the type is an FSharp type (maybe?).</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsFSharpType(this Type type)
     {
         IEnumerable<Attribute> attributes = type.GetCustomAttributes();
@@ -248,23 +226,19 @@ internal static class TypeExtensions
         return attributes.Any(attribute => attribute.GetType().FullName == "Microsoft.FSharp.Core.CompilationMappingAttribute");
     }
 
-    /// <summary>
-    /// Returns true if the type is contained within the namespace
-    /// </summary>
-    /// <param name="type"></param>
-    /// <param name="nameSpace"></param>
-    /// <returns></returns>
+    /// <summary>Returns true if the type is contained within the namespace.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <param name="nameSpace">The name space.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsInNamespace(this Type type, string? nameSpace)
     {
         var subNameSpace = nameSpace + ".";
         return type.Namespace != null && (type.Namespace.Equals(nameSpace) || type.Namespace.StartsWith(subNameSpace));
     }
 
-    /// <summary>
-    /// True if the type is a value type, or an object type that is treated as a value by ViciOne.ServiceBus
-    /// </summary>
-    /// <param name="valueType"></param>
-    /// <returns></returns>
+    /// <summary>True if the type is a value type, or an object type that is treated as a value by ViciOne.ServiceBus.</summary>
+    /// <param name="valueType">The runtime value type used by the operation.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsValueTypeOrObject(this Type valueType)
     {
         if (valueType.IsValueType

@@ -17,34 +17,20 @@ public class ReceiveEndpoint :
     IRestartableReceiveEndpoint,
     IMessageRouteProvider
 {
-    /// <summary>
-    /// Specifies the available state values.
-    /// </summary>
+    /// <summary>Specifies the available state values.</summary>
     public enum State
     {
-        /// <summary>
-        /// Indicates initial.
-        /// </summary>
+        /// <summary>Indicates initial.</summary>
         Initial,
-        /// <summary>
-        /// Indicates started.
-        /// </summary>
+        /// <summary>Indicates started.</summary>
         Started,
-        /// <summary>
-        /// Indicates ready.
-        /// </summary>
+        /// <summary>Indicates ready.</summary>
         Ready,
-        /// <summary>
-        /// Indicates completed.
-        /// </summary>
+        /// <summary>Indicates completed.</summary>
         Completed,
-        /// <summary>
-        /// Indicates faulted.
-        /// </summary>
+        /// <summary>Indicates faulted.</summary>
         Faulted,
-        /// <summary>
-        /// Indicates final.
-        /// </summary>
+        /// <summary>Indicates final.</summary>
         Final
     }
 
@@ -57,11 +43,9 @@ public class ReceiveEndpoint :
     EndpointHandle? _handle;
     bool _paused;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="transport">The transport value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="transport">The transport.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public ReceiveEndpoint(IReceiveTransport transport, ReceiveEndpointContext context)
     {
         _context = context;
@@ -79,46 +63,30 @@ public class ReceiveEndpoint :
         transport.ConnectReceiveTransportObserver(new Observer(this, context.EndpointObservers));
     }
 
-    /// <summary>
-    /// Gets or sets the current state value.
-    /// </summary>
+    /// <summary>Gets or sets the current state.</summary>
     public State CurrentState { get; set; }
 
-    /// <summary>
-    /// Gets or sets the message value.
-    /// </summary>
+    /// <summary>Gets or sets the message.</summary>
     public string Message { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the health result value.
-    /// </summary>
+    /// <summary>Gets or sets the health result.</summary>
     public EndpointHealthResult HealthResult { get; set; }
 
-    /// <summary>
-    /// Gets the is bus endpoint value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether bus endpoint.</summary>
     public bool IsBusEndpoint => _context.IsBusEndpoint;
 
-    /// <summary>
-    /// Gets or sets the input address value.
-    /// </summary>
+    /// <summary>Gets or sets the input address.</summary>
     public Uri InputAddress { get; set; }
 
     IMessageRouteTable IMessageRouteProvider.MessageRoutes => _context.MessageRoutes;
 
-    /// <summary>
-    /// Gets the started value.
-    /// </summary>
+    /// <summary>Gets the started.</summary>
     public Task<ReceiveEndpointReady> Started => _started.Task;
-    /// <summary>
-    /// Gets or sets the observer handle value.
-    /// </summary>
+    /// <summary>Gets or sets the observer handle.</summary>
     public ConnectHandle ObserverHandle { get; set; } = null!; Logging.ILogContext IRestartableReceiveEndpoint.LogContext => _context.LogContext;
 
-    /// <summary>
-    /// Starts the configured component.
-    /// </summary>
+    /// <summary>Starts the configured component.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The receive endpoint handle produced by the operation.</returns>
     public ReceiveEndpointHandle Start(CancellationToken cancellationToken)
     {
         _lifecycleGate.Wait(cancellationToken);
@@ -169,11 +137,9 @@ public class ReceiveEndpoint :
         return _handle;
     }
 
-    /// <summary>
-    /// Stops the configured component.
-    /// </summary>
+    /// <summary>Stops the configured component.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task StopAsync(CancellationToken cancellationToken)
     {
         return StopAsync(false, cancellationToken);
@@ -181,10 +147,8 @@ public class ReceiveEndpoint :
 
     internal bool IsPaused => Volatile.Read(ref _paused);
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         _transport.Probe(context);
@@ -192,144 +156,118 @@ public class ReceiveEndpoint :
         _context.ReceivePipe.Probe(context);
     }
 
-    /// <summary>
-    /// Connects consume observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer)
     {
         return _context.ReceivePipe.ConnectConsumeObserver(observer);
     }
 
-    /// <summary>
-    /// Connects consume pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
         return _context.ReceivePipe.ConnectConsumePipe(pipe);
     }
 
-    /// <summary>
-    /// Connects consume pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
         where T : class
     {
         return _context.ReceivePipe.ConnectConsumePipe(pipe, options);
     }
 
-    /// <summary>
-    /// Connects request pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="requestId">The request id value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects request pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="requestId">The request id.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
         return _context.ReceivePipe.ConnectRequestPipe(requestId, pipe);
     }
 
-    /// <summary>
-    /// Connects publish observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects publish observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
         return _context.ConnectPublishObserver(observer);
     }
 
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects send observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _context.ConnectSendObserver(observer);
     }
 
-    /// <summary>
-    /// Gets send endpoint.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Gets send endpoint.</summary>
+    /// <param name="address">The address.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
         return _context.SendEndpointProvider.GetSendEndpointAsync(address, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Gets publish send endpoint.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Gets publish send endpoint.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
         return _context.PublishEndpointProvider.GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Connects receive observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveObserver(IReceiveObserver observer)
     {
         return _context.ConnectReceiveObserver(observer);
     }
 
-    /// <summary>
-    /// Connects consume message observer.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume message observer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumeMessageObserver<T>(IConsumeMessageObserver<T> observer)
         where T : class
     {
         return _context.ReceivePipe.ConnectConsumeMessageObserver(observer);
     }
 
-    /// <summary>
-    /// Connects receive endpoint observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive endpoint observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
     {
         return _context.ConnectReceiveEndpointObserver(observer);
     }
 
-    /// <summary>
-    /// Determines whether started.
-    /// </summary>
+    /// <summary>Determines whether started.</summary>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsStarted()
     {
         return State.Started.Equals(CurrentState) || State.Ready.Equals(CurrentState) || State.Faulted.Equals(CurrentState);
     }
 
-    /// <summary>
-    /// Stops the configured component.
-    /// </summary>
-    /// <param name="removed">The removed value.</param>
+    /// <summary>Stops the configured component.</summary>
+    /// <param name="removed">The removed.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task StopAsync(bool removed, CancellationToken cancellationToken)
     {
         await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);

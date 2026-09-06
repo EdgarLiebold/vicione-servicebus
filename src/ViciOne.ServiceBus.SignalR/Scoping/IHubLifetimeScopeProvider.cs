@@ -2,16 +2,12 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace ViciOne.ServiceBus.SignalR.Scoping;
 
-/// <summary>
-/// Defines the contract for hub lifetime scope provider.
-/// </summary>
+/// <summary>Provides hub lifetime scope services.</summary>
 public interface IHubLifetimeScopeProvider
 {
-    /// <summary>
-    /// Creates scope.
-    /// </summary>
-    /// <typeparam name="THub">The t hub type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates scope.</summary>
+    /// <typeparam name="THub">The hub type.</typeparam>
+    /// <returns>The created scope.</returns>
     IHubLifetimeScope<THub> CreateScope<THub>()
         where THub : Hub;
 }

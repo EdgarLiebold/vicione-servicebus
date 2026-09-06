@@ -2,23 +2,15 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts;
 
-/// <summary>
-/// Published when the concurrency limit of a filter is updated.
-/// </summary>
+/// <summary>Published when the concurrency limit of a filter is updated.</summary>
 public interface ConcurrencyLimitUpdated
 {
-    /// <summary>
-    /// The actual time at which the adjustment was applied
-    /// </summary>
+    /// <summary>The actual time at which the adjustment was applied.</summary>
     DateTimeOffset Timestamp { get; }
 
-    /// <summary>
-    /// The identifier that was adjusted
-    /// </summary>
+    /// <summary>The identifier that was adjusted.</summary>
     string Id { get; }
 
-    /// <summary>
-    /// The current concurrency limit value
-    /// </summary>
+    /// <summary>The current concurrency limit value.</summary>
     int ConcurrencyLimit { get; }
 }

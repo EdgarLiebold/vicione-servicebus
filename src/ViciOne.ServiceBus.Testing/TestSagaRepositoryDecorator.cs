@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Testing.Implementations;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides a test saga repository decorator implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Records saga creation, consumption, and repository outcomes for a test harness.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class TestSagaRepositoryDecorator<TSaga> :
     ISagaRepository<TSaga>
     where TSaga : class, ISaga
@@ -18,13 +16,11 @@ public class TestSagaRepositoryDecorator<TSaga> :
     readonly ISagaRepository<TSaga> _sagaRepository;
     readonly SagaList<TSaga> _sagas;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="sagaRepository">The saga repository value.</param>
-    /// <param name="received">The received value.</param>
-    /// <param name="created">The created value.</param>
-    /// <param name="sagas">The sagas value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="sagaRepository">The saga repository.</param>
+    /// <param name="received">The received.</param>
+    /// <param name="created">The created.</param>
+    /// <param name="sagas">The sagas.</param>
     public TestSagaRepositoryDecorator(ISagaRepository<TSaga> sagaRepository, ReceivedMessageList received, SagaList<TSaga> created,
         SagaList<TSaga> sagas)
     {
@@ -86,10 +82,8 @@ public class TestSagaRepositoryDecorator<TSaga> :
 
         public async Task SendAsync(SagaConsumeContext<TSaga, TMessage> context)
         {
-            // InsertOnInitial creates and inserts the saga before the policy's Existing branch
-            // invokes this pipe. The older Missing branch is therefore never reached. Record the
-            // instance here, after insertion produced a real consume context, so Created remains
-            // truthful for both creation paths and never reports a failed pre-insert attempt.
+            // InsertOnInitial reaches this pipe through the Existing branch after persistence succeeds.
+            // Record only the resulting consume context so Created contains persisted saga instances.
             if (_preInserted.Value)
                 _created.Add(context);
 

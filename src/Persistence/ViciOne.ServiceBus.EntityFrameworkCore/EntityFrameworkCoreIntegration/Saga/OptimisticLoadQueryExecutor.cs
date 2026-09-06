@@ -6,32 +6,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
-/// <summary>
-/// Provides an optimistic load query executor implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Loads a saga through a tracked EF Core query without explicit row locking.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class OptimisticLoadQueryExecutor<TSaga> :
     ILoadQueryExecutor<TSaga>
     where TSaga : class, ISaga
 {
     readonly Func<IQueryable<TSaga>, IQueryable<TSaga>>? _queryCustomization;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="queryCustomization">The query customization value.</param>
+    /// <summary>Initializes an optimistic saga-row loader with optional query customization.</summary>
+    /// <param name="queryCustomization">An optional transformation applied before the identity predicate.</param>
     public OptimisticLoadQueryExecutor(Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization = null)
     {
         _queryCustomization = queryCustomization;
     }
 
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
-    /// <param name="dbContext">The db context value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
+    /// <summary>Loads the requested state.</summary>
+    /// <param name="dbContext">The DbContext that contains the saga set.</param>
+    /// <param name="correlationId">The saga correlation identifier.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The tracked saga entity, or <see langword="null"/> when no row matches.</returns>
     public Task<TSaga?> LoadAsync(DbContext dbContext, Guid correlationId, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(dbContext);

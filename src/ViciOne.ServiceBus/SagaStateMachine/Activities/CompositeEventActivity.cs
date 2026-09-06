@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a composite event activity implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Executes the composite event activity.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class CompositeEventActivity<TSaga> :
     IStateMachineActivity<TSaga>
     where TSaga : class, SagaStateMachineInstance
@@ -16,14 +14,12 @@ public class CompositeEventActivity<TSaga> :
     readonly int _flag;
     readonly CompositeEventOptions _options;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="accessor">The accessor value.</param>
-    /// <param name="flag">The flag value.</param>
-    /// <param name="complete">The complete value.</param>
-    /// <param name="event">The event value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="accessor">The accessor.</param>
+    /// <param name="flag">The flag.</param>
+    /// <param name="complete">The complete.</param>
+    /// <param name="event">The event.</param>
+    /// <param name="options">The options that control the operation.</param>
     public CompositeEventActivity(ICompositeEventStatusAccessor<TSaga> accessor, int flag, CompositeEventStatus complete, Event @event,
         CompositeEventOptions options)
     {
@@ -34,24 +30,18 @@ public class CompositeEventActivity<TSaga> :
         Event = @event;
     }
 
-    /// <summary>
-    /// Gets the event value.
-    /// </summary>
+    /// <summary>Gets the event.</summary>
     public Event Event { get; }
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("compositeEvent");
@@ -60,12 +50,10 @@ public class CompositeEventActivity<TSaga> :
         scope.Add("flag", _flag.ToString("X8"));
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         await ExecuteAsync(context).ConfigureAwait(false);
@@ -73,13 +61,11 @@ public class CompositeEventActivity<TSaga> :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
         where TData : class
     {
@@ -88,27 +74,23 @@ public class CompositeEventActivity<TSaga> :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception

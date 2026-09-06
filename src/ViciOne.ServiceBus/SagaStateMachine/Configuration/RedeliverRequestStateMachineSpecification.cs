@@ -2,30 +2,24 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a redeliver request state machine specification implementation.
-/// </summary>
+/// <summary>Describes requirements for redeliver request state machine.</summary>
 public class RedeliverRequestStateMachineSpecification :
     IRequestStateMachineMissingInstanceConfigurator
 {
     readonly Action<IMissingInstanceRedeliveryConfigurator> _configure;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public RedeliverRequestStateMachineSpecification(Action<IMissingInstanceRedeliveryConfigurator> configure)
     {
         _configure = configure;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <returns>The pipe produced by the operation.</returns>
     public IPipe<ConsumeContext<TMessage>> Apply<TInstance, TMessage>(IMissingInstanceConfigurator<TInstance, TMessage> configurator)
         where TInstance : SagaStateMachineInstance
         where TMessage : class

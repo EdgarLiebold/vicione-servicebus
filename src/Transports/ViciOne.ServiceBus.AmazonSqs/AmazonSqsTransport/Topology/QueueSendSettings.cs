@@ -3,26 +3,20 @@ using ViciOne.ServiceBus.AmazonSqs.Configuration;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides a queue send settings implementation.
-/// </summary>
+/// <summary>Represents Amazon SQS queue settings and topology for a send destination.</summary>
 public class QueueSendSettings :
     AmazonSqsQueueConfigurator,
     SendSettings
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Initializes queue send settings from an endpoint address.</summary>
+    /// <param name="address">The Amazon SQS queue endpoint address.</param>
     public QueueSendSettings(AmazonSqsEndpointAddress address)
         : base(address.Name, address.Durable, address.AutoDelete)
     {
     }
 
-    /// <summary>
-    /// Gets broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds topology containing the destination queue.</summary>
+    /// <returns>The queue broker topology.</returns>
     public BrokerTopology GetBrokerTopology()
     {
         var builder = new SendEndpointBrokerTopologyBuilder();
@@ -41,10 +35,8 @@ public class QueueSendSettings :
             yield return "auto-delete";
     }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the configured queue lifetime for diagnostics.</summary>
+    /// <returns>The diagnostic settings description.</returns>
     public override string ToString()
     {
         return string.Join(", ", GetSettingStrings());

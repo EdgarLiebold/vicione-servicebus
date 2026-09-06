@@ -7,22 +7,16 @@ namespace ViciOne.ServiceBus.Configuration;
 /// </summary>
 public class ProgressBufferSettings
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public ProgressBufferSettings()
     {
         UpdateLimit = 1000;
         TimeLimit = TimeSpan.FromSeconds(30);
     }
 
-    /// <summary>
-    /// The number of progress updates reported before the value is sent to the job saga
-    /// </summary>
+    /// <summary>The number of progress updates reported before the value is sent to the job saga.</summary>
     public int UpdateLimit { get; set; }
 
-    /// <summary>
-    /// The time period after which the progress should be reported
-    /// </summary>
+    /// <summary>The time period after which the progress should be reported.</summary>
     public TimeSpan TimeLimit { get; set; }
 }

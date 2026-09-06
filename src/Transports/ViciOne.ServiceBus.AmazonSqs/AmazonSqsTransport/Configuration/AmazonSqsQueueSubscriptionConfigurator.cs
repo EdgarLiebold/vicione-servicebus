@@ -1,18 +1,14 @@
 namespace ViciOne.ServiceBus.AmazonSqs.Configuration;
 
-/// <summary>
-/// Provides an amazon sqs queue subscription configurator implementation.
-/// </summary>
+/// <summary>Provides queue-side settings for an Amazon SNS-to-SQS subscription.</summary>
 public class AmazonSqsQueueSubscriptionConfigurator :
     AmazonSqsQueueConfigurator,
     IAmazonSqsQueueSubscriptionConfigurator
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
+    /// <summary>Initializes queue-side subscription configuration.</summary>
+    /// <param name="queueName">The target Amazon SQS queue name.</param>
+    /// <param name="durable">Whether the queue is retained when its endpoint stops.</param>
+    /// <param name="autoDelete">Whether the queue is deleted when its endpoint stops.</param>
     protected AmazonSqsQueueSubscriptionConfigurator(string queueName, bool durable, bool autoDelete)
         : base(queueName, durable, autoDelete)
     {

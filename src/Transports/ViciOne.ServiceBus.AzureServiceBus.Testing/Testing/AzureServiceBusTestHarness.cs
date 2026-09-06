@@ -7,20 +7,16 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides an azure service bus test harness implementation.
-/// </summary>
+/// <summary>Runs a bus test harness against an Azure Service Bus namespace.</summary>
 public class AzureServiceBusTestHarness :
     BusTestHarness
 {
     Uri? _inputQueueAddress;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="serviceUri">The service uri value.</param>
-    /// <param name="namedKeyCredential">The named key credential value.</param>
-    /// <param name="inputQueueName">The input queue name value.</param>
+    /// <summary>Initializes the harness for an Azure Service Bus namespace and input queue.</summary>
+    /// <param name="serviceUri">The namespace URI.</param>
+    /// <param name="namedKeyCredential">The credential used for transport and administration operations.</param>
+    /// <param name="inputQueueName">The input queue name, or <see langword="null"/> to use <c>input_queue</c>.</param>
     public AzureServiceBusTestHarness(Uri serviceUri, AzureNamedKeyCredential namedKeyCredential, string? inputQueueName = null)
     {
         if (serviceUri == null)
@@ -34,61 +30,41 @@ public class AzureServiceBusTestHarness :
         ConfigureMessageScheduler = true;
     }
 
-    /// <summary>
-    /// Gets the named key credential value.
-    /// </summary>
+    /// <summary>Gets the credential used to access the Azure Service Bus namespace.</summary>
     public AzureNamedKeyCredential NamedKeyCredential { get; }
-    /// <summary>
-    /// Gets the input queue name value.
-    /// </summary>
+    /// <summary>Gets the queue on which the harness receives test messages.</summary>
     public override string InputQueueName { get; }
-    /// <summary>
-    /// Gets or sets the configure message scheduler value.
-    /// </summary>
+    /// <summary>Gets or sets whether the bus uses the Azure Service Bus message scheduler.</summary>
     public bool ConfigureMessageScheduler { get; set; }
 
-    /// <summary>
-    /// Gets the input queue address value.
-    /// </summary>
+    /// <summary>Gets the input queue address after the receive endpoint has been configured.</summary>
     public override Uri InputQueueAddress => _inputQueueAddress
         ?? throw new InvalidOperationException("The input queue address is not available before the bus has been created.");
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the Azure Service Bus namespace address.</summary>
     public Uri HostAddress { get; }
 
-    /// <summary>
-    /// Occurs when on configure service bus bus.
-    /// </summary>
+    /// <summary>Occurs while the harness configures the Azure Service Bus bus factory.</summary>
     public event Action<IServiceBusBusFactoryConfigurator>? OnConfigureServiceBusBus;
-    /// <summary>
-    /// Occurs when on configure service bus receive endpoint.
-    /// </summary>
+    /// <summary>Occurs while the harness configures its Azure Service Bus receive endpoint.</summary>
     public event Action<IServiceBusReceiveEndpointConfigurator>? OnConfigureServiceBusReceiveEndpoint;
 
-    /// <summary>
-    /// Configures service bus bus.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Invokes registered callbacks for provider-specific bus configuration.</summary>
+    /// <param name="configurator">The Azure Service Bus factory configurator.</param>
     protected virtual void ConfigureServiceBusBus(IServiceBusBusFactoryConfigurator configurator)
     {
         OnConfigureServiceBusBus?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Configures service bus receive endpoint.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Invokes registered callbacks for provider-specific receive-endpoint configuration.</summary>
+    /// <param name="configurator">The Azure Service Bus receive-endpoint configurator.</param>
     protected virtual void ConfigureServiceBusReceiveEndpoint(IServiceBusReceiveEndpointConfigurator configurator)
     {
         OnConfigureServiceBusReceiveEndpoint?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Performs the clean operation.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deletes every topic and queue from the configured Azure Service Bus namespace.</summary>
+    /// <param name="cancellationToken">The token that cancels enumeration, deletion, or the retry delay.</param>
+    /// <returns>A task that completes when the namespace contains no topics or queues.</returns>
     public override async Task CleanAsync(CancellationToken cancellationToken = default)
     {
         var managementClient = CreateManagementClient();
@@ -125,10 +101,8 @@ public class AzureServiceBusTestHarness :
         return new ServiceBusAdministrationClient(endpoint, NamedKeyCredential);
     }
 
-    /// <summary>
-    /// Creates bus.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the bus and captures the configured input queue address.</summary>
+    /// <returns>A task that produces the configured bus control.</returns>
     protected override async Task<IBusControl> CreateBusAsync()
     {
         return ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingAzureServiceBus(x =>

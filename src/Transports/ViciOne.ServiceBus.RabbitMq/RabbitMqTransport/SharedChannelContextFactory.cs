@@ -7,28 +7,22 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a shared channel context factory implementation.
-/// </summary>
+/// <summary>Creates supervised shared-channel leases and stops them when RabbitMQ closes the underlying channel.</summary>
 public class SharedChannelContextFactory :
     IPipeContextFactory<ChannelContext>
 {
     readonly IChannelContextSupervisor _supervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
+    /// <summary>Creates a factory backed by a channel-context supervisor.</summary>
+    /// <param name="supervisor">The supervisor that establishes the underlying channel contexts.</param>
     public SharedChannelContextFactory(IChannelContextSupervisor supervisor)
     {
         _supervisor = supervisor;
     }
 
-    /// <summary>
-    /// Creates context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and supervises a shared channel context.</summary>
+    /// <param name="supervisor">The lifetime supervisor that owns the returned context agent.</param>
+    /// <returns>An asynchronous agent whose context becomes available when the channel has been established.</returns>
     public IPipeContextAgent<ChannelContext> CreateContext(ISupervisor supervisor)
     {
         IAsyncPipeContextAgent<ChannelContext> asyncContext = supervisor.AddAsyncContext<ChannelContext>();
@@ -56,13 +50,11 @@ public class SharedChannelContextFactory :
         return asyncContext;
     }
 
-    /// <summary>
-    /// Creates active context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an active shared-channel lease over an existing context handle.</summary>
+    /// <param name="supervisor">The lifetime supervisor that owns the active lease.</param>
+    /// <param name="context">The handle that supplies the underlying channel context.</param>
+    /// <param name="cancellationToken">The token that ends the active lease.</param>
+    /// <returns>An active agent for the shared channel context.</returns>
     public IActivePipeContextAgent<ChannelContext> CreateActiveContext(ISupervisor supervisor,
         PipeContextHandle<ChannelContext> context, CancellationToken cancellationToken)
     {

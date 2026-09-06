@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a raw message context implementation.
-/// </summary>
+/// <summary>Carries state for raw message operations.</summary>
 public class RawMessageContext :
     MessageContext
 {
@@ -28,12 +26,10 @@ public class RawMessageContext :
     DateTimeOffset? _sentTime;
     Uri? _sourceAddress;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="headers">The headers value.</param>
-    /// <param name="destinationAddress">The destination address value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="headers">The headers.</param>
+    /// <param name="destinationAddress">The destination address.</param>
+    /// <param name="options">The options that control the operation.</param>
     public RawMessageContext(Headers headers, Uri? destinationAddress, RawSerializerOptions options)
     {
         _transportHeaders = headers;
@@ -41,60 +37,34 @@ public class RawMessageContext :
         _options = options;
     }
 
-    /// <summary>
-    /// Gets the message id value.
-    /// </summary>
+    /// <summary>Gets the message id.</summary>
     public Guid? MessageId => _messageId ??= _transportHeaders.GetMessageId();
-    /// <summary>
-    /// Gets the request id value.
-    /// </summary>
+    /// <summary>Gets the request id.</summary>
     public Guid? RequestId => _requestId ??= _transportHeaders.GetRequestId();
-    /// <summary>
-    /// Gets the correlation id value.
-    /// </summary>
+    /// <summary>Gets the correlation id.</summary>
     public Guid? CorrelationId => _correlationId ??= _transportHeaders.GetCorrelationId();
-    /// <summary>
-    /// Gets the conversation id value.
-    /// </summary>
+    /// <summary>Gets the conversation id.</summary>
     public Guid? ConversationId => _conversationId ??= _transportHeaders.GetConversationId();
-    /// <summary>
-    /// Gets the initiator id value.
-    /// </summary>
+    /// <summary>Gets the initiator id.</summary>
     public Guid? InitiatorId => _initiatorId ??= _transportHeaders.GetInitiatorId();
-    /// <summary>
-    /// Gets the expiration time value.
-    /// </summary>
+    /// <summary>Gets the expiration time.</summary>
     public DateTimeOffset? ExpirationTime { get; } = default;
-    /// <summary>
-    /// Gets the source address value.
-    /// </summary>
+    /// <summary>Gets the source address.</summary>
     public Uri? SourceAddress => _sourceAddress ??= _transportHeaders.GetSourceAddress();
-    /// <summary>
-    /// Gets the destination address value.
-    /// </summary>
+    /// <summary>Gets the destination address.</summary>
     public Uri? DestinationAddress { get; }
-    /// <summary>
-    /// Gets the response address value.
-    /// </summary>
+    /// <summary>Gets the response address.</summary>
     public Uri? ResponseAddress => _responseAddress ??= _transportHeaders.GetResponseAddress();
-    /// <summary>
-    /// Gets the fault address value.
-    /// </summary>
+    /// <summary>Gets the fault address.</summary>
     public Uri? FaultAddress => _faultAddress ??= _transportHeaders.GetFaultAddress();
 
-    /// <summary>
-    /// Gets the sent time value.
-    /// </summary>
+    /// <summary>Gets the sent time.</summary>
     public DateTimeOffset? SentTime => _sentTime ??= GetSentTime();
 
-    /// <summary>
-    /// Gets the headers value.
-    /// </summary>
+    /// <summary>Gets the headers.</summary>
     public Headers Headers => _headers ??= new TransportHeaderFilter(_transportHeaders, _options);
 
-    /// <summary>
-    /// Gets the host value.
-    /// </summary>
+    /// <summary>Gets the host.</summary>
     public HostInfo Host => _host ??= GetHostInfo();
 
     DateTimeOffset? GetSentTime()

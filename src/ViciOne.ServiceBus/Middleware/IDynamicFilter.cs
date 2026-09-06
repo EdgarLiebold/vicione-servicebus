@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Defines the contract for dynamic filter.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Processes dynamic pipeline stages.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
 public interface IDynamicFilter<TInput> :
     IFilter<TInput>,
     IPipeConnector,
@@ -13,11 +11,9 @@ public interface IDynamicFilter<TInput> :
 }
 
 
-/// <summary>
-/// Defines the contract for dynamic filter.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
-/// <typeparam name="TKey">The t key type.</typeparam>
+/// <summary>Processes dynamic pipeline stages.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
 public interface IDynamicFilter<TInput, in TKey> :
     IFilter<TInput>,
     IPipeConnector,

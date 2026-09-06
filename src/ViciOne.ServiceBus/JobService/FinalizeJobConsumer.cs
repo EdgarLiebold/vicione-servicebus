@@ -6,10 +6,8 @@ using ViciOne.ServiceBus.JobService.Messages;
 
 namespace ViciOne.ServiceBus.JobService;
 
-/// <summary>
-/// Provides a finalize job consumer implementation.
-/// </summary>
-/// <typeparam name="TJob">The t job type.</typeparam>
+/// <summary>Consumes finalize job messages.</summary>
+/// <typeparam name="TJob">The job type.</typeparam>
 public class FinalizeJobConsumer<TJob> :
     IConsumer<FaultJob>,
     IConsumer<CompleteJob>
@@ -17,20 +15,16 @@ public class FinalizeJobConsumer<TJob> :
 {
     readonly Guid _jobTypeId;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="jobTypeId">The job type id value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="jobTypeId">The job type id.</param>
     public FinalizeJobConsumer(Guid jobTypeId)
     {
         _jobTypeId = jobTypeId;
     }
 
-    /// <summary>
-    /// Consumes the message provided by the context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Consumes the message provided by the context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ConsumeAsync(ConsumeContext<CompleteJob> context)
     {
         if (context.Message.JobTypeId != _jobTypeId)
@@ -50,11 +44,9 @@ public class FinalizeJobConsumer<TJob> :
         });
     }
 
-    /// <summary>
-    /// Consumes the message provided by the context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Consumes the message provided by the context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ConsumeAsync(ConsumeContext<FaultJob> context)
     {
         var message = context.Message;

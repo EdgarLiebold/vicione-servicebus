@@ -9,17 +9,13 @@ using ViciOne.ServiceBus.SignalR.Scoping;
 
 namespace ViciOne.ServiceBus.SignalR;
 
-/// <summary>
-/// Provides extension methods for vici one service bus signal r configuration.
-/// </summary>
+/// <summary>Provides extension methods for vici one service bus signal r configuration.</summary>
 public static class ViciOneServiceBusSignalRConfigurationExtensions
 {
-    /// <summary>
-    /// Adds signal r hub to the configuration.
-    /// </summary>
-    /// <typeparam name="THub">The t hub type.</typeparam>
-    /// <param name="busConfigurator">The bus configurator value.</param>
-    /// <param name="configureHubLifetimeOptions">The configure hub lifetime options value.</param>
+    /// <summary>Adds signal r hub to the configuration.</summary>
+    /// <typeparam name="THub">The hub type.</typeparam>
+    /// <param name="busConfigurator">The bus configurator.</param>
+    /// <param name="configureHubLifetimeOptions">The configure hub lifetime options.</param>
     public static void AddSignalRHub<THub>(this IBusRegistrationConfigurator busConfigurator,
         Action<IHubLifetimeManagerOptions<THub>>? configureHubLifetimeOptions = null)
         where THub : Hub

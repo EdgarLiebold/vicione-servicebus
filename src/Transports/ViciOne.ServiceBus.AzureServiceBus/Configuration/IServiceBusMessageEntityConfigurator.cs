@@ -2,55 +2,35 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus message entity configurator.
-/// </summary>
+/// <summary>Configures creation properties shared by Azure Service Bus queues and topics.</summary>
 public interface IServiceBusMessageEntityConfigurator :
     IServiceBusEntityConfigurator
 {
-    /// <summary>
-    /// The entity path
-    /// </summary>
+    /// <summary>Gets the entity path relative to the base path.</summary>
     string Path { get; }
 
-    /// <summary>
-    /// The base path for the message entity
-    /// </summary>
+    /// <summary>Gets or sets the namespace-relative prefix applied to the entity path.</summary>
     string? BasePath { get; set; }
 
-    /// <summary>
-    /// The full path of the message entity
-    /// </summary>
+    /// <summary>Gets the entity path including its optional base-path prefix.</summary>
     string FullPath { get; }
 
-    /// <summary>
-    /// How long of a window to use to detect duplicate messages
-    /// </summary>
+    /// <summary>Sets how long Azure Service Bus retains message identifiers for duplicate detection.</summary>
     TimeSpan? DuplicateDetectionHistoryTimeWindow { set; }
 
-    /// <summary>
-    /// Sets a value that indicates whether the queue to be partitioned across multiple message brokers is enabled
-    /// </summary>
+    /// <summary>Sets whether the entity is partitioned across message brokers.</summary>
     bool? EnablePartitioning { set; }
 
-    /// <summary>
-    /// Sets the maximum size of the queue in megabytes, which is the size of memory allocated for the queue
-    /// </summary>
+    /// <summary>Sets the maximum entity size in megabytes.</summary>
     long? MaxSizeInMegabytes { set; }
 
-    /// <summary>
-    /// Set the maximum message size, in kilobytes
-    /// </summary>
+    /// <summary>Set the maximum message size, in kilobytes.</summary>
     long? MaxMessageSizeInKilobytes { set; }
 
-    /// <summary>
-    /// Sets the value indicating if this queue requires duplicate detection.
-    /// </summary>
+    /// <summary>Sets whether Azure Service Bus rejects duplicate message identifiers.</summary>
     bool? RequiresDuplicateDetection { set; }
 
-    /// <summary>
-    /// Enable duplicate detection on the queue, specifying the time window
-    /// </summary>
-    /// <param name="historyTimeWindow">The time window for duplicate history</param>
+    /// <summary>Enables duplicate detection and sets its identifier-retention window.</summary>
+    /// <param name="historyTimeWindow">How long message identifiers remain available for duplicate detection.</param>
     void EnableDuplicateDetection(TimeSpan historyTimeWindow);
 }

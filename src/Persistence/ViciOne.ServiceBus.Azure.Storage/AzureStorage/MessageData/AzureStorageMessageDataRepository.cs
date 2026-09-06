@@ -13,9 +13,7 @@ using Azure.Storage.Blobs.Specialized;
 
 namespace ViciOne.ServiceBus.AzureStorage.MessageData;
 
-/// <summary>
-/// Provides an azure storage message data repository implementation.
-/// </summary>
+/// <summary>Stores message payloads as blobs in one Azure Blob Storage container.</summary>
 public class AzureStorageMessageDataRepository :
     IMessageDataRepository,
     IBusObserver
@@ -25,82 +23,70 @@ public class AzureStorageMessageDataRepository :
     readonly bool _compress;
     readonly TimeProvider _timeProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionString">The connection string value.</param>
-    /// <param name="containerName">The container name value.</param>
-    /// <param name="compress">The compress value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Creates a repository from an Azure Storage connection string.</summary>
+    /// <param name="connectionString">The connection string used to create the blob service client.</param>
+    /// <param name="containerName">The container that stores message payloads.</param>
+    /// <param name="compress">Whether payloads are GZip-compressed before upload.</param>
+    /// <param name="timeProvider">The time source used to calculate expiration metadata, or <see langword="null"/> to use system time.</param>
     public AzureStorageMessageDataRepository(string connectionString, string containerName, bool compress = false, TimeProvider? timeProvider = null)
         : this(new BlobServiceClient(connectionString), containerName, compress, timeProvider)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="serviceUri">The service uri value.</param>
-    /// <param name="containerName">The container name value.</param>
-    /// <param name="accountName">The account name value.</param>
-    /// <param name="accountKey">The account key value.</param>
-    /// <param name="compress">The compress value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Creates a repository that authenticates to Azure Blob Storage with a shared account key.</summary>
+    /// <param name="serviceUri">The blob service endpoint.</param>
+    /// <param name="containerName">The container that stores message payloads.</param>
+    /// <param name="accountName">The Azure Storage account name.</param>
+    /// <param name="accountKey">The Azure Storage account key.</param>
+    /// <param name="compress">Whether payloads are GZip-compressed before upload.</param>
+    /// <param name="timeProvider">The time source used to calculate expiration metadata, or <see langword="null"/> to use system time.</param>
     public AzureStorageMessageDataRepository(Uri serviceUri, string containerName, string accountName, string accountKey, bool compress = false,
         TimeProvider? timeProvider = null)
         : this(new BlobServiceClient(serviceUri, new StorageSharedKeyCredential(accountName, accountKey)), containerName, compress, timeProvider)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="serviceUri">The service uri value.</param>
-    /// <param name="containerName">The container name value.</param>
-    /// <param name="signature">The signature value.</param>
-    /// <param name="compress">The compress value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Creates a repository that authenticates to Azure Blob Storage with a shared access signature.</summary>
+    /// <param name="serviceUri">The blob service endpoint.</param>
+    /// <param name="containerName">The container that stores message payloads.</param>
+    /// <param name="signature">The shared access signature used by the blob service client.</param>
+    /// <param name="compress">Whether payloads are GZip-compressed before upload.</param>
+    /// <param name="timeProvider">The time source used to calculate expiration metadata, or <see langword="null"/> to use system time.</param>
     public AzureStorageMessageDataRepository(Uri serviceUri, string containerName, string signature, bool compress = false, TimeProvider? timeProvider = null)
         : this(new BlobServiceClient(serviceUri, new AzureSasCredential(signature)), containerName, compress, timeProvider)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="serviceUri">The service uri value.</param>
-    /// <param name="containerName">The container name value.</param>
-    /// <param name="tenantId">The tenant id value.</param>
-    /// <param name="clientId">The client id value.</param>
-    /// <param name="clientSecret">The client secret value.</param>
-    /// <param name="compress">The compress value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Creates a repository that authenticates to Azure Blob Storage with a Microsoft Entra application credential.</summary>
+    /// <param name="serviceUri">The blob service endpoint.</param>
+    /// <param name="containerName">The container that stores message payloads.</param>
+    /// <param name="tenantId">The external Microsoft Entra tenant that issued the application identity.</param>
+    /// <param name="clientId">The application registration identifier.</param>
+    /// <param name="clientSecret">The application credential used to authenticate the client.</param>
+    /// <param name="compress">Whether payloads are GZip-compressed before upload.</param>
+    /// <param name="timeProvider">The time source used to calculate expiration metadata, or <see langword="null"/> to use system time.</param>
     public AzureStorageMessageDataRepository(Uri serviceUri, string containerName, string tenantId, string clientId, string clientSecret,
         bool compress = false, TimeProvider? timeProvider = null)
         : this(new BlobServiceClient(serviceUri, new ClientSecretCredential(tenantId, clientId, clientSecret)), containerName, compress, timeProvider)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="client">The client value.</param>
-    /// <param name="containerName">The container name value.</param>
-    /// <param name="compress">The compress value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Creates a repository with caller-owned client lifetime and sequentially generated blob names.</summary>
+    /// <param name="client">The caller-owned blob service client.</param>
+    /// <param name="containerName">The container that stores message payloads.</param>
+    /// <param name="compress">Whether payloads are GZip-compressed before upload.</param>
+    /// <param name="timeProvider">The time source used to calculate expiration metadata, or <see langword="null"/> to use system time.</param>
     public AzureStorageMessageDataRepository(BlobServiceClient client, string containerName, bool compress = false, TimeProvider? timeProvider = null)
         : this(client, containerName, new NewIdBlobNameGenerator(), compress, timeProvider)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="client">The client value.</param>
-    /// <param name="containerName">The container name value.</param>
-    /// <param name="nameGenerator">The name generator value.</param>
-    /// <param name="compress">The compress value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Creates a repository with caller-owned client lifetime and blob-name generation.</summary>
+    /// <param name="client">The caller-owned blob service client.</param>
+    /// <param name="containerName">The container that stores message payloads.</param>
+    /// <param name="nameGenerator">The strategy that assigns a unique name to each uploaded blob.</param>
+    /// <param name="compress">Whether payloads are GZip-compressed before upload.</param>
+    /// <param name="timeProvider">The time source used to calculate expiration metadata, or <see langword="null"/> to use system time.</param>
     public AzureStorageMessageDataRepository(BlobServiceClient client, string containerName, IBlobNameGenerator nameGenerator, bool compress = false,
         TimeProvider? timeProvider = null)
     {
@@ -110,27 +96,21 @@ public class AzureStorageMessageDataRepository :
         _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    /// <summary>
-    /// Performs the post create operation.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
+    /// <summary>Observes successful bus creation; this repository requires no post-creation work.</summary>
+    /// <param name="bus">The bus that was created.</param>
     public void PostCreate(IBus bus)
     {
     }
 
-    /// <summary>
-    /// Creates faulted.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Observes a bus-creation failure; this repository performs no recovery work.</summary>
+    /// <param name="exception">The exception that prevented bus creation.</param>
     public void CreateFaulted(Exception exception)
     {
     }
 
-    /// <summary>
-    /// Performs the pre start operation.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Checks for the configured container and attempts to create it before the bus starts.</summary>
+    /// <param name="bus">The bus that is about to start.</param>
+    /// <returns>A task that completes after the best-effort container check; Azure failures are logged and do not fail bus startup.</returns>
     public async Task PreStartAsync(IBus bus)
     {
         try
@@ -154,65 +134,53 @@ public class AzureStorageMessageDataRepository :
         }
     }
 
-    /// <summary>
-    /// Performs the post start operation.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <param name="busReady">The bus ready value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Observes successful bus startup; this repository requires no post-start work.</summary>
+    /// <param name="bus">The bus that started.</param>
+    /// <param name="busReady">The task that reports the bus readiness result.</param>
+    /// <returns>An already-completed task.</returns>
     public Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Starts faulted.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Observes a bus-start failure; this repository performs no recovery work.</summary>
+    /// <param name="bus">The bus whose start failed.</param>
+    /// <param name="exception">The startup exception.</param>
+    /// <returns>An already-completed task.</returns>
     public Task StartFaultedAsync(IBus bus, Exception exception)
     {
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the pre stop operation.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Observes that the bus is about to stop; this repository owns no shutdown work.</summary>
+    /// <param name="bus">The bus that is about to stop.</param>
+    /// <returns>An already-completed task.</returns>
     public Task PreStopAsync(IBus bus)
     {
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the post stop operation.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Observes successful bus shutdown; this repository owns no post-stop work.</summary>
+    /// <param name="bus">The bus that stopped.</param>
+    /// <returns>An already-completed task.</returns>
     public Task PostStopAsync(IBus bus)
     {
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Stops faulted.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Observes a bus-stop failure; this repository performs no recovery work.</summary>
+    /// <param name="bus">The bus whose stop failed.</param>
+    /// <param name="exception">The shutdown exception.</param>
+    /// <returns>An already-completed task.</returns>
     public Task StopFaultedAsync(IBus bus, Exception exception)
     {
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Opens the blob identified by the supplied address and exposes its uncompressed payload stream.</summary>
+    /// <param name="address">The blob URI whose blob name is resolved within this repository's configured container.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task whose result is the readable payload stream.</returns>
     public async Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default)
     {
         var blobName = new BlobUriBuilder(address).BlobName;
@@ -230,13 +198,11 @@ public class AzureStorageMessageDataRepository :
         }
     }
 
-    /// <summary>
-    /// Performs the put operation.
-    /// </summary>
-    /// <param name="stream">The stream value.</param>
-    /// <param name="timeToLive">The time to live value.</param>
+    /// <summary>Uploads a payload under a generated blob name and optionally records its expiration metadata.</summary>
+    /// <param name="stream">The payload stream to upload.</param>
+    /// <param name="timeToLive">An optional relative lifetime stored as <c>ValidUntilUtc</c> blob metadata.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task whose result is the URI of the uploaded blob.</returns>
     public async Task<Uri> PutAsync(Stream stream, TimeSpan? timeToLive = default, CancellationToken cancellationToken = default)
     {
         var blobName = _nameGenerator.GenerateBlobName();

@@ -6,19 +6,15 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Provides extension methods for saga state machine.
-/// </summary>
+/// <summary>Provides extension methods for saga state machine.</summary>
 public static class SagaStateMachineExtensions
 {
-    /// <summary>
-    /// Create a query that combines the specified expression with an expression that compares the instance state with the specified states
-    /// </summary>
-    /// <param name="machine">The state machine</param>
-    /// <param name="expression">The query expression</param>
-    /// <param name="states">The states that are valid for this query</param>
-    /// <typeparam name="TInstance">The instance type</typeparam>
-    /// <returns></returns>
+    /// <summary>Create a query that combines the specified expression with an expression that compares the instance state with the specified states.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="machine">The state machine.</param>
+    /// <param name="expression">The query expression.</param>
+    /// <param name="states">The states that are valid for this query.</param>
+    /// <returns>The created saga query.</returns>
     public static ISagaQuery<TInstance> CreateSagaQuery<TInstance>(this StateMachine<TInstance> machine, Expression<Func<TInstance, bool>> expression,
         params State[] states)
         where TInstance : class, SagaStateMachineInstance
@@ -28,14 +24,12 @@ public static class SagaStateMachineExtensions
         return new SagaQuery<TInstance>(StateExpressionVisitor<TInstance>.Combine(expression, stateExpression));
     }
 
-    /// <summary>
-    /// Create a query that combines the specified expression with an expression that compares the instance state with the specified states
-    /// </summary>
-    /// <param name="machine">The state machine</param>
-    /// <param name="expression">The query expression</param>
-    /// <param name="states">The states that are valid for this query</param>
-    /// <typeparam name="TInstance">The instance type</typeparam>
-    /// <returns></returns>
+    /// <summary>Create a query that combines the specified expression with an expression that compares the instance state with the specified states.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="machine">The state machine.</param>
+    /// <param name="expression">The query expression.</param>
+    /// <param name="states">The states that are valid for this query.</param>
+    /// <returns>The created saga filter.</returns>
     public static Func<TInstance, bool> CreateSagaFilter<TInstance>(this StateMachine<TInstance> machine, Expression<Func<TInstance, bool>> expression,
         params State[] states)
         where TInstance : class, SagaStateMachineInstance

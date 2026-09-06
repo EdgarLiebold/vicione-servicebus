@@ -6,25 +6,19 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Courier.Messages;
 
-/// <summary>
-/// Provides a routing slip compensate log implementation.
-/// </summary>
+/// <summary>Carries the activity log for routing slip compensate.</summary>
 public class RoutingSlipCompensateLog :
     CompensateLog
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public RoutingSlipCompensateLog()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="executionId">The execution id value.</param>
-    /// <param name="address">The address value.</param>
-    /// <param name="data">The data value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="executionId">The execution id.</param>
+    /// <param name="address">The address.</param>
+    /// <param name="data">The data.</param>
     public RoutingSlipCompensateLog(Guid executionId, Uri address, IDictionary<string, object> data)
     {
         ExecutionId = executionId;
@@ -32,10 +26,8 @@ public class RoutingSlipCompensateLog :
         Data = data;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="compensateLog">The compensate log value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="compensateLog">The compensate log.</param>
     public RoutingSlipCompensateLog(CompensateLog compensateLog)
     {
         if (compensateLog.Address == null)
@@ -46,16 +38,10 @@ public class RoutingSlipCompensateLog :
         Data = compensateLog.Data ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>
-    /// Gets or sets the execution id value.
-    /// </summary>
+    /// <summary>Gets or sets the execution id.</summary>
     public Guid ExecutionId { get; set; }
-    /// <summary>
-    /// Gets or sets the address value.
-    /// </summary>
+    /// <summary>Gets or sets the address.</summary>
     public Uri Address { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the data value.
-    /// </summary>
+    /// <summary>Gets or sets the data.</summary>
     public IDictionary<string, object> Data { get; set; } = null!;
 }

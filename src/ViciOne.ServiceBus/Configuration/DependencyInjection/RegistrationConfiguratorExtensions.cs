@@ -4,17 +4,14 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for core registration configurators.
-/// </summary>
+/// <summary>Provides extension methods for core registration configurators.</summary>
 public static class RegistrationConfiguratorExtensions
 {
-    /// <summary>
-    /// Adds the consumer, allowing configuration when it is configured on an endpoint
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <typeparam name="T">The consumer type</typeparam>
+    /// <summary>Adds the consumer, allowing configuration when it is configured on an endpoint.</summary>
+    /// <typeparam name="T">The consumer type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The consumer registration configurator produced by the operation.</returns>
     public static IConsumerRegistrationConfigurator<T> AddConsumer<T>(this IRegistrationConfigurator configurator,
         Action<IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
@@ -22,13 +19,12 @@ public static class RegistrationConfiguratorExtensions
         return configure != null ? configurator.AddConsumer<T>((_, cfg) => configure.Invoke(cfg)) : configurator.AddConsumer<T>();
     }
 
-    /// <summary>
-    /// Adds the consumer, allowing configuration when it is configured on an endpoint
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="consumerDefinitionType">The consumer definition type</param>
-    /// <param name="configure"></param>
-    /// <typeparam name="T">The consumer type</typeparam>
+    /// <summary>Adds the consumer, allowing configuration when it is configured on an endpoint.</summary>
+    /// <typeparam name="T">The consumer type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="consumerDefinitionType">The consumer definition type.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The consumer registration configurator produced by the operation.</returns>
     public static IConsumerRegistrationConfigurator<T> AddConsumer<T>(this IRegistrationConfigurator configurator,
         Type consumerDefinitionType, Action<IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
@@ -38,12 +34,11 @@ public static class RegistrationConfiguratorExtensions
             : configurator.AddConsumer<T>(consumerDefinitionType);
     }
 
-    /// <summary>
-    /// Adds the consumer, along with an optional consumer definition
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="consumerType">The consumer type</param>
-    /// <param name="consumerDefinitionType">The consumer definition type</param>
+    /// <summary>Adds the consumer, along with an optional consumer definition.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="consumerType">The consumer type.</param>
+    /// <param name="consumerDefinitionType">The consumer definition type.</param>
+    /// <returns>The consumer registration configurator produced by the operation.</returns>
     public static IConsumerRegistrationConfigurator AddConsumer(this IRegistrationConfigurator configurator, Type consumerType,
         Type? consumerDefinitionType = null)
     {

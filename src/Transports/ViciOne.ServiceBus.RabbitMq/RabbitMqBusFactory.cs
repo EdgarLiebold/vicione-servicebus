@@ -6,16 +6,12 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq bus factory implementation.
-/// </summary>
+/// <summary>Creates RabbitMQ-backed bus instances and their message topology.</summary>
 public static class RabbitMqBusFactory
 {
-    /// <summary>
-    /// Configure and create a bus for RabbitMQ
-    /// </summary>
-    /// <param name="configure">The configuration callback to configure the bus</param>
-    /// <returns></returns>
+    /// <summary>Creates a RabbitMQ bus from an optional transport configuration callback.</summary>
+    /// <param name="configure">An optional callback that configures the bus and its endpoints.</param>
+    /// <returns>The configured bus control.</returns>
     public static IBusControl Create(Action<IRabbitMqBusFactoryConfigurator>? configure = null)
     {
         var topologyConfiguration = new RabbitMqTopologyConfiguration(CreateMessageTopology());
@@ -28,10 +24,8 @@ public static class RabbitMqBusFactory
         return configurator.Build(busConfiguration);
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates message topology that formats RabbitMQ exchange names.</summary>
+    /// <returns>A new RabbitMQ message-topology configurator.</returns>
     public static IMessageTopologyConfigurator CreateMessageTopology()
     {
         return new MessageTopology(Cached.EntityNameFormatter);

@@ -4,17 +4,14 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for vici one service bus exception.
-/// </summary>
+/// <summary>Provides extension methods for vici one service bus exception.</summary>
 public static class ViciOneServiceBusExceptionExtensions
 {
-    /// <summary>
-    /// Compiles the validation results and throws a <see cref="ConfigurationException" /> if any failures are present.
-    /// </summary>
-    /// <param name="results"></param>
-    /// <param name="prefix">An optional prefix to override the default exception prefix</param>
-    /// <exception cref="ConfigurationException"></exception>
+    /// <summary>Compiles the validation results and throws a <see cref="ConfigurationException" /> if any failures are present.</summary>
+    /// <param name="results">The results.</param>
+    /// <param name="prefix">An optional prefix to override the default exception prefix.</param>
+    /// <returns>The read only list produced by the operation.</returns>
+    /// <exception cref="ConfigurationException">Thrown when the current service bus configuration is invalid.</exception>
     public static IReadOnlyList<ValidationResult> ThrowIfContainsFailure(this IEnumerable<ValidationResult> results, string? prefix = null)
     {
         List<ValidationResult> resultList = results.ToList();
@@ -29,10 +26,8 @@ public static class ViciOneServiceBusExceptionExtensions
         throw new ConfigurationException(resultList, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Vici One Service Bus Exception Extensions", "unknown", message, "Correct the named configuration before starting the host"));
     }
 
-    /// <summary>
-    /// Performs the contains failure operation.
-    /// </summary>
-    /// <param name="results">The results value.</param>
+    /// <summary>Determines whether the current value contains failure.</summary>
+    /// <param name="results">The results.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool ContainsFailure(this IEnumerable<ValidationResult> results)
     {

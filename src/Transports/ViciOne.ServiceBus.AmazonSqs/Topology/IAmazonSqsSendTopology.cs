@@ -2,38 +2,28 @@ using ViciOne.ServiceBus.AmazonSqs;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Defines the contract for amazon sqs send topology.
-/// </summary>
+/// <summary>Defines Amazon SQS queue topology for send, error, and skipped-message destinations.</summary>
 public interface IAmazonSqsSendTopology :
     ISendTopology
 {
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets send topology for a message type.</summary>
+    /// <typeparam name="T">The sent message type.</typeparam>
+    /// <returns>The typed Amazon SQS message send-topology configurator.</returns>
     new IAmazonSqsMessageSendTopologyConfigurator<T> GetMessageTopology<T>()
         where T : class;
 
-    /// <summary>
-    /// Gets send settings.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates queue send settings from an Amazon SQS endpoint address.</summary>
+    /// <param name="address">The destination queue address.</param>
+    /// <returns>The queue send settings.</returns>
     SendSettings GetSendSettings(AmazonSqsEndpointAddress address);
 
-    /// <summary>
-    /// Return the error settings for the queue
-    /// </summary>
-    /// <param name="settings"></param>
-    /// <returns></returns>
+    /// <summary>Creates error-queue settings from receive settings.</summary>
+    /// <param name="settings">The source receive settings.</param>
+    /// <returns>The generated error-queue settings.</returns>
     ErrorSettings GetErrorSettings(ReceiveSettings settings);
 
-    /// <summary>
-    /// Return the dead letter settings for the queue
-    /// </summary>
-    /// <param name="settings"></param>
-    /// <returns></returns>
+    /// <summary>Creates skipped-message queue settings from receive settings.</summary>
+    /// <param name="settings">The source receive settings.</param>
+    /// <returns>The generated skipped-message queue settings.</returns>
     DeadLetterSettings GetDeadLetterSettings(ReceiveSettings settings);
 }

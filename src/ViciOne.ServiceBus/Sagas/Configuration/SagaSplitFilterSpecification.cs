@@ -3,43 +3,32 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a saga connector implementation.
-/// </summary>
 public partial class SagaConnector<TSaga, TMessage>
     where TSaga : class, ISaga
     where TMessage : class
 {
-    /// <summary>
-    /// Provides a saga split filter specification implementation.
-    /// </summary>
+    /// <summary>Describes requirements for saga split filter.</summary>
     public class SagaSplitFilterSpecification :
         IPipeSpecification<SagaConsumeContext<TSaga, TMessage>>
     {
         readonly IPipeSpecification<SagaConsumeContext<TSaga>> _specification;
 
-        /// <summary>
-        /// Initializes a new instance of the containing type.
-        /// </summary>
-        /// <param name="specification">The specification value.</param>
+        /// <summary>Initializes a new instance.</summary>
+        /// <param name="specification">The specification.</param>
         public SagaSplitFilterSpecification(IPipeSpecification<SagaConsumeContext<TSaga>> specification)
         {
             _specification = specification;
         }
 
-        /// <summary>
-        /// Applies this specification to the target builder.
-        /// </summary>
-        /// <param name="builder">The builder value.</param>
+        /// <summary>Applies this specification to the target builder.</summary>
+        /// <param name="builder">The builder that receives the configuration.</param>
         public void Apply(IPipeBuilder<SagaConsumeContext<TSaga, TMessage>> builder)
         {
             _specification.Apply(new BuilderProxy(builder));
         }
 
-        /// <summary>
-        /// Validates the current configuration.
-        /// </summary>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Validates the current configuration.</summary>
+        /// <returns>The validation failures.</returns>
         public IEnumerable<ValidationResult> Validate()
         {
             return _specification.Validate();

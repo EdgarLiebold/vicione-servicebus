@@ -10,9 +10,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs.Configuration;
 
-/// <summary>
-/// Provides an event hub receive endpoint configurator implementation.
-/// </summary>
+/// <summary>Builds an Event Hubs processor-backed receive endpoint from bus, namespace, and checkpoint settings.</summary>
 public class EventHubReceiveEndpointConfigurator :
     ReceiveEndpointConfiguration,
     IEventHubReceiveEndpointConfigurator,
@@ -30,16 +28,14 @@ public class EventHubReceiveEndpointConfigurator :
     Func<PartitionClosingEventArgs, Task>? _partitionClosingHandler;
     Func<PartitionInitializingEventArgs, Task>? _partitionInitializingHandler;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="busInstance">The bus instance value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
-    /// <param name="hostSettings">The host settings value.</param>
-    /// <param name="storageSettings">The storage settings value.</param>
-    /// <param name="eventHubName">The event hub name value.</param>
-    /// <param name="consumerGroup">The consumer group value.</param>
+    /// <summary>Creates an endpoint configurator with conservative concurrency and batched-checkpoint defaults.</summary>
+    /// <param name="hostConfiguration">The Event Hubs rider host configuration.</param>
+    /// <param name="busInstance">The bus instance that will own the endpoint.</param>
+    /// <param name="endpointConfiguration">The receive endpoint's pipe configuration.</param>
+    /// <param name="hostSettings">The Event Hubs namespace connection settings.</param>
+    /// <param name="storageSettings">The Blob Storage checkpoint settings.</param>
+    /// <param name="eventHubName">The Event Hub entity name.</param>
+    /// <param name="consumerGroup">The consumer group used to coordinate partition ownership.</param>
     public EventHubReceiveEndpointConfigurator(IEventHubHostConfiguration hostConfiguration, IBusInstance busInstance,
         IReceiveEndpointConfiguration endpointConfiguration, IHostSettings hostSettings, IStorageSettings storageSettings, string eventHubName,
         string consumerGroup)
@@ -72,14 +68,10 @@ public class EventHubReceiveEndpointConfigurator :
         this.DiscardSkippedMessages();
     }
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the bus host address exposed by the endpoint configuration.</summary>
     public override Uri HostAddress => _endpointConfiguration.HostAddress;
 
-    /// <summary>
-    /// Gets or sets the container name value.
-    /// </summary>
+    /// <summary>Gets or sets the Blob container name, defaulting to the Event Hub entity name.</summary>
     public string ContainerName
     {
         get => _containerName ?? EventHubName;
@@ -91,31 +83,21 @@ public class EventHubReceiveEndpointConfigurator :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the checkpoint interval value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum time between completed partition checkpoints.</summary>
     public TimeSpan CheckpointInterval { get; set; }
-    /// <summary>
-    /// Gets or sets the checkpoint message limit value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum number of uncheckpointed events retained for one partition.</summary>
     public ushort CheckpointMessageLimit { get; set; }
-    /// <summary>
-    /// Gets or sets the checkpoint message count value.
-    /// </summary>
+    /// <summary>Gets or sets the number of completed events that triggers a partition checkpoint.</summary>
     public ushort CheckpointMessageCount { get; set; }
 
-    /// <summary>
-    /// Gets or sets the configure options value.
-    /// </summary>
+    /// <summary>Sets the callback applied when the event processor client options are created.</summary>
     public Action<EventProcessorClientOptions> ConfigureOptions
     {
         set => _configureOptions = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    /// <summary>
-    /// Performs the on partition closing operation.
-    /// </summary>
-    /// <param name="handler">The handler value.</param>
+    /// <summary>Registers the single application handler invoked after processing stops for a partition.</summary>
+    /// <param name="handler">The asynchronous partition-closing handler.</param>
     public void OnPartitionClosing(Func<PartitionClosingEventArgs, Task> handler)
     {
         if (_partitionClosingHandler != null)
@@ -123,10 +105,8 @@ public class EventHubReceiveEndpointConfigurator :
         _partitionClosingHandler = handler ?? throw new ArgumentNullException(nameof(handler));
     }
 
-    /// <summary>
-    /// Performs the on partition initializing operation.
-    /// </summary>
-    /// <param name="handler">The handler value.</param>
+    /// <summary>Registers the single application handler invoked before processing begins for a partition.</summary>
+    /// <param name="handler">The asynchronous partition-initializing handler.</param>
     public void OnPartitionInitializing(Func<PartitionInitializingEventArgs, Task> handler)
     {
         if (_partitionInitializingHandler != null)
@@ -134,39 +114,27 @@ public class EventHubReceiveEndpointConfigurator :
         _partitionInitializingHandler = handler ?? throw new ArgumentNullException(nameof(handler));
     }
 
-    /// <summary>
-    /// Gets the input address value.
-    /// </summary>
+    /// <summary>Gets the bus input address for this Event Hub and consumer group.</summary>
     public override Uri InputAddress => _endpointConfiguration.InputAddress;
-    /// <summary>
-    /// Gets or sets the concurrent delivery limit value.
-    /// </summary>
+    /// <summary>Gets or sets concurrent deliveries permitted for events with the same partition key.</summary>
     public int ConcurrentDeliveryLimit { get; set; }
 
     int ReceiveSettings.ConcurrentMessageLimit => Transport.GetConcurrentMessageLimit();
 
-    /// <summary>
-    /// Gets the consumer group value.
-    /// </summary>
+    /// <summary>Gets the consumer group used to coordinate partition ownership.</summary>
     public string ConsumerGroup { get; }
-    /// <summary>
-    /// Gets the event hub name value.
-    /// </summary>
+    /// <summary>Gets the Event Hub entity name.</summary>
     public string EventHubName { get; }
 
-    /// <summary>
-    /// Creates receive endpoint context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the receive-endpoint context after applying endpoint specifications.</summary>
+    /// <returns>The Event Hubs receive-endpoint context.</returns>
     public override ReceiveEndpointContext CreateReceiveEndpointContext()
     {
         return CreateEventHubReceiveContext();
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the processor middleware, receive transport, and receive endpoint.</summary>
+    /// <returns>The configured Event Hubs receive endpoint.</returns>
     public ReceiveEndpoint Build()
     {
         var context = CreateEventHubReceiveContext();
@@ -195,22 +163,7 @@ public class EventHubReceiveEndpointConfigurator :
 
     BlobContainerClient CreateBlobClient()
     {
-        var blobClientOptions = new BlobClientOptions();
-        _storageSettings.Configure?.Invoke(blobClientOptions);
-
-        var containerName = ContainerName;
-        if (!string.IsNullOrWhiteSpace(_storageSettings.ConnectionString))
-            return new BlobContainerClient(_storageSettings.ConnectionString, containerName, blobClientOptions);
-
-        Uri containerUri = _storageSettings.ContainerUri
-            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive endpoint", "unknown", "The Event Hub checkpoint storage container URI is not configured.", "Correct the named configuration before starting the host"));
-        var uri = new Uri(containerUri, containerName);
-        if (_storageSettings.TokenCredential != null)
-            return new BlobContainerClient(uri, _storageSettings.TokenCredential, blobClientOptions);
-
-        return _storageSettings.SharedKeyCredential != null
-            ? new BlobContainerClient(uri, _storageSettings.SharedKeyCredential, blobClientOptions)
-            : new BlobContainerClient(containerUri, blobClientOptions);
+        return EventHubCheckpointContainerClientFactory.Create(_storageSettings, ContainerName);
     }
 
     EventProcessorClient CreateEventProcessorClient()
@@ -233,10 +186,8 @@ public class EventHubReceiveEndpointConfigurator :
         return client;
     }
 
-    /// <summary>
-    /// Determines whether already configured.
-    /// </summary>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether endpoint construction has begun or the base configuration is already locked.</summary>
+    /// <returns><see langword="true" /> once the Blob client has been created or base configuration is locked; otherwise, <see langword="false" />.</returns>
     protected override bool IsAlreadyConfigured()
     {
         return _blobClient.IsValueCreated || base.IsAlreadyConfigured();

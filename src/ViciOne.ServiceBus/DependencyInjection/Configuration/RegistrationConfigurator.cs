@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Used for registration of consumers and sagas
-/// </summary>
+/// <summary>Used for registration of consumers and sagas.</summary>
 public abstract class RegistrationConfigurator :
     IRegistrationConfigurator,
     IAdvancedRegistrationConfigurator
@@ -17,11 +15,9 @@ public abstract class RegistrationConfigurator :
     readonly Dictionary<Type, IRegistrationCompletionParticipant> _registrationCompletionParticipants = new();
     bool _configured;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="registrar">The registrar value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="registrar">The registrar.</param>
     protected RegistrationConfigurator(IServiceCollection collection, IContainerRegistrar registrar)
     {
         _collection = collection ?? throw new ArgumentNullException(nameof(collection));
@@ -29,43 +25,33 @@ public abstract class RegistrationConfigurator :
         Registrar = registrar ?? new DependencyInjectionContainerRegistrar(collection);
     }
 
-    /// <summary>
-    /// Gets the registrar value.
-    /// </summary>
+    /// <summary>Gets the registrar.</summary>
     public IContainerRegistrar Registrar { get; }
 
-    /// <summary>
-    /// Gets the services value.
-    /// </summary>
+    /// <summary>Gets the services.</summary>
     public IServiceCollection Services => _collection;
 
     /// <inheritdoc />
     public virtual Type BusType => typeof(IBus);
 
-    /// <summary>
-    /// Gets or sets the default request timeout value.
-    /// </summary>
+    /// <summary>Gets or sets the default request timeout.</summary>
     protected RequestTimeout DefaultRequestTimeout { get; private set; } = RequestTimeout.Default;
 
-    /// <summary>
-    /// Adds consumer to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds consumer to the configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The consumer registration configurator produced by the operation.</returns>
     public IConsumerRegistrationConfigurator<T> AddConsumer<T>(Action<IRegistrationContext, IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
     {
         return AddConsumer(null, configure);
     }
 
-    /// <summary>
-    /// Adds consumer to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="consumerDefinitionType">The consumer definition type value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds consumer to the configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="consumerDefinitionType">The runtime consumer definition type used by the operation.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The consumer registration configurator produced by the operation.</returns>
     public IConsumerRegistrationConfigurator<T> AddConsumer<T>(Type? consumerDefinitionType,
         Action<IRegistrationContext, IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
@@ -77,22 +63,18 @@ public abstract class RegistrationConfigurator :
         return new ConsumerRegistrationConfigurator<T>(this, registration);
     }
 
-    /// <summary>
-    /// Adds endpoint to the configuration.
-    /// </summary>
-    /// <param name="definitionType">The definition type value.</param>
+    /// <summary>Adds endpoint to the configuration.</summary>
+    /// <param name="definitionType">The runtime definition type used by the operation.</param>
     public void AddEndpoint(Type definitionType)
     {
         _collection.RegisterEndpoint(Registrar, definitionType);
     }
 
-    /// <summary>
-    /// Adds endpoint to the configuration.
-    /// </summary>
-    /// <typeparam name="TDefinition">The t definition type.</typeparam>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="registration">The registration value.</param>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Adds endpoint to the configuration.</summary>
+    /// <typeparam name="TDefinition">The definition type.</typeparam>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="registration">The registration.</param>
+    /// <param name="settings">The settings that control the operation.</param>
     public void AddEndpoint<TDefinition, T>(IRegistration registration, IEndpointSettings<IEndpointDefinition<T>>? settings)
         where TDefinition : class, IEndpointDefinition<T>
         where T : class
@@ -100,67 +82,55 @@ public abstract class RegistrationConfigurator :
         _collection.RegisterEndpoint<TDefinition, T>(Registrar, registration, settings);
     }
 
-    /// <summary>
-    /// Adds request client to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Adds request client to the configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     public void AddRequestClient<T>(RequestTimeout timeout)
         where T : class
     {
         Registrar.RegisterRequestClient<T>(GetRequestTimeout(timeout));
     }
 
-    /// <summary>
-    /// Adds request client to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="destinationAddress">The destination address value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Adds request client to the configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="destinationAddress">The destination address.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     public void AddRequestClient<T>(Uri destinationAddress, RequestTimeout timeout)
         where T : class
     {
         Registrar.RegisterRequestClient<T>(destinationAddress, timeout);
     }
 
-    /// <summary>
-    /// Adds request client to the configuration.
-    /// </summary>
-    /// <param name="requestType">The request type value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Adds request client to the configuration.</summary>
+    /// <param name="requestType">The runtime request type used by the operation.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     public void AddRequestClient(Type requestType, RequestTimeout timeout = default)
     {
         RequestClientRegistrationCache.Register(requestType, GetRequestTimeout(timeout), Registrar);
     }
 
-    /// <summary>
-    /// Adds request client to the configuration.
-    /// </summary>
-    /// <param name="requestType">The request type value.</param>
-    /// <param name="destinationAddress">The destination address value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Adds request client to the configuration.</summary>
+    /// <param name="requestType">The runtime request type used by the operation.</param>
+    /// <param name="destinationAddress">The destination address.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     public void AddRequestClient(Type requestType, Uri destinationAddress, RequestTimeout timeout = default)
     {
         RequestClientRegistrationCache.Register(requestType, destinationAddress, GetRequestTimeout(timeout), Registrar);
     }
 
-    /// <summary>
-    /// Sets default request timeout.
-    /// </summary>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Sets default request timeout.</summary>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     public void SetDefaultRequestTimeout(RequestTimeout timeout)
     {
         DefaultRequestTimeout = timeout;
     }
 
-    /// <summary>
-    /// Sets default request timeout.
-    /// </summary>
-    /// <param name="d">The d value.</param>
-    /// <param name="h">The h value.</param>
-    /// <param name="m">The m value.</param>
-    /// <param name="s">The s value.</param>
-    /// <param name="ms">The ms value.</param>
+    /// <summary>Sets default request timeout.</summary>
+    /// <param name="d">The <c>d</c> value.</param>
+    /// <param name="h">The <c>h</c> value.</param>
+    /// <param name="m">The <c>m</c> value.</param>
+    /// <param name="s">The <c>s</c> value.</param>
+    /// <param name="ms">The ms.</param>
     public void SetDefaultRequestTimeout(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null)
     {
         var timeout = new TimeSpan(d ?? 0, h ?? 0, m ?? 0, s ?? 0, ms ?? 0);
@@ -170,10 +140,8 @@ public abstract class RegistrationConfigurator :
         DefaultRequestTimeout = timeout;
     }
 
-    /// <summary>
-    /// Sets endpoint name formatter.
-    /// </summary>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
+    /// <summary>Sets endpoint name formatter.</summary>
+    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
     public void SetEndpointNameFormatter(IEndpointNameFormatter endpointNameFormatter)
     {
         Registrar.RegisterEndpointNameFormatter(endpointNameFormatter);
@@ -198,9 +166,7 @@ public abstract class RegistrationConfigurator :
         return timeout == RequestTimeout.Default ? DefaultRequestTimeout : timeout;
     }
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
+    /// <summary>Marks the current operation as complete.</summary>
     public void Complete()
     {
         foreach (IRegistrationCompletionParticipant participant in _registrationCompletionParticipants.Values
@@ -209,21 +175,17 @@ public abstract class RegistrationConfigurator :
             participant.Complete(this);
     }
 
-    /// <summary>
-    /// Creates registration.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    /// <param name="setScopedConsumeContext">The set scoped consume context value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates registration.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="setScopedConsumeContext">The set scoped consume context.</param>
+    /// <returns>The created registration.</returns>
     protected RegistrationContext CreateRegistration(IServiceProvider provider, ISetScopedConsumeContext setScopedConsumeContext)
     {
         return new RegistrationContext(provider, Registrar, setScopedConsumeContext);
     }
 
-    /// <summary>
-    /// Performs the throw if already configured operation.
-    /// </summary>
-    /// <param name="methodName">The method name value.</param>
+    /// <summary>Reports that throw if already has been configured.</summary>
+    /// <param name="methodName">The method name.</param>
     protected void ThrowIfAlreadyConfigured(string methodName)
     {
         if (_configured)
@@ -232,10 +194,8 @@ public abstract class RegistrationConfigurator :
         _configured = true;
     }
 
-    /// <summary>
-    /// Configures log context.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
+    /// <summary>Configures log context.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
     protected static void ConfigureLogContext(IServiceProvider provider)
     {
         LogContext.ConfigureCurrentLogContextIfNull(provider);

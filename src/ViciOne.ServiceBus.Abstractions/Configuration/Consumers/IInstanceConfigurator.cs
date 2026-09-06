@@ -1,18 +1,14 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for instance configurator.
-/// </summary>
+/// <summary>Configures instance.</summary>
 public interface IInstanceConfigurator :
     IConsumeConfigurator
 {
 }
 
 
-/// <summary>
-/// Defines the contract for instance configurator.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <summary>Configures instance.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
 public interface IInstanceConfigurator<TInstance> :
     IConsumerConfigurator<TInstance>,
     IInstanceConfigurator

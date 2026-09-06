@@ -2,33 +2,25 @@ using System;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Represents an error related to amazon sqs connection.
-/// </summary>
+/// <summary>Represents an Amazon SQS transport connection failure.</summary>
 public class AmazonSqsConnectionException :
     ConnectionException
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes an Amazon SQS connection exception.</summary>
     public AmazonSqsConnectionException()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Initializes an Amazon SQS connection exception with an error message.</summary>
+    /// <param name="message">The error message.</param>
     public AmazonSqsConnectionException(string message)
         : base(message)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="innerException">The inner exception value.</param>
+    /// <summary>Initializes an Amazon SQS connection exception with an underlying failure.</summary>
+    /// <param name="message">The error message.</param>
+    /// <param name="innerException">The underlying failure.</param>
     public AmazonSqsConnectionException(string message, Exception innerException)
         : base(message, innerException)
     {

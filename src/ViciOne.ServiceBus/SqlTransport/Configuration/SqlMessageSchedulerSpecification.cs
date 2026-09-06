@@ -4,25 +4,19 @@ using ViciOne.ServiceBus.SqlTransport.Middleware;
 
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
-/// <summary>
-/// Provides a sql message scheduler specification implementation.
-/// </summary>
+/// <summary>Describes requirements for sql message scheduler.</summary>
 public class SqlMessageSchedulerSpecification :
     IPipeSpecification<ConsumeContext>
 {
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPipeBuilder<ConsumeContext> builder)
     {
         builder.AddFilter(new SqlMessageSchedulerFilter());
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;

@@ -6,10 +6,8 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Consumes a message via a message handler and reports the message as consumed or faulted
-/// </summary>
-/// <typeparam name="TMessage"></typeparam>
+/// <summary>Consumes a message via a message handler and reports the message as consumed or faulted.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class HandlerMessageFilter<TMessage> :
     IFilter<ConsumeContext<TMessage>>
     where TMessage : class
@@ -18,10 +16,8 @@ public class HandlerMessageFilter<TMessage> :
     long _completed;
     long _faulted;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="handler">The handler value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="handler">The handler.</param>
     public HandlerMessageFilter(MessageHandler<TMessage> handler)
     {
         _handler = handler ?? throw new ArgumentNullException(nameof(handler));

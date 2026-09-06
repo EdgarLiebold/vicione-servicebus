@@ -7,10 +7,8 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a service bus message publish topology implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Defines the Azure Service Bus topic and implemented-message relationships for a published contract.</summary>
+/// <typeparam name="TMessage">The published message contract.</typeparam>
 public class ServiceBusMessagePublishTopology<TMessage> :
     MessagePublishTopology<TMessage>,
     IServiceBusMessagePublishTopologyConfigurator<TMessage>
@@ -21,11 +19,9 @@ public class ServiceBusMessagePublishTopology<TMessage> :
     readonly IServiceBusPublishTopology _publishTopology;
     readonly ServiceBusTopicConfigurator _topicConfigurator;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="publishTopology">The publish topology value.</param>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Creates publish topology for a message contract.</summary>
+    /// <param name="publishTopology">The bus-wide Azure publish topology.</param>
+    /// <param name="messageTopology">The provider-neutral topology supplying the entity name.</param>
     public ServiceBusMessagePublishTopology(IServiceBusPublishTopology publishTopology, IMessageTopology<TMessage> messageTopology)
         : base(publishTopology)
     {
@@ -37,12 +33,10 @@ public class ServiceBusMessagePublishTopology<TMessage> :
         _createTopicOptions = new Lazy<CreateTopicOptions>(() => _topicConfigurator.GetCreateTopicOptions());
     }
 
-    /// <summary>
-    /// Attempts to get publish address.
-    /// </summary>
-    /// <param name="baseAddress">The base address value.</param>
-    /// <param name="publishAddress">The publish address value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Builds the absolute topic address for the message contract.</summary>
+    /// <param name="baseAddress">The Azure Service Bus namespace address.</param>
+    /// <param name="publishAddress">Receives the absolute topic address.</param>
+    /// <returns>Always <see langword="true"/>.</returns>
     public override bool TryGetPublishAddress(Uri baseAddress, [NotNullWhen(true)] out Uri? publishAddress)
     {
         publishAddress = new ServiceBusEndpointAddress(new Uri(baseAddress.GetLeftPart(UriPartial.Authority)),
@@ -51,15 +45,11 @@ public class ServiceBusMessagePublishTopology<TMessage> :
         return true;
     }
 
-    /// <summary>
-    /// Gets the create topic options value.
-    /// </summary>
+    /// <summary>Gets the lazily materialized Azure topic declaration options.</summary>
     public CreateTopicOptions CreateTopicOptions => _createTopicOptions.Value;
 
-    /// <summary>
-    /// Gets send settings.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds sender settings and topic topology for the message contract.</summary>
+    /// <returns>The topic send settings.</returns>
     public SendSettings GetSendSettings()
     {
         var createTopicOptions = _topicConfigurator.GetCreateTopicOptions();
@@ -71,128 +61,96 @@ public class ServiceBusMessagePublishTopology<TMessage> :
         return new TopicSendSettings(createTopicOptions, builder.BuildBrokerTopology());
     }
 
-    /// <summary>
-    /// Gets subscription configurator.
-    /// </summary>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a subscription configurator bound to the message topic.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <returns>The subscription configurator with a bounded Azure name.</returns>
     public ServiceBusSubscriptionConfigurator GetSubscriptionConfigurator(string subscriptionName)
     {
         return new ServiceBusSubscriptionConfigurator(_publishTopology.FormatSubscriptionName(subscriptionName), CreateTopicOptions.Name);
     }
 
-    /// <summary>
-    /// Gets the path value.
-    /// </summary>
+    /// <summary>Gets the topic path before an optional base path is applied.</summary>
     public string Path => _topicConfigurator.Path;
 
-    /// <summary>
-    /// Gets or sets the base path value.
-    /// </summary>
+    /// <summary>Gets or sets the optional namespace-relative prefix applied to the topic path.</summary>
     public string? BasePath
     {
         get => _topicConfigurator.BasePath;
         set => _topicConfigurator.BasePath = value;
     }
 
-    /// <summary>
-    /// Gets the full path value.
-    /// </summary>
+    /// <summary>Gets the topic path including its optional base path.</summary>
     public string FullPath => _topicConfigurator.FullPath;
 
-    /// <summary>
-    /// Gets or sets the duplicate detection history time window value.
-    /// </summary>
+    /// <summary>Sets how long the topic retains message identifiers for duplicate detection.</summary>
     public TimeSpan? DuplicateDetectionHistoryTimeWindow
     {
         set => _topicConfigurator.DuplicateDetectionHistoryTimeWindow = value;
     }
 
-    /// <summary>
-    /// Gets or sets the enable partitioning value.
-    /// </summary>
+    /// <summary>Enables or disables topic partitioning.</summary>
     public bool? EnablePartitioning
     {
         set => _topicConfigurator.EnablePartitioning = value;
     }
 
-    /// <summary>
-    /// Gets or sets the max size in megabytes value.
-    /// </summary>
+    /// <summary>Sets the maximum topic size in megabytes.</summary>
     public long? MaxSizeInMegabytes
     {
         set => _topicConfigurator.MaxSizeInMegabytes = value;
     }
 
-    /// <summary>
-    /// Gets or sets the max message size in kilobytes value.
-    /// </summary>
+    /// <summary>Sets the maximum individual message size in kilobytes.</summary>
     public long? MaxMessageSizeInKilobytes
     {
         set => _topicConfigurator.MaxMessageSizeInKilobytes = value;
     }
 
-    /// <summary>
-    /// Gets or sets the requires duplicate detection value.
-    /// </summary>
+    /// <summary>Enables or disables duplicate detection.</summary>
     public bool? RequiresDuplicateDetection
     {
         set => _topicConfigurator.RequiresDuplicateDetection = value;
     }
 
-    /// <summary>
-    /// Gets or sets the support ordering value.
-    /// </summary>
+    /// <summary>Enables or disables broker ordering support.</summary>
     public bool? SupportOrdering
     {
         set => _topicConfigurator.SupportOrdering = value;
     }
 
-    /// <summary>
-    /// Performs the enable duplicate detection operation.
-    /// </summary>
-    /// <param name="historyTimeWindow">The history time window value.</param>
+    /// <summary>Enables duplicate detection and sets the identifier-retention window.</summary>
+    /// <param name="historyTimeWindow">How long the broker retains message identifiers.</param>
     public void EnableDuplicateDetection(TimeSpan historyTimeWindow)
     {
         _topicConfigurator.EnableDuplicateDetection(historyTimeWindow);
     }
 
-    /// <summary>
-    /// Gets or sets the auto delete on idle value.
-    /// </summary>
+    /// <summary>Sets the idle interval after which the topic is deleted.</summary>
     public TimeSpan? AutoDeleteOnIdle
     {
         set => _topicConfigurator.AutoDeleteOnIdle = value;
     }
 
-    /// <summary>
-    /// Gets or sets the default message time to live value.
-    /// </summary>
+    /// <summary>Sets the default time to live for messages sent to the topic.</summary>
     public TimeSpan? DefaultMessageTimeToLive
     {
         set => _topicConfigurator.DefaultMessageTimeToLive = value;
     }
 
-    /// <summary>
-    /// Gets or sets the enable batched operations value.
-    /// </summary>
+    /// <summary>Enables or disables broker-side batching.</summary>
     public bool? EnableBatchedOperations
     {
         set => _topicConfigurator.EnableBatchedOperations = value;
     }
 
-    /// <summary>
-    /// Gets or sets the user metadata value.
-    /// </summary>
+    /// <summary>Sets provider metadata stored with the topic.</summary>
     public string UserMetadata
     {
         set => _topicConfigurator.UserMetadata = value;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Adds this topic and direct implemented-message topics to a publish topology builder.</summary>
+    /// <param name="builder">The publish topology builder.</param>
     public void Apply(IPublishEndpointBrokerTopologyBuilder builder)
     {
         if (Exclude)
@@ -206,12 +164,10 @@ public class ServiceBusMessagePublishTopology<TMessage> :
             configurator.Apply(builder);
     }
 
-    /// <summary>
-    /// Adds implemented message configurator to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="direct">The direct value.</param>
+    /// <summary>Registers an implemented message contract whose topic may be connected directly.</summary>
+    /// <typeparam name="T">The implemented message contract.</typeparam>
+    /// <param name="configurator">The implemented contract's publish topology.</param>
+    /// <param name="direct">Whether the relationship should be applied directly.</param>
     public void AddImplementedMessageConfigurator<T>(IServiceBusMessagePublishTopologyConfigurator<T> configurator, bool direct)
         where T : class
     {

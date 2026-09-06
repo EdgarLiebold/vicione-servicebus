@@ -1,10 +1,8 @@
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a selected state event filter implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Processes selected state event pipeline stages.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class SelectedStateEventFilter<TSaga, TMessage> :
     IStateEventFilter<TSaga>
     where TSaga : class, SagaStateMachineInstance
@@ -12,20 +10,16 @@ public class SelectedStateEventFilter<TSaga, TMessage> :
 {
     readonly StateMachineCondition<TSaga, TMessage> _filter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public SelectedStateEventFilter(StateMachineCondition<TSaga, TMessage> filter)
     {
         _filter = filter;
     }
 
-    /// <summary>
-    /// Performs the filter operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Applies the configured filter.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Filter<T>(BehaviorContext<TSaga, T> context)
         where T : class
@@ -36,10 +30,8 @@ public class SelectedStateEventFilter<TSaga, TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Performs the filter operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Applies the configured filter.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Filter(BehaviorContext<TSaga> context)
     {

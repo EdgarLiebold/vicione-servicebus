@@ -3,47 +3,35 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>
-/// Provides a default saga consume context implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Carries state for default saga consume operations.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class DefaultSagaConsumeContext<TSaga, TMessage> :
     ConsumeContextScope<TMessage>,
     SagaConsumeContext<TSaga, TMessage>
     where TMessage : class
     where TSaga : class, ISaga
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="instance">The instance.</param>
     public DefaultSagaConsumeContext(ConsumeContext<TMessage> context, TSaga instance)
         : base(context)
     {
         Saga = instance;
     }
 
-    /// <summary>
-    /// Gets the correlation id value.
-    /// </summary>
+    /// <summary>Gets the correlation id.</summary>
     public override Guid? CorrelationId => Saga.CorrelationId;
 
-    /// <summary>
-    /// Gets the saga value.
-    /// </summary>
+    /// <summary>Gets the saga.</summary>
     public TSaga Saga { get; }
-    /// <summary>
-    /// Gets or sets the is completed value.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether completed.</summary>
     public bool IsCompleted { get; private set; }
 
-    /// <summary>
-    /// Sets completed.
-    /// </summary>
+    /// <summary>Sets completed.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SetCompletedAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IsCompleted = true;

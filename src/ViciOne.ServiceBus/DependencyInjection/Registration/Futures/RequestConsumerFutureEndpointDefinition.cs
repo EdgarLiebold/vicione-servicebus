@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
-/// <summary>
-/// Provides a request consumer future endpoint definition implementation.
-/// </summary>
-/// <typeparam name="TFuture">The t future type.</typeparam>
+/// <summary>Defines configuration for request consumer future endpoint.</summary>
+/// <typeparam name="TFuture">The future type.</typeparam>
 public class RequestConsumerFutureEndpointDefinition<TFuture> :
     IEndpointDefinition<TFuture>
     where TFuture : class
@@ -12,53 +10,39 @@ public class RequestConsumerFutureEndpointDefinition<TFuture> :
     readonly IDefinition _definition;
     string _endpointName = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="consumerDefinition">The consumer definition value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="definition">The definition.</param>
+    /// <param name="consumerDefinition">The consumer definition.</param>
     public RequestConsumerFutureEndpointDefinition(IDefinition definition, IConsumerDefinition consumerDefinition)
     {
         _definition = definition;
         _consumerDefinition = consumerDefinition;
     }
 
-    /// <summary>
-    /// Gets the configure consume topology value.
-    /// </summary>
+    /// <summary>Gets the configure consume topology.</summary>
     public bool ConfigureConsumeTopology => true;
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public void Configure<T>(T configurator, IRegistrationContext? context)
         where T : IReceiveEndpointConfigurator
     {
     }
 
-    /// <summary>
-    /// Gets the is temporary value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether temporary.</summary>
     public bool IsTemporary => false;
 
-    /// <summary>
-    /// Gets the prefetch count value.
-    /// </summary>
+    /// <summary>Gets the prefetch count.</summary>
     public int? PrefetchCount => default;
 
-    /// <summary>
-    /// Gets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets the concurrent message limit.</summary>
     public int? ConcurrentMessageLimit => _definition.ConcurrentMessageLimit;
 
-    /// <summary>
-    /// Gets endpoint name.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets endpoint name.</summary>
+    /// <param name="formatter">The formatter.</param>
+    /// <returns>The endpoint name.</returns>
     public string GetEndpointName(IEndpointNameFormatter formatter)
     {
         string GetSeparator()

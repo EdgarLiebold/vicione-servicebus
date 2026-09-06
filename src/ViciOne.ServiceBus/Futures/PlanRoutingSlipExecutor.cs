@@ -3,20 +3,16 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Futures;
 
-/// <summary>
-/// Provides a plan routing slip executor implementation.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Executes plan routing slip operations.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class PlanRoutingSlipExecutor<TInput> :
     IRoutingSlipExecutor<TInput>
     where TInput : class
 {
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         var itineraryPlanner = context.GetServiceOrCreateInstance<IItineraryPlanner<TInput>>();
@@ -39,8 +35,6 @@ public class PlanRoutingSlipExecutor<TInput> :
             context.Saga.Pending.Add(trackingNumber);
     }
 
-    /// <summary>
-    /// Gets or sets the track routing slip value.
-    /// </summary>
+    /// <summary>Gets or sets the track routing slip.</summary>
     public bool TrackRoutingSlip { get; set; }
 }

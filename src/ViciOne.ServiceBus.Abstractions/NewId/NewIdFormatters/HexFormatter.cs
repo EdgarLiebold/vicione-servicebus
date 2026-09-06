@@ -6,29 +6,23 @@ using System.Runtime.Intrinsics.X86;
 
 namespace ViciOne.ServiceBus.NewIdFormatters;
 
-/// <summary>
-/// Provides a hex formatter implementation.
-/// </summary>
+/// <summary>Formats hex values.</summary>
 public class HexFormatter :
     INewIdFormatter
 {
     readonly uint _alpha;
     const uint LowerCaseUInt = 0x2020U;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="upperCase">The upper case value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="upperCase">The upper case.</param>
     public HexFormatter(bool upperCase = false)
     {
         _alpha = upperCase ? 0 : LowerCaseUInt;
     }
 
-    /// <summary>
-    /// Formats a canonical identifier representation.
-    /// </summary>
-    /// <param name="bytes">The canonical 16-byte identifier representation.</param>
-    /// <returns>The hexadecimal identifier.</returns>
+    /// <summary>Formats a canonical identifier representation.</summary>
+    /// <param name="bytes">The bytes.</param>
+    /// <returns>The formatted value.</returns>
     /// <exception cref="ArgumentException"><paramref name="bytes" /> does not contain exactly 16 bytes.</exception>
     public string Format(ReadOnlySpan<byte> bytes)
     {

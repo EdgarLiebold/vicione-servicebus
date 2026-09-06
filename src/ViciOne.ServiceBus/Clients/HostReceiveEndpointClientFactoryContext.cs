@@ -3,21 +3,17 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>
-/// Provides a host receive endpoint client factory context implementation.
-/// </summary>
+/// <summary>Carries state for host receive endpoint client factory operations.</summary>
 public class HostReceiveEndpointClientFactoryContext :
     ReceiveEndpointClientFactoryContext,
     IAsyncDisposable
 {
     readonly HostReceiveEndpointHandle _handle;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="handle">The handle value.</param>
-    /// <param name="defaultTimeout">The default timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="handle">The handle.</param>
+    /// <param name="defaultTimeout">The default timeout.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public HostReceiveEndpointClientFactoryContext(
         HostReceiveEndpointHandle handle,
         RequestTimeout defaultTimeout = default,
@@ -27,10 +23,8 @@ public class HostReceiveEndpointClientFactoryContext :
         _handle = handle;
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask DisposeAsync()
     {
         await _handle.StopAsync().ConfigureAwait(false);

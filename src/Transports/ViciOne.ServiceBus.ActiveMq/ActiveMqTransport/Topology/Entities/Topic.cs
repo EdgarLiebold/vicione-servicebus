@@ -1,22 +1,14 @@
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// The exchange details used to declare the exchange to ActiveMQ
-/// </summary>
+/// <summary>Describes an ActiveMQ topic declaration.</summary>
 public interface Topic
 {
-    /// <summary>
-    /// The exchange name
-    /// </summary>
+    /// <summary>Gets the topic name.</summary>
     string EntityName { get; }
 
-    /// <summary>
-    /// True if the exchange should be durable, and survive a broker restart
-    /// </summary>
+    /// <summary>Gets whether the topic persists across broker restarts.</summary>
     bool Durable { get; }
 
-    /// <summary>
-    /// True if the exchange should be deleted when the connection is closed
-    /// </summary>
+    /// <summary>Gets whether the broker removes the topic when its owning connection closes.</summary>
     bool AutoDelete { get; }
 }

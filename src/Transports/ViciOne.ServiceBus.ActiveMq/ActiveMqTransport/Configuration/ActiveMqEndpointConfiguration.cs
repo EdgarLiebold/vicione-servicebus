@@ -2,17 +2,13 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.ActiveMq.Configuration;
 
-/// <summary>
-/// Provides an active mq endpoint configuration implementation.
-/// </summary>
+/// <summary>Owns transport-independent and ActiveMQ topology configuration for an endpoint.</summary>
 public class ActiveMqEndpointConfiguration :
     EndpointConfiguration,
     IActiveMqEndpointConfiguration
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Creates a root ActiveMQ endpoint configuration.</summary>
+    /// <param name="topologyConfiguration">The ActiveMQ topology configuration.</param>
     protected ActiveMqEndpointConfiguration(IActiveMqTopologyConfiguration topologyConfiguration)
         : base(topologyConfiguration)
     {
@@ -25,16 +21,12 @@ public class ActiveMqEndpointConfiguration :
         Topology = topologyConfiguration;
     }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the ActiveMQ topology configuration.</summary>
     public new IActiveMqTopologyConfiguration Topology { get; }
 
-    /// <summary>
-    /// Creates endpoint configuration.
-    /// </summary>
-    /// <param name="isBusEndpoint">The is bus endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a child endpoint configuration with a copied topology configuration.</summary>
+    /// <param name="isBusEndpoint">Whether the child configures the bus endpoint.</param>
+    /// <returns>The child ActiveMQ endpoint configuration.</returns>
     public IActiveMqEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
     {
         var topologyConfiguration = new ActiveMqTopologyConfiguration(Topology);

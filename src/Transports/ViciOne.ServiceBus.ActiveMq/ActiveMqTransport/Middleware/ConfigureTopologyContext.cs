@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.ActiveMq.Middleware;
 
-/// <summary>
-/// Defines the contract for configure topology context.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Keys one-time ActiveMQ topology setup by its associated settings type.</summary>
+/// <typeparam name="T">The topology settings type.</typeparam>
 public interface ConfigureTopologyContext<T>
     where T : class
 {

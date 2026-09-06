@@ -6,19 +6,15 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>
-/// Provides a shared connection context implementation.
-/// </summary>
+/// <summary>Carries state for shared connection operations.</summary>
 public class SharedConnectionContext :
     ProxyPipeContext,
     ConnectionContext
 {
     readonly ConnectionContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public SharedConnectionContext(ConnectionContext context, CancellationToken cancellationToken)
         : base(context)
@@ -27,64 +23,48 @@ public class SharedConnectionContext :
         CancellationToken = cancellationToken;
     }
 
-    /// <summary>
-    /// Gets the cancellation token value.
-    /// </summary>
+    /// <summary>Gets the cancellation token.</summary>
     public override CancellationToken CancellationToken { get; }
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the host address.</summary>
     public Uri HostAddress => _context.HostAddress;
-    /// <summary>
-    /// Gets the schema value.
-    /// </summary>
+    /// <summary>Gets the schema.</summary>
     public string? Schema => _context.Schema;
-    /// <summary>
-    /// Gets the isolation level value.
-    /// </summary>
+    /// <summary>Gets the isolation level.</summary>
     public IsolationLevel IsolationLevel => _context.IsolationLevel;
 
-    /// <summary>
-    /// Creates client context.
-    /// </summary>
+    /// <summary>Creates client context.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The created client context.</returns>
     public ClientContext CreateClientContext(CancellationToken cancellationToken)
     {
         return _context.CreateClientContext(cancellationToken);
     }
 
-    /// <summary>
-    /// Creates connection.
-    /// </summary>
+    /// <summary>Creates connection.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the created value.</returns>
     public Task<ISqlTransportConnection> CreateConnectionAsync(CancellationToken cancellationToken)
     {
         return _context.CreateConnectionAsync(cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the delay until message ready operation.
-    /// </summary>
-    /// <param name="queueId">The queue id value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Delays processing until the message becomes eligible.</summary>
+    /// <param name="queueId">The queue id.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task DelayUntilMessageReadyAsync(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
     {
         return _context.DelayUntilMessageReadyAsync(queueId, timeout, timeProvider, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the query operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Queries the configured data source.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="callback">The callback invoked by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the query outcome.</returns>
     public Task<T> QueryAsync<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
     {
         return _context.QueryAsync(callback, cancellationToken);

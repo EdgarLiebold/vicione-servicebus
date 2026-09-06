@@ -5,21 +5,17 @@ using System.Text.Json.Serialization;
 
 namespace ViciOne.ServiceBus.Serialization.JsonConverters;
 
-/// <summary>
-/// Provides a case insensitive dictionary json converter implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
-/// <typeparam name="TValue">The t value type.</typeparam>
+/// <summary>Converts case insensitive dictionary json values.</summary>
+/// <typeparam name="T">The value type.</typeparam>
+/// <typeparam name="TValue">The value stored by the member.</typeparam>
 public class CaseInsensitiveDictionaryJsonConverter<T, TValue> :
     JsonConverter<T>
     where T : class, IEnumerable<KeyValuePair<string, TValue>>
 {
-    /// <summary>
-    /// Performs the write operation.
-    /// </summary>
-    /// <param name="writer">The writer value.</param>
-    /// <param name="value">The value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Writes the supplied value.</summary>
+    /// <param name="writer">The writer.</param>
+    /// <param name="value">The value to process.</param>
+    /// <param name="options">The options that control the operation.</param>
     public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
@@ -35,25 +31,21 @@ public class CaseInsensitiveDictionaryJsonConverter<T, TValue> :
         writer.WriteEndObject();
     }
 
-    /// <summary>
-    /// Performs the read operation.
-    /// </summary>
-    /// <param name="reader">The reader value.</param>
-    /// <param name="typeToConvert">The type to convert value.</param>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reads the requested value.</summary>
+    /// <param name="reader">The reader updated by the operation.</param>
+    /// <param name="typeToConvert">The type to convert.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <returns>The t produced by the operation.</returns>
     public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return ReadInternal(ref reader, typeToConvert, options);
     }
 
-    /// <summary>
-    /// Performs the read internal operation.
-    /// </summary>
-    /// <param name="reader">The reader value.</param>
-    /// <param name="typeToConvert">The type to convert value.</param>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reads internal.</summary>
+    /// <param name="reader">The reader updated by the operation.</param>
+    /// <param name="typeToConvert">The type to convert.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <returns>The t produced by the operation.</returns>
     protected T? ReadInternal(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)

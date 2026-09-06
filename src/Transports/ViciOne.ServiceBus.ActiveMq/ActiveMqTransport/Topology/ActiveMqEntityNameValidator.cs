@@ -2,23 +2,17 @@ using System.Text.RegularExpressions;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides an active mq entity name validator implementation.
-/// </summary>
+/// <summary>Validates ActiveMQ entity names against the supported portable character set.</summary>
 public class ActiveMqEntityNameValidator :
     IEntityNameValidator
 {
     static readonly Regex _regex = new Regex(@"^[A-Za-z0-9\-_\.:]+$", RegexOptions.Compiled);
 
-    /// <summary>
-    /// Gets the validator value.
-    /// </summary>
+    /// <summary>Gets the shared ActiveMQ entity-name validator.</summary>
     public static IEntityNameValidator Validator => Cached.EntityNameValidator;
 
-    /// <summary>
-    /// Performs the throw if invalid entity name operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
+    /// <summary>Throws when a name is blank or contains an unsupported character.</summary>
+    /// <param name="name">The entity name to validate.</param>
     public void ThrowIfInvalidEntityName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -32,11 +26,9 @@ public class ActiveMqEntityNameValidator :
         }
     }
 
-    /// <summary>
-    /// Determines whether valid entity name.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether a name contains only letters, digits, hyphens, underscores, periods, or colons.</summary>
+    /// <param name="name">The entity name to validate.</param>
+    /// <returns><see langword="true" /> when the name is valid; otherwise, <see langword="false" />.</returns>
     public bool IsValidEntityName(string name)
     {
         return _regex.Match(name).Success;

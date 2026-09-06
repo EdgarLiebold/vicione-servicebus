@@ -10,26 +10,20 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus entity receive endpoint configuration implementation.
-/// </summary>
+/// <summary>Configures the common entity, processor, and receive pipeline for queue and subscription endpoints.</summary>
 public abstract class ServiceBusEntityReceiveEndpointConfiguration :
     ReceiveEndpointConfiguration
 {
     readonly IServiceBusEndpointEntityConfigurator _configurator;
     readonly IServiceBusHostConfiguration _hostConfiguration;
     readonly BaseClientSettings _settings;
-    /// <summary>
-    /// Defines the client pipe configurator value.
-    /// </summary>
+    /// <summary>Builds the client-context pipeline that owns processor startup and message delivery.</summary>
     protected readonly IBuildPipeConfigurator<ClientContext> ClientPipeConfigurator;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
+    /// <summary>Initializes common receive-endpoint state for an Azure Service Bus entity.</summary>
+    /// <param name="hostConfiguration">The namespace host configuration.</param>
+    /// <param name="settings">The entity and processor settings.</param>
+    /// <param name="endpointConfiguration">The endpoint pipeline and topology configuration.</param>
     protected ServiceBusEntityReceiveEndpointConfiguration(IServiceBusHostConfiguration hostConfiguration, BaseClientSettings settings,
         IServiceBusEndpointConfiguration endpointConfiguration)
         : base(hostConfiguration, endpointConfiguration)
@@ -41,17 +35,13 @@ public abstract class ServiceBusEntityReceiveEndpointConfiguration :
         ClientPipeConfigurator = new PipeConfigurator<ClientContext>();
     }
 
-    /// <summary>
-    /// Gets or sets the max concurrent calls value.
-    /// </summary>
+    /// <summary>Sets the endpoint's concurrent message limit.</summary>
     public int MaxConcurrentCalls
     {
         set => ConcurrentMessageLimit = value;
     }
 
-    /// <summary>
-    /// Gets or sets the auto delete on idle value.
-    /// </summary>
+    /// <summary>Sets the idle duration after which Azure Service Bus deletes the entity.</summary>
     public TimeSpan AutoDeleteOnIdle
     {
         set
@@ -62,114 +52,86 @@ public abstract class ServiceBusEntityReceiveEndpointConfiguration :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the default message time to live value.
-    /// </summary>
+    /// <summary>Sets the default lifetime of messages sent to the entity.</summary>
     public TimeSpan DefaultMessageTimeToLive
     {
         set => _configurator.DefaultMessageTimeToLive = value;
     }
 
-    /// <summary>
-    /// Gets or sets the enable batched operations value.
-    /// </summary>
+    /// <summary>Sets whether server-side batched operations are enabled.</summary>
     public bool EnableBatchedOperations
     {
         set => _configurator.EnableBatchedOperations = value;
     }
 
-    /// <summary>
-    /// Gets or sets the enable dead lettering on message expiration value.
-    /// </summary>
+    /// <summary>Sets whether expired messages are moved to the entity's dead-letter subqueue.</summary>
     public bool EnableDeadLetteringOnMessageExpiration
     {
         set => _configurator.EnableDeadLetteringOnMessageExpiration = value;
     }
 
-    /// <summary>
-    /// Gets or sets the forward dead lettered messages to value.
-    /// </summary>
+    /// <summary>Sets the entity path to which dead-lettered messages are forwarded.</summary>
     public string ForwardDeadLetteredMessagesTo
     {
         set => _configurator.ForwardDeadLetteredMessagesTo = value;
     }
 
-    /// <summary>
-    /// Gets or sets the lock duration value.
-    /// </summary>
+    /// <summary>Sets the initial lock duration for received messages.</summary>
     public TimeSpan LockDuration
     {
         set => _configurator.LockDuration = value;
     }
 
-    /// <summary>
-    /// Gets or sets the max delivery count value.
-    /// </summary>
+    /// <summary>Sets the delivery-attempt limit before a message is dead-lettered.</summary>
     public int MaxDeliveryCount
     {
         set => _configurator.MaxDeliveryCount = value;
     }
 
-    /// <summary>
-    /// Gets or sets the requires session value.
-    /// </summary>
+    /// <summary>Sets whether the entity requires sessions.</summary>
     public bool RequiresSession
     {
         set => _configurator.RequiresSession = value;
     }
 
-    /// <summary>
-    /// Gets or sets the max concurrent sessions value.
-    /// </summary>
+    /// <summary>Sets the maximum number of sessions processed concurrently.</summary>
     public int MaxConcurrentSessions
     {
         set => _configurator.MaxConcurrentSessions = value;
     }
 
-    /// <summary>
-    /// Gets or sets the max concurrent calls per session value.
-    /// </summary>
+    /// <summary>Sets the maximum number of concurrent message callbacks for each session.</summary>
     public int MaxConcurrentCallsPerSession
     {
         set => _configurator.MaxConcurrentCallsPerSession = value;
     }
 
-    /// <summary>
-    /// Gets or sets the user metadata value.
-    /// </summary>
+    /// <summary>Sets application-defined metadata stored with the entity.</summary>
     public string UserMetadata
     {
         set => _configurator.UserMetadata = value;
     }
 
-    /// <summary>
-    /// Gets or sets the message wait timeout value.
-    /// </summary>
+    /// <summary>Sets the session idle timeout through the <c>MessageWaitTimeout</c> compatibility property.</summary>
     public TimeSpan MessageWaitTimeout
     {
         set => _settings.SessionIdleTimeout = value;
     }
 
-    /// <summary>
-    /// Gets or sets the session idle timeout value.
-    /// </summary>
+    /// <summary>Sets the maximum idle time to wait for a message from an accepted session.</summary>
     public TimeSpan? SessionIdleTimeout
     {
         set => _settings.SessionIdleTimeout = value;
     }
 
-    /// <summary>
-    /// Gets or sets the max auto renew duration value.
-    /// </summary>
+    /// <summary>Sets the maximum duration for automatic message- or session-lock renewal.</summary>
     public TimeSpan MaxAutoRenewDuration
     {
         set => _settings.MaxAutoRenewDuration = value;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Combines client-pipeline, entity-setting, and base endpoint validation.</summary>
+    /// <returns>All validation failures found in the combined configuration.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         return ClientPipeConfigurator.Validate()
@@ -186,11 +148,9 @@ public abstract class ServiceBusEntityReceiveEndpointConfiguration :
             yield return this.Failure("MaxConcurrentCalls", "must be > 0");
     }
 
-    /// <summary>
-    /// Creates receive endpoint.
-    /// </summary>
-    /// <param name="host">The host value.</param>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
+    /// <summary>Builds the client pipeline and registers the receive endpoint with its host.</summary>
+    /// <param name="host">The host that owns the receive endpoint.</param>
+    /// <param name="receiveEndpointContext">The endpoint context used by the receive transport.</param>
     protected void CreateReceiveEndpoint(IHost host, ServiceBusReceiveEndpointContext receiveEndpointContext)
     {
         if (_hostConfiguration.DeployTopologyOnly)

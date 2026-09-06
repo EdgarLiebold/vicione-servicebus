@@ -1,31 +1,23 @@
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Defines configuration options for sql transport migration.
-/// </summary>
+/// <summary>Defines configuration options for sql transport migration.</summary>
 public sealed class SqlTransportMigrationOptions
 {
-    /// <summary>
-    /// If true, the database and all transport components will be created/updated on startup
-    /// </summary>
+    /// <summary>If true, the database and all transport components will be created/updated on startup.</summary>
     public bool CreateDatabase { get; set; }
 
     /// <summary>
     /// If true, the schema for transport components will be created/updated on startup
-    ///
-    /// Use this, without CreateDatabase, if you do not have the required permissions to create the schema and grant access
+    /// Use this, without CreateDatabase, if you do not have the required permissions to create the schema and grant access.
     /// </summary>
     public bool CreateSchema { get; set; }
 
     /// <summary>
     /// If true, the infrastructure components for the transport will be created/updated on startup
-    ///
-    /// Use this, without CreateDatabase, if you do not have the required permissions to create databases and logins
+    /// Use this, without CreateDatabase, if you do not have the required permissions to create databases and logins.
     /// </summary>
     public bool CreateInfrastructure { get; set; }
 
-    /// <summary>
-    /// If true, the database and all transport components will be deleted on shutdown
-    /// </summary>
+    /// <summary>If true, the database and all transport components will be deleted on shutdown.</summary>
     public bool DeleteDatabase { get; set; }
 }

@@ -4,23 +4,19 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a subscription entity implementation.
-/// </summary>
+/// <summary>Represents an Azure Service Bus topic subscription declaration in broker topology.</summary>
 public class SubscriptionEntity :
     Subscription,
     SubscriptionHandle
 {
     readonly TopicEntity _topic;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="createSubscriptionOptions">The create subscription options value.</param>
-    /// <param name="rule">The rule value.</param>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Creates a topology subscription for a topic.</summary>
+    /// <param name="id">The topology-local identifier.</param>
+    /// <param name="topic">The subscribed topic.</param>
+    /// <param name="createSubscriptionOptions">The Azure subscription declaration options.</param>
+    /// <param name="rule">The optional initial subscription rule.</param>
+    /// <param name="filter">The optional broker rule filter.</param>
     public SubscriptionEntity(long id, TopicEntity topic, CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions? rule = null,
         RuleFilter? filter = null)
     {
@@ -34,46 +30,28 @@ public class SubscriptionEntity :
         Filter = filter;
     }
 
-    /// <summary>
-    /// Gets the name comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that considers only topic and subscription names.</summary>
     public static IEqualityComparer<SubscriptionEntity> NameComparer { get; } = new NameEqualityComparer();
-    /// <summary>
-    /// Gets the entity comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that considers names and subscription declaration properties.</summary>
     public static IEqualityComparer<SubscriptionEntity> EntityComparer { get; } = new SubscriptionEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the create subscription options value.
-    /// </summary>
+    /// <summary>Gets the Azure subscription declaration options.</summary>
     public CreateSubscriptionOptions CreateSubscriptionOptions { get; }
 
-    /// <summary>
-    /// Gets the topic value.
-    /// </summary>
+    /// <summary>Gets the subscribed topic.</summary>
     public TopicHandle Topic => _topic;
 
-    /// <summary>
-    /// Gets the rule value.
-    /// </summary>
+    /// <summary>Gets the optional initial subscription rule.</summary>
     public CreateRuleOptions? Rule { get; }
-    /// <summary>
-    /// Gets the filter value.
-    /// </summary>
+    /// <summary>Gets the optional broker rule filter.</summary>
     public RuleFilter? Filter { get; }
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the topology-local identifier.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the subscription value.
-    /// </summary>
+    /// <summary>Gets this entity through the read-only subscription contract.</summary>
     public Subscription Subscription => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the topic and subscription names for diagnostics.</summary>
+    /// <returns>A diagnostic string containing topic and subscription names.</returns>
     public override string ToString()
     {
         return string.Join(", ",

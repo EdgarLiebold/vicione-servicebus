@@ -2,24 +2,18 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for endpoint registration configurator.
-/// </summary>
+/// <summary>Configures endpoint registration.</summary>
 public interface IEndpointRegistrationConfigurator
 {
-    /// <summary>
-    /// Set the endpoint name, overriding the default endpoint name formatter
-    /// </summary>
+    /// <summary>Set the endpoint name, overriding the default endpoint name formatter.</summary>
     string Name { set; }
 
-    /// <summary>
-    /// True if the endpoint should be removed after the endpoint is stopped
-    /// </summary>
+    /// <summary>True if the endpoint should be removed after the endpoint is stopped.</summary>
     bool Temporary { set; }
 
     /// <summary>
     /// Only specify when required, use <see cref="ConcurrentMessageLimit" /> first and
-    /// only specific a <see cref="PrefetchCount" /> when the default is not appropriate
+    /// only specific a <see cref="PrefetchCount" /> when the default is not appropriate.
     /// </summary>
     int? PrefetchCount { set; }
 
@@ -42,15 +36,11 @@ public interface IEndpointRegistrationConfigurator
     /// </summary>
     string InstanceId { set; }
 
-    /// <summary>
-    /// Add an endpoint configuration callback to the registration
-    /// </summary>
-    /// <param name="callback"></param>
+    /// <summary>Add an endpoint configuration callback to the registration.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
     void AddConfigureEndpointCallback(Action<IReceiveEndpointConfigurator>? callback);
 
-    /// <summary>
-    /// Add an endpoint configuration callback to the registration
-    /// </summary>
-    /// <param name="callback"></param>
+    /// <summary>Add an endpoint configuration callback to the registration.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
     void AddConfigureEndpointCallback(Action<IRegistrationContext, IReceiveEndpointConfigurator>? callback);
 }

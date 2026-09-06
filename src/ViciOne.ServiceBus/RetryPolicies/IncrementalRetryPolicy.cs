@@ -2,21 +2,17 @@ using System;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>
-/// Provides an incremental retry policy implementation.
-/// </summary>
+/// <summary>Defines policy for incremental retry.</summary>
 public class IncrementalRetryPolicy :
     IRetryPolicy
 {
     readonly IExceptionFilter _filter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
-    /// <param name="retryLimit">The retry limit value.</param>
-    /// <param name="initialInterval">The initial interval value.</param>
-    /// <param name="intervalIncrement">The interval increment value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="retryLimit">The retry limit.</param>
+    /// <param name="initialInterval">The initial interval.</param>
+    /// <param name="intervalIncrement">The interval increment.</param>
     public IncrementalRetryPolicy(IExceptionFilter filter, int retryLimit, TimeSpan initialInterval,
         TimeSpan intervalIncrement)
     {
@@ -48,19 +44,13 @@ public class IncrementalRetryPolicy :
         IntervalIncrement = intervalIncrement;
     }
 
-    /// <summary>
-    /// Gets the retry limit value.
-    /// </summary>
+    /// <summary>Gets the retry limit.</summary>
     public int RetryLimit { get; }
 
-    /// <summary>
-    /// Gets the initial interval value.
-    /// </summary>
+    /// <summary>Gets the initial interval.</summary>
     public TimeSpan InitialInterval { get; }
 
-    /// <summary>
-    /// Gets the interval increment value.
-    /// </summary>
+    /// <summary>Gets the interval increment.</summary>
     public TimeSpan IntervalIncrement { get; }
 
     void IProbeSite.Probe(ProbeContext context)
@@ -81,9 +71,7 @@ public class IncrementalRetryPolicy :
         return new IncrementalRetryPolicyContext<T>(this, context);
     }
 
-    /// <summary>
-    /// Determines whether handled.
-    /// </summary>
+    /// <summary>Determines whether handled.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)

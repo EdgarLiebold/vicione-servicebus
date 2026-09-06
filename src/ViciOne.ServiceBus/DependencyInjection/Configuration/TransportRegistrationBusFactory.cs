@@ -9,44 +9,36 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a transport registration bus factory implementation.
-/// </summary>
-/// <typeparam name="TEndpointConfigurator">The t endpoint configurator type.</typeparam>
+/// <summary>Creates transport registration bus instances.</summary>
+/// <typeparam name="TEndpointConfigurator">The endpoint configurator type.</typeparam>
 public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
     IRegistrationBusFactory
     where TEndpointConfigurator : class, IReceiveEndpointConfigurator
 {
     readonly IHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
     protected TransportRegistrationBusFactory(IHostConfiguration hostConfiguration)
     {
         _hostConfiguration = hostConfiguration;
     }
 
-    /// <summary>
-    /// Creates bus.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="specifications">The specifications value.</param>
-    /// <param name="busName">The bus name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates bus.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="specifications">The specifications.</param>
+    /// <param name="busName">The bus name.</param>
+    /// <returns>The created bus.</returns>
     public abstract IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName);
 
-    /// <summary>
-    /// Creates bus.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TConfigurator">The t configurator type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <param name="specifications">The specifications value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates bus.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TConfigurator">The configurator type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="specifications">The specifications.</param>
+    /// <returns>The created bus.</returns>
     protected IBusInstance CreateBus<T, TConfigurator>(T configurator, IBusRegistrationContext context,
         Action<IBusRegistrationContext, TConfigurator>? configure, IEnumerable<IBusInstanceSpecification> specifications)
         where T : TConfigurator, IBusFactory
@@ -239,14 +231,12 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
             connector.ConnectPublishObserver(observer);
     }
 
-    /// <summary>
-    /// Creates bus instance.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <param name="host">The host value.</param>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates bus instance.</summary>
+    /// <param name="bus">The bus.</param>
+    /// <param name="host">The host.</param>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The created bus instance.</returns>
     protected virtual IBusInstance CreateBusInstance(IBusControl bus, IHost<TEndpointConfigurator> host, IHostConfiguration hostConfiguration,
         IBusRegistrationContext context)
     {

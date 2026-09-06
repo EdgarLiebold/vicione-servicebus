@@ -12,18 +12,12 @@ public interface ValidationResult
     /// </summary>
     ValidationResultDisposition Disposition { get; }
 
-    /// <summary>
-    /// The message associated with the result
-    /// </summary>
+    /// <summary>The message associated with the result.</summary>
     string Message { get; }
 
-    /// <summary>
-    /// The key associated with the result (chained if configurators are nested)
-    /// </summary>
+    /// <summary>The key associated with the result (chained if configurators are nested).</summary>
     string Key { get; }
 
-    /// <summary>
-    /// The value associated with the result
-    /// </summary>
+    /// <summary>The value associated with the result.</summary>
     string? Value { get; }
 }

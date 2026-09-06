@@ -79,6 +79,18 @@ public sealed class InterfaceMessagePackFormatterTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "failed-compilation-is-not-counted")]
+    public void FailedCompilation_DoesNotIncreaseTheCompiledEntryCount()
+    {
+        var cache = new ConcreteFormatterCache<ICached>(_ => throw new InvalidOperationException("Rejected test formatter."));
+
+        var exception = Assert.Throws<InvalidOperationException>(() => cache.Get(typeof(Cached)));
+
+        Assert.Equal("Rejected test formatter.", exception.Message);
+        Assert.Equal(0, cache.CompiledCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "weak-key")]
     public void Cache_DoesNotKeepItsOwnTypeKeyAlive()
     {

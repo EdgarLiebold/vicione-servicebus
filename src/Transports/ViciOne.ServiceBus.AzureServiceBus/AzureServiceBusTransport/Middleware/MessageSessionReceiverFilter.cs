@@ -1,24 +1,18 @@
 namespace ViciOne.ServiceBus.AzureServiceBus.Middleware;
 
-/// <summary>
-/// Creates a message session receiver
-/// </summary>
+/// <summary>Creates a session-aware receiver for an endpoint client context.</summary>
 public class MessageSessionReceiverFilter :
     MessageReceiverFilter
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes the filter for a session-enabled receive endpoint.</summary>
+    /// <param name="context">The endpoint whose session receiver is coordinated.</param>
     public MessageSessionReceiverFilter(ServiceBusReceiveEndpointContext context)
         : base(context)
     {
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The probe section to populate.</param>
     public override void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("messageSessionReceiver");
@@ -27,11 +21,9 @@ public class MessageSessionReceiverFilter :
         Context.ReceivePipe.Probe(scope);
     }
 
-    /// <summary>
-    /// Creates message receiver.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the session receiver agent for the client context.</summary>
+    /// <param name="context">The initialized session processor client.</param>
+    /// <returns>The session receiver agent.</returns>
     protected override IReceiver CreateMessageReceiver(ClientContext context)
     {
         return new SessionReceiver(context, Context);

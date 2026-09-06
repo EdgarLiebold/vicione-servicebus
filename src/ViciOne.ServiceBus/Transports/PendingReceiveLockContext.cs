@@ -5,56 +5,44 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a pending receive lock context implementation.
-/// </summary>
+/// <summary>Carries state for pending receive lock operations.</summary>
 public class PendingReceiveLockContext :
     ReceiveLockContext
 {
     Lock? _lockContext;
     Queue<Lock> _pending = null!;
 
-    /// <summary>
-    /// Gets the is empty value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether empty.</summary>
     public bool IsEmpty => _lockContext == null && (_pending == null || _pending.Count == 0);
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
+    /// <summary>Marks the current operation as complete.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CompleteAsync(CancellationToken cancellationToken = default)
     {
         return ExecuteAsync(context => context.CompleteAsync(cancellationToken: cancellationToken), true);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
+    /// <summary>Reports that the operation has faulted.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         return ExecuteAsync(context => context.FaultedAsync(exception, cancellationToken: cancellationToken), true);
     }
 
-    /// <summary>
-    /// Validates lock status.
-    /// </summary>
+    /// <summary>Validates lock status.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
         return ExecuteAsync(context => context.ValidateLockStatusAsync(cancellationToken: cancellationToken));
     }
 
-    /// <summary>
-    /// Performs the enqueue operation.
-    /// </summary>
-    /// <param name="receiveContext">The receive context value.</param>
-    /// <param name="receiveLockContext">The receive lock context value.</param>
+    /// <summary>Adds the supplied item to the queue.</summary>
+    /// <param name="receiveContext">The receive context.</param>
+    /// <param name="receiveLockContext">The receive lock context.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Enqueue(BaseReceiveContext receiveContext, ReceiveLockContext receiveLockContext)
     {
@@ -136,9 +124,7 @@ public class PendingReceiveLockContext :
         }
     }
 
-    /// <summary>
-    /// Determines whether the current value can cel.
-    /// </summary>
+    /// <summary>Determines whether the current value can cel.</summary>
     public void Cancel()
     {
         lock (this)

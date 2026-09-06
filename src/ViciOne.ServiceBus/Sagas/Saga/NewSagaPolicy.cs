@@ -7,8 +7,8 @@ namespace ViciOne.ServiceBus.Saga;
 /// Accepts a message to a saga that does not already exist, throwing an exception if an existing
 /// saga instance is specified.
 /// </summary>
-/// <typeparam name="TSaga">The saga type</typeparam>
-/// <typeparam name="TMessage">The message type</typeparam>
+/// <typeparam name="TSaga">The saga type.</typeparam>
+/// <typeparam name="TMessage">The message type.</typeparam>
 public class NewSagaPolicy<TSaga, TMessage> :
     ISagaPolicy<TSaga, TMessage>
     where TSaga : class, ISaga
@@ -17,27 +17,21 @@ public class NewSagaPolicy<TSaga, TMessage> :
     readonly bool _insertOnInitial;
     readonly ISagaFactory<TSaga, TMessage> _sagaFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="sagaFactory">The saga factory value.</param>
-    /// <param name="insertOnInitial">The insert on initial value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="sagaFactory">The saga factory.</param>
+    /// <param name="insertOnInitial">The insert on initial.</param>
     public NewSagaPolicy(ISagaFactory<TSaga, TMessage> sagaFactory, bool insertOnInitial)
     {
         _sagaFactory = sagaFactory;
         _insertOnInitial = insertOnInitial;
     }
 
-    /// <summary>
-    /// Gets the is read only value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether read only.</summary>
     public bool IsReadOnly => false;
 
-    /// <summary>
-    /// Performs the pre insert instance operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Runs before insert instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="instance">Receives the instance produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool PreInsertInstance(ConsumeContext<TMessage> context, [NotNullWhen(true)] out TSaga? instance)
     {

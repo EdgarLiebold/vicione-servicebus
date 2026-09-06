@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
-/// <summary>
-/// Provides an in memory consume topology implementation.
-/// </summary>
+/// <summary>Defines the topology for in memory consume.</summary>
 public class InMemoryConsumeTopology :
     ConsumeTopology,
     IInMemoryConsumeTopologyConfigurator
@@ -18,11 +16,9 @@ public class InMemoryConsumeTopology :
     readonly IInMemoryPublishTopologyConfigurator _publishTopology;
     readonly List<IInMemoryConsumeTopologySpecification> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
-    /// <param name="publishTopology">The publish topology value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="messageTopology">The message topology.</param>
+    /// <param name="publishTopology">The publish topology.</param>
     public InMemoryConsumeTopology(IMessageTopology messageTopology, IInMemoryPublishTopologyConfigurator publishTopology)
     {
         _messageTopology = messageTopology;
@@ -38,10 +34,8 @@ public class InMemoryConsumeTopology :
             ?? throw new InvalidOperationException($"The consume topology for {TypeCache<T>.ShortName} is not an in-memory topology.");
     }
 
-    /// <summary>
-    /// Adds specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddSpecification(IInMemoryConsumeTopologySpecification specification)
     {
         if (specification == null)
@@ -50,12 +44,10 @@ public class InMemoryConsumeTopology :
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="exchangeType">The exchange type value.</param>
-    /// <param name="routingKey">The routing key value.</param>
+    /// <summary>Binds the configured entities.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
+    /// <param name="routingKey">The routing key.</param>
     public void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default)
     {
         var specification = new ExchangeBindingConsumeTopologySpecification(exchangeName, exchangeType, routingKey);
@@ -69,10 +61,8 @@ public class InMemoryConsumeTopology :
             ?? throw new InvalidOperationException($"The consume topology for {TypeCache<T>.ShortName} is not configurable.");
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IMessageFabricConsumeTopologyBuilder builder)
     {
         foreach (var specification in _specifications)
@@ -81,20 +71,16 @@ public class InMemoryConsumeTopology :
         ForEach<IInMemoryMessageConsumeTopologyConfigurator>(x => x.Apply(builder));
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates message topology.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The created message topology.</returns>
     protected override IMessageConsumeTopologyConfigurator CreateMessageTopology<T>()
     {
         var topology = new InMemoryMessageConsumeTopology<T>(_messageTopology.GetMessageTopology<T>(), _publishTopology);

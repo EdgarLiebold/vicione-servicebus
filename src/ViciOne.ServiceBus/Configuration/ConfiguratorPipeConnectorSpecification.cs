@@ -3,10 +3,8 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a configurator pipe connector specification implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Describes requirements for configurator pipe connector.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class ConfiguratorPipeConnectorSpecification<TContext> :
     IPipeConfigurator<TContext>,
     IPipeConnectorSpecification
@@ -14,27 +12,21 @@ public class ConfiguratorPipeConnectorSpecification<TContext> :
 {
     readonly IBuildPipeConfigurator<TContext> _configurator;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public ConfiguratorPipeConnectorSpecification()
     {
         _configurator = new PipeConfigurator<TContext>();
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<TContext> specification)
     {
         _configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Performs the connect operation.
-    /// </summary>
-    /// <param name="connector">The connector value.</param>
+    /// <summary>Connects the configured observer or endpoint.</summary>
+    /// <param name="connector">The connector.</param>
     public void Connect(IPipeConnector connector)
     {
         IPipe<TContext> pipe = _configurator.Build();
@@ -42,10 +34,8 @@ public class ConfiguratorPipeConnectorSpecification<TContext> :
         connector.ConnectPipe(pipe);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return _configurator.Validate();

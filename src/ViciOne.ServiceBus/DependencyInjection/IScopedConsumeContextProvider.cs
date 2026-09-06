@@ -2,24 +2,16 @@ using System;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>
-/// Defines the contract for scoped consume context provider.
-/// </summary>
+/// <summary>Provides scoped consume context services.</summary>
 public interface IScopedConsumeContextProvider
 {
-    /// <summary>
-    /// Gets the has context value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether this instance has context.</summary>
     bool HasContext { get; }
-    /// <summary>
-    /// Gets context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets context.</summary>
+    /// <returns>The context.</returns>
     ConsumeContext GetContext();
-    /// <summary>
-    /// Performs the push context operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Pushes context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The disposable produced by the operation.</returns>
     IDisposable PushContext(ConsumeContext context);
 }

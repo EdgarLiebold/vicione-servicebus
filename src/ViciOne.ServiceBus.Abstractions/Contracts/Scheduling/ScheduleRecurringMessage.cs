@@ -2,28 +2,18 @@ using System;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>
-/// Defines the contract for schedule recurring message.
-/// </summary>
+/// <summary>Defines the operations required by schedule recurring message.</summary>
 public interface ScheduleRecurringMessage
 {
-    /// <summary>
-    /// Gets the schedule value.
-    /// </summary>
+    /// <summary>Gets the schedule.</summary>
     RecurringSchedule Schedule { get; }
 
-    /// <summary>
-    /// The message types implemented by the message
-    /// </summary>
+    /// <summary>The message types implemented by the message.</summary>
     string[] PayloadType { get; }
 
-    /// <summary>
-    /// The destination where the message should be sent
-    /// </summary>
+    /// <summary>The destination where the message should be sent.</summary>
     Uri Destination { get; }
 
-    /// <summary>
-    /// The actual scheduled message payload
-    /// </summary>
+    /// <summary>The actual scheduled message payload.</summary>
     object Payload { get; }
 }

@@ -12,11 +12,9 @@ namespace ViciOne.ServiceBus;
 public interface ISendEndpointProvider :
     ISendObserverConnector
 {
-    /// <summary>
-    /// Return the send endpoint for the specified address
-    /// </summary>
-    /// <param name="address">The endpoint address</param>
-    /// <returns>The send endpoint</returns>
+    /// <summary>Return the send endpoint for the specified address.</summary>
+    /// <param name="address">The endpoint address.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The send endpoint.</returns>
     Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default);
 }

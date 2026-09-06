@@ -12,42 +12,28 @@ public interface RoutingSlip
 {
     /// <summary>
     /// The unique tracking number for this routing slip, used to correlate events
-    /// and activities
+    /// and activities.
     /// </summary>
     Guid TrackingNumber { get; }
 
-    /// <summary>
-    /// The time when the routing slip was created
-    /// </summary>
+    /// <summary>The time when the routing slip was created.</summary>
     DateTimeOffset CreateTimestamp { get; }
 
-    /// <summary>
-    /// The list of activities that are remaining
-    /// </summary>
+    /// <summary>The list of activities that are remaining.</summary>
     IList<Activity> Itinerary { get; }
 
-    /// <summary>
-    /// The logs of activities that have already been executed
-    /// </summary>
+    /// <summary>The logs of activities that have already been executed.</summary>
     IList<ActivityLog> ActivityLogs { get; }
 
-    /// <summary>
-    /// The logs of activities that can be compensated
-    /// </summary>
+    /// <summary>The logs of activities that can be compensated.</summary>
     IList<CompensateLog> CompensateLogs { get; }
 
-    /// <summary>
-    /// Variables that are carried with the routing slip for use by any activity
-    /// </summary>
+    /// <summary>Variables that are carried with the routing slip for use by any activity.</summary>
     IDictionary<string, object> Variables { get; }
 
-    /// <summary>
-    /// A list of exceptions that have occurred during routing slip execution
-    /// </summary>
+    /// <summary>A list of exceptions that have occurred during routing slip execution.</summary>
     IList<ActivityException> ActivityExceptions { get; }
 
-    /// <summary>
-    /// Subscriptions to routing slip events
-    /// </summary>
+    /// <summary>Subscriptions to routing slip events.</summary>
     IList<Subscription> Subscriptions { get; }
 }

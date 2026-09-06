@@ -12,6 +12,7 @@ namespace ViciOne.ServiceBus.Providers.Transports;
 /// Dispatches a retained serialized message into the volatile InMemory transport and reports consumer completion as
 /// the only valid local completion boundary.
 /// </summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatcher<TBus>
     where TBus : class, IBus
 {

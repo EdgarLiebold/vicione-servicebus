@@ -4,9 +4,7 @@ using Amazon.Runtime;
 using Amazon.SQS.Model;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
-/// <summary>
-/// Classifies Amazon SQS send failures from typed SDK exceptions and HTTP status codes.
-/// </summary>
+/// <summary>Classifies Amazon SQS send failures from typed SDK exceptions and HTTP status codes.</summary>
 public sealed class AmazonSqsSendFailureClassifier : ITransportSendFailureClassifier
 {
     /// <inheritdoc />

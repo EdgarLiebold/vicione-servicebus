@@ -2,28 +2,18 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
-/// <summary>
-/// Defines the contract for recurring job schedule.
-/// </summary>
+/// <summary>Defines the operations required by recurring job schedule.</summary>
 public interface RecurringJobSchedule
 {
-    /// <summary>
-    /// A valid cron expression specifying the job schedule
-    /// </summary>
+    /// <summary>A valid cron expression specifying the job schedule.</summary>
     string? CronExpression { get; }
 
-    /// <summary>
-    /// If specified, the time zone in which the cron expression should be evaluated, otherwise UTC is used.
-    /// </summary>
+    /// <summary>If specified, the time zone in which the cron expression should be evaluated, otherwise UTC is used.</summary>
     string? TimeZoneId { get; }
 
-    /// <summary>
-    /// If specified, the start date for the job. Otherwise, the current date/time will be used.
-    /// </summary>
+    /// <summary>If specified, the start date for the job. Otherwise, the current date/time will be used.</summary>
     DateTimeOffset? Start { get; }
 
-    /// <summary>
-    /// If specified, the end date for the job after which it will be removed from the job scheduler
-    /// </summary>
+    /// <summary>If specified, the end date for the job after which it will be removed from the job scheduler.</summary>
     DateTimeOffset? End { get; }
 }

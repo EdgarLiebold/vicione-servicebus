@@ -3,33 +3,25 @@ using ViciOne.ServiceBus.AzureServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus message consume topology configurator.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures the Azure Service Bus subscription used to consume a message contract.</summary>
+/// <typeparam name="TMessage">The consumed message contract.</typeparam>
 public interface IServiceBusMessageConsumeTopologyConfigurator<TMessage> :
     IMessageConsumeTopologyConfigurator<TMessage>,
     IServiceBusMessageConsumeTopology<TMessage>
     where TMessage : class
 {
-    /// <summary>
-    /// Create a topic subscription for the message type
-    /// </summary>
-    /// <param name="subscriptionName"></param>
-    /// <param name="configure">Configure the binding and the exchange</param>
+    /// <summary>Adds a subscription to this message type's publish topic.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="configure">Optionally configures the subscription.</param>
     void Subscribe(string subscriptionName, Action<IServiceBusSubscriptionConfigurator>? configure = null);
 }
 
 
-/// <summary>
-/// Defines the contract for service bus message consume topology configurator.
-/// </summary>
+/// <summary>Applies runtime-typed Azure Service Bus consume topology to an endpoint builder.</summary>
 public interface IServiceBusMessageConsumeTopologyConfigurator :
     IMessageConsumeTopologyConfigurator
 {
-    /// <summary>
-    /// Apply the message topology to the builder
-    /// </summary>
-    /// <param name="builder"></param>
+    /// <summary>Applies the message subscriptions to a receive-endpoint topology builder.</summary>
+    /// <param name="builder">The topology builder receiving the subscriptions.</param>
     void Apply(IReceiveEndpointBrokerTopologyBuilder builder);
 }

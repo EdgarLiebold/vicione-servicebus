@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Represents an amazon sqs endpoint address value.
-/// </summary>
+/// <summary>Represents a validated Amazon SQS queue or Amazon SNS topic address.</summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct AmazonSqsEndpointAddress
 {
@@ -20,61 +18,39 @@ public readonly struct AmazonSqsEndpointAddress
     const string TypeKey = "type";
 
 
-    /// <summary>
-    /// Specifies the available address type values.
-    /// </summary>
+    /// <summary>Identifies the kind of AWS messaging destination.</summary>
     public enum AddressType
     {
-        /// <summary>
-        /// Indicates queue.
-        /// </summary>
+        /// <summary>Identifies an Amazon SQS queue.</summary>
         Queue = 0,
-        /// <summary>
-        /// Indicates topic.
-        /// </summary>
+        /// <summary>Identifies an Amazon SNS topic.</summary>
         Topic = 1
     }
 
 
     static readonly ITypeConverter<AddressType, string> _parseConverter = new EnumTypeConverter<AddressType>();
 
-    /// <summary>
-    /// Defines the scheme value.
-    /// </summary>
+    /// <summary>The Amazon SQS transport URI scheme.</summary>
     public readonly string Scheme;
-    /// <summary>
-    /// Defines the host value.
-    /// </summary>
+    /// <summary>The AWS region host name.</summary>
     public readonly string Host;
 
-    /// <summary>
-    /// Defines the scope value.
-    /// </summary>
+    /// <summary>The optional logical entity-name scope.</summary>
     public readonly string? Scope;
-    /// <summary>
-    /// Defines the name value.
-    /// </summary>
+    /// <summary>The queue or topic name.</summary>
     public readonly string Name;
 
-    /// <summary>
-    /// Defines the auto delete value.
-    /// </summary>
+    /// <summary>Whether the transport deletes the entity when its endpoint stops.</summary>
     public readonly bool AutoDelete;
-    /// <summary>
-    /// Defines the durable value.
-    /// </summary>
+    /// <summary>Whether the entity is retained after its endpoint stops.</summary>
     public readonly bool Durable;
-    /// <summary>
-    /// Defines the type value.
-    /// </summary>
+    /// <summary>The kind of AWS messaging destination.</summary>
     public readonly AddressType Type;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="address">The address value.</param>
-    /// <param name="type">The type value.</param>
+    /// <summary>Parses a queue, topic, or absolute Amazon SQS endpoint address.</summary>
+    /// <param name="hostAddress">The configured Amazon SQS host address used for relative addresses.</param>
+    /// <param name="address">The destination address to parse.</param>
+    /// <param name="type">The default destination kind when the address does not override it.</param>
     public AmazonSqsEndpointAddress(Uri hostAddress, Uri address, AddressType type = AddressType.Queue)
     {
         Durable = true;
@@ -148,14 +124,12 @@ public readonly struct AmazonSqsEndpointAddress
         ValidateName(Name, Type);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="type">The type value.</param>
+    /// <summary>Creates an AWS destination address from explicit entity settings.</summary>
+    /// <param name="hostAddress">The configured Amazon SQS host address.</param>
+    /// <param name="name">The queue or topic name.</param>
+    /// <param name="durable">Whether the entity is retained after its endpoint stops.</param>
+    /// <param name="autoDelete">Whether the transport deletes the entity when its endpoint stops.</param>
+    /// <param name="type">The destination kind.</param>
     public AmazonSqsEndpointAddress(Uri hostAddress, string name, bool durable = true, bool autoDelete = false, AddressType type = AddressType.Queue)
     {
         ParseLeft(hostAddress, out Scheme, out Host, out Scope);
@@ -177,11 +151,9 @@ public readonly struct AmazonSqsEndpointAddress
         scope = hostAddress.Scope;
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts the destination address to its canonical absolute transport URI.</summary>
+    /// <param name="address">The destination address.</param>
+    /// <returns>An absolute URI containing the region, scope, entity name, and lifecycle options.</returns>
     public static implicit operator Uri(in AmazonSqsEndpointAddress address)
     {
         var builder = new UriBuilder
@@ -198,19 +170,15 @@ public readonly struct AmazonSqsEndpointAddress
         return builder.Uri;
     }
 
-    /// <summary>
-    /// Determines whether fifo.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether an AWS entity name uses the FIFO suffix.</summary>
+    /// <param name="name">The queue or topic name.</param>
+    /// <returns><see langword="true" /> when the name ends with <c>.fifo</c>, ignoring case; otherwise, <see langword="false" />.</returns>
     public static bool IsFifo(string name)
     {
         return name.EndsWith(".fifo", StringComparison.OrdinalIgnoreCase);
     }
 
-    /// <summary>
-    /// Gets the topic address value.
-    /// </summary>
+    /// <summary>Gets a relative Amazon SNS topic URI for this topic address and its lifecycle options.</summary>
     public Uri TopicAddress
     {
         get

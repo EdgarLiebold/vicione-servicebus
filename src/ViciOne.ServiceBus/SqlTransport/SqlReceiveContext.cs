@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>
-/// Provides a sql receive context implementation.
-/// </summary>
+/// <summary>Carries state for sql receive operations.</summary>
 public sealed class SqlReceiveContext :
     BaseReceiveContext,
     SqlMessageContext,
@@ -17,15 +15,13 @@ public sealed class SqlReceiveContext :
     readonly MessageBody _body;
     IHeaderProvider? _headerProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="clientContext">The client context value.</param>
-    /// <param name="connectionContext">The connection context value.</param>
-    /// <param name="lockContext">The lock context value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="settings">The settings that control the operation.</param>
+    /// <param name="clientContext">The client context.</param>
+    /// <param name="connectionContext">The connection context.</param>
+    /// <param name="lockContext">The lock context.</param>
     public SqlReceiveContext(SqlTransportMessage message, SqlReceiveEndpointContext context, ReceiveSettings settings, ClientContext clientContext,
         ConnectionContext connectionContext, SqlReceiveLockContext lockContext)
         : base(message.DeliveryCount > 0, context, settings, clientContext, connectionContext, lockContext)
@@ -37,74 +33,44 @@ public sealed class SqlReceiveContext :
             : new BytesMessageBody(message.BinaryBody);
     }
 
-    /// <summary>
-    /// Gets the body value.
-    /// </summary>
+    /// <summary>Gets the body.</summary>
     public override MessageBody Body => EnforceMessageLimits(_body);
 
-    /// <summary>
-    /// Gets the header provider value.
-    /// </summary>
+    /// <summary>Gets the header provider.</summary>
     protected override IHeaderProvider HeaderProvider => _headerProvider ??= new SqlHeaderProvider(TransportMessage);
 
-    /// <summary>
-    /// Gets the sequence number value.
-    /// </summary>
+    /// <summary>Gets the sequence number.</summary>
     public ulong? SequenceNumber => (ulong)DeliveryMessageId;
 
-    /// <summary>
-    /// Gets the transport message value.
-    /// </summary>
+    /// <summary>Gets the transport message.</summary>
     public SqlTransportMessage TransportMessage { get; }
 
-    /// <summary>
-    /// Gets the routing key value.
-    /// </summary>
+    /// <summary>Gets the routing key.</summary>
     public string? RoutingKey => TransportMessage.RoutingKey;
-    /// <summary>
-    /// Gets the transport message id value.
-    /// </summary>
+    /// <summary>Gets the transport message id.</summary>
     public Guid TransportMessageId => TransportMessage.TransportMessageId;
 
-    /// <summary>
-    /// Gets the consumer id value.
-    /// </summary>
+    /// <summary>Gets the consumer id.</summary>
     public Guid? ConsumerId => TransportMessage.ConsumerId;
-    /// <summary>
-    /// Gets the lock id value.
-    /// </summary>
+    /// <summary>Gets the lock id.</summary>
     public Guid? LockId => TransportMessage.LockId;
 
-    /// <summary>
-    /// Gets the queue name value.
-    /// </summary>
+    /// <summary>Gets the queue name.</summary>
     public string QueueName => TransportMessage.QueueName;
-    /// <summary>
-    /// Gets the priority value.
-    /// </summary>
+    /// <summary>Gets the priority.</summary>
     public short Priority => TransportMessage.Priority;
-    /// <summary>
-    /// Gets the delivery message id value.
-    /// </summary>
+    /// <summary>Gets the delivery message id.</summary>
     public long DeliveryMessageId => TransportMessage.MessageDeliveryId;
-    /// <summary>
-    /// Gets the enqueue time value.
-    /// </summary>
+    /// <summary>Gets the enqueue time.</summary>
     public DateTimeOffset EnqueueTime => TransportMessage.EnqueueTime;
-    /// <summary>
-    /// Gets the delivery count value.
-    /// </summary>
+    /// <summary>Gets the delivery count.</summary>
     public int DeliveryCount => TransportMessage.DeliveryCount;
 
-    /// <summary>
-    /// Gets the partition key value.
-    /// </summary>
+    /// <summary>Gets the partition key.</summary>
     public string? PartitionKey => TransportMessage.PartitionKey;
 
-    /// <summary>
-    /// Gets transport properties.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets transport properties.</summary>
+    /// <returns>The transport properties.</returns>
     public IDictionary<string, object>? GetTransportProperties()
     {
         var properties = new Lazy<Dictionary<string, object>>(() => new Dictionary<string, object>());

@@ -44,11 +44,9 @@ internal static class QueryStringExtensions
         }
     }
 
-    /// <summary>
-    /// Parse the host path, which on a host address might be a virtual host, a scope, etc.
-    /// </summary>
-    /// <param name="address"></param>
-    /// <returns></returns>
+    /// <summary>Parse the host path, which on a host address might be a virtual host, a scope, etc.</summary>
+    /// <param name="address">The address.</param>
+    /// <returns>The parsed host path.</returns>
     public static string ParseHostPath(this Uri address)
     {
         var path = address.AbsolutePath;
@@ -66,12 +64,10 @@ internal static class QueryStringExtensions
         return Uri.UnescapeDataString(path.Substring(1));
     }
 
-    /// <summary>
-    /// Parse the host path and entity name from the address
-    /// </summary>
-    /// <param name="address"></param>
-    /// <param name="hostPath"></param>
-    /// <param name="entityName"></param>
+    /// <summary>Parse the host path and entity name from the address.</summary>
+    /// <param name="address">The address.</param>
+    /// <param name="hostPath">Receives the host path produced by the operation.</param>
+    /// <param name="entityName">Receives the entity name produced by the operation.</param>
     public static void ParseHostPathAndEntityName(this Uri address, out string hostPath, out string entityName)
     {
         var path = address.AbsolutePath;
@@ -92,11 +88,9 @@ internal static class QueryStringExtensions
             entityName = Uri.UnescapeDataString(entityName);
     }
 
-    /// <summary>
-    /// Split the query string into an enumerable stream of tuples
-    /// </summary>
-    /// <param name="address"></param>
-    /// <returns></returns>
+    /// <summary>Split the query string into an enumerable stream of tuples.</summary>
+    /// <param name="address">The address.</param>
+    /// <returns>The enumerable produced by the operation.</returns>
     public static IEnumerable<(string, string?)> SplitQueryString(this Uri address)
     {
         var query = address.Query.TrimStart('?');

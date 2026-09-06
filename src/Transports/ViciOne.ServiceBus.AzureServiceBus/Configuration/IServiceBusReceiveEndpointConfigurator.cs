@@ -2,32 +2,27 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Configure an Azure Service Bus receive endpoint
-/// </summary>
+/// <summary>Configures an Azure Service Bus queue receive endpoint and its additional topic subscriptions.</summary>
 public interface IServiceBusReceiveEndpointConfigurator :
     IReceiveEndpointConfigurator,
     IServiceBusQueueEndpointConfigurator
 {
     /// <summary>
-    /// If true, on shutdown, the subscriptions added are removed. This is used to avoid auto-delete
-    /// queues from creating abandoned subscriptions on the topic, resulting in a quota overflow.
+    /// Sets whether shutdown removes the forwarding subscriptions created for this endpoint. Enable this for
+    /// auto-delete queues so subscriptions do not outlive their destination queue and consume the namespace quota.
     /// </summary>
     bool RemoveSubscriptions { set; }
 
-    /// <summary>
-    /// Create a topic subscription on the endpoint
-    /// </summary>
-    /// <param name="topicName">The topic name</param>
-    /// <param name="subscriptionName">The name for the subscription</param>
-    /// <param name="callback">Configure the exchange and binding</param>
+    /// <summary>Adds a named topic subscription that forwards messages to this endpoint's queue.</summary>
+    /// <param name="topicName">The topic name.</param>
+    /// <param name="subscriptionName">The name for the subscription.</param>
+    /// <param name="callback">The callback that configures the topic subscription.</param>
     void Subscribe(string topicName, string subscriptionName, Action<IServiceBusSubscriptionConfigurator>? callback = null);
 
-    /// <summary>
-    /// Create a topic subscription for the message type
-    /// </summary>
-    /// <param name="subscriptionName">The name for the subscription</param>
-    /// <param name="callback">Configure the topic subscription</param>
+    /// <summary>Adds a subscription from a message type's publish topic to this endpoint's queue.</summary>
+    /// <typeparam name="T">The message type whose publish topology supplies the topic.</typeparam>
+    /// <param name="subscriptionName">The name for the subscription.</param>
+    /// <param name="callback">An optional callback that configures the topic subscription.</param>
     void Subscribe<T>(string subscriptionName, Action<IServiceBusSubscriptionConfigurator>? callback = null)
         where T : class;
 }

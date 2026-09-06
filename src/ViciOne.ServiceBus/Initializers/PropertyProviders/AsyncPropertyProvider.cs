@@ -3,21 +3,17 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyProviders;
 
-/// <summary>
-/// Awaits a <see cref="Task{TProperty}" /> property, returning the property value.
-/// </summary>
-/// <typeparam name="TInput"></typeparam>
-/// <typeparam name="TProperty"></typeparam>
+/// <summary>Awaits a <see cref="Task{TProperty}" /> property, returning the property value.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TProperty">The property type.</typeparam>
 public class AsyncPropertyProvider<TInput, TProperty> :
     IPropertyProvider<TInput, TProperty>
     where TInput : class
 {
     readonly IPropertyProvider<TInput, Task<TProperty?>> _provider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
     public AsyncPropertyProvider(IPropertyProvider<TInput, Task<TProperty?>> provider)
     {
         _provider = provider;
@@ -53,12 +49,10 @@ public class AsyncPropertyProvider<TInput, TProperty> :
 }
 
 
-/// <summary>
-/// Awaits a <see cref="Task{TProperty}" /> property, returning the property value.
-/// </summary>
-/// <typeparam name="TInput"></typeparam>
-/// <typeparam name="TProperty"></typeparam>
-/// <typeparam name="TTask"></typeparam>
+/// <summary>Awaits a <see cref="Task{TProperty}" /> property, returning the property value.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TProperty">The property type.</typeparam>
+/// <typeparam name="TTask">The ask type.</typeparam>
 public class AsyncPropertyProvider<TInput, TProperty, TTask> :
     IPropertyProvider<TInput, TProperty>
     where TInput : class
@@ -66,11 +60,9 @@ public class AsyncPropertyProvider<TInput, TProperty, TTask> :
     readonly IPropertyConverter<TProperty, TTask> _converter;
     readonly IPropertyProvider<TInput, Task<TTask?>> _provider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    /// <param name="converter">The converter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="converter">The converter.</param>
     public AsyncPropertyProvider(IPropertyProvider<TInput, Task<TTask?>> provider, IPropertyConverter<TProperty, TTask> converter)
     {
         _provider = provider;

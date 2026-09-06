@@ -5,19 +5,14 @@ using ViciOne.ServiceBus.DependencyInjection;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides dependency-injection receive-endpoint extensions for consumers.
-/// </summary>
+/// <summary>Provides dependency-injection receive-endpoint extensions for consumers.</summary>
 public static class DependencyInjectionReceiveEndpointExtensions
 {
-    /// <summary>
-    /// Registers a consumer given the lifetime scope specified
-    /// </summary>
-    /// <typeparam name="T">The consumer type</typeparam>
-    /// <param name="configurator">The service bus configurator</param>
-    /// <param name="context">The LifetimeScope of the provider</param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Registers a consumer given the lifetime scope specified.</summary>
+    /// <typeparam name="T">The consumer type.</typeparam>
+    /// <param name="configurator">The service bus configurator.</param>
+    /// <param name="context">The LifetimeScope of the provider.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void Consumer<T>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
         Action<IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
@@ -30,15 +25,12 @@ public static class DependencyInjectionReceiveEndpointExtensions
     }
 
 
-    /// <summary>
-    /// Connect a consumer with a consumer factory method
-    /// </summary>
-    /// <typeparam name="TConsumer"></typeparam>
-    /// <typeparam name="TMessage"></typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="context"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Connect a consumer with a consumer factory method.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void Consumer<TConsumer, TMessage>(this IBatchConfigurator<TMessage> configurator, IRegistrationContext context,
         Action<IConsumerMessageConfigurator<TConsumer, Batch<TMessage>>>? configure = null)
         where TConsumer : class, IConsumer<Batch<TMessage>>
@@ -52,14 +44,12 @@ public static class DependencyInjectionReceiveEndpointExtensions
     }
 
 
-    /// <summary>
-    /// Connect a consumer to the bus/mediator
-    /// </summary>
-    /// <typeparam name="TConsumer"></typeparam>
-    /// <param name="connector"></param>
-    /// <param name="context"></param>
-    /// <param name="pipeSpecifications"></param>
-    /// <returns></returns>
+    /// <summary>Connect a consumer to the bus/mediator.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="connector">The connector.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="pipeSpecifications">The pipe specifications.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectConsumer<TConsumer>(this IConsumePipeConnector connector, IRegistrationContext context,
         params IPipeSpecification<ConsumerConsumeContext<TConsumer>>[] pipeSpecifications)
         where TConsumer : class, IConsumer

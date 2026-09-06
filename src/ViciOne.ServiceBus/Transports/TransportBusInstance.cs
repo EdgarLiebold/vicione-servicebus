@@ -3,10 +3,8 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a transport bus instance implementation.
-/// </summary>
-/// <typeparam name="TEndpointConfigurator">The t endpoint configurator type.</typeparam>
+/// <summary>Represents an instance of transport bus.</summary>
+/// <typeparam name="TEndpointConfigurator">The endpoint configurator type.</typeparam>
 public class TransportBusInstance<TEndpointConfigurator> :
     IBusInstance,
     IReceiveEndpointConnector<TEndpointConfigurator>
@@ -14,13 +12,11 @@ public class TransportBusInstance<TEndpointConfigurator> :
 {
     readonly IHost<TEndpointConfigurator> _host;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="busControl">The bus control value.</param>
-    /// <param name="host">The host value.</param>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="busRegistrationContext">The bus registration context value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="busControl">The bus control.</param>
+    /// <param name="host">The host.</param>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="busRegistrationContext">The bus registration context.</param>
     public TransportBusInstance(IBusControl busControl, IHost<TEndpointConfigurator> host, IHostConfiguration hostConfiguration, IBusRegistrationContext
         busRegistrationContext)
     {
@@ -31,38 +27,24 @@ public class TransportBusInstance<TEndpointConfigurator> :
         HostConfiguration = hostConfiguration;
     }
 
-    /// <summary>
-    /// Gets the registration context value.
-    /// </summary>
+    /// <summary>Gets the registration context.</summary>
     protected IBusRegistrationContext RegistrationContext { get; }
 
-    /// <summary>
-    /// Gets the name value.
-    /// </summary>
+    /// <summary>Gets the name.</summary>
     public string Name => "vicione-servicebus-bus";
-    /// <summary>
-    /// Gets the instance type value.
-    /// </summary>
+    /// <summary>Gets the instance type.</summary>
     public Type InstanceType => typeof(IBus);
-    /// <summary>
-    /// Gets the bus value.
-    /// </summary>
+    /// <summary>Gets the bus.</summary>
     public IBus Bus => BusControl;
-    /// <summary>
-    /// Gets the bus control value.
-    /// </summary>
+    /// <summary>Gets the bus control.</summary>
     public IBusControl BusControl { get; }
 
-    /// <summary>
-    /// Gets the host configuration value.
-    /// </summary>
+    /// <summary>Gets the host configuration.</summary>
     public IHostConfiguration HostConfiguration { get; }
 
-    /// <summary>
-    /// Performs the connect operation.
-    /// </summary>
-    /// <typeparam name="TRider">The t rider type.</typeparam>
-    /// <param name="riderControl">The rider control value.</param>
+    /// <summary>Connects the configured observer or endpoint.</summary>
+    /// <typeparam name="TRider">The rider type.</typeparam>
+    /// <param name="riderControl">The rider control.</param>
     public void Connect<TRider>(IRiderControl riderControl)
         where TRider : IRider
     {
@@ -70,11 +52,9 @@ public class TransportBusInstance<TEndpointConfigurator> :
         _host.AddRider(name, riderControl);
     }
 
-    /// <summary>
-    /// Gets rider.
-    /// </summary>
-    /// <typeparam name="TRider">The t rider type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets rider.</summary>
+    /// <typeparam name="TRider">The rider type.</typeparam>
+    /// <returns>The rider.</returns>
     public TRider GetRider<TRider>()
         where TRider : IRider
     {
@@ -82,13 +62,11 @@ public class TransportBusInstance<TEndpointConfigurator> :
         return (TRider)_host.GetRider(name);
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive endpoint.</summary>
+    /// <param name="definition">The definition.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
         Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
     {
@@ -101,12 +79,10 @@ public class TransportBusInstance<TEndpointConfigurator> :
         });
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive endpoint.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
         Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
     {
@@ -118,13 +94,11 @@ public class TransportBusInstance<TEndpointConfigurator> :
         });
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive endpoint.</summary>
+    /// <param name="definition">The definition.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
         Action<IBusRegistrationContext, TEndpointConfigurator>? configure = null)
     {
@@ -136,12 +110,10 @@ public class TransportBusInstance<TEndpointConfigurator> :
         });
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive endpoint.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IBusRegistrationContext, TEndpointConfigurator>? configure = null)
     {
         return _host.ConnectReceiveEndpoint(queueName, configurator =>

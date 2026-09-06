@@ -1,32 +1,20 @@
 using System;
 
 namespace ViciOne.ServiceBus.RabbitMq;
-/// <summary>
-/// Defines one bounded operational redrive from a receive endpoint's error queue back to the endpoint.
-/// </summary>
+/// <summary>Defines one bounded operational redrive from a receive endpoint's error queue back to the endpoint.</summary>
 public sealed record RabbitMqFaultRedriveRequest
 {
-    /// <summary>
-    /// Defines the default max messages value.
-    /// </summary>
+    /// <summary>The default maximum number of matching messages to redrive.</summary>
     public const int DefaultMaxMessages = 100;
-    /// <summary>
-    /// Defines the default max scan count value.
-    /// </summary>
+    /// <summary>The default maximum number of source messages to inspect.</summary>
     public const int DefaultMaxScanCount = 1000;
-    /// <summary>
-    /// Defines the absolute max messages value.
-    /// </summary>
+    /// <summary>The largest accepted <see cref="MaxMessages" /> value.</summary>
     public const int AbsoluteMaxMessages = 1000;
-    /// <summary>
-    /// Defines the absolute max scan count value.
-    /// </summary>
+    /// <summary>The largest accepted <see cref="MaxScanCount" /> value.</summary>
     public const int AbsoluteMaxScanCount = 10000;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="endpointQueueName">The endpoint queue name value.</param>
+    /// <summary>Creates a redrive request for one receive endpoint.</summary>
+    /// <param name="endpointQueueName">The destination endpoint queue; its error queue is derived from topology.</param>
     public RabbitMqFaultRedriveRequest(string endpointQueueName)
     {
         EndpointQueueName = endpointQueueName ?? throw new ArgumentNullException(nameof(endpointQueueName));

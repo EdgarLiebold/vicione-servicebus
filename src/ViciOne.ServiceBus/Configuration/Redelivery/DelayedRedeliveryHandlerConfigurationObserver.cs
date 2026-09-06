@@ -11,10 +11,8 @@ public class DelayedRedeliveryHandlerConfigurationObserver :
 {
     readonly Action<IRedeliveryConfigurator> _configure;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public DelayedRedeliveryHandlerConfigurationObserver(Action<IRedeliveryConfigurator> configure)
     {
         _configure = configure;

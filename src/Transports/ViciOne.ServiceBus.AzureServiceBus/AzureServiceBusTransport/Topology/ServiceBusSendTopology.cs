@@ -4,20 +4,14 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a service bus send topology implementation.
-/// </summary>
+/// <summary>Creates Azure Service Bus queue or topic settings for send destinations.</summary>
 public class ServiceBusSendTopology :
     SendTopology,
     IServiceBusSendTopologyConfigurator
 {
-    /// <summary>
-    /// Gets or sets the configure error settings value.
-    /// </summary>
+    /// <summary>Gets or sets the callback applied to generated error-queue settings.</summary>
     public Action<IServiceBusEntityConfigurator>? ConfigureErrorSettings { get; set; }
-    /// <summary>
-    /// Gets or sets the configure dead letter settings value.
-    /// </summary>
+    /// <summary>Gets or sets the callback applied to generated skipped-message queue settings.</summary>
     public Action<IServiceBusEntityConfigurator>? ConfigureDeadLetterSettings { get; set; }
 
     IServiceBusMessageSendTopology<T> IServiceBusSendTopology.GetMessageTopology<T>()
@@ -32,11 +26,9 @@ public class ServiceBusSendTopology :
             ?? throw new InvalidOperationException($"The send topology for {typeof(T).FullName} is not an Azure Service Bus topology.");
     }
 
-    /// <summary>
-    /// Gets send settings.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds queue or topic sender settings from an endpoint address.</summary>
+    /// <param name="address">The parsed Azure Service Bus endpoint address.</param>
+    /// <returns>The resolved entity and sender settings.</returns>
     public SendSettings GetSendSettings(ServiceBusEndpointAddress address)
     {
         if (address.Type == ServiceBusEndpointAddress.AddressType.Queue)
@@ -54,11 +46,9 @@ public class ServiceBusSendTopology :
         return new TopicSendSettings(createTopicOptions, builder.BuildBrokerTopology());
     }
 
-    /// <summary>
-    /// Gets error settings.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds error-queue settings from a source queue configuration.</summary>
+    /// <param name="configurator">The source queue configuration.</param>
+    /// <returns>The generated error-queue settings.</returns>
     public SendSettings GetErrorSettings(IServiceBusQueueConfigurator configurator)
     {
         var createQueueOptions = configurator.GetCreateQueueOptions();
@@ -71,11 +61,9 @@ public class ServiceBusSendTopology :
         return errorSettings;
     }
 
-    /// <summary>
-    /// Gets dead letter settings.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds skipped-message queue settings from a source queue configuration.</summary>
+    /// <param name="configurator">The source queue configuration.</param>
+    /// <returns>The generated skipped-message queue settings.</returns>
     public SendSettings GetDeadLetterSettings(IServiceBusQueueConfigurator configurator)
     {
         var createQueueOptions = configurator.GetCreateQueueOptions();
@@ -88,12 +76,10 @@ public class ServiceBusSendTopology :
         return deadLetterSetting;
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="type">The type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates send topology for a message contract.</summary>
+    /// <typeparam name="T">The sent message contract.</typeparam>
+    /// <param name="type">The runtime message type represented by the topology.</param>
+    /// <returns>The message-specific Azure send topology.</returns>
     protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
     {
         var messageTopology = new ServiceBusMessageSendTopology<T>();

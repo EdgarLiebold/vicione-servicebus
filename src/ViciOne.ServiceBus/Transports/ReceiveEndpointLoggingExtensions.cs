@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides extension methods for receive endpoint logging.
-/// </summary>
+/// <summary>Provides extension methods for receive endpoint logging.</summary>
 public static class ReceiveEndpointLoggingExtensions
 {
     static readonly LogMessage<Uri, Guid?, string, string, TimeSpan> _logConsumed = LogContext.DefineMessage<Uri, Guid?, string, string, TimeSpan>(
@@ -57,35 +55,29 @@ public static class ReceiveEndpointLoggingExtensions
     static readonly LogMessage<Uri, long, int, string> _logConsumerCompletedTag = LogContext.DefineMessage<Uri, long, int, string>(
         LogLevel.Debug, "Consumer Completed: {InputAddress}: {DeliveryCount} received, {ConcurrentDeliveryCount} concurrent, {Tag}");
 
-    /// <summary>
-    /// Log a skipped message that was moved to the dead-letter queue
-    /// </summary>
-    /// <param name="context"></param>
+    /// <summary>Log a skipped message that was moved to the dead-letter queue.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogSkipped(this ReceiveContext context)
     {
         _logSkipped(context.InputAddress, GetMessageId(context));
     }
 
-    /// <summary>
-    /// Log a moved message from one endpoint to the destination endpoint address
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="destination"></param>
-    /// <param name="reason"> </param>
+    /// <summary>Log a moved message from one endpoint to the destination endpoint address.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="destination">The destination.</param>
+    /// <param name="reason">The reason.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogMoved(this ReceiveContext context, string destination, string reason)
     {
         _logMoved(context.InputAddress, GetMessageId(context), destination, reason);
     }
 
-    /// <summary>
-    /// Log a consumed message
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="duration"></param>
-    /// <param name="consumerType"></param>
-    /// <typeparam name="T"></typeparam>
+    /// <summary>Log a consumed message.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogConsumed<T>(this ConsumeContext<T> context, TimeSpan duration, string consumerType)
         where T : class
@@ -93,13 +85,11 @@ public static class ReceiveEndpointLoggingExtensions
         _logConsumed(context.Advanced().ReceiveContext.InputAddress, context.MessageId, TypeCache<T>.ShortName, consumerType, duration);
     }
 
-    /// <summary>
-    /// Performs the log faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="duration">The duration value.</param>
-    /// <param name="consumerType">The consumer type value.</param>
+    /// <summary>Reports that log has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogFaulted<T>(this ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
@@ -108,13 +98,11 @@ public static class ReceiveEndpointLoggingExtensions
         _logConsumeFault(context.Advanced().ReceiveContext.InputAddress, context.MessageId, TypeCache<T>.ShortName, consumerType, duration, exception);
     }
 
-    /// <summary>
-    /// Performs the log canceled operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="duration">The duration value.</param>
-    /// <param name="consumerType">The consumer type value.</param>
+    /// <summary>Logs canceled.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogCanceled<T>(this ConsumeContext<T> context, TimeSpan duration, string consumerType)
         where T : class
@@ -122,10 +110,8 @@ public static class ReceiveEndpointLoggingExtensions
         _logConsumeCanceled(context.Advanced().ReceiveContext.InputAddress, context.MessageId, TypeCache<T>.ShortName, consumerType, duration);
     }
 
-    /// <summary>
-    /// Performs the log faulted operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Reports that log has faulted.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogFaulted(this ReceiveContext context, Exception exception)
@@ -133,22 +119,18 @@ public static class ReceiveEndpointLoggingExtensions
         _logReceiveFault(context.InputAddress, GetMessageId(context), context.ElapsedTime, exception);
     }
 
-    /// <summary>
-    /// Performs the log transport dupe operation.
-    /// </summary>
-    /// <typeparam name="TTransportMessageId">The t transport message id type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="transportMessageId">The transport message id value.</param>
+    /// <summary>Logs transport dupe.</summary>
+    /// <typeparam name="TTransportMessageId">The ransport message id type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="transportMessageId">The transport message id.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogTransportDupe<TTransportMessageId>(this ReceiveContext context, TTransportMessageId transportMessageId)
     {
         _logReceiveDupe(context.InputAddress, GetMessageId(context), transportMessageId);
     }
 
-    /// <summary>
-    /// Performs the log transport faulted operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Reports that log transport has faulted.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogTransportFaulted(this ReceiveContext context, Exception exception)
@@ -159,10 +141,8 @@ public static class ReceiveEndpointLoggingExtensions
         _logFault(context.InputAddress, GetMessageId(context), exception);
     }
 
-    /// <summary>
-    /// Performs the log retry operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Logs retry.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogRetry(this ConsumeContext context, Exception exception)
@@ -170,11 +150,9 @@ public static class ReceiveEndpointLoggingExtensions
         _logRetry(context.Advanced().ReceiveContext.InputAddress, context.MessageId, TypeCache.GetShortName(context.GetType()), exception);
     }
 
-    /// <summary>
-    /// Performs the log retry operation.
-    /// </summary>
-    /// <typeparam name="TContext">The t context type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Logs retry.</summary>
+    /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogRetry<TContext>(this TContext context, Exception exception)
@@ -183,11 +161,9 @@ public static class ReceiveEndpointLoggingExtensions
         _logRetry(context.Advanced().ReceiveContext.InputAddress, context.MessageId, TypeCache<TContext>.ShortName, exception);
     }
 
-    /// <summary>
-    /// Performs the log faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Reports that log has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogFaulted<T>(this SendContext<T> context, Exception exception)
@@ -196,11 +172,9 @@ public static class ReceiveEndpointLoggingExtensions
         _logSendFault(context.DestinationAddress, context.MessageId, TypeCache<T>.ShortName, exception);
     }
 
-    /// <summary>
-    /// Performs the log sent operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Logs sent.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogSent<T>(this SendContext<T> context)
         where T : class
@@ -215,37 +189,31 @@ public static class ReceiveEndpointLoggingExtensions
         _logExpiredForward(context.DestinationAddress, context.MessageId, TypeCache<T>.ShortName, expirationTime, timeToLive);
     }
 
-    /// <summary>
-    /// Performs the log consumer completed operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="deliveryCount">The delivery count value.</param>
-    /// <param name="concurrentDeliveryCount">The concurrent delivery count value.</param>
+    /// <summary>Reports that log consumer has completed.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="deliveryCount">The delivery count.</param>
+    /// <param name="concurrentDeliveryCount">The concurrent delivery count.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogConsumerCompleted(this ReceiveEndpointContext context, long deliveryCount, int concurrentDeliveryCount)
     {
         _logConsumerCompleted(context.InputAddress, deliveryCount, concurrentDeliveryCount);
     }
 
-    /// <summary>
-    /// Performs the log consumer completed operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="deliveryCount">The delivery count value.</param>
-    /// <param name="concurrentDeliveryCount">The concurrent delivery count value.</param>
-    /// <param name="tag">The tag value.</param>
+    /// <summary>Reports that log consumer has completed.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="deliveryCount">The delivery count.</param>
+    /// <param name="concurrentDeliveryCount">The concurrent delivery count.</param>
+    /// <param name="tag">The tag.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogConsumerCompleted(this ReceiveEndpointContext context, long deliveryCount, int concurrentDeliveryCount, string tag)
     {
         _logConsumerCompletedTag(context.InputAddress, deliveryCount, concurrentDeliveryCount, tag);
     }
 
-    /// <summary>
-    /// Performs the log scheduled operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="deliveryTime">The delivery time value.</param>
+    /// <summary>Logs scheduled.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="deliveryTime">The delivery time.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogScheduled<T>(this SendContext<T> context, DateTimeOffset deliveryTime)
         where T : class

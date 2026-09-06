@@ -3,19 +3,15 @@ using ViciOne.ServiceBus.Courier;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides extension methods for activity test harness.
-/// </summary>
+/// <summary>Provides extension methods for activity test harness.</summary>
 public static class ActivityTestHarnessExtensions
 {
-    /// <summary>
-    /// Creates an activity test harness
-    /// </summary>
-    /// <typeparam name="TActivity"></typeparam>
-    /// <typeparam name="TArguments"></typeparam>
-    /// <typeparam name="TLog"></typeparam>
-    /// <param name="harness"></param>
-    /// <returns></returns>
+    /// <summary>Creates an activity test harness.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="harness">The harness.</param>
+    /// <returns>The activity test harness produced by the operation.</returns>
     public static ActivityTestHarness<TActivity, TArguments, TLog> Activity<TActivity, TArguments, TLog>(this BusTestHarness harness)
         where TActivity : class, IActivity<TArguments, TLog>, new()
         where TArguments : class
@@ -30,16 +26,14 @@ public static class ActivityTestHarnessExtensions
         });
     }
 
-    /// <summary>
-    /// Creates an activity test harness
-    /// </summary>
-    /// <typeparam name="TActivity"></typeparam>
-    /// <typeparam name="TArguments"></typeparam>
-    /// <typeparam name="TLog"></typeparam>
-    /// <param name="harness"></param>
-    /// <param name="executeFactoryMethod"></param>
-    /// <param name="compensateFactoryMethod"></param>
-    /// <returns></returns>
+    /// <summary>Creates an activity test harness.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="harness">The harness.</param>
+    /// <param name="executeFactoryMethod">The execute factory method.</param>
+    /// <param name="compensateFactoryMethod">The compensate factory method.</param>
+    /// <returns>The activity test harness produced by the operation.</returns>
     public static ActivityTestHarness<TActivity, TArguments, TLog> Activity<TActivity, TArguments, TLog>(this BusTestHarness harness,
         Func<TArguments, TActivity> executeFactoryMethod, Func<TLog, TActivity> compensateFactoryMethod)
         where TActivity : class, IActivity<TArguments, TLog>
@@ -55,13 +49,11 @@ public static class ActivityTestHarnessExtensions
         });
     }
 
-    /// <summary>
-    /// Creates an execute-only activity test harness
-    /// </summary>
-    /// <typeparam name="TActivity"></typeparam>
-    /// <typeparam name="TArguments"></typeparam>
-    /// <param name="harness"></param>
-    /// <returns></returns>
+    /// <summary>Creates an execute-only activity test harness.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <param name="harness">The harness.</param>
+    /// <returns>The execute activity test harness produced by the operation.</returns>
     public static ExecuteActivityTestHarness<TActivity, TArguments> ExecuteActivity<TActivity, TArguments>(this BusTestHarness harness)
         where TActivity : class, IExecuteActivity<TArguments>, new()
         where TArguments : class
@@ -73,14 +65,12 @@ public static class ActivityTestHarnessExtensions
         });
     }
 
-    /// <summary>
-    /// Creates an execute-only activity test harness
-    /// </summary>
-    /// <typeparam name="TActivity"></typeparam>
-    /// <typeparam name="TArguments"></typeparam>
-    /// <param name="harness"></param>
-    /// <param name="executeFactoryMethod"></param>
-    /// <returns></returns>
+    /// <summary>Creates an execute-only activity test harness.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <param name="harness">The harness.</param>
+    /// <param name="executeFactoryMethod">The execute factory method.</param>
+    /// <returns>The execute activity test harness produced by the operation.</returns>
     public static ExecuteActivityTestHarness<TActivity, TArguments> ExecuteActivity<TActivity, TArguments>(this BusTestHarness harness,
         Func<TArguments, TActivity> executeFactoryMethod)
         where TActivity : class, IExecuteActivity<TArguments>

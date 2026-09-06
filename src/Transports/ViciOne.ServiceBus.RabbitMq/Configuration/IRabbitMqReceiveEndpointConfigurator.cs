@@ -3,94 +3,70 @@ using ViciOne.ServiceBus.RabbitMq;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Configure a receiving RabbitMQ endpoint
-/// </summary>
+/// <summary>Configures a RabbitMQ receive endpoint and its broker topology.</summary>
 public interface IRabbitMqReceiveEndpointConfigurator :
     IReceiveEndpointConfigurator,
     IRabbitMqQueueEndpointConfigurator
 {
-    /// <summary>
-    /// If false, deploys only exchange, without queue
-    /// </summary>
+    /// <summary>Specifies whether deployment includes the endpoint queue and its exchange-to-queue binding.</summary>
     bool BindQueue { set; }
 
-    /// <summary>
-    /// Specifies the dead letter exchange name, which is used to send expired messages
-    /// </summary>
+    /// <summary>Sets the exchange that receives messages dead-lettered by the endpoint queue.</summary>
     string DeadLetterExchange { set; }
 
-    /// <summary>
-    /// Bind an exchange to the receive endpoint exchange
-    /// </summary>
-    /// <param name="exchangeName">The exchange name</param>
-    /// <param name="callback">Configure the exchange and binding</param>
+    /// <summary>Binds an exchange to the receive endpoint exchange.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="callback">An optional callback that customizes the source exchange and binding.</param>
     void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator>? callback = null);
 
-    /// <summary>
-    /// Bind an exchange to the receive endpoint exchange
-    /// </summary>
-    /// <param name="callback">Configure the exchange and binding</param>
+    /// <summary>Binds the publish exchange for a message contract to the receive endpoint exchange.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="callback">An optional callback that customizes the message exchange and binding.</param>
     void Bind<T>(Action<IRabbitMqExchangeBindingConfigurator>? callback = null)
         where T : class;
 
-    /// <summary>
-    /// Bind a dead letter exchange and queue to the receive endpoint so that expired messages are moved automatically.
-    /// </summary>
-    /// <param name="exchangeName"></param>
-    /// <param name="queueName"></param>
-    /// <param name="configure"></param>
+    /// <summary>Declares and binds an exchange and queue that receive messages dead-lettered by the endpoint queue.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configure">An optional callback that customizes the dead-letter queue and binding.</param>
     void BindDeadLetterQueue(string exchangeName, string? queueName = null, Action<IRabbitMqQueueBindingConfigurator>? configure = null);
 
-    /// <summary>
-    /// Add middleware to the channel pipe
-    /// </summary>
-    /// <param name="configure"></param>
+    /// <summary>Adds middleware to the RabbitMQ channel pipeline.</summary>
+    /// <param name="configure">The channel-pipeline configuration callback.</param>
     void ConfigureChannel(Action<IPipeConfigurator<ChannelContext>> configure);
 
-    /// <summary>
-    /// Add middleware to the connection pipe
-    /// </summary>
-    /// <param name="configure"></param>
+    /// <summary>Adds middleware to the RabbitMQ connection pipeline.</summary>
+    /// <param name="configure">The connection-pipeline configuration callback.</param>
     void ConfigureConnection(Action<IPipeConfigurator<ConnectionContext>> configure);
 
-    /// <summary>
-    /// By default, RabbitMQ assigns a dynamically generated consumer tag, which is always the right choice. In certain scenarios
-    /// where a specific consumer tag is needed, this will set it.
-    /// </summary>
+    /// <summary>Overrides RabbitMQ's dynamically generated consumer tag for this endpoint.</summary>
     /// <param name="consumerTag">The consumer tag to use for this receive endpoint.</param>
     void OverrideConsumerTag(string consumerTag);
 
-    /// <summary>
-    /// Configure receive endpoint to use a stream
-    /// </summary>
-    /// <param name="callback"></param>
+    /// <summary>Configures the receive endpoint queue as a RabbitMQ stream.</summary>
+    /// <param name="callback">An optional callback that configures stream retention and consumer offset.</param>
     void Stream(Action<IRabbitMqStreamConfigurator>? callback = null);
 
-    /// <summary>
-    /// Configure receive endpoint to use a stream
-    /// </summary>
-    /// <param name="consumerTag">Overrides the default consumer tag with the specified name</param>
-    /// <param name="callback"></param>
+    /// <summary>Configures the receive endpoint queue as a RabbitMQ stream with an explicit consumer tag.</summary>
+    /// <param name="consumerTag">Overrides the default consumer tag with the specified name.</param>
+    /// <param name="callback">An optional callback that configures stream retention and consumer offset.</param>
     void Stream(string consumerTag, Action<IRabbitMqStreamConfigurator>? callback = null);
 
     /// <summary>
-    /// Configure the RabbitMQ delivery acknowledgement timeout for this queue explicitly. This is entirely optional,
-    /// and generally not necessary.
+    /// Sets RabbitMQ's delivery-acknowledgement timeout for the endpoint queue.
     /// <see href="https://www.rabbitmq.com/docs/consumers#acknowledgement-timeout"/>
     /// </summary>
-    /// <param name="timeSpan"></param>
+    /// <param name="timeSpan">The maximum time allowed before a delivery must be acknowledged.</param>
     void SetDeliveryAcknowledgementTimeout(TimeSpan timeSpan);
 
     /// <summary>
-    /// Configure the RabbitMQ delivery acknowledgement timeout for this queue explicitly. This is entirely optional,
-    /// and generally not necessary.
+    /// Sets RabbitMQ's delivery-acknowledgement timeout from optional duration components.
     /// <see href="https://www.rabbitmq.com/docs/consumers#acknowledgement-timeout"/>
     /// </summary>
-    /// <param name="d">days</param>
-    /// <param name="h">hours</param>
-    /// <param name="m">minutes</param>
-    /// <param name="s">seconds</param>
-    /// <param name="ms">milliseconds</param>
+    /// <param name="d">The optional number of days.</param>
+    /// <param name="h">The optional number of hours.</param>
+    /// <param name="m">The optional number of minutes.</param>
+    /// <param name="s">The optional number of seconds.</param>
+    /// <param name="ms">The optional number of milliseconds.</param>
     void SetDeliveryAcknowledgementTimeout(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null);
 }

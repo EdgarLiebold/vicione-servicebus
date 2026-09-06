@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>
-/// Defines the contract for pipe context agent.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Defines the operations required by pipe context agent.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public interface IPipeContextAgent<TContext> :
     PipeContextHandle<TContext>,
     IAgent

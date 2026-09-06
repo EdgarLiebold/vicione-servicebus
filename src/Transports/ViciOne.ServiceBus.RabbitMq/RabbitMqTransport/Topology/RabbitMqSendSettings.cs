@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.RabbitMq.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a rabbit mq send settings implementation.
-/// </summary>
+/// <summary>Configures the destination exchange and optional queue or exchange bindings for a RabbitMQ send transport.</summary>
 public class RabbitMqSendSettings :
     RabbitMqExchangeConfigurator,
     SendSettings
@@ -17,10 +15,8 @@ public class RabbitMqSendSettings :
     bool _bindToQueue;
     string? _queueName;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Creates send settings from a parsed RabbitMQ endpoint address.</summary>
+    /// <param name="address">The endpoint address whose topology options initialize the settings.</param>
     public RabbitMqSendSettings(RabbitMqEndpointAddress address)
         : base(address.Name, address.ExchangeType, address.Durable, address.AutoDelete)
     {
@@ -44,16 +40,12 @@ public class RabbitMqSendSettings :
             SetQueueArgument(RabbitMQ.Client.Headers.XSingleActiveConsumer, true);
     }
 
-    /// <summary>
-    /// Gets the queue arguments value.
-    /// </summary>
+    /// <summary>Gets the broker-specific arguments for the optional bound queue.</summary>
     public IDictionary<string, object?> QueueArguments { get; }
 
-    /// <summary>
-    /// Gets send address.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Projects the exchange and simple binding settings into a RabbitMQ endpoint address.</summary>
+    /// <param name="hostAddress">The RabbitMQ host address.</param>
+    /// <returns>The destination endpoint address.</returns>
     public RabbitMqEndpointAddress GetSendAddress(Uri hostAddress)
     {
         return new RabbitMqEndpointAddress(hostAddress, ExchangeName, ExchangeType, Durable, AutoDelete, _bindToQueue, _queueName,
@@ -63,10 +55,8 @@ public class RabbitMqSendSettings :
                 && argument is string alternateExchange ? alternateExchange : default);
     }
 
-    /// <summary>
-    /// Gets broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the exchange declarations and optional queue or exchange bindings required for sending.</summary>
+    /// <returns>The send broker topology, or an empty topology for RabbitMQ direct reply-to.</returns>
     public BrokerTopology GetBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder();
@@ -89,10 +79,8 @@ public class RabbitMqSendSettings :
         return builder.BuildBrokerTopology();
     }
 
-    /// <summary>
-    /// Performs the bind to queue operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
+    /// <summary>Configures a queue to be declared and bound to the destination exchange.</summary>
+    /// <param name="queueName">The queue name to declare.</param>
     public void BindToQueue(string queueName)
     {
         if (string.IsNullOrWhiteSpace(queueName))
@@ -102,11 +90,9 @@ public class RabbitMqSendSettings :
         _queueName = queueName;
     }
 
-    /// <summary>
-    /// Performs the bind to exchange operation.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures a source exchange to be declared and bound to the destination exchange.</summary>
+    /// <param name="exchangeName">The source exchange name.</param>
+    /// <param name="configure">An optional callback that customizes the source exchange and binding.</param>
     public void BindToExchange(string exchangeName, Action<IRabbitMqExchangeBindingConfigurator>? configure = null)
     {
         var exchangeType = ExchangeArguments.TryGetValue("x-delayed-type", out var argument) && argument is string delayedType
@@ -119,10 +105,8 @@ public class RabbitMqSendSettings :
         _exchangeBindings.Add(specification);
     }
 
-    /// <summary>
-    /// Performs the bind to exchange operation.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Configures a source exchange binding from an endpoint address.</summary>
+    /// <param name="address">The address that supplies the source exchange declaration.</param>
     public void BindToExchange(RabbitMqEndpointAddress address)
     {
         var specification = new ExchangeBindingPublishTopologySpecification(address.Name, address.ExchangeType, address.Durable, address.AutoDelete);
@@ -130,11 +114,9 @@ public class RabbitMqSendSettings :
         _exchangeBindings.Add(specification);
     }
 
-    /// <summary>
-    /// Sets queue argument.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Adds, replaces, or removes a broker-specific argument for the optional queue.</summary>
+    /// <param name="key">The RabbitMQ queue argument name.</param>
+    /// <param name="value">The argument value, or <see langword="null"/> to remove the argument.</param>
     public void SetQueueArgument(string key, object? value)
     {
         if (key == null)
@@ -173,10 +155,8 @@ public class RabbitMqSendSettings :
         }
     }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the exchange, queue binding, and declaration arguments for diagnostics.</summary>
+    /// <returns>A diagnostic description of the send settings.</returns>
     public override string ToString()
     {
         return string.Join(", ", GetSettingStrings());

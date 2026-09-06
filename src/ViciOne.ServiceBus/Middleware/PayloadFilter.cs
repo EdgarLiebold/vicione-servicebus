@@ -3,11 +3,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a payload filter implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
-/// <typeparam name="TPayload">The t payload type.</typeparam>
+/// <summary>Processes payload pipeline stages.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+/// <typeparam name="TPayload">The payload type.</typeparam>
 public class PayloadFilter<TContext, TPayload> :
     IFilter<TContext>
     where TContext : class, PipeContext
@@ -15,30 +13,24 @@ public class PayloadFilter<TContext, TPayload> :
 {
     readonly TPayload _payload;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="payload">The payload value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="payload">The payload.</param>
     public PayloadFilter(TPayload payload)
     {
         _payload = payload;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateFilterScope("inline");
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
     public Task SendAsync(TContext context, IPipe<TContext> next)

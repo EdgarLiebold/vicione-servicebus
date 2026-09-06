@@ -4,12 +4,10 @@ using ViciOne.ServiceBus.Contracts;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a request activity impl implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TRequest">The t request type.</typeparam>
-/// <typeparam name="TResponse">The t response type.</typeparam>
+/// <summary>Sends a state-machine request and schedules its configured timeout message.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TRequest">The request type.</typeparam>
+/// <typeparam name="TResponse">The response type.</typeparam>
 public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
     where TInstance : class, SagaStateMachineInstance
     where TRequest : class
@@ -17,22 +15,18 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
 {
     readonly Request<TInstance, TRequest, TResponse> _request;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="request">The request value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="request">The request.</param>
     protected RequestActivityImpl(Request<TInstance, TRequest, TResponse> request)
     {
         _request = request;
     }
 
-    /// <summary>
-    /// Sends request.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="sendTuple">The send tuple value.</param>
-    /// <param name="serviceAddress">The service address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends request.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="sendTuple">The send tuple.</param>
+    /// <param name="serviceAddress">The service address.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected async Task SendRequestAsync(BehaviorContext<TInstance> context, global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest> sendTuple, Uri serviceAddress)
     {
         var requestId = _request.GenerateRequestId(context.Saga);
@@ -62,10 +56,8 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public virtual void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("request");
@@ -75,9 +67,7 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
     }
 
 
-    /// <summary>
-    /// Handles the sending of a request to the endpoint specified
-    /// </summary>
+    /// <summary>Handles the sending of a request to the endpoint specified.</summary>
     class SendRequestPipe :
         IPipe<SendContext<TRequest>>
     {

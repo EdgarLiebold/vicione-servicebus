@@ -1,27 +1,21 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a named endpoint definition implementation.
-/// </summary>
+/// <summary>Defines configuration for named endpoint.</summary>
 public class NamedEndpointDefinition :
     DefaultEndpointDefinition
 {
     readonly string _endpointName;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="endpointName">The endpoint name value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="endpointName">The endpoint name.</param>
     public NamedEndpointDefinition(string endpointName)
     {
         _endpointName = endpointName;
     }
 
-    /// <summary>
-    /// Gets endpoint name.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets endpoint name.</summary>
+    /// <param name="formatter">The formatter.</param>
+    /// <returns>The endpoint name.</returns>
     public override string GetEndpointName(IEndpointNameFormatter formatter)
     {
         return _endpointName;

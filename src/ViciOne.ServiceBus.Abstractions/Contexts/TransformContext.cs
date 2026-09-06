@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Context used by a message transform
-/// </summary>
+/// <summary>Context used by a message transform.</summary>
 public interface TransformContext :
     PipeContext,
     MessageContext
@@ -10,21 +8,15 @@ public interface TransformContext :
 }
 
 
-/// <summary>
-/// A message transform for a single message type
-/// </summary>
-/// <typeparam name="TMessage">The message type</typeparam>
+/// <summary>A message transform for a single message type.</summary>
+/// <typeparam name="TMessage">The message type.</typeparam>
 public interface TransformContext<out TMessage> :
     TransformContext
     where TMessage : class
 {
-    /// <summary>
-    /// If true, the input is present, otherwise it equals <i>default</i>.
-    /// </summary>
+    /// <summary>If true, the input is present, otherwise it equals <i>default</i>.</summary>
     bool HasInput { get; }
 
-    /// <summary>
-    /// Gets the input value.
-    /// </summary>
+    /// <summary>Gets the input.</summary>
     TMessage Input { get; }
 }

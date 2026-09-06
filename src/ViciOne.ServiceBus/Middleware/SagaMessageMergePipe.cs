@@ -3,11 +3,9 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Merges the out-of-band Saga back into the context
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
-/// <typeparam name="TMessage"></typeparam>
+/// <summary>Merges the out-of-band Saga back into the context.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class SagaMessageMergePipe<TSaga, TMessage> :
     IPipe<ConsumeContext<TMessage>>
     where TMessage : class
@@ -16,11 +14,9 @@ public class SagaMessageMergePipe<TSaga, TMessage> :
     readonly SagaConsumeContext<TSaga, TMessage> _context;
     readonly IPipe<SagaConsumeContext<TSaga, TMessage>> _output;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="output">The output value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="output">The output.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public SagaMessageMergePipe(IPipe<SagaConsumeContext<TSaga, TMessage>> output, SagaConsumeContext<TSaga, TMessage> context)
     {
         _output = output;
@@ -39,11 +35,9 @@ public class SagaMessageMergePipe<TSaga, TMessage> :
         _output.Probe(scope);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(ConsumeContext<TMessage> context)
     {
         if (ReferenceEquals(context, _context))

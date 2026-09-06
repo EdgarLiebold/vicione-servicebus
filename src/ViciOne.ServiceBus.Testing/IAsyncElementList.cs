@@ -4,55 +4,39 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Defines the contract for async element list.
-/// </summary>
-/// <typeparam name="TElement">The t element type.</typeparam>
+/// <summary>Defines the operations required by async element list.</summary>
+/// <typeparam name="TElement">The element type.</typeparam>
 public interface IAsyncElementList<out TElement>
     where TElement : class, IAsyncListElement
 {
-    /// <summary>
-    /// Gets the count value.
-    /// </summary>
+    /// <summary>Gets the count.</summary>
     int Count { get; }
 
-    /// <summary>
-    /// Gets the save mode value.
-    /// </summary>
+    /// <summary>Gets the save mode.</summary>
     TestContextSaveMode SaveMode { get; }
 
-    /// <summary>
-    /// Gets the maximum saved elements value.
-    /// </summary>
+    /// <summary>Gets the maximum saved elements.</summary>
     int MaximumSavedElements { get; }
 
-    /// <summary>
-    /// Performs the snapshot operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Captures the current state.</summary>
+    /// <returns>The read only list produced by the operation.</returns>
     IReadOnlyList<TElement> Snapshot();
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects the matching value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The selected value.</returns>
     IEnumerable<TElement> Select(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects the matching value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>An asynchronous sequence containing the selected value.</returns>
     IAsyncEnumerable<TElement> SelectAsync(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the any operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects any matching value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the any outcome.</returns>
     Task<bool> AnyAsync(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default);
 }

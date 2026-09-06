@@ -3,31 +3,23 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
-/// <summary>
-/// Provides a base bus activity indicator connectable implementation.
-/// </summary>
+/// <summary>Connects bus-activity observations to a test-harness condition.</summary>
 public abstract class BaseBusActivityIndicatorConnectable : Connectable<IConditionObserver>,
     IObservableCondition
 {
-    /// <summary>
-    /// Connects condition observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects condition observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConditionObserver(IConditionObserver observer)
     {
         return Connect(observer);
     }
 
-    /// <summary>
-    /// Gets the is met value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether met.</summary>
     public abstract bool IsMet { get; }
 
-    /// <summary>
-    /// Performs the condition updated operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reevaluates state after a condition changes.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected Task ConditionUpdatedAsync()
     {
         return ForEachAsync(x => x.ConditionUpdatedAsync());

@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// An Agent Provocateur that simply exists, out of context
-/// </summary>
+/// <summary>An Agent Provocateur that simply exists, out of context.</summary>
 public class Agent :
     IAgent
 {
@@ -22,9 +20,7 @@ public class Agent :
     TaskCompletionSource<bool>? _setReady;
     CancellationTokenSource? _setReadyCancel;
 
-    /// <summary>
-    /// Creates the Agent
-    /// </summary>
+    /// <summary>Creates the Agent.</summary>
     public Agent()
     {
         _ready = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -48,24 +44,16 @@ public class Agent :
         });
     }
 
-    /// <summary>
-    /// True if the agent is in the process of stopping or is stopped
-    /// </summary>
+    /// <summary>True if the agent is in the process of stopping or is stopped.</summary>
     protected bool IsStopping { get; private set; }
 
-    /// <summary>
-    /// True if the agent is stopped
-    /// </summary>
+    /// <summary>True if the agent is stopped.</summary>
     protected bool IsStopped { get; private set; }
 
-    /// <summary>
-    /// Gets the is already ready value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether already ready.</summary>
     protected bool IsAlreadyReady => _ready.Task.IsCompleted;
 
-    /// <summary>
-    /// Gets the is already completed value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether already completed.</summary>
     protected bool IsAlreadyCompleted => _completed.Task.IsCompleted;
 
     /// <inheritdoc />
@@ -99,11 +87,9 @@ public class Agent :
             _stopped.Value.Cancel();
     }
 
-    /// <summary>
-    /// Stops the agent
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <summary>Stops the agent.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected virtual Task StopAgentAsync(StopContext context)
     {
         _completed.TrySetResult(true);
@@ -111,34 +97,28 @@ public class Agent :
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Puts the agent in a ready state, explicitly
-    /// </summary>
+    /// <summary>Puts the agent in a ready state, explicitly.</summary>
     public virtual void SetReady()
     {
         _ready.TrySetResult(true);
     }
 
-    /// <summary>
-    /// Puts the agent in a faulted state where it will never be ready
-    /// </summary>
-    /// <param name="exception"></param>
+    /// <summary>Puts the agent in a faulted state where it will never be ready.</summary>
+    /// <param name="exception">The exception associated with the operation.</param>
     public virtual void SetNotReady(Exception exception)
     {
         _ready.TrySetException(exception);
     }
 
-    /// <summary>
-    /// Set the agent ready for duty
-    /// </summary>
-    /// <param name="readyTask"></param>
+    /// <summary>Set the agent ready for duty.</summary>
+    /// <param name="readyTask">The ready task.</param>
     protected void SetReady(Task readyTask)
     {
         lock (_ready)
         {
             if (_setReady != null)
             {
-                // if a previous readyTask is already completed, no sense in trying
+                // A completed readiness signal is already authoritative.
                 if (_setReady.Task.IsCompleted)
                 {
                     if (_setReady.Task.IsFaulted)
@@ -190,17 +170,15 @@ public class Agent :
         }
     }
 
-    /// <summary>
-    /// Set the agent Completed for duty
-    /// </summary>
-    /// <param name="completedTask"></param>
+    /// <summary>Set the agent Completed for duty.</summary>
+    /// <param name="completedTask">The completed task.</param>
     protected void SetCompleted(Task completedTask)
     {
         lock (_completed)
         {
             if (_setCompleted != null)
             {
-                // if a previous completedTask is already completed, no sense in trying
+                // A completed terminal signal is already authoritative.
                 if (_setCompleted.Task.IsCompleted)
                     return;
 
@@ -238,10 +216,8 @@ public class Agent :
         }
     }
 
-    /// <summary>
-    /// Set the agent faulted, making it dead.
-    /// </summary>
-    /// <param name="task"></param>
+    /// <summary>Set the agent faulted, making it dead.</summary>
+    /// <param name="task">The task.</param>
     protected void SetFaulted(Task task)
     {
         switch (task)

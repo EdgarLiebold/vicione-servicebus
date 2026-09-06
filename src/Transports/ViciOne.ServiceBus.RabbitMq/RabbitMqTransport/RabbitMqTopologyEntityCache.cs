@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq;
-/// <summary>
-/// Owns stable RabbitMQ topology declarations for the lifetime of one connection.
-/// </summary>
+/// <summary>Owns stable RabbitMQ topology declarations for the lifetime of one connection.</summary>
 /// <remarks>
 /// Stable declarations are single-flight and retain an immutable structural fingerprint. A second
 /// declaration of the same entity with a different definition fails before provider work starts.
@@ -22,13 +20,11 @@ public sealed class RabbitMqTopologyEntityCache
     readonly ConcurrentDictionary<EntityKey, Entry> _entries = new();
     long _generation;
 
-    /// <summary>
-    /// Performs the declare exchange operation.
-    /// </summary>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="declare">The declare value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs a stable exchange declaration once per cache generation; transient exchanges bypass the cache.</summary>
+    /// <param name="exchange">The immutable exchange definition.</param>
+    /// <param name="declare">The broker declaration callback.</param>
+    /// <param name="cancellationToken">Cancellation for this caller's wait.</param>
+    /// <returns>A task that completes when the shared declaration completes.</returns>
     public Task DeclareExchangeAsync(Exchange exchange, Func<CancellationToken, Task> declare, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(exchange);
@@ -44,13 +40,11 @@ public sealed class RabbitMqTopologyEntityCache
             cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the declare queue operation.
-    /// </summary>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="declare">The declare value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs a stable queue declaration once per cache generation; transient queues bypass the cache.</summary>
+    /// <param name="queue">The immutable queue definition.</param>
+    /// <param name="declare">The broker declaration callback.</param>
+    /// <param name="cancellationToken">Cancellation for this caller's wait.</param>
+    /// <returns>A task that completes when the shared declaration completes.</returns>
     public Task DeclareQueueAsync(Queue queue, Func<CancellationToken, Task> declare, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(queue);
@@ -66,13 +60,11 @@ public sealed class RabbitMqTopologyEntityCache
             cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="binding">The binding value.</param>
-    /// <param name="bind">The bind value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs a stable exchange-to-queue binding once per cache generation.</summary>
+    /// <param name="binding">The immutable binding definition.</param>
+    /// <param name="bind">The broker binding callback.</param>
+    /// <param name="cancellationToken">Cancellation for this caller's wait.</param>
+    /// <returns>A task that completes when the shared binding completes.</returns>
     public Task BindAsync(ExchangeToQueueBinding binding, Func<CancellationToken, Task> bind, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(binding);
@@ -91,13 +83,11 @@ public sealed class RabbitMqTopologyEntityCache
             cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="binding">The binding value.</param>
-    /// <param name="bind">The bind value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs a stable exchange-to-exchange binding once per cache generation.</summary>
+    /// <param name="binding">The immutable binding definition.</param>
+    /// <param name="bind">The broker binding callback.</param>
+    /// <param name="cancellationToken">Cancellation for this caller's wait.</param>
+    /// <returns>A task that completes when the shared binding completes.</returns>
     public Task BindAsync(ExchangeToExchangeBinding binding, Func<CancellationToken, Task> bind, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(binding);
@@ -210,21 +200,13 @@ public sealed class RabbitMqTopologyEntityCache
 
     enum EntityKind
     {
-        /// <summary>
-        /// Indicates exchange.
-        /// </summary>
+        /// <summary>An exchange declaration.</summary>
         Exchange,
-        /// <summary>
-        /// Indicates queue.
-        /// </summary>
+        /// <summary>A queue declaration.</summary>
         Queue,
-        /// <summary>
-        /// Indicates exchange to queue binding.
-        /// </summary>
+        /// <summary>An exchange-to-queue binding.</summary>
         ExchangeToQueueBinding,
-        /// <summary>
-        /// Indicates exchange to exchange binding.
-        /// </summary>
+        /// <summary>An exchange-to-exchange binding.</summary>
         ExchangeToExchangeBinding
     }
 

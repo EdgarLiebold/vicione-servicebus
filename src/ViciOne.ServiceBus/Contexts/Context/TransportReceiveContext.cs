@@ -2,20 +2,16 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>
-/// Defines the contract for transport receive context.
-/// </summary>
+/// <summary>Exposes state for transport receive operations.</summary>
 public interface TransportReceiveContext
 {
-    /// <summary>
-    /// Gets the stable transport identity used by diagnostics. This identifies the product
-    /// transport, independently of the wire protocol used by the broker connection.
-    /// </summary>
+    /// <summary>Gets the activity system.</summary>
     string ActivitySystem => string.Empty;
 
     /// <summary>
     /// Write any transport-specific properties to the dictionary so that they can be
-    /// restored on subsequent outgoing messages (scheduled)
+    /// restored on subsequent outgoing messages (scheduled).
     /// </summary>
+    /// <returns>The transport properties.</returns>
     IDictionary<string, object>? GetTransportProperties();
 }

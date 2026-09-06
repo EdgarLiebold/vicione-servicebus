@@ -2,36 +2,26 @@ using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for message fabric topology builder.
-/// </summary>
+/// <summary>Builds message fabric topology components.</summary>
 public interface IMessageFabricTopologyBuilder
 {
-    /// <summary>
-    /// Performs the exchange bind operation.
-    /// </summary>
+    /// <summary>Binds the configured exchange.</summary>
     /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="routingKey">The routing key value.</param>
+    /// <param name="destination">The destination.</param>
+    /// <param name="routingKey">The routing key.</param>
     void ExchangeBind(string source, string destination, string? routingKey);
 
-    /// <summary>
-    /// Performs the queue bind operation.
-    /// </summary>
+    /// <summary>Binds the configured queue.</summary>
     /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination value.</param>
+    /// <param name="destination">The destination.</param>
     void QueueBind(string source, string destination);
 
-    /// <summary>
-    /// Performs the exchange declare operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="exchangeType">The exchange type value.</param>
+    /// <summary>Declares the configured exchange.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
     void ExchangeDeclare(string name, ExchangeType exchangeType);
 
-    /// <summary>
-    /// Performs the queue declare operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
+    /// <summary>Declares the configured queue.</summary>
+    /// <param name="name">The name.</param>
     void QueueDeclare(string name);
 }

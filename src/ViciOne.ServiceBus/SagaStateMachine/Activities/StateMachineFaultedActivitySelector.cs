@@ -2,11 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a state machine faulted activity selector implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TException">The t exception type.</typeparam>
+/// <summary>Selects state machine faulted activity values.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TException">The exception handled by the member.</typeparam>
 public class StateMachineFaultedActivitySelector<TSaga, TException> :
     IStateMachineFaultedActivitySelector<TSaga, TException>
     where TSaga : class, SagaStateMachineInstance
@@ -14,20 +12,16 @@ public class StateMachineFaultedActivitySelector<TSaga, TException> :
 {
     readonly ExceptionActivityBinder<TSaga, TException> _binder;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="binder">The binder value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="binder">The binder.</param>
     public StateMachineFaultedActivitySelector(ExceptionActivityBinder<TSaga, TException> binder)
     {
         _binder = binder;
     }
 
-    /// <summary>
-    /// Performs the of type operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Restricts the operation to the specified type.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TSaga, TException> OfType<TActivity>()
         where TActivity : class, IStateMachineActivity<TSaga>
     {
@@ -38,12 +32,10 @@ public class StateMachineFaultedActivitySelector<TSaga, TException> :
 }
 
 
-/// <summary>
-/// Provides a state machine faulted activity selector implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
-/// <typeparam name="TException">The t exception type.</typeparam>
+/// <summary>Selects state machine faulted activity values.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TException">The exception handled by the member.</typeparam>
 public class StateMachineFaultedActivitySelector<TSaga, TMessage, TException> :
     IStateMachineFaultedActivitySelector<TSaga, TMessage, TException>
     where TSaga : class, SagaStateMachineInstance
@@ -52,20 +44,16 @@ public class StateMachineFaultedActivitySelector<TSaga, TMessage, TException> :
 {
     readonly ExceptionActivityBinder<TSaga, TMessage, TException> _binder;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="binder">The binder value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="binder">The binder.</param>
     public StateMachineFaultedActivitySelector(ExceptionActivityBinder<TSaga, TMessage, TException> binder)
     {
         _binder = binder;
     }
 
-    /// <summary>
-    /// Performs the of type operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Restricts the operation to the specified type.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TSaga, TMessage, TException> OfType<TActivity>()
         where TActivity : class, IStateMachineActivity<TSaga, TMessage>
     {
@@ -74,11 +62,9 @@ public class StateMachineFaultedActivitySelector<TSaga, TMessage, TException> :
         return _binder.Add(activity);
     }
 
-    /// <summary>
-    /// Performs the of instance type operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Restricts the operation to the saga instance type.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TSaga, TMessage, TException> OfInstanceType<TActivity>()
         where TActivity : class, IStateMachineActivity<TSaga>
     {

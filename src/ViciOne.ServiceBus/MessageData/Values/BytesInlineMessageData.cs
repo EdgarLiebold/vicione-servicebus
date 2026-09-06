@@ -6,20 +6,16 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.MessageData.Values;
 
-/// <summary>
-/// Provides a bytes inline message data implementation.
-/// </summary>
+/// <summary>Carries bytes inline message data.</summary>
 public class BytesInlineMessageData :
     MessageData<byte[]>,
     IInlineMessageData
 {
     readonly byte[] _value;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="address">The address value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <param name="address">The address.</param>
     public BytesInlineMessageData(byte[] value, Uri? address = null)
     {
         Address = address;
@@ -28,37 +24,27 @@ public class BytesInlineMessageData :
         Value = Task.FromResult<byte[]?>(value);
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="reference">The reference value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <param name="reference">The reference.</param>
     public void Set(IMessageDataReference reference)
     {
         reference.Text = default;
         reference.Data = _value;
     }
 
-    /// <summary>
-    /// Gets the address value.
-    /// </summary>
+    /// <summary>Gets the address.</summary>
     public Uri? Address { get; }
 
-    /// <summary>
-    /// Gets the has value value.
-    /// </summary>
+    /// <summary>Gets whether this instance contains a value.</summary>
     public bool HasValue => true;
 
-    /// <summary>
-    /// Gets the underlying value.
-    /// </summary>
+    /// <summary>Gets the value.</summary>
     public Task<byte[]?> Value { get; }
 }
 
 
-/// <summary>
-/// Provides a bytes inline message data implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Carries bytes inline message data.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class BytesInlineMessageData<T> :
     MessageData<T>,
     IInlineMessageData
@@ -67,12 +53,10 @@ public class BytesInlineMessageData<T> :
     readonly byte[] _value;
     readonly Lazy<Task<T?>> _valueTask;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="converter">The converter value.</param>
-    /// <param name="value">The value.</param>
-    /// <param name="address">The address value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="converter">The converter.</param>
+    /// <param name="value">The value to process.</param>
+    /// <param name="address">The address.</param>
     public BytesInlineMessageData(IMessageDataConverter<T> converter, byte[] value, Uri? address = null)
     {
         Address = address;
@@ -83,29 +67,21 @@ public class BytesInlineMessageData<T> :
         _converter = converter;
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="reference">The reference value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <param name="reference">The reference.</param>
     public void Set(IMessageDataReference reference)
     {
         reference.Text = default;
         reference.Data = _value;
     }
 
-    /// <summary>
-    /// Gets the address value.
-    /// </summary>
+    /// <summary>Gets the address.</summary>
     public Uri? Address { get; }
 
-    /// <summary>
-    /// Gets the has value value.
-    /// </summary>
+    /// <summary>Gets whether this instance contains a value.</summary>
     public bool HasValue => true;
 
-    /// <summary>
-    /// Gets the underlying value.
-    /// </summary>
+    /// <summary>Gets the value.</summary>
     public Task<T?> Value => _valueTask.Value;
 
     async Task<T?> GetValueAsync()

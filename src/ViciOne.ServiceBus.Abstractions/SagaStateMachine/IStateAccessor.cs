@@ -4,35 +4,27 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Defines the contract for state accessor.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Defines the operations required by state accessor.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public interface IStateAccessor<TSaga> :
     IProbeSite
     where TSaga : class, SagaStateMachineInstance
 {
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Retrieves the requested value.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     Task<State<TSaga>?> GetAsync(BehaviorContext<TSaga> context, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="state">The state value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="state">The state.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task SetAsync(BehaviorContext<TSaga> context, State<TSaga> state, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Converts a state expression to the instance current state property type.
-    /// </summary>
-    /// <param name="states"></param>
-    /// <returns></returns>
+    /// <summary>Converts a state expression to the instance current state property type.</summary>
+    /// <param name="states">The states.</param>
+    /// <returns>The state expression.</returns>
     Expression<Func<TSaga, bool>> GetStateExpression(params State[] states);
 }

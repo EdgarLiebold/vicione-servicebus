@@ -6,25 +6,19 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Courier.Messages;
 
-/// <summary>
-/// Provides a routing slip activity implementation.
-/// </summary>
+/// <summary>Executes the routing slip activity.</summary>
 public class RoutingSlipActivity :
     Activity
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public RoutingSlipActivity()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="address">The address value.</param>
-    /// <param name="arguments">The arguments value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="address">The address.</param>
+    /// <param name="arguments">The arguments.</param>
     public RoutingSlipActivity(string name, Uri address, IDictionary<string, object> arguments)
     {
         Name = name;
@@ -32,10 +26,8 @@ public class RoutingSlipActivity :
         Arguments = arguments;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="activity">The activity value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="activity">The activity.</param>
     public RoutingSlipActivity(Activity activity)
     {
         if (string.IsNullOrEmpty(activity.Name))
@@ -48,16 +40,10 @@ public class RoutingSlipActivity :
         Arguments = activity.Arguments ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>
-    /// Gets or sets the name value.
-    /// </summary>
+    /// <summary>Gets or sets the name.</summary>
     public string Name { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the address value.
-    /// </summary>
+    /// <summary>Gets or sets the address.</summary>
     public Uri Address { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the arguments value.
-    /// </summary>
+    /// <summary>Gets or sets the arguments.</summary>
     public IDictionary<string, object> Arguments { get; set; } = null!;
 }

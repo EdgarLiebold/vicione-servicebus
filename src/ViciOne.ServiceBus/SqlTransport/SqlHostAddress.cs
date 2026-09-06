@@ -34,42 +34,26 @@ namespace ViciOne.ServiceBus.Providers.Transports;
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct SqlHostAddress
 {
-    /// <summary>
-    /// Defines the db scheme value.
-    /// </summary>
+    /// <summary>Exposes the db scheme used by the containing type.</summary>
     public const string DbScheme = "db";
 
     const string InstanceNameKey = "instance";
 
-    /// <summary>
-    /// Defines the scheme value.
-    /// </summary>
+    /// <summary>Exposes the scheme used by the containing type.</summary>
     public readonly string Scheme;
-    /// <summary>
-    /// Defines the host value.
-    /// </summary>
+    /// <summary>Exposes the host used by the containing type.</summary>
     public readonly string Host;
-    /// <summary>
-    /// Defines the port value.
-    /// </summary>
+    /// <summary>Exposes the port used by the containing type.</summary>
     public readonly int? Port;
-    /// <summary>
-    /// Defines the instance name value.
-    /// </summary>
+    /// <summary>Exposes the instance name used by the containing type.</summary>
     public readonly string? InstanceName;
-    /// <summary>
-    /// Defines the virtual host value.
-    /// </summary>
+    /// <summary>Exposes the virtual host used by the containing type.</summary>
     public readonly string VirtualHost;
-    /// <summary>
-    /// Defines the area value.
-    /// </summary>
+    /// <summary>Exposes the area used by the containing type.</summary>
     public readonly string? Area;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="address">The address.</param>
     public SqlHostAddress(Uri address)
     {
         var scheme = address.Scheme.ToLowerInvariant();
@@ -94,14 +78,12 @@ public readonly struct SqlHostAddress
         }
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="host">The host value.</param>
-    /// <param name="instanceName">The instance name value.</param>
-    /// <param name="port">The port value.</param>
-    /// <param name="virtualHost">The virtual host value.</param>
-    /// <param name="area">The area value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="host">The host.</param>
+    /// <param name="instanceName">The instance name.</param>
+    /// <param name="port">The port.</param>
+    /// <param name="virtualHost">The virtual host.</param>
+    /// <param name="area">The area.</param>
     public SqlHostAddress(string host, string? instanceName, int? port, string virtualHost, string? area)
     {
         Scheme = DbScheme;
@@ -164,11 +146,9 @@ public readonly struct SqlHostAddress
         return (virtualHost, area);
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts a value to <see cref="Uri" />.</summary>
+    /// <param name="address">The address.</param>
+    /// <returns>The value produced by the operation.</returns>
     public static implicit operator Uri(in SqlHostAddress address)
     {
         var path = address.VirtualHost == "/" ? "/" : Uri.EscapeDataString(address.VirtualHost);

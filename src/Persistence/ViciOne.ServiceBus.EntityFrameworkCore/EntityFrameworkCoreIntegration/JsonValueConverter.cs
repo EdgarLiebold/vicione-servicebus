@@ -4,18 +4,14 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides a json value converter implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Converts a reference-type property to and from JSON for relational persistence.</summary>
+/// <typeparam name="T">The reference type converted to JSON.</typeparam>
 public class JsonValueConverter<T> :
     ValueConverter<T, string>
     where T : class?
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hints">The hints value.</param>
+    /// <summary>Initializes the converter with optional provider mapping hints.</summary>
+    /// <param name="hints">Mapping hints forwarded to EF Core.</param>
     public JsonValueConverter(ConverterMappingHints? hints = default)
         : base(v => Serialize(v), v => Deserialize(v), hints)
     {

@@ -3,29 +3,23 @@ using System.Text;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides a sql server lock statement formatter implementation.
-/// </summary>
+/// <summary>Builds SQL Server row-lock, outbox-claim, and application-lock SQL.</summary>
 public class SqlServerLockStatementFormatter :
     ILockStatementFormatter
 {
     readonly bool _serializable;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="serializable">The serializable value.</param>
+    /// <summary>Initializes SQL Server row-lock formatting with optional serializable isolation.</summary>
+    /// <param name="serializable"><see langword="true"/> to add the <c>SERIALIZABLE</c> table hint to row locks.</param>
     public SqlServerLockStatementFormatter(bool serializable)
     {
         _serializable = serializable;
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="sb">The sb value.</param>
-    /// <param name="schema">The schema value.</param>
-    /// <param name="table">The table value.</param>
+    /// <summary>Starts a quoted row query with SQL Server update and row locks.</summary>
+    /// <param name="sb">The destination SQL builder.</param>
+    /// <param name="schema">The mapped SQL Server schema.</param>
+    /// <param name="table">The mapped SQL Server table.</param>
     public void Create(StringBuilder sb, string schema, string table)
     {
         sb.AppendFormat("SELECT * FROM {0} WITH (UPDLOCK, ROWLOCK", FormatTableName(schema, table));
@@ -34,12 +28,10 @@ public class SqlServerLockStatementFormatter :
         sb.Append(") WHERE ");
     }
 
-    /// <summary>
-    /// Performs the append column operation.
-    /// </summary>
-    /// <param name="sb">The sb value.</param>
-    /// <param name="index">The index value.</param>
-    /// <param name="columnName">The column name value.</param>
+    /// <summary>Appends a quoted equality predicate for a positional EF Core parameter.</summary>
+    /// <param name="sb">The destination SQL builder.</param>
+    /// <param name="index">The zero-based EF Core parameter index.</param>
+    /// <param name="columnName">The mapped SQL Server column.</param>
     public void AppendColumn(StringBuilder sb, int index, string columnName)
     {
         if (index == 0)
@@ -48,25 +40,21 @@ public class SqlServerLockStatementFormatter :
             sb.AppendFormat(" AND {0} = @p{1}", QuoteIdentifier(columnName), index);
     }
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
-    /// <param name="sb">The sb value.</param>
+    /// <summary>Completes the row-lock statement; SQL Server lock hints are already present in the query prefix.</summary>
+    /// <param name="sb">The destination SQL builder.</param>
     public void Complete(StringBuilder sb)
     {
     }
 
-    /// <summary>
-    /// Creates outbox statement.
-    /// </summary>
-    /// <param name="sb">The sb value.</param>
-    /// <param name="schema">The schema value.</param>
-    /// <param name="table">The table value.</param>
-    /// <param name="createdColumn">The created column value.</param>
-    /// <param name="outboxIdColumn">The outbox id column value.</param>
-    /// <param name="busKeyColumn">The bus key column value.</param>
-    /// <param name="statusColumn">The status column value.</param>
-    /// <param name="nextDeliveryTimeColumn">The next delivery time column value.</param>
+    /// <summary>Builds a SQL Server query that claims one due outbox row with <c>READPAST</c>.</summary>
+    /// <param name="sb">The destination SQL builder.</param>
+    /// <param name="schema">The mapped SQL Server schema.</param>
+    /// <param name="table">The mapped SQL Server outbox table.</param>
+    /// <param name="createdColumn">The created column.</param>
+    /// <param name="outboxIdColumn">The outbox id column.</param>
+    /// <param name="busKeyColumn">The bus key column.</param>
+    /// <param name="statusColumn">The status column.</param>
+    /// <param name="nextDeliveryTimeColumn">The next delivery time column.</param>
     public void CreateOutboxStatement(StringBuilder sb, string schema, string table, string createdColumn, string outboxIdColumn,
         string busKeyColumn, string statusColumn, string nextDeliveryTimeColumn)
     {
@@ -76,12 +64,10 @@ public class SqlServerLockStatementFormatter :
             QuoteIdentifier(createdColumn), QuoteIdentifier(outboxIdColumn));
     }
 
-    /// <summary>
-    /// Creates inbox cleanup lock statement.
-    /// </summary>
-    /// <param name="sb">The sb value.</param>
-    /// <param name="schema">The schema value.</param>
-    /// <param name="table">The table value.</param>
+    /// <summary>Builds a non-blocking transaction-owned <c>sp_getapplock</c> query for inbox cleanup.</summary>
+    /// <param name="sb">The destination SQL builder.</param>
+    /// <param name="schema">The mapped SQL Server schema.</param>
+    /// <param name="table">The mapped SQL Server inbox table.</param>
     public void CreateInboxCleanupLockStatement(StringBuilder sb, string schema, string table)
     {
         string resource = $"ViciOne.ServiceBus:InboxCleanup:{schema}.{table}".Replace("'", "''", StringComparison.Ordinal);

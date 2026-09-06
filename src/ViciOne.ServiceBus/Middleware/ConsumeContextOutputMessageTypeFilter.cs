@@ -4,10 +4,8 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Converts an inbound context type to a pipe context type post-dispatch
-/// </summary>
-/// <typeparam name="TMessage">The subsequent pipe context type</typeparam>
+/// <summary>Converts an inbound context type to a pipe context type post-dispatch.</summary>
+/// <typeparam name="TMessage">The subsequent pipe context type.</typeparam>
 public class ConsumeContextOutputMessageTypeFilter<TMessage> :
     IConsumeContextOutputMessageTypeFilter<TMessage>
     where TMessage : class
@@ -16,11 +14,9 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
     readonly ConsumeMessageObservable<TMessage> _observers;
     readonly IRequestIdTeeFilter<TMessage> _output;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="observers">The observers value.</param>
-    /// <param name="output">The output value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="observers">The observers.</param>
+    /// <param name="output">The output.</param>
     public ConsumeContextOutputMessageTypeFilter(ConsumeObservable observers, IRequestIdTeeFilter<TMessage> output)
     {
         _output = output;
@@ -29,10 +25,8 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
         _observers = new ConsumeMessageObservable<TMessage>();
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("dispatchPipe");
@@ -41,12 +35,10 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
         _output.Probe(scope);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(ConsumeContext context, IPipe<ConsumeContext> next)
     {
         return context.TryGetMessage(out ConsumeContext<TMessage>? pipeContext)
@@ -54,32 +46,26 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
             : next.SendAsync(context);
     }
 
-    /// <summary>
-    /// Connects consume message observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume message observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumeMessageObserver(IConsumeMessageObserver<TMessage> observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects pipe.
-    /// </summary>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects pipe.</summary>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPipe(IPipe<ConsumeContext<TMessage>> pipe)
     {
         return _output.ConnectPipe(pipe);
     }
 
-    /// <summary>
-    /// Connects pipe.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects pipe.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPipe(Guid key, IPipe<ConsumeContext<TMessage>> pipe)
     {
         return _output.ConnectPipe(key, pipe);

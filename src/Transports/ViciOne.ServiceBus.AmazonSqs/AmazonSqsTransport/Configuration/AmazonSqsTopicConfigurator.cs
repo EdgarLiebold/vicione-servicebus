@@ -3,23 +3,19 @@ using ViciOne.ServiceBus.AmazonSqs.Topology;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Configuration;
 
-/// <summary>
-/// Provides an amazon sqs topic configurator implementation.
-/// </summary>
+/// <summary>Configures an Amazon SNS topic and subscriptions originating from it.</summary>
 public class AmazonSqsTopicConfigurator :
     EntityConfigurator,
     IAmazonSqsTopicConfigurator,
     Topic
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="topicAttributes">The topic attributes value.</param>
-    /// <param name="topicSubscriptionAttributes">The topic subscription attributes value.</param>
-    /// <param name="topicTags">The topic tags value.</param>
+    /// <summary>Initializes topic configuration and marks <c>.fifo</c> topics as FIFO entities.</summary>
+    /// <param name="topicName">The Amazon SNS topic name.</param>
+    /// <param name="durable">Whether the topic is retained when its endpoint stops.</param>
+    /// <param name="autoDelete">Whether the topic is deleted when its endpoint stops.</param>
+    /// <param name="topicAttributes">Optional Amazon SNS topic attributes.</param>
+    /// <param name="topicSubscriptionAttributes">Optional default Amazon SNS subscription attributes.</param>
+    /// <param name="topicTags">Optional tags applied to the topic.</param>
     public AmazonSqsTopicConfigurator(string topicName, bool durable = true, bool autoDelete = false, IDictionary<string, object>? topicAttributes = null,
         IDictionary<string, object>? topicSubscriptionAttributes = null, IDictionary<string, string>? topicTags = null)
         : base(topicName, durable, autoDelete)
@@ -32,35 +28,23 @@ public class AmazonSqsTopicConfigurator :
             TopicAttributes["FifoTopic"] = "true";
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="source">The source value.</param>
+    /// <summary>Initializes topic configuration from an existing topology entity.</summary>
+    /// <param name="source">The topic topology entity whose settings and collections are reused.</param>
     public AmazonSqsTopicConfigurator(Topic source)
         : this(source.EntityName, source.Durable, source.AutoDelete, source.TopicAttributes, source.TopicSubscriptionAttributes, source.TopicTags)
     {
     }
 
-    /// <summary>
-    /// Gets the tags value.
-    /// </summary>
+    /// <summary>Gets the tags applied to the topic.</summary>
     public IDictionary<string, string> Tags => TopicTags;
 
-    /// <summary>
-    /// Gets the address type value.
-    /// </summary>
+    /// <summary>Gets the topic address type used for endpoint-address formatting.</summary>
     protected override AmazonSqsEndpointAddress.AddressType AddressType => AmazonSqsEndpointAddress.AddressType.Topic;
 
-    /// <summary>
-    /// Gets the topic attributes value.
-    /// </summary>
+    /// <summary>Gets the Amazon SNS topic attributes.</summary>
     public IDictionary<string, object> TopicAttributes { get; }
-    /// <summary>
-    /// Gets the topic subscription attributes value.
-    /// </summary>
+    /// <summary>Gets the default Amazon SNS subscription attributes.</summary>
     public IDictionary<string, object> TopicSubscriptionAttributes { get; }
-    /// <summary>
-    /// Gets the topic tags value.
-    /// </summary>
+    /// <summary>Gets the tags applied to the topic.</summary>
     public IDictionary<string, string> TopicTags { get; }
 }

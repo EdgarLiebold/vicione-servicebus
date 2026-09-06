@@ -3,9 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Places the consumer-local concurrency owner immediately around the real consume pipeline.
-/// </summary>
+/// <summary>Places the consumer-local concurrency owner immediately around the real consume pipeline.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 internal sealed class ConsumerConcurrencyFilter<TMessage> :
     IFilter<ConsumeContext<TMessage>>
     where TMessage : class

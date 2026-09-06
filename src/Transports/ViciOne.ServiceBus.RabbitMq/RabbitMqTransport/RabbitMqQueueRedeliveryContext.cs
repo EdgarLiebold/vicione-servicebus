@@ -6,10 +6,8 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq queue redelivery context implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Republishes a consumed message to a predeclared RabbitMQ TTL redelivery queue.</summary>
+/// <typeparam name="TMessage">The consumed message contract.</typeparam>
 public sealed class RabbitMqQueueRedeliveryContext<TMessage> : MessageRedeliveryContext
     where TMessage : class
 {
@@ -17,12 +15,10 @@ public sealed class RabbitMqQueueRedeliveryContext<TMessage> : MessageRedelivery
     readonly RedeliveryOptions _options;
     readonly RabbitMqQueueRedeliveryPlan _plan;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="plan">The plan value.</param>
+    /// <summary>Creates a redelivery context over the current consume context and finite delay plan.</summary>
+    /// <param name="context">The consumed message to redeliver.</param>
+    /// <param name="options">The provider-neutral redelivery options.</param>
+    /// <param name="plan">The predeclared RabbitMQ delay queues and routing keys.</param>
     public RabbitMqQueueRedeliveryContext(ConsumeContext<TMessage> context, RedeliveryOptions options, RabbitMqQueueRedeliveryPlan plan)
     {
         _context = context;
@@ -30,13 +26,11 @@ public sealed class RabbitMqQueueRedeliveryContext<TMessage> : MessageRedelivery
         _plan = plan;
     }
 
-    /// <summary>
-    /// Schedules redelivery.
-    /// </summary>
-    /// <param name="delay">The delay value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Publishes the message to the TTL queue declared for an exact configured delay.</summary>
+    /// <param name="delay">A delay present in the endpoint's redelivery plan.</param>
+    /// <param name="callback">An optional callback that customizes the redelivery send context.</param>
+    /// <param name="cancellationToken">Cancellation for send-endpoint lookup; the consume context governs topology and publish operations.</param>
+    /// <returns>A task that completes after the redelivery publish completes.</returns>
     public async Task ScheduleRedeliveryAsync(TimeSpan delay, Action<ConsumeContext, SendContext>? callback, CancellationToken cancellationToken = default)
     {
         var routingKey = _plan.GetRoutingKey(delay);

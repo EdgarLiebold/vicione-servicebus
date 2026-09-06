@@ -6,15 +6,11 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for send context.
-/// </summary>
+/// <summary>Provides extension methods for send context.</summary>
 public static class SendContextExtensions
 {
-    /// <summary>
-    /// Set the host headers on the SendContext (for error, dead-letter, etc.)
-    /// </summary>
-    /// <param name="headers"></param>
+    /// <summary>Set the host headers on the SendContext (for error, dead-letter, etc.).</summary>
+    /// <param name="headers">The headers.</param>
     public static void SetHostHeaders(this SendHeaders headers)
     {
         headers.Set(MessageHeaders.Host.MachineName, HostMetadataCache.Host.MachineName);
@@ -27,11 +23,10 @@ public static class SendContextExtensions
         headers.Set(MessageHeaders.Host.OperatingSystemVersion, HostMetadataCache.Host.OperatingSystemVersion);
     }
 
-    /// <summary>
-    /// Set the host headers on the SendContext (for error, dead-letter, etc.)
-    /// </summary>
-    /// <param name="adapter"></param>
-    /// <param name="dictionary"></param>
+    /// <summary>Set the host headers on the SendContext (for error, dead-letter, etc.).</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="adapter">The adapter.</param>
+    /// <param name="dictionary">The dictionary.</param>
     public static void SetHostHeaders<T>(this ITransportSetHeaderAdapter<T> adapter, IDictionary<string, T> dictionary)
     {
         adapter.Set(dictionary, MessageHeaders.Host.MachineName, HostMetadataCache.Host.MachineName);
@@ -44,11 +39,9 @@ public static class SendContextExtensions
         adapter.Set(dictionary, MessageHeaders.Host.OperatingSystemVersion, HostMetadataCache.Host.OperatingSystemVersion);
     }
 
-    /// <summary>
-    /// Set the host headers on the SendContext (for error, dead-letter, etc.)
-    /// </summary>
-    /// <param name="headers"></param>
-    /// <param name="exceptionContext"></param>
+    /// <summary>Set the host headers on the SendContext (for error, dead-letter, etc.).</summary>
+    /// <param name="headers">The headers.</param>
+    /// <param name="exceptionContext">The exception context.</param>
     public static void SetExceptionHeaders(this SendHeaders headers, ExceptionReceiveContext exceptionContext)
     {
         var exception = exceptionContext.Exception.GetBaseException() ?? exceptionContext.Exception;
@@ -73,12 +66,11 @@ public static class SendContextExtensions
             headers.Set(MessageHeaders.FaultRetryCount, retryContext.RetryCount);
     }
 
-    /// <summary>
-    /// Set the host headers on the SendContext (for error, dead-letter, etc.)
-    /// </summary>
-    /// <param name="adapter"></param>
-    /// <param name="headers"></param>
-    /// <param name="exceptionContext"></param>
+    /// <summary>Set the host headers on the SendContext (for error, dead-letter, etc.).</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="adapter">The adapter.</param>
+    /// <param name="headers">The headers.</param>
+    /// <param name="exceptionContext">The exception context.</param>
     public static void SetExceptionHeaders<T>(this ITransportSetHeaderAdapter<T> adapter, IDictionary<string, T> headers, ExceptionReceiveContext
         exceptionContext)
     {
@@ -104,11 +96,9 @@ public static class SendContextExtensions
             adapter.Set(headers, MessageHeaders.FaultRetryCount, retryContext.RetryCount);
     }
 
-    /// <summary>
-    /// Transfer the header information from the ConsumeContext to the SendContext, including any non-ViciOne-ServiceBus headers.
-    /// </summary>
-    /// <param name="sendContext"></param>
-    /// <param name="consumeContext"></param>
+    /// <summary>Transfer the header information from the ConsumeContext to the SendContext, including any non-ViciOne-ServiceBus headers.</summary>
+    /// <param name="sendContext">The send context.</param>
+    /// <param name="consumeContext">The consume context.</param>
     public static void TransferConsumeContextHeaders(this SendContext sendContext, ConsumeContext consumeContext)
     {
         sendContext.GetOrAddPayload(() => consumeContext);
@@ -134,12 +124,10 @@ public static class SendContextExtensions
         }
     }
 
-    /// <summary>
-    /// Performs the apply redelivery options operation.
-    /// </summary>
-    /// <param name="sendContext">The send context value.</param>
-    /// <param name="consumeContext">The consume context value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Applies redelivery options.</summary>
+    /// <param name="sendContext">The send context.</param>
+    /// <param name="consumeContext">The consume context.</param>
+    /// <param name="options">The options that control the operation.</param>
     public static void ApplyRedeliveryOptions(this SendContext sendContext, ConsumeContext consumeContext, RedeliveryOptions options)
     {
         if (options.HasFlag(RedeliveryOptions.ReplaceMessageId))
@@ -148,12 +136,10 @@ public static class SendContextExtensions
         sendContext.Headers.Set(MessageHeaders.RedeliveryCount, consumeContext.GetRedeliveryCount() + 1);
     }
 
-    /// <summary>
-    /// Generate a new MessageId, storing the original MessageId in the OriginalMessageId header (unless it already exists)
-    /// </summary>
-    /// <param name="sendContext"></param>
-    /// <param name="consumeContext"></param>
-    /// <returns></returns>
+    /// <summary>Generate a new MessageId, storing the original MessageId in the OriginalMessageId header (unless it already exists).</summary>
+    /// <param name="sendContext">The send context.</param>
+    /// <param name="consumeContext">The consume context.</param>
+    /// <returns>The send context produced by the operation.</returns>
     public static SendContext ReplaceMessageId(this SendContext sendContext, ConsumeContext consumeContext)
     {
         if (consumeContext.TryGetHeader(MessageHeaders.OriginalMessageId, out Guid? originalMessageId) && originalMessageId.HasValue)
@@ -166,11 +152,9 @@ public static class SendContextExtensions
         return sendContext;
     }
 
-    /// <summary>
-    /// Returns the original MessageId from the message headers, or the MessageId if not present
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <summary>Returns the original MessageId from the message headers, or the MessageId if not present.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The original message id.</returns>
     public static Guid? GetOriginalMessageId(this ConsumeContext context)
     {
         return context.TryGetHeader(MessageHeaders.OriginalMessageId, out Guid? originalMessageId)
@@ -182,8 +166,8 @@ public static class SendContextExtensions
     /// Sets the ConversationId to a new value, starting a new conversation. If a message was being consumed, and the
     /// ConversationId was present, that value is stored in a VSB-InitiatingConversationId header.
     /// </summary>
-    /// <param name="context">The send context</param>
-    /// <returns></returns>
+    /// <param name="context">The send context.</param>
+    /// <returns>The send context produced by the operation.</returns>
     public static SendContext StartNewConversation(this SendContext context)
     {
         return StartNewConversation(context, NewId.NextGuid());
@@ -193,9 +177,9 @@ public static class SendContextExtensions
     /// Sets the ConversationId to a new value, starting a new conversation. If a message was being consumed, and the
     /// ConversationId was present, that value is stored in a VSB-InitiatingConversationId header.
     /// </summary>
-    /// <param name="context">The send context</param>
-    /// <param name="conversationId">The new ConversationId</param>
-    /// <returns></returns>
+    /// <param name="context">The send context.</param>
+    /// <param name="conversationId">The new ConversationId.</param>
+    /// <returns>The send context produced by the operation.</returns>
     public static SendContext StartNewConversation(this SendContext context, Guid conversationId)
     {
         if (context.ConversationId.HasValue)

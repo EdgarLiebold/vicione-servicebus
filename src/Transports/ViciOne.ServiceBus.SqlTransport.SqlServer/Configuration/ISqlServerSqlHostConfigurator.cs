@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
-/// <summary>
-/// Defines the contract for sql server sql host configurator.
-/// </summary>
+/// <summary>Configures a SQL Server host used by the SQL transport.</summary>
 public interface ISqlServerSqlHostConfigurator :
     ISqlHostConfigurator
 {

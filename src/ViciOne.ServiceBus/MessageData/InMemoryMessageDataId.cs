@@ -3,23 +3,17 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.MessageData;
 
-/// <summary>
-/// Provides an in memory message data id implementation.
-/// </summary>
+/// <summary>Represents the identifier for in memory message data.</summary>
 public class InMemoryMessageDataId
 {
     readonly NewId _id;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public InMemoryMessageDataId()
     {
         _id = NewId.Next();
     }
 
-    /// <summary>
-    /// Gets the uri value.
-    /// </summary>
+    /// <summary>Gets the uri.</summary>
     public Uri Uri => new Uri("urn:msgdata:" + FormatUtil.Formatter.Format(_id.ToByteArray()));
 }

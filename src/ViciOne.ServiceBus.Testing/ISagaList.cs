@@ -5,56 +5,42 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Defines the contract for saga list.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Defines the operations required by saga list.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface ISagaList<out T> :
     IAsyncElementList<ISagaInstance<T>>
     where T : class, ISaga
 {
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects the matching value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The selected value.</returns>
     IEnumerable<ISagaInstance<T>> Select(FilterDelegate<T> filter, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the contains operation.
-    /// </summary>
-    /// <param name="sagaId">The saga id value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Determines whether the current collection contains the supplied value.</summary>
+    /// <param name="sagaId">The saga id.</param>
+    /// <returns>The t produced by the operation.</returns>
     T? Contains(Guid sagaId);
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
+    /// <summary>Selects the matching value.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>An asynchronous sequence containing the selected value.</returns>
     IAsyncEnumerable<ISagaInstance<T>> SelectAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects the matching value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>An asynchronous sequence containing the selected value.</returns>
     IAsyncEnumerable<ISagaInstance<T>> SelectAsync(FilterDelegate<T> filter, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the any operation.
-    /// </summary>
+    /// <summary>Selects any matching value.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the any outcome.</returns>
     Task<bool> AnyAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the any operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects any matching value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the any outcome.</returns>
     Task<bool> AnyAsync(FilterDelegate<T> filter, CancellationToken cancellationToken = default);
 }

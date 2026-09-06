@@ -3,9 +3,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-/// <summary>
-/// Provides a date time offset type converter implementation.
-/// </summary>
+/// <summary>Converts date time offset type values.</summary>
 public class DateTimeOffsetTypeConverter :
     ITypeConverter<string, DateTimeOffset>,
     ITypeConverter<int, DateTimeOffset>,
@@ -13,11 +11,9 @@ public class DateTimeOffsetTypeConverter :
     ITypeConverter<DateTimeOffset, string>,
     ITypeConverter<DateTimeOffset, object>
 {
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(object? input, out DateTimeOffset result)
     {
@@ -40,22 +36,18 @@ public class DateTimeOffsetTypeConverter :
         }
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(string? input, out DateTimeOffset result)
     {
         return DateTimeOffset.TryParse(input, out result);
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(DateTimeOffset input, out int result)
     {
@@ -73,11 +65,9 @@ public class DateTimeOffsetTypeConverter :
         return false;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(DateTimeOffset input, out long result)
     {
@@ -95,11 +85,9 @@ public class DateTimeOffsetTypeConverter :
         return false;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="input">The input value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="input">The input.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(DateTimeOffset input, out string result)
     {

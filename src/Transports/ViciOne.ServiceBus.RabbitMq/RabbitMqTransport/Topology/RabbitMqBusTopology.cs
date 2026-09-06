@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a rabbit mq bus topology implementation.
-/// </summary>
+/// <summary>Provides RabbitMQ send and publish topology and constructs provider-specific destination addresses.</summary>
 public class RabbitMqBusTopology :
     BusTopology,
     IRabbitMqBusTopology
@@ -15,12 +13,10 @@ public class RabbitMqBusTopology :
     readonly IRabbitMqHostConfiguration _hostConfiguration;
     readonly IMessageNameFormatter _messageNameFormatter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="messageNameFormatter">The message name formatter value.</param>
-    /// <param name="configuration">The configuration callback.</param>
+    /// <summary>Creates the bus topology for a RabbitMQ host.</summary>
+    /// <param name="hostConfiguration">The host that supplies the base destination address.</param>
+    /// <param name="messageNameFormatter">The formatter used to derive exchange names from message contracts.</param>
+    /// <param name="configuration">The RabbitMQ send and publish topology configuration.</param>
     public RabbitMqBusTopology(IRabbitMqHostConfiguration hostConfiguration, IMessageNameFormatter messageNameFormatter,
         IRabbitMqTopologyConfiguration configuration)
         : base(hostConfiguration, configuration)
@@ -43,12 +39,10 @@ public class RabbitMqBusTopology :
         return _configuration.Send.GetMessageTopology<T>();
     }
 
-    /// <summary>
-    /// Gets destination address.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds a destination address for a named exchange.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="configure">An optional callback that customizes the exchange settings encoded in the address.</param>
+    /// <returns>The RabbitMQ destination address.</returns>
     public Uri GetDestinationAddress(string exchangeName, Action<IRabbitMqExchangeConfigurator>? configure = null)
     {
         var hostAddress = _hostConfiguration.HostAddress;
@@ -61,12 +55,10 @@ public class RabbitMqBusTopology :
         return sendSettings.GetSendAddress(hostAddress);
     }
 
-    /// <summary>
-    /// Gets destination address.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds a destination address for a message contract's exchange.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="configure">An optional callback that customizes the exchange settings encoded in the address.</param>
+    /// <returns>The RabbitMQ destination address; temporary message contracts use non-durable, auto-delete exchanges.</returns>
     public Uri GetDestinationAddress(Type messageType, Action<IRabbitMqExchangeConfigurator>? configure = null)
     {
         var hostAddress = _hostConfiguration.HostAddress;

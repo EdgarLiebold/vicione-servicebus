@@ -3,15 +3,12 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Advanced.Registration;
 
-/// <summary>
-/// Used to register conventions for consumer message types
-/// </summary>
+/// <summary>Used to register conventions for consumer message types.</summary>
 public static class ConsumerConvention
 {
-    /// <summary>
-    /// Register a consumer convention to be used for finding message types
-    /// </summary>
-    /// <typeparam name="T">The convention type</typeparam>
+    /// <summary>Register a consumer convention to be used for finding message types.</summary>
+    /// <typeparam name="T">The convention type.</typeparam>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool Register<T>()
         where T : IConsumerConvention, new()
     {
@@ -20,10 +17,10 @@ public static class ConsumerConvention
         return ConsumerConventionCache.TryAdd(convention);
     }
 
-    /// <summary>
-    /// Register a consumer convention to be used for finding message types
-    /// </summary>
-    /// <typeparam name="T">The convention type</typeparam>
+    /// <summary>Register a consumer convention to be used for finding message types.</summary>
+    /// <typeparam name="T">The convention type.</typeparam>
+    /// <param name="convention">The convention.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool Register<T>(T convention)
         where T : IConsumerConvention
     {
@@ -33,10 +30,8 @@ public static class ConsumerConvention
         return ConsumerConventionCache.TryAdd(convention);
     }
 
-    /// <summary>
-    /// Remove a consumer convention used for finding message types
-    /// </summary>
-    /// <typeparam name="T">The convention type to remove</typeparam>
+    /// <summary>Remove a consumer convention used for finding message types.</summary>
+    /// <typeparam name="T">The convention type to remove.</typeparam>
     public static void Remove<T>()
         where T : IConsumerConvention
     {

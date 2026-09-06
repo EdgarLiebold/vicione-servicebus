@@ -2,38 +2,28 @@ using ViciOne.ServiceBus.AzureServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus publish topology.
-/// </summary>
+/// <summary>Exposes Azure Service Bus publish topics for a bus.</summary>
 public interface IServiceBusPublishTopology :
     IPublishTopology
 {
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the publish topology for a message contract.</summary>
+    /// <typeparam name="T">The published message contract.</typeparam>
+    /// <returns>The message-specific publish topology.</returns>
     new IServiceBusMessagePublishTopology<T> GetMessageTopology<T>()
         where T : class;
 
-    /// <summary>
-    /// Gets publish broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the broker entities required by the configured publish topology.</summary>
+    /// <returns>The topics and subscriptions to declare.</returns>
     BrokerTopology GetPublishBrokerTopology();
 
-    /// <summary>
-    /// Formats a subscription name to be 50 characters if it is greater than 50 characters.
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
+    /// <summary>Shortens a subscription name to Azure Service Bus's 50-character limit.</summary>
+    /// <param name="name">The candidate subscription name.</param>
+    /// <returns>The original name when valid, otherwise a deterministic shortened name.</returns>
     string FormatSubscriptionName(string name);
 
-    /// <summary>
-    /// Generate a subscription name that is less than 50 characters, using the entity name and host address
-    /// </summary>
-    /// <param name="entityName">The entity name of the destination queue or topic</param>
-    /// <param name="hostScope">The absolute path of the host, which is usually the scope</param>
-    /// <returns></returns>
+    /// <summary>Generates a bounded subscription name from an entity name and optional namespace scope.</summary>
+    /// <param name="entityName">The destination queue or topic name.</param>
+    /// <param name="hostScope">The optional namespace-relative scope.</param>
+    /// <returns>A deterministic subscription name no longer than 50 characters.</returns>
     string GenerateSubscriptionName(string entityName, string? hostScope = default);
 }

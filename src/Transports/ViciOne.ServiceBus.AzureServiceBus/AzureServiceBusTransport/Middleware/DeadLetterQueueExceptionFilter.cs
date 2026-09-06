@@ -2,9 +2,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Middleware;
 
-/// <summary>
-/// Moves a faulted message to the dead-letter queue, rather than the _error queue
-/// </summary>
+/// <summary>Dead-letters a faulted delivery in Azure Service Bus instead of forwarding it to the transport error queue.</summary>
 public class DeadLetterQueueExceptionFilter :
     IFilter<ExceptionReceiveContext>
 {

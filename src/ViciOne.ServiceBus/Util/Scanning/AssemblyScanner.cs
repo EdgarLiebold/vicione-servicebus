@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Util.Scanning;
 
-/// <summary>
-/// Provides an assembly scanner implementation.
-/// </summary>
+/// <summary>Scans assembly metadata.</summary>
 public class AssemblyScanner :
     IAssemblyScanner
 {
@@ -18,119 +16,91 @@ public class AssemblyScanner :
     readonly CompositeFilter<string> _assemblyFilter = new CompositeFilter<string>();
     readonly CompositeFilter<Type> _filter = new CompositeFilter<Type>();
 
-    /// <summary>
-    /// Gets the count value.
-    /// </summary>
+    /// <summary>Gets the count.</summary>
     public int Count => _assemblies.Count;
 
-    /// <summary>
-    /// Gets or sets the description value.
-    /// </summary>
+    /// <summary>Gets or sets the description.</summary>
     public string Description { get; set; } = null!;
-    /// <summary>
-    /// Performs the assembly operation.
-    /// </summary>
-    /// <param name="assembly">The assembly value.</param>
+    /// <summary>Adds the supplied assembly to the scan.</summary>
+    /// <param name="assembly">The assembly.</param>
     public void Assembly(Assembly assembly)
     {
         if (!_assemblies.Contains(assembly))
             _assemblies.Add(assembly);
     }
 
-    /// <summary>
-    /// Performs the assembly operation.
-    /// </summary>
-    /// <param name="assemblyName">The assembly name value.</param>
+    /// <summary>Adds the supplied assembly to the scan.</summary>
+    /// <param name="assemblyName">The assembly name.</param>
     public void Assembly(string assemblyName)
     {
         var asm = System.Reflection.Assembly.Load(assemblyName);
         Assembly(asm);
     }
 
-    /// <summary>
-    /// Performs the assembly containing type operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Adds the assembly containing the specified type.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     public void AssemblyContainingType<T>()
     {
         AssemblyContainingType(typeof(T));
     }
 
-    /// <summary>
-    /// Performs the assembly containing type operation.
-    /// </summary>
-    /// <param name="type">The type value.</param>
+    /// <summary>Adds the assembly containing the specified type.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
     public void AssemblyContainingType(Type type)
     {
         _assemblies.Add(type.Assembly);
     }
 
-    /// <summary>
-    /// Performs the exclude operation.
-    /// </summary>
-    /// <param name="exclude">The exclude value.</param>
+    /// <summary>Excludes the selected value.</summary>
+    /// <param name="exclude">The exclude.</param>
     public void Exclude(Func<Type, bool> exclude)
     {
         _filter.Excludes.Add(exclude);
     }
 
-    /// <summary>
-    /// Performs the exclude namespace operation.
-    /// </summary>
-    /// <param name="nameSpace">The name space value.</param>
+    /// <summary>Excludes namespace.</summary>
+    /// <param name="nameSpace">The name space.</param>
     public void ExcludeNamespace(string? nameSpace)
     {
         Exclude(type => type.IsInNamespace(nameSpace));
     }
 
-    /// <summary>
-    /// Performs the exclude namespace containing type operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Excludes namespace containing type.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     public void ExcludeNamespaceContainingType<T>()
     {
         ExcludeNamespace(typeof(T).Namespace);
     }
 
-    /// <summary>
-    /// Performs the include operation.
-    /// </summary>
-    /// <param name="predicate">The predicate value.</param>
+    /// <summary>Includes the selected value.</summary>
+    /// <param name="predicate">The predicate used to select matching values.</param>
     public void Include(Func<Type, bool> predicate)
     {
         _filter.Includes.Add(predicate);
     }
 
-    /// <summary>
-    /// Performs the include namespace operation.
-    /// </summary>
-    /// <param name="nameSpace">The name space value.</param>
+    /// <summary>Includes namespace.</summary>
+    /// <param name="nameSpace">The name space.</param>
     public void IncludeNamespace(string? nameSpace)
     {
         Include(type => type.IsInNamespace(nameSpace));
     }
 
-    /// <summary>
-    /// Performs the include namespace containing type operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Includes namespace containing type.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     public void IncludeNamespaceContainingType<T>()
     {
         IncludeNamespace(typeof(T).Namespace);
     }
 
-    /// <summary>
-    /// Performs the exclude type operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Excludes type.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     public void ExcludeType<T>()
     {
         Exclude(type => type == typeof(T));
     }
 
-    /// <summary>
-    /// Performs the assemblies from application base directory operation.
-    /// </summary>
+    /// <summary>Adds assemblies from the application base directory.</summary>
     public void AssembliesFromApplicationBaseDirectory()
     {
         IEnumerable<Assembly> assemblies = AssemblyFinder.FindAssemblies(OnAssemblyLoadFailure, false, _assemblyFilter.Matches);
@@ -139,10 +109,8 @@ public class AssemblyScanner :
             Assembly(assembly);
     }
 
-    /// <summary>
-    /// Performs the assemblies and executables from path operation.
-    /// </summary>
-    /// <param name="path">The path value.</param>
+    /// <summary>Adds assemblies and executables from the specified path.</summary>
+    /// <param name="path">The path.</param>
     public void AssembliesAndExecutablesFromPath(string path)
     {
         IEnumerable<Assembly> assemblies = AssemblyFinder.FindAssemblies(path, OnAssemblyLoadFailure, true, _assemblyFilter.Matches);
@@ -151,10 +119,8 @@ public class AssemblyScanner :
             Assembly(assembly);
     }
 
-    /// <summary>
-    /// Performs the assemblies from path operation.
-    /// </summary>
-    /// <param name="path">The path value.</param>
+    /// <summary>Adds assemblies from the specified path.</summary>
+    /// <param name="path">The path.</param>
     public void AssembliesFromPath(string path)
     {
         IEnumerable<Assembly> assemblies = AssemblyFinder.FindAssemblies(path, OnAssemblyLoadFailure, false, _assemblyFilter.Matches);
@@ -163,11 +129,9 @@ public class AssemblyScanner :
             Assembly(assembly);
     }
 
-    /// <summary>
-    /// Performs the assemblies and executables from path operation.
-    /// </summary>
-    /// <param name="path">The path value.</param>
-    /// <param name="assemblyFilter">The assembly filter value.</param>
+    /// <summary>Adds assemblies and executables from the specified path.</summary>
+    /// <param name="path">The path.</param>
+    /// <param name="assemblyFilter">The assembly filter.</param>
     public void AssembliesAndExecutablesFromPath(string path, Func<Assembly, bool> assemblyFilter)
     {
         IEnumerable<Assembly> assemblies = AssemblyFinder.FindAssemblies(path, OnAssemblyLoadFailure, true, _assemblyFilter.Matches)
@@ -177,11 +141,9 @@ public class AssemblyScanner :
             Assembly(assembly);
     }
 
-    /// <summary>
-    /// Performs the assemblies from path operation.
-    /// </summary>
-    /// <param name="path">The path value.</param>
-    /// <param name="assemblyFilter">The assembly filter value.</param>
+    /// <summary>Adds assemblies from the specified path.</summary>
+    /// <param name="path">The path.</param>
+    /// <param name="assemblyFilter">The assembly filter.</param>
     public void AssembliesFromPath(string path, Func<Assembly, bool> assemblyFilter)
     {
         IEnumerable<Assembly> assemblies = AssemblyFinder.FindAssemblies(path, OnAssemblyLoadFailure, false, _assemblyFilter.Matches)
@@ -191,10 +153,8 @@ public class AssemblyScanner :
             Assembly(assembly);
     }
 
-    /// <summary>
-    /// Performs the exclude file name starts with operation.
-    /// </summary>
-    /// <param name="startsWith">The starts with value.</param>
+    /// <summary>Excludes file name starts with.</summary>
+    /// <param name="startsWith">The starts with.</param>
     public void ExcludeFileNameStartsWith(params string[] startsWith)
     {
         for (var i = 0; i < startsWith.Length; i++)
@@ -205,10 +165,8 @@ public class AssemblyScanner :
         }
     }
 
-    /// <summary>
-    /// Performs the include file name starts with operation.
-    /// </summary>
-    /// <param name="startsWith">The starts with value.</param>
+    /// <summary>Includes file name starts with.</summary>
+    /// <param name="startsWith">The starts with.</param>
     public void IncludeFileNameStartsWith(params string[] startsWith)
     {
         for (var i = 0; i < startsWith.Length; i++)
@@ -219,9 +177,7 @@ public class AssemblyScanner :
         }
     }
 
-    /// <summary>
-    /// Performs the assemblies and executables from application base directory operation.
-    /// </summary>
+    /// <summary>Adds assemblies and executables from the application base directory.</summary>
     public void AssembliesAndExecutablesFromApplicationBaseDirectory()
     {
         IEnumerable<Assembly> assemblies = AssemblyFinder.FindAssemblies(OnAssemblyLoadFailure, true, _assemblyFilter.Matches);
@@ -230,18 +186,14 @@ public class AssemblyScanner :
             Assembly(assembly);
     }
 
-    /// <summary>
-    /// Performs the scan for types operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Scans for types.</summary>
+    /// <returns>The type set produced by the operation.</returns>
     public TypeSet ScanForTypes()
     {
         return AssemblyTypeCache.FindTypes(_assemblies, _filter.Matches);
     }
 
-    /// <summary>
-    /// Performs the the calling assembly operation.
-    /// </summary>
+    /// <summary>Adds the calling assembly to the scan.</summary>
     public void TheCallingAssembly()
     {
         var callingAssembly = FindTheCallingAssembly();
@@ -257,10 +209,8 @@ public class AssemblyScanner :
         Console.WriteLine("ViciOne.ServiceBus could not load assembly from " + assemblyName);
     }
 
-    /// <summary>
-    /// Performs the contains operation.
-    /// </summary>
-    /// <param name="assemblyName">The assembly name value.</param>
+    /// <summary>Determines whether the current collection contains the supplied value.</summary>
+    /// <param name="assemblyName">The assembly name.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Contains(string assemblyName)
     {
@@ -269,9 +219,7 @@ public class AssemblyScanner :
             .Any(aName => aName.Name == assemblyName);
     }
 
-    /// <summary>
-    /// Determines whether the current value has assemblies.
-    /// </summary>
+    /// <summary>Determines whether the current value has assemblies.</summary>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool HasAssemblies()
     {

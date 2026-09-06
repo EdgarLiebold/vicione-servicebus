@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a consume pipe implementation.
-/// </summary>
+/// <summary>Executes the pipeline for consume.</summary>
 public class ConsumePipe :
     IConsumePipe
 {
@@ -18,13 +16,11 @@ public class ConsumePipe :
     readonly IPipe<ConsumeContext> _pipe;
     readonly IConsumePipeSpecification _specification;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
-    /// <param name="filter">The filter value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="autoStart">The auto start value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="specification">The specification.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="autoStart">The auto start.</param>
     public ConsumePipe(IConsumePipeSpecification specification, IConsumeContextMessageTypeFilter filter, IPipe<ConsumeContext> pipe, bool autoStart)
     {
         _specification = specification;
@@ -38,15 +34,11 @@ public class ConsumePipe :
             _connected.TrySetResult(true);
     }
 
-    /// <summary>
-    /// Gets the connected value.
-    /// </summary>
+    /// <summary>Gets the connected.</summary>
     public Task Connected => _connected.Task;
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("consumePipe");
@@ -54,34 +46,28 @@ public class ConsumePipe :
         _pipe.Probe(scope);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(ConsumeContext context)
     {
         return _pipe.SendAsync(context);
     }
 
-    /// <summary>
-    /// Connects consume message observer.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume message observer.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumeMessageObserver<TMessage>(IConsumeMessageObserver<TMessage> observer)
         where TMessage : class
     {
         return _filter.ConnectConsumeMessageObserver(observer);
     }
 
-    /// <summary>
-    /// Connects consume pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
@@ -93,26 +79,22 @@ public class ConsumePipe :
         return handle;
     }
 
-    /// <summary>
-    /// Connects consume pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
         where T : class
     {
         return ConnectConsumePipe(pipe);
     }
 
-    /// <summary>
-    /// Connects request pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="requestId">The request id value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects request pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="requestId">The request id.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
@@ -124,11 +106,9 @@ public class ConsumePipe :
         return handle;
     }
 
-    /// <summary>
-    /// Connects consume observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer)
     {
         return _filter.ConnectConsumeObserver(observer);

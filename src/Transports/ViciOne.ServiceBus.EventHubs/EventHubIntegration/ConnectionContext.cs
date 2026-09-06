@@ -2,16 +2,12 @@ using Azure.Messaging.EventHubs.Producer;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Defines the contract for connection context.
-/// </summary>
+/// <summary>Creates producer clients from the configured Event Hubs namespace credentials.</summary>
 public interface ConnectionContext :
     PipeContext
 {
-    /// <summary>
-    /// Creates event hub client.
-    /// </summary>
-    /// <param name="eventHubName">The event hub name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an Azure SDK producer client for a named Event Hub.</summary>
+    /// <param name="eventHubName">The Event Hub entity name.</param>
+    /// <returns>The producer client for the entity.</returns>
     EventHubProducerClient CreateEventHubClient(string eventHubName);
 }

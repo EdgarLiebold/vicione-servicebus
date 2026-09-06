@@ -2,18 +2,14 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Middleware;
-/// <summary>
-/// A filter that uses the model context to create a basic consumer and connect it to the model
-/// </summary>
+/// <summary>Runs an Amazon SQS polling receiver for the lifetime of a client-context pipeline.</summary>
 public class AmazonSqsConsumerFilter :
     IFilter<ClientContext>
 {
     readonly SqsReceiveEndpointContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes an Amazon SQS consumer filter.</summary>
+    /// <param name="context">The receive endpoint that owns the receiver and its metrics.</param>
     public AmazonSqsConsumerFilter(SqsReceiveEndpointContext context)
     {
         _context = context;

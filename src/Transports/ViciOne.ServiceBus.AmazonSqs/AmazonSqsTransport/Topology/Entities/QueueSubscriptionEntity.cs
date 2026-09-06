@@ -1,11 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides a queue subscription entity implementation.
-/// </summary>
+/// <summary>Represents a deduplicated Amazon SNS-to-SQS subscription topology entity.</summary>
 public class QueueSubscriptionEntity :
     QueueSubscription,
     QueueSubscriptionHandle
@@ -13,12 +12,10 @@ public class QueueSubscriptionEntity :
     readonly QueueEntity _queue;
     readonly TopicEntity _topic;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="queue">The queue value.</param>
+    /// <summary>Initializes a topic-to-queue subscription entity.</summary>
+    /// <param name="id">The builder-assigned entity identifier.</param>
+    /// <param name="topic">The source topic entity.</param>
+    /// <param name="queue">The destination queue entity.</param>
     public QueueSubscriptionEntity(long id, TopicEntity topic, QueueEntity queue)
     {
         Id = id;
@@ -26,37 +23,23 @@ public class QueueSubscriptionEntity :
         _queue = queue;
     }
 
-    /// <summary>
-    /// Gets the name comparer value.
-    /// </summary>
+    /// <summary>Gets the collection's subscription-name comparer.</summary>
     public static IEqualityComparer<QueueSubscriptionEntity> NameComparer { get; } = new NameEqualityComparer();
-    /// <summary>
-    /// Gets the entity comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that identifies subscriptions by source and destination entities.</summary>
     public static IEqualityComparer<QueueSubscriptionEntity> EntityComparer { get; } = new ConsumerEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the source value.
-    /// </summary>
+    /// <inheritdoc />
     public Topic Source => _topic.Topic;
-    /// <summary>
-    /// Gets the destination value.
-    /// </summary>
+    /// <inheritdoc />
     public Queue Destination => _queue.Queue;
 
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the builder-assigned entity identifier.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the queue subscription value.
-    /// </summary>
+    /// <summary>Gets this entity as a queue subscription declaration.</summary>
     public QueueSubscription QueueSubscription => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats source and destination names for diagnostics.</summary>
+    /// <returns>The diagnostic subscription description.</returns>
     public override string ToString()
     {
         return string.Join(", ",
@@ -112,12 +95,15 @@ public class QueueSubscriptionEntity :
             if (x.GetType() != y.GetType())
                 return false;
 
-            return string.Equals(x._topic.EntityName, y._topic.EntityName);
+            return string.Equals(x._topic.EntityName, y._topic.EntityName, StringComparison.Ordinal)
+                && string.Equals(x._queue.EntityName, y._queue.EntityName, StringComparison.Ordinal);
         }
 
         public int GetHashCode(QueueSubscriptionEntity obj)
         {
-            return obj._topic.EntityName.GetHashCode();
+            return HashCode.Combine(
+                StringComparer.Ordinal.GetHashCode(obj._topic.EntityName),
+                StringComparer.Ordinal.GetHashCode(obj._queue.EntityName));
         }
     }
 }

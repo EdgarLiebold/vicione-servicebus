@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a transition activity implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Executes the transition activity.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class TransitionActivity<TSaga> :
     IStateMachineActivity<TSaga>
     where TSaga : class, SagaStateMachineInstance
@@ -14,47 +12,37 @@ public class TransitionActivity<TSaga> :
     readonly IStateAccessor<TSaga> _currentStateAccessor;
     readonly State<TSaga> _toState;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="toState">The to state value.</param>
-    /// <param name="currentStateAccessor">The current state accessor value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="toState">The to state.</param>
+    /// <param name="currentStateAccessor">The current state accessor.</param>
     public TransitionActivity(State<TSaga> toState, IStateAccessor<TSaga> currentStateAccessor)
     {
         _toState = toState;
         _currentStateAccessor = currentStateAccessor;
     }
 
-    /// <summary>
-    /// Gets the to state value.
-    /// </summary>
+    /// <summary>Gets the to state.</summary>
     public State ToState => _toState;
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("transition");
         scope.Add("toState", _toState.Name);
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         await TransitionAsync(context).ConfigureAwait(false);
@@ -62,13 +50,11 @@ public class TransitionActivity<TSaga> :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
         where TData : class
     {
@@ -77,27 +63,23 @@ public class TransitionActivity<TSaga> :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception

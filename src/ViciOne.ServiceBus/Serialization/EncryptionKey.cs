@@ -3,16 +3,12 @@ using System.Security.Cryptography;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Represents a named AES key that can be selected from an encrypted message-data envelope.
-/// </summary>
+/// <summary>Represents a named AES key that can be selected from an encrypted message-data envelope.</summary>
 public sealed class EncryptionKey
 {
     readonly byte[] _keyMaterial;
 
-    /// <summary>
-    /// Initializes a named encryption key and takes a defensive copy of its key material.
-    /// </summary>
+    /// <summary>Initializes a named encryption key and takes a defensive copy of its key material.</summary>
     /// <param name="keyId">The stable identifier written to encrypted envelopes.</param>
     /// <param name="keyMaterial">A 128-, 192-, or 256-bit AES key.</param>
     /// <exception cref="ArgumentException">
@@ -29,14 +25,10 @@ public sealed class EncryptionKey
         _keyMaterial = keyMaterial.ToArray();
     }
 
-    /// <summary>
-    /// Gets the stable identifier written to encrypted envelopes.
-    /// </summary>
+    /// <summary>Gets the key id.</summary>
     public string KeyId { get; }
 
-    /// <summary>
-    /// Returns a defensive copy of the AES key material for one cryptographic operation.
-    /// </summary>
+    /// <summary>Returns a defensive copy of the AES key material for one cryptographic operation.</summary>
     /// <returns>A new byte array containing the AES key.</returns>
     public byte[] ExportKeyMaterial()
     {

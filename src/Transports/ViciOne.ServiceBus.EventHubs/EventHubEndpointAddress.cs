@@ -3,40 +3,26 @@ using System.Diagnostics;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Represents an event hub endpoint address value.
-/// </summary>
+/// <summary>Represents an event hub endpoint address.</summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct EventHubEndpointAddress
 {
-    /// <summary>
-    /// Defines the path prefix value.
-    /// </summary>
+    /// <summary>Identifies Event Hubs paths in bus endpoint addresses.</summary>
     public const string PathPrefix = "event-hub";
 
-    /// <summary>
-    /// Defines the event hub name value.
-    /// </summary>
+    /// <summary>The Event Hub entity name.</summary>
     public readonly string EventHubName;
 
-    /// <summary>
-    /// Defines the host value.
-    /// </summary>
+    /// <summary>The Event Hubs namespace host.</summary>
     public readonly string Host;
-    /// <summary>
-    /// Defines the scheme value.
-    /// </summary>
+    /// <summary>The scheme inherited from the configured host address.</summary>
     public readonly string Scheme;
-    /// <summary>
-    /// Defines the port value.
-    /// </summary>
+    /// <summary>The explicit namespace port, when present.</summary>
     public readonly int? Port;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="address">The address value.</param>
+    /// <summary>Parses an Event Hub endpoint address relative to the configured namespace address.</summary>
+    /// <param name="hostAddress">The configured Event Hubs namespace address.</param>
+    /// <param name="address">The endpoint address to parse.</param>
     public EventHubEndpointAddress(Uri hostAddress, Uri address)
     {
         ArgumentNullException.ThrowIfNull(hostAddress);
@@ -69,11 +55,9 @@ public readonly struct EventHubEndpointAddress
         }
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="eventHubName">The event hub name value.</param>
+    /// <summary>Creates an endpoint address for an Event Hub in the configured namespace.</summary>
+    /// <param name="hostAddress">The configured Event Hubs namespace address.</param>
+    /// <param name="eventHubName">The Event Hub entity name.</param>
     public EventHubEndpointAddress(Uri hostAddress, string eventHubName)
     {
         ArgumentNullException.ThrowIfNull(hostAddress);
@@ -92,11 +76,9 @@ public readonly struct EventHubEndpointAddress
         port = address.Port;
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts the endpoint address to its bus URI representation.</summary>
+    /// <param name="address">The Event Hubs endpoint address.</param>
+    /// <returns>A URI containing the namespace and Event Hub entity path.</returns>
     public static implicit operator Uri(in EventHubEndpointAddress address)
     {
         var builder = new UriBuilder

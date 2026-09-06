@@ -5,15 +5,11 @@ using ViciOne.ServiceBus.DependencyInjection;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for delayed message scheduler registration.
-/// </summary>
+/// <summary>Provides extension methods for delayed message scheduler registration.</summary>
 public static class DelayedMessageSchedulerRegistrationExtensions
 {
-    /// <summary>
-    /// Add a <see cref="IMessageScheduler" /> to the container that uses transport message delay to schedule messages
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Add a <see cref="IMessageScheduler" /> to the container that uses transport message delay to schedule messages.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public static void AddDelayedMessageScheduler(this IBusRegistrationConfigurator configurator)
     {
         configurator.Services.TryAddScoped(provider =>
@@ -25,10 +21,9 @@ public static class DelayedMessageSchedulerRegistrationExtensions
         });
     }
 
-    /// <summary>
-    /// Add a <see cref="IMessageScheduler" /> to the container that uses transport message delay to schedule messages
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Add a <see cref="IMessageScheduler" /> to the container that uses transport message delay to schedule messages.</summary>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public static void AddDelayedMessageScheduler<TBus>(this IBusRegistrationConfigurator<TBus> configurator)
         where TBus : class, IBus
     {

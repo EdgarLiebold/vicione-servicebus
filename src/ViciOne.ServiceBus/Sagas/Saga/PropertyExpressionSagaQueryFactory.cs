@@ -5,12 +5,10 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>
-/// Provides a property expression saga query factory implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TData">The t data type.</typeparam>
-/// <typeparam name="TProperty">The t property type.</typeparam>
+/// <summary>Creates property expression saga query instances.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TData">The data type.</typeparam>
+/// <typeparam name="TProperty">The property type.</typeparam>
 public class PropertyExpressionSagaQueryFactory<TInstance, TData, TProperty> :
     ISagaQueryFactory<TInstance, TData>
     where TInstance : class, SagaStateMachineInstance
@@ -20,11 +18,9 @@ public class PropertyExpressionSagaQueryFactory<TInstance, TData, TProperty> :
     readonly PropertyInfo _propertyInfo;
     readonly ISagaQueryPropertySelector<TData, TProperty> _selector;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="propertyExpression">The property expression value.</param>
-    /// <param name="selector">The selector value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="propertyExpression">The property expression.</param>
+    /// <param name="selector">The selector.</param>
     public PropertyExpressionSagaQueryFactory(Expression<Func<TInstance, TProperty>> propertyExpression,
         ISagaQueryPropertySelector<TData, TProperty> selector)
     {
@@ -35,11 +31,9 @@ public class PropertyExpressionSagaQueryFactory<TInstance, TData, TProperty> :
             ?? throw new InvalidOperationException("The saga query value property was not found.");
     }
 
-    /// <summary>
-    /// Performs the try create query operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="query">The query value.</param>
+    /// <summary>Attempts to create query.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="query">Receives the query produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryCreateQuery(ConsumeContext<TData> context, [NotNullWhen(true)] out ISagaQuery<TInstance>? query)
     {
@@ -55,10 +49,8 @@ public class PropertyExpressionSagaQueryFactory<TInstance, TData, TProperty> :
         return false;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.Add("property", _propertyExpression.ToString());

@@ -19,9 +19,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-/// <summary>
-/// Provides extension methods for dependency injection testing.
-/// </summary>
+/// <summary>Provides extension methods for dependency injection testing.</summary>
 public static class DependencyInjectionTestingExtensions
 {
     /// <summary>
@@ -31,6 +29,9 @@ public static class DependencyInjectionTestingExtensions
     /// The registration fails when a bus has already been configured, because silently replacing production registrations
     /// would make the test container exercise a different topology.
     /// </summary>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddViciOneServiceBusTestHarness(this IServiceCollection services, Action<IBusRegistrationConfigurator>? configure = null)
     {
         return AddViciOneServiceBusTestHarness(services, Console.Out, configure);
@@ -43,6 +44,10 @@ public static class DependencyInjectionTestingExtensions
     /// The registration fails when a bus has already been configured, because silently replacing production registrations
     /// would make the test container exercise a different topology.
     /// </summary>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="textWriter">The text writer.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddViciOneServiceBusTestHarness(this IServiceCollection services, TextWriter textWriter,
         Action<IBusRegistrationConfigurator>? configure = null)
     {
@@ -115,11 +120,10 @@ public static class DependencyInjectionTestingExtensions
     }
 
 
-    /// <summary>
-    /// Internally used by AddViciOneServiceBusTestHarness to add a console-based <see cref="ILogger"/> for unit testing
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="textWriter"></param>
+    /// <summary>Internally used by AddViciOneServiceBusTestHarness to add a console-based <see cref="ILogger"/> for unit testing.</summary>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="textWriter">The text writer.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddViciOneServiceBusTextWriterLogger(this IServiceCollection services, TextWriter? textWriter = null)
     {
         services.AddOptions<TextWriterLoggerOptions>()
@@ -135,22 +139,20 @@ public static class DependencyInjectionTestingExtensions
         return services;
     }
 
-    /// <summary>
-    /// Adds a telemetry listener to the test harness, which outputs a timeline view of the unit test
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="includeDetails">If true, additional details from each span are shown</param>
+    /// <summary>Adds a telemetry listener to the test harness, which outputs a timeline view of the unit test.</summary>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="includeDetails">If true, additional details from each span are shown.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddTelemetryListener(this IServiceCollection services, bool includeDetails = false)
     {
         return services.AddTelemetryListener(Console.Out, includeDetails);
     }
 
-    /// <summary>
-    /// Adds a telemetry listener to the test harness, which outputs a timeline view of the unit test
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="textWriter">Override the default Console.Out TextWriter</param>
-    /// <param name="includeDetails">If true, additional details from each span are shown</param>
+    /// <summary>Adds a telemetry listener to the test harness, which outputs a timeline view of the unit test.</summary>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="textWriter">Override the default Console.Out TextWriter.</param>
+    /// <param name="includeDetails">If true, additional details from each span are shown.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddTelemetryListener(this IServiceCollection services, TextWriter textWriter, bool includeDetails = false)
     {
         var (methodName, className) = GetTestMethodInfo();
@@ -160,13 +162,11 @@ public static class DependencyInjectionTestingExtensions
         return services;
     }
 
-    /// <summary>
-    /// Specify the test and/or the test inactivity timeouts that should be used by the test harness.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="testTimeout">If specified, changes the test timeout</param>
-    /// <param name="testInactivityTimeout">If specified, changes the test inactivity timeout</param>
-    /// <returns></returns>
+    /// <summary>Specify the test and/or the test inactivity timeouts that should be used by the test harness.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="testTimeout">If specified, changes the test timeout.</param>
+    /// <param name="testInactivityTimeout">If specified, changes the test inactivity timeout.</param>
+    /// <returns>The bus registration configurator produced by the operation.</returns>
     public static IBusRegistrationConfigurator SetTestTimeouts(this IBusRegistrationConfigurator configurator, TimeSpan? testTimeout = null,
         TimeSpan? testInactivityTimeout = null)
     {
@@ -186,6 +186,10 @@ public static class DependencyInjectionTestingExtensions
     /// Controls how many observed contexts the test harness retains for later assertions.
     /// Activity/inactivity tracking is independent from context retention.
     /// </summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="saveMode">The save mode.</param>
+    /// <param name="maximumSavedContexts">The maximum saved contexts.</param>
+    /// <returns>The bus registration configurator produced by the operation.</returns>
     public static IBusRegistrationConfigurator SetTestContextSaveMode(this IBusRegistrationConfigurator configurator,
         TestContextSaveMode saveMode, int maximumSavedContexts = 4096)
     {
@@ -201,9 +205,10 @@ public static class DependencyInjectionTestingExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Add the In-Memory test harness to the container, and configure it using the callback specified.
-    /// </summary>
+    /// <summary>Add the In-Memory test harness to the container, and configure it using the callback specified.</summary>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddViciOneServiceBusInMemoryTestHarness(this IServiceCollection services,
         Action<IBusRegistrationConfigurator>? configure = null)
     {
@@ -262,9 +267,9 @@ public static class DependencyInjectionTestingExtensions
         return (null, null);
     }
 
-    /// <summary>
-    /// Add a consumer test harness for the specified consumer to the container
-    /// </summary>
+    /// <summary>Add a consumer test harness for the specified consumer to the container.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public static void AddConsumerContainerTestHarness<T>(this IServiceCollection configurator)
         where T : class, IConsumer
     {
@@ -278,6 +283,8 @@ public static class DependencyInjectionTestingExtensions
     /// Add a saga test harness for the specified saga to the container. The saga must be added separately, including
     /// a valid saga repository.
     /// </summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
     public static void AddSagaContainerTestHarness<T>(this IServiceCollection services)
         where T : class, ISaga
     {
@@ -291,6 +298,9 @@ public static class DependencyInjectionTestingExtensions
     /// Add a saga state machine test harness for the specified saga to the container. The saga must be added separately, including
     /// a valid saga repository.
     /// </summary>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
     public static void AddSagaStateMachineContainerTestHarness<TStateMachine, T>(this IServiceCollection services)
         where TStateMachine : class, SagaStateMachine<T>
         where T : class, SagaStateMachineInstance

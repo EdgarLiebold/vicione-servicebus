@@ -4,19 +4,15 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for time span context schedule.
-/// </summary>
+/// <summary>Provides extension methods for time span context schedule.</summary>
 public static class TimeSpanContextScheduleExtensions
 {
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
+    /// <summary>Send a message.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="message">The message</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="message">The message.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, T message,
         CancellationToken cancellationToken = default)
@@ -27,15 +23,13 @@ public static class TimeSpanContextScheduleExtensions
         return scheduler.ScheduleSendAsync(dueAt, message, cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
+    /// <summary>Send a message.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="message">The message</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="message">The message.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
@@ -46,15 +40,13 @@ public static class TimeSpanContextScheduleExtensions
         return scheduler.ScheduleSendAsync(dueAt, message, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message, using a callback to modify the send context instead of building a pipe from scratch
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
+    /// <summary>Send a message, using a callback to modify the send context instead of building a pipe from scratch.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="message">The message</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <param name="message">The message.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, T message,
         Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
@@ -65,15 +57,13 @@ public static class TimeSpanContextScheduleExtensions
         return scheduler.ScheduleSendAsync(dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message, using a callback to modify the send context instead of building a pipe from scratch
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
+    /// <summary>Send a message, using a callback to modify the send context instead of building a pipe from scratch.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="message">The message</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <param name="message">The message.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, T message,
         Func<SendContext<T>, Task> callback, CancellationToken cancellationToken = default)
@@ -84,15 +74,13 @@ public static class TimeSpanContextScheduleExtensions
         return scheduler.ScheduleSendAsync(dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="message">The message</param>
+    /// <summary>Send a message.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="message">The message.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, T message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
@@ -103,15 +91,13 @@ public static class TimeSpanContextScheduleExtensions
         return scheduler.ScheduleSendAsync(dueAt, message, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message, using a callback to modify the send context instead of building a pipe from scratch
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
+    /// <summary>Send a message, using a callback to modify the send context instead of building a pipe from scratch.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="message">The message</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <param name="message">The message.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, T message,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
@@ -122,15 +108,13 @@ public static class TimeSpanContextScheduleExtensions
         return scheduler.ScheduleSendAsync(dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message, using a callback to modify the send context instead of building a pipe from scratch
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
+    /// <summary>Send a message, using a callback to modify the send context instead of building a pipe from scratch.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="message">The message</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <param name="message">The message.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, T message,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
@@ -141,13 +125,11 @@ public static class TimeSpanContextScheduleExtensions
         return scheduler.ScheduleSendAsync(dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Sends an object as a message, using the type of the message instance.
-    /// </summary>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="message">The message object</param>
+    /// <summary>Sends an object as a message, using the type of the message instance.</summary>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="message">The message object.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this MessageSchedulerContext scheduler, TimeSpan delay, object message,
         CancellationToken cancellationToken = default)
@@ -161,11 +143,11 @@ public static class TimeSpanContextScheduleExtensions
     /// Sends an object as a message, using the message type specified. If the object cannot be cast
     /// to the specified message type, an exception will be thrown.
     /// </summary>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="message">The message object</param>
-    /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="message">The message object.</param>
+    /// <param name="messageType">The type of the message (use message.GetType() if desired).</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this MessageSchedulerContext scheduler, TimeSpan delay, object message, Type messageType,
         CancellationToken cancellationToken = default)
@@ -175,14 +157,12 @@ public static class TimeSpanContextScheduleExtensions
         return scheduler.ScheduleSendAsync(dueAt, message, messageType, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends an object as a message.
-    /// </summary>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="message">The message object</param>
+    /// <summary>Sends an object as a message.</summary>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="message">The message object.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this MessageSchedulerContext scheduler, TimeSpan delay, object message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
@@ -192,14 +172,12 @@ public static class TimeSpanContextScheduleExtensions
         return scheduler.ScheduleSendAsync(dueAt, message, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends an object as a message.
-    /// </summary>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="message">The message object</param>
+    /// <summary>Sends an object as a message.</summary>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="message">The message object.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this MessageSchedulerContext scheduler, TimeSpan delay, object message,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
@@ -209,14 +187,12 @@ public static class TimeSpanContextScheduleExtensions
         return scheduler.ScheduleSendAsync(dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Sends an object as a message.
-    /// </summary>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="message">The message object</param>
+    /// <summary>Sends an object as a message.</summary>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="message">The message object.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this MessageSchedulerContext scheduler, TimeSpan delay, object message,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
@@ -230,12 +206,12 @@ public static class TimeSpanContextScheduleExtensions
     /// Sends an object as a message, using the message type specified. If the object cannot be cast
     /// to the specified message type, an exception will be thrown.
     /// </summary>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="message">The message object</param>
-    /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="message">The message object.</param>
+    /// <param name="messageType">The type of the message (use message.GetType() if desired).</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this MessageSchedulerContext scheduler, TimeSpan delay, object message, Type messageType,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
@@ -249,12 +225,12 @@ public static class TimeSpanContextScheduleExtensions
     /// Sends an object as a message, using the message type specified. If the object cannot be cast
     /// to the specified message type, an exception will be thrown.
     /// </summary>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="message">The message object</param>
-    /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="message">The message object.</param>
+    /// <param name="messageType">The type of the message (use message.GetType() if desired).</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this MessageSchedulerContext scheduler, TimeSpan delay, object message, Type messageType,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
@@ -266,12 +242,12 @@ public static class TimeSpanContextScheduleExtensions
     /// Sends an object as a message, using the message type specified. If the object cannot be cast
     /// to the specified message type, an exception will be thrown.
     /// </summary>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="message">The message object</param>
-    /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="message">The message object.</param>
+    /// <param name="messageType">The type of the message (use message.GetType() if desired).</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this MessageSchedulerContext scheduler, TimeSpan delay, object message, Type messageType,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
@@ -281,13 +257,13 @@ public static class TimeSpanContextScheduleExtensions
 
     /// <summary>
     /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified
+    /// object specified.
     /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="values">The property values to initialize on the interface</param>
+    /// <typeparam name="T">The interface type to send.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="values">The property values to initialize on the interface.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, object values,
         CancellationToken cancellationToken = default)
@@ -300,14 +276,14 @@ public static class TimeSpanContextScheduleExtensions
 
     /// <summary>
     /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified
+    /// object specified.
     /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="values">The property values to initialize on the interface</param>
+    /// <typeparam name="T">The interface type to send.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="values">The property values to initialize on the interface.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, object values,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
@@ -320,14 +296,14 @@ public static class TimeSpanContextScheduleExtensions
 
     /// <summary>
     /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified
+    /// object specified.
     /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="values">The property values to initialize on the interface</param>
+    /// <typeparam name="T">The interface type to send.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="values">The property values to initialize on the interface.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, object values,
         Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
@@ -340,14 +316,14 @@ public static class TimeSpanContextScheduleExtensions
 
     /// <summary>
     /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified
+    /// object specified.
     /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="values">The property values to initialize on the interface</param>
+    /// <typeparam name="T">The interface type to send.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="values">The property values to initialize on the interface.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, object values,
         Func<SendContext<T>, Task> callback, CancellationToken cancellationToken = default)
@@ -360,14 +336,14 @@ public static class TimeSpanContextScheduleExtensions
 
     /// <summary>
     /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified
+    /// object specified.
     /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="values">The property values to initialize on the interface</param>
+    /// <typeparam name="T">The interface type to send.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="values">The property values to initialize on the interface.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, object values,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
@@ -380,14 +356,14 @@ public static class TimeSpanContextScheduleExtensions
 
     /// <summary>
     /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified
+    /// object specified.
     /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="values">The property values to initialize on the interface</param>
+    /// <typeparam name="T">The interface type to send.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="values">The property values to initialize on the interface.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, object values,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
@@ -400,14 +376,14 @@ public static class TimeSpanContextScheduleExtensions
 
     /// <summary>
     /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified
+    /// object specified.
     /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="scheduler">The message scheduler</param>
-    /// <param name="values">The property values to initialize on the interface</param>
+    /// <typeparam name="T">The interface type to send.</typeparam>
+    /// <param name="scheduler">The message scheduler.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="values">The property values to initialize on the interface.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this MessageSchedulerContext scheduler, TimeSpan delay, object values,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)

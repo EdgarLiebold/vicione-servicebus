@@ -10,16 +10,13 @@ namespace ViciOne.ServiceBus;
 public class FaultEntityNameAttribute :
     Attribute
 {
-    /// <summary>
-    /// </summary>
-    /// <param name="entityName">The entity name to use for the faulted message type</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="entityName">The entity name to use for the faulted message type.</param>
     public FaultEntityNameAttribute(string entityName)
     {
         EntityName = entityName;
     }
 
-    /// <summary>
-    /// Gets the entity name value.
-    /// </summary>
+    /// <summary>Gets the entity name.</summary>
     public string EntityName { get; }
 }

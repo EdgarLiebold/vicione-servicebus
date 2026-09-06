@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Defines the contract for publish settings.
-/// </summary>
+/// <summary>Defines Amazon SNS entity settings for a publish destination.</summary>
 public interface PublishSettings :
     EntitySettings
 {

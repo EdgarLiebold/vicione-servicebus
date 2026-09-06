@@ -2,14 +2,10 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for timeout configurator.
-/// </summary>
+/// <summary>Configures timeout.</summary>
 public interface ITimeoutConfigurator
 {
-    /// <summary>
-    /// The maximum time allowed for the configured operation. The value must be greater than zero.
-    /// </summary>
+    /// <summary>The maximum time allowed for the configured operation. The value must be greater than zero.</summary>
     TimeSpan Timeout { set; }
 
     /// <summary>

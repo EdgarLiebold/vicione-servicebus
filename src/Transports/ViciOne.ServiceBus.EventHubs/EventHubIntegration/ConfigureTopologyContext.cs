@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Defines the contract for configure topology context.
-/// </summary>
+/// <summary>Marks a pipeline context used while configuring Event Hubs topology.</summary>
 public interface ConfigureTopologyContext
 {
 }

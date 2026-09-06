@@ -4,18 +4,14 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a correlated by correlation id selector implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Selects correlated by correlation id values.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class CorrelatedByCorrelationIdSelector<T> :
     ICorrelationIdSelector<T>
     where T : class
 {
-    /// <summary>
-    /// Attempts to get set correlation id.
-    /// </summary>
-    /// <param name="messageCorrelationId">The message correlation id value.</param>
+    /// <summary>Attempts to get set correlation id.</summary>
+    /// <param name="messageCorrelationId">Receives the message correlation id produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetSetCorrelationId([NotNullWhen(true)] out IMessageCorrelationId<T>? messageCorrelationId)
     {

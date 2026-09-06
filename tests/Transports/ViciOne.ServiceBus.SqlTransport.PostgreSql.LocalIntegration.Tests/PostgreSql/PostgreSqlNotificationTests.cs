@@ -46,7 +46,7 @@ public sealed class PostgreSqlNotificationTests
             await using NpgsqlConnection inspection = fixture.CreateConnection();
             await inspection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
             long queueId = await QueueIdAsync(inspection, fixture.Schema, queueName, cancellationToken);
-            string channel = $"{NotifyChannel.SanitizeSchemaName(fixture.Schema)}_msg_{queueId}";
+            string channel = NotifyChannel.CreateName(fixture.Schema, queueId);
             await WaitUntilReceiverListensAsync(
                 inspection,
                 channel,

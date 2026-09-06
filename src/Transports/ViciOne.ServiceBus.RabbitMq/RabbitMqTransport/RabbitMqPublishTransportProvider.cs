@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq publish transport provider implementation.
-/// </summary>
+/// <summary>Creates RabbitMQ publish transports from the endpoint's shared channel supervisor.</summary>
 public class RabbitMqPublishTransportProvider :
     IPublishTransportProvider
 {
@@ -14,11 +12,9 @@ public class RabbitMqPublishTransportProvider :
     readonly IChannelContextSupervisor _supervisor;
     readonly RabbitMqReceiveEndpointContext _receiveEndpointContext;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionContextSupervisor">The connection context supervisor value.</param>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
+    /// <summary>Creates a provider bound to a connection and receive endpoint.</summary>
+    /// <param name="connectionContextSupervisor">The RabbitMQ connection supervisor.</param>
+    /// <param name="receiveEndpointContext">The endpoint that owns publish transports.</param>
     public RabbitMqPublishTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, RabbitMqReceiveEndpointContext receiveEndpointContext)
     {
         _connectionContextSupervisor = connectionContextSupervisor;
@@ -26,13 +22,11 @@ public class RabbitMqPublishTransportProvider :
         _receiveEndpointContext = receiveEndpointContext;
     }
 
-    /// <summary>
-    /// Gets publish transport.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="publishAddress">The publish address value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the publish transport selected by message-contract topology.</summary>
+    /// <typeparam name="T">The published message contract.</typeparam>
+    /// <param name="publishAddress">Ignored because RabbitMQ publish topology derives the exchange address.</param>
+    /// <param name="cancellationToken">Cancellation checked before transport creation.</param>
+    /// <returns>The configured RabbitMQ publish transport.</returns>
     public Task<ISendTransport> GetPublishTransportAsync<T>(Uri? publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {

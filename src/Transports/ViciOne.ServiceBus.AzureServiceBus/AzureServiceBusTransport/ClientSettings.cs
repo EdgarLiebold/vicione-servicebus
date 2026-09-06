@@ -2,58 +2,42 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for client settings.
-/// </summary>
+/// <summary>Describes the Azure Service Bus entity and processor settings used to create a client context.</summary>
 public interface ClientSettings
 {
-    /// <summary>
-    /// The number of concurrent messages to process
-    /// </summary>
+    /// <summary>Gets the maximum number of concurrent message callbacks.</summary>
     int MaxConcurrentCalls { get; }
 
-    /// <summary>
-    /// The number of messages to push from the server to the client
-    /// </summary>
+    /// <summary>Gets the number of messages the processor may cache locally.</summary>
     int PrefetchCount { get; }
 
-    /// <summary>
-    /// The timeout before the session state is renewed
-    /// </summary>
+    /// <summary>Gets the maximum duration for automatic message- or session-lock renewal.</summary>
     TimeSpan MaxAutoRenewDuration { get; }
 
     /// <summary>
-    /// The timeout before a message session is abandoned
-    /// - if unset the SDK will use
+    /// Gets the maximum idle time to wait for a message from an accepted session. When unset, the SDK uses
     /// <see
-    ///     href="https://learn.microsoft.com/en-us/dotnet/api/azure.messaging.servicebus.servicebusretryoptions.trytimeout?view=azure-dotnet#azure-messaging-servicebus-servicebusretryoptions-trytimeout">
+    /// href="https://learn.microsoft.com/en-us/dotnet/api/azure.messaging.servicebus.servicebusretryoptions.trytimeout?view=azure-dotnet#azure-messaging-servicebus-servicebusretryoptions-trytimeout">
     /// ServiceBusRetryOptions.TryTimeout
-    /// </see>
+    /// </see>.
     /// </summary>
     TimeSpan? SessionIdleTimeout { get; }
 
-    /// <summary>
-    /// The maximum number of concurrent sessions
-    /// </summary>
+    /// <summary>Gets the maximum number of sessions processed concurrently.</summary>
     int MaxConcurrentSessions { get; }
 
-    /// <summary>
-    /// The maximum number of concurrent calls per session
-    /// </summary>
+    /// <summary>Gets the maximum number of concurrent message callbacks for each session.</summary>
     int MaxConcurrentCallsPerSession { get; }
 
-    /// <summary>
-    /// The path of the message entity
-    /// </summary>
+    /// <summary>Gets the queue or subscription entity path.</summary>
     string Path { get; }
 
-    /// <summary>
-    /// The name of the message entity
-    /// </summary>
+    /// <summary>Gets the logical entity name.</summary>
     string Name { get; }
 
-    /// <summary>
-    /// Get the input address for the client on the specified host
-    /// </summary>
+    /// <summary>Builds the transport input address for the entity path in a namespace.</summary>
+    /// <param name="serviceUri">The namespace URI.</param>
+    /// <param name="path">The entity path relative to the namespace.</param>
+    /// <returns>The resolved entity address.</returns>
     Uri GetInputAddress(Uri serviceUri, string path);
 }

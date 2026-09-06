@@ -2,33 +2,21 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for entity settings.
-/// </summary>
+/// <summary>Defines the RabbitMQ exchange declaration shared by send and fault entities.</summary>
 public interface EntitySettings
 {
-    /// <summary>
-    /// True if messages should be persisted to disk for the queue
-    /// </summary>
+    /// <summary>Gets whether the broker entity survives RabbitMQ restarts.</summary>
     bool Durable { get; }
 
-    /// <summary>
-    /// True if the queue/exchange should automatically be deleted
-    /// </summary>
+    /// <summary>Gets whether RabbitMQ deletes the broker entity when unused.</summary>
     bool AutoDelete { get; }
 
-    /// <summary>
-    /// Arguments passed to exchange-declare
-    /// </summary>
+    /// <summary>Arguments passed to exchange-declare.</summary>
     IDictionary<string, object?> ExchangeArguments { get; }
 
-    /// <summary>
-    /// The exchange name to bind to the queue as the default exchange
-    /// </summary>
+    /// <summary>The exchange name to bind to the queue as the default exchange.</summary>
     string ExchangeName { get; }
 
-    /// <summary>
-    /// The RabbitMQ exchange type
-    /// </summary>
+    /// <summary>The RabbitMQ exchange type.</summary>
     string ExchangeType { get; }
 }

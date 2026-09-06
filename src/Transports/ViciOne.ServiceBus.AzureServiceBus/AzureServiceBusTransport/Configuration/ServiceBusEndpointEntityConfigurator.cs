@@ -2,44 +2,28 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus endpoint entity configurator implementation.
-/// </summary>
+/// <summary>Captures Azure Service Bus queue or subscription properties used by a receive endpoint.</summary>
 public class ServiceBusEndpointEntityConfigurator :
     ServiceBusEntityConfigurator,
     IServiceBusEndpointEntityConfigurator
 {
-    /// <summary>
-    /// Gets or sets the enable dead lettering on message expiration value.
-    /// </summary>
+    /// <summary>Gets or sets whether expired messages are moved to the entity's dead-letter subqueue.</summary>
     public bool? EnableDeadLetteringOnMessageExpiration { get; set; }
 
-    /// <summary>
-    /// Gets or sets the forward dead lettered messages to value.
-    /// </summary>
+    /// <summary>Gets or sets the entity path to which dead-lettered messages are forwarded.</summary>
     public string? ForwardDeadLetteredMessagesTo { get; set; }
 
-    /// <summary>
-    /// Gets or sets the lock duration value.
-    /// </summary>
+    /// <summary>Gets or sets the initial lock duration for received messages.</summary>
     public TimeSpan? LockDuration { get; set; }
 
-    /// <summary>
-    /// Gets or sets the max delivery count value.
-    /// </summary>
+    /// <summary>Gets or sets the delivery-attempt limit before a message is dead-lettered.</summary>
     public int? MaxDeliveryCount { get; set; }
 
-    /// <summary>
-    /// Gets or sets the requires session value.
-    /// </summary>
+    /// <summary>Gets or sets whether the entity requires sessions.</summary>
     public bool? RequiresSession { get; set; }
 
-    /// <summary>
-    /// Gets or sets the max concurrent sessions value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum number of sessions processed concurrently.</summary>
     public int? MaxConcurrentSessions { get; set; }
-    /// <summary>
-    /// Gets or sets the max concurrent calls per session value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum number of concurrent message callbacks for each session.</summary>
     public int? MaxConcurrentCallsPerSession { get; set; }
 }

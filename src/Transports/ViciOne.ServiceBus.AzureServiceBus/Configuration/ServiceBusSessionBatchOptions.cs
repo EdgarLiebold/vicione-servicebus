@@ -3,9 +3,7 @@ using ViciOne.ServiceBus.AzureServiceBus;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines configuration options for service bus session batch.
-/// </summary>
+/// <summary>Controls how messages from each Azure Service Bus session are collected into consumer batches.</summary>
 public sealed class ServiceBusSessionBatchOptions
 {
     internal void Validate()
@@ -22,75 +20,60 @@ public sealed class ServiceBusSessionBatchOptions
             throw Invalid(nameof(TimeLimitStart), $"has the undefined value '{TimeLimitStart}'", "Select a defined BatchTimeLimitStart value");
     }
 
-    /// <summary>
-    /// The maximum number of messages in a single batch
-    /// </summary>
+    /// <summary>Gets or sets the maximum number of messages from one session in a batch.</summary>
     public int MessageLimitPerSession { get; set; } = 10;
 
-    /// <summary>
-    /// The maximum number of concurrent sessions
-    /// </summary>
+    /// <summary>Gets or sets the maximum number of sessions whose batches are processed concurrently.</summary>
     public int MaxConcurrentSessions { get; set; } = 1;
 
-    /// <summary>
-    /// The timeout before a message session is abandoned
-    /// </summary>
+    /// <summary>Gets or sets how long the processor waits for another message before releasing an inactive session.</summary>
     public TimeSpan? SessionIdleTimeout { get; set; } = Defaults.SessionIdleTimeout;
 
-    /// <summary>
-    /// The maximum time to wait before delivering a partial batch
-    /// </summary>
+    /// <summary>Gets or sets the maximum time to wait before delivering a partial batch.</summary>
     public TimeSpan TimeLimit { get; set; } = TimeSpan.FromSeconds(1);
 
-    /// <summary>
-    /// The starting point for the <see cref="TimeLimit" />
-    /// </summary>
+    /// <summary>Gets or sets the event from which <see cref="TimeLimit"/> is measured.</summary>
     public BatchTimeLimitStart TimeLimitStart { get; set; } = BatchTimeLimitStart.FromFirst;
 
-    /// <summary>
-    /// Sets the maximum number of messages in a single batch
-    /// </summary>
-    /// <param name="limit">The message limit</param>
+    /// <summary>Sets the maximum number of messages in a single batch.</summary>
+    /// <param name="limit">The positive per-session message limit.</param>
+    /// <returns>This options instance for fluent chaining.</returns>
     public ServiceBusSessionBatchOptions SetMessageLimitPerSession(int limit)
     {
         MessageLimitPerSession = limit;
         return this;
     }
 
-    /// <summary>
-    /// Sets the maximum number of concurrent sessions
-    /// </summary>
-    /// <param name="limit">The maximum number of concurrent sessions</param>
+    /// <summary>Sets the maximum number of concurrent sessions.</summary>
+    /// <param name="limit">The maximum number of concurrent sessions.</param>
+    /// <returns>This options instance for fluent chaining.</returns>
     public ServiceBusSessionBatchOptions SetMaxConcurrentSessions(int limit)
     {
         MaxConcurrentSessions = limit;
         return this;
     }
 
-    /// <summary>
-    /// Sets the maximum time to wait for messages within a session before abandoning the session for another
-    /// </summary>
-    /// <param name="limit">The time limit</param>
+    /// <summary>Sets how long the processor waits for another message before releasing an inactive session.</summary>
+    /// <param name="limit">The positive session idle timeout.</param>
+    /// <returns>This options instance for fluent chaining.</returns>
     public ServiceBusSessionBatchOptions SetSessionIdleTimeout(TimeSpan limit)
     {
         SessionIdleTimeout = limit;
         return this;
     }
 
-    /// <summary>
-    /// Sets the maximum time to wait before delivering a partial batch
-    /// </summary>
-    /// <param name="limit">The time limit</param>
+    /// <summary>Sets the maximum time to wait before delivering a partial batch.</summary>
+    /// <param name="limit">The positive batch time limit.</param>
+    /// <returns>This options instance for fluent chaining.</returns>
     public ServiceBusSessionBatchOptions SetTimeLimit(TimeSpan limit)
     {
         TimeLimit = limit;
         return this;
     }
 
-    /// <summary>
-    /// Sets the starting point for the <see cref="TimeLimit" />
-    /// </summary>
-    /// <param name="timeLimitStart">The starting point</param>
+    /// <summary>Sets the starting point for the <see cref="TimeLimit" />.</summary>
+    /// <param name="timeLimitStart">The event from which the time limit is measured.</param>
+    /// <returns>This options instance for fluent chaining.</returns>
     public ServiceBusSessionBatchOptions SetTimeLimitStart(BatchTimeLimitStart timeLimitStart)
     {
         TimeLimitStart = timeLimitStart;

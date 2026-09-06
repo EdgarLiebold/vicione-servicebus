@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a connection context supervisor implementation.
-/// </summary>
+/// <summary>Supervises the shared namespace connection and transports created from it.</summary>
 public class ConnectionContextSupervisor :
     TransportPipeContextSupervisor<ConnectionContext>,
     IConnectionContextSupervisor
@@ -17,11 +15,9 @@ public class ConnectionContextSupervisor :
     readonly IServiceBusHostConfiguration _hostConfiguration;
     readonly IServiceBusTopologyConfiguration _topologyConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Initializes a namespace connection supervisor.</summary>
+    /// <param name="hostConfiguration">The host configuration used to create connections and retry policies.</param>
+    /// <param name="topologyConfiguration">The topology used to resolve send and publish settings.</param>
     public ConnectionContextSupervisor(IServiceBusHostConfiguration hostConfiguration, IServiceBusTopologyConfiguration topologyConfiguration)
         : base(new ConnectionContextFactory(hostConfiguration))
     {
@@ -29,24 +25,20 @@ public class ConnectionContextSupervisor :
         _topologyConfiguration = topologyConfiguration;
     }
 
-    /// <summary>
-    /// Performs the normalize address operation.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Resolves an address against the configured Azure Service Bus namespace.</summary>
+    /// <param name="address">The relative or absolute endpoint address.</param>
+    /// <returns>The normalized transport address.</returns>
     public Uri NormalizeAddress(Uri address)
     {
         return new ServiceBusEndpointAddress(_hostConfiguration.HostAddress, address);
     }
 
-    /// <summary>
-    /// Creates publish transport.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="publishAddress">The publish address value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a supervised send transport using a message type's publish topology.</summary>
+    /// <typeparam name="T">The published message type.</typeparam>
+    /// <param name="receiveEndpointContext">The receive context that owns the transport.</param>
+    /// <param name="publishAddress">The topic address.</param>
+    /// <param name="cancellationToken">The token checked before transport creation.</param>
+    /// <returns>A task that produces the send transport.</returns>
     public Task<ISendTransport> CreatePublishTransportAsync<T>(ReceiveEndpointContext receiveEndpointContext, Uri publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -59,13 +51,11 @@ public class ConnectionContextSupervisor :
         return CreateSendTransportAsync(publishAddress, settings, receiveEndpointContext);
     }
 
-    /// <summary>
-    /// Creates send transport.
-    /// </summary>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="address">The address value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a supervised send transport for an explicit queue or topic address.</summary>
+    /// <param name="receiveEndpointContext">The receive context that owns the transport.</param>
+    /// <param name="address">The destination address to normalize.</param>
+    /// <param name="cancellationToken">The token checked before transport creation.</param>
+    /// <returns>A task that produces the send transport.</returns>
     public Task<ISendTransport> CreateSendTransportAsync(ReceiveEndpointContext receiveEndpointContext, Uri address, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Transports.ISendTransport>(cancellationToken); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
@@ -77,11 +67,9 @@ public class ConnectionContextSupervisor :
         return CreateSendTransportAsync(endpointAddress, settings, receiveEndpointContext);
     }
 
-    /// <summary>
-    /// Creates client context supervisor.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and registers a client-context supervisor as a consume agent.</summary>
+    /// <param name="factory">The factory that binds a client context to this connection supervisor.</param>
+    /// <returns>The registered client-context supervisor.</returns>
     public IClientContextSupervisor CreateClientContextSupervisor(Func<IConnectionContextSupervisor, IPipeContextFactory<ClientContext>> factory)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
@@ -93,11 +81,9 @@ public class ConnectionContextSupervisor :
         return clientContextSupervisor;
     }
 
-    /// <summary>
-    /// Creates send endpoint context supervisor.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a send-endpoint supervisor whose context configures the destination topology.</summary>
+    /// <param name="settings">The destination entity and topology settings.</param>
+    /// <returns>The send-endpoint context supervisor.</returns>
     public ISendEndpointContextSupervisor CreateSendEndpointContextSupervisor(SendSettings settings)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);

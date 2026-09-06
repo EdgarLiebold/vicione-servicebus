@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.SqlTransport.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
-/// <summary>
-/// Provides a sql topology configuration implementation.
-/// </summary>
+/// <summary>Stores and validates sql topology configuration.</summary>
 public class SqlTopologyConfiguration :
     ISqlTopologyConfiguration
 {
@@ -16,10 +14,8 @@ public class SqlTopologyConfiguration :
     readonly ISqlPublishTopologyConfigurator _publishTopology;
     readonly ISqlSendTopologyConfigurator _sendTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="messageTopology">The message topology.</param>
     public SqlTopologyConfiguration(IMessageTopologyConfigurator messageTopology)
     {
         _messageTopology = messageTopology;
@@ -38,10 +34,8 @@ public class SqlTopologyConfiguration :
         _consumeTopology = new SqlConsumeTopology(_publishTopology);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="topologyConfiguration">The topology configuration.</param>
     public SqlTopologyConfiguration(ISqlTopologyConfiguration topologyConfiguration)
     {
         _messageTopology = topologyConfiguration.Message;
@@ -60,10 +54,8 @@ public class SqlTopologyConfiguration :
     ISqlSendTopologyConfigurator ISqlTopologyConfiguration.Send => _sendTopology;
     ISqlConsumeTopologyConfigurator ISqlTopologyConfiguration.Consume => _consumeTopology;
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return _sendTopology.Validate()

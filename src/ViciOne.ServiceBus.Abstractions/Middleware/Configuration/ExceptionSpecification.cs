@@ -3,62 +3,48 @@ using ViciOne.ServiceBus.ExceptionFilters;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an exception specification implementation.
-/// </summary>
+/// <summary>Describes requirements for exception.</summary>
 public abstract class ExceptionSpecification :
     IExceptionConfigurator
 {
     readonly CompositeFilter<Exception> _exceptionFilter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     protected ExceptionSpecification()
     {
         _exceptionFilter = new CompositeFilter<Exception>();
         Filter = new CompositeExceptionFilter(_exceptionFilter);
     }
 
-    /// <summary>
-    /// Gets the filter value.
-    /// </summary>
+    /// <summary>Gets the filter.</summary>
     protected IExceptionFilter Filter { get; }
 
-    /// <summary>
-    /// Creates filter snapshot.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates filter snapshot.</summary>
+    /// <returns>The created filter snapshot.</returns>
     protected IExceptionFilter CreateFilterSnapshot()
     {
         return new CompositeExceptionFilter(_exceptionFilter.CreateSnapshot());
     }
 
-    /// <summary>
-    /// Performs the handle operation.
-    /// </summary>
-    /// <param name="exceptionTypes">The exception types value.</param>
+    /// <summary>Handles the supplied message or context.</summary>
+    /// <param name="exceptionTypes">The exception types.</param>
     public void Handle(params Type[] exceptionTypes)
     {
         var snapshot = SnapshotTypes(exceptionTypes);
         _exceptionFilter.Includes.Add(exception => Match(exception, snapshot));
     }
 
-    /// <summary>
-    /// Performs the handle operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Handles the supplied message or context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     public void Handle<T>()
         where T : Exception
     {
         _exceptionFilter.Includes.Add(exception => Match(exception, typeof(T)));
     }
 
-    /// <summary>
-    /// Performs the handle operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Handles the supplied message or context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public void Handle<T>(Func<T, bool> filter)
         where T : Exception
     {
@@ -66,31 +52,25 @@ public abstract class ExceptionSpecification :
         _exceptionFilter.Includes.Add(exception => Match(exception, filter));
     }
 
-    /// <summary>
-    /// Performs the ignore operation.
-    /// </summary>
-    /// <param name="exceptionTypes">The exception types value.</param>
+    /// <summary>Ignores the selected event or message.</summary>
+    /// <param name="exceptionTypes">The exception types.</param>
     public void Ignore(params Type[] exceptionTypes)
     {
         var snapshot = SnapshotTypes(exceptionTypes);
         _exceptionFilter.Excludes.Add(exception => Match(exception, snapshot));
     }
 
-    /// <summary>
-    /// Performs the ignore operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Ignores the selected event or message.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     public void Ignore<T>()
         where T : Exception
     {
         _exceptionFilter.Excludes.Add(exception => Match(exception, typeof(T)));
     }
 
-    /// <summary>
-    /// Performs the ignore operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Ignores the selected event or message.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public void Ignore<T>(Func<T, bool> filter)
         where T : Exception
     {

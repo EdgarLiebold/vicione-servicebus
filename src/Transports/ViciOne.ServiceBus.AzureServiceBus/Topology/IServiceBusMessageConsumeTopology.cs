@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus message consume topology.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Describes the Azure Service Bus consume topology for a message contract.</summary>
+/// <typeparam name="TMessage">The consumed message contract.</typeparam>
 public interface IServiceBusMessageConsumeTopology<TMessage> :
     IMessageConsumeTopology<TMessage>
     where TMessage : class

@@ -18,13 +18,11 @@ public sealed class EntityFrameworkMessageJournalStore : IMessageJournalStore
     private readonly string? _schemaName;
     private readonly string _tableName;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="contextOptions">The context options value.</param>
-    /// <param name="tableName">The table name value.</param>
-    /// <param name="limits">The limits value.</param>
-    /// <param name="schemaName">The schema name value.</param>
+    /// <summary>Initializes a bounded store for an explicitly selected relational table.</summary>
+    /// <param name="contextOptions">The configured relational provider options.</param>
+    /// <param name="tableName">The table that stores journal entries.</param>
+    /// <param name="limits">The entry-size, count, and retention bounds.</param>
+    /// <param name="schemaName">The schema, or <see langword="null"/> to use the provider default.</param>
     public EntityFrameworkMessageJournalStore(
         DbContextOptions contextOptions,
         string tableName,
@@ -43,17 +41,13 @@ public sealed class EntityFrameworkMessageJournalStore : IMessageJournalStore
         Limits = limits;
     }
 
-    /// <summary>
-    /// Gets the limits value.
-    /// </summary>
+    /// <summary>Gets the bounds enforced transactionally before each append.</summary>
     public MessageJournalStoreLimits Limits { get; }
 
-    /// <summary>
-    /// Performs the append operation.
-    /// </summary>
-    /// <param name="entry">The entry value.</param>
+    /// <summary>Removes expired or excess rows and appends one sanitized entry in a serializable transaction.</summary>
+    /// <param name="entry">The sanitized journal entry to persist.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask AppendAsync(MessageJournalEntry entry, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(entry);

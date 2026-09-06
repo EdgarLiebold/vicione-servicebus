@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a retry activity implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <summary>Executes the retry activity.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
 public class RetryActivity<TInstance> :
     IStateMachineActivity<TInstance>
     where TInstance : class, SagaStateMachineInstance
@@ -16,21 +14,17 @@ public class RetryActivity<TInstance> :
     readonly IBehavior<TInstance> _retryBehavior;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="retryBehavior">The retry behavior value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="retryBehavior">The state-machine behavior that controls retry execution.</param>
     public RetryActivity(IRetryPolicy retryPolicy, IBehavior<TInstance> retryBehavior)
     {
         _retryPolicy = retryPolicy;
         _retryBehavior = retryBehavior;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("retry");
@@ -38,21 +32,17 @@ public class RetryActivity<TInstance> :
         _retryBehavior.Probe(scope);
     }
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this, x => _retryBehavior.Accept(visitor));
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(BehaviorContext<TInstance> context, IBehavior<TInstance> next)
     {
         await _retryPolicy.RetryAsync(() => ExecuteRetryBehaviorAsync(context), context.CancellationToken);
@@ -60,13 +50,11 @@ public class RetryActivity<TInstance> :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync<T>(BehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
         where T : class
     {
@@ -75,27 +63,23 @@ public class RetryActivity<TInstance> :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TException> context, IBehavior<TInstance> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context, IBehavior<TInstance, T> next)
         where T : class
         where TException : Exception
@@ -132,11 +116,9 @@ public class RetryActivity<TInstance> :
 }
 
 
-/// <summary>
-/// Provides a retry activity implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Executes the retry activity.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class RetryActivity<TInstance, TMessage> :
     IStateMachineActivity<TInstance>
     where TInstance : class, SagaStateMachineInstance
@@ -145,21 +127,17 @@ public class RetryActivity<TInstance, TMessage> :
     readonly IBehavior<TInstance> _retryBehavior;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="retryBehavior">The retry behavior value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="retryBehavior">The state-machine behavior that controls retry execution.</param>
     public RetryActivity(IRetryPolicy retryPolicy, IBehavior<TInstance> retryBehavior)
     {
         _retryPolicy = retryPolicy;
         _retryBehavior = retryBehavior;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("retry");
@@ -167,33 +145,27 @@ public class RetryActivity<TInstance, TMessage> :
         _retryBehavior.Probe(scope);
     }
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this, x => _retryBehavior.Accept(visitor));
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(BehaviorContext<TInstance> context, IBehavior<TInstance> next)
     {
         throw new SagaStateMachineException("This activity requires a body with the event, but no body was specified.");
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync<T>(BehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
         where T : class
     {
@@ -203,27 +175,23 @@ public class RetryActivity<TInstance, TMessage> :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TException> context, IBehavior<TInstance> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context, IBehavior<TInstance, T> next)
         where T : class
         where TException : Exception

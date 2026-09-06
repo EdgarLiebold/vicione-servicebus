@@ -3,28 +3,22 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for activity observer configuration.
-/// </summary>
+/// <summary>Provides extension methods for activity observer configuration.</summary>
 public static class ActivityObserverConfigurationExtensions
 {
-    /// <summary>
-    /// Connect an activity observer that will be connected to all activity execute/compensate endpoints
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="observer"></param>
-    /// <returns></returns>
+    /// <summary>Connect an activity observer that will be connected to all activity execute/compensate endpoints.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectActivityObserver(this IBusFactoryConfigurator configurator, IActivityObserver observer)
     {
         return new ActivityConfigurationObserver(configurator, observer);
     }
 
-    /// <summary>
-    /// Connect an activity observer that will be connected to all activity execute/compensate endpoints
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="observer"></param>
-    /// <returns></returns>
+    /// <summary>Connect an activity observer that will be connected to all activity execute/compensate endpoints.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectActivityObserver(this IReceiveEndpointConfigurator configurator, IActivityObserver observer)
     {
         return new ActivityConfigurationObserver(configurator, observer);

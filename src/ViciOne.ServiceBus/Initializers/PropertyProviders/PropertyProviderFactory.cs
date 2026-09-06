@@ -10,10 +10,8 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyProviders;
 
-/// <summary>
-/// For an input type, builds the property providers for the requested result types
-/// </summary>
-/// <typeparam name="TInput"></typeparam>
+/// <summary>For an input type, builds the property providers for the requested result types.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class PropertyProviderFactory<TInput> :
     IPropertyProviderFactory<TInput>
     where TInput : class
@@ -22,22 +20,20 @@ public class PropertyProviderFactory<TInput> :
     /// Return the factory to create a property provider for the specified type <typeparamref name="TResult" /> using the
     /// <paramref name="propertyInfo" /> as the source.
     /// </summary>
-    /// <param name="propertyInfo">The input property</param>
-    /// <param name="provider"></param>
-    /// <typeparam name="TResult"></typeparam>
-    /// <returns></returns>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
+    /// <param name="propertyInfo">The input property.</param>
+    /// <param name="provider">Receives the provider produced by the operation.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetPropertyProvider<TResult>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IPropertyProvider<TInput, TResult>? provider)
     {
         return CreateProviderFactory<TResult>(propertyInfo.PropertyType).TryGetProvider(propertyInfo, out provider);
     }
 
-    /// <summary>
-    /// Attempts to get property converter.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="converter">The converter value.</param>
+    /// <summary>Attempts to get property converter.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="converter">Receives the converter produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetPropertyConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
     {
@@ -193,10 +189,8 @@ public class PropertyProviderFactory<TInput> :
     }
 
 
-    /// <summary>
-    /// The property on the input is a Task
-    /// </summary>
-    /// <typeparam name="TTask"></typeparam>
+    /// <summary>The property on the input is a Task.</summary>
+    /// <typeparam name="TTask">The ask type.</typeparam>
     class TaskProperty<TTask> :
         IProviderFactory
     {

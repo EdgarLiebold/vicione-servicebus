@@ -6,24 +6,20 @@ namespace ViciOne.ServiceBus.Internals;
 
 internal static class ExpressionExtensions
 {
-    /// <summary>
-    /// Gets the name of the member specified
-    /// </summary>
-    /// <typeparam name="T">The type referenced</typeparam>
-    /// <typeparam name="TMember">The type of the member referenced</typeparam>
-    /// <param name="expression">The expression referencing the member</param>
-    /// <returns>The name of the member referenced by the expression</returns>
+    /// <summary>Gets the name of the member specified.</summary>
+    /// <typeparam name="T">The type referenced.</typeparam>
+    /// <typeparam name="TMember">The type of the member referenced.</typeparam>
+    /// <param name="expression">The expression referencing the member.</param>
+    /// <returns>The name of the member referenced by the expression.</returns>
     public static string GetMemberName<T, TMember>(this Expression<Func<T, TMember>> expression)
     {
         return expression.GetMemberExpression().Member.Name;
     }
 
-    /// <summary>
-    /// Gets the name of the member specified
-    /// </summary>
-    /// <typeparam name="T">The type referenced</typeparam>
-    /// <param name="expression">The expression referencing the member</param>
-    /// <returns>The name of the member referenced by the expression</returns>
+    /// <summary>Gets the name of the member specified.</summary>
+    /// <typeparam name="T">The type referenced.</typeparam>
+    /// <param name="expression">The expression referencing the member.</param>
+    /// <returns>The name of the member referenced by the expression.</returns>
     public static string GetMemberName<T>(this Expression<Action<T>> expression)
     {
         return expression.GetMemberExpression().Member.Name;

@@ -4,19 +4,15 @@ using ViciOne.ServiceBus.Contracts;
 
 namespace ViciOne.ServiceBus.Advanced.Middleware;
 
-/// <summary>
-/// Provides extension methods for concurrency limit.
-/// </summary>
+/// <summary>Provides extension methods for concurrency limit.</summary>
 public static class ConcurrencyLimitExtensions
 {
-    /// <summary>
-    /// Set the concurrency limit of the filter
-    /// </summary>
-    /// <param name="pipe"></param>
-    /// <param name="concurrencyLimit"></param>
+    /// <summary>Set the concurrency limit of the filter.</summary>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="concurrencyLimit">The concurrency limit.</param>
     /// <param name="timeProvider">The clock used to timestamp the concurrency-limit command and enforce its timeout.</param>
-    /// <returns></returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task SetConcurrencyLimitAsync(this IPipe<CommandContext> pipe, int concurrencyLimit, TimeProvider? timeProvider = null, CancellationToken cancellationToken = default)
     {
         timeProvider ??= TimeProvider.System;

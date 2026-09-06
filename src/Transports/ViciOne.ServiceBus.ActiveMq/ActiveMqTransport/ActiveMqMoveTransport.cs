@@ -6,33 +6,27 @@ using ViciOne.ServiceBus.ActiveMq.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides an active mq move transport implementation.
-/// </summary>
-/// <typeparam name="TSettings">The t settings type.</typeparam>
+/// <summary>Copies received Apache NMS messages to a configured ActiveMQ queue.</summary>
+/// <typeparam name="TSettings">The topology settings used to provision the destination.</typeparam>
 public class ActiveMqMoveTransport<TSettings>
     where TSettings : class
 {
     readonly Queue _destination;
     readonly ConfigureActiveMqTopologyFilter<TSettings> _topologyFilter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="topologyFilter">The topology filter value.</param>
+    /// <summary>Creates a message-move transport.</summary>
+    /// <param name="destination">The queue that receives copied messages.</param>
+    /// <param name="topologyFilter">The filter that provisions the destination topology.</param>
     protected ActiveMqMoveTransport(Queue destination, ConfigureActiveMqTopologyFilter<TSettings> topologyFilter)
     {
         _topologyFilter = topologyFilter;
         _destination = destination;
     }
 
-    /// <summary>
-    /// Performs the move operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="preSend">The pre send value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Copies the current native message and its transport properties to the destination queue.</summary>
+    /// <param name="context">The received-message context.</param>
+    /// <param name="preSend">A callback that applies move-specific headers before sending.</param>
+    /// <returns>A task that completes when the copied message has been sent.</returns>
     protected async Task MoveAsync(ReceiveContext context, Action<IMessage, SendHeaders> preSend)
     {
         if (!context.TryGetPayload(out SessionContext? sessionContext))

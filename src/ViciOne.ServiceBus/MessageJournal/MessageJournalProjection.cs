@@ -4,22 +4,18 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ViciOne.ServiceBus.MessageJournal;
-/// <summary>
-/// Sanitized content selected by the application policy for persistence.
-/// </summary>
+/// <summary>Sanitized content selected by the application policy for persistence.</summary>
 public sealed class MessageJournalProjection
 {
     private readonly byte[] _body;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="dataClassification">The data classification value.</param>
-    /// <param name="contentType">The content type value.</param>
-    /// <param name="messageTypes">The message types value.</param>
-    /// <param name="metadata">The metadata value.</param>
-    /// <param name="headers">The headers value.</param>
-    /// <param name="body">The body value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="dataClassification">The data classification.</param>
+    /// <param name="contentType">The runtime content type used by the operation.</param>
+    /// <param name="messageTypes">The message types.</param>
+    /// <param name="metadata">The metadata.</param>
+    /// <param name="headers">The headers.</param>
+    /// <param name="body">The body.</param>
     public MessageJournalProjection(
         MessageJournalDataClassification dataClassification,
         string? contentType,
@@ -39,34 +35,22 @@ public sealed class MessageJournalProjection
         _body = body.ToArray();
     }
 
-    /// <summary>
-    /// Gets the data classification value.
-    /// </summary>
+    /// <summary>Gets the data classification.</summary>
     public MessageJournalDataClassification DataClassification { get; }
 
-    /// <summary>
-    /// Gets the content type value.
-    /// </summary>
+    /// <summary>Gets the content type.</summary>
     public string? ContentType { get; }
 
-    /// <summary>
-    /// Gets the message types value.
-    /// </summary>
+    /// <summary>Gets the message types.</summary>
     public IReadOnlyList<string> MessageTypes { get; }
 
-    /// <summary>
-    /// Gets the metadata value.
-    /// </summary>
+    /// <summary>Gets the metadata.</summary>
     public IReadOnlyDictionary<string, string> Metadata { get; }
 
-    /// <summary>
-    /// Gets the headers value.
-    /// </summary>
+    /// <summary>Gets the headers.</summary>
     public IReadOnlyDictionary<string, string> Headers { get; }
 
-    /// <summary>
-    /// Gets the body value.
-    /// </summary>
+    /// <summary>Gets the body.</summary>
     public ReadOnlyMemory<byte> Body => _body.ToArray();
 
     private static IReadOnlyDictionary<string, string> Snapshot(IReadOnlyDictionary<string, string>? source)

@@ -3,15 +3,12 @@ using Amazon.Runtime;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides extension methods for amazon web service response.
-/// </summary>
+/// <summary>Provides response validation for Amazon Web Services SDK operations.</summary>
 public static class AmazonWebServiceResponseExtensions
 {
-    /// <summary>
-    /// Performs the ensure successful response operation.
-    /// </summary>
-    /// <param name="response">The response value.</param>
+    /// <summary>Verifies that an AWS response has a successful HTTP status code.</summary>
+    /// <param name="response">The AWS response to validate.</param>
+    /// <exception cref="AmazonSqsTransportException">The response status code is outside the successful HTTP range.</exception>
     public static void EnsureSuccessfulResponse(this AmazonWebServiceResponse response)
     {
         const string documentationUri = "https://aws.amazon.com/blogs/developer/logging-with-the-aws-sdk-for-net/";

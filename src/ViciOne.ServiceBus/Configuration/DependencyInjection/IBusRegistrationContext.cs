@@ -3,15 +3,11 @@ using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for bus registration context.
-/// </summary>
+/// <summary>Exposes state for bus registration operations.</summary>
 public interface IBusRegistrationContext :
     IRegistrationContext
 {
-    /// <summary>
-    /// Gets the endpoint name formatter value.
-    /// </summary>
+    /// <summary>Gets the endpoint name formatter.</summary>
     IEndpointNameFormatter EndpointNameFormatter { get; }
 
     /// <summary>
@@ -20,9 +16,9 @@ public interface IBusRegistrationContext :
     /// is registered in the container, it is resolved from the container. Otherwise, the <see cref="DefaultEndpointNameFormatter" />
     /// is used.
     /// </summary>
-    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured</param>
-    /// <param name="endpointNameFormatter">Optional, the endpoint name formatter</param>
-    /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
+    /// <typeparam name="T">The bus factory type (depends upon the transport).</typeparam>
+    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured.</param>
+    /// <param name="endpointNameFormatter">Optional, the endpoint name formatter.</param>
     void ConfigureEndpoints<T>(IReceiveConfigurator<T> configurator, IEndpointNameFormatter? endpointNameFormatter)
         where T : IReceiveEndpointConfigurator;
 
@@ -32,10 +28,10 @@ public interface IBusRegistrationContext :
     /// is registered in the container, it is resolved from the container. Otherwise, the <see cref="DefaultEndpointNameFormatter" />
     /// is used.
     /// </summary>
-    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured</param>
-    /// <param name="endpointNameFormatter">Optional, the endpoint name formatter</param>
-    /// <param name="configureFilter">A filter for the endpoints to be configured</param>
-    /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
+    /// <typeparam name="T">The bus factory type (depends upon the transport).</typeparam>
+    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured.</param>
+    /// <param name="endpointNameFormatter">Optional, the endpoint name formatter.</param>
+    /// <param name="configureFilter">A filter for the endpoints to be configured.</param>
     void ConfigureEndpoints<T>(IReceiveConfigurator<T> configurator, IEndpointNameFormatter? endpointNameFormatter,
         Action<IRegistrationFilterConfigurator>? configureFilter)
         where T : IReceiveEndpointConfigurator;
@@ -44,6 +40,6 @@ public interface IBusRegistrationContext :
     /// Returns the registered <see cref="IConfigureReceiveEndpoint" /> instances from the container. Used internally
     /// to apply configuration to every receive endpoint. This method should normally not be called.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The configure receive endpoints.</returns>
     IConfigureReceiveEndpoint GetConfigureReceiveEndpoints();
 }

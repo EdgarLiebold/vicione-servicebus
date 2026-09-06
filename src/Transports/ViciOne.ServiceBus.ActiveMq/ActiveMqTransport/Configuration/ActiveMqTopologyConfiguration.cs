@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.ActiveMq.Configuration;
 
-/// <summary>
-/// Provides an active mq topology configuration implementation.
-/// </summary>
+/// <summary>Coordinates ActiveMQ send, publish, and consume topology configuration.</summary>
 public class ActiveMqTopologyConfiguration :
     IActiveMqTopologyConfiguration
 {
@@ -16,10 +14,8 @@ public class ActiveMqTopologyConfiguration :
     readonly IActiveMqPublishTopologyConfigurator _publishTopology;
     readonly IActiveMqSendTopologyConfigurator _sendTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Creates a root ActiveMQ topology configuration and connects global topology observers.</summary>
+    /// <param name="messageTopology">The message-topology configurator used for publish entities.</param>
     public ActiveMqTopologyConfiguration(IMessageTopologyConfigurator messageTopology)
     {
         _messageTopology = messageTopology;
@@ -36,10 +32,8 @@ public class ActiveMqTopologyConfiguration :
         _consumeTopology = new ActiveMqConsumeTopology(_publishTopology);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Creates endpoint topology that shares send and publish configuration and copies consume configuration.</summary>
+    /// <param name="topologyConfiguration">The parent ActiveMQ topology configuration.</param>
     public ActiveMqTopologyConfiguration(IActiveMqTopologyConfiguration topologyConfiguration)
     {
         _messageTopology = topologyConfiguration.Message;
@@ -58,10 +52,8 @@ public class ActiveMqTopologyConfiguration :
     IActiveMqSendTopologyConfigurator IActiveMqTopologyConfiguration.Send => _sendTopology;
     IActiveMqConsumeTopologyConfigurator IActiveMqTopologyConfiguration.Consume => _consumeTopology;
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return _sendTopology.Validate()

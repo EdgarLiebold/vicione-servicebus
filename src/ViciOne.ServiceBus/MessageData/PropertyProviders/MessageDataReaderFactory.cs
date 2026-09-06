@@ -3,16 +3,12 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.MessageData.PropertyProviders;
 
-/// <summary>
-/// Provides a message data reader factory implementation.
-/// </summary>
+/// <summary>Creates message data reader instances.</summary>
 public static class MessageDataReaderFactory
 {
-    /// <summary>
-    /// Creates reader.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates reader.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The created reader.</returns>
     public static IMessageDataReader<T> CreateReader<T>()
     {
         if (typeof(T) == typeof(string))

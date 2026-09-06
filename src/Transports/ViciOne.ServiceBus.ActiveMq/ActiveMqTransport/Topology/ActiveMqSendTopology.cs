@@ -3,20 +3,14 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides an active mq send topology implementation.
-/// </summary>
+/// <summary>Creates ActiveMQ destination settings and per-message send topology.</summary>
 public class ActiveMqSendTopology :
     SendTopology,
     IActiveMqSendTopologyConfigurator
 {
-    /// <summary>
-    /// Gets or sets the configure error settings value.
-    /// </summary>
+    /// <summary>Gets or sets the callback applied to generated error-queue settings.</summary>
     public Action<IActiveMqQueueConfigurator>? ConfigureErrorSettings { get; set; }
-    /// <summary>
-    /// Gets or sets the configure dead letter settings value.
-    /// </summary>
+    /// <summary>Gets or sets the callback applied to generated dead-letter queue settings.</summary>
     public Action<IActiveMqQueueConfigurator>? ConfigureDeadLetterSettings { get; set; }
 
     IActiveMqMessageSendTopologyConfigurator<T> IActiveMqSendTopology.GetMessageTopology<T>()
@@ -27,11 +21,9 @@ public class ActiveMqSendTopology :
             ?? throw new InvalidOperationException($"The send topology for {typeof(T).FullName} is not an ActiveMQ topology.");
     }
 
-    /// <summary>
-    /// Gets send settings.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates queue or topic send settings for an endpoint address.</summary>
+    /// <param name="address">The parsed ActiveMQ destination address.</param>
+    /// <returns>The destination-specific send settings.</returns>
     public SendSettings GetSendSettings(ActiveMqEndpointAddress address)
     {
         if (address.Type == ActiveMqEndpointAddress.AddressType.Queue)
@@ -40,11 +32,9 @@ public class ActiveMqSendTopology :
         return new ActiveMqTopicSendSettings(address);
     }
 
-    /// <summary>
-    /// Gets error settings.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates error-queue settings derived from a source entity.</summary>
+    /// <param name="settings">The source entity settings.</param>
+    /// <returns>The configured error-destination settings.</returns>
     public ErrorSettings GetErrorSettings(EntitySettings settings)
     {
         var errorSettings = new ActiveMqErrorSettings(settings, ErrorQueueNameFormatter.FormatErrorQueueName(settings.EntityName));
@@ -54,11 +44,9 @@ public class ActiveMqSendTopology :
         return errorSettings;
     }
 
-    /// <summary>
-    /// Gets dead letter settings.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates dead-letter queue settings derived from a source entity.</summary>
+    /// <param name="settings">The source entity settings.</param>
+    /// <returns>The configured dead-letter destination settings.</returns>
     public DeadLetterSettings GetDeadLetterSettings(EntitySettings settings)
     {
         var deadLetterSetting = new ActiveMqDeadLetterSettings(settings, DeadLetterQueueNameFormatter.FormatDeadLetterQueueName(settings.EntityName));
@@ -68,12 +56,10 @@ public class ActiveMqSendTopology :
         return deadLetterSetting;
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="type">The type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates ActiveMQ send topology for a message type.</summary>
+    /// <typeparam name="T">The sent message type.</typeparam>
+    /// <param name="type">The runtime message type represented by the topology.</param>
+    /// <returns>The new message send topology.</returns>
     protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
     {
         var messageTopology = new ActiveMqMessageSendTopology<T>();

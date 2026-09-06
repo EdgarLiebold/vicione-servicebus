@@ -2,31 +2,25 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a reply to send endpoint implementation.
-/// </summary>
+/// <summary>Routes a response through RabbitMQ direct reply-to using the request's opaque reply routing key.</summary>
 public class ReplyToSendEndpoint :
     SendEndpointProxy
 {
     readonly string _queueName;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="endpoint">The endpoint value.</param>
-    /// <param name="queueName">The queue name value.</param>
+    /// <summary>Creates a proxy that adds the request's reply routing key to typed responses.</summary>
+    /// <param name="endpoint">The underlying direct-reply-to send endpoint.</param>
+    /// <param name="queueName">The opaque reply routing key carried by the request.</param>
     public ReplyToSendEndpoint(ISendEndpoint endpoint, string queueName)
         : base(endpoint)
     {
         _queueName = queueName;
     }
 
-    /// <summary>
-    /// Gets pipe proxy.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Wraps a typed send pipeline with direct-reply-to routing-key assignment.</summary>
+    /// <typeparam name="T">The response message contract.</typeparam>
+    /// <param name="pipe">The caller-supplied send pipeline.</param>
+    /// <returns>The direct-reply-to pipeline proxy.</returns>
     protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>>? pipe = default)
     {
         return new ReplyToPipe<T>(_queueName, pipe);

@@ -1,15 +1,11 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for send topology configuration observer.
-/// </summary>
+/// <summary>Receives notifications about send topology configuration events.</summary>
 public interface ISendTopologyConfigurationObserver
 {
-    /// <summary>
-    /// Performs the message topology created operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configuration">The configuration callback.</param>
+    /// <summary>Reports that message topology has been created.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configuration">The callback used to configure the component.</param>
     void MessageTopologyCreated<T>(IMessageSendTopologyConfigurator<T> configuration)
         where T : class;
 }

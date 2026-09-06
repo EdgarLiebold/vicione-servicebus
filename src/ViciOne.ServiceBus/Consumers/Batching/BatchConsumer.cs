@@ -10,10 +10,8 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Batching;
 
-/// <summary>
-/// Provides a batch consumer implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Consumes batch messages.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class BatchConsumer<TMessage> :
     IConsumer<TMessage>
     where TMessage : class
@@ -31,14 +29,12 @@ public class BatchConsumer<TMessage> :
     DateTime _lastMessage;
     ILogContext? _logContext = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <param name="executor">The executor value.</param>
-    /// <param name="dispatcher">The dispatcher value.</param>
-    /// <param name="consumerPipe">The consumer pipe value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="executor">The executor.</param>
+    /// <param name="dispatcher">The dispatcher.</param>
+    /// <param name="consumerPipe">The consumer pipe.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public BatchConsumer(BatchOptions options, TaskExecutor executor, TaskExecutor dispatcher, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe,
         TimeProvider timeProvider)
     {
@@ -54,16 +50,12 @@ public class BatchConsumer<TMessage> :
         _timer = _timeProvider.CreateTimer(TimeLimitExpired, null, _options.TimeLimit, Timeout.InfiniteTimeSpan);
     }
 
-    /// <summary>
-    /// Gets or sets the is completed value.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether completed.</summary>
     public bool IsCompleted { get; private set; }
 
-    /// <summary>
-    /// Consumes the message provided by the context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Consumes the message provided by the context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ConsumeAsync(ConsumeContext<TMessage> context)
     {
         try
@@ -76,7 +68,7 @@ public class BatchConsumer<TMessage> :
         }
         catch
         {
-            // if this message was marked as successfully delivered, do not fault it
+            // Successfully delivered messages are excluded from the batch fault set.
             if (context.Advanced().ReceiveContext.IsDelivered)
                 return;
 
@@ -102,13 +94,11 @@ public class BatchConsumer<TMessage> :
         });
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="currentActivity">The current activity value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="currentActivity">The current activity.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task AddAsync(ConsumeContext<TMessage> context, Activity? currentActivity, CancellationToken cancellationToken = default)
     {
         _logContext ??= LogContext.Current;
@@ -185,11 +175,9 @@ public class BatchConsumer<TMessage> :
         return _messages.Count == _options.MessageLimit;
     }
 
-    /// <summary>
-    /// Performs the force complete operation.
-    /// </summary>
+    /// <summary>Forces complete.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ForceCompleteAsync(CancellationToken cancellationToken = default)
     {
         IsCompleted = true;

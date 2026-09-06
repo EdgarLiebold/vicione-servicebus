@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
-/// <summary>
-/// Provides a sql receive endpoint configuration implementation.
-/// </summary>
+/// <summary>Stores and validates sql receive endpoint configuration.</summary>
 public class SqlReceiveEndpointConfiguration :
     ReceiveEndpointConfiguration,
     ISqlReceiveEndpointConfiguration,
@@ -25,12 +23,10 @@ public class SqlReceiveEndpointConfiguration :
     readonly Lazy<Uri> _inputAddress;
     readonly SqlReceiveSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="settings">The settings that control the operation.</param>
+    /// <param name="endpointConfiguration">The endpoint configuration.</param>
     public SqlReceiveEndpointConfiguration(ISqlHostConfiguration hostConfiguration, SqlReceiveSettings settings,
         ISqlEndpointConfiguration endpointConfiguration)
         : base(hostConfiguration, endpointConfiguration)
@@ -45,24 +41,16 @@ public class SqlReceiveEndpointConfiguration :
         _inputAddress = new Lazy<Uri>(FormatInputAddress);
     }
 
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the settings.</summary>
     public ReceiveSettings Settings => _settings;
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the host address.</summary>
     public override Uri HostAddress => _hostConfiguration.HostAddress;
-    /// <summary>
-    /// Gets the input address value.
-    /// </summary>
+    /// <summary>Gets the input address.</summary>
     public override Uri InputAddress => _inputAddress.Value;
 
-    /// <summary>
-    /// Creates receive endpoint context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates receive endpoint context.</summary>
+    /// <returns>The created receive endpoint context.</returns>
     public override ReceiveEndpointContext CreateReceiveEndpointContext()
     {
         return CreateDbReceiveEndpointContext();
@@ -70,10 +58,8 @@ public class SqlReceiveEndpointConfiguration :
 
     ISqlTopologyConfiguration ISqlEndpointConfiguration.Topology => _endpointConfiguration.Topology;
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <param name="host">The host value.</param>
+    /// <summary>Builds the configured component.</summary>
+    /// <param name="host">The host.</param>
     public void Build(IHost host)
     {
         var context = CreateDbReceiveEndpointContext();
@@ -113,10 +99,8 @@ public class SqlReceiveEndpointConfiguration :
         ReceiveEndpoint = receiveEndpoint;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         if (!IsValidEntityName(_settings.QueueName))
@@ -138,9 +122,7 @@ public class SqlReceiveEndpointConfiguration :
             yield return result.WithParentKey(_settings.QueueName);
     }
 
-    /// <summary>
-    /// Gets or sets the auto delete on idle value.
-    /// </summary>
+    /// <summary>Gets or sets the auto delete on idle.</summary>
     public TimeSpan? AutoDeleteOnIdle
     {
         set
@@ -151,67 +133,51 @@ public class SqlReceiveEndpointConfiguration :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the polling interval value.
-    /// </summary>
+    /// <summary>Gets or sets the polling interval.</summary>
     public TimeSpan PollingInterval
     {
         set => _settings.PollingInterval = value;
     }
 
-    /// <summary>
-    /// Gets or sets the lock duration value.
-    /// </summary>
+    /// <summary>Gets or sets the lock duration.</summary>
     public TimeSpan LockDuration
     {
         set => _settings.LockDuration = value;
     }
 
-    /// <summary>
-    /// Gets or sets the max lock duration value.
-    /// </summary>
+    /// <summary>Gets or sets the max lock duration.</summary>
     public TimeSpan MaxLockDuration
     {
         set => _settings.MaxLockDuration = value;
     }
 
-    /// <summary>
-    /// Gets or sets the max delivery count value.
-    /// </summary>
+    /// <summary>Gets or sets the max delivery count.</summary>
     public int? MaxDeliveryCount
     {
         set => _settings.MaxDeliveryCount = value;
     }
 
-    /// <summary>
-    /// Gets or sets the purge on startup value.
-    /// </summary>
+    /// <summary>Gets or sets the purge on startup.</summary>
     public bool PurgeOnStartup
     {
         set => _settings.PurgeOnStartup = value;
     }
 
-    /// <summary>
-    /// Gets or sets the maintenance batch size value.
-    /// </summary>
+    /// <summary>Gets or sets the maintenance batch size.</summary>
     public int MaintenanceBatchSize
     {
         set => _settings.MaintenanceBatchSize = value;
     }
 
-    /// <summary>
-    /// Gets or sets the dead letter expired messages value.
-    /// </summary>
+    /// <summary>Gets or sets the dead letter expired messages.</summary>
     public bool DeadLetterExpiredMessages
     {
         set => _settings.DeadLetterExpiredMessages = value;
     }
 
-    /// <summary>
-    /// Performs the subscribe operation.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Subscribes to the configured event source.</summary>
+    /// <param name="topicName">The topic name.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
     public void Subscribe(string topicName, Action<ISqlTopicSubscriptionConfigurator>? callback)
     {
         if (topicName == null)
@@ -220,38 +186,30 @@ public class SqlReceiveEndpointConfiguration :
         _endpointConfiguration.Topology.Consume.Subscribe(topicName, callback);
     }
 
-    /// <summary>
-    /// Gets or sets the unlock delay value.
-    /// </summary>
+    /// <summary>Gets or sets the unlock delay.</summary>
     public TimeSpan? UnlockDelay
     {
         set => _settings.UnlockDelay = value;
     }
 
-    /// <summary>
-    /// Gets or sets the concurrent delivery limit value.
-    /// </summary>
+    /// <summary>Gets or sets the concurrent delivery limit.</summary>
     public int ConcurrentDeliveryLimit
     {
         set => _settings.ConcurrentDeliveryLimit = value;
     }
 
-    /// <summary>
-    /// Performs the subscribe operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Subscribes to the configured event source.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="callback">The callback invoked by the operation.</param>
     public void Subscribe<T>(Action<ISqlTopicSubscriptionConfigurator>? callback)
         where T : class
     {
         _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Subscribe(callback);
     }
 
-    /// <summary>
-    /// Sets receive mode.
-    /// </summary>
-    /// <param name="mode">The mode value.</param>
-    /// <param name="concurrentDeliveryLimit">The concurrent delivery limit value.</param>
+    /// <summary>Sets receive mode.</summary>
+    /// <param name="mode">The mode.</param>
+    /// <param name="concurrentDeliveryLimit">The concurrent delivery limit.</param>
     public void SetReceiveMode(SqlReceiveMode mode, int? concurrentDeliveryLimit = default)
     {
         if (concurrentDeliveryLimit != null)
@@ -260,10 +218,8 @@ public class SqlReceiveEndpointConfiguration :
         _settings.ReceiveMode = mode;
     }
 
-    /// <summary>
-    /// Configures client.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures client.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void ConfigureClient(Action<IPipeConfigurator<ClientContext>>? configure)
     {
         configure?.Invoke(_clientConfigurator);
@@ -288,9 +244,7 @@ public class SqlReceiveEndpointConfiguration :
         return _settings.GetInputAddress(_hostConfiguration.HostAddress);
     }
 
-    /// <summary>
-    /// Determines whether already configured.
-    /// </summary>
+    /// <summary>Determines whether already configured.</summary>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     protected override bool IsAlreadyConfigured()
     {

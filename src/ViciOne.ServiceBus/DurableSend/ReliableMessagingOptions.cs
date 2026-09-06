@@ -16,16 +16,16 @@ internal sealed class ReliableDeliveryConfigurator : IReliableDeliveryConfigurat
     /// <summary>Gets or sets the maximum retry delay.</summary>
     public TimeSpan MaximumRetryDelay { get; set; } = TimeSpan.FromMinutes(5);
 
-    /// <summary>Gets or sets the bounded fractional retry jitter.</summary>
+    /// <summary>Gets or sets the retry jitter fraction.</summary>
     public double RetryJitterFraction { get; set; } = 0.20;
 
-    /// <summary>Gets or sets the durable ownership lease duration.</summary>
+    /// <summary>Gets or sets the lease duration.</summary>
     public TimeSpan LeaseDuration { get; set; } = TimeSpan.FromMinutes(2);
 
     /// <summary>Gets or sets the maximum wait for in-process consumer completion.</summary>
     public TimeSpan ConsumerCompletionTimeout { get; set; } = TimeSpan.FromMinutes(5);
 
-    /// <summary>Gets or sets the idle polling interval.</summary>
+    /// <summary>Gets or sets the poll interval.</summary>
     public TimeSpan PollInterval { get; set; } = TimeSpan.FromSeconds(1);
 
     /// <summary>Gets or sets the telemetry snapshot interval.</summary>
@@ -36,60 +36,37 @@ internal sealed class ReliableDeliveryConfigurator : IReliableDeliveryConfigurat
 }
 
 /// <summary>Mutable bootstrap options for one typed bus; validated and frozen before reliable messaging starts.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 public sealed class ReliableMessagingOptions<TBus>
     where TBus : class, IBus
 {
 
-    /// <summary>
-    /// Gets or sets the maximum stored count value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum stored count.</summary>
     public int MaximumStoredCount { get; set; }
-    /// <summary>
-    /// Gets or sets the maximum stored bytes value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum stored bytes.</summary>
     public long MaximumStoredBytes { get; set; }
-    /// <summary>
-    /// Gets or sets the maximum concurrent deliveries value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum concurrent deliveries.</summary>
     public int MaximumConcurrentDeliveries { get; set; } = 16;
-    /// <summary>
-    /// Gets or sets the maximum delivery attempts value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum delivery attempts.</summary>
     public int MaximumDeliveryAttempts { get; set; } = 10;
-    /// <summary>
-    /// Gets or sets the initial retry delay value.
-    /// </summary>
+    /// <summary>Gets or sets the initial retry delay.</summary>
     public TimeSpan InitialRetryDelay { get; set; } = TimeSpan.FromSeconds(15);
-    /// <summary>
-    /// Gets or sets the maximum retry delay value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum retry delay.</summary>
     public TimeSpan MaximumRetryDelay { get; set; } = TimeSpan.FromMinutes(5);
-    /// <summary>
-    /// Gets or sets the retry jitter fraction value.
-    /// </summary>
+    /// <summary>Gets or sets the retry jitter fraction.</summary>
     public double RetryJitterFraction { get; set; } = 0.20;
-    /// <summary>
-    /// Gets or sets the lease duration value.
-    /// </summary>
+    /// <summary>Gets or sets the lease duration.</summary>
     public TimeSpan LeaseDuration { get; set; } = TimeSpan.FromMinutes(2);
-    /// <summary>
-    /// Gets or sets the consumer completion timeout value.
-    /// </summary>
+    /// <summary>Gets or sets the consumer completion timeout.</summary>
     public TimeSpan ConsumerCompletionTimeout { get; set; } = TimeSpan.FromMinutes(5);
-    /// <summary>
-    /// Gets or sets the poll interval value.
-    /// </summary>
+    /// <summary>Gets or sets the poll interval.</summary>
     public TimeSpan PollInterval { get; set; } = TimeSpan.FromSeconds(1);
-    /// <summary>
-    /// Gets or sets the telemetry snapshot interval value.
-    /// </summary>
+    /// <summary>Gets or sets the telemetry snapshot interval.</summary>
     public TimeSpan TelemetrySnapshotInterval { get; set; } = TimeSpan.FromSeconds(5);
-    /// <summary>
-    /// Gets or sets the health degraded after value.
-    /// </summary>
+    /// <summary>Gets or sets the health degraded after.</summary>
     public TimeSpan HealthDegradedAfter { get; set; } = TimeSpan.FromMinutes(15);
 
-    /// <summary>Gets or sets the retention period for terminal reliable-messaging state.</summary>
+    /// <summary>Gets or sets the retention.</summary>
     public TimeSpan Retention { get; set; }
 
     internal bool StoreLimitsConfigured { get; set; }

@@ -2,9 +2,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Discard the error instead of moving it to the error transport.
-/// </summary>
+/// <summary>Discard the error instead of moving it to the error transport.</summary>
 public class DiscardErrorTransportFilter :
     IFilter<ExceptionReceiveContext>
 {

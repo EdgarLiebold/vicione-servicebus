@@ -1,33 +1,19 @@
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 
-/// <summary>
-/// Specifies the available outbox failure kind values.
-/// </summary>
+/// <summary>Classifies the most recent transactional-outbox delivery failure.</summary>
 public enum OutboxFailureKind
 {
-    /// <summary>
-    /// Indicates none.
-    /// </summary>
+    /// <summary>No failure is recorded.</summary>
     None = 0,
-    /// <summary>
-    /// Indicates transient.
-    /// </summary>
+    /// <summary>The transport classified the failure as retryable.</summary>
     Transient = 1,
-    /// <summary>
-    /// Indicates permanent.
-    /// </summary>
+    /// <summary>The transport classified the failure as non-retryable.</summary>
     Permanent = 2,
-    /// <summary>
-    /// Indicates invariant violation.
-    /// </summary>
+    /// <summary>Persisted data violated a delivery invariant.</summary>
     InvariantViolation = 3,
-    /// <summary>
-    /// Indicates retry limit exceeded.
-    /// </summary>
+    /// <summary>The configured maximum number of attempts was reached.</summary>
     RetryLimitExceeded = 4,
-    /// <summary>
-    /// Indicates unclassified.
-    /// </summary>
+    /// <summary>No registered classifier recognized the failure.</summary>
     Unclassified = 5
 }

@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Represents an in memory endpoint address value.
-/// </summary>
+/// <summary>Represents an in memory endpoint address.</summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct InMemoryEndpointAddress
 {
@@ -16,41 +14,25 @@ public readonly struct InMemoryEndpointAddress
     const string QueueNameKey = "queue";
     const string ExchangeTypeKey = "type";
 
-    /// <summary>
-    /// Defines the scheme value.
-    /// </summary>
+    /// <summary>Exposes the scheme used by the containing type.</summary>
     public readonly string Scheme;
-    /// <summary>
-    /// Defines the host value.
-    /// </summary>
+    /// <summary>Exposes the host used by the containing type.</summary>
     public readonly string Host;
-    /// <summary>
-    /// Defines the virtual host value.
-    /// </summary>
+    /// <summary>Exposes the virtual host used by the containing type.</summary>
     public readonly string VirtualHost = null!;
 
-    /// <summary>
-    /// Defines the name value.
-    /// </summary>
+    /// <summary>Exposes the name used by the containing type.</summary>
     public readonly string Name;
-    /// <summary>
-    /// Defines the bind to queue value.
-    /// </summary>
+    /// <summary>Exposes the bind to queue used by the containing type.</summary>
     public readonly bool BindToQueue;
-    /// <summary>
-    /// Defines the queue name value.
-    /// </summary>
+    /// <summary>Exposes the queue name used by the containing type.</summary>
     public readonly string? QueueName;
-    /// <summary>
-    /// Defines the exchange type value.
-    /// </summary>
+    /// <summary>Exposes the exchange type used by the containing type.</summary>
     public readonly ExchangeType ExchangeType;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="address">The address value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostAddress">The host address.</param>
+    /// <param name="address">The address.</param>
     public InMemoryEndpointAddress(Uri hostAddress, Uri address)
     {
         Scheme = null!;
@@ -111,14 +93,12 @@ public readonly struct InMemoryEndpointAddress
         }
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="bindToQueue">The bind to queue value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="exchangeType">The exchange type value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostAddress">The host address.</param>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="bindToQueue">The bind to queue.</param>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
     public InMemoryEndpointAddress(Uri hostAddress, string exchangeName, bool bindToQueue = false, string? queueName = default,
         ExchangeType exchangeType = ExchangeType.FanOut)
     {
@@ -139,11 +119,9 @@ public readonly struct InMemoryEndpointAddress
         virtualHost = hostAddress.VirtualHost;
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts a value to <see cref="Uri" />.</summary>
+    /// <param name="address">The address.</param>
+    /// <returns>The value produced by the operation.</returns>
     public static implicit operator Uri(in InMemoryEndpointAddress address)
     {
         var builder = new UriBuilder

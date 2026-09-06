@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Defines the contract for active mq queue endpoint configurator.
-/// </summary>
+/// <summary>Configures the queue lifecycle of an ActiveMQ receive endpoint.</summary>
 public interface IActiveMqQueueEndpointConfigurator :
     IActiveMqQueueConfigurator
 {

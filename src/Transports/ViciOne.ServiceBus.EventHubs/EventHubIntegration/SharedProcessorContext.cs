@@ -5,20 +5,16 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides a shared processor context implementation.
-/// </summary>
+/// <summary>Projects a shared Event Hubs processor context onto a caller-specific cancellation token.</summary>
 public class SharedProcessorContext :
     ProxyPipeContext,
     ProcessorContext
 {
     readonly ProcessorContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a proxy over a shared processor context.</summary>
+    /// <param name="context">The shared processor context.</param>
+    /// <param name="cancellationToken">The cancellation token exposed by this proxy.</param>
     public SharedProcessorContext(ProcessorContext context, CancellationToken cancellationToken)
         : base(context)
     {
@@ -26,30 +22,22 @@ public class SharedProcessorContext :
         CancellationToken = cancellationToken;
     }
 
-    /// <summary>
-    /// Gets the cancellation token value.
-    /// </summary>
+    /// <summary>Gets the cancellation token.</summary>
     public override CancellationToken CancellationToken { get; }
 
-    /// <summary>
-    /// Gets the log context value.
-    /// </summary>
+    /// <summary>Gets the underlying receive endpoint's logging context.</summary>
     public ILogContext LogContext => _context.LogContext;
 
-    /// <summary>
-    /// Gets client.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers partition callbacks and leases the shared processor client.</summary>
+    /// <param name="context">The callback target for partition initialization and closure.</param>
+    /// <returns>The shared processor client.</returns>
     public EventProcessorClient GetClient(ProcessorClientBuilderContext context)
     {
         return _context.GetClient(context);
     }
 
-    /// <summary>
-    /// Performs the release client operation.
-    /// </summary>
-    /// <param name="processorLockContext">The processor lock context value.</param>
+    /// <summary>Releases the processor client lease and its partition callback subscriptions.</summary>
+    /// <param name="processorLockContext">The callback target whose lease is being released.</param>
     public void ReleaseClient(ProcessorClientBuilderContext processorLockContext)
     {
         _context.ReleaseClient(processorLockContext);

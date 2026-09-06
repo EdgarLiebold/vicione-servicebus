@@ -2,44 +2,32 @@ using System;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Defines the contract for sql bus factory configurator.
-/// </summary>
+/// <summary>Configures sql bus factory.</summary>
 public interface ISqlBusFactoryConfigurator :
     IBusFactoryConfigurator<ISqlReceiveEndpointConfigurator>,
     ISqlQueueEndpointConfigurator
 {
-    /// <summary>
-    /// Gets the send topology value.
-    /// </summary>
+    /// <summary>Gets the send topology.</summary>
     new ISqlSendTopologyConfigurator SendTopology { get; }
 
-    /// <summary>
-    /// Gets the publish topology value.
-    /// </summary>
+    /// <summary>Gets the publish topology.</summary>
     new ISqlPublishTopologyConfigurator PublishTopology { get; }
 
-    /// <summary>
-    /// Configure the send topology of the message type
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="configureTopology"></param>
+    /// <summary>Configure the send topology of the message type.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configureTopology">The configure topology.</param>
     void Send<T>(Action<ISqlMessageSendTopologyConfigurator<T>> configureTopology)
         where T : class;
 
-    /// <summary>
-    /// Configure the send topology of the message type
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="configureTopology"></param>
+    /// <summary>Configure the send topology of the message type.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configureTopology">The configure topology.</param>
     void Publish<T>(Action<ISqlMessagePublishTopologyConfigurator<T>>? configureTopology = null)
         where T : class;
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     void Publish(Type messageType, Action<ISqlMessagePublishTopologyConfigurator>? configure = null);
 
     /// <summary>
@@ -47,13 +35,13 @@ public interface ISqlBusFactoryConfigurator :
     /// endpoint queue name needs to be changed, this will do it. Do NOT set it to the same name as a receive
     /// endpoint or you will screw things up.
     /// </summary>
+    /// <param name="value">The value to process.</param>
     void OverrideDefaultBusEndpointQueueName(string value);
 
     /// <summary>
     /// Configure a Host that can be connected. If only one host is specified, it is used as the default
     /// host for receive endpoints.
     /// </summary>
-    /// <param name="settings"></param>
-    /// <returns></returns>
+    /// <param name="settings">The settings that control the operation.</param>
     void Host(SqlHostSettings settings);
 }

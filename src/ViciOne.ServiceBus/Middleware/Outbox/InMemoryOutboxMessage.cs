@@ -5,95 +5,57 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 
-/// <summary>
-/// Provides an in memory outbox message implementation.
-/// </summary>
+/// <summary>Carries in memory outbox message data.</summary>
 public class InMemoryOutboxMessage :
     OutboxMessageContext
 {
     Headers? _headers;
     IReadOnlyDictionary<string, object>? _properties;
 
-    /// <summary>
-    /// When the message should be visible / ready to be delivered
-    /// </summary>
+    /// <summary>When the message should be visible / ready to be delivered.</summary>
     public DateTimeOffset? EnqueueTime { get; set; }
 
-    /// <summary>
-    /// Gets or sets the sent time value.
-    /// </summary>
+    /// <summary>Gets or sets the sent time.</summary>
     public DateTimeOffset SentTime { get; set; }
 
-    /// <summary>
-    /// Gets or sets the headers value.
-    /// </summary>
+    /// <summary>Gets or sets the headers.</summary>
     public string? Headers { get; set; }
 
-    /// <summary>
-    /// Transport-specific message properties (routing key, partition key, sessionId, etc.)
-    /// </summary>
+    /// <summary>Transport-specific message properties (routing key, partition key, sessionId, etc.).</summary>
     public string? Properties { get; set; }
 
-    /// <summary>
-    /// Gets or sets the sequence number value.
-    /// </summary>
+    /// <summary>Gets or sets the sequence number.</summary>
     public long SequenceNumber { get; set; }
 
-    /// <summary>
-    /// Gets or sets the message id value.
-    /// </summary>
+    /// <summary>Gets or sets the message id.</summary>
     public Guid MessageId { get; set; }
 
-    /// <summary>
-    /// Gets or sets the content type value.
-    /// </summary>
+    /// <summary>Gets or sets the content type.</summary>
     public string ContentType { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the message type value.
-    /// </summary>
+    /// <summary>Gets or sets the message type.</summary>
     public string MessageType { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the body value.
-    /// </summary>
+    /// <summary>Gets or sets the body.</summary>
     public string Body { get; set; } = null!;
 
-    /// <summary>
-    /// Gets or sets the conversation id value.
-    /// </summary>
+    /// <summary>Gets or sets the conversation id.</summary>
     public Guid? ConversationId { get; set; }
-    /// <summary>
-    /// Gets or sets the correlation id value.
-    /// </summary>
+    /// <summary>Gets or sets the correlation id.</summary>
     public Guid? CorrelationId { get; set; }
-    /// <summary>
-    /// Gets or sets the initiator id value.
-    /// </summary>
+    /// <summary>Gets or sets the initiator id.</summary>
     public Guid? InitiatorId { get; set; }
-    /// <summary>
-    /// Gets or sets the request id value.
-    /// </summary>
+    /// <summary>Gets or sets the request id.</summary>
     public Guid? RequestId { get; set; }
 
-    /// <summary>
-    /// Gets or sets the source address value.
-    /// </summary>
+    /// <summary>Gets or sets the source address.</summary>
     public Uri? SourceAddress { get; set; }
-    /// <summary>
-    /// Gets or sets the destination address value.
-    /// </summary>
+    /// <summary>Gets or sets the destination address.</summary>
     public Uri? DestinationAddress { get; set; }
-    /// <summary>
-    /// Gets or sets the response address value.
-    /// </summary>
+    /// <summary>Gets or sets the response address.</summary>
     public Uri? ResponseAddress { get; set; }
-    /// <summary>
-    /// Gets or sets the fault address value.
-    /// </summary>
+    /// <summary>Gets or sets the fault address.</summary>
     public Uri? FaultAddress { get; set; }
 
-    /// <summary>
-    /// Gets or sets the expiration time value.
-    /// </summary>
+    /// <summary>Gets or sets the expiration time.</summary>
     public DateTimeOffset? ExpirationTime { get; set; }
 
     Guid? MessageContext.MessageId => MessageId;
@@ -103,10 +65,8 @@ public class InMemoryOutboxMessage :
 
     IReadOnlyDictionary<string, object> OutboxMessageContext.Properties => _properties!;
 
-    /// <summary>
-    /// Performs the deserialize operation.
-    /// </summary>
-    /// <param name="deserializer">The deserializer value.</param>
+    /// <summary>Deserializes the supplied payload.</summary>
+    /// <param name="deserializer">The deserializer.</param>
     public void Deserialize(IObjectDeserializer deserializer)
     {
         _headers = DeserializerHeaders(deserializer);

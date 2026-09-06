@@ -11,9 +11,7 @@ namespace ViciOne.ServiceBus.Providers.Persistence;
 /// </summary>
 public interface IDurableSendConsumerCompletion
 {
-    /// <summary>
-    /// Gets the durable send id value.
-    /// </summary>
+    /// <summary>Gets the durable send id.</summary>
     DurableSendId DurableSendId { get; }
 
     /// <summary>
@@ -23,5 +21,6 @@ public interface IDurableSendConsumerCompletion
     /// overlapping retry/quarantine race for that generation without affecting a future re-admission.
     /// </summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the complete outcome.</returns>
     ValueTask<bool> CompleteAsync(CancellationToken cancellationToken = default);
 }

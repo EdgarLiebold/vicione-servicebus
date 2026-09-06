@@ -6,18 +6,14 @@ using ViciOne.ServiceBus.SqlTransport.Configuration;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
-/// <summary>
-/// Provides a sql server sql host settings implementation.
-/// </summary>
+/// <summary>Defines SQL Server connection and maintenance settings for a SQL transport host.</summary>
 public class SqlServerSqlHostSettings :
     ConfigurationSqlHostSettings
 {
     SqlConnectionStringBuilder? _builder;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
+    /// <summary>Initializes the settings from a SQL Server host address.</summary>
+    /// <param name="hostAddress">The SQL Server host address.</param>
     public SqlServerSqlHostSettings(Uri hostAddress)
         : base(hostAddress)
     {
@@ -27,19 +23,15 @@ public class SqlServerSqlHostSettings :
         InstanceName = address.InstanceName;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionString">The connection string value.</param>
+    /// <summary>Initializes the settings from a SQL Server connection string.</summary>
+    /// <param name="connectionString">The SQL Server connection string.</param>
     public SqlServerSqlHostSettings(string connectionString)
     {
         ConnectionString = connectionString;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes the settings from SQL transport options.</summary>
+    /// <param name="options">The SQL transport options.</param>
     public SqlServerSqlHostSettings(SqlTransportOptions options)
     {
         var builder = SqlServerSqlTransportConnection.CreateBuilder(options);
@@ -60,9 +52,7 @@ public class SqlServerSqlHostSettings :
         MaintenanceEnabled = !options.DisableMaintenance;
     }
 
-    /// <summary>
-    /// Gets or sets the connection string value.
-    /// </summary>
+    /// <summary>Sets the SQL Server connection string and updates the corresponding host settings.</summary>
     public string? ConnectionString
     {
         set
@@ -80,20 +70,16 @@ public class SqlServerSqlHostSettings :
         }
     }
 
-    /// <summary>
-    /// Creates connection context factory.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a SQL Server connection-context factory for the specified host configuration.</summary>
+    /// <param name="hostConfiguration">The host configuration used by new connection contexts.</param>
+    /// <returns>The SQL Server connection-context factory.</returns>
     public override ConnectionContextFactory CreateConnectionContextFactory(ISqlHostConfiguration hostConfiguration)
     {
         return new SqlServerConnectionContextFactory(hostConfiguration);
     }
 
-    /// <summary>
-    /// Gets connection string.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets a connection string assembled from the current SQL Server host settings.</summary>
+    /// <returns>The SQL Server connection string.</returns>
     public string GetConnectionString()
     {
         var builder = _builder ??= new SqlConnectionStringBuilder

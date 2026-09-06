@@ -7,18 +7,14 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides extension methods for async element list.
-/// </summary>
+/// <summary>Provides extension methods for async element list.</summary>
 public static class AsyncElementListExtensions
 {
-    /// <summary>
-    /// Performs the first observed operation.
-    /// </summary>
-    /// <typeparam name="TElement">The t element type.</typeparam>
-    /// <param name="elements">The elements value.</param>
+    /// <summary>Returns the first observed matching message.</summary>
+    /// <typeparam name="TElement">The element type.</typeparam>
+    /// <param name="elements">The elements.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the first observed outcome.</returns>
     public static async Task<TElement> FirstObservedAsync<TElement>(this IAsyncEnumerable<TElement> elements,
         CancellationToken cancellationToken = default)
         where TElement : class
@@ -29,13 +25,11 @@ public static class AsyncElementListExtensions
         throw new InvalidOperationException("Message List was empty, or timed out");
     }
 
-    /// <summary>
-    /// Performs the count observed operation.
-    /// </summary>
-    /// <typeparam name="TElement">The t element type.</typeparam>
-    /// <param name="elements">The elements value.</param>
+    /// <summary>Returns the number of observed matching messages.</summary>
+    /// <typeparam name="TElement">The element type.</typeparam>
+    /// <param name="elements">The elements.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the count observed outcome.</returns>
     public static async Task<int> CountObservedAsync<TElement>(this IAsyncEnumerable<TElement> elements, CancellationToken cancellationToken = default)
         where TElement : class
     {
@@ -46,13 +40,11 @@ public static class AsyncElementListExtensions
         return count;
     }
 
-    /// <summary>
-    /// Performs the count operation.
-    /// </summary>
-    /// <typeparam name="TElement">The t element type.</typeparam>
-    /// <param name="elements">The elements value.</param>
+    /// <summary>Returns the number of matching values.</summary>
+    /// <typeparam name="TElement">The element type.</typeparam>
+    /// <param name="elements">The elements.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The int produced by the operation.</returns>
     public static int Count<TElement>(this IAsyncElementList<TElement> elements, CancellationToken cancellationToken = default)
         where TElement : class, IAsyncListElement
     {
@@ -60,13 +52,11 @@ public static class AsyncElementListExtensions
     }
 
 
-    /// <summary>
-    /// Performs the first observed or default operation.
-    /// </summary>
-    /// <typeparam name="TElement">The t element type.</typeparam>
-    /// <param name="elements">The elements value.</param>
+    /// <summary>Returns the first observed matching message, or the default value.</summary>
+    /// <typeparam name="TElement">The element type.</typeparam>
+    /// <param name="elements">The elements.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the first observed or default outcome.</returns>
     public static async Task<TElement?> FirstObservedOrDefaultAsync<TElement>(this IAsyncEnumerable<TElement> elements,
         CancellationToken cancellationToken = default)
         where TElement : class
@@ -77,13 +67,11 @@ public static class AsyncElementListExtensions
         return default;
     }
 
-    /// <summary>
-    /// Performs the any observed operation.
-    /// </summary>
-    /// <typeparam name="TElement">The t element type.</typeparam>
-    /// <param name="elements">The elements value.</param>
+    /// <summary>Determines whether any matching message was observed.</summary>
+    /// <typeparam name="TElement">The element type.</typeparam>
+    /// <param name="elements">The elements.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the any observed outcome.</returns>
     public static async Task<bool> AnyObservedAsync<TElement>(this IAsyncEnumerable<TElement> elements,
         CancellationToken cancellationToken = default)
         where TElement : class
@@ -100,14 +88,12 @@ public static class AsyncElementListExtensions
         return false;
     }
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <typeparam name="TElement">The t element type.</typeparam>
-    /// <typeparam name="TResult">The t result type.</typeparam>
-    /// <param name="elements">The elements value.</param>
+    /// <summary>Selects the matching value.</summary>
+    /// <typeparam name="TElement">The element type.</typeparam>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
+    /// <param name="elements">The elements.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>An asynchronous sequence containing the selected value.</returns>
     public static async IAsyncEnumerable<TResult> SelectAsync<TElement, TResult>(this IAsyncEnumerable<TElement> elements,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
         where TElement : class
@@ -120,25 +106,21 @@ public static class AsyncElementListExtensions
         }
     }
 
-    /// <summary>
-    /// Deconstructs this value into its components.
-    /// </summary>
-    /// <param name="sent">The sent value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Deconstructs this value into its components.</summary>
+    /// <param name="sent">The sent.</param>
+    /// <param name="message">Receives the message produced by the operation.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public static void Deconstruct(this ISentMessage sent, out object message, out SendContext context)
     {
         context = sent.Context;
         message = sent.MessageObject;
     }
 
-    /// <summary>
-    /// Deconstructs this value into its components.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="sent">The sent value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Deconstructs this value into its components.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="sent">The sent.</param>
+    /// <param name="message">Receives the message produced by the operation.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public static void Deconstruct<TMessage>(this ISentMessage<TMessage> sent, out TMessage message, out SendContext context)
         where TMessage : class
     {

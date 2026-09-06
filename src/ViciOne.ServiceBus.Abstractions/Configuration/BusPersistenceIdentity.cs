@@ -6,12 +6,11 @@ namespace ViciOne.ServiceBus.Providers.Persistence;
 /// The one stable persistence namespace owned by a typed bus and shared by all persistent features.
 /// Applications configure it through the typed AddViciOneServiceBus overload; provider packages consume it here.
 /// </summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 public sealed class BusPersistenceIdentity<TBus>
     where TBus : class, IBus
 {
-    /// <summary>
-    /// Defines the maximum length value.
-    /// </summary>
+    /// <summary>Exposes the maximum length used by the containing type.</summary>
     public const int MaximumLength = 128;
 
     private readonly string? _value;
@@ -25,24 +24,18 @@ public sealed class BusPersistenceIdentity<TBus>
 
     internal static BusPersistenceIdentity<TBus> Unspecified { get; } = new(null);
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The newly created instance.</returns>
     public static BusPersistenceIdentity<TBus> Create(string value)
         => new(Validate(value));
 
-    /// <summary>
-    /// Gets the is specified value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether specified.</summary>
     public bool IsSpecified => _value is not null;
 
-    /// <summary>
-    /// Performs the require operation.
-    /// </summary>
-    /// <param name="feature">The feature value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Requires the selected capability.</summary>
+    /// <param name="feature">The feature.</param>
+    /// <returns>The string produced by the operation.</returns>
     public string Require(string feature)
     {
         if (_value is not null)

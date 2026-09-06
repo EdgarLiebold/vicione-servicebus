@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.MessageData;
 
-/// <summary>
-/// Provides an encrypted message data repository implementation.
-/// </summary>
+/// <summary>Stores and retrieves encrypted message data data.</summary>
 public class EncryptedMessageDataRepository :
     IMessageDataRepository
 {
@@ -16,9 +14,7 @@ public class EncryptedMessageDataRepository :
     readonly IEncryptionKeyProvider _keyProvider;
     readonly int _maximumObjectBytes;
 
-    /// <summary>
-    /// Provides encrypted stream support to ensure that message data is encrypted at rest.
-    /// </summary>
+    /// <summary>Provides encrypted stream support to ensure that message data is encrypted at rest.</summary>
     /// <param name="repository">The original message data repository where message data is stored.</param>
     /// <param name="keyProvider">The provider that selects current and historical encryption keys.</param>
     /// <param name="maximumObjectBytes">The hard upper bound for one plaintext message-data object.</param>
@@ -38,12 +34,10 @@ public class EncryptedMessageDataRepository :
         _maximumObjectBytes = maximumObjectBytes;
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Retrieves the requested value.</summary>
+    /// <param name="address">The address.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public async Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(address);
@@ -54,13 +48,11 @@ public class EncryptedMessageDataRepository :
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the put operation.
-    /// </summary>
-    /// <param name="stream">The stream value.</param>
-    /// <param name="timeToLive">The time to live value.</param>
+    /// <summary>Writes the supplied value.</summary>
+    /// <param name="stream">The stream.</param>
+    /// <param name="timeToLive">The time to live.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the put outcome.</returns>
     public async Task<Uri> PutAsync(Stream stream, TimeSpan? timeToLive = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(stream);

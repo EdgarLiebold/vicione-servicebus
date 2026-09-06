@@ -3,22 +3,18 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 
-/// <summary>
-/// Converts a <see cref="Task{TResult}" /> to {T} by awaiting the result
-/// </summary>
-/// <typeparam name="TResult"></typeparam>
+/// <summary>Converts a <see cref="Task{TResult}" /> to {T} by awaiting the result.</summary>
+/// <typeparam name="TResult">The result produced by the operation.</typeparam>
 public class TaskPropertyConverter<TResult> :
     IPropertyConverter<TResult, Task<TResult?>>,
     IPropertyConverter<Task<TResult?>, TResult>
 {
-    /// <summary>
-    /// Performs the convert operation.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="input">The input value.</param>
+    /// <summary>Converts the supplied value.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="input">The input.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the converted value.</returns>
     public Task<Task<TResult?>?> ConvertAsync<TMessage>(InitializeContext<TMessage> context, TResult? input,
         CancellationToken cancellationToken = default)
         where TMessage : class
@@ -37,34 +33,28 @@ public class TaskPropertyConverter<TResult> :
 }
 
 
-/// <summary>
-/// Converts a <see cref="Task{T}" /> to {T} by awaiting the result
-/// </summary>
-/// <typeparam name="TResult"></typeparam>
-/// <typeparam name="TInput"></typeparam>
+/// <summary>Converts a <see cref="Task{T}" /> to {T} by awaiting the result.</summary>
+/// <typeparam name="TResult">The result produced by the operation.</typeparam>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class TaskPropertyConverter<TResult, TInput> :
     IPropertyConverter<TResult, Task<TInput?>>,
     IPropertyConverter<Task<TResult?>, TInput>
 {
     readonly IPropertyConverter<TResult, TInput> _converter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="converter">The converter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="converter">The converter.</param>
     public TaskPropertyConverter(IPropertyConverter<TResult, TInput> converter)
     {
         _converter = converter;
     }
 
-    /// <summary>
-    /// Performs the convert operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="input">The input value.</param>
+    /// <summary>Converts the supplied value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="input">The input.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the converted value.</returns>
     public Task<Task<TResult?>?> ConvertAsync<T>(InitializeContext<T> context, TInput? input, CancellationToken cancellationToken = default)
         where T : class
     {

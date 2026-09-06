@@ -7,20 +7,16 @@ using ViciOne.ServiceBus.RabbitMq.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a shared connection context implementation.
-/// </summary>
+/// <summary>Delegates connection operations to a shared connection while combining the connection lease and caller cancellation tokens.</summary>
 public class SharedConnectionContext :
     ProxyPipeContext,
     ConnectionContext
 {
     readonly ConnectionContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a cancellable view over an existing connection context.</summary>
+    /// <param name="context">The underlying connection context.</param>
+    /// <param name="cancellationToken">The token that ends this shared-connection lease.</param>
     public SharedConnectionContext(ConnectionContext context, CancellationToken cancellationToken)
         : base(context)
     {
@@ -28,55 +24,33 @@ public class SharedConnectionContext :
         CancellationToken = cancellationToken;
     }
 
-    /// <summary>
-    /// Gets the cancellation token value.
-    /// </summary>
+    /// <summary>Gets the token that ends this shared-connection lease.</summary>
     public override CancellationToken CancellationToken { get; }
 
-    /// <summary>
-    /// Gets the connection value.
-    /// </summary>
+    /// <summary>Gets the underlying RabbitMQ connection.</summary>
     public IConnection Connection => _context.Connection;
-    /// <summary>
-    /// Gets the description value.
-    /// </summary>
+    /// <summary>Gets the human-readable connection description.</summary>
     public string Description => _context.Description;
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the RabbitMQ host address.</summary>
     public Uri HostAddress => _context.HostAddress;
-    /// <summary>
-    /// Gets the publisher confirmation value.
-    /// </summary>
+    /// <summary>Gets whether channels created by this connection use publisher confirmations.</summary>
     public bool PublisherConfirmation => _context.PublisherConfirmation;
-    /// <summary>
-    /// Gets the batch settings value.
-    /// </summary>
+    /// <summary>Gets the publish-batching settings.</summary>
     public BatchSettings BatchSettings => _context.BatchSettings;
-    /// <summary>
-    /// Gets the continuation timeout value.
-    /// </summary>
+    /// <summary>Gets the timeout used for RabbitMQ client continuations.</summary>
     public TimeSpan ContinuationTimeout => _context.ContinuationTimeout;
 
-    /// <summary>
-    /// Gets the stop timeout value.
-    /// </summary>
+    /// <summary>Gets the time allowed for transport shutdown.</summary>
     public TimeSpan StopTimeout => _context.StopTimeout;
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the RabbitMQ bus topology.</summary>
     public IRabbitMqBusTopology Topology => _context.Topology;
-    /// <summary>
-    /// Gets the topology entity cache value.
-    /// </summary>
+    /// <summary>Gets the cache that coalesces topology declarations on this connection.</summary>
     public RabbitMqTopologyEntityCache TopologyEntityCache => _context.TopologyEntityCache;
 
-    /// <summary>
-    /// Creates channel.
-    /// </summary>
-    /// <param name="concurrentMessageLimit">The concurrent message limit value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a RabbitMQ channel through the underlying connection context.</summary>
+    /// <param name="concurrentMessageLimit">The optional publisher-confirm concurrency limit.</param>
+    /// <param name="cancellationToken">The token that cancels channel creation in addition to the shared-connection token.</param>
+    /// <returns>The created RabbitMQ channel.</returns>
     public async Task<IChannel> CreateChannelAsync(ushort? concurrentMessageLimit, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
@@ -84,13 +58,11 @@ public class SharedConnectionContext :
         return await _context.CreateChannelAsync(concurrentMessageLimit, tokenSource.Token).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Creates channel context.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a supervised channel context through the underlying connection context.</summary>
+    /// <param name="agent">The agent that owns the channel context lifetime.</param>
+    /// <param name="concurrentMessageLimit">The optional publisher-confirm concurrency limit.</param>
+    /// <param name="cancellationToken">The token that cancels channel creation in addition to the shared-connection token.</param>
+    /// <returns>The created channel context.</returns>
     public async Task<ChannelContext> CreateChannelContextAsync(IAgent agent, ushort? concurrentMessageLimit, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);

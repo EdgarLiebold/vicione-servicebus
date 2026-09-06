@@ -2,16 +2,12 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AzureStorage.MessageData;
 
-/// <summary>
-/// Provides a new id blob name generator implementation.
-/// </summary>
+/// <summary>Generates compact blob names from sequential <see cref="NewId"/> values.</summary>
 public class NewIdBlobNameGenerator :
     IBlobNameGenerator
 {
-    /// <summary>
-    /// Performs the generate blob name operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Generates the next sequential message-data blob name.</summary>
+    /// <returns>The formatted bytes of a newly generated sequential identifier.</returns>
     public string GenerateBlobName()
     {
         return FormatUtil.Formatter.Format(NewId.Next().ToSequentialGuid().ToByteArray());

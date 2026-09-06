@@ -2,40 +2,28 @@ using System;
 
 namespace ViciOne.ServiceBus.Events;
 
-/// <summary>
-/// Provides a receive endpoint completed event implementation.
-/// </summary>
+/// <summary>Carries the receive endpoint completed event data.</summary>
 public class ReceiveEndpointCompletedEvent :
     ReceiveEndpointCompleted
 {
     readonly ReceiveTransportCompleted _completed;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="completed">The completed value.</param>
-    /// <param name="receiveEndpoint">The receive endpoint value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="completed">The completed.</param>
+    /// <param name="receiveEndpoint">The receive endpoint.</param>
     public ReceiveEndpointCompletedEvent(ReceiveTransportCompleted completed, IReceiveEndpoint receiveEndpoint)
     {
         _completed = completed;
         ReceiveEndpoint = receiveEndpoint;
     }
 
-    /// <summary>
-    /// Gets the input address value.
-    /// </summary>
+    /// <summary>Gets the input address.</summary>
     public Uri InputAddress => _completed.InputAddress;
-    /// <summary>
-    /// Gets the delivery count value.
-    /// </summary>
+    /// <summary>Gets the delivery count.</summary>
     public long DeliveryCount => _completed.DeliveryCount;
-    /// <summary>
-    /// Gets the concurrent delivery count value.
-    /// </summary>
+    /// <summary>Gets the concurrent delivery count.</summary>
     public long ConcurrentDeliveryCount => _completed.ConcurrentDeliveryCount;
 
-    /// <summary>
-    /// Gets the receive endpoint value.
-    /// </summary>
+    /// <summary>Gets the receive endpoint.</summary>
     public IReceiveEndpoint ReceiveEndpoint { get; }
 }

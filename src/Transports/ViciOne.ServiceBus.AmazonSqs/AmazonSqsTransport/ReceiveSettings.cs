@@ -2,66 +2,44 @@ using System;
 using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
-/// <summary>
-/// Specify the receive settings for a receive transport
-/// </summary>
+/// <summary>Defines Amazon SQS queue, polling, concurrency, ordering, and visibility settings for a receive transport.</summary>
 public interface ReceiveSettings :
     EntitySettings
 {
-    /// <summary>
-    /// The number of unacknowledged messages to allow to be processed concurrently
-    /// </summary>
+    /// <summary>Gets the target number of messages prefetched for processing.</summary>
     int PrefetchCount { get; }
 
-    /// <summary>
-    /// Gets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets the maximum number of messages processed concurrently.</summary>
     int ConcurrentMessageLimit { get; }
 
-    /// <summary>
-    /// Gets the concurrent delivery limit value.
-    /// </summary>
+    /// <summary>Gets the maximum number of concurrent deliveries within an ordered message group.</summary>
     int ConcurrentDeliveryLimit { get; }
 
-    /// <summary>
-    /// Gets the wait time seconds value.
-    /// </summary>
+    /// <summary>Gets the Amazon SQS long-poll wait time, in seconds.</summary>
     int WaitTimeSeconds { get; }
 
     /// <summary>
-    /// If True, and a queue name is specified, if the queue exists and has messages, they are purged at startup
-    /// If the connection is reset, messages are not purged until the service is reset
+    /// Gets whether available messages are purged once when this receive endpoint starts.
+    /// Reconnecting the same filter instance does not purge the queue again.
     /// </summary>
     bool PurgeOnStartup { get; }
 
-    /// <summary>
-    /// Additional <see href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_SetQueueAttributes.html">attributes</see> for the queue.
-    /// </summary>
+    /// <summary>Gets additional <see href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_SetQueueAttributes.html">Amazon SQS queue attributes</see>.</summary>
     IDictionary<string, object> QueueAttributes { get; }
 
-    /// <summary>
-    /// Additional <see href="https://docs.aws.amazon.com/sns/latest/api/API_SetSubscriptionAttributes.html">attributes</see> for the queue's subscription.
-    /// </summary>
+    /// <summary>Gets additional <see href="https://docs.aws.amazon.com/sns/latest/api/API_SetSubscriptionAttributes.html">Amazon SNS attributes</see> for subscriptions targeting the queue.</summary>
     IDictionary<string, object> QueueSubscriptionAttributes { get; }
 
-    /// <summary>
-    /// If the queue is ordered, enables grouping by MessageGroupId and process messages in ordered way by SequenceNumber
-    /// </summary>
+    /// <summary>Gets whether FIFO messages are partitioned by <c>MessageGroupId</c> and ordered by <c>SequenceNumber</c>.</summary>
     bool IsOrdered { get; }
 
-    /// <summary>
-    /// Gets or sets the visibility timeout value.
-    /// </summary>
+    /// <summary>Gets or sets the queue visibility timeout, in seconds.</summary>
     int VisibilityTimeout { get; set; }
 
-    /// <summary>
-    /// Gets or sets the max visibility timeout value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum total duration for automatic message-visibility renewal.</summary>
     TimeSpan MaxVisibilityTimeout { get; set; }
 
-    /// <summary>
-    /// The number of seconds to wait before allowing SQS to redeliver the message when faults are returned back to SQS.
-    /// </summary>
+    /// <summary>Gets or sets the visibility delay, in seconds, applied after message processing faults.</summary>
     int RedeliverVisibilityTimeout { get; set; }
 
     /// <summary>
@@ -71,13 +49,11 @@ public interface ReceiveSettings :
     /// </summary>
     int MaxVisibilityTimeoutRenewal { get; set; }
 
-    /// <summary>
-    /// Gets or sets the queue url value.
-    /// </summary>
+    /// <summary>Gets or sets the Amazon SQS queue URL resolved when the receiver starts.</summary>
     string? QueueUrl { get; set; }
 
-    /// <summary>
-    /// Get the input address for the transport on the specified host
-    /// </summary>
+    /// <summary>Formats the receive endpoint address relative to an Amazon SQS host.</summary>
+    /// <param name="hostAddress">The Amazon SQS host address.</param>
+    /// <returns>The queue input address.</returns>
     Uri GetInputAddress(Uri hostAddress);
 }

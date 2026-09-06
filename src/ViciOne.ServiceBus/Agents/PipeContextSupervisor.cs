@@ -7,10 +7,8 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>
-/// Maintains a cached context, which is created upon first use, and recreated whenever a fault is propagated to the usage.
-/// </summary>
-/// <typeparam name="TContext"></typeparam>
+/// <summary>Maintains a cached context, which is created upon first use, and recreated whenever a fault is propagated to the usage.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class PipeContextSupervisor<TContext> :
     Supervisor,
     ISupervisor<TContext>
@@ -21,10 +19,8 @@ public class PipeContextSupervisor<TContext> :
     readonly object _contextLock = new object();
     PipeContextHandle<TContext>? _context;
 
-    /// <summary>
-    /// Create the cache
-    /// </summary>
-    /// <param name="contextFactory">Factory used to create the underlying and active contexts</param>
+    /// <summary>Create the cache.</summary>
+    /// <param name="contextFactory">Factory used to create the underlying and active contexts.</param>
     public PipeContextSupervisor(IPipeContextFactory<TContext> contextFactory)
     {
         _contextFactory = contextFactory;
@@ -32,9 +28,7 @@ public class PipeContextSupervisor<TContext> :
         _activeSupervisor = new Supervisor();
     }
 
-    /// <summary>
-    /// Gets the has context value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether this instance has context.</summary>
     protected bool HasContext
     {
         get
@@ -44,12 +38,10 @@ public class PipeContextSupervisor<TContext> :
         }
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(IPipe<TContext> pipe, CancellationToken cancellationToken)
     {
         IActivePipeContextAgent<TContext> activeContext = CreateActiveContext(cancellationToken);
@@ -104,10 +96,8 @@ public class PipeContextSupervisor<TContext> :
     }
 
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("source");
@@ -118,11 +108,9 @@ public class PipeContextSupervisor<TContext> :
         });
     }
 
-    /// <summary>
-    /// Stops supervisor.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Stops supervisor.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected override async Task StopSupervisorAsync(StopSupervisorContext context)
     {
         SetCompleted(ActiveAndActualAgentsCompletedAsync(context));

@@ -4,18 +4,14 @@ using System.Data;
 
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
-/// <summary>
-/// Provides a configuration sql host settings implementation.
-/// </summary>
+/// <summary>Defines settings for configuration sql host.</summary>
 public abstract class ConfigurationSqlHostSettings :
     SqlHostSettings
 {
     readonly Lazy<Uri> _hostAddress;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="address">The address.</param>
     protected ConfigurationSqlHostSettings(Uri address)
         : this()
     {
@@ -38,9 +34,7 @@ public abstract class ConfigurationSqlHostSettings :
         Area = hostAddress.Area;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     protected ConfigurationSqlHostSettings()
     {
         VirtualHost = "/";
@@ -57,92 +51,54 @@ public abstract class ConfigurationSqlHostSettings :
         MaintenanceBatchSize = 10000;
     }
 
-    /// <summary>
-    /// Gets or sets the host value.
-    /// </summary>
+    /// <summary>Gets or sets the host.</summary>
     public string? Host { get; set; }
-    /// <summary>
-    /// Gets or sets the instance name value.
-    /// </summary>
+    /// <summary>Gets or sets the instance name.</summary>
     public string? InstanceName { get; set; }
-    /// <summary>
-    /// Gets or sets the port value.
-    /// </summary>
+    /// <summary>Gets or sets the port.</summary>
     public int? Port { get; set; }
-    /// <summary>
-    /// Gets or sets the database value.
-    /// </summary>
+    /// <summary>Gets or sets the database.</summary>
     public string? Database { get; set; }
-    /// <summary>
-    /// Gets or sets the schema value.
-    /// </summary>
+    /// <summary>Gets or sets the schema.</summary>
     public string? Schema { get; set; }
-    /// <summary>
-    /// Gets or sets the username value.
-    /// </summary>
+    /// <summary>Gets or sets the username.</summary>
     public string? Username { get; set; }
-    /// <summary>
-    /// Gets or sets the password value.
-    /// </summary>
+    /// <summary>Gets or sets the password.</summary>
     public string? Password { get; set; }
 
-    /// <summary>
-    /// Gets or sets the isolation level value.
-    /// </summary>
+    /// <summary>Gets or sets the isolation level.</summary>
     public IsolationLevel IsolationLevel { get; set; }
 
-    /// <summary>
-    /// Gets or sets the connection limit value.
-    /// </summary>
+    /// <summary>Gets or sets the connection limit.</summary>
     public int ConnectionLimit { get; set; }
 
-    /// <summary>
-    /// Gets or sets the maintenance enabled value.
-    /// </summary>
+    /// <summary>Gets or sets the maintenance enabled.</summary>
     public bool MaintenanceEnabled { get; set; }
-    /// <summary>
-    /// Gets or sets the maintenance interval value.
-    /// </summary>
+    /// <summary>Gets or sets the maintenance interval.</summary>
     public TimeSpan MaintenanceInterval { get; set; }
-    /// <summary>
-    /// Gets or sets the queue cleanup interval value.
-    /// </summary>
+    /// <summary>Gets or sets the queue cleanup interval.</summary>
     public TimeSpan QueueCleanupInterval { get; set; }
-    /// <summary>
-    /// Gets or sets the maintenance batch size value.
-    /// </summary>
+    /// <summary>Gets or sets the maintenance batch size.</summary>
     public int MaintenanceBatchSize { get; set; }
 
-    /// <summary>
-    /// Gets or sets the connection tag value.
-    /// </summary>
+    /// <summary>Gets or sets the connection tag.</summary>
     public string? ConnectionTag { get; set; }
 
-    /// <summary>
-    /// Gets or sets the virtual host value.
-    /// </summary>
+    /// <summary>Gets or sets the virtual host.</summary>
     public string? VirtualHost { get; set; }
-    /// <summary>
-    /// Gets or sets the area value.
-    /// </summary>
+    /// <summary>Gets or sets the area.</summary>
     public string? Area { get; set; }
 
-    /// <summary>
-    /// Creates connection context factory.
-    /// </summary>
-    /// <param name="configuration">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates connection context factory.</summary>
+    /// <param name="configuration">The callback used to configure the component.</param>
+    /// <returns>The created connection context factory.</returns>
     public abstract ConnectionContextFactory CreateConnectionContextFactory(ISqlHostConfiguration configuration);
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the host address.</summary>
     public Uri HostAddress => _hostAddress.Value;
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public virtual IEnumerable<ValidationResult> Validate()
     {
         if (string.IsNullOrWhiteSpace(Host))

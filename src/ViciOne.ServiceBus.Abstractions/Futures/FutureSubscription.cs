@@ -3,41 +3,29 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Futures;
 
-/// <summary>
-/// Provides a future subscription implementation.
-/// </summary>
+/// <summary>Represents a subscription to future.</summary>
 public class FutureSubscription :
     IEquatable<FutureSubscription>
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <param name="requestId">The request id value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="address">The address.</param>
+    /// <param name="requestId">The request id.</param>
     public FutureSubscription(Uri address, Guid? requestId = default)
     {
         RequestId = requestId;
         Address = address;
     }
 
-    /// <summary>
-    /// Gets the comparer value.
-    /// </summary>
+    /// <summary>Gets the comparer.</summary>
     public static IEqualityComparer<FutureSubscription> Comparer { get; } = new EqualityComparer();
 
-    /// <summary>
-    /// Gets the request id value.
-    /// </summary>
+    /// <summary>Gets the request id.</summary>
     public Guid? RequestId { get; }
-    /// <summary>
-    /// Gets the address value.
-    /// </summary>
+    /// <summary>Gets the address.</summary>
     public Uri Address { get; }
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="other">The other value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="other">The other.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Equals(FutureSubscription? other)
     {
@@ -48,10 +36,8 @@ public class FutureSubscription :
         return Nullable.Equals(RequestId, other.RequestId) && Equals(Address, other.Address);
     }
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="obj">The obj value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="obj">The obj.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool Equals(object? obj)
     {
@@ -64,10 +50,8 @@ public class FutureSubscription :
         return Equals((FutureSubscription)obj);
     }
 
-    /// <summary>
-    /// Gets hash code.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets hash code.</summary>
+    /// <returns>The hash code for this instance.</returns>
     public override int GetHashCode()
     {
         unchecked
@@ -76,22 +60,18 @@ public class FutureSubscription :
         }
     }
 
-    /// <summary>
-    /// Applies the <c>==</c> operator.
-    /// </summary>
-    /// <param name="left">The left value.</param>
-    /// <param name="right">The right value.</param>
+    /// <summary>Applies the <c>==</c> operator.</summary>
+    /// <param name="left">The left.</param>
+    /// <param name="right">The right.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator ==(FutureSubscription? left, FutureSubscription? right)
     {
         return Equals(left, right);
     }
 
-    /// <summary>
-    /// Applies the <c>!=</c> operator.
-    /// </summary>
-    /// <param name="left">The left value.</param>
-    /// <param name="right">The right value.</param>
+    /// <summary>Applies the <c>!=</c> operator.</summary>
+    /// <param name="left">The left.</param>
+    /// <param name="right">The right.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator !=(FutureSubscription? left, FutureSubscription? right)
     {

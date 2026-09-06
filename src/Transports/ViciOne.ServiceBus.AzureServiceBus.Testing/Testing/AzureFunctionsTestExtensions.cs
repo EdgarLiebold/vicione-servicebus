@@ -10,16 +10,12 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides extension methods for azure functions test.
-/// </summary>
+/// <summary>Provides Azure Functions test-harness integration.</summary>
 public static class AzureFunctionsTestExtensions
 {
-    /// <summary>
-    /// Adds azure functions test components to the configuration.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers the bus handle and message receiver used to invoke consumers in Azure Functions tests.</summary>
+    /// <param name="configurator">The bus registration configurator to update.</param>
+    /// <returns>The same bus registration configurator.</returns>
     public static IBusRegistrationConfigurator AddAzureFunctionsTestComponents(this IBusRegistrationConfigurator configurator)
     {
         configurator.Services.TryAddSingleton<IAsyncBusHandle, AsyncBusHandle>();
@@ -28,13 +24,12 @@ public static class AzureFunctionsTestExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Handle the Azure Service Bus message using the specified consumer
-    /// </summary>
-    /// <param name="harness"></param>
-    /// <param name="message"></param>
-    /// <typeparam name="TConsumer"></typeparam>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Serializes a message as an Azure Service Bus delivery and dispatches it to the specified consumer.</summary>
+    /// <typeparam name="TConsumer">The consumer type to invoke.</typeparam>
+    /// <param name="harness">The test harness whose service scope resolves the receiver.</param>
+    /// <param name="message">The message instance to serialize and dispatch.</param>
+    /// <param name="cancellationToken">The token that cancels dispatch.</param>
+    /// <returns>A task that completes when the receiver finishes handling the message.</returns>
     public static Task HandleConsumerAsync<TConsumer>(this ITestHarness harness, object message, CancellationToken cancellationToken = default)
         where TConsumer : class, IConsumer
     {

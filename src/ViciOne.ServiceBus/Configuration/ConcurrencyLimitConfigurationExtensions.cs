@@ -5,19 +5,17 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for concurrency limit configuration.
-/// </summary>
+/// <summary>Provides extension methods for concurrency limit configuration.</summary>
 public static class ConcurrencyLimitConfigurationExtensions
 {
     /// <summary>
     /// Specify a concurrency limit for tasks executing through the filter. No more than the specified
     /// number of tasks will be allowed to execute concurrently.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="concurrencyLimit">The concurrency limit for the subsequent filters in the pipeline</param>
-    /// <param name="router">A control pipe to support runtime adjustment</param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="concurrencyLimit">The concurrency limit for the subsequent filters in the pipeline.</param>
+    /// <param name="router">A control pipe to support runtime adjustment.</param>
     public static void UseConcurrencyLimit<T>(this IPipeConfigurator<T> configurator, int concurrencyLimit, IPipeRouter? router = null)
         where T : class, PipeContext
     {
@@ -29,11 +27,9 @@ public static class ConcurrencyLimitConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Limits the number of concurrent messages consumed on the receive endpoint, regardless of message type.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="concurrentMessageLimit">The concurrency limit for the subsequent filters in the pipeline</param>
+    /// <summary>Limits the number of concurrent messages consumed on the receive endpoint, regardless of message type.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="concurrentMessageLimit">The concurrency limit for the subsequent filters in the pipeline.</param>
     public static void UseConcurrencyLimit(this IConsumePipeConfigurator configurator, int concurrentMessageLimit)
     {
         if (configurator == null)
@@ -42,13 +38,11 @@ public static class ConcurrencyLimitConfigurationExtensions
         var observer = new ConcurrencyLimitConfigurationObserver(configurator, concurrentMessageLimit);
     }
 
-    /// <summary>
-    /// Limits the number of concurrent messages consumed on the receive endpoint, regardless of message type.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="concurrentMessageLimit">The concurrency limit for the subsequent filters in the pipeline</param>
-    /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment</param>
-    /// <param name="id">An identifier for the concurrency limit to allow selective adjustment</param>
+    /// <summary>Limits the number of concurrent messages consumed on the receive endpoint, regardless of message type.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="concurrentMessageLimit">The concurrency limit for the subsequent filters in the pipeline.</param>
+    /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment.</param>
+    /// <param name="id">An identifier for the concurrency limit to allow selective adjustment.</param>
     public static void UseConcurrencyLimit(this IConsumePipeConfigurator configurator, int concurrentMessageLimit,
         IReceiveEndpointConfigurator managementEndpointConfigurator, string? id = default)
     {

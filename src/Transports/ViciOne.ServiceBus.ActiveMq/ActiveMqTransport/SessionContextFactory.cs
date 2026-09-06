@@ -6,28 +6,22 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides a session context factory implementation.
-/// </summary>
+/// <summary>Creates and monitors Apache NMS session contexts on supervised connections.</summary>
 public class SessionContextFactory :
     IPipeContextFactory<SessionContext>
 {
     readonly IConnectionContextSupervisor _connectionContextSupervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionContextSupervisor">The connection context supervisor value.</param>
+    /// <summary>Creates a session-context factory for a connection supervisor.</summary>
+    /// <param name="connectionContextSupervisor">The parent connection supervisor.</param>
     public SessionContextFactory(IConnectionContextSupervisor connectionContextSupervisor)
     {
         _connectionContextSupervisor = connectionContextSupervisor;
     }
 
-    /// <summary>
-    /// Creates context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a supervised session-context agent.</summary>
+    /// <param name="supervisor">The supervisor that owns the agent.</param>
+    /// <returns>The asynchronous session-context agent.</returns>
     public IPipeContextAgent<SessionContext> CreateContext(ISupervisor supervisor)
     {
         IAsyncPipeContextAgent<SessionContext> asyncContext = supervisor.AddAsyncContext<SessionContext>();
@@ -37,13 +31,11 @@ public class SessionContextFactory :
         return asyncContext;
     }
 
-    /// <summary>
-    /// Creates active context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an operation-scoped proxy over a supervised session context.</summary>
+    /// <param name="supervisor">The supervisor that owns the active context.</param>
+    /// <param name="context">The underlying session-context handle.</param>
+    /// <param name="cancellationToken">The token associated with the operation scope.</param>
+    /// <returns>The active session-context agent.</returns>
     public IActivePipeContextAgent<SessionContext> CreateActiveContext(ISupervisor supervisor,
         PipeContextHandle<SessionContext> context, CancellationToken cancellationToken)
     {

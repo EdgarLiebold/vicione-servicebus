@@ -2,68 +2,49 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a pipe configurator implementation.
-/// </summary>
 public partial class PipeConfigurator<TContext>
     where TContext : class, PipeContext
 {
-    /// <summary>
-    /// Provides a specification pipe builder implementation.
-    /// </summary>
+    /// <summary>Builds specification pipe components.</summary>
     public class SpecificationPipeBuilder :
         ISpecificationPipeBuilder<TContext>
     {
         readonly List<IFilter<TContext>> _filters;
 
-        /// <summary>
-        /// Initializes a new instance of the containing type.
-        /// </summary>
+        /// <summary>Initializes a new instance.</summary>
         public SpecificationPipeBuilder()
         {
             _filters = new List<IFilter<TContext>>(16);
         }
 
-        /// <summary>
-        /// Adds filter to the configuration.
-        /// </summary>
-        /// <param name="filter">The filter value.</param>
+        /// <summary>Adds filter to the configuration.</summary>
+        /// <param name="filter">The filter to add to the pipeline.</param>
         public void AddFilter(IFilter<TContext> filter)
         {
             _filters.Add(filter);
         }
 
-        /// <summary>
-        /// Gets the is delegated value.
-        /// </summary>
+        /// <summary>Gets a value indicating whether delegated.</summary>
         public bool IsDelegated => false;
-        /// <summary>
-        /// Gets the is implemented value.
-        /// </summary>
+        /// <summary>Gets a value indicating whether implemented.</summary>
         public bool IsImplemented => false;
 
-        /// <summary>
-        /// Creates delegated builder.
-        /// </summary>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Creates delegated builder.</summary>
+        /// <returns>The created delegated builder.</returns>
         public ISpecificationPipeBuilder<TContext> CreateDelegatedBuilder()
         {
             return new ChildSpecificationPipeBuilder(this, IsImplemented, true);
         }
 
-        /// <summary>
-        /// Creates implemented builder.
-        /// </summary>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Creates implemented builder.</summary>
+        /// <returns>The created implemented builder.</returns>
         public ISpecificationPipeBuilder<TContext> CreateImplementedBuilder()
         {
             return new ChildSpecificationPipeBuilder(this, true, IsDelegated);
         }
 
-        /// <summary>
-        /// Performs the build operation.
-        /// </summary>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Builds the configured component.</summary>
+        /// <returns>The configured component.</returns>
         public IPipe<TContext> Build()
         {
             if (_filters.Count == 0)
@@ -77,11 +58,9 @@ public partial class PipeConfigurator<TContext>
             return current;
         }
 
-        /// <summary>
-        /// Performs the build operation.
-        /// </summary>
-        /// <param name="lastPipe">The last pipe value.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Builds the configured component.</summary>
+        /// <param name="lastPipe">The last pipe.</param>
+        /// <returns>The configured component.</returns>
         public IPipe<TContext> Build(IPipe<TContext> lastPipe)
         {
             if (_filters.Count == 0)

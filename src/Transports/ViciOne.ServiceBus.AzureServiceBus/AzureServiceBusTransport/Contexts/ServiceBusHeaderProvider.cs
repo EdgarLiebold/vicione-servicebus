@@ -7,27 +7,21 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus header provider implementation.
-/// </summary>
+/// <summary>Projects Azure Service Bus system and application properties as transport headers.</summary>
 public class ServiceBusHeaderProvider :
     IHeaderProvider
 {
     readonly ServiceBusReceivedMessage _message;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Initializes the provider for a received Azure Service Bus message.</summary>
+    /// <param name="message">The received message whose headers are exposed.</param>
     public ServiceBusHeaderProvider(ServiceBusReceivedMessage message)
     {
         _message = message;
     }
 
-    /// <summary>
-    /// Gets all.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Enumerates non-empty message identity, correlation, content-type, and application properties.</summary>
+    /// <returns>The transport header sequence.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
         if (!string.IsNullOrWhiteSpace(_message.MessageId))
@@ -44,12 +38,10 @@ public class ServiceBusHeaderProvider :
         }
     }
 
-    /// <summary>
-    /// Attempts to get header.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Gets an application or mapped Azure Service Bus system property by header name.</summary>
+    /// <param name="key">The case-insensitive transport header name.</param>
+    /// <param name="value">The header value when present.</param>
+    /// <returns><see langword="true"/> when a non-null mapped value is available.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         if (_message.ApplicationProperties != null)

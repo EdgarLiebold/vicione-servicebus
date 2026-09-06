@@ -3,17 +3,13 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for transaction configurator.
-/// </summary>
+/// <summary>Provides extension methods for transaction configurator.</summary>
 public static class TransactionConfiguratorExtensions
 {
-    /// <summary>
-    /// Encapsulate the pipe behavior in a transaction
-    /// </summary>
-    /// <typeparam name="T">The pipe context type</typeparam>
-    /// <param name="configurator">The pipe configurator</param>
-    /// <param name="configure">Configure the transaction pipe</param>
+    /// <summary>Encapsulate the pipe behavior in a transaction.</summary>
+    /// <typeparam name="T">The pipe context type.</typeparam>
+    /// <param name="configurator">The pipe configurator.</param>
+    /// <param name="configure">Configure the transaction pipe.</param>
     public static void UseTransaction<T>(this IPipeConfigurator<T> configurator, Action<ITransactionConfigurator>? configure = null)
         where T : class, PipeContext
     {

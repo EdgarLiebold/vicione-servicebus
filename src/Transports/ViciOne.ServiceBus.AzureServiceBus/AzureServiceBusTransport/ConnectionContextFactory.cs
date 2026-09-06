@@ -10,18 +10,14 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a connection context factory implementation.
-/// </summary>
+/// <summary>Creates Azure Service Bus messaging and administration clients for a configured namespace.</summary>
 public class ConnectionContextFactory :
     IPipeContextFactory<ConnectionContext>
 {
     readonly IServiceBusHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <summary>Initializes the factory from the resolved namespace configuration.</summary>
+    /// <param name="hostConfiguration">The host configuration containing client, credential, and retry settings.</param>
     public ConnectionContextFactory(IServiceBusHostConfiguration hostConfiguration)
     {
         _hostConfiguration = hostConfiguration;

@@ -17,11 +17,9 @@ namespace ViciOne.ServiceBus.Configuration;
 /// </summary>
 public static class RetryConfigurationExtensions
 {
-    /// <summary>
-    /// Configures message retry for the current pipeline.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures message retry for the current pipeline.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseMessageRetry(this IPipeConfigurator<ConsumeContext> configurator, Action<IRetryConfigurator> configure)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -34,12 +32,10 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Configures message retry for the current pipeline.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures message retry for the current pipeline.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseMessageRetry<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<IRetryConfigurator> configure)
         where T : class
     {
@@ -53,12 +49,10 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Configures message retry for the current pipeline.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures message retry for the current pipeline.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseMessageRetry<T>(this IConsumePipeConfigurator configurator, Action<IRetryConfigurator> configure)
         where T : class
     {
@@ -78,12 +72,10 @@ public static class RetryConfigurationExtensions
         return new RetryConsumeContext<T>(context, retryPolicy, retryContext);
     }
 
-    /// <summary>
-    /// Configures message retry for the current pipeline.
-    /// </summary>
-    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures message retry for the current pipeline.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseMessageRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, Action<IRetryConfigurator> configure)
         where TConsumer : class
     {
@@ -105,12 +97,10 @@ public static class RetryConfigurationExtensions
         return new RetryConsumerConsumeContext<TConsumer>(context, retryPolicy, retryContext);
     }
 
-    /// <summary>
-    /// Configures retry for the current pipeline.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures retry for the current pipeline.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseRetry<T>(this IPipeConfigurator<T> configurator, Action<IRetryConfigurator> configure)
         where T : class, PipeContext
     {
@@ -124,12 +114,10 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Configures message retry for the current pipeline.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="connector">The connector value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures message retry for the current pipeline.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="connector">The connector.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseMessageRetry(this IPipeConfigurator<ConsumeContext> configurator, IBusFactoryConfigurator connector,
         Action<IRetryConfigurator> configure)
     {
@@ -147,13 +135,11 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Configures message retry for the current pipeline.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="connector">The connector value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures message retry for the current pipeline.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="connector">The connector.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseMessageRetry<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IBusFactoryConfigurator connector,
         Action<IRetryConfigurator> configure)
         where T : class
@@ -172,13 +158,11 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Configures message retry for the current pipeline.
-    /// </summary>
-    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="connector">The connector value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures message retry for the current pipeline.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="connector">The connector.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseMessageRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, IBusFactoryConfigurator connector,
         Action<IRetryConfigurator> configure)
         where TConsumer : class
@@ -198,11 +182,9 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Create a policy that does not retry any messages.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <returns></returns>
+    /// <summary>Create a policy that does not retry any messages.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <returns>The retry configurator produced by the operation.</returns>
     public static IRetryConfigurator None(this IRetryConfigurator configurator)
     {
         if (configurator == null)
@@ -217,9 +199,9 @@ public static class RetryConfigurationExtensions
     /// Create an immediate retry policy with the specified number of retries, with no
     /// delay between attempts.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="retryLimit">The number of retries to attempt</param>
-    /// <returns></returns>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="retryLimit">The number of retries to attempt.</param>
+    /// <returns>The retry configurator produced by the operation.</returns>
     public static IRetryConfigurator Immediate(this IRetryConfigurator configurator, int retryLimit)
     {
         if (configurator == null)
@@ -232,11 +214,11 @@ public static class RetryConfigurationExtensions
 
     /// <summary>
     /// Create an interval retry policy with the specified intervals. The retry count equals
-    /// the number of intervals provided
+    /// the number of intervals provided.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="intervals">The intervals before each subsequent retry attempt</param>
-    /// <returns></returns>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="intervals">The intervals before each subsequent retry attempt.</param>
+    /// <returns>The retry configurator produced by the operation.</returns>
     public static IRetryConfigurator Intervals(this IRetryConfigurator configurator, params TimeSpan[] intervals)
     {
         if (configurator == null)
@@ -249,11 +231,11 @@ public static class RetryConfigurationExtensions
 
     /// <summary>
     /// Create an interval retry policy with the specified intervals. The retry count equals
-    /// the number of intervals provided
+    /// the number of intervals provided.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="intervals">The intervals in milliseconds before each subsequent retry attempt</param>
-    /// <returns></returns>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="intervals">The intervals in milliseconds before each subsequent retry attempt.</param>
+    /// <returns>The retry configurator produced by the operation.</returns>
     public static IRetryConfigurator Intervals(this IRetryConfigurator configurator, params int[] intervals)
     {
         if (configurator == null)
@@ -264,13 +246,11 @@ public static class RetryConfigurationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Create an interval retry policy with the specified number of retries at a fixed interval
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="retryCount">The number of retry attempts</param>
-    /// <param name="interval">The interval between each retry attempt</param>
-    /// <returns></returns>
+    /// <summary>Create an interval retry policy with the specified number of retries at a fixed interval.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="retryCount">The number of retry attempts.</param>
+    /// <param name="interval">The interval between each retry attempt.</param>
+    /// <returns>The retry configurator produced by the operation.</returns>
     public static IRetryConfigurator Interval(this IRetryConfigurator configurator, int retryCount, TimeSpan interval)
     {
         if (configurator == null)
@@ -281,13 +261,11 @@ public static class RetryConfigurationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Create an interval retry policy with the specified number of retries at a fixed interval
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="retryCount">The number of retry attempts</param>
-    /// <param name="interval">The interval in milliseconds between each retry attempt</param>
-    /// <returns></returns>
+    /// <summary>Create an interval retry policy with the specified number of retries at a fixed interval.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="retryCount">The number of retry attempts.</param>
+    /// <param name="interval">The interval in milliseconds between each retry attempt.</param>
+    /// <returns>The retry configurator produced by the operation.</returns>
     public static IRetryConfigurator Interval(this IRetryConfigurator configurator, int retryCount, int interval)
     {
         if (configurator == null)
@@ -300,14 +278,14 @@ public static class RetryConfigurationExtensions
 
     /// <summary>
     /// Create an exponential retry policy with the specified number of retries at exponential
-    /// intervals
+    /// intervals.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="retryLimit"></param>
-    /// <param name="minInterval"></param>
-    /// <param name="maxInterval"></param>
-    /// <param name="intervalDelta"></param>
-    /// <returns></returns>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="retryLimit">The retry limit.</param>
+    /// <param name="minInterval">The min interval.</param>
+    /// <param name="maxInterval">The max interval.</param>
+    /// <param name="intervalDelta">The interval delta.</param>
+    /// <returns>The retry configurator produced by the operation.</returns>
     public static IRetryConfigurator Exponential(this IRetryConfigurator configurator, int retryLimit, TimeSpan minInterval, TimeSpan maxInterval,
         TimeSpan intervalDelta)
     {
@@ -321,13 +299,13 @@ public static class RetryConfigurationExtensions
 
     /// <summary>
     /// Create an incremental retry policy with the specified number of retry attempts with an incrementing
-    /// interval between retries
+    /// interval between retries.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="retryLimit">The number of retry attempts</param>
-    /// <param name="initialInterval">The initial retry interval</param>
-    /// <param name="intervalIncrement">The interval to add to the retry interval with each subsequent retry</param>
-    /// <returns></returns>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="retryLimit">The number of retry attempts.</param>
+    /// <param name="initialInterval">The initial retry interval.</param>
+    /// <param name="intervalIncrement">The interval to add to the retry interval with each subsequent retry.</param>
+    /// <returns>The retry configurator produced by the operation.</returns>
     public static IRetryConfigurator Incremental(this IRetryConfigurator configurator, int retryLimit, TimeSpan initialInterval, TimeSpan intervalIncrement)
     {
         if (configurator == null)

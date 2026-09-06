@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for message type topology configurator.
-/// </summary>
+/// <summary>Configures message type topology.</summary>
 public interface IMessageTypeTopologyConfigurator
 {
 }

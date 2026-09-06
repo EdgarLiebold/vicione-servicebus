@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an in memory outbox specification implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Describes requirements for in memory outbox.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class InMemoryOutboxSpecification<T> :
     IPipeSpecification<ConsumeContext<T>>,
     IOutboxConfigurator
@@ -16,42 +14,32 @@ public class InMemoryOutboxSpecification<T> :
 {
     readonly ISetScopedConsumeContext? _setter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public InMemoryOutboxSpecification(IRegistrationContext context)
         : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)))
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="setter">The setter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="setter">The setter.</param>
     public InMemoryOutboxSpecification(ISetScopedConsumeContext? setter)
     {
         _setter = setter;
     }
 
-    /// <summary>
-    /// Gets or sets the concurrent message delivery value.
-    /// </summary>
+    /// <summary>Gets or sets the concurrent message delivery.</summary>
     public bool ConcurrentMessageDelivery { get; set; }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPipeBuilder<ConsumeContext<T>> builder)
     {
         builder.AddFilter(new InMemoryOutboxFilter<ConsumeContext<T>, InMemoryOutboxConsumeContext<T>>(_setter, Factory, ConcurrentMessageDelivery));
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;
@@ -63,51 +51,39 @@ public class InMemoryOutboxSpecification<T> :
     }
 
 
-    /// <summary>
-    /// Provides a batch implementation.
-    /// </summary>
+    /// <summary>Applies in-memory outbox configuration to consumed message batches.</summary>
     public class Batch :
         IPipeSpecification<ConsumeContext<Batch<T>>>,
         IOutboxConfigurator
     {
         readonly ISetScopedConsumeContext? _setter;
 
-        /// <summary>
-        /// Initializes a new instance of the containing type.
-        /// </summary>
-        /// <param name="context">The operation context.</param>
+        /// <summary>Initializes a new instance.</summary>
+        /// <param name="context">The context associated with the operation.</param>
         public Batch(IRegistrationContext context)
             : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)))
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the containing type.
-        /// </summary>
-        /// <param name="setter">The setter value.</param>
+        /// <summary>Initializes a new instance.</summary>
+        /// <param name="setter">The setter.</param>
         public Batch(ISetScopedConsumeContext? setter)
         {
             _setter = setter;
         }
 
-        /// <summary>
-        /// Gets or sets the concurrent message delivery value.
-        /// </summary>
+        /// <summary>Gets or sets the concurrent message delivery.</summary>
         public bool ConcurrentMessageDelivery { get; set; }
 
-        /// <summary>
-        /// Validates the current configuration.
-        /// </summary>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Validates the current configuration.</summary>
+        /// <returns>The validation failures.</returns>
         public IEnumerable<ValidationResult> Validate()
         {
             yield break;
         }
 
-        /// <summary>
-        /// Applies this specification to the target builder.
-        /// </summary>
-        /// <param name="builder">The builder value.</param>
+        /// <summary>Applies this specification to the target builder.</summary>
+        /// <param name="builder">The builder that receives the configuration.</param>
         public void Apply(IPipeBuilder<ConsumeContext<Batch<T>>> builder)
         {
             builder.AddFilter(new InMemoryOutboxFilter<ConsumeContext<Batch<T>>, InMemoryOutboxConsumeContext<T>.Batch>(_setter, BatchFactory,

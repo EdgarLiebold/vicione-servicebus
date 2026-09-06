@@ -1,28 +1,20 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a composite filter implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Processes composite pipeline stages.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class CompositeFilter<T>
 {
     readonly CompositePredicate<T> _excludes = new CompositePredicate<T>();
     readonly CompositePredicate<T> _includes = new CompositePredicate<T>();
 
-    /// <summary>
-    /// Gets the predicates that select values for evaluation.
-    /// </summary>
+    /// <summary>Gets the includes.</summary>
     public CompositePredicate<T> Includes => _includes;
 
-    /// <summary>
-    /// Gets the predicates that reject selected values.
-    /// </summary>
+    /// <summary>Gets the excludes.</summary>
     public CompositePredicate<T> Excludes => _excludes;
 
-    /// <summary>
-    /// Performs the matches operation.
-    /// </summary>
-    /// <param name="target">The target value.</param>
+    /// <summary>Determines whether the supplied value matches.</summary>
+    /// <param name="target">The target.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Matches(T target)
     {

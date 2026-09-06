@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs.Configuration;
 
-/// <summary>
-/// Provides an event hub producer specification implementation.
-/// </summary>
+/// <summary>Collects serializer, observer, Azure SDK, and send-pipeline configuration for Event Hubs producers.</summary>
 public class EventHubProducerSpecification :
     IEventHubProducerConfigurator,
     IEventHubProducerSpecification
@@ -21,11 +19,9 @@ public class EventHubProducerSpecification :
     readonly ISerializationConfiguration _serializationConfiguration;
     Action<EventHubProducerClientOptions>? _configureOptions;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="hostSettings">The host settings value.</param>
+    /// <summary>Creates a producer specification for the configured Event Hubs host.</summary>
+    /// <param name="hostConfiguration">The Event Hubs host configuration.</param>
+    /// <param name="hostSettings">The namespace connection settings validated by this specification.</param>
     public EventHubProducerSpecification(IEventHubHostConfiguration hostConfiguration, IHostSettings hostSettings)
     {
         _hostConfiguration = hostConfiguration;
@@ -35,48 +31,38 @@ public class EventHubProducerSpecification :
         _configureSend = new List<Action<ISendPipeConfigurator>>();
     }
 
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects send observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _sendObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Configures send.
-    /// </summary>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Adds a callback that configures the producer send pipeline.</summary>
+    /// <param name="callback">The send-pipeline configuration callback.</param>
     public void ConfigureSend(Action<ISendPipeConfigurator> callback)
     {
         _configureSend.Add(callback ?? throw new ArgumentNullException(nameof(callback)));
     }
 
-    /// <summary>
-    /// Gets or sets the configure options value.
-    /// </summary>
+    /// <summary>Gets or sets the callback applied to each producer client's options.</summary>
     public Action<EventHubProducerClientOptions>? ConfigureOptions
     {
         set => _configureOptions = value ?? throw new ArgumentNullException(nameof(value));
         get => _configureOptions;
     }
 
-    /// <summary>
-    /// Adds serializer to the configuration.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="isSerializer">The is serializer value.</param>
+    /// <summary>Adds an outbound message serializer.</summary>
+    /// <param name="factory">The serializer factory to add.</param>
+    /// <param name="isSerializer">Whether this factory becomes the default outbound serializer.</param>
     public void AddSerializer(ISerializerFactory factory, bool isSerializer = true)
     {
         _serializationConfiguration.AddSerializer(factory, isSerializer);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (string.IsNullOrWhiteSpace(_hostSettings.ConnectionString)
@@ -84,12 +70,10 @@ public class EventHubProducerSpecification :
             yield return this.Failure("HostSettings", "is invalid");
     }
 
-    /// <summary>
-    /// Creates send transport context.
-    /// </summary>
-    /// <param name="eventHubName">The event hub name value.</param>
-    /// <param name="busInstance">The bus instance value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the send pipeline and transport context for a named Event Hub.</summary>
+    /// <param name="eventHubName">The Event Hub entity name.</param>
+    /// <param name="busInstance">The bus instance supplying host and topology services.</param>
+    /// <returns>The configured Event Hubs send transport context.</returns>
     public EventHubSendTransportContext CreateSendTransportContext(string eventHubName, IBusInstance busInstance)
     {
         var sendConfiguration = new SendPipeConfiguration(busInstance.HostConfiguration.Topology.SendTopology);

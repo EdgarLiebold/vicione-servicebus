@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.JobService;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines configuration options for job service.
-/// </summary>
+/// <summary>Defines configuration options for job service.</summary>
 public sealed class JobServiceOptions :
     JobSagaSettings,
     IOptions,
@@ -17,9 +15,7 @@ public sealed class JobServiceOptions :
     string _jobSagaEndpointName = null!;
     string _jobTypeSagaEndpointName = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public JobServiceOptions()
     {
         StatusCheckInterval = TimeSpan.FromMinutes(1);
@@ -31,9 +27,7 @@ public sealed class JobServiceOptions :
         SagaPartitionCount = 16;
     }
 
-    /// <summary>
-    /// Gets or sets the job type saga endpoint name value.
-    /// </summary>
+    /// <summary>Gets or sets the job type saga endpoint name.</summary>
     public string JobTypeSagaEndpointName
     {
         get => _jobTypeSagaEndpointName;
@@ -44,9 +38,7 @@ public sealed class JobServiceOptions :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the job state saga endpoint name value.
-    /// </summary>
+    /// <summary>Gets or sets the job state saga endpoint name.</summary>
     public string JobStateSagaEndpointName
     {
         get => _jobSagaEndpointName;
@@ -57,9 +49,7 @@ public sealed class JobServiceOptions :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the job attempt saga endpoint name value.
-    /// </summary>
+    /// <summary>Gets or sets the job attempt saga endpoint name.</summary>
     public string JobAttemptSagaEndpointName
     {
         get => _jobAttemptSagaEndpointName;
@@ -70,13 +60,9 @@ public sealed class JobServiceOptions :
         }
     }
 
-    /// <summary>
-    /// The job service for the endpoint
-    /// </summary>
+    /// <summary>The job service for the endpoint.</summary>
     public IJobService JobService { get; set; } = null!;
-    /// <summary>
-    /// How often a job instance should send a heartbeat
-    /// </summary>
+    /// <summary>How often a job instance should send a heartbeat.</summary>
     public TimeSpan HeartbeatInterval { get; set; }
 
     /// <summary>
@@ -85,17 +71,11 @@ public sealed class JobServiceOptions :
     /// </summary>
     public int? SagaPartitionCount { get; set; }
 
-    /// <summary>
-    /// Gets or sets the instance endpoint configurator value.
-    /// </summary>
+    /// <summary>Gets or sets the instance endpoint configurator.</summary>
     public IReceiveEndpointConfigurator InstanceEndpointConfigurator { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the on configure endpoint value.
-    /// </summary>
+    /// <summary>Gets or sets the on configure endpoint.</summary>
     public Action<IReceiveEndpointConfigurator> OnConfigureEndpoint { get; set; } = null!;
-    /// <summary>
-    /// Gets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets the concurrent message limit.</summary>
     public int? ConcurrentMessageLimit => SagaPartitionCount;
 
     IEnumerable<ValidationResult> ISpecification.Validate()
@@ -123,46 +103,28 @@ public sealed class JobServiceOptions :
             yield return this.Failure(nameof(JobAttemptSagaEndpointName), "must not be null or empty");
     }
 
-    /// <summary>
-    /// The endpoint for the JobAttemptStateMachine
-    /// </summary>
+    /// <summary>The endpoint for the JobAttemptStateMachine.</summary>
     public Uri JobSagaEndpointAddress { get; set; } = null!;
-    /// <summary>
-    /// The endpoint for the JobAttemptStateMachine
-    /// </summary>
+    /// <summary>The endpoint for the JobAttemptStateMachine.</summary>
     public Uri JobTypeSagaEndpointAddress { get; set; } = null!;
-    /// <summary>
-    /// The endpoint for the JobAttemptStateMachine
-    /// </summary>
+    /// <summary>The endpoint for the JobAttemptStateMachine.</summary>
     public Uri JobAttemptSagaEndpointAddress { get; set; } = null!;
-    /// <summary>
-    /// The time to wait for a job slot when one is unavailable
-    /// </summary>
+    /// <summary>The time to wait for a job slot when one is unavailable.</summary>
     public TimeSpan SlotWaitTime { get; set; }
 
-    /// <summary>
-    /// The time after which the status of a job should be checked
-    /// </summary>
+    /// <summary>The time after which the status of a job should be checked.</summary>
     public TimeSpan StatusCheckInterval { get; set; }
 
-    /// <summary>
-    /// The time after which an instance will automatically be purged from the instance list
-    /// </summary>
+    /// <summary>The time after which an instance will automatically be purged from the instance list.</summary>
     public TimeSpan HeartbeatTimeout { get; set; }
 
-    /// <summary>
-    /// The number of times to retry a suspect job before it is faulted. Defaults to zero.
-    /// </summary>
+    /// <summary>The number of times to retry a suspect job before it is faulted. Defaults to zero.</summary>
     public int SuspectJobRetryCount { get; set; }
 
-    /// <summary>
-    /// The delay before retrying a suspect job
-    /// </summary>
+    /// <summary>The delay before retrying a suspect job.</summary>
     public TimeSpan? SuspectJobRetryDelay { get; set; }
 
-    /// <summary>
-    /// If true, completed jobs will be finalized, removing the saga from the repository
-    /// </summary>
+    /// <summary>If true, completed jobs will be finalized, removing the saga from the repository.</summary>
     public bool FinalizeCompleted { get; set; }
 
     /// <summary>

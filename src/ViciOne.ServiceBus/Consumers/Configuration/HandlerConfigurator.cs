@@ -4,10 +4,8 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Connects a handler to the inbound pipe of the receive endpoint
-/// </summary>
-/// <typeparam name="TMessage"></typeparam>
+/// <summary>Connects a handler to the inbound pipe of the receive endpoint.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class HandlerConfigurator<TMessage> :
     IHandlerConfigurator<TMessage>,
     IReceiveEndpointSpecification
@@ -18,11 +16,9 @@ public class HandlerConfigurator<TMessage> :
     readonly IBuildPipeConfigurator<ConsumeContext<TMessage>> _pipeConfigurator;
     readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="handler">The handler value.</param>
-    /// <param name="observer">The observer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="handler">The handler.</param>
+    /// <param name="observer">The observer to connect.</param>
     public HandlerConfigurator(MessageHandler<TMessage> handler, IHandlerConfigurationObserver observer)
     {
         ArgumentNullException.ThrowIfNull(handler);
@@ -35,29 +31,23 @@ public class HandlerConfigurator<TMessage> :
         _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumeContext<TMessage>> specification)
     {
         _pipeConfigurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Connects handler configuration observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects handler configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectHandlerConfigurationObserver(IHandlerConfigurationObserver observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         _configurationNotification.EnsureNotified(() =>
@@ -68,10 +58,8 @@ public class HandlerConfigurator<TMessage> :
             .ToArray();
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Configure(IReceiveEndpointBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);

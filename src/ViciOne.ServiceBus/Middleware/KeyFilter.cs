@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Handles the registration of requests and connecting them to the consume pipe
-/// </summary>
-/// <typeparam name="TContext"></typeparam>
-/// <typeparam name="TKey"></typeparam>
+/// <summary>Handles the registration of requests and connecting them to the consume pipe.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
 public class KeyFilter<TContext, TKey> :
     IFilter<TContext>,
     IKeyPipeConnector<TKey>
@@ -20,20 +18,16 @@ public class KeyFilter<TContext, TKey> :
     readonly KeyAccessor<TContext, TKey> _keyAccessor;
     readonly ConcurrentDictionary<TKey, IPipe<TContext>> _pipes;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="keyAccessor">The key accessor value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="keyAccessor">The key accessor.</param>
     public KeyFilter(KeyAccessor<TContext, TKey> keyAccessor)
     {
         _keyAccessor = keyAccessor ?? throw new ArgumentNullException(nameof(keyAccessor));
         _pipes = new ConcurrentDictionary<TKey, IPipe<TContext>>();
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("key");
@@ -45,12 +39,10 @@ public class KeyFilter<TContext, TKey> :
             pipe.Probe(scope);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [DebuggerNonUserCode]
     public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
@@ -64,13 +56,11 @@ public class KeyFilter<TContext, TKey> :
         await next.SendAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Connects pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="key">The key value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
         where T : class, PipeContext
     {

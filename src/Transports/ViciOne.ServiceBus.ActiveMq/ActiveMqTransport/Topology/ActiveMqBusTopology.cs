@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides an active mq bus topology implementation.
-/// </summary>
+/// <summary>Resolves ActiveMQ send and publish destinations from configured topology.</summary>
 public class ActiveMqBusTopology :
     BusTopology,
     IActiveMqBusTopology
@@ -14,11 +12,9 @@ public class ActiveMqBusTopology :
     readonly IActiveMqHostConfiguration _hostConfiguration;
     readonly IActiveMqTopologyConfiguration _topologyConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Creates a bus-topology resolver for an ActiveMQ host.</summary>
+    /// <param name="hostConfiguration">The ActiveMQ host configuration.</param>
+    /// <param name="topologyConfiguration">The ActiveMQ topology configuration.</param>
     public ActiveMqBusTopology(IActiveMqHostConfiguration hostConfiguration, IActiveMqTopologyConfiguration topologyConfiguration)
         : base(hostConfiguration, topologyConfiguration)
     {
@@ -39,11 +35,9 @@ public class ActiveMqBusTopology :
         return _topologyConfiguration.Send.GetMessageTopology<T>();
     }
 
-    /// <summary>
-    /// Gets send settings.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets send settings for a queue or topic address.</summary>
+    /// <param name="address">The destination address.</param>
+    /// <returns>The ActiveMQ send settings.</returns>
     public SendSettings GetSendSettings(Uri address)
     {
         var endpointAddress = new ActiveMqEndpointAddress(_hostConfiguration.HostAddress, address);
@@ -51,12 +45,10 @@ public class ActiveMqBusTopology :
         return _topologyConfiguration.Send.GetSendSettings(endpointAddress);
     }
 
-    /// <summary>
-    /// Gets destination address.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds a topic destination address from an explicit topic name.</summary>
+    /// <param name="topicName">The topic name.</param>
+    /// <param name="configure">An optional callback that configures topic lifecycle settings.</param>
+    /// <returns>The absolute topic destination address.</returns>
     public Uri GetDestinationAddress(string topicName, Action<IActiveMqTopicConfigurator>? configure = null)
     {
         var address = new ActiveMqEndpointAddress(
@@ -71,12 +63,10 @@ public class ActiveMqBusTopology :
         return sendSettings.GetSendAddress(_hostConfiguration.HostAddress);
     }
 
-    /// <summary>
-    /// Gets destination address.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the configured publish destination address for a message type.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="configure">An optional callback that configures topic lifecycle settings.</param>
+    /// <returns>The absolute publish-topic address.</returns>
     public Uri GetDestinationAddress(Type messageType, Action<IActiveMqTopicConfigurator>? configure = null)
     {
         var isTemporary = MessageTypeCache.IsTemporaryMessageType(messageType);

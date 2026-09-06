@@ -3,12 +3,10 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
-/// <summary>
-/// Provides an activity registration configurator implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
-/// <typeparam name="TLog">The t log type.</typeparam>
+/// <summary>Configures activity registration.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
+/// <typeparam name="TLog">The log type.</typeparam>
 public class ActivityRegistrationConfigurator<TActivity, TArguments, TLog> :
     IActivityRegistrationConfigurator<TActivity, TArguments, TLog>
     where TActivity : class, IActivity<TArguments, TLog>
@@ -18,22 +16,18 @@ public class ActivityRegistrationConfigurator<TActivity, TArguments, TLog> :
     readonly IRegistrationConfigurator _configurator;
     readonly IActivityRegistration _registration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="registration">The registration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="registration">The registration.</param>
     public ActivityRegistrationConfigurator(IRegistrationConfigurator configurator, IActivityRegistration registration)
     {
         _configurator = configurator;
         _registration = registration;
     }
 
-    /// <summary>
-    /// Performs the execute endpoint operation.
-    /// </summary>
-    /// <param name="configureExecute">The configure execute value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Executes endpoint.</summary>
+    /// <param name="configureExecute">The configure execute.</param>
+    /// <returns>The activity registration configurator produced by the operation.</returns>
     public IActivityRegistrationConfigurator ExecuteEndpoint(Action<IEndpointRegistrationConfigurator> configureExecute)
     {
         if (!_registration.IncludeInConfigureEndpoints)
@@ -49,11 +43,9 @@ public class ActivityRegistrationConfigurator<TActivity, TArguments, TLog> :
         return this;
     }
 
-    /// <summary>
-    /// Performs the compensate endpoint operation.
-    /// </summary>
-    /// <param name="configureCompensate">The configure compensate value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Compensates endpoint.</summary>
+    /// <param name="configureCompensate">The configure compensate.</param>
+    /// <returns>The activity registration configurator produced by the operation.</returns>
     public IActivityRegistrationConfigurator CompensateEndpoint(Action<IEndpointRegistrationConfigurator> configureCompensate)
     {
         if (!_registration.IncludeInConfigureEndpoints)
@@ -69,9 +61,7 @@ public class ActivityRegistrationConfigurator<TActivity, TArguments, TLog> :
         return this;
     }
 
-    /// <summary>
-    /// Performs the exclude from configure endpoints operation.
-    /// </summary>
+    /// <summary>Excludes from configure endpoints.</summary>
     public void ExcludeFromConfigureEndpoints()
     {
         _registration.IncludeInConfigureEndpoints = false;

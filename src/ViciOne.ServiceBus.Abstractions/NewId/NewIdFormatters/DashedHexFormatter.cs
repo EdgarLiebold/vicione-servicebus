@@ -6,9 +6,7 @@ using System.Runtime.Intrinsics.X86;
 
 namespace ViciOne.ServiceBus.NewIdFormatters;
 
-/// <summary>
-/// Provides a dashed hex formatter implementation.
-/// </summary>
+/// <summary>Formats dashed hex values.</summary>
 public class DashedHexFormatter :
     INewIdFormatter
 {
@@ -18,12 +16,10 @@ public class DashedHexFormatter :
     readonly char _suffix;
     const uint LowerCaseUInt = 0x2020U;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="prefix">The prefix value.</param>
-    /// <param name="suffix">The suffix value.</param>
-    /// <param name="upperCase">The upper case value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="prefix">The prefix.</param>
+    /// <param name="suffix">The suffix.</param>
+    /// <param name="upperCase">The upper case.</param>
     public DashedHexFormatter(char prefix = '\0', char suffix = '\0', bool upperCase = false)
     {
         if (prefix == '\0' || suffix == '\0')
@@ -38,11 +34,9 @@ public class DashedHexFormatter :
         _alpha = upperCase ? 0 : LowerCaseUInt;
     }
 
-    /// <summary>
-    /// Formats a canonical identifier representation.
-    /// </summary>
-    /// <param name="bytes">The canonical 16-byte identifier representation.</param>
-    /// <returns>The dashed hexadecimal identifier.</returns>
+    /// <summary>Formats a canonical identifier representation.</summary>
+    /// <param name="bytes">The bytes.</param>
+    /// <returns>The formatted value.</returns>
     /// <exception cref="ArgumentException"><paramref name="bytes" /> does not contain exactly 16 bytes.</exception>
     public string Format(ReadOnlySpan<byte> bytes)
     {

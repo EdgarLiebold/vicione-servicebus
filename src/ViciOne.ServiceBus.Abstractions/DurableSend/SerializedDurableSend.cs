@@ -3,61 +3,39 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
 
-/// <summary>
-/// Immutable serialized representation admitted into producer-side durable storage.
-/// </summary>
+/// <summary>Immutable serialized representation admitted into producer-side durable storage.</summary>
 /// <remarks>
 /// <see cref="ContractIdentity"/> is the durable protocol identity. No assembly-qualified CLR type name is persisted.
 /// Metadata is ServiceBus-owned infrastructure metadata; payload body remains opaque to the durable store.
 /// </remarks>
 public sealed record SerializedDurableSend
 {
-    /// <summary>
-    /// Defines the maximum destination address characters value.
-    /// </summary>
+    /// <summary>Exposes the maximum destination address characters used by the containing type.</summary>
     public const int MaximumDestinationAddressCharacters = 2048;
-    /// <summary>
-    /// Defines the maximum content type characters value.
-    /// </summary>
+    /// <summary>Exposes the maximum content type characters used by the containing type.</summary>
     public const int MaximumContentTypeCharacters = 256;
-    /// <summary>
-    /// Gets or sets the id value.
-    /// </summary>
+    /// <summary>Gets or sets the id.</summary>
     public required DurableSendId Id { get; init; }
 
-    /// <summary>
-    /// Gets or sets the contract identity value.
-    /// </summary>
+    /// <summary>Gets or sets the contract identity.</summary>
     public required MessageContractIdentity ContractIdentity { get; init; }
 
-    /// <summary>
-    /// Gets or sets the destination address value.
-    /// </summary>
+    /// <summary>Gets or sets the destination address.</summary>
     public required Uri DestinationAddress { get; init; }
 
-    /// <summary>
-    /// Gets or sets the content type value.
-    /// </summary>
+    /// <summary>Gets or sets the content type.</summary>
     public required string ContentType { get; init; }
 
-    /// <summary>
-    /// Gets or sets the body value.
-    /// </summary>
+    /// <summary>Gets or sets the body.</summary>
     public required ReadOnlyMemory<byte> Body { get; init; }
 
-    /// <summary>
-    /// Opaque, bounded ServiceBus infrastructure metadata encoded with the stable infrastructure metadata codec.
-    /// </summary>
+    /// <summary>Opaque, bounded ServiceBus infrastructure metadata encoded with the stable infrastructure metadata codec.</summary>
     public ReadOnlyMemory<byte> Metadata { get; init; }
 
-    /// <summary>
-    /// Gets or sets the message id value.
-    /// </summary>
+    /// <summary>Gets or sets the message id.</summary>
     public Guid? MessageId { get; init; }
 
-    /// <summary>
-    /// Gets or sets the correlation id value.
-    /// </summary>
+    /// <summary>Gets or sets the correlation id.</summary>
     public Guid? CorrelationId { get; init; }
 
     /// <summary>
@@ -84,6 +62,7 @@ public sealed record SerializedDurableSend
     }
 
     /// <summary>Validates the durable infrastructure contract before it crosses a persistence boundary.</summary>
+    /// <returns>The validation failures.</returns>
     public SerializedDurableSend Validate()
     {
         if (Id.Value == Guid.Empty)

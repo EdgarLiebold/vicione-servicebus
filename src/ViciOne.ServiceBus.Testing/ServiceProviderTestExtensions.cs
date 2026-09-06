@@ -5,30 +5,24 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides extension methods for service provider test.
-/// </summary>
+/// <summary>Provides extension methods for service provider test.</summary>
 public static class ServiceProviderTestExtensions
 {
-    /// <summary>
-    /// Gets task.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="provider">The service provider.</param>
+    /// <summary>Gets task.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public static Task<T> GetTaskAsync<T>(this IServiceProvider provider, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<T>(cancellationToken); var taskCompletionSource = provider.GetRequiredService<TaskCompletionSource<T>>();
         return taskCompletionSource.Task;
     }
 
-    /// <summary>
-    /// Gets tasks.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="provider">The service provider.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets tasks.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <returns>A task that produces the requested value.</returns>
     public static Task<T>[] GetTasks<T>(this IServiceProvider provider)
     {
         return provider.GetServices<TaskCompletionSource<T>>().Select(x => x.Task).ToArray();

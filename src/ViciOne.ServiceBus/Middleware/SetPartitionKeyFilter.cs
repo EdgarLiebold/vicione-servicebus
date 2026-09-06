@@ -3,31 +3,25 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a set partition key filter implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Processes set partition key pipeline stages.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class SetPartitionKeyFilter<TMessage> :
     IFilter<SendContext<TMessage>>
     where TMessage : class
 {
     readonly IMessagePartitionKeyFormatter<TMessage> _routingKeyFormatter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="routingKeyFormatter">The routing key formatter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="routingKeyFormatter">The routing key formatter.</param>
     public SetPartitionKeyFilter(IMessagePartitionKeyFormatter<TMessage> routingKeyFormatter)
     {
         _routingKeyFormatter = routingKeyFormatter;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(SendContext<TMessage> context, IPipe<SendContext<TMessage>> next)
     {
         var routingKey = _routingKeyFormatter.FormatPartitionKey(context);
@@ -38,10 +32,8 @@ public class SetPartitionKeyFilter<TMessage> :
         return next.SendAsync(context);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateFilterScope("setPartitionKey");

@@ -8,10 +8,7 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Util;
 
-/// <summary>
-/// Generates a monospaced text table, useful in trace output formats. Shamelessly inspired by ConsoleTables
-/// https://github.com/khalidabuhakmeh/ConsoleTables
-/// </summary>
+/// <summary>Generates a monospaced text table for diagnostic output.</summary>
 public class TextTable
 {
     static readonly HashSet<Type> NumericTypes = new HashSet<Type>
@@ -33,19 +30,15 @@ public class TextTable
     readonly List<object?[]> _rows;
     Type[] _columnTypes = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="columns">The columns value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="columns">The columns.</param>
     public TextTable(params string[] columns)
         : this(new TextTableOptions { Columns = new List<string>(columns) })
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="options">The options that control the operation.</param>
     public TextTable(TextTableOptions options)
     {
         Options = options ?? throw new ArgumentNullException(nameof(options));
@@ -55,26 +48,20 @@ public class TextTable
         _columns = new List<object?>(options.Columns);
     }
 
-    /// <summary>
-    /// Gets the options value.
-    /// </summary>
+    /// <summary>Gets the options.</summary>
     public TextTableOptions Options { get; }
 
-    /// <summary>
-    /// Adds columns to the configuration.
-    /// </summary>
-    /// <param name="names">The names value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds columns to the configuration.</summary>
+    /// <param name="names">The names.</param>
+    /// <returns>The text table produced by the operation.</returns>
     public TextTable AddColumns(params string[] names)
     {
         return AddColumns((IEnumerable<string>)names);
     }
 
-    /// <summary>
-    /// Adds columns to the configuration.
-    /// </summary>
-    /// <param name="names">The names value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds columns to the configuration.</summary>
+    /// <param name="names">The names.</param>
+    /// <returns>The text table produced by the operation.</returns>
     public TextTable AddColumns(IEnumerable<string> names)
     {
         foreach (var name in names)
@@ -83,11 +70,9 @@ public class TextTable
         return this;
     }
 
-    /// <summary>
-    /// Adds row to the configuration.
-    /// </summary>
-    /// <param name="values">The values value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds row to the configuration.</summary>
+    /// <param name="values">The values.</param>
+    /// <returns>The text table produced by the operation.</returns>
     public TextTable AddRow(params object?[] values)
     {
         if (values == null)
@@ -102,11 +87,9 @@ public class TextTable
         return this;
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="action">The action value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <param name="action">The action.</param>
+    /// <returns>The text table produced by the operation.</returns>
     public TextTable Configure(Action<TextTableOptions> action)
     {
         action(Options);
@@ -114,12 +97,10 @@ public class TextTable
         return this;
     }
 
-    /// <summary>
-    /// Create a table from an existing enumerable collection
-    /// </summary>
-    /// <param name="rows">The collection</param>
-    /// <typeparam name="T">The collection element type</typeparam>
-    /// <returns></returns>
+    /// <summary>Create a table from an existing enumerable collection.</summary>
+    /// <typeparam name="T">The collection element type.</typeparam>
+    /// <param name="rows">The collection.</param>
+    /// <returns>The newly created instance.</returns>
     public static TextTable Create<T>(IEnumerable<T> rows)
     {
         IReadOnlyPropertyCache<T> properties = TypeCache<T>.ReadOnlyPropertyCache;
@@ -135,10 +116,8 @@ public class TextTable
         return table;
     }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the string representation of this instance.</summary>
+    /// <returns>The converted string.</returns>
     public override string ToString()
     {
         var builder = new StringBuilder();
@@ -205,21 +184,17 @@ public class TextTable
         return columnLengths;
     }
 
-    /// <summary>
-    /// Performs the write operation.
-    /// </summary>
+    /// <summary>Writes the supplied value.</summary>
     public void Write()
     {
         Options.Out.WriteLine(ToString());
     }
 
-    /// <summary>
-    /// Sets column.
-    /// </summary>
-    /// <param name="column">The column value.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="columnType">The column type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets column.</summary>
+    /// <param name="column">The column.</param>
+    /// <param name="name">The name.</param>
+    /// <param name="columnType">The runtime column type used by the operation.</param>
+    /// <returns>The text table produced by the operation.</returns>
     public TextTable SetColumn(int column, string name, Type? columnType = default)
     {
         if (column < 0 || column >= _columns.Count)
@@ -235,42 +210,34 @@ public class TextTable
         return this;
     }
 
-    /// <summary>
-    /// Performs the hide row separator operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Hides the separator for the selected row.</summary>
+    /// <returns>The text table produced by the operation.</returns>
     public TextTable HideRowSeparator()
     {
         Options.ShowRowSeparator = false;
         return this;
     }
 
-    /// <summary>
-    /// Performs the enable count operation.
-    /// </summary>
-    /// <param name="enabled">The enabled value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Enables count.</summary>
+    /// <param name="enabled">The enabled.</param>
+    /// <returns>The text table produced by the operation.</returns>
     public TextTable EnableCount(bool enabled)
     {
         Options.EnableCount = enabled;
         return this;
     }
 
-    /// <summary>
-    /// Sets right number alignment.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets right number alignment.</summary>
+    /// <returns>The text table produced by the operation.</returns>
     public TextTable SetRightNumberAlignment()
     {
         Options.NumberAlignment = NumberAlignment.Right;
         return this;
     }
 
-    /// <summary>
-    /// Performs the output to operation.
-    /// </summary>
-    /// <param name="textWriter">The text writer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Routes output to the supplied destination.</summary>
+    /// <param name="textWriter">The text writer.</param>
+    /// <returns>The text table produced by the operation.</returns>
     public TextTable OutputTo(TextWriter textWriter)
     {
         Options.Out = textWriter ?? TextWriter.Null;

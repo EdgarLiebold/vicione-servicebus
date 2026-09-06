@@ -2,63 +2,39 @@ using System;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides an inbox state implementation.
-/// </summary>
+/// <summary>Persists duplicate-detection and receive-side outbox progress for one message/consumer pair.</summary>
 public class InboxState
 {
-    /// <summary>
-    /// Primary key for table, to have ordered clustered index
-    /// </summary>
+    /// <summary>Gets or sets the surrogate primary key used for ordered relational storage.</summary>
     public long Id { get; set; }
 
-    /// <summary>
-    /// The MessageId of the incoming message
-    /// </summary>
+    /// <summary>Gets or sets the identifier of the incoming message.</summary>
     public Guid MessageId { get; set; }
 
-    /// <summary>
-    /// And MD5 hash of the endpoint name + consumer type
-    /// </summary>
+    /// <summary>Gets or sets the stable identifier of the endpoint/consumer combination.</summary>
     public Guid ConsumerId { get; set; }
 
-    /// <summary>
-    /// Lock token to ensure row is locked within the transaction
-    /// </summary>
+    /// <summary>Gets or sets the token written when the row is claimed in a transaction.</summary>
     public Guid LockId { get; set; }
 
-    /// <summary>
-    /// EF RowVersion
-    /// </summary>
+    /// <summary>Gets or sets the EF Core concurrency token for the row.</summary>
     public byte[]? RowVersion { get; set; }
 
-    /// <summary>
-    /// When the message was first received
-    /// </summary>
+    /// <summary>Gets or sets the UTC time when the message was first received.</summary>
     public DateTimeOffset Received { get; set; }
 
-    /// <summary>
-    /// How many times the message has been received
-    /// </summary>
+    /// <summary>Gets or sets the number of receive attempts recorded for this key.</summary>
     public int ReceiveCount { get; set; }
 
-    /// <summary>
-    /// If present, when the message expires (from the message header)
-    /// </summary>
+    /// <summary>Gets or sets the message expiration time captured from the incoming envelope.</summary>
     public DateTimeOffset? ExpirationTime { get; set; }
 
-    /// <summary>
-    /// When the message was consumed, successfully
-    /// </summary>
+    /// <summary>Gets or sets the UTC time when consumer processing completed successfully.</summary>
     public DateTimeOffset? Consumed { get; set; }
 
-    /// <summary>
-    /// When all messages in the outbox were delivered to the transport
-    /// </summary>
+    /// <summary>Gets or sets the UTC time when all outgoing messages were sent to their transports.</summary>
     public DateTimeOffset? Delivered { get; set; }
 
-    /// <summary>
-    /// The last sequence number that was successfully delivered to the transport
-    /// </summary>
+    /// <summary>Gets or sets the highest outgoing sequence number sent successfully.</summary>
     public long? LastSequenceNumber { get; set; }
 }

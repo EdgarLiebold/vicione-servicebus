@@ -9,12 +9,10 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.Conventions;
 
-/// <summary>
-/// Provides a dictionary initializer convention implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
-/// <typeparam name="TInput">The t input type.</typeparam>
-/// <typeparam name="TValue">The t value type.</typeparam>
+/// <summary>Applies conventions for dictionary initializer.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TValue">The value stored by the member.</typeparam>
 public class DictionaryInitializerConvention<TMessage, TInput, TValue> :
     IInitializerConvention<TMessage, TInput>
     where TMessage : class
@@ -22,20 +20,16 @@ public class DictionaryInitializerConvention<TMessage, TInput, TValue> :
 {
     readonly IPropertyProviderFactory<TInput> _providerFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public DictionaryInitializerConvention()
     {
         _providerFactory = new PropertyProviderFactory<TInput>();
     }
 
-    /// <summary>
-    /// Attempts to get property initializer.
-    /// </summary>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get property initializer.</summary>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetPropertyInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IPropertyInitializer<TMessage, TInput>? initializer)
@@ -78,19 +72,17 @@ public class DictionaryInitializerConvention<TMessage, TInput, TValue> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get header initializer.
-    /// </summary>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get header initializer.</summary>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeaderInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
     {
         var propertyName = propertyInfo?.Name ?? throw new ArgumentNullException(nameof(propertyInfo));
 
-        // headers use a double underscore prefix
+        // Header initializer properties use a double-underscore prefix.
         var key = new StringBuilder(propertyName.Length + 2).Append("__").Append(propertyName).ToString();
 
         if (typeof(TValue) == typeof(TProperty))
@@ -115,12 +107,10 @@ public class DictionaryInitializerConvention<TMessage, TInput, TValue> :
         return false;
     }
 
-    /// <summary>
-    /// Attempts to get headers initializer.
-    /// </summary>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="propertyInfo">The property info value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Attempts to get headers initializer.</summary>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="propertyInfo">The property info.</param>
+    /// <param name="initializer">Receives the initializer produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeadersInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
@@ -131,18 +121,14 @@ public class DictionaryInitializerConvention<TMessage, TInput, TValue> :
 }
 
 
-/// <summary>
-/// Provides a dictionary initializer convention implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Applies conventions for dictionary initializer.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class DictionaryInitializerConvention<TMessage> :
     InitializerConvention<TMessage>
     where TMessage : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="convention">The convention value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="convention">The convention.</param>
     public DictionaryInitializerConvention(IInitializerConvention convention)
         : base(new CacheFactory(), convention)
     {
@@ -168,15 +154,11 @@ public class DictionaryInitializerConvention<TMessage> :
 }
 
 
-/// <summary>
-/// Provides a dictionary initializer convention implementation.
-/// </summary>
+/// <summary>Applies conventions for dictionary initializer.</summary>
 public class DictionaryInitializerConvention :
     InitializerConvention
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public DictionaryInitializerConvention()
         : base(new CacheFactory())
     {

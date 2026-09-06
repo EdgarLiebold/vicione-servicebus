@@ -2,9 +2,7 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for send topology configurator.
-/// </summary>
+/// <summary>Configures send topology.</summary>
 public interface ISendTopologyConfigurator :
     ISendTopology,
     ISpecification
@@ -25,14 +23,13 @@ public interface ISendTopologyConfigurator :
     /// Adds a convention to the topology, which will be applied to every message type
     /// requested, to determine if a convention for the message type is available.
     /// </summary>
-    /// <param name="convention">The send topology convention</param>
+    /// <param name="convention">The send topology convention.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     bool TryAddConvention(ISendTopologyConvention convention);
 
-    /// <summary>
-    /// Add a send topology for a specific message type
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="topology">The topology</param>
+    /// <summary>Add a send topology for a specific message type.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="topology">The topology.</param>
     void AddMessageSendTopology<T>(IMessageSendTopology<T> topology)
         where T : class;
 }

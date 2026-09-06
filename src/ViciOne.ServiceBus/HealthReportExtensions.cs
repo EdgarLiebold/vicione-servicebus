@@ -7,16 +7,12 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Operations;
 
-/// <summary>
-/// Provides extension methods for health report.
-/// </summary>
+/// <summary>Provides extension methods for health report.</summary>
 public static class HealthReportExtensions
 {
-    /// <summary>
-    /// Performs the to json string operation.
-    /// </summary>
-    /// <param name="result">The result value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to json string.</summary>
+    /// <param name="result">The result.</param>
+    /// <returns>The converted json string.</returns>
     public static string ToJsonString(this HealthReport result)
     {
         var healthResult = new JsonObject

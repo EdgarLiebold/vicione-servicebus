@@ -4,52 +4,42 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
-/// <summary>
-/// Provides a delegate saga db context factory implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Creates and owns saga DbContext instances through a caller-supplied delegate.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class DelegateSagaDbContextFactory<TSaga> :
     ISagaDbContextFactory<TSaga>
     where TSaga : class, ISaga
 {
     readonly Func<DbContext> _dbContextFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="dbContextFactory">The db context factory value.</param>
+    /// <summary>Initializes a factory that creates DbContext instances through a delegate.</summary>
+    /// <param name="dbContextFactory">The delegate invoked for each DbContext request.</param>
     public DelegateSagaDbContextFactory(Func<DbContext> dbContextFactory)
     {
         _dbContextFactory = dbContextFactory;
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a DbContext through the configured delegate.</summary>
+    /// <returns>A new DbContext that must later be returned through <see cref="ReleaseAsync"/>.</returns>
     public DbContext Create()
     {
         return _dbContextFactory();
     }
 
-    /// <summary>
-    /// Creates scoped.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a DbContext through the configured delegate for a consume operation.</summary>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="context">The active consumption context; the delegate does not receive it.</param>
+    /// <returns>A new factory-owned DbContext.</returns>
     public DbContext CreateScoped<T>(ConsumeContext<T> context)
         where T : class
     {
         return _dbContextFactory();
     }
 
-    /// <summary>
-    /// Performs the release operation.
-    /// </summary>
-    /// <param name="dbContext">The db context value.</param>
+    /// <summary>Asynchronously disposes a DbContext created by this factory.</summary>
+    /// <param name="dbContext">The DbContext to dispose.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask ReleaseAsync(DbContext dbContext, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return dbContext.DisposeAsync();

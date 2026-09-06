@@ -2,9 +2,7 @@ using System;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Middleware;
-/// <summary>
-/// Purges the queue on startup, only once per filter instance
-/// </summary>
+/// <summary>Purges an Amazon SQS queue once before allowing the client pipeline to continue.</summary>
 public class PurgeOnStartupFilter :
     IFilter<ClientContext>
 {
@@ -12,10 +10,8 @@ public class PurgeOnStartupFilter :
     readonly string _queueName;
     Task? _purgeTask;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
+    /// <summary>Initializes a startup-purge filter.</summary>
+    /// <param name="queueName">The logical name of the queue to purge.</param>
     public PurgeOnStartupFilter(string queueName)
     {
         _queueName = queueName;

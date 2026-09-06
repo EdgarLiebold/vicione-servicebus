@@ -5,20 +5,16 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Util;
 
-/// <summary>
-/// Provides a chart row implementation.
-/// </summary>
+/// <summary>Represents a row of chart data.</summary>
 public class ChartRow
 {
     readonly object[] _columns;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="title">The title value.</param>
-    /// <param name="duration">The duration value.</param>
-    /// <param name="timeline">The timeline value.</param>
-    /// <param name="columns">The columns value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="title">The title.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="timeline">The timeline.</param>
+    /// <param name="columns">The columns.</param>
     public ChartRow(string title, string duration, string timeline, object[] columns)
     {
         _columns = columns;
@@ -27,24 +23,16 @@ public class ChartRow
         Timeline = timeline;
     }
 
-    /// <summary>
-    /// Gets the title value.
-    /// </summary>
+    /// <summary>Gets the title.</summary>
     public string Title { get; }
-    /// <summary>
-    /// Gets the duration value.
-    /// </summary>
+    /// <summary>Gets the duration.</summary>
     public string Duration { get; }
-    /// <summary>
-    /// Gets the timeline value.
-    /// </summary>
+    /// <summary>Gets the timeline.</summary>
     public string Timeline { get; }
 
-    /// <summary>
-    /// Gets column.
-    /// </summary>
-    /// <param name="column">The column value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets column.</summary>
+    /// <param name="column">The column.</param>
+    /// <returns>The column.</returns>
     public object GetColumn(int column)
     {
         if (_columns == null || column < 0 || column >= _columns.Length)

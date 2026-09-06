@@ -2,30 +2,22 @@ using System;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Defines the contract for schedule configurator.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures schedule.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public interface IScheduleConfigurator<TInstance, TMessage>
     where TInstance : class, SagaStateMachineInstance
     where TMessage : class
 {
-    /// <summary>
-    /// Set a fixed message delay, which is applied to all scheduled messages unless
-    /// overriden by the .Schedule method.
-    /// </summary>
+    /// <summary>Sets a fixed message delay that applies unless an individual schedule operation overrides it.</summary>
     TimeSpan Delay { set; }
 
     /// <summary>
-    /// Set a dynamic message delay provider, which uses the instance to determine the delay
-    /// unless overriden by the .Schedule method.
+    /// Sets a message-delay provider that derives the delay from the state-machine instance unless
+    /// an individual schedule operation overrides it.
     /// </summary>
     ScheduleDelayProvider<TInstance> DelayProvider { set; }
 
-    /// <summary>
-    /// Configure the behavior of the Received event, the same was Events are configured on
-    /// the state machine.
-    /// </summary>
+    /// <summary>Sets the correlation configuration applied when the scheduled message is received.</summary>
     Action<IEventCorrelationConfigurator<TInstance, TMessage>> Received { set; }
 }

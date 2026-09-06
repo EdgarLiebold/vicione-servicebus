@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs.Configuration;
 
-/// <summary>
-/// Provides an event hub receive endpoint builder implementation.
-/// </summary>
+/// <summary>Creates an Event Hubs receive-endpoint context and attaches its transport settings as payloads.</summary>
 public class EventHubReceiveEndpointBuilder :
     ReceiveEndpointBuilder
 {
@@ -21,16 +19,14 @@ public class EventHubReceiveEndpointBuilder :
     readonly Func<PartitionInitializingEventArgs, Task>? _partitionInitializingHandler;
     readonly ReceiveSettings _receiveSettings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="busInstance">The bus instance value.</param>
-    /// <param name="configuration">The configuration callback.</param>
-    /// <param name="receiveSettings">The receive settings value.</param>
-    /// <param name="clientFactory">The client factory value.</param>
-    /// <param name="partitionClosingHandler">The partition closing handler value.</param>
-    /// <param name="partitionInitializingHandler">The partition initializing handler value.</param>
+    /// <summary>Creates a builder from the completed endpoint and processor configuration.</summary>
+    /// <param name="hostConfiguration">The Event Hubs rider host configuration.</param>
+    /// <param name="busInstance">The bus instance that will own the endpoint.</param>
+    /// <param name="configuration">The receive endpoint's pipe configuration.</param>
+    /// <param name="receiveSettings">The Event Hubs concurrency and checkpoint settings.</param>
+    /// <param name="clientFactory">Creates the Azure SDK event processor client.</param>
+    /// <param name="partitionClosingHandler">The optional application partition-closing handler.</param>
+    /// <param name="partitionInitializingHandler">The optional application partition-initializing handler.</param>
     public EventHubReceiveEndpointBuilder(IEventHubHostConfiguration hostConfiguration, IBusInstance busInstance,
         IReceiveEndpointConfiguration configuration, ReceiveSettings receiveSettings,
         Func<EventProcessorClient> clientFactory,
@@ -47,10 +43,8 @@ public class EventHubReceiveEndpointBuilder :
         _partitionInitializingHandler = partitionInitializingHandler;
     }
 
-    /// <summary>
-    /// Creates receive endpoint context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the Event Hubs receive-endpoint context and registers topology and receive settings as payloads.</summary>
+    /// <returns>The initialized receive-endpoint context.</returns>
     public IEventHubReceiveEndpointContext CreateReceiveEndpointContext()
     {
         var context = new EventHubReceiveEndpointContext(_hostConfiguration, _busInstance, _configuration,

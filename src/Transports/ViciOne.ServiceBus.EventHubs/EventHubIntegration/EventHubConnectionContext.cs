@@ -7,22 +7,18 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides an event hub connection context implementation.
-/// </summary>
+/// <summary>Creates Event Hubs producer clients from shared namespace authentication and client options.</summary>
 public class EventHubConnectionContext :
     BasePipeContext,
     ConnectionContext
 {
     readonly Action<EventHubProducerClientOptions>? _configureOptions;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostSettings">The host settings value.</param>
-    /// <param name="storageSettings">The storage settings value.</param>
-    /// <param name="configureOptions">The configure options value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a connection context from immutable rider settings.</summary>
+    /// <param name="hostSettings">The Event Hubs namespace authentication settings.</param>
+    /// <param name="storageSettings">The Blob Storage checkpoint settings exposed by this context.</param>
+    /// <param name="configureOptions">The optional producer client options callback.</param>
+    /// <param name="cancellationToken">Stops operations using this connection context.</param>
     public EventHubConnectionContext(IHostSettings hostSettings, IStorageSettings storageSettings, Action<EventHubProducerClientOptions>? configureOptions,
         CancellationToken cancellationToken)
         : base(cancellationToken)
@@ -32,20 +28,14 @@ public class EventHubConnectionContext :
         StorageSettings = storageSettings;
     }
 
-    /// <summary>
-    /// Gets the host settings value.
-    /// </summary>
+    /// <summary>Gets the Event Hubs namespace authentication settings.</summary>
     public IHostSettings HostSettings { get; }
-    /// <summary>
-    /// Gets the storage settings value.
-    /// </summary>
+    /// <summary>Gets the Blob Storage checkpoint settings.</summary>
     public IStorageSettings StorageSettings { get; }
 
-    /// <summary>
-    /// Creates event hub client.
-    /// </summary>
-    /// <param name="eventHubName">The event hub name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an Azure SDK producer client using the configured authentication mode.</summary>
+    /// <param name="eventHubName">The Event Hub entity name.</param>
+    /// <returns>The configured producer client.</returns>
     public EventHubProducerClient CreateEventHubClient(string eventHubName)
     {
         var options = new EventHubProducerClientOptions();

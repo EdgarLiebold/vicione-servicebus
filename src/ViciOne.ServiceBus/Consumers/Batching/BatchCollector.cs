@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Batching;
 
-/// <summary>
-/// Provides a batch collector implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Collects batch values.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class BatchCollector<TMessage> :
     IBatchCollector<TMessage>
     where TMessage : class
@@ -19,11 +17,9 @@ public class BatchCollector<TMessage> :
     readonly BatchOptions _options;
     BatchConsumer<TMessage>? _currentConsumer;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <param name="consumerPipe">The consumer pipe value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="consumerPipe">The consumer pipe.</param>
     public BatchCollector(BatchOptions options, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe)
     {
         _options = options;
@@ -33,22 +29,18 @@ public class BatchCollector<TMessage> :
         _dispatcher = new TaskExecutor(options.ConcurrencyLimit);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask DisposeAsync()
     {
         await _collector.DisposeAsync().ConfigureAwait(false);
         await _dispatcher.DisposeAsync().ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the collect operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Collects the matching values.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the collect outcome.</returns>
     public Task<BatchConsumer<TMessage>> CollectAsync(ConsumeContext<TMessage> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Batching.BatchConsumer<TMessage>>(cancellationToken); var currentActivity = Activity.Current;
@@ -56,22 +48,18 @@ public class BatchCollector<TMessage> :
         return _collector.ExecuteAsync(() => AddAsync(context, currentActivity), context.CancellationToken);
     }
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="consumer">The consumer value.</param>
+    /// <summary>Marks the current operation as complete.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="consumer">The consumer.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CompleteAsync(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer, CancellationToken cancellationToken = default)
     {
         return _collector.ExecuteAsync(() => RemoveAsync(consumer), cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("batchCollector");
@@ -105,11 +93,9 @@ public class BatchCollector<TMessage> :
 }
 
 
-/// <summary>
-/// Provides a batch collector implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
-/// <typeparam name="TKey">The t key type.</typeparam>
+/// <summary>Collects batch values.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
 public class BatchCollector<TMessage, TKey> :
     IBatchCollector<TMessage>
     where TMessage : class
@@ -123,12 +109,10 @@ public class BatchCollector<TMessage, TKey> :
     readonly BatchOptions _options;
     BatchConsumer<TMessage>? _currentConsumer;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <param name="consumerPipe">The consumer pipe value.</param>
-    /// <param name="keyProvider">The key provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="consumerPipe">The consumer pipe.</param>
+    /// <param name="keyProvider">The key provider.</param>
     public BatchCollector(BatchOptions options, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe, IGroupKeyProvider<TMessage, TKey> keyProvider)
     {
         _options = options;
@@ -140,22 +124,18 @@ public class BatchCollector<TMessage, TKey> :
         _collectors = new Dictionary<TKey, BatchConsumer<TMessage>>();
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask DisposeAsync()
     {
         await _collector.DisposeAsync().ConfigureAwait(false);
         await _dispatcher.DisposeAsync().ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the collect operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Collects the matching values.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the collect outcome.</returns>
     public Task<BatchConsumer<TMessage>> CollectAsync(ConsumeContext<TMessage> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Batching.BatchConsumer<TMessage>>(cancellationToken); var currentActivity = Activity.Current;
@@ -163,22 +143,18 @@ public class BatchCollector<TMessage, TKey> :
         return _collector.ExecuteAsync(() => AddAsync(context, currentActivity), context.CancellationToken);
     }
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="consumer">The consumer value.</param>
+    /// <summary>Marks the current operation as complete.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="consumer">The consumer.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CompleteAsync(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer, CancellationToken cancellationToken = default)
     {
         return _collector.ExecuteAsync(() => RemoveAsync(context, consumer), cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("batchCollector");

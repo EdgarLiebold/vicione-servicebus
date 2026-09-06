@@ -3,22 +3,16 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides an address equality comparer implementation.
-/// </summary>
+/// <summary>Compares address equality values.</summary>
 public class AddressEqualityComparer :
     IEqualityComparer<Uri>
 {
-    /// <summary>
-    /// Defines the comparer value.
-    /// </summary>
+    /// <summary>Exposes the comparer used by the containing type.</summary>
     public static readonly IEqualityComparer<Uri> Comparer = new AddressEqualityComparer();
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="x">The x value.</param>
-    /// <param name="y">The y value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="x">The <c>x</c> value.</param>
+    /// <param name="y">The <c>y</c> value.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Equals(Uri? x, Uri? y)
     {
@@ -31,11 +25,9 @@ public class AddressEqualityComparer :
                 && x.AbsolutePath.Equals(y.AbsolutePath, StringComparison.OrdinalIgnoreCase));
     }
 
-    /// <summary>
-    /// Gets hash code.
-    /// </summary>
-    /// <param name="obj">The obj value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets hash code.</summary>
+    /// <param name="obj">The obj.</param>
+    /// <returns>The hash code for this instance.</returns>
     public int GetHashCode(Uri obj)
     {
         return obj.AbsolutePath.GetHashCode();

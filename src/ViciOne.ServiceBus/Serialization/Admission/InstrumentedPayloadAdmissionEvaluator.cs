@@ -5,6 +5,7 @@ using ViciOne.ServiceBus.Diagnostics;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>Exception-isolated observation around the exact-byte admission evaluator.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 internal sealed class InstrumentedPayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator<TBus>
     where TBus : class, IBus
 {

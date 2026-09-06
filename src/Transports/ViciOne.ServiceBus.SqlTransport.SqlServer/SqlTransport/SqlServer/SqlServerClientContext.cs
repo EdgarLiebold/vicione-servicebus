@@ -12,9 +12,7 @@ using ViciOne.ServiceBus.SqlTransport.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
-/// <summary>
-/// Provides a sql server client context implementation.
-/// </summary>
+/// <summary>Executes SQL Server queue, topic, delivery, and lock operations for one SQL transport client.</summary>
 public class SqlServerClientContext :
     SqlClientContext
 {
@@ -37,11 +35,9 @@ public class SqlServerClientContext :
     readonly string _unlockSql;
     readonly string _deadLetterMessagesSql;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Initializes a client that uses the specified SQL Server connection context.</summary>
+    /// <param name="context">The connection context used to execute transport commands.</param>
+    /// <param name="cancellationToken">The token that controls the lifetime of this client context.</param>
     public SqlServerClientContext(SqlServerDbConnectionContext context, CancellationToken cancellationToken)
         : base(context, cancellationToken)
     {
@@ -66,12 +62,10 @@ public class SqlServerClientContext :
         _deleteScheduledMessageSql = $"{_context.Schema}.DeleteScheduledMessage";
     }
 
-    /// <summary>
-    /// Creates queue.
-    /// </summary>
-    /// <param name="queue">The queue value.</param>
+    /// <summary>Creates or resolves a transport queue.</summary>
+    /// <param name="queue">The queue topology definition.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The database identifier of the queue.</returns>
     public override async Task<long> CreateQueueAsync(Queue queue, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_createQueueSql, new
@@ -84,12 +78,10 @@ public class SqlServerClientContext :
         return result ?? throw new SqlTopologyException("Create queue failed");
     }
 
-    /// <summary>
-    /// Creates topic.
-    /// </summary>
-    /// <param name="topic">The topic value.</param>
+    /// <summary>Creates or resolves a transport topic.</summary>
+    /// <param name="topic">The topic topology definition.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The database identifier of the topic.</returns>
     public override async Task<long> CreateTopicAsync(Topic topic, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_createTopicSql, new { topicName = topic.TopicName });
@@ -97,12 +89,10 @@ public class SqlServerClientContext :
         return result ?? throw new SqlTopologyException("Create topic failed");
     }
 
-    /// <summary>
-    /// Creates topic subscription.
-    /// </summary>
-    /// <param name="subscription">The subscription value.</param>
+    /// <summary>Creates or resolves a topic-to-topic subscription.</summary>
+    /// <param name="subscription">The subscription topology definition.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The database identifier of the subscription.</returns>
     public override async Task<long> CreateTopicSubscriptionAsync(TopicToTopicSubscription subscription, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_createTopicSubscriptionSql, new
@@ -117,12 +107,10 @@ public class SqlServerClientContext :
         return result ?? throw new SqlTopologyException("Create topic subscription failed");
     }
 
-    /// <summary>
-    /// Creates queue subscription.
-    /// </summary>
-    /// <param name="subscription">The subscription value.</param>
+    /// <summary>Creates or resolves a topic-to-queue subscription.</summary>
+    /// <param name="subscription">The subscription topology definition.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The database identifier of the subscription.</returns>
     public override async Task<long> CreateQueueSubscriptionAsync(TopicToQueueSubscription subscription, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_createQueueSubscriptionSql, new
@@ -137,12 +125,10 @@ public class SqlServerClientContext :
         return result ?? throw new SqlTopologyException("Create queue subscription failed");
     }
 
-    /// <summary>
-    /// Performs the purge queue operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
+    /// <summary>Removes currently available messages from a queue.</summary>
+    /// <param name="queueName">The queue to purge.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The number of messages removed.</returns>
     public override async Task<long> PurgeQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_purgeQueueSql, new { QueueName = queueName });
@@ -150,16 +136,14 @@ public class SqlServerClientContext :
         return result ?? throw new SqlTopologyException("Purge queue failed");
     }
 
-    /// <summary>
-    /// Performs the receive messages operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="mode">The mode value.</param>
-    /// <param name="messageLimit">The message limit value.</param>
-    /// <param name="concurrentLimit">The concurrent limit value.</param>
-    /// <param name="lockDuration">The lock duration value.</param>
+    /// <summary>Acquires and returns a batch of messages from a queue.</summary>
+    /// <param name="queueName">The queue from which messages are acquired.</param>
+    /// <param name="mode">The receive ordering and partition mode.</param>
+    /// <param name="messageLimit">The maximum number of messages to return.</param>
+    /// <param name="concurrentLimit">The maximum number of concurrently active partitions for a partitioned receive.</param>
+    /// <param name="lockDuration">How long acquired messages remain locked.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The acquired transport messages, or an empty sequence when SQL Server selects this transaction as a deadlock victim.</returns>
     public override async Task<IEnumerable<SqlTransportMessage>> ReceiveMessagesAsync(string queueName, SqlReceiveMode mode, int messageLimit,
         int concurrentLimit, TimeSpan lockDuration, CancellationToken cancellationToken = default)
     {
@@ -201,37 +185,31 @@ public class SqlServerClientContext :
         }
     }
 
-    /// <summary>
-    /// Performs the touch queue operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
+    /// <summary>Updates a queue's last-used timestamp.</summary>
+    /// <param name="queueName">The queue to mark as used.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override Task TouchQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return ExecuteAsync<long>(_touchQueueSql, new { queueName });
     }
 
-    /// <summary>
-    /// Performs the dead letter queue operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="messageCount">The message count value.</param>
+    /// <summary>Moves eligible messages from a queue to its dead-letter queue.</summary>
+    /// <param name="queueName">The source queue.</param>
+    /// <param name="messageCount">The maximum number of messages to move.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The number of messages moved, or <see langword="null" /> when the operation produces no result.</returns>
     public override Task<int?> DeadLetterQueueAsync(string queueName, int messageCount, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<int?>(cancellationToken); return ExecuteAsync<int>(_deadLetterMessagesSql, new { queueName, messageCount });
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Enqueues a message and its transport metadata in a queue.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="queueName">The destination queue.</param>
+    /// <param name="context">The serialized message and send metadata.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override Task SendAsync<T>(string queueName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IEnumerable<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
@@ -271,14 +249,12 @@ public class SqlServerClientContext :
         });
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Publishes a message and its transport metadata through a topic.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="topicName">The source topic used to resolve subscriptions.</param>
+    /// <param name="context">The serialized message and publish metadata.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override Task PublishAsync<T>(string topicName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IEnumerable<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
@@ -318,13 +294,11 @@ public class SqlServerClientContext :
         });
     }
 
-    /// <summary>
-    /// Performs the delete message operation.
-    /// </summary>
-    /// <param name="lockId">The lock id value.</param>
-    /// <param name="messageDeliveryId">The message delivery id value.</param>
+    /// <summary>Deletes a delivered message when the supplied lock still owns it.</summary>
+    /// <param name="lockId">The current delivery lock identifier.</param>
+    /// <param name="messageDeliveryId">The delivery identifier.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns><see langword="true" /> when the delivery was deleted; otherwise, <see langword="false" />.</returns>
     public override async Task<bool> DeleteMessageAsync(Guid lockId, long messageDeliveryId, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_deleteMessageSql, new
@@ -336,12 +310,10 @@ public class SqlServerClientContext :
         return result == messageDeliveryId;
     }
 
-    /// <summary>
-    /// Performs the delete scheduled message operation.
-    /// </summary>
-    /// <param name="tokenId">The token id value.</param>
+    /// <summary>Deletes a scheduled message identified by its scheduling token.</summary>
+    /// <param name="tokenId">The scheduling token identifier.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns><see langword="true" /> when a scheduled message was deleted; otherwise, <see langword="false" />.</returns>
     public override async Task<bool> DeleteScheduledMessageAsync(Guid tokenId, CancellationToken cancellationToken = default)
     {
         IEnumerable<SqlTransportMessage> result = await QueryAsync<SqlTransportMessage>(_deleteScheduledMessageSql, new
@@ -352,17 +324,15 @@ public class SqlServerClientContext :
         return result.Any();
     }
 
-    /// <summary>
-    /// Performs the move message operation.
-    /// </summary>
-    /// <param name="lockId">The lock id value.</param>
-    /// <param name="messageDeliveryId">The message delivery id value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="queueType">The queue type value.</param>
-    /// <param name="expirationTime">The expiration time value.</param>
-    /// <param name="sendHeaders">The send headers value.</param>
+    /// <summary>Moves a locked delivery to a queue and applies replacement transport metadata.</summary>
+    /// <param name="lockId">The current delivery lock identifier.</param>
+    /// <param name="messageDeliveryId">The delivery identifier.</param>
+    /// <param name="queueName">The destination queue.</param>
+    /// <param name="queueType">The destination queue category used for transport metrics.</param>
+    /// <param name="expirationTime">The replacement expiration timestamp, or <see langword="null" /> for no expiration.</param>
+    /// <param name="sendHeaders">Headers to merge into the moved message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns><see langword="true" /> when the delivery was moved; otherwise, <see langword="false" />.</returns>
     public override async Task<bool> MoveMessageAsync(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType,
         DateTimeOffset? expirationTime, SendHeaders sendHeaders, CancellationToken cancellationToken = default)
     {
@@ -382,14 +352,12 @@ public class SqlServerClientContext :
         return result == messageDeliveryId;
     }
 
-    /// <summary>
-    /// Performs the renew lock operation.
-    /// </summary>
-    /// <param name="lockId">The lock id value.</param>
-    /// <param name="messageDeliveryId">The message delivery id value.</param>
-    /// <param name="duration">The duration value.</param>
+    /// <summary>Extends the lock on a delivery owned by the supplied lock identifier.</summary>
+    /// <param name="lockId">The current delivery lock identifier.</param>
+    /// <param name="messageDeliveryId">The delivery identifier.</param>
+    /// <param name="duration">The additional lock duration measured from the database clock.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns><see langword="true" /> when the lock was renewed; otherwise, <see langword="false" />.</returns>
     public override async Task<bool> RenewLockAsync(Guid lockId, long messageDeliveryId, TimeSpan duration, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_renewMessageLockSql, new
@@ -402,15 +370,13 @@ public class SqlServerClientContext :
         return result == messageDeliveryId;
     }
 
-    /// <summary>
-    /// Performs the unlock operation.
-    /// </summary>
-    /// <param name="lockId">The lock id value.</param>
-    /// <param name="messageDeliveryId">The message delivery id value.</param>
-    /// <param name="delay">The delay value.</param>
-    /// <param name="sendHeaders">The send headers value.</param>
+    /// <summary>Releases a delivery lock and makes the message available after an optional delay.</summary>
+    /// <param name="lockId">The current delivery lock identifier.</param>
+    /// <param name="messageDeliveryId">The delivery identifier.</param>
+    /// <param name="delay">The delay before the message becomes available again.</param>
+    /// <param name="sendHeaders">Headers to merge into the unlocked message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns><see langword="true" /> when the delivery was unlocked; otherwise, <see langword="false" />.</returns>
     public override async Task<bool> UnlockAsync(Guid lockId, long messageDeliveryId, TimeSpan delay, SendHeaders sendHeaders, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); IEnumerable<KeyValuePair<string, object>> headers = sendHeaders.GetAll().ToList();

@@ -5,28 +5,22 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>
-/// Provides a pending fault collection implementation.
-/// </summary>
+/// <summary>Stores a collection of pending fault values.</summary>
 public class PendingFaultCollection
 {
     readonly List<IPendingFault> _pendingFaults;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public PendingFaultCollection()
     {
         _pendingFaults = new List<IPendingFault>();
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="elapsed">The elapsed value.</param>
-    /// <param name="consumerType">The consumer type value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="elapsed">The elapsed.</param>
+    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     public void Add<T>(ConsumeContext<T> context, TimeSpan elapsed, string consumerType, Exception exception)
         where T : class
@@ -37,12 +31,10 @@ public class PendingFaultCollection
             _pendingFaults.Add(pendingFault);
     }
 
-    /// <summary>
-    /// Performs the notify operation.
-    /// </summary>
-    /// <param name="consumeContext">The consume context value.</param>
+    /// <summary>Notifies the registered observers.</summary>
+    /// <param name="consumeContext">The consume context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task NotifyAsync(ConsumeContext consumeContext, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); IPendingFault[] pendingFaults;

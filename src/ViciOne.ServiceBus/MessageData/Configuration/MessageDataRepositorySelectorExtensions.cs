@@ -5,16 +5,12 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.MessageData.Configuration;
 
-/// <summary>
-/// Provides extension methods for message data repository selector.
-/// </summary>
+/// <summary>Provides extension methods for message data repository selector.</summary>
 public static class MessageDataRepositorySelectorExtensions
 {
-    /// <summary>
-    /// Performs the in memory operation.
-    /// </summary>
-    /// <param name="selector">The selector value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Selects the in-memory implementation.</summary>
+    /// <param name="selector">The selector.</param>
+    /// <returns>The message data repository produced by the operation.</returns>
     public static IMessageDataRepository InMemory(this IMessageDataRepositorySelector selector)
     {
         if (selector is null)
@@ -23,12 +19,10 @@ public static class MessageDataRepositorySelectorExtensions
         return new InMemoryMessageDataRepository();
     }
 
-    /// <summary>
-    /// Performs the file system operation.
-    /// </summary>
-    /// <param name="selector">The selector value.</param>
-    /// <param name="path">The path value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Uses the file-system assembly source.</summary>
+    /// <param name="selector">The selector.</param>
+    /// <param name="path">The path.</param>
+    /// <returns>The message data repository produced by the operation.</returns>
     public static IMessageDataRepository FileSystem(this IMessageDataRepositorySelector selector, string path)
     {
         if (selector is null)
@@ -41,14 +35,12 @@ public static class MessageDataRepositorySelectorExtensions
         return new FileSystemMessageDataRepository(dataDirectory);
     }
 
-    /// <summary>
-    /// Performs the encrypted operation.
-    /// </summary>
-    /// <param name="selector">The selector value.</param>
+    /// <summary>Determines whether the payload is encrypted.</summary>
+    /// <param name="selector">The selector.</param>
     /// <param name="keyProvider">The provider that selects current and historical encryption keys.</param>
     /// <param name="maximumObjectBytes">The hard upper bound for one plaintext message-data object.</param>
-    /// <param name="innerSelector">The inner selector value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="innerSelector">The inner selector.</param>
+    /// <returns>The message data repository produced by the operation.</returns>
     public static IMessageDataRepository Encrypted(
         this IMessageDataRepositorySelector selector,
         IEncryptionKeyProvider keyProvider,

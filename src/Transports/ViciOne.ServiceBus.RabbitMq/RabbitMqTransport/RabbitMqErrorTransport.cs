@@ -5,29 +5,23 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq error transport implementation.
-/// </summary>
+/// <summary>Republishes faulted deliveries to the configured RabbitMQ error exchange.</summary>
 public class RabbitMqErrorTransport :
     RabbitMqMoveTransport<ErrorSettings>,
     IErrorTransport
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="topologyFilter">The topology filter value.</param>
+    /// <summary>Creates a move transport for an error exchange and its topology.</summary>
+    /// <param name="exchange">The destination exchange name.</param>
+    /// <param name="topologyFilter">The filter that declares error topology before publishing.</param>
     public RabbitMqErrorTransport(string exchange, ConfigureRabbitMqTopologyFilter<ErrorSettings> topologyFilter)
         : base(exchange, topologyFilter)
     {
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Copies a faulted message and its exception headers to the error exchange.</summary>
+    /// <param name="context">The faulted receive context to copy.</param>
+    /// <param name="cancellationToken">Cancellation checked before the move begins; the receive context governs the broker operations.</param>
+    /// <returns>A task that follows the mandatory RabbitMQ client publish operation; the receive pipeline settles the source delivery separately.</returns>
     public Task SendAsync(ExceptionReceiveContext context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); void PreSend(BasicProperties message, SendHeaders headers)

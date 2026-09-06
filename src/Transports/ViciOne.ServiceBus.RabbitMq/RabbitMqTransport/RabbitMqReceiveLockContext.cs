@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq receive lock context implementation.
-/// </summary>
+/// <summary>Completes or requeues one manually acknowledged RabbitMQ delivery.</summary>
 public class RabbitMqReceiveLockContext :
     ReceiveLockContext
 {
@@ -18,12 +16,10 @@ public class RabbitMqReceiveLockContext :
     readonly ChannelContext _channel;
     readonly ulong _deliveryTag;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="channel">The channel value.</param>
-    /// <param name="deliveryTag">The delivery tag value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates acknowledgement state for one channel-scoped delivery tag.</summary>
+    /// <param name="channel">The RabbitMQ channel context that received the message.</param>
+    /// <param name="deliveryTag">The channel-scoped delivery tag.</param>
+    /// <param name="cancellationToken">The receive-context cancellation used for broker acknowledgements.</param>
     public RabbitMqReceiveLockContext(ChannelContext channel, ulong deliveryTag, CancellationToken cancellationToken)
     {
         _channel = channel;
@@ -31,20 +27,15 @@ public class RabbitMqReceiveLockContext :
         _cancellationToken = cancellationToken;
     }
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Acknowledges successful processing of the delivery.</summary>
+    /// <param name="cancellationToken">Cancellation checked before acknowledgement begins.</param>
+    /// <returns>A task that completes after the acknowledgement is written.</returns>
     public async Task CompleteAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); if (_channel.Channel.IsClosed)
         {
-            // Channel.IsClosed and Channel.CloseReason are read-only diagnostics and safe to read at
-            // any time; the operations themselves go through the owning context and its lease. The
-            // reason reported is the one the channel actually closed for. Where there is none — a
-            // close this process started — the initiator is Library, because a locally produced
-            // state must not claim the peer sent it.
+            // Preserve a broker close reason when available; otherwise identify the synthesized
+            // unavailable state as library-initiated.
             var reason = _channel.Channel.CloseReason;
 
             throw new OperationInterruptedException(reason
@@ -63,12 +54,10 @@ public class RabbitMqReceiveLockContext :
         }
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Best-effort requeues the delivery after processing fails.</summary>
+    /// <param name="exception">The processing failure included in acknowledgement diagnostics.</param>
+    /// <param name="cancellationToken">Cancellation checked before negative acknowledgement begins.</param>
+    /// <returns>A task that completes after the negative acknowledgement attempt.</returns>
     public async Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); if (_channel.Channel.IsClosed || _cancellationToken.IsCancellationRequested)
@@ -84,20 +73,15 @@ public class RabbitMqReceiveLockContext :
         }
     }
 
-    /// <summary>
-    /// Validates lock status.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Verifies that the channel and receive context can still acknowledge the delivery.</summary>
+    /// <param name="cancellationToken">Cancellation checked before validation.</param>
+    /// <returns>A completed task when acknowledgement remains available.</returns>
     public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (_channel.Channel.IsClosed)
         {
-            // Channel.IsClosed and Channel.CloseReason are read-only diagnostics and safe to read at
-            // any time; the operations themselves go through the owning context and its lease. The
-            // reason reported is the one the channel actually closed for. Where there is none — a
-            // close this process started — the initiator is Library, because a locally produced
-            // state must not claim the peer sent it.
+            // Preserve a broker close reason when available; otherwise identify the synthesized
+            // unavailable state as library-initiated.
             var reason = _channel.Channel.CloseReason;
 
             throw new OperationInterruptedException(reason

@@ -7,18 +7,14 @@ using ViciOne.ServiceBus.EntityFrameworkCore.Configuration;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides extension methods for entity framework core saga repository registration.
-/// </summary>
+/// <summary>Provides EF Core saga-repository registration and relational-provider selection.</summary>
 public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
 {
-    /// <summary>
-    /// Adds a EntityFramework saga repository to the registration
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <typeparam name="TSaga"></typeparam>
-    /// <returns></returns>
+    /// <summary>Registers an EF Core repository for the saga type.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The saga registration to associate with the EF Core repository.</param>
+    /// <param name="configure">The callback that selects the DbContext and concurrency behavior.</param>
+    /// <returns>The same saga registration configurator.</returns>
     public static ISagaRegistrationConfigurator<TSaga> EntityFrameworkRepository<TSaga>(this ISagaRegistrationConfigurator<TSaga> configurator,
         Action<IEntityFrameworkSagaRepositoryConfigurator<TSaga>> configure)
         where TSaga : class, ISaga
@@ -34,15 +30,13 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Adds a EntityFramework saga repository to the registration
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="sagaRepository"></param>
-    /// <param name="configure"></param>
-    /// <param name="configureSagaMapping"></param>
-    /// <typeparam name="TSaga"></typeparam>
-    /// <returns></returns>
+    /// <summary>Registers the saga in a shared EF Core repository and optionally configures its entity mapping.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The saga registration to associate with the shared EF Core repository.</param>
+    /// <param name="sagaRepository">The shared mapping and DbContext repository.</param>
+    /// <param name="configure">An optional callback that configures concurrency and querying.</param>
+    /// <param name="configureSagaMapping">An optional callback that configures the saga entity.</param>
+    /// <returns>The same saga registration configurator.</returns>
     public static ISagaRegistrationConfigurator<TSaga> EntityFrameworkRepository<TSaga>(this ISagaRegistrationConfigurator<TSaga> configurator,
         IEntityFrameworkSagaRepository sagaRepository, Action<IEntityFrameworkSagaRepositoryConfigurator<TSaga>>? configure = null,
         Action<EntityTypeBuilder<TSaga>>? configureSagaMapping = null)
@@ -51,15 +45,13 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
         return configurator.EntityFrameworkRepository(sagaRepository, configure, new ActionSagaClassMap<TSaga>(configureSagaMapping));
     }
 
-    /// <summary>
-    /// Adds a EntityFramework saga repository to the registration
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="sagaRepository"></param>
-    /// <param name="configure"></param>
-    /// <param name="sagaClassMap"></param>
-    /// <typeparam name="TSaga"></typeparam>
-    /// <returns></returns>
+    /// <summary>Registers the saga in a shared EF Core repository using an explicit saga mapping.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The saga registration to associate with the shared EF Core repository.</param>
+    /// <param name="sagaRepository">The shared mapping and DbContext repository.</param>
+    /// <param name="configure">An optional callback that configures concurrency and querying.</param>
+    /// <param name="sagaClassMap">The mapping to add, or <see langword="null"/> to use the default saga mapping.</param>
+    /// <returns>The same saga registration configurator.</returns>
     public static ISagaRegistrationConfigurator<TSaga> EntityFrameworkRepository<TSaga>(this ISagaRegistrationConfigurator<TSaga> configurator,
         IEntityFrameworkSagaRepository sagaRepository, Action<IEntityFrameworkSagaRepositoryConfigurator<TSaga>>? configure = null,
         ISagaClassMap<TSaga>? sagaClassMap = null)
@@ -74,12 +66,10 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
         });
     }
 
-    /// <summary>
-    /// Configure the Job Service saga state machines to use Entity Framework Core as the saga repository
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Configures all job-service saga state machines to use EF Core repositories.</summary>
+    /// <param name="configurator">The job-saga registration that receives the repository provider.</param>
+    /// <param name="configure">An optional callback applied to each job-service saga repository.</param>
+    /// <returns>The same job saga registration configurator.</returns>
     public static IJobSagaRegistrationConfigurator EntityFrameworkRepository(this IJobSagaRegistrationConfigurator configurator,
         Action<IEntityFrameworkSagaRepositoryConfigurator>? configure = null)
     {
@@ -90,23 +80,19 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Use the EntityFramework saga repository for sagas configured by type (without a specific generic call to AddSaga/AddSagaStateMachine)
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
+    /// <summary>Uses EF Core for saga types registered without a saga-specific repository call.</summary>
+    /// <param name="configurator">The registration configurator that receives the default saga repository provider.</param>
+    /// <param name="configure">The callback applied to each discovered saga repository.</param>
     public static void SetEntityFrameworkSagaRepositoryProvider(this IRegistrationConfigurator configurator,
         Action<IEntityFrameworkSagaRepositoryConfigurator> configure)
     {
         configurator.SetSagaRepositoryProvider(new EntityFrameworkSagaRepositoryRegistrationProvider(configure));
     }
 
-    /// <summary>
-    /// Configure the repository for use with SQL Server
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Selects SQL Server locking for the saga repository.</summary>
+    /// <typeparam name="T">The saga state type.</typeparam>
+    /// <param name="configurator">The typed repository configuration on which SQL Server locking is selected.</param>
+    /// <returns>The same repository configurator.</returns>
     public static IEntityFrameworkSagaRepositoryConfigurator<T> UseSqlServer<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
         where T : class, ISaga
     {
@@ -116,13 +102,11 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Configure the repository for use with SQL Server
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="schemaName">The schema name to use if the table schema cannot be discovered</param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Selects SQL Server locking and a fallback schema for the saga repository.</summary>
+    /// <typeparam name="T">The saga state type.</typeparam>
+    /// <param name="configurator">The typed repository configuration on which SQL Server locking is selected.</param>
+    /// <param name="schemaName">The schema name to use if the table schema cannot be discovered.</param>
+    /// <returns>The same repository configurator.</returns>
     public static IEntityFrameworkSagaRepositoryConfigurator<T> UseSqlServer<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator,
         string schemaName)
         where T : class, ISaga
@@ -136,11 +120,9 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Configure the repository for use with SQL Server
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <returns></returns>
+    /// <summary>Selects SQL Server locking for a non-generic saga repository configuration.</summary>
+    /// <param name="configurator">The repository configuration on which SQL Server locking is selected.</param>
+    /// <returns>The same repository configurator.</returns>
     public static IEntityFrameworkSagaRepositoryConfigurator UseSqlServer(this IEntityFrameworkSagaRepositoryConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -149,12 +131,10 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Configure the repository for use with SQL Server
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="schemaName">The schema name to use if the table schema cannot be discovered</param>
-    /// <returns></returns>
+    /// <summary>Selects SQL Server locking and a fallback schema for a non-generic saga repository configuration.</summary>
+    /// <param name="configurator">The repository configuration on which SQL Server locking is selected.</param>
+    /// <param name="schemaName">The schema name to use if the table schema cannot be discovered.</param>
+    /// <returns>The same repository configurator.</returns>
     public static IEntityFrameworkSagaRepositoryConfigurator UseSqlServer(this IEntityFrameworkSagaRepositoryConfigurator configurator,
         string schemaName)
     {
@@ -167,12 +147,10 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Configure the repository for use with Postgres
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Selects PostgreSQL row locking for the saga repository.</summary>
+    /// <typeparam name="T">The saga state type.</typeparam>
+    /// <param name="configurator">The typed repository configuration on which PostgreSQL locking is selected.</param>
+    /// <returns>The same repository configurator.</returns>
     public static IEntityFrameworkSagaRepositoryConfigurator<T> UsePostgres<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
         where T : class, ISaga
     {
@@ -182,13 +160,11 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Configure the repository for use with Postgres
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="schemaName">The schema name to use if the table schema cannot be discovered</param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Selects PostgreSQL row locking and a fallback schema for the saga repository.</summary>
+    /// <typeparam name="T">The saga state type.</typeparam>
+    /// <param name="configurator">The typed repository configuration on which PostgreSQL locking is selected.</param>
+    /// <param name="schemaName">The schema name to use if the table schema cannot be discovered.</param>
+    /// <returns>The same repository configurator.</returns>
     public static IEntityFrameworkSagaRepositoryConfigurator<T> UsePostgres<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator,
         string schemaName)
         where T : class, ISaga
@@ -202,11 +178,9 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Configure the repository for use with Postgres
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <returns></returns>
+    /// <summary>Selects PostgreSQL row locking for a non-generic saga repository configuration.</summary>
+    /// <param name="configurator">The repository configuration on which PostgreSQL locking is selected.</param>
+    /// <returns>The same repository configurator.</returns>
     public static IEntityFrameworkSagaRepositoryConfigurator UsePostgres(this IEntityFrameworkSagaRepositoryConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -215,12 +189,10 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Configure the repository for use with Postgres
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="schemaName">The schema name to use if the table schema cannot be discovered</param>
-    /// <returns></returns>
+    /// <summary>Selects PostgreSQL row locking and a fallback schema for a non-generic saga repository configuration.</summary>
+    /// <param name="configurator">The repository configuration on which PostgreSQL locking is selected.</param>
+    /// <param name="schemaName">The schema name to use if the table schema cannot be discovered.</param>
+    /// <returns>The same repository configurator.</returns>
     public static IEntityFrameworkSagaRepositoryConfigurator UsePostgres(this IEntityFrameworkSagaRepositoryConfigurator configurator,
         string schemaName)
     {
@@ -234,12 +206,12 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
     }
 
     /// <summary>
-    /// Configure the repository for use with SQLite. SQLite has no row-level locking, so saga
+    /// Configures the repository for SQLite. SQLite has no row-level locking, so saga
     /// concurrency is configured as optimistic and must use an application-managed concurrency token.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <typeparam name="T">The saga state type.</typeparam>
+    /// <param name="configurator">The typed repository configuration switched to optimistic concurrency.</param>
+    /// <returns>The same repository configurator.</returns>
     public static IEntityFrameworkSagaRepositoryConfigurator<T> UseSqlite<T>(this IEntityFrameworkSagaRepositoryConfigurator<T> configurator)
         where T : class, ISaga
     {
@@ -250,11 +222,11 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
     }
 
     /// <summary>
-    /// Configure the repository for use with SQLite. SQLite has no row-level locking, so saga
+    /// Configures the repository for SQLite. SQLite has no row-level locking, so saga
     /// concurrency is configured as optimistic and must use an application-managed concurrency token.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <returns></returns>
+    /// <param name="configurator">The repository configuration switched to optimistic concurrency.</param>
+    /// <returns>The same repository configurator.</returns>
     public static IEntityFrameworkSagaRepositoryConfigurator UseSqlite(this IEntityFrameworkSagaRepositoryConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);

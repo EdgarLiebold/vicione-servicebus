@@ -5,9 +5,9 @@ using ViciOne.ServiceBus.ActiveMq.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq.Middleware;
 /// <summary>
-/// Configures the broker with the supplied topology once the model is created, to ensure
-/// that the exchanges, queues, and bindings for the model are properly configured in ActiveMQ.
+/// Resolves the topics and queues required by a broker topology once per Apache NMS session context.
 /// </summary>
+/// <typeparam name="TSettings">The settings associated with the topology deployment.</typeparam>
 public class ConfigureActiveMqTopologyFilter<TSettings> :
     IFilter<SessionContext>
     where TSettings : class
@@ -16,12 +16,10 @@ public class ConfigureActiveMqTopologyFilter<TSettings> :
     readonly ActiveMqReceiveEndpointContext _context;
     readonly TSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="brokerTopology">The broker topology value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Creates a one-time topology-deployment filter.</summary>
+    /// <param name="settings">The settings associated with the deployment.</param>
+    /// <param name="brokerTopology">The topics and queues to resolve.</param>
+    /// <param name="context">The receive endpoint that owns cleanup agents.</param>
     public ConfigureActiveMqTopologyFilter(TSettings settings, BrokerTopology brokerTopology, ActiveMqReceiveEndpointContext context)
     {
         _settings = settings;
@@ -29,12 +27,10 @@ public class ConfigureActiveMqTopologyFilter<TSettings> :
         _context = context;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Ensures the topology exists, executes the next session stage, and installs OpenWire cleanup when needed.</summary>
+    /// <param name="context">The Apache NMS session context.</param>
+    /// <param name="next">The next session pipeline stage.</param>
+    /// <returns>A task that completes when the next stage completes.</returns>
     public async Task SendAsync(SessionContext context, IPipe<SessionContext> next)
     {
         OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await ConfigureAsync(context);
@@ -65,10 +61,8 @@ public class ConfigureActiveMqTopologyFilter<TSettings> :
         return string.Equals(hostAddress.Scheme, ActiveMqHostAddress.ActiveMqScheme, StringComparison.OrdinalIgnoreCase);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The probe context to populate.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("configureTopology");
@@ -76,12 +70,10 @@ public class ConfigureActiveMqTopologyFilter<TSettings> :
         _brokerTopology.Probe(scope);
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Ensures the broker topology is configured once for a session context.</summary>
+    /// <param name="context">The Apache NMS session context.</param>
+    /// <param name="cancellationToken">The token used to cancel one-time setup.</param>
+    /// <returns>A task that produces the one-time setup handle.</returns>
     public async Task<OneTimeContext<ConfigureTopologyContext<TSettings>>> ConfigureAsync(SessionContext context, CancellationToken cancellationToken = default)
     {
         return await context.OneTimeSetupAsync<ConfigureTopologyContext<TSettings>>(() =>
@@ -103,9 +95,7 @@ public class ConfigureActiveMqTopologyFilter<TSettings> :
     {
         LogContext.Debug?.Log("Declare topic {Topic}", topic);
 
-        // The outcome, not the steps. Resolving a name is a client side act that leaves the broker
-        // without the topic, which is what this filter used to do and why a deployed topology was
-        // deployed nowhere.
+        // Topology deployment completes only after the broker confirms that the topic exists.
         return context.EnsureTopicExistsAsync(topic);
     }
 

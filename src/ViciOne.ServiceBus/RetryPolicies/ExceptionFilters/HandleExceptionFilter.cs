@@ -3,18 +3,14 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
 
-/// <summary>
-/// Provides a handle exception filter implementation.
-/// </summary>
+/// <summary>Processes handle exception pipeline stages.</summary>
 public class HandleExceptionFilter :
     IExceptionFilter
 {
     readonly Type[] _exceptionTypes;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="exceptionTypes">The exception types value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="exceptionTypes">The exception types.</param>
     public HandleExceptionFilter(params Type[] exceptionTypes)
     {
         _exceptionTypes = exceptionTypes;

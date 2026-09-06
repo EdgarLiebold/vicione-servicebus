@@ -5,20 +5,16 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for publish endpoint recurring scheduler.
-/// </summary>
+/// <summary>Provides extension methods for publish endpoint recurring scheduler.</summary>
 public static class PublishEndpointRecurringSchedulerExtensions
 {
-    /// <summary>
-    /// Schedule a message for recurring delivery using the specified schedule
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="endpoint">The message scheduler endpoint</param>
-    /// <param name="message">The message</param>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="schedule">The schedule for the message to be delivered</param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Schedule a message for recurring delivery using the specified schedule.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="endpoint">The message scheduler endpoint.</param>
+    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
+    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(this IPublishEndpoint endpoint, Uri destinationAddress,
         RecurringSchedule schedule, T message,
@@ -30,16 +26,14 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return scheduler.ScheduleRecurringSendAsync(destinationAddress, schedule, message, cancellationToken);
     }
 
-    /// <summary>
-    /// Schedule a message for recurring delivery using the specified schedule
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="endpoint">The message scheduler endpoint</param>
-    /// <param name="message">The message</param>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="schedule">The schedule for the message to be delivered</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Schedule a message for recurring delivery using the specified schedule.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="endpoint">The message scheduler endpoint.</param>
+    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
+    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(this IPublishEndpoint endpoint, Uri destinationAddress,
         RecurringSchedule schedule, T message,
@@ -51,16 +45,14 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return scheduler.ScheduleRecurringSendAsync(destinationAddress, schedule, message, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Schedule a message for recurring delivery using the specified schedule
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="endpoint">The message scheduler endpoint</param>
-    /// <param name="message">The message</param>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="schedule">The schedule for the message to be delivered</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Schedule a message for recurring delivery using the specified schedule.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="endpoint">The message scheduler endpoint.</param>
+    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
+    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(this IPublishEndpoint endpoint, Uri destinationAddress,
         RecurringSchedule schedule, T message,
@@ -72,14 +64,12 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return scheduler.ScheduleRecurringSendAsync(destinationAddress, schedule, message, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Schedule a message for recurring delivery using the specified schedule
-    /// </summary>
-    /// <param name="endpoint">The message scheduler endpoint</param>
-    /// <param name="message">The message object</param>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="schedule">The schedule for the message to be delivered</param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Schedule a message for recurring delivery using the specified schedule.</summary>
+    /// <param name="endpoint">The message scheduler endpoint.</param>
+    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
+    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="message">The message object.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(this IPublishEndpoint endpoint, Uri destinationAddress, RecurringSchedule schedule,
         object message, CancellationToken cancellationToken = default)
@@ -89,15 +79,13 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return scheduler.ScheduleRecurringSendAsync(destinationAddress, schedule, message, cancellationToken);
     }
 
-    /// <summary>
-    /// Schedule a message for recurring delivery using the specified schedule
-    /// </summary>
-    /// <param name="endpoint">The message scheduler endpoint</param>
-    /// <param name="message">The message object</param>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="schedule">The schedule for the message to be delivered</param>
-    /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Schedule a message for recurring delivery using the specified schedule.</summary>
+    /// <param name="endpoint">The message scheduler endpoint.</param>
+    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
+    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="message">The message object.</param>
+    /// <param name="messageType">The type of the message (use message.GetType() if desired).</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(this IPublishEndpoint endpoint, Uri destinationAddress, RecurringSchedule schedule,
         object message, Type messageType, CancellationToken cancellationToken = default)
@@ -107,15 +95,13 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return scheduler.ScheduleRecurringSendAsync(destinationAddress, schedule, message, messageType, cancellationToken);
     }
 
-    /// <summary>
-    /// Schedule a message for recurring delivery using the specified schedule
-    /// </summary>
-    /// <param name="endpoint">The message scheduler endpoint</param>
-    /// <param name="message">The message object</param>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="schedule">The schedule for the message to be delivered</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Schedule a message for recurring delivery using the specified schedule.</summary>
+    /// <param name="endpoint">The message scheduler endpoint.</param>
+    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
+    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="message">The message object.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(this IPublishEndpoint endpoint, Uri destinationAddress, RecurringSchedule schedule,
         object message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
@@ -125,16 +111,14 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return scheduler.ScheduleRecurringSendAsync(destinationAddress, schedule, message, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Schedule a message for recurring delivery using the specified schedule
-    /// </summary>
-    /// <param name="endpoint">The message scheduler endpoint</param>
-    /// <param name="message">The message object</param>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="schedule">The schedule for the message to be delivered</param>
-    /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Schedule a message for recurring delivery using the specified schedule.</summary>
+    /// <param name="endpoint">The message scheduler endpoint.</param>
+    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
+    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="message">The message object.</param>
+    /// <param name="messageType">The type of the message (use message.GetType() if desired).</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(this IPublishEndpoint endpoint, Uri destinationAddress, RecurringSchedule schedule,
         object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
@@ -144,15 +128,13 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return scheduler.ScheduleRecurringSendAsync(destinationAddress, schedule, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Schedule a message for recurring delivery using the specified schedule
-    /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="endpoint">The message scheduler endpoint</param>
-    /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="schedule">The schedule for the message to be delivered</param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Schedule a message for recurring delivery using the specified schedule.</summary>
+    /// <typeparam name="T">The interface type to send.</typeparam>
+    /// <param name="endpoint">The message scheduler endpoint.</param>
+    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
+    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="values">The property values to initialize on the interface.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(this IPublishEndpoint endpoint, Uri destinationAddress,
         RecurringSchedule schedule, object values, CancellationToken cancellationToken = default)
@@ -163,16 +145,14 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return scheduler.ScheduleRecurringSendAsync<T>(destinationAddress, schedule, values, cancellationToken);
     }
 
-    /// <summary>
-    /// Schedule a message for recurring delivery using the specified schedule
-    /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="endpoint">The message scheduler endpoint</param>
-    /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="schedule">The schedule for the message to be delivered</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Schedule a message for recurring delivery using the specified schedule.</summary>
+    /// <typeparam name="T">The interface type to send.</typeparam>
+    /// <param name="endpoint">The message scheduler endpoint.</param>
+    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
+    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="values">The property values to initialize on the interface.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(this IPublishEndpoint endpoint, Uri destinationAddress,
         RecurringSchedule schedule, object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
@@ -183,16 +163,14 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return scheduler.ScheduleRecurringSendAsync(destinationAddress, schedule, values, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Schedule a message for recurring delivery using the specified schedule
-    /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="endpoint">The message scheduler endpoint</param>
-    /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="schedule">The schedule for the message to be delivered</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Schedule a message for recurring delivery using the specified schedule.</summary>
+    /// <typeparam name="T">The interface type to send.</typeparam>
+    /// <param name="endpoint">The message scheduler endpoint.</param>
+    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
+    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="values">The property values to initialize on the interface.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(this IPublishEndpoint endpoint, Uri destinationAddress,
         RecurringSchedule schedule, object values, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
@@ -203,12 +181,12 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return scheduler.ScheduleRecurringSendAsync<T>(destinationAddress, schedule, values, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Cancel a scheduled message using the scheduled message instance
-    /// </summary>
-    /// <param name="endpoint">The endpoint of the scheduling service</param>
-    /// <param name="message">The schedule message reference</param>
+    /// <summary>Cancel a scheduled message using the scheduled message instance.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="endpoint">The endpoint of the scheduling service.</param>
+    /// <param name="message">The schedule message reference.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task CancelScheduledRecurringSendAsync<T>(this IPublishEndpoint endpoint, ScheduledRecurringMessage<T> message, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -218,13 +196,12 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return CancelScheduledRecurringSendAsync(endpoint, message.Schedule.ScheduleId, message.Schedule.ScheduleGroup, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Cancel a scheduled message using the scheduleId and scheduleGroup that was returned when the message was scheduled.
-    /// </summary>
-    /// <param name="endpoint">The endpoint of the scheduling service</param>
-    /// <param name="scheduleId">The scheduleId from the recurring schedule</param>
-    /// <param name="scheduleGroup">The scheduleGroup from the recurring schedule</param>
+    /// <summary>Cancel a scheduled message using the scheduleId and scheduleGroup that was returned when the message was scheduled.</summary>
+    /// <param name="endpoint">The endpoint of the scheduling service.</param>
+    /// <param name="scheduleId">The scheduleId from the recurring schedule.</param>
+    /// <param name="scheduleGroup">The scheduleGroup from the recurring schedule.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task CancelScheduledRecurringSendAsync(this IPublishEndpoint endpoint, string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default)
     {
         IRecurringMessageScheduler scheduler = new PublishRecurringMessageScheduler(endpoint);
@@ -232,12 +209,12 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return scheduler.CancelScheduledRecurringSendAsync(scheduleId, scheduleGroup, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Pause a scheduled message using the scheduled message instance
-    /// </summary>
-    /// <param name="endpoint">The endpoint of the scheduling service</param>
-    /// <param name="message">The schedule message reference</param>
+    /// <summary>Pause a scheduled message using the scheduled message instance.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="endpoint">The endpoint of the scheduling service.</param>
+    /// <param name="message">The schedule message reference.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task PauseScheduledRecurringSendAsync<T>(this IPublishEndpoint endpoint, ScheduledRecurringMessage<T> message, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -247,13 +224,12 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return PauseScheduledRecurringSendAsync(endpoint, message.Schedule.ScheduleId, message.Schedule.ScheduleGroup, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Pause a scheduled message using the scheduleId and scheduleGroup that was returned when the message was scheduled.
-    /// </summary>
-    /// <param name="endpoint">The endpoint of the scheduling service</param>
-    /// <param name="scheduleId">The scheduleId from the recurring schedule</param>
-    /// <param name="scheduleGroup">The scheduleGroup from the recurring schedule</param>
+    /// <summary>Pause a scheduled message using the scheduleId and scheduleGroup that was returned when the message was scheduled.</summary>
+    /// <param name="endpoint">The endpoint of the scheduling service.</param>
+    /// <param name="scheduleId">The scheduleId from the recurring schedule.</param>
+    /// <param name="scheduleGroup">The scheduleGroup from the recurring schedule.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task PauseScheduledRecurringSendAsync(this IPublishEndpoint endpoint, string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default)
     {
         IRecurringMessageScheduler scheduler = new PublishRecurringMessageScheduler(endpoint);
@@ -261,12 +237,12 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return scheduler.PauseScheduledRecurringSendAsync(scheduleId, scheduleGroup, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Resume a scheduled message using the scheduled message instance
-    /// </summary>
-    /// <param name="endpoint">The endpoint of the scheduling service</param>
-    /// <param name="message">The schedule message reference</param>
+    /// <summary>Resume a scheduled message using the scheduled message instance.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="endpoint">The endpoint of the scheduling service.</param>
+    /// <param name="message">The schedule message reference.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task ResumeScheduledRecurringSendAsync<T>(this IPublishEndpoint endpoint, ScheduledRecurringMessage<T> message, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -276,13 +252,12 @@ public static class PublishEndpointRecurringSchedulerExtensions
         return ResumeScheduledRecurringSendAsync(endpoint, message.Schedule.ScheduleId, message.Schedule.ScheduleGroup, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Resume a scheduled message using the scheduleId and scheduleGroup that was returned when the message was scheduled.
-    /// </summary>
-    /// <param name="endpoint">The endpoint of the scheduling service</param>
-    /// <param name="scheduleId">The scheduleId from the recurring schedule</param>
-    /// <param name="scheduleGroup">The scheduleGroup from the recurring schedule</param>
+    /// <summary>Resume a scheduled message using the scheduleId and scheduleGroup that was returned when the message was scheduled.</summary>
+    /// <param name="endpoint">The endpoint of the scheduling service.</param>
+    /// <param name="scheduleId">The scheduleId from the recurring schedule.</param>
+    /// <param name="scheduleGroup">The scheduleGroup from the recurring schedule.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task ResumeScheduledRecurringSendAsync(this IPublishEndpoint endpoint, string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default)
     {
         IRecurringMessageScheduler scheduler = new PublishRecurringMessageScheduler(endpoint);

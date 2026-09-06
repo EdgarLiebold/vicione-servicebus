@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.RabbitMq.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a sequential endpoint resolver implementation.
-/// </summary>
+/// <summary>Cycles through configured RabbitMQ cluster nodes for successive connection attempts.</summary>
 public class SequentialEndpointResolver :
     IRabbitMqEndpointResolver
 {
@@ -17,11 +15,9 @@ public class SequentialEndpointResolver :
     ClusterNode _lastNode;
     int _nextHostIndex;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="nodes">The nodes value.</param>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Creates a round-robin resolver over a nonempty node snapshot.</summary>
+    /// <param name="nodes">The RabbitMQ cluster nodes.</param>
+    /// <param name="settings">The host defaults and TLS settings applied to resolved endpoints.</param>
     public SequentialEndpointResolver(ClusterNode[] nodes, RabbitMqHostSettings settings)
     {
         if (nodes == null)
@@ -34,15 +30,11 @@ public class SequentialEndpointResolver :
         _nextHostIndex = 0;
     }
 
-    /// <summary>
-    /// Gets the last host value.
-    /// </summary>
+    /// <summary>Gets the node selected by the most recent enumeration.</summary>
     public ClusterNode LastHost => _lastNode;
 
-    /// <summary>
-    /// Performs the all operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Selects the next node and returns its RabbitMQ client endpoint.</summary>
+    /// <returns>A single endpoint for the current connection attempt.</returns>
     public IEnumerable<AmqpTcpEndpoint> All()
     {
         _lastNode = _nodes[_nextHostIndex % _nodes.Length];

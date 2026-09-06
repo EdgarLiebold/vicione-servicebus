@@ -1,16 +1,10 @@
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Defines the contract for consumer fault context.
-/// </summary>
+/// <summary>Exposes state for consumer fault operations.</summary>
 public interface ConsumerFaultContext
 {
-    /// <summary>
-    /// Gets the message type value.
-    /// </summary>
+    /// <summary>Gets the message type.</summary>
     string MessageType { get; }
-    /// <summary>
-    /// Gets the consumer type value.
-    /// </summary>
+    /// <summary>Gets the consumer type.</summary>
     string ConsumerType { get; }
 }

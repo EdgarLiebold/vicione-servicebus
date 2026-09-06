@@ -3,20 +3,16 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>
-/// Provides a sql bus topology implementation.
-/// </summary>
+/// <summary>Defines the topology for sql bus.</summary>
 public class SqlBusTopology :
     BusTopology,
     ISqlBusTopology
 {
     readonly ISqlTopologyConfiguration _configuration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="configuration">The configuration callback.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="configuration">The callback used to configure the component.</param>
     public SqlBusTopology(ISqlHostConfiguration hostConfiguration, ISqlTopologyConfiguration configuration)
         : base(hostConfiguration, configuration)
     {

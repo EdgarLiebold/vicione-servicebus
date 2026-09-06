@@ -7,27 +7,21 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides an active mq header provider implementation.
-/// </summary>
+/// <summary>Reads framework and native properties from an Apache NMS message.</summary>
 public class ActiveMqHeaderProvider :
     IHeaderProvider
 {
     readonly IMessage _message;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Creates a header provider for an Apache NMS message.</summary>
+    /// <param name="message">The native message whose headers are exposed.</param>
     public ActiveMqHeaderProvider(IMessage message)
     {
         _message = message;
     }
 
-    /// <summary>
-    /// Gets all.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Enumerates the transport message identifier, correlation identifier, and native message properties.</summary>
+    /// <returns>The available header name/value pairs.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
         if (_message.NMSMessageId is { } messageId)
@@ -44,12 +38,10 @@ public class ActiveMqHeaderProvider :
         }
     }
 
-    /// <summary>
-    /// Attempts to get header.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Tries to read a framework header or native message property.</summary>
+    /// <param name="key">The header name.</param>
+    /// <param name="value">The header value, when present and non-null.</param>
+    /// <returns><see langword="true" /> when a non-null value is available; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         if (MessageHeaders.TransportMessageId.Equals(key, StringComparison.OrdinalIgnoreCase))

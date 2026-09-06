@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides an event hub rider implementation.
-/// </summary>
+/// <summary>Owns Event Hubs endpoints, shared connection state, and producer-provider lifetime for a bus instance.</summary>
 public class EventHubRider :
     IEventHubRider
 {
@@ -21,13 +19,11 @@ public class EventHubRider :
     readonly IEventHubHostConfiguration _hostConfiguration;
     Lazy<IEventHubProducerProvider> _producerProvider = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="busInstance">The bus instance value.</param>
-    /// <param name="endpoints">The endpoints value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Creates a rider from its built host configuration and receive-endpoint collection.</summary>
+    /// <param name="hostConfiguration">The Event Hubs host configuration.</param>
+    /// <param name="busInstance">The bus instance that owns the rider.</param>
+    /// <param name="endpoints">The rider's configured receive endpoints.</param>
+    /// <param name="context">The rider registration context used for dynamically connected endpoints.</param>
     public EventHubRider(IEventHubHostConfiguration hostConfiguration, IBusInstance busInstance, IReceiveEndpointCollection endpoints,
         IRiderRegistrationContext context)
     {
@@ -39,11 +35,9 @@ public class EventHubRider :
         InitializeProducerProvider();
     }
 
-    /// <summary>
-    /// Gets producer provider.
-    /// </summary>
-    /// <param name="consumeContext">The consume context value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the shared producer provider, optionally wrapped to propagate consume-context headers.</summary>
+    /// <param name="consumeContext">The consume context whose headers should flow to produced messages, or <see langword="null" />.</param>
+    /// <returns>The shared provider or a consume-context-aware wrapper.</returns>
     public IEventHubProducerProvider GetProducerProvider(ConsumeContext? consumeContext = default)
     {
         return consumeContext == null
@@ -51,13 +45,11 @@ public class EventHubRider :
             : new ConsumeContextEventHubProducerProvider(_producerProvider.Value, consumeContext);
     }
 
-    /// <summary>
-    /// Connects event hub endpoint.
-    /// </summary>
-    /// <param name="eventHubName">The event hub name value.</param>
-    /// <param name="consumerGroup">The consumer group value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds, adds, and starts a receive endpoint on the running rider.</summary>
+    /// <param name="eventHubName">The Event Hub entity name.</param>
+    /// <param name="consumerGroup">The consumer group used to coordinate partition ownership.</param>
+    /// <param name="configure">Configures the connected receive endpoint.</param>
+    /// <returns>A handle for observing readiness and stopping the endpoint.</returns>
     public HostReceiveEndpointHandle ConnectEventHubEndpoint(string eventHubName, string consumerGroup,
         Action<IRiderRegistrationContext, IEventHubReceiveEndpointConfigurator> configure)
     {
@@ -71,11 +63,9 @@ public class EventHubRider :
         return _endpoints.Start(specification.EndpointName);
     }
 
-    /// <summary>
-    /// Starts the configured component.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Starts configured receive endpoints and binds rider completion to the shared connection supervisor.</summary>
+    /// <param name="cancellationToken">Cancels endpoint startup.</param>
+    /// <returns>A handle that reports readiness and stops the rider.</returns>
     public RiderHandle Start(CancellationToken cancellationToken = default)
     {
         HostReceiveEndpointHandle[] endpointsHandle = _endpoints.StartEndpoints(cancellationToken);
@@ -87,10 +77,8 @@ public class EventHubRider :
         return new Handle(endpointsHandle, agent);
     }
 
-    /// <summary>
-    /// Performs the check endpoint health operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the current health result for every configured or connected receive endpoint.</summary>
+    /// <returns>The endpoint health results.</returns>
     public IEnumerable<EndpointHealthResult> CheckEndpointHealth()
     {
         return _endpoints.CheckEndpointHealth();
@@ -154,7 +142,7 @@ public class EventHubRider :
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            return _agent.StopAsync("EvenHub stopped", cancellationToken);
+            return _agent.StopAsync("Event Hub stopped", cancellationToken);
         }
 
         async Task ReadyOrNotAsync(IEnumerable<Task<ReceiveEndpointReady>> endpoints)

@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for registration context.
-/// </summary>
+/// <summary>Provides extension methods for registration context.</summary>
 public static class RegistrationContextExtensions
 {
     /// <summary>
@@ -18,10 +16,10 @@ public static class RegistrationContextExtensions
     /// is registered in the container, it is resolved from the container. Otherwise, the <see cref="DefaultEndpointNameFormatter" />
     /// is used.
     /// </summary>
-    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured</param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="endpointNameFormatter">Optional, the endpoint name formatter</param>
-    /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
+    /// <typeparam name="T">The bus factory type (depends upon the transport).</typeparam>
+    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured.</param>
+    /// <param name="registration">The registration for this bus instance.</param>
+    /// <param name="endpointNameFormatter">Optional, the endpoint name formatter.</param>
     public static void ConfigureEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,
         IEndpointNameFormatter? endpointNameFormatter = null)
         where T : IReceiveEndpointConfigurator
@@ -35,11 +33,11 @@ public static class RegistrationContextExtensions
     /// is registered in the container, it is resolved from the container. Otherwise, the <see cref="DefaultEndpointNameFormatter" />
     /// is used.
     /// </summary>
-    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured</param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="configureFilter">Filter the configured consumers, sagas, and activities</param>
-    /// <param name="endpointNameFormatter">Optional, the endpoint name formatter</param>
-    /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
+    /// <typeparam name="T">The bus factory type (depends upon the transport).</typeparam>
+    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured.</param>
+    /// <param name="registration">The registration for this bus instance.</param>
+    /// <param name="configureFilter">Filter the configured consumers, sagas, and activities.</param>
+    /// <param name="endpointNameFormatter">Optional, the endpoint name formatter.</param>
     public static void ConfigureEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,
         Action<IRegistrationFilterConfigurator> configureFilter, IEndpointNameFormatter? endpointNameFormatter = null)
         where T : IReceiveEndpointConfigurator
@@ -53,10 +51,10 @@ public static class RegistrationContextExtensions
     /// is registered in the container, it is resolved from the container. Otherwise, the <see cref="DefaultEndpointNameFormatter" />
     /// is used.
     /// </summary>
-    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured</param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="endpointNameFormatter">Optional, the endpoint name formatter</param>
-    /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
+    /// <typeparam name="T">The bus factory type (depends upon the transport).</typeparam>
+    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured.</param>
+    /// <param name="registration">The registration for this bus instance.</param>
+    /// <param name="endpointNameFormatter">Optional, the endpoint name formatter.</param>
     public static void ConfigureEndpoints<T>(this IServiceInstanceConfigurator<T> configurator, IBusRegistrationContext registration,
         IEndpointNameFormatter? endpointNameFormatter = null)
         where T : IReceiveEndpointConfigurator
@@ -70,11 +68,11 @@ public static class RegistrationContextExtensions
     /// is registered in the container, it is resolved from the container. Otherwise, the <see cref="DefaultEndpointNameFormatter" />
     /// is used.
     /// </summary>
-    /// <param name="configurator">The <see cref="IReceiveConfigurator" /> for the bus being configured</param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="configureFilter">Filter the configured consumers, sagas, and activities</param>
-    /// <param name="endpointNameFormatter">Optional, the endpoint name formatter</param>
-    /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
+    /// <typeparam name="T">The bus factory type (depends upon the transport).</typeparam>
+    /// <param name="configurator">The <see cref="IReceiveConfigurator" /> for the bus being configured.</param>
+    /// <param name="registration">The registration for this bus instance.</param>
+    /// <param name="configureFilter">Filter the configured consumers, sagas, and activities.</param>
+    /// <param name="endpointNameFormatter">Optional, the endpoint name formatter.</param>
     public static void ConfigureEndpoints<T>(this IServiceInstanceConfigurator<T> configurator, IBusRegistrationContext registration,
         Action<IRegistrationFilterConfigurator> configureFilter, IEndpointNameFormatter? endpointNameFormatter = null)
         where T : IReceiveEndpointConfigurator
@@ -86,11 +84,11 @@ public static class RegistrationContextExtensions
     /// Create a service instance and configure the endpoints of every defined consumer, saga and
     /// activity inside it, so their names are bound to this instance.
     /// </summary>
-    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured</param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="configureFilter">Filter the configured consumers, sagas, and activities</param>
-    /// <param name="options">Optional service instance options to start</param>
-    /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
+    /// <typeparam name="T">The bus factory type (depends upon the transport).</typeparam>
+    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured.</param>
+    /// <param name="registration">The registration for this bus instance.</param>
+    /// <param name="configureFilter">Filter the configured consumers, sagas, and activities.</param>
+    /// <param name="options">Optional service instance options to start.</param>
     public static void ConfigureServiceInstanceEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,
         Action<IRegistrationFilterConfigurator>? configureFilter, ServiceInstanceOptions? options = null)
         where T : IReceiveEndpointConfigurator
@@ -118,10 +116,10 @@ public static class RegistrationContextExtensions
     /// Create a service instance and configure the endpoints of every defined consumer, saga and
     /// activity inside it, so their names are bound to this instance.
     /// </summary>
-    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured</param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="options">Optional service instance options to start</param>
-    /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
+    /// <typeparam name="T">The bus factory type (depends upon the transport).</typeparam>
+    /// <param name="configurator">The <see cref="IBusFactoryConfigurator" /> for the bus being configured.</param>
+    /// <param name="registration">The registration for this bus instance.</param>
+    /// <param name="options">Optional service instance options to start.</param>
     public static void ConfigureServiceInstanceEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,
         ServiceInstanceOptions? options = null)
         where T : IReceiveEndpointConfigurator
@@ -129,24 +127,20 @@ public static class RegistrationContextExtensions
         ConfigureServiceInstanceEndpoints(configurator, registration, null, options);
     }
 
-    /// <summary>
-    /// Configure a consumer on the receive endpoint
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="consumerType">The consumer type</param>
+    /// <summary>Configure a consumer on the receive endpoint.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="registration">The registration for this bus instance.</param>
+    /// <param name="consumerType">The consumer type.</param>
     public static void ConfigureConsumer(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration, Type consumerType)
     {
         registration.ConfigureConsumer(consumerType, configurator);
     }
 
-    /// <summary>
-    /// Configure a consumer on the receive endpoint, with an optional configuration action
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="configure"></param>
-    /// <typeparam name="T">The consumer type</typeparam>
+    /// <summary>Configure a consumer on the receive endpoint, with an optional configuration action.</summary>
+    /// <typeparam name="T">The consumer type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="registration">The registration for this bus instance.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void ConfigureConsumer<T>(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration,
         Action<IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
@@ -154,23 +148,19 @@ public static class RegistrationContextExtensions
         registration.ConfigureConsumer(configurator, configure);
     }
 
-    /// <summary>
-    /// Configure all registered consumers on the receive endpoint
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="registration">The registration for this bus instance</param>
+    /// <summary>Configure all registered consumers on the receive endpoint.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="registration">The registration for this bus instance.</param>
     public static void ConfigureConsumers(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration)
     {
         registration.ConfigureConsumers(configurator);
     }
 
-    /// <summary>
-    /// Configure the specified activity type
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="compensateEndpointConfigurator">The configurator for the compensate activity endpoint</param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="activityType"></param>
+    /// <summary>Configure the specified activity type.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="compensateEndpointConfigurator">The configurator for the compensate activity endpoint.</param>
+    /// <param name="registration">The registration for this bus instance.</param>
+    /// <param name="activityType">The runtime activity type used by the operation.</param>
     public static void ConfigureActivity(this IReceiveEndpointConfigurator configurator, IReceiveEndpointConfigurator compensateEndpointConfigurator,
         IRegistrationContext registration,
         Type activityType)
@@ -178,36 +168,30 @@ public static class RegistrationContextExtensions
         registration.ConfigureActivity(activityType, configurator, compensateEndpointConfigurator);
     }
 
-    /// <summary>
-    /// Configure the specified execute activity type
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="activityType"></param>
+    /// <summary>Configure the specified execute activity type.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="registration">The registration for this bus instance.</param>
+    /// <param name="activityType">The runtime activity type used by the operation.</param>
     public static void ConfigureExecuteActivity(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration, Type activityType)
     {
         registration.ConfigureExecuteActivity(activityType, configurator);
     }
 
-    /// <summary>
-    /// Configure the specified activity type
-    /// </summary>
-    /// <param name="configurator">The configurator for the execute activity endpoint</param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="activityType"></param>
-    /// <param name="compensateAddress"></param>
+    /// <summary>Configure the specified activity type.</summary>
+    /// <param name="configurator">The configurator for the execute activity endpoint.</param>
+    /// <param name="registration">The registration for this bus instance.</param>
+    /// <param name="activityType">The runtime activity type used by the operation.</param>
+    /// <param name="compensateAddress">The compensate address.</param>
     public static void ConfigureActivityExecute(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration, Type activityType,
         Uri compensateAddress)
     {
         registration.ConfigureActivityExecute(activityType, configurator, compensateAddress);
     }
 
-    /// <summary>
-    /// Configure the specified activity type
-    /// </summary>
-    /// <param name="configurator">The configurator for the compensate activity endpoint</param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="activityType"></param>
+    /// <summary>Configure the specified activity type.</summary>
+    /// <param name="configurator">The configurator for the compensate activity endpoint.</param>
+    /// <param name="registration">The registration for this bus instance.</param>
+    /// <param name="activityType">The runtime activity type used by the operation.</param>
     public static void ConfigureActivityCompensate(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration, Type activityType)
     {
         registration.ConfigureActivityCompensate(activityType, configurator);

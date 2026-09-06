@@ -1,25 +1,15 @@
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// A unique builder context should be created for each specification, so that the items added
-/// by it can be combined together into a group - so that if a subsequent specification yanks
-/// something that conflicts, the system can yank the group or warn that it's impacted.
-/// </summary>
+/// <summary>Builds the queue, endpoint exchange, and optional message exchange bindings for one receive endpoint.</summary>
 public interface IReceiveEndpointBrokerTopologyBuilder :
     IBrokerTopologyBuilder
 {
-    /// <summary>
-    /// A handle to the consuming queue
-    /// </summary>
+    /// <summary>Gets the consuming queue handle.</summary>
     QueueHandle Queue { get; }
 
-    /// <summary>
-    /// A handle to the exchange which is bound directly to the consuming queue
-    /// </summary>
+    /// <summary>Gets the receive endpoint exchange handle that is bound directly to the queue.</summary>
     ExchangeHandle Exchange { get; }
 
-    /// <summary>
-    /// A handle to an exchange bound to the receive endpoint exchange
-    /// </summary>
+    /// <summary>Gets or sets the message exchange currently bound to the receive endpoint exchange.</summary>
     ExchangeHandle? BoundExchange { get; set; }
 }

@@ -1,4 +1,6 @@
+using Apache.NMS;
 using ViciOne.ServiceBus.ActiveMq.Configuration;
+using ViciOne.ServiceBus.ActiveMq.Topology;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -111,5 +113,36 @@ public sealed class ActiveMqHostSettingsTests
         Assert.Equal("production", snapshot.VirtualHost);
         Assert.DoesNotContain("nms.AsyncSend", snapshot.BrokerAddress.OriginalString, StringComparison.Ordinal);
         Assert.DoesNotContain("secret", snapshot.HostAddress.OriginalString, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION", "host-comparer-hash-matches-case-insensitive-equality")]
+    public void HostComparer_UsesTheSameCaseInsensitiveIdentityForEqualityAndHashing()
+    {
+        ActiveMqHostSettings upperCase = new CasePreservingHostSettings("BROKER.EXAMPLE.TEST", 61616);
+        ActiveMqHostSettings lowerCase = new CasePreservingHostSettings("broker.example.test", 61616);
+        IEqualityComparer<ActiveMqHostSettings> comparer = ActiveMqHostEqualityComparer.Default;
+        var values = new Dictionary<ActiveMqHostSettings, string>(comparer)
+        {
+            [upperCase] = "first",
+            [lowerCase] = "updated",
+        };
+
+        Assert.True(comparer.Equals(upperCase, lowerCase));
+        Assert.Equal(comparer.GetHashCode(upperCase), comparer.GetHashCode(lowerCase));
+        Assert.Equal("updated", Assert.Single(values).Value);
+    }
+
+    private sealed class CasePreservingHostSettings(string host, int port) : ActiveMqHostSettings
+    {
+        public string Host { get; } = host;
+        public int Port { get; } = port;
+        public string VirtualHost => string.Empty;
+        public string Username => string.Empty;
+        public string Password => string.Empty;
+        public Uri HostAddress => throw new NotSupportedException();
+        public bool UseSsl => false;
+        public Uri BrokerAddress => throw new NotSupportedException();
+        public IConnection CreateConnection() => throw new NotSupportedException();
     }
 }

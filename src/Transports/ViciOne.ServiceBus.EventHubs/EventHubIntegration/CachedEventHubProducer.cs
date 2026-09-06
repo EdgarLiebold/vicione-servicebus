@@ -6,10 +6,8 @@ using ViciOne.ServiceBus.Caching;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides a cached event hub producer implementation.
-/// </summary>
-/// <typeparam name="TKey">The t key type.</typeparam>
+/// <summary>Associates a cache key with an Event Hubs producer and reports each use to the resource cache.</summary>
+/// <typeparam name="TKey">The producer cache-key type.</typeparam>
 public class CachedEventHubProducer<TKey> :
     IEventHubProducer,
     IResourceUsageSource,
@@ -18,26 +16,20 @@ public class CachedEventHubProducer<TKey> :
 {
     readonly IEventHubProducer _producer;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="producer">The producer value.</param>
+    /// <summary>Creates a cache-owned wrapper around a producer.</summary>
+    /// <param name="key">The key that identifies the cached producer.</param>
+    /// <param name="producer">The producer to wrap and dispose.</param>
     public CachedEventHubProducer(TKey key, IEventHubProducer producer)
     {
         Key = key;
         _producer = producer;
     }
 
-    /// <summary>
-    /// Gets the key value.
-    /// </summary>
+    /// <summary>Gets the key used by the resource cache.</summary>
     public TKey Key { get; }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Disposes the wrapped producer when it supports asynchronous disposal.</summary>
+    /// <returns>The producer's disposal task, or a completed value task.</returns>
     public ValueTask DisposeAsync()
     {
         return _producer switch
@@ -47,24 +39,20 @@ public class CachedEventHubProducer<TKey> :
         };
     }
 
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports cache usage and connects a send observer to the wrapped producer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         Used?.Invoke();
         return _producer.ConnectSendObserver(observer);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
+    /// <summary>Reports cache usage and produces one message.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="message">The message to produce.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The task returned by the wrapped producer.</returns>
     public Task ProduceAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -72,13 +60,11 @@ public class CachedEventHubProducer<TKey> :
         return _producer.ProduceAsync(message, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="messages">The messages value.</param>
+    /// <summary>Reports cache usage and produces a batch of messages.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="messages">The messages to produce.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The task returned by the wrapped producer.</returns>
     public Task ProduceAsync<T>(IEnumerable<T> messages, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -86,14 +72,12 @@ public class CachedEventHubProducer<TKey> :
         return _producer.ProduceAsync(messages, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Reports cache usage and produces one configured message.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="message">The message to produce.</param>
+    /// <param name="pipe">The pipe that configures the Event Hubs send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The task returned by the wrapped producer.</returns>
     public Task ProduceAsync<T>(T message, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -101,14 +85,12 @@ public class CachedEventHubProducer<TKey> :
         return _producer.ProduceAsync(message, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="messages">The messages value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Reports cache usage and produces a configured batch of messages.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="messages">The messages to produce.</param>
+    /// <param name="pipe">The pipe applied to each Event Hubs send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The task returned by the wrapped producer.</returns>
     public Task ProduceAsync<T>(IEnumerable<T> messages, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -116,13 +98,11 @@ public class CachedEventHubProducer<TKey> :
         return _producer.ProduceAsync(messages, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
+    /// <summary>Reports cache usage, initializes one message, and produces it.</summary>
+    /// <typeparam name="T">The message type to initialize.</typeparam>
+    /// <param name="values">The values used to initialize the message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The task returned by the wrapped producer.</returns>
     public Task ProduceAsync<T>(object values, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -130,13 +110,11 @@ public class CachedEventHubProducer<TKey> :
         return _producer.ProduceAsync<T>(values, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
+    /// <summary>Reports cache usage, initializes a batch of messages, and produces them.</summary>
+    /// <typeparam name="T">The message type to initialize.</typeparam>
+    /// <param name="values">The values used to initialize the messages.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The task returned by the wrapped producer.</returns>
     public Task ProduceAsync<T>(IEnumerable<object> values, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -144,14 +122,12 @@ public class CachedEventHubProducer<TKey> :
         return _producer.ProduceAsync<T>(values, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Reports cache usage, initializes one message, configures its send context, and produces it.</summary>
+    /// <typeparam name="T">The message type to initialize.</typeparam>
+    /// <param name="values">The values used to initialize the message.</param>
+    /// <param name="pipe">The pipe that configures the Event Hubs send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The task returned by the wrapped producer.</returns>
     public Task ProduceAsync<T>(object values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -159,14 +135,12 @@ public class CachedEventHubProducer<TKey> :
         return _producer.ProduceAsync(values, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Reports cache usage, initializes a batch, configures each send context, and produces the messages.</summary>
+    /// <typeparam name="T">The message type to initialize.</typeparam>
+    /// <param name="values">The values used to initialize the messages.</param>
+    /// <param name="pipe">The pipe applied to each Event Hubs send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The task returned by the wrapped producer.</returns>
     public Task ProduceAsync<T>(IEnumerable<object> values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -174,8 +148,6 @@ public class CachedEventHubProducer<TKey> :
         return _producer.ProduceAsync(values, pipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Occurs when used.
-    /// </summary>
+    /// <summary>Occurs whenever an operation is delegated to the wrapped producer.</summary>
     public event Action? Used;
 }

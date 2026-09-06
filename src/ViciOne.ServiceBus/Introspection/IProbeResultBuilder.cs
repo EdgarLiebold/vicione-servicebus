@@ -1,13 +1,9 @@
 namespace ViciOne.ServiceBus.Introspection;
 
-/// <summary>
-/// Defines the contract for probe result builder.
-/// </summary>
+/// <summary>Builds probe result components.</summary>
 public interface IProbeResultBuilder
 {
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the configured component.</summary>
+    /// <returns>The configured component.</returns>
     ProbeResult Build();
 }

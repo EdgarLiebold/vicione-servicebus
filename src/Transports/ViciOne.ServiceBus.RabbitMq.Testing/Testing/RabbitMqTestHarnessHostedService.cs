@@ -16,9 +16,7 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides a rabbit mq test harness hosted service implementation.
-/// </summary>
+/// <summary>Creates, cleans, and configures the RabbitMQ virtual host before the application host starts.</summary>
 public class RabbitMqTestHarnessHostedService :
     IHostedService
 {
@@ -26,12 +24,10 @@ public class RabbitMqTestHarnessHostedService :
     readonly RabbitMqTestHarnessOptions _testOptions;
     readonly RabbitMqTransportOptions _transportOptions;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="transportOptions">The transport options value.</param>
-    /// <param name="testOptions">The test options value.</param>
-    /// <param name="logger">The logger value.</param>
+    /// <summary>Creates the hosted service from the effective transport and test-harness options.</summary>
+    /// <param name="transportOptions">Connection and management settings for the RabbitMQ broker.</param>
+    /// <param name="testOptions">Virtual-host preparation settings.</param>
+    /// <param name="logger">The logger used for preparation and cleanup diagnostics.</param>
     public RabbitMqTestHarnessHostedService(IOptions<RabbitMqTransportOptions> transportOptions, IOptions<RabbitMqTestHarnessOptions> testOptions,
         ILogger<RabbitMqTestHarnessHostedService> logger)
     {
@@ -40,11 +36,9 @@ public class RabbitMqTestHarnessHostedService :
         _testOptions = testOptions.Value;
     }
 
-    /// <summary>
-    /// Starts the configured component.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Performs the configured virtual-host creation, cleanup, and configuration sequence.</summary>
+    /// <param name="cancellationToken">Cancellation checked before broker preparation begins.</param>
+    /// <returns>A task that completes when virtual-host preparation has finished.</returns>
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested(); if (_testOptions.CreateVirtualHostIfNotExists)
@@ -57,11 +51,9 @@ public class RabbitMqTestHarnessHostedService :
             await ConfigureVirtualHostAsync(configureVirtualHost);
     }
 
-    /// <summary>
-    /// Stops the configured component.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes immediately because the service owns no resources after startup.</summary>
+    /// <param name="cancellationToken">Cancellation that faults the returned task when already requested.</param>
+    /// <returns>A completed task, or a canceled task when cancellation was requested.</returns>
     public Task StopAsync(CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
@@ -140,11 +132,7 @@ public class RabbitMqTestHarnessHostedService :
         }
         catch (Exception ex)
         {
-            // Two different failures, and only one of them is the answer. The setup failure is what
-            // actually went wrong and it used to disappear here entirely: the method returned
-            // normally, the caller learned nothing, and a broken virtual host first became visible
-            // as an unrelated failure in some later spec. Logging it was not enough — a log entry is
-            // not an error contract — so it is rethrown below with its own type, cause and stack.
+            // Setup failure remains authoritative while connection cleanup is best effort.
             _logger.LogError(ex, "Preparing the virtual host failed");
 
             if (connection.IsOpen)
@@ -161,7 +149,7 @@ public class RabbitMqTestHarnessHostedService :
                 }
             }
 
-            // Bare rethrow: the original stack is preserved, which a "throw ex" would discard.
+            // Bare rethrow preserves the primary setup failure and its stack.
             throw;
         }
     }
@@ -170,18 +158,15 @@ public class RabbitMqTestHarnessHostedService :
     /// <summary>
     /// Fits a connection close reason into what AMQP can carry.
     /// <para>
-    /// The reason travels in a shortstr, which holds at most 255 bytes. Both close sites built it
-    /// from an exception message, so any message longer than that overflowed the frame buffer and
-    /// threw ArgumentException: "The output byte buffer is too small to contain the encoded data,
-    /// encoding codepage '65001'". Because that happened inside a catch handler, the real failure
-    /// vanished and eight job specs reported an encoding error for a harness start that had failed
-    /// for an entirely different reason.
+    /// RabbitMQ encodes a close reason as a short string containing at most 255 bytes. The returned
+    /// value always fits that protocol field so connection cleanup cannot replace the primary failure.
     /// </para>
     /// <para>
-    /// Trimming runs over characters rather than bytes so a multi byte character is never cut in
-    /// half, which would produce a replacement character and a reason nobody can read.
+    /// Trimming preserves complete UTF-16 surrogate pairs and therefore complete UTF-8 scalar values.
     /// </para>
     /// </summary>
+    /// <param name="text">The proposed AMQP close reason.</param>
+    /// <returns>A UTF-8 prefix no longer than 255 bytes.</returns>
     static string CloseReason(string text)
     {
         const int maximumBytes = 255;
@@ -189,16 +174,11 @@ public class RabbitMqTestHarnessHostedService :
         if (Encoding.UTF8.GetByteCount(text) <= maximumBytes)
             return text;
 
-        // Substring rather than a span: this assembly also targets netstandard2.0, which has no
-        // span overload for GetByteCount. It is a rare error path, so the allocation is cheap.
         var length = Math.Min(text.Length, maximumBytes);
         while (length > 0 && Encoding.UTF8.GetByteCount(text.Substring(0, length)) > maximumBytes)
             length--;
 
-        // Characters are UTF-16 code units, not code points. A character outside the basic plane is
-        // a surrogate pair of two of them, and cutting between the two leaves a lone high surrogate
-        // that encodes as the replacement character — exactly what the paragraph above promises not
-        // to produce. True for two and three byte characters, false for four byte ones until here.
+        // A prefix ending in a high surrogate would split its Unicode scalar value.
         if (length > 0 && char.IsHighSurrogate(text[length - 1]))
             length--;
 
@@ -231,11 +211,7 @@ public class RabbitMqTestHarnessHostedService :
         }
         catch (Exception ex)
         {
-            // Two different failures, and only one of them is the answer. The setup failure is what
-            // actually went wrong and it used to disappear here entirely: the method returned
-            // normally, the caller learned nothing, and a broken virtual host first became visible
-            // as an unrelated failure in some later spec. Logging it was not enough — a log entry is
-            // not an error contract — so it is rethrown below with its own type, cause and stack.
+            // Setup failure remains authoritative while connection cleanup is best effort.
             _logger.LogError(ex, "Preparing the virtual host failed");
 
             if (connection.IsOpen)
@@ -252,7 +228,7 @@ public class RabbitMqTestHarnessHostedService :
                 }
             }
 
-            // Bare rethrow: the original stack is preserved, which a "throw ex" would discard.
+            // Bare rethrow preserves the primary setup failure and its stack.
             throw;
         }
     }

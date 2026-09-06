@@ -2,14 +2,10 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>
-/// Defines the contract for queue handle.
-/// </summary>
+/// <summary>Controls the lifetime of queue.</summary>
 public interface QueueHandle :
     EntityHandle
 {
-    /// <summary>
-    /// Gets the queue value.
-    /// </summary>
+    /// <summary>Gets the queue.</summary>
     Queue Queue { get; }
 }

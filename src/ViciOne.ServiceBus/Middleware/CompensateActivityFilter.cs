@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Compensates an activity as part of an activity execute host pipe
-/// </summary>
-/// <typeparam name="TLog"></typeparam>
-/// <typeparam name="TActivity"></typeparam>
+/// <summary>Compensates an activity as part of an activity execute host pipe.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TLog">The log type.</typeparam>
 public class CompensateActivityFilter<TActivity, TLog> :
     IFilter<CompensateActivityContext<TActivity, TLog>>
     where TLog : class
@@ -17,10 +15,8 @@ public class CompensateActivityFilter<TActivity, TLog> :
 {
     readonly ActivityObservable _observers;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="observers">The observers value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="observers">The observers.</param>
     public CompensateActivityFilter(ActivityObservable observers)
     {
         _observers = observers;
@@ -31,12 +27,10 @@ public class CompensateActivityFilter<TActivity, TLog> :
         context.CreateFilterScope("compensate");
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(CompensateActivityContext<TActivity, TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next)
     {
         try

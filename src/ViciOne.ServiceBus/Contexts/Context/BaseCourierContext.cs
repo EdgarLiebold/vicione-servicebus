@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>
-/// Provides a base courier context implementation.
-/// </summary>
+/// <summary>Carries state for base courier operations.</summary>
 public abstract class BaseCourierContext :
     ConsumeContextScope<RoutingSlip>,
     CourierContext
@@ -21,10 +19,8 @@ public abstract class BaseCourierContext :
     readonly TimeProvider _timeProvider;
     readonly IReadOnlyDictionary<string, object> _variables;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="consumeContext">The consume context value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="consumeContext">The consume context.</param>
     protected BaseCourierContext(ConsumeContext<RoutingSlip> consumeContext)
         : base(consumeContext)
     {
@@ -44,13 +40,9 @@ public abstract class BaseCourierContext :
         Publisher = new RoutingSlipEventPublisher(this, RoutingSlip, CancellationToken);
     }
 
-    /// <summary>
-    /// Gets the publisher value.
-    /// </summary>
+    /// <summary>Gets the publisher.</summary>
     protected IRoutingSlipEventPublisher Publisher { get; }
-    /// <summary>
-    /// Gets the routing slip value.
-    /// </summary>
+    /// <summary>Gets the routing slip.</summary>
     protected SanitizedRoutingSlip RoutingSlip { get; }
 
     DateTimeOffset ActivityContext.Timestamp => _timestamp;
@@ -61,9 +53,7 @@ public abstract class BaseCourierContext :
 
     RoutingSlip ConsumeContext<RoutingSlip>.Message => RoutingSlip;
 
-    /// <summary>
-    /// Gets the activity name value.
-    /// </summary>
+    /// <summary>Gets the activity name.</summary>
     public abstract string ActivityName { get; }
 
     Task ActivityContext.NotifyActivityConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken)

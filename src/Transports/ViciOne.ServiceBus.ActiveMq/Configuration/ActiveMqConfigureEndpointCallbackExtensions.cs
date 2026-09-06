@@ -2,16 +2,12 @@ using System;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides extension methods for active mq configure endpoint callback.
-/// </summary>
+/// <summary>Adds ActiveMQ-specific callbacks to endpoint registration.</summary>
 public static class ActiveMqConfigureEndpointCallbackExtensions
 {
-    /// <summary>
-    /// Add an ActiveMQ specific configure callback to the endpoint.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="callback"></param>
+    /// <summary>Adds a callback that runs when this registration is configured as an ActiveMQ endpoint.</summary>
+    /// <param name="configurator">The endpoint registration configurator.</param>
+    /// <param name="callback">The ActiveMQ-specific endpoint callback.</param>
     public static void AddActiveMqConfigureEndpointCallback(this IEndpointRegistrationConfigurator configurator,
         Action<IRegistrationContext, IActiveMqReceiveEndpointConfigurator> callback)
     {
@@ -25,11 +21,9 @@ public static class ActiveMqConfigureEndpointCallbackExtensions
         });
     }
 
-    /// <summary>
-    /// Add an ActiveMQ specific configure callback for configured endpoints
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="callback"></param>
+    /// <summary>Adds a callback that runs for every configured ActiveMQ endpoint.</summary>
+    /// <param name="configurator">The bus registration configurator.</param>
+    /// <param name="callback">The ActiveMQ-specific configured-endpoint callback.</param>
     public static void AddActiveMqConfigureEndpointsCallback(this IBusRegistrationConfigurator configurator, ActiveMqConfigureEndpointsCallback callback)
     {
         if (callback == null)

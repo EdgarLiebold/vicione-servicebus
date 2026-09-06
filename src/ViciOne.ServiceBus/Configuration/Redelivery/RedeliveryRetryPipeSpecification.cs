@@ -6,10 +6,8 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a redelivery retry pipe specification implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Describes requirements for redelivery retry pipe.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class RedeliveryRetryPipeSpecification<TMessage> :
     ExceptionSpecification,
     IRedeliveryConfigurator,
@@ -20,20 +18,16 @@ public class RedeliveryRetryPipeSpecification<TMessage> :
     readonly IRedeliveryPipeSpecification _redeliveryPipeSpecification;
     RetryPolicyFactory _policyFactory = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="redeliveryPipeSpecification">The redelivery pipe specification value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="redeliveryPipeSpecification">The redelivery pipe specification.</param>
     public RedeliveryRetryPipeSpecification(IRedeliveryPipeSpecification redeliveryPipeSpecification)
     {
         _redeliveryPipeSpecification = redeliveryPipeSpecification;
         _observers = new RetryObservable();
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPipeBuilder<ConsumeContext<TMessage>> builder)
     {
         var retryPolicy = _policyFactory(Filter);
@@ -43,38 +37,30 @@ public class RedeliveryRetryPipeSpecification<TMessage> :
         builder.AddFilter(new RedeliveryRetryFilter<ConsumeContext<TMessage>, TMessage>(policy, _observers));
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_policyFactory == null)
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
-    /// <summary>
-    /// Sets retry policy.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Sets retry policy.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         _policyFactory = factory;
     }
 
-    /// <summary>
-    /// Connects retry observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects retry observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectRetryObserver(IRetryObserver observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Gets or sets the replace message id value.
-    /// </summary>
+    /// <summary>Gets or sets the replace message id.</summary>
     public bool ReplaceMessageId
     {
         set

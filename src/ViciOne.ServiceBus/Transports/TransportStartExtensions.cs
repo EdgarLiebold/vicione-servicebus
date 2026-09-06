@@ -5,19 +5,15 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides extension methods for transport start.
-/// </summary>
+/// <summary>Provides extension methods for transport start.</summary>
 public static class TransportStartExtensions
 {
-    /// <summary>
-    /// Performs the on transport startup operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="supervisor">The supervisor value.</param>
+    /// <summary>Handles the notification for transport startup.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="supervisor">The supervisor.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static async Task OnTransportStartupAsync<T>(this ReceiveEndpointContext context, ITransportSupervisor<T> supervisor,
         CancellationToken cancellationToken)
         where T : class, PipeContext

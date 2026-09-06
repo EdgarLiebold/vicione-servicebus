@@ -3,19 +3,15 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus bus configuration implementation.
-/// </summary>
+/// <summary>Owns the Azure Service Bus host, bus endpoint, message routes, and bus observers.</summary>
 public class ServiceBusBusConfiguration :
     ServiceBusEndpointConfiguration,
     IServiceBusBusConfiguration
 {
     readonly BusObservable _busObservers;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Initializes a bus configuration with a host and a dedicated bus endpoint.</summary>
+    /// <param name="topologyConfiguration">The topology configuration inherited by the bus endpoint.</param>
     public ServiceBusBusConfiguration(IServiceBusTopologyConfiguration topologyConfiguration)
         : base(topologyConfiguration)
     {
@@ -31,34 +27,24 @@ public class ServiceBusBusConfiguration :
     IEndpointConfiguration IBusConfiguration.BusEndpointConfiguration => BusEndpointConfiguration;
     IBusObserver IBusConfiguration.BusObservers => _busObservers;
 
-    /// <summary>
-    /// Gets the bus endpoint configuration value.
-    /// </summary>
+    /// <summary>Gets the endpoint-level configuration used for the bus endpoint.</summary>
     public IServiceBusEndpointConfiguration BusEndpointConfiguration { get; }
-    /// <summary>
-    /// Gets the host configuration value.
-    /// </summary>
+    /// <summary>Gets the namespace host configuration.</summary>
     public IServiceBusHostConfiguration HostConfiguration { get; }
-    /// <summary>
-    /// Gets the message routes value.
-    /// </summary>
+    /// <summary>Gets the message route table populated during bus configuration.</summary>
     public MessageRouteTable MessageRoutes { get; }
 
-    /// <summary>
-    /// Connects bus observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Subscribes an observer to bus lifecycle events.</summary>
+    /// <param name="observer">The bus observer to subscribe.</param>
+    /// <returns>A handle that disconnects the observer.</returns>
     public ConnectHandle ConnectBusObserver(IBusObserver observer)
     {
         return _busObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Connects endpoint configuration observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Subscribes an observer to receive-endpoint configuration events.</summary>
+    /// <param name="observer">The endpoint-configuration observer to subscribe.</param>
+    /// <returns>A handle that disconnects the observer.</returns>
     public ConnectHandle ConnectEndpointConfigurationObserver(IEndpointConfigurationObserver observer)
     {
         return HostConfiguration.ConnectEndpointConfigurationObserver(observer);

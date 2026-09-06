@@ -4,10 +4,8 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a consumer metadata cache implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Caches consumer metadata data.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class ConsumerMetadataCache<T> :
     IConsumerMetadataCache<T>
     where T : class
@@ -24,9 +22,7 @@ public class ConsumerMetadataCache<T> :
         _consumerTypes = Array.AsReadOnly(consumerTypes);
     }
 
-    /// <summary>
-    /// Gets the consumer types value.
-    /// </summary>
+    /// <summary>Gets the consumer types.</summary>
     public static IReadOnlyList<IMessageInterfaceType> ConsumerTypes => Cached.Metadata.Value.ConsumerTypes;
 
     IReadOnlyList<IMessageInterfaceType> IConsumerMetadataCache<T>.ConsumerTypes => _consumerTypes;

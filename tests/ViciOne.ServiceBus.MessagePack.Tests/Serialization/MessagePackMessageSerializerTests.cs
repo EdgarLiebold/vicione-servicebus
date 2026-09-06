@@ -1,6 +1,7 @@
 using System.Text;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.MessageData;
+using ViciOne.ServiceBus.MessageData.Values;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -263,6 +264,23 @@ public sealed class MessagePackMessageSerializerTests
 
         Assert.NotNull(result.Value);
         Assert.Equal(source.Value.Address, result.Value.Address);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-MESSAGE-DATA", "inline-text-value")]
+    public async Task MessageData_RoundTripsItsInlineTextAsync()
+    {
+        const string expected = "Inline payload preserved by MessagePack";
+        var source = new MessageDataContainer
+        {
+            Value = new StringInlineMessageData(expected),
+        };
+
+        var result = MessagePackRoundTrip.Execute(source);
+
+        Assert.True(result.Value.HasValue);
+        Assert.Null(result.Value.Address);
+        Assert.Equal(expected, await result.Value.Value);
     }
 
     private static void AssertScalarMessage(ScalarMessage expected, ScalarMessage actual)

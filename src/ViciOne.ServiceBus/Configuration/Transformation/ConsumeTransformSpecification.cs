@@ -3,10 +3,8 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a consume transform specification implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Describes requirements for consume transform.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class ConsumeTransformSpecification<TMessage> :
     TransformSpecification<TMessage>,
     IConsumeTransformSpecification<TMessage>

@@ -109,9 +109,8 @@ internal static class BusCompositionRegistrations
     }
 }
 
-/// <summary>
-/// Aggregates static ownership failures for one bus before the runtime host starts any bus or delivery service.
-/// </summary>
+/// <summary>Aggregates static ownership failures for one bus before the runtime host starts any bus or delivery service.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 internal sealed class BusCompositionStartupValidator<TBus>(IServiceProvider provider) : IHostedService
     where TBus : class, IBus
 {

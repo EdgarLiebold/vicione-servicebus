@@ -1,14 +1,10 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for instance connector cache.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Provides cached access to instance connector data.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface IInstanceConnectorCache<T>
     where T : class
 {
-    /// <summary>
-    /// Gets the connector value.
-    /// </summary>
+    /// <summary>Gets the connector.</summary>
     IInstanceConnector Connector { get; }
 }

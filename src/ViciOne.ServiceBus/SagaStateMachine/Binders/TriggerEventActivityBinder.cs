@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a trigger event activity binder implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <summary>Binds trigger event activity activities to the pipeline.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
 public class TriggerEventActivityBinder<TInstance> :
     EventActivityBinder<TInstance>
     where TInstance : class, SagaStateMachineInstance
@@ -17,12 +15,10 @@ public class TriggerEventActivityBinder<TInstance> :
     readonly StateMachineCondition<TInstance>? _filter = null!;
     readonly StateMachine<TInstance> _machine;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="event">The event value.</param>
-    /// <param name="activities">The activities value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="machine">The machine.</param>
+    /// <param name="event">The event.</param>
+    /// <param name="activities">The activities.</param>
     public TriggerEventActivityBinder(StateMachine<TInstance> machine, Event @event, params IActivityBinder<TInstance>[] activities)
     {
         Event = @event;
@@ -30,13 +26,11 @@ public class TriggerEventActivityBinder<TInstance> :
         _activities = activities ?? [];
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="event">The event value.</param>
-    /// <param name="filter">The filter value.</param>
-    /// <param name="activities">The activities value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="machine">The machine.</param>
+    /// <param name="event">The event.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="activities">The activities.</param>
     public TriggerEventActivityBinder(StateMachine<TInstance> machine, Event @event, StateMachineCondition<TInstance>? filter,
         params IActivityBinder<TInstance>[] activities)
     {
@@ -59,9 +53,7 @@ public class TriggerEventActivityBinder<TInstance> :
         Array.Copy(appendActivity, 0, _activities, activities.Length, appendActivity.Length);
     }
 
-    /// <summary>
-    /// Gets the event value.
-    /// </summary>
+    /// <summary>Gets the event.</summary>
     public Event Event { get; }
 
     Event EventActivityBinder<TInstance>.Event => Event;
@@ -85,12 +77,10 @@ public class TriggerEventActivityBinder<TInstance> :
         return new TriggerEventActivityBinder<TInstance>(_machine, Event, _filter, _activities, activityBinder);
     }
 
-    /// <summary>
-    /// Performs the retry operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
-    /// <param name="activityCallback">The activity callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Retries the configured operation.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="activityCallback">The activity callback.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public EventActivityBinder<TInstance> Retry(Action<IRetryConfigurator> configure,
         Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> activityCallback)
     {
@@ -121,13 +111,11 @@ public class TriggerEventActivityBinder<TInstance> :
         return IfElseAsync(condition, activityCallback, b => b);
     }
 
-    /// <summary>
-    /// Performs the if else operation.
-    /// </summary>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="thenActivityCallback">The then activity callback value.</param>
-    /// <param name="elseActivityCallback">The else activity callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds conditional success and alternative branches.</summary>
+    /// <param name="condition">The condition.</param>
+    /// <param name="thenActivityCallback">The then activity callback.</param>
+    /// <param name="elseActivityCallback">The else activity callback.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public EventActivityBinder<TInstance> IfElse(StateMachineCondition<TInstance> condition,
         Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> thenActivityCallback,
         Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> elseActivityCallback)
@@ -140,13 +128,11 @@ public class TriggerEventActivityBinder<TInstance> :
         return new TriggerEventActivityBinder<TInstance>(_machine, Event, _filter, _activities, conditionBinder);
     }
 
-    /// <summary>
-    /// Performs the if else operation.
-    /// </summary>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="thenActivityCallback">The then activity callback value.</param>
-    /// <param name="elseActivityCallback">The else activity callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds conditional success and alternative branches.</summary>
+    /// <param name="condition">The condition.</param>
+    /// <param name="thenActivityCallback">The then activity callback.</param>
+    /// <param name="elseActivityCallback">The else activity callback.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public EventActivityBinder<TInstance> IfElseAsync(StateMachineAsyncCondition<TInstance> condition,
         Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> thenActivityCallback,
         Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> elseActivityCallback)
@@ -161,10 +147,8 @@ public class TriggerEventActivityBinder<TInstance> :
 
     StateMachine<TInstance> EventActivityBinder<TInstance>.StateMachine => _machine;
 
-    /// <summary>
-    /// Gets state activity binders.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets state activity binders.</summary>
+    /// <returns>The state activity binders.</returns>
     public IEnumerable<IActivityBinder<TInstance>> GetStateActivityBinders()
     {
         if (_filter != null)

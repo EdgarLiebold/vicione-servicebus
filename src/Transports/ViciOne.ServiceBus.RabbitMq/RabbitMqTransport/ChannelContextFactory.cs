@@ -9,31 +9,25 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a channel context factory implementation.
-/// </summary>
+/// <summary>Creates supervised RabbitMQ channel contexts and invalidates them on broker shutdown.</summary>
 public class ChannelContextFactory :
     IPipeContextFactory<ChannelContext>
 {
     readonly ushort? _concurrentMessageLimit;
     readonly IConnectionContextSupervisor _supervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit value.</param>
+    /// <summary>Creates a channel factory backed by a supervised RabbitMQ connection.</summary>
+    /// <param name="supervisor">The connection-context supervisor used to create channels.</param>
+    /// <param name="concurrentMessageLimit">The optional consumer concurrency used to size the channel prefetch.</param>
     public ChannelContextFactory(IConnectionContextSupervisor supervisor, ushort? concurrentMessageLimit)
     {
         _supervisor = supervisor;
         _concurrentMessageLimit = concurrentMessageLimit;
     }
 
-    /// <summary>
-    /// Creates context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and monitors an owned RabbitMQ channel context.</summary>
+    /// <param name="supervisor">The supervisor that owns the context agent.</param>
+    /// <returns>The asynchronous channel-context agent.</returns>
     public IPipeContextAgent<ChannelContext> CreateContext(ISupervisor supervisor)
     {
         IAsyncPipeContextAgent<ChannelContext> asyncContext = supervisor.AddAsyncContext<ChannelContext>();
@@ -42,10 +36,7 @@ public class ChannelContextFactory :
 
         Task HandleShutdownAsync(object sender, ShutdownEventArgs args)
         {
-            // Invalidation first, and it keeps the broker's own reason. Disposal is not started here:
-            // the client raises this notification while the refused operation is still unwinding, and
-            // taking the channel away underneath it is what replaced the broker's answer with an
-            // ObjectDisposedException. The lifetime disposes once the last operation has finished.
+            // Preserve the broker reason and defer disposal until every active channel lease has finished.
             if (context.Status == TaskStatus.RanToCompletion && context.Result is RabbitMqChannelContext channelContext)
             {
                 channelContext.ConnectionContext.TopologyEntityCache.Invalidate();
@@ -90,13 +81,11 @@ public class ChannelContextFactory :
         return asyncContext;
     }
 
-    /// <summary>
-    /// Creates active context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a scoped view over an existing active channel context.</summary>
+    /// <param name="supervisor">The supervisor that owns the active context.</param>
+    /// <param name="context">The handle for the shared channel context.</param>
+    /// <param name="cancellationToken">Cancellation linked to the scoped view.</param>
+    /// <returns>The active scoped context agent.</returns>
     public IActivePipeContextAgent<ChannelContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ChannelContext> context,
         CancellationToken cancellationToken)
     {
@@ -113,8 +102,7 @@ public class ChannelContextFactory :
         {
             var reason = context.Channel.CloseReason;
 
-            // The broker's own answer when there is one, and this transport's own when there is not.
-            // Nothing is invented, and nothing travels as prose or in Exception.Data.
+            // Prefer the typed broker reply; synthesize a library reply only when none exists.
             throw reason != null
                 ? new OperationInterruptedException(reason)
                 : new OperationInterruptedException(

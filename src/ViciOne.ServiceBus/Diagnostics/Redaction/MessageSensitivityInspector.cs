@@ -7,18 +7,14 @@ using System.Runtime.CompilerServices;
 
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
-/// <summary>
-/// Caches immutable sensitivity metadata without pinning collectible message assemblies.
-/// </summary>
+/// <summary>Caches immutable sensitivity metadata without pinning collectible message assemblies.</summary>
 public sealed class MessageSensitivityInspector : IMessageSensitivityInspector
 {
     private readonly ConditionalWeakTable<Type, MessageSensitivityDescriptor> _cache = new();
 
-    /// <summary>
-    /// Performs the inspect operation.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Inspects the supplied message or type.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <returns>The message sensitivity descriptor produced by the operation.</returns>
     public MessageSensitivityDescriptor Inspect(Type messageType)
     {
         ArgumentNullException.ThrowIfNull(messageType);

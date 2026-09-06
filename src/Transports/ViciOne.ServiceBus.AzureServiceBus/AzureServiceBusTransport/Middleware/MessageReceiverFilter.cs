@@ -3,32 +3,24 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Middleware;
 
-/// <summary>
-/// Creates a message receiver and receives messages from the input queue of the endpoint
-/// </summary>
+/// <summary>Starts a receiver for an endpoint client context and reports its readiness, completion, and delivery metrics.</summary>
 public class MessageReceiverFilter :
     IFilter<ClientContext>
 {
     readonly IReceiveTransportObserver _transportObserver;
-    /// <summary>
-    /// Defines the context value.
-    /// </summary>
+    /// <summary>Provides the receive-endpoint context used by specialized receiver filters.</summary>
     protected readonly ServiceBusReceiveEndpointContext Context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes the filter for a receive endpoint.</summary>
+    /// <param name="context">The endpoint whose client and observer lifecycles are coordinated.</param>
     public MessageReceiverFilter(ServiceBusReceiveEndpointContext context)
     {
         _transportObserver = context.TransportObservers;
         Context = context;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The probe section to populate.</param>
     public virtual void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("messageReceiver");
@@ -68,11 +60,9 @@ public class MessageReceiverFilter :
         await next.SendAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Creates message receiver.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the receiver agent for the client context.</summary>
+    /// <param name="context">The initialized processor client.</param>
+    /// <returns>The receiver agent.</returns>
     protected virtual IReceiver CreateMessageReceiver(ClientContext context)
     {
         return new Receiver(context, Context);

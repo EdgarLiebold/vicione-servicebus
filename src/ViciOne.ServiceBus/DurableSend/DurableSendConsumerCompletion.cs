@@ -5,6 +5,7 @@ using ViciOne.ServiceBus.Diagnostics;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
 /// <summary>Process-local, generation-fenced completion capability handed to a volatile transport adapter for one dispatch.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 internal sealed class DurableSendConsumerCompletion<TBus> : IDurableSendConsumerCompletion
     where TBus : class, IBus
 {

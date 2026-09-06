@@ -4,20 +4,16 @@ using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Provides extension methods for send by convention.
-/// </summary>
+/// <summary>Provides extension methods for send by convention.</summary>
 public static class SendByConventionExtensions
 {
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> Send<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
         TMessage message, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -27,15 +23,13 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> SendAsync<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
         Task<TMessage> message, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -45,15 +39,13 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> Send<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
         EventMessageFactory<TInstance, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -63,15 +55,13 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> SendAsync<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
         AsyncEventMessageFactory<TInstance, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -81,15 +71,13 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> SendAsync<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
         Func<BehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -99,16 +87,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> Send<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
         TMessage message, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -119,16 +105,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> SendAsync<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
         Task<TMessage> message, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -139,16 +123,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> Send<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
         EventMessageFactory<TInstance, TData, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -159,16 +141,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> SendAsync<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
         AsyncEventMessageFactory<TInstance, TData, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -179,16 +159,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> SendAsync<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
         Func<BehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -199,16 +177,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> Send<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source, TMessage message,
         Action<SendContext<TMessage>>? callback = null)
@@ -220,16 +196,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> SendAsync<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source, Task<TMessage> message,
         Action<SendContext<TMessage>>? callback = null)
@@ -241,16 +215,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> Send<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source,
         EventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
@@ -262,16 +234,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> SendAsync<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source,
         AsyncEventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
@@ -283,16 +253,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> SendAsync<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source,
         Func<BehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
@@ -305,17 +273,15 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> Send<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source, TMessage message,
         Action<SendContext<TMessage>>? callback = null)
@@ -328,17 +294,15 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> SendAsync<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source, Task<TMessage> message,
         Action<SendContext<TMessage>>? callback = null)
@@ -351,17 +315,15 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> Send<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source,
         EventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
@@ -374,17 +336,15 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> SendAsync<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source,
         AsyncEventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
@@ -397,17 +357,15 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> SendAsync<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source,
         Func<BehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
@@ -421,15 +379,13 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> Send<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
         TMessage message, SendContextCallback<TInstance, TMessage> callback)
         where TInstance : class, SagaStateMachineInstance
@@ -439,15 +395,13 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> SendAsync<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
         Task<TMessage> message, SendContextCallback<TInstance, TMessage> callback)
         where TInstance : class, SagaStateMachineInstance
@@ -457,15 +411,13 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> Send<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
         EventMessageFactory<TInstance, TMessage> messageFactory, SendContextCallback<TInstance, TMessage> callback)
         where TInstance : class, SagaStateMachineInstance
@@ -475,15 +427,13 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> SendAsync<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
         AsyncEventMessageFactory<TInstance, TMessage> messageFactory, SendContextCallback<TInstance, TMessage> callback)
         where TInstance : class, SagaStateMachineInstance
@@ -493,15 +443,13 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance> SendAsync<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
         Func<BehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory, SendContextCallback<TInstance, TMessage> callback)
         where TInstance : class, SagaStateMachineInstance
@@ -511,16 +459,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> Send<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
         TMessage message, SendContextCallback<TInstance, TData, TMessage> callback)
         where TInstance : class, SagaStateMachineInstance
@@ -531,16 +477,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> SendAsync<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
         Task<TMessage> message, SendContextCallback<TInstance, TData, TMessage> callback)
         where TInstance : class, SagaStateMachineInstance
@@ -551,16 +495,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> Send<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
         EventMessageFactory<TInstance, TData, TMessage> messageFactory, SendContextCallback<TInstance, TData, TMessage> callback)
         where TInstance : class, SagaStateMachineInstance
@@ -571,16 +513,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> SendAsync<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
         AsyncEventMessageFactory<TInstance, TData, TMessage> messageFactory, SendContextCallback<TInstance, TData, TMessage> callback)
         where TInstance : class, SagaStateMachineInstance
@@ -591,16 +531,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The event activity binder produced by the operation.</returns>
     public static EventActivityBinder<TInstance, TData> SendAsync<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
         Func<BehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory, SendContextCallback<TInstance, TData, TMessage> callback)
         where TInstance : class, SagaStateMachineInstance
@@ -611,16 +549,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> Send<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source, TMessage message,
         SendExceptionContextCallback<TInstance, TException, TMessage> callback)
@@ -632,16 +568,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> SendAsync<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source, Task<TMessage> message,
         SendExceptionContextCallback<TInstance, TException, TMessage> callback)
@@ -653,16 +587,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> Send<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source,
         EventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory,
@@ -675,16 +607,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> SendAsync<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source,
         AsyncEventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory,
@@ -697,16 +627,14 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TException> SendAsync<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source,
         Func<BehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
@@ -719,17 +647,15 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> Send<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source, TMessage message,
         SendExceptionContextCallback<TInstance, TData, TException, TMessage> callback)
@@ -742,17 +668,15 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> SendAsync<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source, Task<TMessage> message,
         SendExceptionContextCallback<TInstance, TData, TException, TMessage> callback)
@@ -765,17 +689,15 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(message, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> Send<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source,
         EventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory,
@@ -789,17 +711,15 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> SendAsync<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source,
         AsyncEventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory,
@@ -813,17 +733,15 @@ public static class SendByConventionExtensions
             MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TData">The t data type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="source">The source value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> SendAsync<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source,
         Func<BehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,

@@ -1,20 +1,16 @@
 namespace ViciOne.ServiceBus.Initializers.Factories;
 
-/// <summary>
-/// Provides a dynamic message factory implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
-/// <typeparam name="TImplementation">The t implementation type.</typeparam>
+/// <summary>Creates dynamic message instances.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TImplementation">The implementation type.</typeparam>
 public class DynamicMessageFactory<TMessage, TImplementation> :
     IMessageFactory<TMessage>
     where TMessage : class
     where TImplementation : TMessage, new()
 {
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public InitializeContext<TMessage> Create(InitializeContext context)
     {
         var message = new TImplementation();
@@ -24,29 +20,23 @@ public class DynamicMessageFactory<TMessage, TImplementation> :
 }
 
 
-/// <summary>
-/// Provides a dynamic message factory implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Creates dynamic message instances.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class DynamicMessageFactory<TMessage> :
     IMessageFactory<TMessage>,
     IMessageFactory
     where TMessage : class, new()
 {
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <returns>The newly created instance.</returns>
     public object Create()
     {
         return new TMessage();
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public InitializeContext<TMessage> Create(InitializeContext context)
     {
         var message = new TMessage();

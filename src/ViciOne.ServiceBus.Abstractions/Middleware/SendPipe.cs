@@ -7,29 +7,23 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a send pipe implementation.
-/// </summary>
+/// <summary>Executes the pipeline for send.</summary>
 public class SendPipe :
     ISendPipe
 {
     readonly ConcurrentDictionary<Type, IMessagePipe> _outputPipes;
     readonly ISendPipeSpecification _specification;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="specification">The specification.</param>
     public SendPipe(ISendPipeSpecification specification)
     {
         _specification = specification;
         _outputPipes = new ConcurrentDictionary<Type, IMessagePipe>();
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("sendPipe");
@@ -38,13 +32,11 @@ public class SendPipe :
             outputPipe.Probe(scope);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
     public Task SendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)

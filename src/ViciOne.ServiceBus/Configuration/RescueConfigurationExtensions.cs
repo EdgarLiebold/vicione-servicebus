@@ -4,17 +4,13 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for rescue configuration.
-/// </summary>
+/// <summary>Provides extension methods for rescue configuration.</summary>
 public static class RescueConfigurationExtensions
 {
-    /// <summary>
-    /// Rescue exceptions via the alternate pipe
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="rescuePipe"></param>
-    /// <param name="configure"></param>
+    /// <summary>Rescue exceptions via the alternate pipe.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="rescuePipe">The rescue pipe.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseRescue(this IPipeConfigurator<ReceiveContext> configurator, IPipe<ExceptionReceiveContext> rescuePipe,
         Action<IExceptionConfigurator>? configure = null)
     {
@@ -28,12 +24,10 @@ public static class RescueConfigurationExtensions
         configurator.AddPipeSpecification(rescueConfigurator);
     }
 
-    /// <summary>
-    /// Rescue exceptions via the alternate pipe
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="rescuePipe"></param>
-    /// <param name="configure"></param>
+    /// <summary>Rescue exceptions via the alternate pipe.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="rescuePipe">The rescue pipe.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseRescue(this IPipeConfigurator<ConsumeContext> configurator, IPipe<ExceptionConsumeContext> rescuePipe,
         Action<IExceptionConfigurator>? configure = null)
     {
@@ -47,12 +41,11 @@ public static class RescueConfigurationExtensions
         configurator.AddPipeSpecification(rescueConfigurator);
     }
 
-    /// <summary>
-    /// Rescue exceptions via the alternate pipe
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="rescuePipe"></param>
-    /// <param name="configure"></param>
+    /// <summary>Rescue exceptions via the alternate pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="rescuePipe">The rescue pipe.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseRescue<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IPipe<ExceptionConsumeContext<T>> rescuePipe,
         Action<IExceptionConfigurator>? configure = null)
         where T : class
@@ -67,12 +60,11 @@ public static class RescueConfigurationExtensions
         configurator.AddPipeSpecification(rescueConfigurator);
     }
 
-    /// <summary>
-    /// Rescue exceptions via the alternate pipe
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="rescuePipe"></param>
-    /// <param name="configure"></param>
+    /// <summary>Rescue exceptions via the alternate pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="rescuePipe">The rescue pipe.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseRescue<T>(this IPipeConfigurator<ConsumerConsumeContext<T>> configurator, IPipe<ExceptionConsumerConsumeContext<T>> rescuePipe,
         Action<IExceptionConfigurator>? configure = null)
         where T : class
@@ -87,15 +79,13 @@ public static class RescueConfigurationExtensions
         configurator.AddPipeSpecification(rescueConfigurator);
     }
 
-    /// <summary>
-    /// Rescue exceptions via the alternate pipe
-    /// </summary>
-    /// <typeparam name="TContext"></typeparam>
-    /// <typeparam name="TRescue"></typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="rescuePipe"></param>
-    /// <param name="rescueContextFactory">Factory method to convert the pipe context to the rescue pipe context</param>
-    /// <param name="configure"></param>
+    /// <summary>Rescue exceptions via the alternate pipe.</summary>
+    /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+    /// <typeparam name="TRescue">The rescue type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="rescuePipe">The rescue pipe.</param>
+    /// <param name="rescueContextFactory">Factory method to convert the pipe context to the rescue pipe context.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseRescue<TContext, TRescue>(this IPipeConfigurator<TContext> configurator, IPipe<TRescue> rescuePipe,
         RescueContextFactory<TContext, TRescue> rescueContextFactory, Action<IRescueConfigurator<TContext, TRescue>>? configure = null)
         where TContext : class, PipeContext
@@ -109,14 +99,12 @@ public static class RescueConfigurationExtensions
         });
     }
 
-    /// <summary>
-    /// Adds a filter to the pipe which is of a different type than the native pipe context type
-    /// </summary>
-    /// <typeparam name="TContext">The context type</typeparam>
-    /// <typeparam name="TRescue">The filter context type</typeparam>
-    /// <param name="configurator">The pipe configurator</param>
-    /// <param name="rescueContextFactory"></param>
-    /// <param name="configure"></param>
+    /// <summary>Adds a filter to the pipe which is of a different type than the native pipe context type.</summary>
+    /// <typeparam name="TContext">The context type.</typeparam>
+    /// <typeparam name="TRescue">The filter context type.</typeparam>
+    /// <param name="configurator">The pipe configurator.</param>
+    /// <param name="rescueContextFactory">The rescue context factory.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseRescue<TContext, TRescue>(this IPipeConfigurator<TContext> configurator,
         RescueContextFactory<TContext, TRescue> rescueContextFactory, Action<IRescueConfigurator<TContext, TRescue>>? configure = null)
         where TContext : class, PipeContext

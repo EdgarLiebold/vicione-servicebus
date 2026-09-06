@@ -11,6 +11,9 @@ public static class MessageContractServiceCollectionExtensions
     /// Adds stable contract declarations to the one immutable catalog. Separate bus/feature configuration blocks may
     /// contribute declarations; the catalog is built exactly once when the container materializes it.
     /// </summary>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddViciOneMessageContracts(
         this IServiceCollection services,
         Action<MessageContractCatalogBuilder> configure)

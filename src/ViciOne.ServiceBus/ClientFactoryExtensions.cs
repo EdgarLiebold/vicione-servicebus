@@ -3,18 +3,15 @@ using ViciOne.ServiceBus.Clients;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for client factory.
-/// </summary>
+/// <summary>Provides extension methods for client factory.</summary>
 public static class ClientFactoryExtensions
 {
-    /// <summary>
-    /// Create a request client from the bus, using the default bus endpoint for responses
-    /// </summary>
-    /// <param name="bus">The bus instance</param>
-    /// <param name="destinationAddress">The request service address</param>
-    /// <param name="timeout">The default request timeout</param>
-    /// <typeparam name="TRequest">The request type</typeparam>
+    /// <summary>Create a request client from the bus, using the default bus endpoint for responses.</summary>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <param name="bus">The bus instance.</param>
+    /// <param name="destinationAddress">The request service address.</param>
+    /// <param name="timeout">The default request timeout.</param>
+    /// <returns>The created request client.</returns>
     public static IRequestClient<TRequest> CreateRequestClient<TRequest>(this IBus bus, Uri destinationAddress, RequestTimeout timeout = default)
         where TRequest : class
     {
@@ -23,12 +20,11 @@ public static class ClientFactoryExtensions
         return clientFactory.CreateRequestClient<TRequest>(destinationAddress, timeout);
     }
 
-    /// <summary>
-    /// Create a request client from the bus, using the default bus endpoint for responses, and publishing the request versus sending it.
-    /// </summary>
-    /// <param name="bus">The bus instance</param>
-    /// <param name="timeout">The default request timeout</param>
-    /// <typeparam name="TRequest">The request type</typeparam>
+    /// <summary>Create a request client from the bus, using the default bus endpoint for responses, and publishing the request versus sending it.</summary>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <param name="bus">The bus instance.</param>
+    /// <param name="timeout">The default request timeout.</param>
+    /// <returns>The created request client.</returns>
     public static IRequestClient<TRequest> CreateRequestClient<TRequest>(this IBus bus, RequestTimeout timeout = default)
         where TRequest : class
     {
@@ -37,14 +33,13 @@ public static class ClientFactoryExtensions
         return clientFactory.CreateRequestClient<TRequest>(timeout);
     }
 
-    /// <summary>
-    /// Create a request client from the bus, using the default bus endpoint for responses
-    /// </summary>
-    /// <param name="consumeContext"></param>
-    /// <param name="bus">The bus instance</param>
-    /// <param name="destinationAddress">The request service address</param>
-    /// <param name="timeout">The default request timeout</param>
-    /// <typeparam name="TRequest">The request type</typeparam>
+    /// <summary>Create a request client from the bus, using the default bus endpoint for responses.</summary>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <param name="consumeContext">The consume context.</param>
+    /// <param name="bus">The bus instance.</param>
+    /// <param name="destinationAddress">The request service address.</param>
+    /// <param name="timeout">The default request timeout.</param>
+    /// <returns>The created request client.</returns>
     public static IRequestClient<TRequest> CreateRequestClient<TRequest>(this ConsumeContext consumeContext, IBus bus, Uri destinationAddress,
         RequestTimeout timeout = default)
         where TRequest : class
@@ -54,13 +49,12 @@ public static class ClientFactoryExtensions
         return clientFactory.CreateRequestClient<TRequest>(consumeContext, destinationAddress, timeout);
     }
 
-    /// <summary>
-    /// Create a request client from the bus, using the default bus endpoint for responses
-    /// </summary>
-    /// <param name="consumeContext"></param>
-    /// <param name="bus">The bus instance</param>
-    /// <param name="timeout">The default request timeout</param>
-    /// <typeparam name="TRequest">The request type</typeparam>
+    /// <summary>Create a request client from the bus, using the default bus endpoint for responses.</summary>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <param name="consumeContext">The consume context.</param>
+    /// <param name="bus">The bus instance.</param>
+    /// <param name="timeout">The default request timeout.</param>
+    /// <returns>The created request client.</returns>
     public static IRequestClient<TRequest> CreateRequestClient<TRequest>(this ConsumeContext consumeContext, IBus bus, RequestTimeout timeout = default)
         where TRequest : class
     {
@@ -69,25 +63,19 @@ public static class ClientFactoryExtensions
         return clientFactory.CreateRequestClient<TRequest>(consumeContext, timeout);
     }
 
-    /// <summary>
-    /// Create a client factory from the bus, which uses the default bus endpoint for any response messages
-    /// </summary>
-    /// <param name="bus">THe bus instance</param>
-    /// <param name="timeout">The default request timeout</param>
-    /// <returns></returns>
+    /// <summary>Create a client factory from the bus, which uses the default bus endpoint for any response messages.</summary>
+    /// <param name="bus">The bus instance.</param>
+    /// <param name="timeout">The default request timeout.</param>
+    /// <returns>The created client factory.</returns>
     public static IClientFactory CreateClientFactory(this IBus bus, RequestTimeout timeout = default)
     {
         return new ClientFactory(new BusClientFactoryContext(bus, timeout));
     }
 
-    /// <summary>
-    /// Connects a client factory to a host receive endpoint, using the bus as the send endpoint provider
-    /// </summary>
-    /// <param name="receiveEndpointHandle">
-    /// A handle to the receive endpoint, which is stopped when the client factory is disposed
-    /// </param>
-    /// <param name="timeout"></param>
-    /// <returns></returns>
+    /// <summary>Connects a client factory to a host receive endpoint, using the bus as the send endpoint provider.</summary>
+    /// <param name="receiveEndpointHandle">A handle to the receive endpoint, which is stopped when the client factory is disposed.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <returns>The created client factory.</returns>
     public static IClientFactory CreateClientFactory(this HostReceiveEndpointHandle receiveEndpointHandle, RequestTimeout timeout = default)
     {
         var context = new HostReceiveEndpointClientFactoryContext(receiveEndpointHandle, timeout);
@@ -95,12 +83,10 @@ public static class ClientFactoryExtensions
         return new ClientFactory(context);
     }
 
-    /// <summary>
-    /// Connects a new receive endpoint to the host, and creates a <see cref="IClientFactory" />.
-    /// </summary>
-    /// <param name="connector">The host to connect the new receive endpoint</param>
-    /// <param name="timeout">The default request timeout</param>
-    /// <returns></returns>
+    /// <summary>Connects a new receive endpoint to the host, and creates a <see cref="IClientFactory" />.</summary>
+    /// <param name="connector">The host to connect the new receive endpoint.</param>
+    /// <param name="timeout">The default request timeout.</param>
+    /// <returns>The created client factory.</returns>
     public static IClientFactory CreateClientFactory(this IReceiveConnector connector, RequestTimeout timeout = default)
     {
         var receiveEndpointHandle = connector.ConnectResponseEndpoint();
@@ -108,12 +94,10 @@ public static class ClientFactoryExtensions
         return receiveEndpointHandle.CreateClientFactory(timeout);
     }
 
-    /// <summary>
-    /// Connects a new receive endpoint to the host, and creates a <see cref="IClientFactory" />.
-    /// </summary>
-    /// <param name="connector">The host to connect the new receive endpoint</param>
-    /// <param name="timeout">The default request timeout</param>
-    /// <returns></returns>
+    /// <summary>Connects a new receive endpoint to the host, and creates a <see cref="IClientFactory" />.</summary>
+    /// <param name="connector">The host to connect the new receive endpoint.</param>
+    /// <param name="timeout">The default request timeout.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static IClientFactory ConnectClientFactory(this IReceiveConnector connector, RequestTimeout timeout = default)
     {
         var endpointDefinition = new TemporaryEndpointDefinition();

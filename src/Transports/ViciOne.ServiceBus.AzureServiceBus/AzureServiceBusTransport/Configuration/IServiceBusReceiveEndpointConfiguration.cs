@@ -1,13 +1,9 @@
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for service bus receive endpoint configuration.
-/// </summary>
+/// <summary>Exposes the settings for an Azure Service Bus queue receive endpoint.</summary>
 public interface IServiceBusReceiveEndpointConfiguration :
     IServiceBusEntityEndpointConfiguration
 {
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the queue entity and processor settings.</summary>
     ReceiveSettings Settings { get; }
 }

@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides an active mq consumer receive endpoint context implementation.
-/// </summary>
+/// <summary>Provides the runtime context for an ActiveMQ consumer receive endpoint.</summary>
 public class ActiveMqConsumerReceiveEndpointContext :
     BaseReceiveEndpointContext,
     ActiveMqReceiveEndpointContext
@@ -17,12 +15,10 @@ public class ActiveMqConsumerReceiveEndpointContext :
     readonly IActiveMqHostConfiguration _hostConfiguration;
     readonly Recycle<ISessionContextSupervisor> _sessionContext;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="configuration">The configuration callback.</param>
-    /// <param name="brokerTopology">The broker topology value.</param>
+    /// <summary>Creates a receive-endpoint context for the configured broker topology.</summary>
+    /// <param name="hostConfiguration">The ActiveMQ host configuration.</param>
+    /// <param name="configuration">The receive-endpoint configuration.</param>
+    /// <param name="brokerTopology">The topology deployed for the endpoint.</param>
     public ActiveMqConsumerReceiveEndpointContext(IActiveMqHostConfiguration hostConfiguration, IActiveMqReceiveEndpointConfiguration configuration,
         BrokerTopology brokerTopology)
         : base(hostConfiguration, configuration)
@@ -34,54 +30,40 @@ public class ActiveMqConsumerReceiveEndpointContext :
         _sessionContext = new Recycle<ISessionContextSupervisor>(() => new SessionContextSupervisor(hostConfiguration.ConnectionContextSupervisor));
     }
 
-    /// <summary>
-    /// Gets the broker topology value.
-    /// </summary>
+    /// <summary>Gets the topology deployed for the endpoint.</summary>
     public BrokerTopology BrokerTopology { get; }
 
-    /// <summary>
-    /// Gets the connection context supervisor value.
-    /// </summary>
+    /// <summary>Gets the supervisor for the endpoint's broker connection.</summary>
     public IConnectionContextSupervisor ConnectionContextSupervisor => _hostConfiguration.ConnectionContextSupervisor;
 
-    /// <summary>
-    /// Gets the session context supervisor value.
-    /// </summary>
+    /// <summary>Gets the recyclable supervisor for the endpoint's Apache NMS session.</summary>
     public ISessionContextSupervisor SessionContextSupervisor => _sessionContext.Supervisor;
 
-    /// <summary>
-    /// Adds send agent to the configuration.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
+    /// <summary>Adds a send agent to the endpoint session supervisor.</summary>
+    /// <param name="agent">The send agent to supervise.</param>
     public override void AddSendAgent(IAgent agent)
     {
         _sessionContext.Supervisor.AddSendAgent(agent);
     }
 
-    /// <summary>
-    /// Adds consume agent to the configuration.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
+    /// <summary>Adds a consume agent to the endpoint session supervisor.</summary>
+    /// <param name="agent">The consume agent to supervise.</param>
     public override void AddConsumeAgent(IAgent agent)
     {
         _sessionContext.Supervisor.AddConsumeAgent(agent);
     }
 
-    /// <summary>
-    /// Performs the convert exception operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Wraps a failure with the configured ActiveMQ host description.</summary>
+    /// <param name="exception">The underlying failure.</param>
+    /// <param name="message">The contextual error message.</param>
+    /// <returns>An ActiveMQ connection exception.</returns>
     public override Exception ConvertException(Exception exception, string message)
     {
         return new ActiveMqConnectionException(message + _hostConfiguration.Settings.ToDescription(), exception);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The probe context to populate.</param>
     public override void Probe(ProbeContext context)
     {
         context.Add("type", "ActiveMQ");
@@ -99,19 +81,15 @@ public class ActiveMqConsumerReceiveEndpointContext :
         BrokerTopology.Probe(topologyScope);
     }
 
-    /// <summary>
-    /// Creates send transport provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the endpoint's ActiveMQ send-transport provider.</summary>
+    /// <returns>A send-transport provider bound to this endpoint.</returns>
     protected override ISendTransportProvider CreateSendTransportProvider()
     {
         return new ActiveMqSendTransportProvider(_hostConfiguration.ConnectionContextSupervisor, this);
     }
 
-    /// <summary>
-    /// Creates publish transport provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the endpoint's ActiveMQ publish-transport provider.</summary>
+    /// <returns>A publish-transport provider bound to this endpoint.</returns>
     protected override IPublishTransportProvider CreatePublishTransportProvider()
     {
         return new ActiveMqPublishTransportProvider(_hostConfiguration.ConnectionContextSupervisor, this);

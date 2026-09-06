@@ -8,22 +8,18 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>
-/// Provides a client request handle implementation.
-/// </summary>
-/// <typeparam name="TRequest">The t request type.</typeparam>
+/// <summary>Controls the lifetime of client request.</summary>
+/// <typeparam name="TRequest">The request type.</typeparam>
 public class ClientRequestHandle<TRequest> :
     RequestHandle<TRequest>,
     IPipe<SendContext<TRequest>>
     where TRequest : class
 {
-    /// <summary>
-    /// Represents the method that handles send request callback.
-    /// </summary>
-    /// <param name="requestId">The request id value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Represents the method that handles send request callback.</summary>
+    /// <param name="requestId">The request id.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The value produced by the operation.</returns>
     public delegate Task<TRequest> SendRequestCallback(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken);
 
 
@@ -45,15 +41,13 @@ public class ClientRequestHandle<TRequest> :
     ITimer? _timeoutTimer;
     RequestTimeout _timeToLive;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="sendRequestCallback">The send request callback value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="sendRequestCallback">The send request callback.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="requestId">The request id value.</param>
-    /// <param name="taskScheduler">The task scheduler value.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="requestId">The request id.</param>
+    /// <param name="taskScheduler">The task scheduler.</param>
     public ClientRequestHandle(ClientFactoryContext context, SendRequestCallback sendRequestCallback, CancellationToken cancellationToken = default,
         RequestTimeout timeout = default, Guid? requestId = null, TaskScheduler? taskScheduler = null)
     {
@@ -90,11 +84,9 @@ public class ClientRequestHandle<TRequest> :
         HandleFault();
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(SendContext<TRequest> context)
     {
         await _readyToSend.Task.ConfigureAwait(false);
@@ -121,30 +113,22 @@ public class ClientRequestHandle<TRequest> :
         _sendContext.TrySetResult(context);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
     }
 
-    /// <summary>
-    /// Gets the request id value.
-    /// </summary>
+    /// <summary>Gets the request id.</summary>
     public Guid RequestId { get; }
 
-    /// <summary>
-    /// Gets or sets the time to live value.
-    /// </summary>
+    /// <summary>Gets or sets the time to live.</summary>
     public RequestTimeout TimeToLive
     {
         set => _timeToLive = value;
     }
 
-    /// <summary>
-    /// Determines whether the current value can cel.
-    /// </summary>
+    /// <summary>Determines whether the current value can cel.</summary>
     public void Cancel()
     {
         if (Interlocked.CompareExchange(ref _faultedOrCanceled, 1, 0) != 0)
@@ -153,22 +137,18 @@ public class ClientRequestHandle<TRequest> :
         Task.Factory.StartNew(CancelAndDispose, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<SendContext<TRequest>> specification)
     {
         _pipeConfigurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Gets response.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="readyToSend">The ready to send value.</param>
+    /// <summary>Gets response.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="readyToSend">The ready to send.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<Response<T>> GetResponseAsync<T>(bool readyToSend, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -182,18 +162,14 @@ public class ClientRequestHandle<TRequest> :
         return response;
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         if (Interlocked.CompareExchange(ref _faultedOrCanceled, 1, 0) == 0)
             CancelAndDispose();
     }
 
-    /// <summary>
-    /// Gets the message value.
-    /// </summary>
+    /// <summary>Gets the message.</summary>
     public Task<TRequest> Message => _message.Task;
 
     void AcceptResponse<T>()

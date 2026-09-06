@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>
-/// An Agent Provocateur that uses a context handle for the activate state of the agent
-/// </summary>
-/// <typeparam name="TContext"></typeparam>
+/// <summary>An Agent Provocateur that uses a context handle for the activate state of the agent.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class ActivePipeContextAgent<TContext> :
     Agent,
     IActivePipeContextAgent<TContext>
@@ -18,10 +16,8 @@ public class ActivePipeContextAgent<TContext> :
 
     readonly ActivePipeContextHandle<TContext> _contextHandle;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public ActivePipeContextAgent(ActivePipeContextHandle<TContext> context)
     {
         _contextHandle = context;

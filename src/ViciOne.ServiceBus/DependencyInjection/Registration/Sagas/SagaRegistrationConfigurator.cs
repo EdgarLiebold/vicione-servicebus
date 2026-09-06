@@ -3,10 +3,8 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
-/// <summary>
-/// Provides a saga registration configurator implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Configures saga registration.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class SagaRegistrationConfigurator<TSaga> :
     ISagaRegistrationConfigurator<TSaga>
     where TSaga : class, ISaga
@@ -14,11 +12,9 @@ public class SagaRegistrationConfigurator<TSaga> :
     readonly IRegistrationConfigurator _configurator;
     readonly ISagaRegistration? _registration = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="registration">The registration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="registration">The registration.</param>
     public SagaRegistrationConfigurator(IRegistrationConfigurator configurator, ISagaRegistration? registration = null)
     {
         _configurator = configurator;
@@ -36,11 +32,9 @@ public class SagaRegistrationConfigurator<TSaga> :
             _registration.IncludeInConfigureEndpoints = false;
     }
 
-    /// <summary>
-    /// Performs the endpoint operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Applies the endpoint configuration.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The saga registration configurator produced by the operation.</returns>
     public ISagaRegistrationConfigurator<TSaga> Endpoint(Action<IEndpointRegistrationConfigurator> configure)
     {
         if (_registration is { IncludeInConfigureEndpoints: false })
@@ -57,11 +51,9 @@ public class SagaRegistrationConfigurator<TSaga> :
         return this;
     }
 
-    /// <summary>
-    /// Performs the repository operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Applies the repository configuration.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The saga registration configurator produced by the operation.</returns>
     public ISagaRegistrationConfigurator<TSaga> Repository(Action<ISagaRepositoryRegistrationConfigurator<TSaga>> configure)
     {
         var configurator = new SagaRepositoryRegistrationConfigurator<TSaga>(_configurator.Services);

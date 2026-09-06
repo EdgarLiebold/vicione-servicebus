@@ -4,10 +4,8 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>
-/// An asynchronously pipe context handle, which can be completed.
-/// </summary>
-/// <typeparam name="TContext">The context type</typeparam>
+/// <summary>An asynchronously pipe context handle, which can be completed.</summary>
+/// <typeparam name="TContext">The context type.</typeparam>
 public class AsyncPipeContextHandle<TContext> :
     IAsyncPipeContextHandle<TContext>
     where TContext : class, PipeContext
@@ -16,9 +14,8 @@ public class AsyncPipeContextHandle<TContext> :
     readonly TaskCompletionSource<DateTime> _inactive;
     readonly TimeProvider _timeProvider;
 
-    /// <summary>
-    /// Creates the handle
-    /// </summary>
+    /// <summary>Creates the handle.</summary>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public AsyncPipeContextHandle(TimeProvider? timeProvider = null)
     {
         _context = TaskCompletionSources.Create<TContext>();

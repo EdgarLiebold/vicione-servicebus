@@ -9,10 +9,8 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
-/// <summary>
-/// Provides an entity framework saga repository context factory implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Executes EF Core saga load, query, and consume operations with the configured transaction strategy.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
     ISagaRepositoryContextFactory<TSaga>,
     IQuerySagaRepositoryContextFactory<TSaga>,
@@ -23,12 +21,10 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
     readonly ISagaDbContextFactory<TSaga> _dbContextFactory;
     readonly ISagaRepositoryLockStrategy<TSaga> _lockStrategy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="dbContextFactory">The db context factory value.</param>
-    /// <param name="consumeContextFactory">The consume context factory value.</param>
-    /// <param name="lockStrategy">The lock strategy value.</param>
+    /// <summary>Initializes the repository-context factory with DbContext, consume-context, and lock-strategy factories.</summary>
+    /// <param name="dbContextFactory">The factory that supplies and releases DbContext instances.</param>
+    /// <param name="consumeContextFactory">The factory that wraps loaded entities for message consumption.</param>
+    /// <param name="lockStrategy">The concurrency, transaction, and query strategy.</param>
     public EntityFrameworkSagaRepositoryContextFactory(ISagaDbContextFactory<TSaga> dbContextFactory,
         ISagaConsumeContextFactory<DbContext, TSaga> consumeContextFactory, ISagaRepositoryLockStrategy<TSaga> lockStrategy)
     {
@@ -37,36 +33,30 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         _lockStrategy = lockStrategy;
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="asyncMethod">The async method value.</param>
+    /// <summary>Executes a nullable load operation with provider retries and the configured transaction.</summary>
+    /// <typeparam name="T">The reference-type result.</typeparam>
+    /// <param name="asyncMethod">The operation to execute against a load context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The value returned by <paramref name="asyncMethod" />, which may be <see langword="null"/>.</returns>
     public Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
         where T : class
     {
         return ExecuteNullableAsyncMethodAsync(asyncMethod, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="asyncMethod">The async method value.</param>
+    /// <summary>Executes a query operation with provider retries and the configured transaction.</summary>
+    /// <typeparam name="T">The reference-type result.</typeparam>
+    /// <param name="asyncMethod">The operation to execute against a query context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The value returned by <paramref name="asyncMethod" />.</returns>
     public Task<T> ExecuteAsync<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
         where T : class
     {
         return ExecuteAsyncMethodAsync(asyncMethod, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds the EF Core persistence identity and mapped entity names to the probe.</summary>
+    /// <param name="context">The probe context to populate.</param>
     public void Probe(ProbeContext context)
     {
         var dbContext = _dbContextFactory.Create();
@@ -81,13 +71,11 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         }
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Executes a saga consume pipeline in the ambient or repository-created transaction.</summary>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="context">The active consumption context.</param>
+    /// <param name="next">The saga repository pipeline to execute.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
@@ -120,14 +108,12 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         }
     }
 
-    /// <summary>
-    /// Sends query.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="query">The query value.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Loads all saga rows selected by a query and executes the query pipeline.</summary>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="context">The active consumption context.</param>
+    /// <param name="query">The saga filter to execute.</param>
+    /// <param name="next">The loaded-saga query pipeline to execute.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
@@ -265,7 +251,6 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
             }
             catch (Exception)
             {
-                //
             }
         }
 

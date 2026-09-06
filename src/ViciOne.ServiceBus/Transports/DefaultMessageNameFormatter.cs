@@ -4,9 +4,7 @@ using System.Text;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a default message name formatter implementation.
-/// </summary>
+/// <summary>Formats default message name values.</summary>
 public class DefaultMessageNameFormatter :
     IMessageNameFormatter
 {
@@ -17,27 +15,23 @@ public class DefaultMessageNameFormatter :
     readonly string _namespaceSeparator;
     readonly string _nestedTypeSeparator;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="genericArgumentSeparator">The generic argument separator value.</param>
-    /// <param name="genericTypeSeparator">The generic type separator value.</param>
-    /// <param name="namespaceSeparator">The namespace separator value.</param>
-    /// <param name="nestedTypeSeparator">The nested type separator value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="genericArgumentSeparator">The generic argument separator.</param>
+    /// <param name="genericTypeSeparator">The generic type separator.</param>
+    /// <param name="namespaceSeparator">The namespace separator.</param>
+    /// <param name="nestedTypeSeparator">The nested type separator.</param>
     public DefaultMessageNameFormatter(string genericArgumentSeparator, string genericTypeSeparator,
         string namespaceSeparator, string nestedTypeSeparator)
         : this(genericArgumentSeparator, genericTypeSeparator, namespaceSeparator, nestedTypeSeparator, true)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="genericArgumentSeparator">The generic argument separator value.</param>
-    /// <param name="genericTypeSeparator">The generic type separator value.</param>
-    /// <param name="namespaceSeparator">The namespace separator value.</param>
-    /// <param name="nestedTypeSeparator">The nested type separator value.</param>
-    /// <param name="includeNamespace">The include namespace value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="genericArgumentSeparator">The generic argument separator.</param>
+    /// <param name="genericTypeSeparator">The generic type separator.</param>
+    /// <param name="namespaceSeparator">The namespace separator.</param>
+    /// <param name="nestedTypeSeparator">The nested type separator.</param>
+    /// <param name="includeNamespace">The include namespace.</param>
     public DefaultMessageNameFormatter(string genericArgumentSeparator, string genericTypeSeparator,
         string namespaceSeparator, string nestedTypeSeparator, bool includeNamespace)
     {
@@ -50,11 +44,9 @@ public class DefaultMessageNameFormatter :
         _cache = new ConcurrentDictionary<Type, string>();
     }
 
-    /// <summary>
-    /// Gets message name.
-    /// </summary>
-    /// <param name="type">The type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message name.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns>The message name.</returns>
     public string GetMessageName(Type type)
     {
         return _cache.GetOrAdd(type, CreateMessageName);
@@ -93,7 +85,7 @@ public class DefaultMessageNameFormatter :
         {
             var name = type.GetGenericTypeDefinition().Name;
 
-            //remove `1
+            // The CLR generic arity suffix is not part of a message name.
             var index = name.IndexOf('`');
             if (index > 0)
                 name = name.Remove(index);

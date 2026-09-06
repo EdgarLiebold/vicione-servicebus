@@ -3,17 +3,13 @@ using ViciOne.ServiceBus.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides extension methods for entity framework core job service configuration.
-/// </summary>
+/// <summary>Configures the job-service saga repositories to use EF Core.</summary>
 public static class EntityFrameworkCoreJobServiceConfigurationExtensions
 {
-    /// <summary>
-    /// Configures entity framework core saga repository for the current pipeline.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="contextFactory">The context factory value.</param>
-    /// <param name="lockStatementProvider">The lock statement provider value.</param>
+    /// <summary>Uses one DbContext factory and pessimistic lock provider for all three job-service saga repositories.</summary>
+    /// <param name="configurator">The job-service configuration that receives the EF Core repositories.</param>
+    /// <param name="contextFactory">The delegate that creates a job-service saga DbContext.</param>
+    /// <param name="lockStatementProvider">The relational lock provider; defaults to SQL Server locking.</param>
     public static void UseEntityFrameworkCoreSagaRepository(this IJobServiceConfigurator configurator, Func<JobServiceSagaDbContext> contextFactory,
         ILockStatementProvider? lockStatementProvider = default)
     {

@@ -4,11 +4,9 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Dispatches the ConsumeContext to the consumer method for the specified message type
-/// </summary>
-/// <typeparam name="TSaga">The consumer type</typeparam>
-/// <typeparam name="TMessage">The message type</typeparam>
+/// <summary>Dispatches the ConsumeContext to the consumer method for the specified message type.</summary>
+/// <typeparam name="TSaga">The consumer type.</typeparam>
+/// <typeparam name="TMessage">The message type.</typeparam>
 public class InitiatedByOrOrchestratesSagaMessageFilter<TSaga, TMessage> :
     ISagaMessageFilter<TSaga, TMessage>
     where TSaga : class, ISaga, InitiatedByOrOrchestrates<TMessage>
@@ -20,12 +18,10 @@ public class InitiatedByOrOrchestratesSagaMessageFilter<TSaga, TMessage> :
         scope.Add("method", $"Consume({TypeCache<TMessage>.ShortName} message)");
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
         StartedActivity? activity = LogContext.Current?.StartSagaActivity(context);

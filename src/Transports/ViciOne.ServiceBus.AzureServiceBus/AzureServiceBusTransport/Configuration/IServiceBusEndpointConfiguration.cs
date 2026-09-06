@@ -2,14 +2,10 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for service bus endpoint configuration.
-/// </summary>
+/// <summary>Exposes Azure Service Bus topology settings for an endpoint configuration.</summary>
 public interface IServiceBusEndpointConfiguration :
     IEndpointConfiguration
 {
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the endpoint's transport-specific topology configuration.</summary>
     new IServiceBusTopologyConfiguration Topology { get; }
 }

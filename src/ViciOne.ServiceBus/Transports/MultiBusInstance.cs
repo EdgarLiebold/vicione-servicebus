@@ -3,95 +3,71 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a multi bus instance implementation.
-/// </summary>
-/// <typeparam name="TBus">The t bus type.</typeparam>
+/// <summary>Represents an instance of multi bus.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 public class MultiBusInstance<TBus> :
     IBusInstance<TBus>
     where TBus : IBus
 {
     readonly TBus _bus;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="bus">The bus.</param>
+    /// <param name="instance">The instance.</param>
     public MultiBusInstance(TBus bus, IBusInstance instance)
     {
         BusInstance = instance;
         _bus = bus;
     }
 
-    /// <summary>
-    /// Gets the name value.
-    /// </summary>
+    /// <summary>Gets the name.</summary>
     public string Name { get; } = FormatBusName();
-    /// <summary>
-    /// Gets the instance type value.
-    /// </summary>
+    /// <summary>Gets the instance type.</summary>
     public Type InstanceType => typeof(TBus);
-    /// <summary>
-    /// Gets the bus value.
-    /// </summary>
+    /// <summary>Gets the bus.</summary>
     public IBus Bus => _bus;
-    /// <summary>
-    /// Gets the bus instance value.
-    /// </summary>
+    /// <summary>Gets the bus instance.</summary>
     public IBusInstance BusInstance { get; }
-    /// <summary>
-    /// Gets the bus control value.
-    /// </summary>
+    /// <summary>Gets the bus control.</summary>
     public IBusControl BusControl => BusInstance.BusControl;
-    /// <summary>
-    /// Gets the host configuration value.
-    /// </summary>
+    /// <summary>Gets the host configuration.</summary>
     public IHostConfiguration HostConfiguration => BusInstance.HostConfiguration;
 
     TBus IBusInstance<TBus>.Bus => _bus;
 
-    /// <summary>
-    /// Performs the connect operation.
-    /// </summary>
-    /// <typeparam name="TRider">The t rider type.</typeparam>
-    /// <param name="riderControl">The rider control value.</param>
+    /// <summary>Connects the configured observer or endpoint.</summary>
+    /// <typeparam name="TRider">The rider type.</typeparam>
+    /// <param name="riderControl">The rider control.</param>
     public void Connect<TRider>(IRiderControl riderControl)
         where TRider : IRider
     {
         BusInstance.Connect<TRider>(riderControl);
     }
 
-    /// <summary>
-    /// Gets rider.
-    /// </summary>
-    /// <typeparam name="TRider">The t rider type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets rider.</summary>
+    /// <typeparam name="TRider">The rider type.</typeparam>
+    /// <returns>The rider.</returns>
     public TRider GetRider<TRider>()
         where TRider : IRider
     {
         return BusInstance.GetRider<TRider>();
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive endpoint.</summary>
+    /// <param name="definition">The definition.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
         Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
     {
         return BusInstance.ConnectReceiveEndpoint(definition, endpointNameFormatter, configure);
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive endpoint.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
         Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
     {

@@ -4,39 +4,31 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs.Configuration;
 
-/// <summary>
-/// Provides an event hub bus instance specification implementation.
-/// </summary>
+/// <summary>Validates the Event Hubs rider configuration and attaches the built rider to a bus instance.</summary>
 public class EventHubBusInstanceSpecification :
     IBusInstanceSpecification
 {
     readonly IRiderRegistrationContext _context;
     readonly IEventHubHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <summary>Creates a bus-instance specification for the configured Event Hubs rider.</summary>
+    /// <param name="context">The rider registration context used to build the rider.</param>
+    /// <param name="hostConfiguration">The Event Hubs host configuration.</param>
     public EventHubBusInstanceSpecification(IRiderRegistrationContext context, IEventHubHostConfiguration hostConfiguration)
     {
         _context = context;
         _hostConfiguration = hostConfiguration;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return _hostConfiguration.Validate();
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="busInstance">The bus instance value.</param>
+    /// <summary>Builds and connects the Event Hubs rider.</summary>
+    /// <param name="busInstance">The bus instance that will own the rider.</param>
     public void Configure(IBusInstance busInstance)
     {
         var rider = _hostConfiguration.Build(_context, busInstance);

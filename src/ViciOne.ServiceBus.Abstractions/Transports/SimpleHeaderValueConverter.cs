@@ -1,16 +1,12 @@
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a simple header value converter implementation.
-/// </summary>
+/// <summary>Converts simple header value values.</summary>
 public class SimpleHeaderValueConverter :
     IHeaderValueConverter
 {
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <param name="headerValue">The header value value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <param name="headerValue">The header value to convert or store.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(HeaderValue headerValue, out HeaderValue result)
     {
@@ -24,12 +20,10 @@ public class SimpleHeaderValueConverter :
         return false;
     }
 
-    /// <summary>
-    /// Performs the try convert operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="headerValue">The header value value.</param>
-    /// <param name="result">The result value.</param>
+    /// <summary>Attempts to convert the supplied value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="headerValue">The header value to convert or store.</param>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert<T>(HeaderValue<T> headerValue, out HeaderValue result)
     {

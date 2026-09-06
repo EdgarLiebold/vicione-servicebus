@@ -11,8 +11,8 @@ namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 /// A saga state machine represents a state machine and instance, which will use the container to resolve, as well
 /// as the saga repository.
 /// </summary>
-/// <typeparam name="TStateMachine"></typeparam>
-/// <typeparam name="TInstance"></typeparam>
+/// <typeparam name="TStateMachine">The state machine type.</typeparam>
+/// <typeparam name="TInstance">The instance type.</typeparam>
 public class SagaStateMachineRegistration<TStateMachine, TInstance> :
     ISagaRegistration
     where TStateMachine : class, SagaStateMachine<TInstance>
@@ -22,10 +22,8 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
     readonly List<Action<IRegistrationContext, ISagaConfigurator<TInstance>>> _configureActions;
     ISagaDefinition<TInstance> _definition = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="selector">The selector value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="selector">The selector.</param>
     public SagaStateMachineRegistration(IContainerSelector selector)
     {
         _selector = selector;
@@ -33,24 +31,18 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
         IncludeInConfigureEndpoints = !Type.HasAttribute<ExcludeFromConfigureEndpointsAttribute>();
     }
 
-    /// <summary>
-    /// Gets the type value.
-    /// </summary>
+    /// <summary>Gets the type.</summary>
     public Type Type => typeof(TInstance);
 
     /// <inheritdoc />
     public Type? StateMachineType => typeof(TStateMachine);
 
-    /// <summary>
-    /// Gets or sets the include in configure endpoints value.
-    /// </summary>
+    /// <summary>Gets or sets the include in configure endpoints.</summary>
     public bool IncludeInConfigureEndpoints { get; set; }
 
-    /// <summary>
-    /// Adds configure action to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Adds configure action to the configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void AddConfigureAction<T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure)
         where T : class
     {
@@ -58,11 +50,9 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
             _configureActions.Add(action);
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
     {
         var stateMachine = context.GetRequiredService<SagaStateMachine<TInstance>>();

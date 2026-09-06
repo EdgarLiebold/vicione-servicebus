@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a settings endpoint definition implementation.
-/// </summary>
-/// <typeparam name="TSettings">The t settings type.</typeparam>
+/// <summary>Defines configuration for settings endpoint.</summary>
+/// <typeparam name="TSettings">The settings type.</typeparam>
 public abstract class SettingsEndpointDefinition<TSettings> :
     IEndpointDefinition<TSettings>
     where TSettings : class
@@ -11,20 +9,16 @@ public abstract class SettingsEndpointDefinition<TSettings> :
     readonly IEndpointSettings<IEndpointDefinition<TSettings>> _settings;
     string? _endpointName;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="settings">The settings that control the operation.</param>
     protected SettingsEndpointDefinition(IEndpointSettings<IEndpointDefinition<TSettings>> settings)
     {
         _settings = settings;
     }
 
-    /// <summary>
-    /// Gets endpoint name.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets endpoint name.</summary>
+    /// <param name="formatter">The formatter.</param>
+    /// <returns>The endpoint name.</returns>
     public string GetEndpointName(IEndpointNameFormatter formatter)
     {
         string FormatName()
@@ -39,39 +33,27 @@ public abstract class SettingsEndpointDefinition<TSettings> :
             : formatter.SanitizeName(FormatName() + formatter.Separator + _settings.InstanceId);
     }
 
-    /// <summary>
-    /// Gets the is temporary value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether temporary.</summary>
     public bool IsTemporary => _settings.IsTemporary;
-    /// <summary>
-    /// Gets the prefetch count value.
-    /// </summary>
+    /// <summary>Gets the prefetch count.</summary>
     public int? PrefetchCount => _settings.PrefetchCount;
-    /// <summary>
-    /// Gets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets the concurrent message limit.</summary>
     public int? ConcurrentMessageLimit => _settings.ConcurrentMessageLimit;
-    /// <summary>
-    /// Gets the configure consume topology value.
-    /// </summary>
+    /// <summary>Gets the configure consume topology.</summary>
     public bool ConfigureConsumeTopology => _settings.ConfigureConsumeTopology;
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public void Configure<T>(T configurator, IRegistrationContext? context)
         where T : IReceiveEndpointConfigurator
     {
         _settings.ConfigureEndpoint(configurator, context);
     }
 
-    /// <summary>
-    /// Performs the format endpoint name operation.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats endpoint name.</summary>
+    /// <param name="formatter">The formatter.</param>
+    /// <returns>The formatted endpoint name.</returns>
     protected abstract string FormatEndpointName(IEndpointNameFormatter formatter);
 }

@@ -7,10 +7,8 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Creates a saga instance through one cached compiled constructor-and-property delegate.
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
+/// <summary>Creates a saga instance through one cached compiled constructor-and-property delegate.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 internal sealed class PropertySagaInstanceFactory<TSaga>
     where TSaga : class, ISaga
 {

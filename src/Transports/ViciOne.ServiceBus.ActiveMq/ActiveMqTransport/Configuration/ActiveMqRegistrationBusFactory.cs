@@ -7,19 +7,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.ActiveMq.Configuration;
 
-/// <summary>
-/// Provides an active mq registration bus factory implementation.
-/// </summary>
+/// <summary>Creates dependency-injection-registered ActiveMQ bus instances.</summary>
 public class ActiveMqRegistrationBusFactory :
     TransportRegistrationBusFactory<IActiveMqReceiveEndpointConfigurator>
 {
     readonly ActiveMqBusConfiguration _busConfiguration;
     readonly Action<IBusRegistrationContext, IActiveMqBusFactoryConfigurator>? _configure;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Creates a registration bus factory with an optional bus callback.</summary>
+    /// <param name="configure">An optional callback that configures the bus using its registration context.</param>
     public ActiveMqRegistrationBusFactory(Action<IBusRegistrationContext, IActiveMqBusFactoryConfigurator>? configure)
         : this(new ActiveMqBusConfiguration(new ActiveMqTopologyConfiguration(ActiveMqBusFactory.CreateMessageTopology())), configure)
     {
@@ -34,13 +30,11 @@ public class ActiveMqRegistrationBusFactory :
         _busConfiguration = busConfiguration;
     }
 
-    /// <summary>
-    /// Creates bus.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="specifications">The specifications value.</param>
-    /// <param name="busName">The bus name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a registered ActiveMQ bus using named transport options and registration specifications.</summary>
+    /// <param name="context">The dependency-injection bus registration context.</param>
+    /// <param name="specifications">The specifications applied to the bus.</param>
+    /// <param name="busName">The name used to select transport options.</param>
+    /// <returns>The created bus instance.</returns>
     public override IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
     {
         var configurator = new ActiveMqBusFactoryConfigurator(_busConfiguration);

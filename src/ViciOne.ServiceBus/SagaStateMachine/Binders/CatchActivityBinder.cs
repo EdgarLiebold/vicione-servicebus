@@ -2,11 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Creates a compensation activity with the compensation behavior
-/// </summary>
-/// <typeparam name="TInstance"></typeparam>
-/// <typeparam name="TException"></typeparam>
+/// <summary>Creates a compensation activity with the compensation behavior.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TException">The exception handled by the member.</typeparam>
 public class CatchActivityBinder<TInstance, TException> :
     IActivityBinder<TInstance>
     where TInstance : class, SagaStateMachineInstance
@@ -14,26 +12,20 @@ public class CatchActivityBinder<TInstance, TException> :
 {
     readonly EventActivities<TInstance> _activities;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="event">The event value.</param>
-    /// <param name="activities">The activities value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="event">The event.</param>
+    /// <param name="activities">The activities.</param>
     public CatchActivityBinder(Event @event, EventActivities<TInstance> activities)
     {
         Event = @event;
         _activities = activities;
     }
 
-    /// <summary>
-    /// Gets the event value.
-    /// </summary>
+    /// <summary>Gets the event.</summary>
     public Event Event { get; }
 
-    /// <summary>
-    /// Determines whether state transition event.
-    /// </summary>
-    /// <param name="state">The state value.</param>
+    /// <summary>Determines whether state transition event.</summary>
+    /// <param name="state">The state.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsStateTransitionEvent(State state)
     {
@@ -41,10 +33,8 @@ public class CatchActivityBinder<TInstance, TException> :
             || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="state">The state value.</param>
+    /// <summary>Binds the configured entities.</summary>
+    /// <param name="state">The state.</param>
     public void Bind(State<TInstance> state)
     {
         var builder = new CatchBehaviorBuilder<TInstance>();
@@ -56,10 +46,8 @@ public class CatchActivityBinder<TInstance, TException> :
         state.Bind(Event, compensateActivity);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Binds the configured entities.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Bind(IBehaviorBuilder<TInstance> builder)
     {
         var compensateActivityBuilder = new CatchBehaviorBuilder<TInstance>();

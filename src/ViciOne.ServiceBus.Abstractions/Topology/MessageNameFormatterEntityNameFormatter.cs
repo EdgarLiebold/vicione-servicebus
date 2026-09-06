@@ -2,18 +2,14 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Advanced.Topology;
 
-/// <summary>
-/// Provides a message name formatter entity name formatter implementation.
-/// </summary>
+/// <summary>Formats message name formatter entity name values.</summary>
 public class MessageNameFormatterEntityNameFormatter :
     IEntityNameFormatter
 {
     readonly IMessageNameFormatter _formatter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="formatter">The formatter.</param>
     public MessageNameFormatterEntityNameFormatter(IMessageNameFormatter formatter)
     {
         _formatter = formatter;

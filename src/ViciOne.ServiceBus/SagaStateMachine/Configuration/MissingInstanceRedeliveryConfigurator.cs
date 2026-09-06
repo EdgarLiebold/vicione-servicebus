@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a missing instance redelivery configurator implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures missing instance redelivery.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class MissingInstanceRedeliveryConfigurator<TSaga, TMessage> :
     ExceptionSpecification,
     IMissingInstanceRedeliveryConfigurator<TSaga, TMessage>,
@@ -21,10 +19,8 @@ public class MissingInstanceRedeliveryConfigurator<TSaga, TMessage> :
     IPipe<ConsumeContext<TMessage>> _finalPipe;
     RetryPolicyFactory _policyFactory = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public MissingInstanceRedeliveryConfigurator(IMissingInstanceConfigurator<TSaga, TMessage> configurator)
     {
         _configurator = configurator;
@@ -32,57 +28,43 @@ public class MissingInstanceRedeliveryConfigurator<TSaga, TMessage> :
         _finalPipe = configurator.Discard();
     }
 
-    /// <summary>
-    /// Sets retry policy.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Sets retry policy.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         _policyFactory = factory;
     }
 
-    /// <summary>
-    /// Performs the on redelivery limit reached operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Handles the notification for redelivery limit reached.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void OnRedeliveryLimitReached(Func<IMissingInstanceConfigurator<TSaga, TMessage>, IPipe<ConsumeContext<TMessage>>> configure)
     {
         _finalPipe = configure(_configurator) ?? _configurator.Discard();
     }
 
-    /// <summary>
-    /// Connects retry observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects retry observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectRetryObserver(IRetryObserver observer)
     {
         return new EmptyConnectHandle();
     }
 
-    /// <summary>
-    /// Gets or sets the replace message id value.
-    /// </summary>
+    /// <summary>Gets or sets the replace message id.</summary>
     public bool ReplaceMessageId { get; set; } = true;
-    /// <summary>
-    /// Gets or sets the use message scheduler value.
-    /// </summary>
+    /// <summary>Gets or sets the configure message scheduler.</summary>
     public bool ConfigureMessageScheduler { get; set; } = true;
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_policyFactory == null)
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the configured component.</summary>
+    /// <returns>The configured component.</returns>
     public IPipe<ConsumeContext<TMessage>> Build()
     {
         var retryPolicy = _policyFactory(Filter);

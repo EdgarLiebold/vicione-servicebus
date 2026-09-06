@@ -2,21 +2,15 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for job service registration configurator.
-/// </summary>
+/// <summary>Configures job service registration.</summary>
 public interface IJobServiceRegistrationConfigurator
 {
-    /// <summary>
-    /// Configure the job service options
-    /// </summary>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Configure the job service options.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The job service registration configurator produced by the operation.</returns>
     IJobServiceRegistrationConfigurator Options(Action<JobConsumerOptions> configure);
 
-    /// <summary>
-    /// Configure the instance endpoint settings
-    /// </summary>
-    /// <param name="configure"></param>
+    /// <summary>Configure the instance endpoint settings.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     void Endpoint(Action<IEndpointRegistrationConfigurator> configure);
 }

@@ -5,28 +5,22 @@ using ViciOne.ServiceBus.DependencyInjection;
 
 namespace ViciOne.ServiceBus.EventHubs.Configuration;
 
-/// <summary>
-/// Provides an event hub registration rider factory implementation.
-/// </summary>
+/// <summary>Creates the bus-instance specification for a configured Event Hubs rider registration.</summary>
 public class EventHubRegistrationRiderFactory :
     IRegistrationRiderFactory<IEventHubRider>
 {
     readonly Action<IRiderRegistrationContext, IEventHubFactoryConfigurator> _configure;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Stores the callback used to configure each rider instance.</summary>
+    /// <param name="configure">Configures the Event Hubs rider from its registration context.</param>
     public EventHubRegistrationRiderFactory(Action<IRiderRegistrationContext, IEventHubFactoryConfigurator> configure)
     {
         _configure = configure;
     }
 
-    /// <summary>
-    /// Creates rider.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a configured Event Hubs bus-instance specification.</summary>
+    /// <param name="context">The rider registration context.</param>
+    /// <returns>The specification that will build and attach the rider.</returns>
     public IBusInstanceSpecification CreateRider(IRiderRegistrationContext context)
     {
         var configurator = new EventHubFactoryConfigurator();

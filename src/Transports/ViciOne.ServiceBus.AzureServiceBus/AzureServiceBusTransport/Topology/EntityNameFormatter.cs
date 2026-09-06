@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides an entity name formatter implementation.
-/// </summary>
+/// <summary>Builds Azure Service Bus subscription and transfer subqueue paths.</summary>
 public static class EntityNameFormatter
 {
     const string PathDelimiter = @"/";
@@ -13,42 +11,35 @@ public static class EntityNameFormatter
     const string DeadLetterQueueName = SubQueuePrefix + DeadLetterQueueSuffix;
     const string ErrorQueueName = SubQueuePrefix + ErrorQueueSuffix;
 
-    /// <summary>
-    /// Formats the dead letter path for either a queue, or a subscription.
-    /// </summary>
-    /// <param name="entityPath">The name of the queue, or path of the subscription.</param>
-    /// <returns>The path as a string of the dead letter entity.</returns>
+    /// <summary>Appends the Azure dead-letter subqueue name to a queue or subscription path.</summary>
+    /// <param name="entityPath">The queue or subscription entity path.</param>
+    /// <returns>The dead-letter subqueue path.</returns>
     public static string FormatDeadLetterPath(string entityPath)
     {
         return FormatSubQueuePath(entityPath, DeadLetterQueueName);
     }
 
-    /// <summary>
-    /// Formats the dead letter path for either a queue, or a subscription.
-    /// </summary>
-    /// <param name="entityPath">The name of the queue, or path of the subscription.</param>
-    /// <returns>The path as a string of the dead letter entity.</returns>
+    /// <summary>Appends the transport error subqueue name to a queue or subscription path.</summary>
+    /// <param name="entityPath">The queue or subscription entity path.</param>
+    /// <returns>The transport error subqueue path.</returns>
     public static string FormatErrorPath(string entityPath)
     {
         return FormatSubQueuePath(entityPath, ErrorQueueName);
     }
 
-    /// <summary>
-    /// Formats the subqueue path for either a queue, or a subscription.
-    /// </summary>
-    /// <param name="entityPath">The name of the queue, or path of the subscription.</param>
-    /// <param name="subQueueName">The name of the subQueue</param>
-    /// <returns>The path as a string of the subqueue entity.</returns>
+    /// <summary>Appends a subqueue name to a queue or subscription path.</summary>
+    /// <param name="entityPath">The queue or subscription entity path.</param>
+    /// <param name="subQueueName">The provider subqueue name, including its leading dollar sign.</param>
+    /// <returns>The complete subqueue path.</returns>
     public static string FormatSubQueuePath(string entityPath, string subQueueName)
     {
         return string.Concat(entityPath, PathDelimiter, subQueueName);
     }
 
-    /// <summary>
-    /// Formats the subscription path, based on the topic path and subscription name.
-    /// </summary>
-    /// <param name="topicPath">The name of the topic, including slashes.</param>
-    /// <param name="subscriptionName">The subscription name</param>
+    /// <summary>Builds a subscription entity path from its topic and subscription names.</summary>
+    /// <param name="topicPath">The namespace-relative topic path.</param>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <returns>The formatted subscription path.</returns>
     public static string FormatSubscriptionPath(string topicPath, string subscriptionName)
     {
         return string.Concat(topicPath, PathDelimiter, Subscriptions, PathDelimiter, subscriptionName);

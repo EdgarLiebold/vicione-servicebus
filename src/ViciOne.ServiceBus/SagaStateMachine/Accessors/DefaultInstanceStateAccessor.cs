@@ -7,16 +7,13 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Provides a vici one service bus state machine implementation.
-/// </summary>
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, SagaStateMachineInstance
 {
     /// <summary>
     /// The default state accessor will attempt to find and use a single State property on the
     /// instance type. If no State property is found, or more than one is found, an exception
-    /// will be thrown
+    /// will be thrown.
     /// </summary>
     class DefaultInstanceStateAccessor :
         IStateAccessor<TInstance>

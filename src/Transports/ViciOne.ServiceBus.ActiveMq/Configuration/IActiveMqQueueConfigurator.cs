@@ -1,18 +1,11 @@
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Configures a queue/exchange pair in ActiveMQ
-/// </summary>
+/// <summary>Configures an ActiveMQ queue and its consumer subscription.</summary>
 public interface IActiveMqQueueConfigurator
 {
-    /// <summary>
-    /// Specify the queue should be durable (survives broker restart) or in-memory
-    /// </summary>
-    /// <value>True for a durable queue, False for an in-memory queue</value>
+    /// <summary>Sets whether the queue persists across broker restarts.</summary>
     bool Durable { set; }
 
-    /// <summary>
-    /// Specify that the queue (and the exchange of the same name) should be created as auto-delete
-    /// </summary>
+    /// <summary>Sets whether the broker removes the queue when its owning connection closes.</summary>
     bool AutoDelete { set; }
 }

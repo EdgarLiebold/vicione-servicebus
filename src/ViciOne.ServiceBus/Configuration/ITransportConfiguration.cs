@@ -1,29 +1,19 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for transport configuration.
-/// </summary>
+/// <summary>Defines transport configuration.</summary>
 public interface ITransportConfiguration :
     ISpecification
 {
-    /// <summary>
-    /// Gets the configurator value.
-    /// </summary>
+    /// <summary>Gets the configurator.</summary>
     ITransportConfigurator Configurator { get; }
 
-    /// <summary>
-    /// Gets the prefetch count value.
-    /// </summary>
+    /// <summary>Gets the prefetch count.</summary>
     int PrefetchCount { get; }
 
-    /// <summary>
-    /// Gets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets the concurrent message limit.</summary>
     int? ConcurrentMessageLimit { get; }
 
-    /// <summary>
-    /// Gets concurrent message limit.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets concurrent message limit.</summary>
+    /// <returns>The concurrent message limit.</returns>
     int GetConcurrentMessageLimit();
 }

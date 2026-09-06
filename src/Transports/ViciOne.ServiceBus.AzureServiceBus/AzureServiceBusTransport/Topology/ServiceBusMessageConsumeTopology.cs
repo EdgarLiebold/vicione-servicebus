@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a service bus message consume topology implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Collects Azure Service Bus subscriptions used to consume a message contract.</summary>
+/// <typeparam name="TMessage">The consumed message contract.</typeparam>
 public class ServiceBusMessageConsumeTopology<TMessage> :
     MessageConsumeTopology<TMessage>,
     IServiceBusMessageConsumeTopologyConfigurator<TMessage>,
@@ -19,11 +17,9 @@ public class ServiceBusMessageConsumeTopology<TMessage> :
     readonly IServiceBusMessagePublishTopology<TMessage> _publishTopology;
     readonly IList<IServiceBusConsumeTopologySpecification> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
-    /// <param name="publishTopology">The publish topology value.</param>
+    /// <summary>Creates an empty consume topology for a message contract.</summary>
+    /// <param name="messageTopology">The provider-neutral topology for the message contract.</param>
+    /// <param name="publishTopology">The Azure publish topology used to resolve the message topic.</param>
     public ServiceBusMessageConsumeTopology(IMessageTopology<TMessage> messageTopology, IServiceBusMessagePublishTopology<TMessage> publishTopology)
     {
         _messageTopology = messageTopology;
@@ -32,21 +28,17 @@ public class ServiceBusMessageConsumeTopology<TMessage> :
         _specifications = new List<IServiceBusConsumeTopologySpecification>();
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies all message-specific subscription specifications to a receive-endpoint builder.</summary>
+    /// <param name="builder">The topology builder receiving the subscriptions.</param>
     public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
     {
         foreach (var specification in _specifications)
             specification.Apply(builder);
     }
 
-    /// <summary>
-    /// Performs the subscribe operation.
-    /// </summary>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Adds a subscription to this message contract's publish topic.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="configure">Optionally configures the subscription.</param>
     public void Subscribe(string subscriptionName, Action<IServiceBusSubscriptionConfigurator>? configure = null)
     {
         if (string.IsNullOrWhiteSpace(subscriptionName))
@@ -71,10 +63,8 @@ public class ServiceBusMessageConsumeTopology<TMessage> :
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the message topology and every configured subscription.</summary>
+    /// <returns>All validation failures for this consumed message contract.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));

@@ -69,7 +69,7 @@ internal class TypeNameFormatter
         {
             var name = type.GetGenericTypeDefinition().Name;
 
-            //remove `1
+            // The CLR generic arity suffix is not part of a formatted type name.
             var index = name.IndexOf('`');
             if (index > 0)
                 name = name.Remove(index);

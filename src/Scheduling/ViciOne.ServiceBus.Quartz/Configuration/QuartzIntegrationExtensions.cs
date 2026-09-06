@@ -8,18 +8,14 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Quartz;
 
-/// <summary>
-/// Provides extension methods for quartz integration.
-/// </summary>
+/// <summary>Configures a bus-hosted Quartz scheduler and its in-memory scheduling endpoint.</summary>
 public static class QuartzIntegrationExtensions
 {
 
-    /// <summary>
-    /// Configures in memory scheduler for the current pipeline.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an isolated in-memory Quartz scheduler and connects it to a bus endpoint.</summary>
+    /// <param name="configurator">The bus factory configuration to update.</param>
+    /// <param name="queueName">The scheduling endpoint queue name.</param>
+    /// <returns>The scheduling endpoint address.</returns>
     public static Uri ConfigureInMemoryScheduler(this IBusFactoryConfigurator configurator, string queueName = "quartz")
     {
         if (configurator == null)
@@ -30,13 +26,11 @@ public static class QuartzIntegrationExtensions
         return configurator.ConfigureInMemoryScheduler(schedulerFactory, queueName);
     }
 
-    /// <summary>
-    /// Configures in memory scheduler for the current pipeline.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="schedulerFactory">The scheduler factory value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an isolated in-memory Quartz scheduler, returns its factory, and connects it to a bus endpoint.</summary>
+    /// <param name="configurator">The bus factory configuration to update.</param>
+    /// <param name="schedulerFactory">Receives the created scheduler factory.</param>
+    /// <param name="queueName">The scheduling endpoint queue name.</param>
+    /// <returns>The scheduling endpoint address.</returns>
     public static Uri ConfigureInMemoryScheduler(this IBusFactoryConfigurator configurator, out ISchedulerFactory schedulerFactory, string queueName = "quartz")
     {
         schedulerFactory = CreateSchedulerFactory();
@@ -44,13 +38,11 @@ public static class QuartzIntegrationExtensions
         return ConfigureInMemoryScheduler(configurator, schedulerFactory, queueName);
     }
 
-    /// <summary>
-    /// Configures in memory scheduler for the current pipeline.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="schedulerFactory">The scheduler factory value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a caller-supplied Quartz scheduler factory to a bus-hosted scheduling endpoint.</summary>
+    /// <param name="configurator">The bus factory configuration to update.</param>
+    /// <param name="schedulerFactory">The Quartz scheduler factory to use.</param>
+    /// <param name="queueName">The scheduling endpoint queue name.</param>
+    /// <returns>The scheduling endpoint address.</returns>
     public static Uri ConfigureInMemoryScheduler(this IBusFactoryConfigurator configurator, ISchedulerFactory schedulerFactory, string queueName = "quartz")
     {
         return configurator.ConfigureInMemoryScheduler(options =>
@@ -80,12 +72,10 @@ public static class QuartzIntegrationExtensions
             .Build();
     }
 
-    /// <summary>
-    /// Configures in memory scheduler for the current pipeline.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a configured Quartz scheduler to a bus-hosted scheduling endpoint.</summary>
+    /// <param name="configurator">The bus factory configuration to update.</param>
+    /// <param name="configure">A callback that supplies the scheduler factory, endpoint, clock, and time-zone resolver.</param>
+    /// <returns>The scheduling endpoint address.</returns>
     public static Uri ConfigureInMemoryScheduler(this IBusFactoryConfigurator configurator, Action<QuartzSchedulerOptions>? configure)
     {
         if (configurator == null)

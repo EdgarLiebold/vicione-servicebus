@@ -2,44 +2,34 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Represents an error related to message time to live expired.
-/// </summary>
+/// <summary>Indicates that an Azure Service Bus message exceeded its time-to-live interval.</summary>
 public class MessageTimeToLiveExpiredException :
     TransportException
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Creates an exception without endpoint details.</summary>
     public MessageTimeToLiveExpiredException()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="uri">The uri value.</param>
+    /// <summary>Creates an exception for the endpoint at which the message expired.</summary>
+    /// <param name="uri">The receive endpoint address.</param>
     public MessageTimeToLiveExpiredException(Uri uri)
         : base(uri)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="uri">The uri value.</param>
-    /// <param name="message">The message value.</param>
+    /// <summary>Creates an exception with endpoint and diagnostic details.</summary>
+    /// <param name="uri">The receive endpoint address.</param>
+    /// <param name="message">A description of the expiration failure.</param>
     public MessageTimeToLiveExpiredException(Uri uri, string message)
         : base(uri, message)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="uri">The uri value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="innerException">The inner exception value.</param>
+    /// <summary>Creates an exception with endpoint, diagnostic details, and the underlying provider failure.</summary>
+    /// <param name="uri">The receive endpoint address.</param>
+    /// <param name="message">A description of the expiration failure.</param>
+    /// <param name="innerException">The provider exception that caused the failure.</param>
     public MessageTimeToLiveExpiredException(Uri uri, string message, Exception innerException)
         : base(uri, message, innerException)
     {

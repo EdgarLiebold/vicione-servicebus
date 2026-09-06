@@ -15,9 +15,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Logging;
 
-/// <summary>
-/// Provides extension methods for log context instrumentation.
-/// </summary>
+/// <summary>Creates failure-isolated OpenTelemetry metric scopes for service-bus operations.</summary>
 public static class LogContextInstrumentationExtensions
 {
     private static readonly ConditionalWeakTable<ILogContext, LogContextInstrumentationState> LogContextStates = new();
@@ -27,12 +25,10 @@ public static class LogContextInstrumentationExtensions
 
     private static LogContextInstrumentationState? _fallbackState;
 
-    /// <summary>
-    /// Starts receive instrument.
-    /// </summary>
-    /// <param name="logContext">The log context value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Starts metrics for one transport receive operation.</summary>
+    /// <param name="logContext">The log context bound to the active meter.</param>
+    /// <param name="context">The receive context that supplies transport identity and time.</param>
+    /// <returns>A completion scope, or <see langword="null"/> when instrumentation is unavailable or disabled.</returns>
     public static MetricOperation? StartReceiveInstrument(this ILogContext logContext, ReceiveContext context) =>
         TryStart(logContext, context, state =>
         {
@@ -56,27 +52,23 @@ public static class LogContextInstrumentationExtensions
             });
         });
 
-    /// <summary>
-    /// Starts handler instrument.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="logContext">The log context value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Starts processing metrics for a message handled by a delegate.</summary>
+    /// <typeparam name="TMessage">The handled message contract.</typeparam>
+    /// <param name="logContext">The log context bound to the active meter.</param>
+    /// <param name="context">The active consume context.</param>
+    /// <returns>A completion scope, or <see langword="null"/> when instrumentation is unavailable or disabled.</returns>
     public static MetricOperation? StartHandlerInstrument<TMessage>(
         this ILogContext logContext,
         ConsumeContext<TMessage> context)
         where TMessage : class =>
         StartProcess(logContext, context, "handle", "handler");
 
-    /// <summary>
-    /// Starts consume instrument.
-    /// </summary>
-    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="logContext">The log context value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Starts processing metrics for a message delivered to a consumer.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation.</typeparam>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="logContext">The log context bound to the active meter.</param>
+    /// <param name="context">The active consume context.</param>
+    /// <returns>A completion scope, or <see langword="null"/> when instrumentation is unavailable or disabled.</returns>
     public static MetricOperation? StartConsumeInstrument<TConsumer, T>(
         this ILogContext logContext,
         ConsumeContext<T> context)
@@ -87,14 +79,12 @@ public static class LogContextInstrumentationExtensions
             ConsumerProcessorIdentity<TConsumer>.OperationName,
             ConsumerProcessorIdentity<TConsumer>.ProcessorKind);
 
-    /// <summary>
-    /// Starts send instrument.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="logContext">The log context value.</param>
-    /// <param name="transportContext">The transport context value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Starts metrics for one transport send operation.</summary>
+    /// <typeparam name="T">The sent message contract.</typeparam>
+    /// <param name="logContext">The calling log context; the transport-bound context owns the metric binding.</param>
+    /// <param name="transportContext">The transport context that supplies the metric binding and transport identity.</param>
+    /// <param name="context">The active send context.</param>
+    /// <returns>A completion scope, or <see langword="null"/> when instrumentation is unavailable or disabled.</returns>
     public static MetricOperation? StartSendInstrument<T>(
         this ILogContext logContext,
         SendTransportContext transportContext,
@@ -122,19 +112,15 @@ public static class LogContextInstrumentationExtensions
             });
         });
 
-    /// <summary>
-    /// Starts outbox enqueue instrument.
-    /// </summary>
-    /// <param name="logContext">The log context value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Starts an outcome counter scope for one outbox enqueue operation.</summary>
+    /// <param name="logContext">The log context bound to the active meter.</param>
+    /// <returns>A completion scope, or <see langword="null"/> when instrumentation is unavailable or disabled.</returns>
     public static MetricOperation? StartOutboxEnqueueInstrument(this ILogContext logContext) =>
         StartOutbox(logContext, "enqueue");
 
-    /// <summary>
-    /// Starts outbox delivery instrument.
-    /// </summary>
-    /// <param name="logContext">The log context value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Starts an outcome counter scope for one outbox delivery operation.</summary>
+    /// <param name="logContext">The log context bound to the active meter.</param>
+    /// <returns>A completion scope, or <see langword="null"/> when instrumentation is unavailable or disabled.</returns>
     public static MetricOperation? StartOutboxDeliveryInstrument(this ILogContext logContext) =>
         StartOutbox(logContext, "deliver");
 
@@ -170,8 +156,8 @@ public static class LogContextInstrumentationExtensions
         {
             // Instrument creation belongs to the application observation boundary. A broken custom
             // meter factory or listener disables metrics for this activation, not the service bus.
-            // The provider-specific uninstrumented log context installed above prevents accidental
-            // reuse of a previously activated provider's meter scope.
+            // The provider-specific uninstrumented log context installed above ensures that each
+            // activation owns its meter scope.
         }
     }
 
@@ -372,6 +358,7 @@ public static class LogContextInstrumentationExtensions
         "loopback" or "in-memory" => ServiceBusTelemetry.MessagingSystems.InMemory,
         "rabbitmq" => ServiceBusTelemetry.MessagingSystems.RabbitMq,
         "activemq" => ServiceBusTelemetry.MessagingSystems.ActiveMq,
+        "aws.sns" => ServiceBusTelemetry.MessagingSystems.AmazonSns,
         "amazonsqs" or "amazon_sqs" or "aws-sqs" or "aws_sqs" => ServiceBusTelemetry.MessagingSystems.AmazonSqs,
         "eventhubs" => ServiceBusTelemetry.MessagingSystems.AzureEventHubs,
         "sb" or "azure-service-bus" or "servicebus" => ServiceBusTelemetry.MessagingSystems.AzureServiceBus,

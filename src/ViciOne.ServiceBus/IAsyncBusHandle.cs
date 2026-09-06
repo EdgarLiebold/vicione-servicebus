@@ -2,9 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Defines the contract for async bus handle.
-/// </summary>
+/// <summary>Controls the lifetime of async bus.</summary>
 public interface IAsyncBusHandle :
     IAsyncDisposable
 {

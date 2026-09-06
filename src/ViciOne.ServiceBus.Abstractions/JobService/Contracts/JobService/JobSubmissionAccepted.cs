@@ -2,13 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
-/// <summary>
-/// Defines the contract for job submission accepted.
-/// </summary>
+/// <summary>Defines the operations required by job submission accepted.</summary>
 public interface JobSubmissionAccepted
 {
-    /// <summary>
-    /// Gets the job id value.
-    /// </summary>
+    /// <summary>Gets the job id.</summary>
     Guid JobId { get; }
 }

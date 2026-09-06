@@ -4,17 +4,14 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides typed and runtime saga registration extensions.
-/// </summary>
+/// <summary>Provides typed and runtime saga registration extensions.</summary>
 public static class SagaRegistrationConfiguratorRuntimeExtensions
 {
-    /// <summary>
-    /// Adds the saga, along with an optional saga definition
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="sagaType">The saga type</param>
-    /// <param name="sagaDefinitionType">The saga definition type</param>
+    /// <summary>Adds the saga, along with an optional saga definition.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="sagaType">The saga type.</param>
+    /// <param name="sagaDefinitionType">The saga definition type.</param>
+    /// <returns>The saga registration configurator produced by the operation.</returns>
     public static ISagaRegistrationConfigurator AddSaga(this IRegistrationConfigurator configurator, Type sagaType, Type? sagaDefinitionType = null)
     {
         if (sagaType.ImplementsInterface<SagaStateMachineInstance>())
@@ -25,12 +22,11 @@ public static class SagaRegistrationConfiguratorRuntimeExtensions
         return register.Register(configurator, sagaDefinitionType);
     }
 
-    /// <summary>
-    /// Adds the state machine saga, along with an optional saga definition
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="sagaType">The saga type</param>
-    /// <param name="sagaDefinitionType">The saga definition type</param>
+    /// <summary>Adds the state machine saga, along with an optional saga definition.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="sagaType">The saga type.</param>
+    /// <param name="sagaDefinitionType">The saga definition type.</param>
+    /// <returns>The saga registration configurator produced by the operation.</returns>
     public static ISagaRegistrationConfigurator AddSagaStateMachine(this IRegistrationConfigurator configurator, Type sagaType,
         Type? sagaDefinitionType = null)
     {

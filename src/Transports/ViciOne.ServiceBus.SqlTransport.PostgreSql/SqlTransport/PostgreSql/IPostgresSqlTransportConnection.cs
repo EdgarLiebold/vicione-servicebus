@@ -2,21 +2,15 @@ using Npgsql;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
-/// <summary>
-/// Defines the contract for postgres sql transport connection.
-/// </summary>
+/// <summary>Exposes the PostgreSQL connection used by a SQL transport operation.</summary>
 public interface IPostgresSqlTransportConnection :
     ISqlTransportConnection
 {
-    /// <summary>
-    /// Gets the connection value.
-    /// </summary>
+    /// <summary>Gets the underlying PostgreSQL connection.</summary>
     NpgsqlConnection Connection { get; }
 
-    /// <summary>
-    /// Creates command.
-    /// </summary>
-    /// <param name="commandText">The command text value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a command associated with the underlying connection.</summary>
+    /// <param name="commandText">The SQL command text.</param>
+    /// <returns>A command whose connection is set to <see cref="Connection" />.</returns>
     NpgsqlCommand CreateCommand(string commandText);
 }

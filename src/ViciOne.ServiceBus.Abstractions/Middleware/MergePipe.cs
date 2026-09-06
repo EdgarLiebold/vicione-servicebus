@@ -2,11 +2,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a merge pipe implementation.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
-/// <typeparam name="TSplit">The t split type.</typeparam>
+/// <summary>Executes the pipeline for merge.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TSplit">The split type.</typeparam>
 public class MergePipe<TInput, TSplit> :
     IPipe<TSplit>
     where TSplit : class, PipeContext
@@ -16,12 +14,10 @@ public class MergePipe<TInput, TSplit> :
     readonly TInput _input;
     readonly IPipe<TInput> _next;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="next">The next value.</param>
-    /// <param name="input">The input value.</param>
-    /// <param name="contextProvider">The context provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <param name="input">The input.</param>
+    /// <param name="contextProvider">The context provider.</param>
     public MergePipe(IPipe<TInput> next, TInput input, MergeFilterContextProvider<TInput, TSplit> contextProvider)
     {
         _next = next;
@@ -29,10 +25,8 @@ public class MergePipe<TInput, TSplit> :
         _contextProvider = contextProvider;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("merge");
@@ -41,11 +35,9 @@ public class MergePipe<TInput, TSplit> :
         _next.Probe(scope);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(TSplit context)
     {
         var inputContext = _contextProvider(_input, context);

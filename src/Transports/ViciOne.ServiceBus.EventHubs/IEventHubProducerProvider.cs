@@ -3,17 +3,13 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Defines the contract for event hub producer provider.
-/// </summary>
+/// <summary>Resolves and observes producers for Event Hubs endpoint addresses.</summary>
 public interface IEventHubProducerProvider :
     ISendObserverConnector
 {
-    /// <summary>
-    /// Gets producer.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Gets a producer for the specified Event Hubs endpoint.</summary>
+    /// <param name="address">The Event Hubs endpoint address.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task whose result is the endpoint producer.</returns>
     Task<IEventHubProducer> GetProducerAsync(Uri address, CancellationToken cancellationToken = default);
 }

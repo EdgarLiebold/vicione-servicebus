@@ -7,17 +7,13 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>
-/// Provides a connection context factory implementation.
-/// </summary>
+/// <summary>Creates connection context instances.</summary>
 public abstract class ConnectionContextFactory :
     IPipeContextFactory<ConnectionContext>
 {
-    /// <summary>
-    /// Creates context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates context.</summary>
+    /// <param name="supervisor">The supervisor.</param>
+    /// <returns>The created context.</returns>
     public IPipeContextAgent<ConnectionContext> CreateContext(ISupervisor supervisor)
     {
         ITransportSupervisor<ConnectionContext> transportSupervisor =
@@ -26,13 +22,11 @@ public abstract class ConnectionContextFactory :
         return supervisor.AddContext(CreateConnection(transportSupervisor));
     }
 
-    /// <summary>
-    /// Creates active context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Creates active context.</summary>
+    /// <param name="supervisor">The supervisor.</param>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The created active context.</returns>
     public IActivePipeContextAgent<ConnectionContext> CreateActiveContext(ISupervisor supervisor,
         PipeContextHandle<ConnectionContext> context, CancellationToken cancellationToken)
     {
@@ -46,10 +40,8 @@ public abstract class ConnectionContextFactory :
             : new SharedConnectionContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 
-    /// <summary>
-    /// Creates connection.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates connection.</summary>
+    /// <param name="supervisor">The supervisor.</param>
+    /// <returns>The created connection.</returns>
     protected abstract ConnectionContext CreateConnection(ITransportSupervisor<ConnectionContext> supervisor);
 }

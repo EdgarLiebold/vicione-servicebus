@@ -5,30 +5,24 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Courier.Messages;
 
-/// <summary>
-/// Provides a routing slip routing slip implementation.
-/// </summary>
+/// <summary>Represents the mutable wire contract of a routing slip.</summary>
 public class RoutingSlipRoutingSlip :
     RoutingSlip
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public RoutingSlipRoutingSlip()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="trackingNumber">The tracking number value.</param>
-    /// <param name="createTimestamp">The create timestamp value.</param>
-    /// <param name="activities">The activities value.</param>
-    /// <param name="activityLogs">The activity logs value.</param>
-    /// <param name="compensateLogs">The compensate logs value.</param>
-    /// <param name="exceptions">The exceptions value.</param>
-    /// <param name="variables">The variables value.</param>
-    /// <param name="subscriptions">The subscriptions value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="trackingNumber">The tracking number.</param>
+    /// <param name="createTimestamp">The create timestamp.</param>
+    /// <param name="activities">The activities.</param>
+    /// <param name="activityLogs">The activity logs.</param>
+    /// <param name="compensateLogs">The compensate logs.</param>
+    /// <param name="exceptions">The exceptions.</param>
+    /// <param name="variables">The variables.</param>
+    /// <param name="subscriptions">The subscriptions.</param>
     public RoutingSlipRoutingSlip(Guid trackingNumber, DateTimeOffset createTimestamp, IEnumerable<Activity> activities,
         IEnumerable<ActivityLog> activityLogs, IEnumerable<CompensateLog> compensateLogs, IEnumerable<ActivityException> exceptions,
         IDictionary<string, object> variables, IEnumerable<Subscription> subscriptions)
@@ -43,36 +37,20 @@ public class RoutingSlipRoutingSlip :
         Subscriptions = subscriptions.ToList();
     }
 
-    /// <summary>
-    /// Gets or sets the tracking number value.
-    /// </summary>
+    /// <summary>Gets or sets the tracking number.</summary>
     public Guid TrackingNumber { get; set; }
-    /// <summary>
-    /// Gets or sets the create timestamp value.
-    /// </summary>
+    /// <summary>Gets or sets the create timestamp.</summary>
     public DateTimeOffset CreateTimestamp { get; set; }
-    /// <summary>
-    /// Gets or sets the itinerary value.
-    /// </summary>
+    /// <summary>Gets or sets the itinerary.</summary>
     public IList<Activity> Itinerary { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the activity logs value.
-    /// </summary>
+    /// <summary>Gets or sets the activity logs.</summary>
     public IList<ActivityLog> ActivityLogs { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the compensate logs value.
-    /// </summary>
+    /// <summary>Gets or sets the compensate logs.</summary>
     public IList<CompensateLog> CompensateLogs { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the variables value.
-    /// </summary>
+    /// <summary>Gets or sets the variables.</summary>
     public IDictionary<string, object> Variables { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the activity exceptions value.
-    /// </summary>
+    /// <summary>Gets or sets the activity exceptions.</summary>
     public IList<ActivityException> ActivityExceptions { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the subscriptions value.
-    /// </summary>
+    /// <summary>Gets or sets the subscriptions.</summary>
     public IList<Subscription> Subscriptions { get; set; } = null!;
 }

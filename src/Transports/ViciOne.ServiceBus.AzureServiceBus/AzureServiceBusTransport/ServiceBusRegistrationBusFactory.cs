@@ -8,19 +8,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus registration bus factory implementation.
-/// </summary>
+/// <summary>Creates Azure Service Bus instances from dependency-injection registrations.</summary>
 public class ServiceBusRegistrationBusFactory :
     TransportRegistrationBusFactory<IServiceBusReceiveEndpointConfigurator>
 {
     readonly ServiceBusBusConfiguration _busConfiguration;
     readonly Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator>? _configure;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Creates a factory with the default Azure Service Bus topology.</summary>
+    /// <param name="configure">Optionally configures the bus with access to registration services.</param>
     public ServiceBusRegistrationBusFactory(Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator>? configure)
         : this(new ServiceBusBusConfiguration(new ServiceBusTopologyConfiguration(AzureBusFactory.CreateMessageTopology())), configure)
     {
@@ -35,13 +31,11 @@ public class ServiceBusRegistrationBusFactory :
         _busConfiguration = busConfiguration;
     }
 
-    /// <summary>
-    /// Creates bus.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="specifications">The specifications value.</param>
-    /// <param name="busName">The bus name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a bus using named transport options and registered specifications.</summary>
+    /// <param name="context">The bus registration context.</param>
+    /// <param name="specifications">The endpoint and bus specifications to apply.</param>
+    /// <param name="busName">The name used to resolve transport options.</param>
+    /// <returns>The configured bus instance.</returns>
     public override IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
     {
         var configurator = new ServiceBusBusFactoryConfigurator(_busConfiguration);
@@ -53,14 +47,12 @@ public class ServiceBusRegistrationBusFactory :
         return CreateBus(configurator, context, _configure, specifications);
     }
 
-    /// <summary>
-    /// Creates bus instance.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <param name="host">The host value.</param>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Wraps a configured Azure Service Bus control and host as a running bus instance.</summary>
+    /// <param name="bus">The configured bus control.</param>
+    /// <param name="host">The Azure Service Bus host.</param>
+    /// <param name="hostConfiguration">The active host configuration.</param>
+    /// <param name="context">The bus registration context.</param>
+    /// <returns>The Azure Service Bus bus instance.</returns>
     protected override IBusInstance CreateBusInstance(IBusControl bus, IHost<IServiceBusReceiveEndpointConfigurator> host,
         IHostConfiguration hostConfiguration, IBusRegistrationContext context)
     {

@@ -444,33 +444,19 @@ internal sealed class KillSwitch :
 
 internal enum KillSwitchState
 {
-    /// <summary>
-    /// Indicates initial.
-    /// </summary>
+    /// <summary>Indicates initial.</summary>
     Initial,
-    /// <summary>
-    /// Indicates running.
-    /// </summary>
+    /// <summary>Indicates running.</summary>
     Running,
-    /// <summary>
-    /// Indicates stopping.
-    /// </summary>
+    /// <summary>Indicates stopping.</summary>
     Stopping,
-    /// <summary>
-    /// Indicates paused.
-    /// </summary>
+    /// <summary>Indicates paused.</summary>
     Paused,
-    /// <summary>
-    /// Indicates starting.
-    /// </summary>
+    /// <summary>Indicates starting.</summary>
     Starting,
-    /// <summary>
-    /// Indicates verifying recovery.
-    /// </summary>
+    /// <summary>Indicates verifying recovery.</summary>
     VerifyingRecovery,
-    /// <summary>
-    /// Indicates terminated.
-    /// </summary>
+    /// <summary>Indicates terminated.</summary>
     Terminated
 }
 

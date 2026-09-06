@@ -1,27 +1,21 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a future endpoint definition implementation.
-/// </summary>
-/// <typeparam name="TFuture">The t future type.</typeparam>
+/// <summary>Defines configuration for future endpoint.</summary>
+/// <typeparam name="TFuture">The future type.</typeparam>
 public class FutureEndpointDefinition<TFuture> :
     SettingsEndpointDefinition<TFuture>
     where TFuture : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="settings">The settings that control the operation.</param>
     public FutureEndpointDefinition(IEndpointSettings<IEndpointDefinition<TFuture>> settings)
         : base(settings)
     {
     }
 
-    /// <summary>
-    /// Performs the format endpoint name operation.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats endpoint name.</summary>
+    /// <param name="formatter">The formatter.</param>
+    /// <returns>The formatted endpoint name.</returns>
     protected override string FormatEndpointName(IEndpointNameFormatter formatter)
     {
         return formatter.Message<TFuture>();

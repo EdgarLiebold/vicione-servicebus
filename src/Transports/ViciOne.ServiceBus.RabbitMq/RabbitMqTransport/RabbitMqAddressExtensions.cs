@@ -8,16 +8,12 @@ using ViciOne.ServiceBus.RabbitMq.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides extension methods for rabbit mq address.
-/// </summary>
+/// <summary>Converts RabbitMQ addresses and host settings into runtime transport configuration.</summary>
 public static class RabbitMqAddressExtensions
 {
-    /// <summary>
-    /// Gets receive settings.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds receive settings from a full RabbitMQ endpoint URI.</summary>
+    /// <param name="address">The RabbitMQ endpoint URI.</param>
+    /// <returns>The derived receive, queue, and exchange settings.</returns>
     public static ReceiveSettings GetReceiveSettings(this Uri address)
     {
         var hostAddress = new RabbitMqHostAddress(address);
@@ -41,12 +37,10 @@ public static class RabbitMqAddressExtensions
         return settings;
     }
 
-    /// <summary>
-    /// Gets connection factory.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds a RabbitMQ client connection factory from validated host settings.</summary>
+    /// <param name="settings">The effective RabbitMQ host settings.</param>
+    /// <param name="timeProvider">The time source for connection metadata.</param>
+    /// <returns>The configured RabbitMQ client factory.</returns>
     public static ConnectionFactory GetConnectionFactory(this RabbitMqHostSettings settings, TimeProvider? timeProvider = null)
     {
         var factory = new ConnectionFactory
@@ -114,11 +108,9 @@ public static class RabbitMqAddressExtensions
         return factory;
     }
 
-    /// <summary>
-    /// Performs the apply ssl options operation.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="option">The option value.</param>
+    /// <summary>Applies TLS protocol, certificate, and validation settings to RabbitMQ.Client.</summary>
+    /// <param name="settings">The effective RabbitMQ host settings.</param>
+    /// <param name="option">The RabbitMQ client TLS options to update.</param>
     public static void ApplySslOptions(this RabbitMqHostSettings settings, SslOption option)
     {
         option.Enabled = settings.Ssl;
@@ -143,21 +135,17 @@ public static class RabbitMqAddressExtensions
         }
     }
 
-    /// <summary>
-    /// Gets host settings.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Parses RabbitMQ host settings from a transport URI.</summary>
+    /// <param name="address">The RabbitMQ host or endpoint URI.</param>
+    /// <returns>The mutable host settings.</returns>
     public static RabbitMqHostSettings GetHostSettings(this Uri address)
     {
         return GetConfigurationHostSettings(address);
     }
 
-    /// <summary>
-    /// Gets rabbit mq host topology.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets RabbitMQ bus topology or rejects a bus backed by another transport.</summary>
+    /// <param name="bus">The bus whose topology is requested.</param>
+    /// <returns>The RabbitMQ bus topology.</returns>
     public static IRabbitMqBusTopology GetRabbitMqHostTopology(this IBus bus)
     {
         if (bus.Topology is IRabbitMqBusTopology hostTopology)
@@ -203,11 +191,9 @@ public static class RabbitMqAddressExtensions
         return Uri.UnescapeDataString(uri.Replace("+", "%2B"));
     }
 
-    /// <summary>
-    /// Determines whether reply to address.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether an address targets RabbitMQ's direct-reply-to pseudo-queue.</summary>
+    /// <param name="address">The address to inspect.</param>
+    /// <returns><see langword="true" /> when its path ends with the direct-reply-to name.</returns>
     public static bool IsReplyToAddress(this Uri address)
     {
         return address?.AbsolutePath?.EndsWith(RabbitMqExchangeNames.ReplyTo) ?? false;

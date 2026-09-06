@@ -7,16 +7,16 @@ namespace ViciOne.ServiceBus.Advanced.Registration;
 /// <summary>Describes one handler registration that contributes to a receive endpoint.</summary>
 public interface IConsumerKindRegistration
 {
-    /// <summary>Gets the registered handler type.</summary>
+    /// <summary>Gets the registration type.</summary>
     Type RegistrationType { get; }
 
-    /// <summary>Gets the definition that owns the endpoint contribution.</summary>
+    /// <summary>Gets the definition.</summary>
     IDefinition Definition { get; }
 
-    /// <summary>Gets the endpoint name selected for the registration.</summary>
+    /// <summary>Gets the endpoint name.</summary>
     string EndpointName { get; }
 
-    /// <summary>Gets the endpoint definition supplied by the registration, if any.</summary>
+    /// <summary>Gets the endpoint definition.</summary>
     IEndpointDefinition? EndpointDefinition { get; }
 
     /// <summary>Gets whether the endpoint must be hosted by a service instance.</summary>
@@ -26,5 +26,6 @@ public interface IConsumerKindRegistration
     IReadOnlyCollection<string> CompanionEndpointNames { get; }
 
     /// <summary>Configures the registration on its materialized endpoint.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     void Configure(IConsumerKindEndpointContext context);
 }

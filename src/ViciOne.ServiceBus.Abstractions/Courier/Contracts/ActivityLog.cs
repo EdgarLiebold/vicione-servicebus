@@ -2,33 +2,21 @@ using System;
 
 namespace ViciOne.ServiceBus.Courier.Contracts;
 
-/// <summary>
-/// Message contract for storing activity log data
-/// </summary>
+/// <summary>Message contract for storing activity log data.</summary>
 public interface ActivityLog
 {
-    /// <summary>
-    /// The tracking number for completion of the activity
-    /// </summary>
+    /// <summary>The tracking number for completion of the activity.</summary>
     Guid ExecutionId { get; }
 
-    /// <summary>
-    /// The name of the activity that was completed
-    /// </summary>
+    /// <summary>The name of the activity that was completed.</summary>
     string Name { get; }
 
-    /// <summary>
-    /// The timestamp when the activity started
-    /// </summary>
+    /// <summary>The timestamp when the activity started.</summary>
     DateTimeOffset Timestamp { get; }
 
-    /// <summary>
-    /// The duration of the activity execution
-    /// </summary>
+    /// <summary>The duration of the activity execution.</summary>
     TimeSpan Duration { get; }
 
-    /// <summary>
-    /// The host that executed the activity
-    /// </summary>
+    /// <summary>The host that executed the activity.</summary>
     HostInfo Host { get; }
 }

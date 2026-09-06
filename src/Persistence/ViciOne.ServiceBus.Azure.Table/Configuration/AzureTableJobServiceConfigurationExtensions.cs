@@ -5,19 +5,15 @@ using ViciOne.ServiceBus.AzureTable.Saga;
 
 namespace ViciOne.ServiceBus.Azure.Table;
 
-/// <summary>
-/// Provides extension methods for azure table job service configuration.
-/// </summary>
+/// <summary>Configures Job Service saga state to use Azure Table Storage.</summary>
 public static class AzureTableJobServiceConfigurationExtensions
 {
-    /// <summary>
-    /// Configures azure table saga repository for the current pipeline.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="contextFactory">The context factory value.</param>
-    /// <param name="jobTypeKeyFormatter">The job type key formatter value.</param>
-    /// <param name="jobKeyFormatter">The job key formatter value.</param>
-    /// <param name="jobAttemptKeyFormatter">The job attempt key formatter value.</param>
+    /// <summary>Assigns Azure Table repositories and explicit key formats to all three Job Service saga types.</summary>
+    /// <param name="configurator">The Job Service configurator to update.</param>
+    /// <param name="contextFactory">The factory that supplies the Azure Table client for each repository context.</param>
+    /// <param name="jobTypeKeyFormatter">The key strategy for job-type saga entities.</param>
+    /// <param name="jobKeyFormatter">The key strategy for job saga entities.</param>
+    /// <param name="jobAttemptKeyFormatter">The key strategy for job-attempt saga entities.</param>
     public static void UseAzureTableSagaRepository(this IJobServiceConfigurator configurator,
         Func<TableClient> contextFactory,
         ISagaKeyFormatter<JobTypeSaga> jobTypeKeyFormatter,
@@ -37,11 +33,9 @@ public static class AzureTableJobServiceConfigurationExtensions
         configurator.JobAttemptRepository = AzureTableSagaRepository<JobAttemptSaga>.Create(contextFactory, jobAttemptKeyFormatter);
     }
 
-    /// <summary>
-    /// Configures azure table saga repository for the current pipeline.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="contextFactory">The context factory value.</param>
+    /// <summary>Assigns Azure Table repositories that partition each Job Service saga type by its type name.</summary>
+    /// <param name="configurator">The Job Service configurator to update.</param>
+    /// <param name="contextFactory">The factory that supplies the Azure Table client for each repository context.</param>
     public static void UseAzureTableSagaRepository(this IJobServiceConfigurator configurator,
         Func<TableClient> contextFactory)
     {

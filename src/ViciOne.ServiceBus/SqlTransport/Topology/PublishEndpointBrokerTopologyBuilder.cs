@@ -2,22 +2,16 @@ using System;
 
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>
-/// Provides a publish endpoint broker topology builder implementation.
-/// </summary>
+/// <summary>Builds publish endpoint broker topology components.</summary>
 public class PublishEndpointBrokerTopologyBuilder :
     BrokerTopologyBuilder,
     IPublishEndpointBrokerTopologyBuilder
 {
-    /// <summary>
-    /// The topic to which the published message is sent
-    /// </summary>
+    /// <summary>The topic to which the published message is sent.</summary>
     public TopicHandle? Topic { get; set; }
 
-    /// <summary>
-    /// Creates implemented builder.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates implemented builder.</summary>
+    /// <returns>The created implemented builder.</returns>
     public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
     {
         return new ImplementedBuilder(this);

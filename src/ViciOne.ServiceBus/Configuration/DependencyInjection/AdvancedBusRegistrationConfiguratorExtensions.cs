@@ -5,9 +5,9 @@ namespace ViciOne.ServiceBus.Advanced.Registration;
 /// <summary>Provides opt-in access to infrastructure-level bus registration operations.</summary>
 public static class AdvancedBusRegistrationConfiguratorExtensions
 {
-    /// <summary>Gets the advanced contract implemented by the built-in registration configurator.</summary>
-    /// <param name="configurator">The application registration configurator.</param>
-    /// <returns>The advanced registration contract.</returns>
+    /// <summary>Selects the advanced configuration API.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <returns>The advanced registration configurator produced by the operation.</returns>
     /// <exception cref="ArgumentNullException">The configurator is <see langword="null" />.</exception>
     /// <exception cref="ConfigurationException">The configurator does not support advanced registration.</exception>
     public static IAdvancedRegistrationConfigurator Advanced(this IRegistrationConfigurator configurator)
@@ -18,9 +18,9 @@ public static class AdvancedBusRegistrationConfiguratorExtensions
             ?? throw Unsupported(configurator);
     }
 
-    /// <summary>Gets the advanced registration contract implemented by the built-in bus configurator.</summary>
-    /// <param name="configurator">The application bus registration configurator.</param>
-    /// <returns>The advanced bus registration contract.</returns>
+    /// <summary>Selects the advanced configuration API.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <returns>The advanced bus registration configurator produced by the operation.</returns>
     /// <exception cref="ArgumentNullException">The configurator is <see langword="null" />.</exception>
     /// <exception cref="ConfigurationException">The configurator does not support advanced registration.</exception>
     public static IAdvancedBusRegistrationConfigurator Advanced(this IBusRegistrationConfigurator configurator)
@@ -31,8 +31,8 @@ public static class AdvancedBusRegistrationConfiguratorExtensions
             ?? throw Unsupported(configurator);
     }
 
-    /// <summary>Gets the advanced registration contract implemented by the built-in multi-bus configurator.</summary>
-    /// <typeparam name="TBus">The additional bus contract.</typeparam>
+    /// <summary>Selects the advanced configuration API.</summary>
+    /// <typeparam name="TBus">The bus type.</typeparam>
     /// <param name="configurator">The typed application bus registration configurator.</param>
     /// <returns>The typed advanced bus registration contract.</returns>
     /// <exception cref="ArgumentNullException">The configurator is <see langword="null" />.</exception>

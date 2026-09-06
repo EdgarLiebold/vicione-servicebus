@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides an amazon sqs receive lock context implementation.
-/// </summary>
+/// <summary>Renews and settles the Amazon SQS visibility lock for a received message.</summary>
 public class AmazonSqsReceiveLockContext :
     ReceiveLockContext
 {
@@ -33,14 +31,12 @@ public class AmazonSqsReceiveLockContext :
     readonly Task _visibilityTask;
     int _locked;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="inputAddress">The input address value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="clientContext">The client context value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Starts visibility-timeout renewal for a received Amazon SQS message.</summary>
+    /// <param name="inputAddress">The queue endpoint address used in lock-loss errors.</param>
+    /// <param name="message">The received Amazon SQS message.</param>
+    /// <param name="settings">The queue's visibility and redelivery settings.</param>
+    /// <param name="clientContext">The client context used to change visibility and delete the message.</param>
+    /// <param name="cancellationToken">The token that stops visibility renewal.</param>
     public AmazonSqsReceiveLockContext(Uri inputAddress, Message message, ReceiveSettings settings, ClientContext clientContext,
         CancellationToken cancellationToken)
         : this(inputAddress, message, settings, cancellationToken, TimeProvider.System, clientContext.ChangeMessageVisibilityAsync,
@@ -85,58 +81,20 @@ public class AmazonSqsReceiveLockContext :
         _visibilityTask = RenewMessageVisibilityAsync();
     }
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Stops visibility renewal and deletes the message from Amazon SQS.</summary>
+    /// <param name="cancellationToken">The caller token used to cancel provider deletion after renewal has stopped.</param>
+    /// <returns>A task that completes when renewal has stopped and the message has been deleted.</returns>
     public async Task CompleteAsync(CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); try
-        {
-            await StopRenewalAsync().ConfigureAwait(false);
-            await _deleteMessage(_entityName, _message.ReceiptHandle, _cancellationToken).ConfigureAwait(false);
-        }
-        finally
-        {
-            Interlocked.Exchange(ref _locked, 0);
-            DisposeRenewalTokens();
-        }
-    }
+        cancellationToken.ThrowIfCancellationRequested();
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
-    public async Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(exception);
-
-        await StopRenewalAsync().ConfigureAwait(false);
+        using var settlementLifetime = CancellationTokenSource.CreateLinkedTokenSource(_cancellationToken, cancellationToken);
 
         try
         {
-            if (!_connectionCancellationRequested() && _queueUrl != null)
-            {
-                await _changeMessageVisibility(_queueUrl, _message.ReceiptHandle, _redeliverVisibilityTimeout, _cancellationToken)
-                    .ConfigureAwait(false);
-            }
-        }
-        catch (OperationCanceledException) when (_cancellationToken.IsCancellationRequested || _connectionCancellationRequested())
-        {
-        }
-        catch (MessageNotInflightException)
-        {
-        }
-        catch (ReceiptHandleIsInvalidException)
-        {
-        }
-        catch (Exception redeliveryException)
-        {
-            LogContext.Error?.Log(redeliveryException, "ChangeMessageVisibility failed: {ReceiptHandle}, Original Exception: {Exception}",
-                _message.ReceiptHandle, exception);
+            await StopRenewalAsync().ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            await _deleteMessage(_entityName, _message.ReceiptHandle, settlementLifetime.Token).ConfigureAwait(false);
         }
         finally
         {
@@ -145,14 +103,66 @@ public class AmazonSqsReceiveLockContext :
         }
     }
 
-    /// <summary>
-    /// Validates lock status.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Stops visibility renewal and makes the message eligible for redelivery after the configured delay.</summary>
+    /// <param name="exception">The consumer exception retained for diagnostic logging if redelivery preparation also fails.</param>
+    /// <param name="cancellationToken">The caller token used to cancel provider settlement after renewal has stopped.</param>
+    /// <returns>A task that completes after renewal and redelivery preparation have stopped.</returns>
+    public async Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        ArgumentNullException.ThrowIfNull(exception);
+
+        using var settlementLifetime = CancellationTokenSource.CreateLinkedTokenSource(_cancellationToken, cancellationToken);
+
+        try
+        {
+            await StopRenewalAsync().ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            try
+            {
+                if (!_connectionCancellationRequested() && _queueUrl != null)
+                {
+                    await _changeMessageVisibility(_queueUrl, _message.ReceiptHandle, _redeliverVisibilityTimeout, settlementLifetime.Token)
+                        .ConfigureAwait(false);
+                }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (OperationCanceledException) when (_cancellationToken.IsCancellationRequested || _connectionCancellationRequested())
+            {
+            }
+            catch (MessageNotInflightException)
+            {
+            }
+            catch (ReceiptHandleIsInvalidException)
+            {
+            }
+            catch (Exception redeliveryException)
+            {
+                LogContext.Error?.Log(redeliveryException, "ChangeMessageVisibility failed: {ReceiptHandle}, Original Exception: {Exception}",
+                    _message.ReceiptHandle, exception);
+            }
+        }
+        finally
+        {
+            Interlocked.Exchange(ref _locked, 0);
+            DisposeRenewalTokens();
+        }
+    }
+
+    /// <summary>Verifies that the message visibility lock is still active.</summary>
+    /// <param name="cancellationToken">The token used to cancel validation.</param>
+    /// <returns>A completed task while the lock remains active.</returns>
+    /// <exception cref="TransportException">The visibility lock has been lost or settlement has completed.</exception>
     public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (Volatile.Read(ref _locked) == 1)
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        if (Volatile.Read(ref _locked) == 1)
             return Task.CompletedTask;
 
         throw new TransportException(_inputAddress, $"Message Lock Lost: {_message.ReceiptHandle}");

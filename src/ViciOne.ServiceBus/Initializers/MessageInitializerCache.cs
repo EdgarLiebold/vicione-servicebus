@@ -7,10 +7,8 @@ using ViciOne.ServiceBus.Initializers.Factories;
 
 namespace ViciOne.ServiceBus.Initializers;
 
-/// <summary>
-/// Provides a message initializer cache implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Caches message initializer data.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class MessageInitializerCache<TMessage> :
     IMessageInitializerCache<TMessage>
     where TMessage : class
@@ -48,21 +46,18 @@ public class MessageInitializerCache<TMessage> :
         return factory.CreateMessageInitializer();
     }
 
-    /// <summary>
-    /// Returns the initializer for the message/input type combination
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Returns the initializer for the message/input type combination.</summary>
+    /// <param name="inputType">The runtime input type used by the operation.</param>
+    /// <returns>The initializer.</returns>
     public static IMessageInitializer<TMessage> GetInitializer(Type inputType)
     {
         return Cached.InitializerCache.GetInitializer(inputType);
     }
 
-    /// <summary>
-    /// Performs the initialize operation.
-    /// </summary>
-    /// <param name="values">The values value.</param>
+    /// <summary>Initializes the target component.</summary>
+    /// <param name="values">The values.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the initialize outcome.</returns>
     public static Task<InitializeContext<TMessage>> InitializeAsync(object values, CancellationToken cancellationToken = default)
     {
         if (values == null)
@@ -71,13 +66,11 @@ public class MessageInitializerCache<TMessage> :
         return Cached.InitializerCache.GetInitializer(values.GetType()).InitializeAsync(values, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the initialize message operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="values">The values value.</param>
+    /// <summary>Initializes message.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="values">The values.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the initialize message outcome.</returns>
     public static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object values, CancellationToken cancellationToken = default)
     {
         if (values == null)
@@ -88,15 +81,13 @@ public class MessageInitializerCache<TMessage> :
         return initializer.InitializeMessageAsync(context, values, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the initialize message operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="values">The values value.</param>
-    /// <param name="moreValues">The more values value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Initializes message.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="values">The values.</param>
+    /// <param name="moreValues">The more values.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the initialize message outcome.</returns>
     public static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object values, object?[] moreValues,
         IPipe<SendContext<TMessage>>? pipe = null, CancellationToken cancellationToken = default)
     {
@@ -108,14 +99,12 @@ public class MessageInitializerCache<TMessage> :
         return initializer.InitializeMessageAsync(context, values, moreValues, pipe, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the initialize message operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="values">The values value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Initializes message.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="values">The values.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the initialize message outcome.</returns>
     public static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object values, IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken = default)
     {
         if (values == null)
@@ -126,12 +115,10 @@ public class MessageInitializerCache<TMessage> :
         return initializer.InitializeMessageAsync(context, values, pipe.IsNotEmpty() ? pipe : Pipe.Empty<SendContext<TMessage>>(), cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the initialize message operation.
-    /// </summary>
-    /// <param name="values">The values value.</param>
+    /// <summary>Initializes message.</summary>
+    /// <param name="values">The values.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the initialize message outcome.</returns>
     public static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(object values, CancellationToken cancellationToken = default)
     {
         if (values == null)
@@ -142,13 +129,11 @@ public class MessageInitializerCache<TMessage> :
         return initializer.InitializeMessageAsync(values, Pipe.Empty<SendContext<TMessage>>(), cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the initialize message operation.
-    /// </summary>
-    /// <param name="values">The values value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Initializes message.</summary>
+    /// <param name="values">The values.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the initialize message outcome.</returns>
     public static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(object values, IPipe<SendContext<TMessage>> pipe,
         CancellationToken cancellationToken = default)
     {
@@ -160,13 +145,11 @@ public class MessageInitializerCache<TMessage> :
         return initializer.InitializeMessageAsync(values, pipe.IsNotEmpty() ? pipe : Pipe.Empty<SendContext<TMessage>>(), cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the initialize operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="values">The values value.</param>
+    /// <summary>Initializes the target component.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="values">The values.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the initialize outcome.</returns>
     public static Task<InitializeContext<TMessage>> InitializeAsync(InitializeContext<TMessage> context, object values, CancellationToken cancellationToken = default)
     {
         if (values == null)

@@ -6,10 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
-/// <summary>
-/// Queries the list of saga ids prior to the transaction, and then loads/locks them individually
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
+/// <summary>Queries the list of saga ids prior to the transaction, and then loads/locks them individually.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class PessimisticSagaLockContext<TSaga> :
     SagaLockContext<TSaga>
     where TSaga : class, ISaga
@@ -19,13 +17,11 @@ public class PessimisticSagaLockContext<TSaga> :
     readonly ILoadQueryExecutor<TSaga> _executor;
     readonly IList<Guid> _instances;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a pessimistic saga lock context for preselected correlation identifiers.</summary>
+    /// <param name="context">The DbContext that contains the saga set.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="instances">The instances value.</param>
-    /// <param name="executor">The executor value.</param>
+    /// <param name="instances">The correlation identifiers selected before row locking.</param>
+    /// <param name="executor">The loader that locks and returns each saga row.</param>
     public PessimisticSagaLockContext(DbContext context, CancellationToken cancellationToken, IList<Guid> instances, ILoadQueryExecutor<TSaga> executor)
     {
         _context = context;
@@ -34,11 +30,9 @@ public class PessimisticSagaLockContext<TSaga> :
         _executor = executor;
     }
 
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
+    /// <summary>Loads the requested state.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The saga rows that still exist when individually locked.</returns>
     public async Task<IList<TSaga>> LoadAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var loaded = new List<TSaga>();

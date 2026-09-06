@@ -10,9 +10,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides an event hub producer send transport context implementation.
-/// </summary>
+/// <summary>Creates Event Hubs send contexts, serializes them to Azure SDK events, and executes provider sends through a supervised producer.</summary>
 public class EventHubProducerSendTransportContext :
     BaseSendTransportContext,
     EventHubSendTransportContext
@@ -22,14 +20,12 @@ public class EventHubProducerSendTransportContext :
     readonly ISendPipe _sendPipe;
     readonly IProducerContextSupervisor _supervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="sendPipe">The send pipe value.</param>
-    /// <param name="configuration">The configuration callback.</param>
-    /// <param name="eventHubName">The event hub name value.</param>
-    /// <param name="serialization">The serialization value.</param>
+    /// <summary>Creates a send transport for one Event Hub.</summary>
+    /// <param name="supervisor">The producer-context supervisor.</param>
+    /// <param name="sendPipe">The rider-level send configuration pipe.</param>
+    /// <param name="configuration">The bus host configuration.</param>
+    /// <param name="eventHubName">The Event Hub entity name.</param>
+    /// <param name="serialization">The serializer collection used for outbound messages.</param>
     public EventHubProducerSendTransportContext(IProducerContextSupervisor supervisor, ISendPipe sendPipe,
         IHostConfiguration configuration, string eventHubName, ISerialization serialization)
         : base(configuration, serialization)
@@ -40,24 +36,20 @@ public class EventHubProducerSendTransportContext :
         _endpointAddress = new EventHubEndpointAddress(configuration.HostAddress, eventHubName);
     }
 
-    /// <summary>
-    /// Gets agent handles.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the producer supervisor owned by senders using this context.</summary>
+    /// <returns>A sequence containing the producer supervisor.</returns>
     public override IEnumerable<IAgent> GetAgentHandles()
     {
         return [_supervisor];
     }
 
-    /// <summary>
-    /// Creates context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="value">The value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="initializerPipe">The initializer pipe value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a send context and applies generic, rider-level, initializer, and Event Hubs-specific send pipes in that order.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="value">The outbound message.</param>
+    /// <param name="pipe">The Event Hubs-specific context pipe.</param>
+    /// <param name="initializerPipe">The optional message initializer pipe.</param>
+    /// <param name="cancellationToken">Cancels context configuration.</param>
+    /// <returns>A task whose result is the fully configured send context.</returns>
     public async Task<EventHubSendContext<T>> CreateContextAsync<T>(T value, IPipe<EventHubSendContext<T>> pipe,
         IPipe<SendContext<T>>? initializerPipe = null, CancellationToken cancellationToken = default)
         where T : class
@@ -84,19 +76,24 @@ public class EventHubProducerSendTransportContext :
         return context;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="producerContext">The producer context value.</param>
-    /// <param name="sendContext">The send context value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
-    public Task SendAsync<T>(ProducerContext producerContext, EventHubSendContext<T> sendContext, CancellationToken cancellationToken = default)
+    /// <summary>Converts one send context to Azure SDK event data and submits it to the producer.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="producerContext">The active producer context.</param>
+    /// <param name="sendContext">The configured outbound message context.</param>
+    /// <param name="cancellationToken">Cancels preparation or provider submission.</param>
+    /// <returns>A task that completes after the provider accepts the event.</returns>
+    public async Task SendAsync<T>(ProducerContext producerContext, EventHubSendContext<T> sendContext,
+        CancellationToken cancellationToken = default)
         where T : class
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); EventHubMessageSendContext<T> context = sendContext as EventHubMessageSendContext<T>
-                    ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
+        ArgumentNullException.ThrowIfNull(producerContext);
+        EventHubMessageSendContext<T> context = sendContext as EventHubMessageSendContext<T>
+            ?? throw new ArgumentException("The context must be an EventHubMessageSendContext<T>.", nameof(sendContext));
+
+        using CancellationTokenSource operationTokenSource =
+            CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, context.CancellationToken);
+        CancellationToken operationToken = operationTokenSource.Token;
+        operationToken.ThrowIfCancellationRequested();
 
         context.ConversationId ??= NewId.NextGuid();
 
@@ -127,118 +124,43 @@ public class EventHubProducerSendTransportContext :
         eventData.ContentType = (context.ContentType
             ?? throw new InvalidOperationException("A content type is required before an Event Hub message can be sent.")).ToString();
 
-        context.CancellationToken.ThrowIfCancellationRequested();
-
-        return producerContext.ProduceAsync([eventData], options, context.CancellationToken);
+        await producerContext.ProduceAsync([eventData], options, operationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="producerContext">The producer context value.</param>
-    /// <param name="sendContexts">The send contexts value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
-    public async Task SendAsync<T>(ProducerContext producerContext, EventHubSendContext<T>[] sendContexts, CancellationToken cancellationToken = default)
+    /// <summary>Converts send contexts to Azure SDK event data and emits as many size-constrained batches as required.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="producerContext">The active producer context.</param>
+    /// <param name="sendContexts">The outbound contexts; each context retains its declared partition route.</param>
+    /// <param name="cancellationToken">Cancels validation, batch creation, or provider submission.</param>
+    /// <returns>A task that completes after every generated batch has been sent.</returns>
+    public Task SendAsync<T>(ProducerContext producerContext, EventHubSendContext<T>[] sendContexts,
+        CancellationToken cancellationToken = default)
         where T : class
     {
-        cancellationToken.ThrowIfCancellationRequested(); EventHubSendContext<T> sendContext = sendContexts[0];
-        var options = new CreateBatchOptions
-        {
-            PartitionId = sendContext.PartitionId,
-            PartitionKey = sendContext.PartitionKey
-        };
-
-        if (Activity.Current?.IsAllDataRequested ?? false)
-        {
-            Activity.Current.SetTag(nameof(sendContext.PartitionId), options.PartitionId);
-            Activity.Current.SetTag(nameof(sendContext.PartitionKey), options.PartitionKey);
-        }
-
-        sendContext.CancellationToken.ThrowIfCancellationRequested();
-
-        var eventDataBatch = await producerContext.CreateBatchAsync(options, sendContext.CancellationToken).ConfigureAwait(false);
-
-        async Task FlushAsync(EventDataBatch batch)
-        {
-            try
-            {
-                sendContext.CancellationToken.ThrowIfCancellationRequested();
-
-                await producerContext.ProduceAsync(batch, sendContext.CancellationToken).ConfigureAwait(false);
-            }
-            finally
-            {
-                batch.Dispose();
-            }
-        }
-
-        NewId[] ids = NewId.Next(sendContexts.Length);
-
-        for (var i = 0; i < sendContexts.Length; i++)
-        {
-            EventHubMessageSendContext<T> context = sendContexts[i] as EventHubMessageSendContext<T>
-                ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
-
-            context.ConversationId ??= ids[i].ToGuid();
-
-            var eventData = new EventData(context.Body.GetBytes());
-
-            if (context.MessageId.HasValue)
-                eventData.MessageId = context.MessageId.Value.ToString("N");
-
-            if (context.CorrelationId.HasValue)
-                eventData.CorrelationId = context.CorrelationId.Value.ToString("N");
-
-            eventData.ContentType = (context.ContentType
-                ?? throw new InvalidOperationException("A content type is required before an Event Hub message can be sent.")).ToString();
-
-            eventData.Properties.Set(context.Headers);
-
-            if (eventDataBatch.TryAdd(eventData))
-                continue;
-
-            await FlushAsync(eventDataBatch).ConfigureAwait(false);
-            eventDataBatch = await producerContext.CreateBatchAsync(options, context.CancellationToken).ConfigureAwait(false);
-
-            if (!eventDataBatch.TryAdd(eventData))
-                throw new ApplicationException("Message can not be added to the empty EventDataBatch");
-        }
-
-        if (eventDataBatch.Count > 0)
-            await FlushAsync(eventDataBatch).ConfigureAwait(false);
+        return EventHubProducerBatchSender.SendAsync(producerContext, sendContexts, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs a producer operation through the supervised context and host retry policy.</summary>
+    /// <param name="pipe">The operation to execute with an active producer context.</param>
+    /// <param name="cancellationToken">Cancels context acquisition, retry, or operation execution.</param>
+    /// <returns>The host-retry task that acquires a producer and executes <paramref name="pipe"/>.</returns>
     public Task SendAsync(IPipe<ProducerContext> pipe, CancellationToken cancellationToken)
     {
         return _configuration.RetryAsync(() => _supervisor.SendAsync(pipe, cancellationToken),
             stoppingToken: _supervisor.SendStopping, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Gets the entity name value.
-    /// </summary>
+    /// <summary>Gets the destination Event Hub entity name.</summary>
     public override string EntityName => _endpointAddress.EventHubName;
-    /// <summary>
-    /// Gets the activity system value.
-    /// </summary>
+    /// <summary>Gets the OpenTelemetry messaging-system identifier.</summary>
     public override string ActivitySystem => "eventhubs";
 
-    /// <summary>
-    /// Creates send context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Rejects generic outbox send-context creation because this producer-only transport requires an Event Hubs context.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="message">The outbound message.</param>
+    /// <param name="pipe">The generic send-context pipe.</param>
+    /// <param name="cancellationToken">Cancels the call before the unsupported-operation exception is created.</param>
+    /// <returns>A canceled task when cancellation was already requested; otherwise, this method throws.</returns>
     public override Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
@@ -247,10 +169,8 @@ public class EventHubProducerSendTransportContext :
         throw new NotSupportedException("Event Hubs is a producer-only transport and cannot create an outbox send context.");
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The probe context receiving producer-supervisor diagnostics.</param>
     public void Probe(ProbeContext context)
     {
         _supervisor.Probe(context);

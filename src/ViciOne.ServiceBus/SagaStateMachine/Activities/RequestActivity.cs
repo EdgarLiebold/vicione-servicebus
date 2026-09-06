@@ -3,12 +3,10 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a request activity implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TRequest">The t request type.</typeparam>
-/// <typeparam name="TResponse">The t response type.</typeparam>
+/// <summary>Executes the request activity.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TRequest">The request type.</typeparam>
+/// <typeparam name="TResponse">The response type.</typeparam>
 public class RequestActivity<TInstance, TRequest, TResponse> :
     RequestActivityImpl<TInstance, TRequest, TResponse>,
     IStateMachineActivity<TInstance>
@@ -19,11 +17,9 @@ public class RequestActivity<TInstance, TRequest, TResponse> :
     readonly ContextMessageFactory<BehaviorContext<TInstance>, TRequest> _messageFactory;
     readonly ServiceAddressProvider<TInstance> _serviceAddressProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="request">The request value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="request">The request.</param>
+    /// <param name="messageFactory">The message factory.</param>
     public RequestActivity(Request<TInstance, TRequest, TResponse> request, ContextMessageFactory<BehaviorContext<TInstance>, TRequest> messageFactory)
         : base(request)
     {
@@ -31,12 +27,10 @@ public class RequestActivity<TInstance, TRequest, TResponse> :
         _serviceAddressProvider = context => request.Settings.ServiceAddress ?? EndpointConvention.GetDestinationAddress<TRequest>(context);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="request">The request value.</param>
-    /// <param name="serviceAddressProvider">The service address provider value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="request">The request.</param>
+    /// <param name="serviceAddressProvider">The service address provider.</param>
+    /// <param name="messageFactory">The message factory.</param>
     public RequestActivity(Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance> serviceAddressProvider,
         ContextMessageFactory<BehaviorContext<TInstance>, TRequest> messageFactory)
         : base(request)
@@ -46,21 +40,17 @@ public class RequestActivity<TInstance, TRequest, TResponse> :
             ?? EndpointConvention.GetDestinationAddress<TRequest>(context);
     }
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(BehaviorContext<TInstance> context, IBehavior<TInstance> next)
     {
         await ExecuteAsync(context).ConfigureAwait(false);
@@ -68,13 +58,11 @@ public class RequestActivity<TInstance, TRequest, TResponse> :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync<T>(BehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
         where T : class
     {
@@ -83,27 +71,23 @@ public class RequestActivity<TInstance, TRequest, TResponse> :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TException> context, IBehavior<TInstance> next)
         where TException : Exception
     {
         return next.FaultedAsync(context);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context, IBehavior<TInstance, T> next)
         where T : class
         where TException : Exception
@@ -120,13 +104,11 @@ public class RequestActivity<TInstance, TRequest, TResponse> :
 }
 
 
-/// <summary>
-/// Provides a request activity implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TData">The t data type.</typeparam>
-/// <typeparam name="TRequest">The t request type.</typeparam>
-/// <typeparam name="TResponse">The t response type.</typeparam>
+/// <summary>Executes the request activity.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TData">The data type.</typeparam>
+/// <typeparam name="TRequest">The request type.</typeparam>
+/// <typeparam name="TResponse">The response type.</typeparam>
 public class RequestActivity<TInstance, TData, TRequest, TResponse> :
     RequestActivityImpl<TInstance, TRequest, TResponse>,
     IStateMachineActivity<TInstance, TData>
@@ -138,11 +120,9 @@ public class RequestActivity<TInstance, TData, TRequest, TResponse> :
     readonly ContextMessageFactory<BehaviorContext<TInstance, TData>, TRequest> _messageFactory;
     readonly ServiceAddressProvider<TInstance, TData> _serviceAddressProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="request">The request value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="request">The request.</param>
+    /// <param name="messageFactory">The message factory.</param>
     public RequestActivity(Request<TInstance, TRequest, TResponse> request,
         ContextMessageFactory<BehaviorContext<TInstance, TData>, TRequest> messageFactory)
         : base(request)
@@ -151,12 +131,10 @@ public class RequestActivity<TInstance, TData, TRequest, TResponse> :
         _serviceAddressProvider = context => request.Settings.ServiceAddress ?? EndpointConvention.GetDestinationAddress<TRequest>(context);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="request">The request value.</param>
-    /// <param name="serviceAddressProvider">The service address provider value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="request">The request.</param>
+    /// <param name="serviceAddressProvider">The service address provider.</param>
+    /// <param name="messageFactory">The message factory.</param>
     public RequestActivity(Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance, TData> serviceAddressProvider,
         ContextMessageFactory<BehaviorContext<TInstance, TData>, TRequest> messageFactory)
         : base(request)
@@ -166,21 +144,17 @@ public class RequestActivity<TInstance, TData, TRequest, TResponse> :
             ?? EndpointConvention.GetDestinationAddress<TRequest>(context);
     }
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(BehaviorContext<TInstance, TData> context, IBehavior<TInstance, TData> next)
     {
         var serviceAddress = _serviceAddressProvider(context);
@@ -190,13 +164,11 @@ public class RequestActivity<TInstance, TData, TRequest, TResponse> :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TData, TException> context, IBehavior<TInstance, TData> next)
         where TException : Exception
     {

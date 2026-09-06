@@ -3,29 +3,23 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a message factory implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Creates message instances.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public static class MessageFactory<T>
     where T : class
 {
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <returns>The newly created instance.</returns>
     public static TaskMessageFactory<T> Create(T message)
     {
         return new TaskMessageFactory<T>(Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(message)));
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>The newly created instance.</returns>
     public static TaskMessageFactory<T> Create(T message, IPipe<SendContext<T>> pipe)
     {
         return pipe.IsNotEmpty()
@@ -33,12 +27,10 @@ public static class MessageFactory<T>
             : Create(message);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static TaskMessageFactory<T> Create(T message, Action<SendContext<T>>? callback)
     {
         if (callback == null)
@@ -49,11 +41,9 @@ public static class MessageFactory<T>
         return new TaskMessageFactory<T>(Task.FromResult(new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>(message, callbackPipe)));
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static TaskMessageFactory<T> Create(Task<T> factory)
     {
         if (factory.Status == TaskStatus.RanToCompletion)
@@ -67,12 +57,10 @@ public static class MessageFactory<T>
         return new TaskMessageFactory<T>(FactoryAsync());
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>The newly created instance.</returns>
     public static TaskMessageFactory<T> Create(Task<T> factory, IPipe<SendContext<T>> pipe)
     {
         if (!pipe.IsNotEmpty())
@@ -89,12 +77,10 @@ public static class MessageFactory<T>
         return new TaskMessageFactory<T>(FactoryAsync());
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static TaskMessageFactory<T> Create(Task<T> factory, Action<SendContext<T>>? callback)
     {
         if (callback == null)
@@ -113,16 +99,12 @@ public static class MessageFactory<T>
         return new TaskMessageFactory<T>(FactoryAsync());
     }
 
-    // Saga/Message
-
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(T message,
         SendContextCallback<TSaga, TMessage, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -133,14 +115,12 @@ public static class MessageFactory<T>
             : Create(context => message, callback);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(Task<T> factory,
         SendContextCallback<TSaga, TMessage, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -151,13 +131,11 @@ public static class MessageFactory<T>
             : Create(context => factory, callback);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(
         Func<BehaviorContext<TSaga, TMessage>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory)
         where TSaga : class, SagaStateMachineInstance
@@ -166,14 +144,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(factory);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(
         Func<BehaviorContext<TSaga, TMessage>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
@@ -197,14 +173,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(
         Func<BehaviorContext<TSaga, TMessage>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory, SendContextCallback<TSaga, TMessage, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -228,13 +202,11 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(AsyncEventMessageFactory<TSaga, TMessage, T> factory)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
@@ -256,14 +228,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(AsyncEventMessageFactory<TSaga, TMessage, T> factory,
         IPipe<SendContext<T>> pipe)
         where TSaga : class, SagaStateMachineInstance
@@ -289,14 +259,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(AsyncEventMessageFactory<TSaga, TMessage, T> factory,
         Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
@@ -305,14 +273,12 @@ public static class MessageFactory<T>
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(AsyncEventMessageFactory<TSaga, TMessage, T> factory,
         SendContextCallback<TSaga, TMessage, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -340,13 +306,11 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(EventMessageFactory<TSaga, TMessage, T> factory)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
@@ -360,14 +324,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(EventMessageFactory<TSaga, TMessage, T> factory,
         IPipe<SendContext<T>> pipe)
         where TSaga : class, SagaStateMachineInstance
@@ -385,14 +347,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(EventMessageFactory<TSaga, TMessage, T> factory,
         Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
@@ -401,14 +361,12 @@ public static class MessageFactory<T>
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(EventMessageFactory<TSaga, TMessage, T> factory,
         SendContextCallback<TSaga, TMessage, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -428,15 +386,13 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(T message,
         SendExceptionContextCallback<TSaga, TMessage, TException, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -448,15 +404,13 @@ public static class MessageFactory<T>
             : Create(context => message, callback);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(Task<T> factory,
         SendExceptionContextCallback<TSaga, TMessage, TException, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -468,14 +422,12 @@ public static class MessageFactory<T>
             : Create(context => factory, callback);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
         Func<BehaviorExceptionContext<TSaga, TMessage, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory)
         where TSaga : class, SagaStateMachineInstance
@@ -485,15 +437,13 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(factory);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
         Func<BehaviorExceptionContext<TSaga, TMessage, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
@@ -518,15 +468,13 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
         Func<BehaviorExceptionContext<TSaga, TMessage, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory,
         SendExceptionContextCallback<TSaga, TMessage, TException, T> callback)
@@ -552,14 +500,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
         AsyncEventExceptionMessageFactory<TSaga, TMessage, TException, T> factory)
         where TSaga : class, SagaStateMachineInstance
@@ -583,15 +529,13 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
         AsyncEventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, IPipe<SendContext<T>> pipe)
         where TSaga : class, SagaStateMachineInstance
@@ -618,15 +562,13 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
         AsyncEventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
@@ -636,15 +578,13 @@ public static class MessageFactory<T>
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
         AsyncEventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, SendExceptionContextCallback<TSaga, TMessage, TException, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -673,14 +613,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
         EventExceptionMessageFactory<TSaga, TMessage, TException, T> factory)
         where TSaga : class, SagaStateMachineInstance
@@ -696,15 +634,13 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
         EventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, IPipe<SendContext<T>> pipe)
         where TSaga : class, SagaStateMachineInstance
@@ -723,15 +659,13 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
         EventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
@@ -741,15 +675,13 @@ public static class MessageFactory<T>
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
         EventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, SendExceptionContextCallback<TSaga, TMessage, TException, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -770,15 +702,11 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
-    // Saga Only
-
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(T message, SendContextCallback<TSaga, T> callback)
         where TSaga : class, SagaStateMachineInstance
     {
@@ -787,13 +715,11 @@ public static class MessageFactory<T>
             : Create(context => message, callback);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(Task<T> factory, SendContextCallback<TSaga, T> callback)
         where TSaga : class, SagaStateMachineInstance
     {
@@ -802,14 +728,12 @@ public static class MessageFactory<T>
             : Create(context => factory, callback);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(T message,
         SendExceptionContextCallback<TSaga, TException, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -820,14 +744,12 @@ public static class MessageFactory<T>
             : Create(context => message, callback);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(Task<T> factory,
         SendExceptionContextCallback<TSaga, TException, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -838,25 +760,21 @@ public static class MessageFactory<T>
             : Create(context => factory, callback);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(Func<BehaviorContext<TSaga>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory)
         where TSaga : class, SagaStateMachineInstance
     {
         return new ContextMessageFactory<BehaviorContext<TSaga>, T>(factory);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(Func<BehaviorContext<TSaga>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory,
         Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
@@ -879,13 +797,11 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(Func<BehaviorContext<TSaga>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory,
         SendContextCallback<TSaga, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -908,12 +824,10 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(AsyncEventMessageFactory<TSaga, T> factory)
         where TSaga : class, SagaStateMachineInstance
     {
@@ -934,13 +848,11 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(AsyncEventMessageFactory<TSaga, T> factory,
         IPipe<SendContext<T>> pipe)
         where TSaga : class, SagaStateMachineInstance
@@ -965,13 +877,11 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(AsyncEventMessageFactory<TSaga, T> factory,
         Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
@@ -979,13 +889,11 @@ public static class MessageFactory<T>
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(AsyncEventMessageFactory<TSaga, T> factory,
         SendContextCallback<TSaga, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -1012,12 +920,10 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(EventMessageFactory<TSaga, T> factory)
         where TSaga : class, SagaStateMachineInstance
     {
@@ -1030,13 +936,11 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(EventMessageFactory<TSaga, T> factory,
         IPipe<SendContext<T>> pipe)
         where TSaga : class, SagaStateMachineInstance
@@ -1053,13 +957,11 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(EventMessageFactory<TSaga, T> factory,
         Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
@@ -1067,13 +969,11 @@ public static class MessageFactory<T>
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(EventMessageFactory<TSaga, T> factory,
         SendContextCallback<TSaga, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -1092,13 +992,11 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
         Func<BehaviorExceptionContext<TSaga, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory)
         where TSaga : class, SagaStateMachineInstance
@@ -1107,14 +1005,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(factory);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
         Func<BehaviorExceptionContext<TSaga, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
@@ -1138,14 +1034,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
         Func<BehaviorExceptionContext<TSaga, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> factory, SendExceptionContextCallback<TSaga, TException, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -1169,13 +1063,11 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
         AsyncEventExceptionMessageFactory<TSaga, TException, T> factory)
         where TSaga : class, SagaStateMachineInstance
@@ -1198,14 +1090,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
         AsyncEventExceptionMessageFactory<TSaga, TException, T> factory, IPipe<SendContext<T>> pipe)
         where TSaga : class, SagaStateMachineInstance
@@ -1231,14 +1121,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
         AsyncEventExceptionMessageFactory<TSaga, TException, T> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
@@ -1247,14 +1135,12 @@ public static class MessageFactory<T>
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
         AsyncEventExceptionMessageFactory<TSaga, TException, T> factory, SendExceptionContextCallback<TSaga, TException, T> callback)
         where TSaga : class, SagaStateMachineInstance
@@ -1282,13 +1168,11 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
         EventExceptionMessageFactory<TSaga, TException, T> factory)
         where TSaga : class, SagaStateMachineInstance
@@ -1303,14 +1187,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
         EventExceptionMessageFactory<TSaga, TException, T> factory, IPipe<SendContext<T>> pipe)
         where TSaga : class, SagaStateMachineInstance
@@ -1328,14 +1210,12 @@ public static class MessageFactory<T>
         return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
         EventExceptionMessageFactory<TSaga, TException, T> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
@@ -1344,14 +1224,12 @@ public static class MessageFactory<T>
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="TException">The t exception type.</typeparam>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TException">The exception handled by the member.</typeparam>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
         EventExceptionMessageFactory<TSaga, TException, T> factory, SendExceptionContextCallback<TSaga, TException, T> callback)
         where TSaga : class, SagaStateMachineInstance

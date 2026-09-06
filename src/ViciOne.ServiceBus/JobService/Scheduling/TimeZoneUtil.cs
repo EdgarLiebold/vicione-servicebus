@@ -4,9 +4,7 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.JobService.Scheduling;
 
-/// <summary>
-/// Provides a time zone util implementation.
-/// </summary>
+/// <summary>Provides utility operations for time zone.</summary>
 public static class TimeZoneUtil
 {
     static readonly Dictionary<string, string> TimeZoneIdAliases = new Dictionary<string, string>();
@@ -50,39 +48,32 @@ public static class TimeZoneUtil
         TimeZoneIdAliases["Asia/Karachi"] = "Pakistan Standard Time";
     }
 
-    /// <summary>
-    /// TimeZoneInfo.ConvertTime is not supported under mono
-    /// </summary>
-    /// <param name="dateTimeOffset"></param>
-    /// <param name="timeZoneInfo"></param>
-    /// <returns></returns>
+    /// <summary>TimeZoneInfo.ConvertTime is not supported under mono.</summary>
+    /// <param name="dateTimeOffset">The date time offset.</param>
+    /// <param name="timeZoneInfo">The time zone info.</param>
+    /// <returns>The converted time.</returns>
     public static DateTimeOffset ConvertTime(DateTimeOffset dateTimeOffset, TimeZoneInfo timeZoneInfo)
     {
         return TimeZoneInfo.ConvertTime(dateTimeOffset, timeZoneInfo);
     }
 
-    /// <summary>
-    /// TimeZoneInfo.GetUtcOffset(DateTimeOffset) is not supported under mono
-    /// </summary>
-    /// <param name="dateTimeOffset"></param>
-    /// <param name="timeZoneInfo"></param>
-    /// <returns></returns>
+    /// <summary>TimeZoneInfo.GetUtcOffset(DateTimeOffset) is not supported under mono.</summary>
+    /// <param name="dateTimeOffset">The date time offset.</param>
+    /// <param name="timeZoneInfo">The time zone info.</param>
+    /// <returns>The utc offset.</returns>
     public static TimeSpan GetUtcOffset(DateTimeOffset dateTimeOffset, TimeZoneInfo timeZoneInfo)
     {
         return timeZoneInfo.GetUtcOffset(dateTimeOffset);
     }
 
-    /// <summary>
-    /// Gets ambiguous time utc offset.
-    /// </summary>
-    /// <param name="dateTime">The date time value.</param>
-    /// <param name="timeZoneInfo">The time zone info value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets ambiguous time utc offset.</summary>
+    /// <param name="dateTime">The date time.</param>
+    /// <param name="timeZoneInfo">The time zone info.</param>
+    /// <returns>The ambiguous time utc offset.</returns>
     public static TimeSpan GetAmbiguousTimeUtcOffset(DateTimeOffset dateTime, TimeZoneInfo timeZoneInfo)
     {
-        // Unlike the default behavior of TimeZoneInfo.GetUtcOffset, it is prefered to choose
-        // the DAYLIGHT time when the input is ambiguous, because the daylight instance is the
-        // FIRST instance, and time moves in a forward direction.
+        // During a backward clock transition, the larger offset selects the first chronological
+        // occurrence of an ambiguous wall-clock value and preserves forward scheduling order.
         DateTime wallTime = dateTime.DateTime;
 
         var offset = timeZoneInfo.IsAmbiguousTime(wallTime)
@@ -92,12 +83,10 @@ public static class TimeZoneUtil
         return offset;
     }
 
-    /// <summary>
-    /// Tries to find time zone with given id, has ability do some fallbacks when necessary.
-    /// </summary>
+    /// <summary>Tries to find time zone with given id, has ability do some fallbacks when necessary.</summary>
     /// <param name="id">System id of the time zone.</param>
     /// <param name="customResolver">An optional owner-scoped resolver used after platform and alias lookup.</param>
-    /// <returns></returns>
+    /// <returns>The matching time zone by id.</returns>
     public static TimeZoneInfo FindTimeZoneById(string id, Func<string, TimeZoneInfo?>? customResolver = null)
     {
         TimeZoneInfo? info = null;

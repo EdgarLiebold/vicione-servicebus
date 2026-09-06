@@ -1,0 +1,260 @@
+using System.Runtime.Serialization;
+using Azure.Messaging.EventHubs;
+using Azure.Messaging.EventHubs.Producer;
+using ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.Infrastructure;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using Xunit;
+
+namespace ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration;
+
+public sealed class EventHubProducerBatchSenderTests
+{
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "empty-input-rejected-before-provider-use")]
+    public async Task EmptyInput_IsRejectedBeforeProviderUseAsync()
+    {
+        var producer = new RecordingProducerContext();
+
+        ArgumentException exception = await Assert.ThrowsAsync<ArgumentException>(() =>
+            EventHubProducerBatchSender.SendAsync<TestMessage>(
+                producer,
+                [],
+                TestContext.Current.CancellationToken,
+                producer.DisposeBatch));
+
+        Assert.Equal("sendContexts", exception.ParamName);
+        Assert.Empty(producer.CreatedRoutes);
+        Assert.Empty(producer.SentBatchSizes);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "mixed-routes-preserved-in-input-order")]
+    public async Task MixedRoutes_ArePreservedInInputOrderAsync()
+    {
+        var producer = new RecordingProducerContext();
+        EventHubMessageSendContext<TestMessage>[] contexts =
+        [
+            CreateContext(1, partitionId: "0", cancellationToken: TestContext.Current.CancellationToken),
+            CreateContext(2, partitionId: "1", cancellationToken: TestContext.Current.CancellationToken),
+            CreateContext(3, partitionKey: "customer-3", cancellationToken: TestContext.Current.CancellationToken)
+        ];
+
+        await EventHubProducerBatchSender.SendAsync(
+            producer,
+            contexts,
+            TestContext.Current.CancellationToken,
+            producer.DisposeBatch);
+
+        Assert.Equal(
+            [new Route("0", null), new Route("1", null), new Route(null, "customer-3")],
+            producer.CreatedRoutes);
+        Assert.Equal([1, 1, 1], producer.SentBatchSizes);
+        producer.AssertEveryBatchDisposed();
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "size-rollover-preserves-cardinality-and-disposes-batches")]
+    public async Task SizeRollover_PreservesCardinalityAndDisposesEveryBatchAsync()
+    {
+        var producer = new RecordingProducerContext { MaximumEntriesPerBatch = 1 };
+        EventHubMessageSendContext<TestMessage>[] contexts =
+        [
+            CreateContext(1, partitionKey: "ordered", cancellationToken: TestContext.Current.CancellationToken),
+            CreateContext(2, partitionKey: "ordered", cancellationToken: TestContext.Current.CancellationToken)
+        ];
+
+        await EventHubProducerBatchSender.SendAsync(
+            producer,
+            contexts,
+            TestContext.Current.CancellationToken,
+            producer.DisposeBatch);
+
+        Assert.Equal([1, 1], producer.SentBatchSizes);
+        Assert.Equal(2, producer.CreatedRoutes.Count);
+        Assert.All(producer.CreatedRoutes, route => Assert.Equal(new Route(null, "ordered"), route));
+        producer.AssertEveryBatchDisposed();
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "oversized-event-rejected-without-empty-send-or-batch-leak")]
+    public async Task OversizedEvent_IsRejectedWithoutSendingAnEmptyBatchOrLeakingTheBatchAsync()
+    {
+        var producer = new RecordingProducerContext { MaximumEntriesPerBatch = 0 };
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            EventHubProducerBatchSender.SendAsync(
+                producer,
+                new[] { CreateContext(1, partitionId: "0", cancellationToken: TestContext.Current.CancellationToken) },
+                TestContext.Current.CancellationToken,
+                producer.DisposeBatch));
+
+        Assert.Contains("maximum Event Hubs batch size", exception.Message, StringComparison.Ordinal);
+        Assert.Empty(producer.SentBatchSizes);
+        Assert.Single(producer.CreatedRoutes);
+        producer.AssertEveryBatchDisposed();
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "late-invalid-context-preflight-prevents-partial-send")]
+    public async Task InvalidLaterContext_IsRejectedBeforeAnyProviderOperationAsync()
+    {
+        var producer = new RecordingProducerContext();
+        EventHubMessageSendContext<TestMessage> invalid =
+            CreateContext(2, partitionId: "0", cancellationToken: TestContext.Current.CancellationToken);
+        invalid.Serializer = null!;
+        EventHubMessageSendContext<TestMessage>[] contexts =
+        [
+            CreateContext(1, partitionId: "0", cancellationToken: TestContext.Current.CancellationToken),
+            invalid
+        ];
+
+        await Assert.ThrowsAsync<SerializationException>(() =>
+            EventHubProducerBatchSender.SendAsync(
+                producer,
+                contexts,
+                TestContext.Current.CancellationToken,
+                producer.DisposeBatch));
+
+        Assert.Empty(producer.CreatedRoutes);
+        Assert.Empty(producer.SentBatchSizes);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "provider-failure-disposes-current-batch")]
+    public async Task ProviderFailure_DisposesTheCurrentBatchAsync()
+    {
+        var expected = new InvalidOperationException("provider failed");
+        var producer = new RecordingProducerContext { ProduceException = expected };
+
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            EventHubProducerBatchSender.SendAsync(
+                producer,
+                new[] { CreateContext(1, partitionKey: "customer-1", cancellationToken: TestContext.Current.CancellationToken) },
+                TestContext.Current.CancellationToken,
+                producer.DisposeBatch));
+
+        Assert.Same(expected, actual);
+        Assert.Equal([1], producer.SentBatchSizes);
+        producer.AssertEveryBatchDisposed();
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "every-context-cancellation-governs-shared-provider-operation")]
+    public async Task EveryContextCancellation_GovernsTheSharedProviderOperationAsync()
+    {
+        using var secondContextCancellation = new CancellationTokenSource();
+        var producer = new RecordingProducerContext { WaitForProduceCancellation = true };
+        EventHubMessageSendContext<TestMessage>[] contexts =
+        [
+            CreateContext(1, partitionKey: "customer", cancellationToken: TestContext.Current.CancellationToken),
+            CreateContext(2, partitionKey: "customer", cancellationToken: secondContextCancellation.Token)
+        ];
+
+        Task send = EventHubProducerBatchSender.SendAsync(
+            producer,
+            contexts,
+            TestContext.Current.CancellationToken,
+            producer.DisposeBatch);
+        await producer.ProduceStarted.Task.WaitAsync(TimeSpan.FromSeconds(2), TestContext.Current.CancellationToken);
+        secondContextCancellation.Cancel();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => send);
+
+        Assert.True(exception.CancellationToken.IsCancellationRequested);
+        producer.AssertEveryBatchDisposed();
+    }
+
+    private static EventHubMessageSendContext<TestMessage> CreateContext(
+        int value,
+        string? partitionId = null,
+        string? partitionKey = null,
+        CancellationToken cancellationToken = default)
+    {
+        return new EventHubMessageSendContext<TestMessage>(new TestMessage(value), cancellationToken)
+        {
+            Serializer = ServiceBusMetadataJson.MessageSerializer,
+            PartitionId = partitionId,
+            PartitionKey = partitionKey
+        };
+    }
+
+    private sealed record TestMessage(int Value);
+
+    private sealed record Route(string? PartitionId, string? PartitionKey);
+
+    private sealed class RecordingProducerContext :
+        BasePipeContext,
+        ProducerContext
+    {
+        private readonly List<EventDataBatch> _createdBatches = [];
+        private readonly HashSet<EventDataBatch> _disposedBatches = [];
+        private readonly TaskCompletionSource _providerCancellationGate =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public RecordingProducerContext()
+            : base(CancellationToken.None)
+        {
+        }
+
+        public List<Route> CreatedRoutes { get; } = [];
+        public int MaximumEntriesPerBatch { get; set; } = int.MaxValue;
+        public Exception? ProduceException { get; set; }
+        public TaskCompletionSource ProduceStarted { get; } =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public List<int> SentBatchSizes { get; } = [];
+        public bool WaitForProduceCancellation { get; set; }
+
+        public ValueTask DisposeAsync() => default;
+
+        public ValueTask<EventDataBatch> CreateBatchAsync(
+            CreateBatchOptions options,
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var accepted = 0;
+            EventDataBatch batch = EventHubsModelFactory.EventDataBatch(
+                1_000_000,
+                [],
+                options,
+                _ => accepted++ < MaximumEntriesPerBatch);
+
+            _createdBatches.Add(batch);
+            CreatedRoutes.Add(new Route(options.PartitionId, options.PartitionKey));
+            return ValueTask.FromResult(batch);
+        }
+
+        public Task ProduceAsync(
+            IEnumerable<EventData> eventData,
+            SendEventOptions options,
+            CancellationToken cancellationToken)
+        {
+            throw new NotSupportedException();
+        }
+
+        public async Task ProduceAsync(EventDataBatch eventDataBatch, CancellationToken cancellationToken)
+        {
+            SentBatchSizes.Add(eventDataBatch.Count);
+            ProduceStarted.TrySetResult();
+
+            if (ProduceException is not null)
+                throw ProduceException;
+
+            if (WaitForProduceCancellation)
+                await _providerCancellationGate.Task.WaitAsync(cancellationToken);
+        }
+
+        public void AssertEveryBatchDisposed()
+        {
+            Assert.Equal(_createdBatches.Count, _disposedBatches.Count);
+            Assert.All(_createdBatches, batch => Assert.Contains(batch, _disposedBatches));
+        }
+
+        public void DisposeBatch(EventDataBatch batch)
+        {
+            batch.Dispose();
+            Assert.True(_disposedBatches.Add(batch), "A provider batch was disposed more than once.");
+        }
+    }
+}

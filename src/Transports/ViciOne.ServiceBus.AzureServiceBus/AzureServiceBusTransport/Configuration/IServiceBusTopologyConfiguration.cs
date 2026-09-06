@@ -2,24 +2,16 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for service bus topology configuration.
-/// </summary>
+/// <summary>Groups the Azure Service Bus publish, send, and consume topology configurators.</summary>
 public interface IServiceBusTopologyConfiguration :
     ITopologyConfiguration
 {
-    /// <summary>
-    /// Gets the publish value.
-    /// </summary>
+    /// <summary>Gets publish-topology configuration.</summary>
     new IServiceBusPublishTopologyConfigurator Publish { get; }
 
-    /// <summary>
-    /// Gets the send value.
-    /// </summary>
+    /// <summary>Gets send-topology configuration.</summary>
     new IServiceBusSendTopologyConfigurator Send { get; }
 
-    /// <summary>
-    /// Gets the consume value.
-    /// </summary>
+    /// <summary>Gets consume-topology configuration.</summary>
     new IServiceBusConsumeTopologyConfigurator Consume { get; }
 }

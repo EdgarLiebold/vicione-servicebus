@@ -2,25 +2,19 @@ using System;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>
-/// Provides a pause scheduled recurring message command implementation.
-/// </summary>
+/// <summary>Carries the command for pause scheduled recurring message.</summary>
 public class PauseScheduledRecurringMessageCommand :
     PauseScheduledRecurringMessage
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public PauseScheduledRecurringMessageCommand()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="scheduleId">The schedule id value.</param>
-    /// <param name="scheduleGroup">The schedule group value.</param>
-    /// <param name="timestamp">The timestamp value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="scheduleId">The schedule id.</param>
+    /// <param name="scheduleGroup">The schedule group.</param>
+    /// <param name="timestamp">The timestamp.</param>
     public PauseScheduledRecurringMessageCommand(string scheduleId, string scheduleGroup, DateTimeOffset timestamp)
     {
         Timestamp = timestamp;
@@ -29,16 +23,10 @@ public class PauseScheduledRecurringMessageCommand :
         ScheduleGroup = scheduleGroup;
     }
 
-    /// <summary>
-    /// Gets or sets the timestamp value.
-    /// </summary>
+    /// <summary>Gets or sets the timestamp.</summary>
     public DateTimeOffset Timestamp { get; set; }
-    /// <summary>
-    /// Gets or sets the schedule id value.
-    /// </summary>
+    /// <summary>Gets or sets the schedule id.</summary>
     public string ScheduleId { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the schedule group value.
-    /// </summary>
+    /// <summary>Gets or sets the schedule group.</summary>
     public string ScheduleGroup { get; set; } = null!;
 }

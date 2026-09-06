@@ -12,20 +12,16 @@ namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// </summary>
 public interface IMessageDataRepository
 {
-    /// <summary>
-    /// Returns a stream to read the message data for the specified address.
-    /// </summary>
-    /// <param name="address">The data address</param>
-    /// <param name="cancellationToken">A cancellation token for the request</param>
-    /// <returns></returns>
+    /// <summary>Returns a stream to read the message data for the specified address.</summary>
+    /// <param name="address">The data address.</param>
+    /// <param name="cancellationToken">A cancellation token for the request.</param>
+    /// <returns>A task that produces the requested value.</returns>
     Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Puts message data into the repository
-    /// </summary>
-    /// <param name="stream">The stream of data for the message</param>
-    /// <param name="timeToLive"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <summary>Puts message data into the repository.</summary>
+    /// <param name="stream">The stream of data for the message.</param>
+    /// <param name="timeToLive">The time to live.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the put outcome.</returns>
     Task<Uri> PutAsync(Stream stream, TimeSpan? timeToLive = default, CancellationToken cancellationToken = default);
 }

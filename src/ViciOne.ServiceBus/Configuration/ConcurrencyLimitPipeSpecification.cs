@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// Configures a concurrency limit on the pipe. If the management endpoint is specified,
 /// the consumer and appropriate mediator is created to handle the adjustment of the limit.
 /// </summary>
-/// <typeparam name="T">The message type being limited</typeparam>
+/// <typeparam name="T">The message type being limited.</typeparam>
 public class ConcurrencyLimitPipeSpecification<T> :
     IPipeSpecification<T>
     where T : class, PipeContext
@@ -16,11 +16,9 @@ public class ConcurrencyLimitPipeSpecification<T> :
 
     readonly IPipeRouter? _router = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="concurrencyLimit">The concurrency limit value.</param>
-    /// <param name="router">The router value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="concurrencyLimit">The concurrency limit.</param>
+    /// <param name="router">The router.</param>
     public ConcurrencyLimitPipeSpecification(int concurrencyLimit, IPipeRouter? router = null)
     {
         _concurrencyLimit = concurrencyLimit;
@@ -28,10 +26,8 @@ public class ConcurrencyLimitPipeSpecification<T> :
         _router = router;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPipeBuilder<T> builder)
     {
         var filter = new ConcurrencyLimitFilter<T>(_concurrencyLimit);
@@ -41,10 +37,8 @@ public class ConcurrencyLimitPipeSpecification<T> :
         _router?.ConnectPipe(filter);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_concurrencyLimit < 1)

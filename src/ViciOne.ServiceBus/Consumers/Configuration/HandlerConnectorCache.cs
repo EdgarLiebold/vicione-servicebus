@@ -2,10 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a handler connector cache implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Caches handler connector data.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class HandlerConnectorCache<TMessage> :
     IHandlerConnectorCache<TMessage>
     where TMessage : class
@@ -17,9 +15,7 @@ public class HandlerConnectorCache<TMessage> :
         _connector = new HandlerConnector<TMessage>();
     }
 
-    /// <summary>
-    /// Gets the connector value.
-    /// </summary>
+    /// <summary>Gets the connector.</summary>
     public static IHandlerConnector<TMessage> Connector => InstanceCache.Cached.Value.Connector;
 
     IHandlerConnector<TMessage> IHandlerConnectorCache<TMessage>.Connector => _connector;

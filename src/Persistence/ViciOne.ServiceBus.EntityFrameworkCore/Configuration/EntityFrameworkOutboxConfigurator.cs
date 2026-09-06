@@ -8,11 +8,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an entity framework outbox configurator implementation.
-/// </summary>
-/// <typeparam name="TBus">The t bus type.</typeparam>
-/// <typeparam name="TDbContext">The t db context type.</typeparam>
+/// <summary>Configures EF Core inbox deduplication and optional transactional-outbox delivery for a bus.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
+/// <typeparam name="TDbContext">The db context type.</typeparam>
 public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
     IEntityFrameworkOutboxConfigurator
     where TBus : class, IBus
@@ -25,9 +23,7 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
     bool _registerInboxCleanupService;
     bool _useBusOutbox;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes default EF Core outbox behavior for the supplied service collection.</summary>
     /// <param name="services">The service collection owned by the bus configuration.</param>
     internal EntityFrameworkOutboxConfigurator(IServiceCollection services)
     {
@@ -37,54 +33,38 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
         _registerInboxCleanupService = true;
     }
 
-    /// <summary>
-    /// Gets or sets the duplicate detection window value.
-    /// </summary>
+    /// <summary>Gets or sets how long delivered inbox rows remain available for duplicate detection.</summary>
     public TimeSpan DuplicateDetectionWindow { get; set; } = TimeSpan.FromMinutes(30);
 
-    /// <summary>
-    /// Gets or sets the isolation level value.
-    /// </summary>
+    /// <summary>Sets the isolation level used by inbox and outbox transactions.</summary>
     public IsolationLevel IsolationLevel
     {
         set => _isolationLevel = value;
     }
 
-    /// <summary>
-    /// Gets or sets the lock statement provider value.
-    /// </summary>
+    /// <summary>Sets the provider-specific SQL used to acquire inbox and outbox locks.</summary>
     public ILockStatementProvider LockStatementProvider
     {
         set => _lockStatementProvider = value ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "LockStatementProvider must not be null", "Correct the named configuration before starting the host"));
     }
 
-    /// <summary>
-    /// Gets or sets the query delay value.
-    /// </summary>
+    /// <summary>Gets or sets the idle delay between inbox-cleanup and outbox-delivery polls.</summary>
     public TimeSpan QueryDelay { get; set; } = TimeSpan.FromSeconds(10);
 
-    /// <summary>
-    /// Gets or sets the query message limit value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum number of rows processed by one cleanup or delivery polling cycle.</summary>
     public int QueryMessageLimit { get; set; } = 100;
 
-    /// <summary>
-    /// Gets or sets the query timeout value.
-    /// </summary>
+    /// <summary>Gets or sets the timeout for each database polling operation.</summary>
     public TimeSpan QueryTimeout { get; set; } = TimeSpan.FromSeconds(30);
 
-    /// <summary>
-    /// Performs the disable inbox cleanup service operation.
-    /// </summary>
+    /// <summary>Prevents registration of the hosted service that removes expired delivered inbox rows.</summary>
     public void DisableInboxCleanupService()
     {
         _registerInboxCleanupService = false;
     }
 
-    /// <summary>
-    /// Configures bus outbox for the current pipeline.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Enables the transactional bus outbox for sends and publishes made outside a receive pipeline.</summary>
+    /// <param name="configure">An optional callback that customizes delivery of persisted outbox messages.</param>
     public virtual void EnableTransactionalOutbox(Action<IEntityFrameworkBusOutboxConfigurator>? configure = null)
     {
         if (_useBusOutbox)
@@ -94,10 +74,8 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
         _configureBusOutbox = configure;
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Applies the callback, validates the relational settings, and registers the configured services.</summary>
+    /// <param name="configure">An optional callback that customizes inbox and outbox persistence.</param>
     public virtual void Configure(Action<IEntityFrameworkOutboxConfigurator>? configure)
     {
         configure?.Invoke(this);

@@ -8,8 +8,8 @@ namespace ViciOne.ServiceBus.Middleware;
 /// Rescue catches an exception, and if the exception matches the exception filter,
 /// passes control to the rescue pipe.
 /// </summary>
-/// <typeparam name="TContext">The context type</typeparam>
-/// <typeparam name="TRescueContext"></typeparam>
+/// <typeparam name="TContext">The context type.</typeparam>
+/// <typeparam name="TRescueContext">The rescue context type.</typeparam>
 public class RescueFilter<TContext, TRescueContext> :
     IFilter<TContext>
     where TContext : class, PipeContext
@@ -19,12 +19,10 @@ public class RescueFilter<TContext, TRescueContext> :
     readonly RescueContextFactory<TContext, TRescueContext> _rescueContextFactory;
     readonly IPipe<TRescueContext> _rescuePipe;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="rescuePipe">The rescue pipe value.</param>
-    /// <param name="exceptionFilter">The exception filter value.</param>
-    /// <param name="rescueContextFactory">The rescue context factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="rescuePipe">The rescue pipe.</param>
+    /// <param name="exceptionFilter">The exception filter.</param>
+    /// <param name="rescueContextFactory">The rescue context factory.</param>
     public RescueFilter(IPipe<TRescueContext> rescuePipe, IExceptionFilter exceptionFilter,
         RescueContextFactory<TContext, TRescueContext> rescueContextFactory)
     {

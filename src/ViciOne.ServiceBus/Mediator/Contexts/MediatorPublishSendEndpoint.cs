@@ -5,8 +5,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Mediator.Contexts;
 
-/// <summary>
-/// </summary>
+/// <summary>Provides an endpoint for mediator publish send.</summary>
 public class MediatorPublishSendEndpoint :
     SendEndpointProxy,
     IPublishObserverConnector
@@ -14,11 +13,9 @@ public class MediatorPublishSendEndpoint :
     readonly PublishObservable _observers;
     readonly IPublishPipe _publishPipe;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="endpoint">The endpoint value.</param>
-    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="endpoint">The endpoint.</param>
+    /// <param name="publishPipe">The publish pipe.</param>
     public MediatorPublishSendEndpoint(ISendEndpoint endpoint, IPublishPipe publishPipe)
         : base(endpoint)
     {
@@ -27,22 +24,18 @@ public class MediatorPublishSendEndpoint :
         _observers = new PublishObservable();
     }
 
-    /// <summary>
-    /// Connects publish observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects publish observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Gets pipe proxy.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets pipe proxy.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>The pipe proxy.</returns>
     protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>>? pipe = default)
     {
         return new PublishPipeAdapter<T>(_publishPipe, pipe);

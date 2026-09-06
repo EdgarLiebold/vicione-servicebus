@@ -6,18 +6,12 @@ namespace ViciOne.ServiceBus.Scheduling;
 /// </summary>
 public enum MissedEventPolicy
 {
-    /// <summary>
-    /// use the default handling of the scheduler
-    /// </summary>
+    /// <summary>use the default handling of the scheduler.</summary>
     Default,
 
-    /// <summary>
-    /// Skip the event, waiting for the next scheduled interval
-    /// </summary>
+    /// <summary>Skip the event, waiting for the next scheduled interval.</summary>
     Skip,
 
-    /// <summary>
-    /// Send the message immediately and then continue the schedule as planned
-    /// </summary>
+    /// <summary>Send the message immediately and then continue the schedule as planned.</summary>
     Send
 }

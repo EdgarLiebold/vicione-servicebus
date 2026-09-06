@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Advanced.Registration;
 /// A consumer definition defines the configuration for a consumer, which can be used by the automatic registration code to
 /// configure the consumer on a receive endpoint.
 /// </summary>
-/// <typeparam name="TConsumer"></typeparam>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
 public class ConsumerDefinition<TConsumer> :
     IConsumerDefinition<TConsumer>
     where TConsumer : class, IConsumer
@@ -16,9 +16,7 @@ public class ConsumerDefinition<TConsumer> :
     ConsumerConcurrencyPolicy? _concurrencyPolicy;
     string? _endpointName;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     protected ConsumerDefinition()
     {
     }
@@ -32,13 +30,12 @@ public class ConsumerDefinition<TConsumer> :
         set => _endpointName = value;
     }
 
-    /// <summary>
-    /// Gets or sets the endpoint definition value.
-    /// </summary>
+    /// <summary>Gets or sets the endpoint definition.</summary>
     public IEndpointDefinition<TConsumer>? EndpointDefinition { get; set; }
 
     IEndpointDefinition? IConsumerDefinition.EndpointDefinition => EndpointDefinition;
 
+    /// <summary>Gets or sets the concurrent message limit.</summary>
     /// Set the concurrent message limit for the consumer, which limits how many consumers are able to concurrently
     /// consume messages.
     public int? ConcurrentMessageLimit
@@ -93,10 +90,8 @@ public class ConsumerDefinition<TConsumer> :
             : _endpointName!;
     }
 
-    /// <summary>
-    /// Configure the consumer endpoint
-    /// </summary>
-    /// <param name="configure"></param>
+    /// <summary>Configure the consumer endpoint.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     protected void Endpoint(Action<IEndpointRegistrationConfigurator>? configure = null)
     {
         var configurator = new EndpointRegistrationConfigurator<TConsumer>();
@@ -110,9 +105,9 @@ public class ConsumerDefinition<TConsumer> :
     /// Called when the consumer is being configured on the endpoint. Configuration only applies to this consumer, and does not apply to
     /// the endpoint.
     /// </summary>
-    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer</param>
-    /// <param name="consumerConfigurator">The consumer configurator</param>
-    /// <param name="context"></param>
+    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer.</param>
+    /// <param name="consumerConfigurator">The consumer configurator.</param>
+    /// <param name="context">The context associated with the operation.</param>
     protected virtual void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<TConsumer> consumerConfigurator,
         IRegistrationContext context)
     {

@@ -2,37 +2,27 @@ using ViciOne.ServiceBus.AzureServiceBus;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus send topology.
-/// </summary>
+/// <summary>Resolves Azure Service Bus entity settings for send, error, and dead-letter destinations.</summary>
 public interface IServiceBusSendTopology :
     ISendTopology
 {
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the send topology for a message contract.</summary>
+    /// <typeparam name="T">The sent message contract.</typeparam>
+    /// <returns>The message-specific send topology.</returns>
     new IServiceBusMessageSendTopology<T> GetMessageTopology<T>()
         where T : class;
 
-    /// <summary>
-    /// Gets send settings.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds send settings for an endpoint address.</summary>
+    /// <param name="address">The queue or topic address.</param>
+    /// <returns>The resolved entity and addressing settings.</returns>
     SendSettings GetSendSettings(ServiceBusEndpointAddress address);
 
-    /// <summary>
-    /// Gets error settings.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds settings for an endpoint's error queue.</summary>
+    /// <param name="configurator">The source queue configuration.</param>
+    /// <returns>The configured error-queue settings.</returns>
     SendSettings GetErrorSettings(IServiceBusQueueConfigurator configurator);
-    /// <summary>
-    /// Gets dead letter settings.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds settings for an endpoint's skipped-message queue.</summary>
+    /// <param name="configurator">The source queue configuration.</param>
+    /// <returns>The configured skipped-message queue settings.</returns>
     SendSettings GetDeadLetterSettings(IServiceBusQueueConfigurator configurator);
 }

@@ -4,19 +4,15 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for send execute.
-/// </summary>
+/// <summary>Provides extension methods for send execute.</summary>
 public static class SendExecuteExtensions
 {
-    /// <summary>
-    /// Send a message, using a callback to modify the send context instead of building a pipe from scratch
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="message">The message</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Send a message, using a callback to modify the send context instead of building a pipe from scratch.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpoint endpoint, T message, Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
         where T : class
@@ -24,14 +20,12 @@ public static class SendExecuteExtensions
         return endpoint.SendAsync(message, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message, using a callback to modify the send context instead of building a pipe from scratch
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="message">The message</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Send a message, using a callback to modify the send context instead of building a pipe from scratch.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpoint endpoint, T message, Func<SendContext<T>, Task> callback, CancellationToken cancellationToken = default)
         where T : class
@@ -39,40 +33,34 @@ public static class SendExecuteExtensions
         return endpoint.SendAsync(message, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message, using a callback to modify the send context instead of building a pipe from scratch
-    /// </summary>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="message">The message</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Send a message, using a callback to modify the send context instead of building a pipe from scratch.</summary>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync(this ISendEndpoint endpoint, object message, Action<SendContext> callback, CancellationToken cancellationToken = default)
     {
         return endpoint.SendAsync(message, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message, using a callback to modify the send context instead of building a pipe from scratch
-    /// </summary>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="message">The message</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Send a message, using a callback to modify the send context instead of building a pipe from scratch.</summary>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync(this ISendEndpoint endpoint, object message, Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
     {
         return endpoint.SendAsync(message, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message, using a callback to modify the send context instead of building a pipe from scratch
-    /// </summary>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="message">The message</param>
-    /// <param name="messageType">The message type to send the object as</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Send a message, using a callback to modify the send context instead of building a pipe from scratch.</summary>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="messageType">The message type to send the object as.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync(this ISendEndpoint endpoint, object message, Type messageType, Action<SendContext> callback,
         CancellationToken cancellationToken = default)
@@ -80,14 +68,12 @@ public static class SendExecuteExtensions
         return endpoint.SendAsync(message, messageType, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message, using a callback to modify the send context instead of building a pipe from scratch
-    /// </summary>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="message">The message</param>
-    /// <param name="messageType">The message type to send the object as</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Send a message, using a callback to modify the send context instead of building a pipe from scratch.</summary>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="messageType">The message type to send the object as.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync(this ISendEndpoint endpoint, object message, Type messageType, Func<SendContext, Task> callback,
         CancellationToken cancellationToken = default)
@@ -95,14 +81,12 @@ public static class SendExecuteExtensions
         return endpoint.SendAsync(message, messageType, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message, using a callback to modify the send context instead of building a pipe from scratch
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="values">The values that map to the object</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Send a message, using a callback to modify the send context instead of building a pipe from scratch.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="values">The values that map to the object.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpoint endpoint, object values, Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
         where T : class
@@ -110,14 +94,12 @@ public static class SendExecuteExtensions
         return endpoint.SendAsync(values, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Send a message, using a callback to modify the send context instead of building a pipe from scratch
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="values">The values that map to the object</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Send a message, using a callback to modify the send context instead of building a pipe from scratch.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="values">The values that map to the object.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpoint endpoint, object values, Func<SendContext<T>, Task> callback,
         CancellationToken cancellationToken = default)
@@ -126,45 +108,37 @@ public static class SendExecuteExtensions
         return endpoint.SendAsync(values, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the to pipe operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The converted pipe.</returns>
     public static IPipe<SendContext<T>> ToPipe<T>(this Action<SendContext<T>> callback)
         where T : class
     {
         return new SendContextPipe<T>(callback);
     }
 
-    /// <summary>
-    /// Performs the to pipe operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The converted pipe.</returns>
     public static IPipe<SendContext<T>> ToPipe<T>(this Func<SendContext<T>, Task> callback)
         where T : class
     {
         return new SendContextAsyncPipe<T>(callback);
     }
 
-    /// <summary>
-    /// Performs the to pipe operation.
-    /// </summary>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to pipe.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The converted pipe.</returns>
     public static IPipe<SendContext> ToPipe(this Action<SendContext> callback)
     {
         return new SendContextPipe(callback);
     }
 
-    /// <summary>
-    /// Performs the to pipe operation.
-    /// </summary>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to pipe.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The converted pipe.</returns>
     public static IPipe<SendContext> ToPipe(this Func<SendContext, Task> callback)
     {
         return new SendContextAsyncPipe(callback);

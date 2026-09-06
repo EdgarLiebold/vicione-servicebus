@@ -10,9 +10,7 @@ using Amazon.SQS.Model;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides a queue info implementation.
-/// </summary>
+/// <summary>Owns resolved Amazon SQS queue metadata, policy updates, and message batchers.</summary>
 public class QueueInfo :
     IAsyncDisposable,
     ViciOne.ServiceBus.Caching.IResourceUsageSource
@@ -25,15 +23,13 @@ public class QueueInfo :
 
     const string SendMessageIAMActionName = "sqs:SendMessage";
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="entityName">The entity name value.</param>
-    /// <param name="url">The url value.</param>
-    /// <param name="attributes">The attributes value.</param>
-    /// <param name="client">The client value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="existing">The existing value.</param>
+    /// <summary>Initializes resolved queue metadata and lazy send and delete batchers.</summary>
+    /// <param name="entityName">The logical queue name.</param>
+    /// <param name="url">The Amazon SQS queue URL.</param>
+    /// <param name="attributes">The queue attributes, including <c>QueueArn</c>.</param>
+    /// <param name="client">The Amazon SQS client used by policy and batch operations.</param>
+    /// <param name="cancellationToken">The token used to cancel provider requests issued by lazy batchers.</param>
+    /// <param name="existing">Whether the queue existed before it was resolved.</param>
     public QueueInfo(string entityName, string url, IDictionary<string, string> attributes, IAmazonSQS client, CancellationToken cancellationToken,
         bool existing)
     {
@@ -55,40 +51,24 @@ public class QueueInfo :
         SubscriptionArns = new List<string>();
     }
 
-    /// <summary>
-    /// Gets the entity name value.
-    /// </summary>
+    /// <summary>Gets the logical queue name.</summary>
     public string EntityName { get; }
-    /// <summary>
-    /// Gets the url value.
-    /// </summary>
+    /// <summary>Gets the Amazon SQS queue URL.</summary>
     public string Url { get; }
-    /// <summary>
-    /// Gets the arn value.
-    /// </summary>
+    /// <summary>Gets the Amazon SQS queue ARN.</summary>
     public string Arn { get; }
-    /// <summary>
-    /// Gets the attributes value.
-    /// </summary>
+    /// <summary>Gets the queue attributes returned by Amazon SQS.</summary>
     public IDictionary<string, string> Attributes { get; }
-    /// <summary>
-    /// Gets the subscription arns value.
-    /// </summary>
+    /// <summary>Gets the Amazon SNS subscription ARNs associated with the queue in this context.</summary>
     public IList<string> SubscriptionArns { get; }
-    /// <summary>
-    /// Gets the existing value.
-    /// </summary>
+    /// <summary>Gets whether the queue existed before it was resolved.</summary>
     public bool Existing { get; }
 
-    /// <summary>
-    /// Occurs when used.
-    /// </summary>
+    /// <summary>Occurs when an operation uses this queue metadata resource.</summary>
     public event Action? Used;
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Disposes the policy-update semaphore and any initialized message batchers.</summary>
+    /// <returns>A task that completes when initialized batchers have drained and stopped.</returns>
     public async ValueTask DisposeAsync()
     {
         if (_disposed)
@@ -104,24 +84,20 @@ public class QueueInfo :
             await _batchDeleter.Value.DisposeAsync().ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="entry">The entry value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Queues an Amazon SQS send entry and waits for its batch result.</summary>
+    /// <param name="entry">The send-message batch entry.</param>
+    /// <param name="cancellationToken">The token used to cancel admission to the batch queue.</param>
+    /// <returns>A task that completes when Amazon SQS reports the entry result.</returns>
     public Task SendAsync(SendMessageBatchRequestEntry entry, CancellationToken cancellationToken)
     {
         Used?.Invoke();
         return _batchSender.Value.ExecuteAsync(entry, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the delete operation.
-    /// </summary>
-    /// <param name="receiptHandle">The receipt handle value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Queues deletion of a received message and waits for its batch result.</summary>
+    /// <param name="receiptHandle">The receipt handle returned for the received message.</param>
+    /// <param name="cancellationToken">The token used to cancel admission to the batch queue.</param>
+    /// <returns>A task that completes when Amazon SQS reports the deletion result.</returns>
     public Task DeleteAsync(string receiptHandle, CancellationToken cancellationToken)
     {
         Used?.Invoke();
@@ -130,13 +106,11 @@ public class QueueInfo :
         return _batchDeleter.Value.ExecuteAsync(entry, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the update policy operation.
-    /// </summary>
-    /// <param name="sqsQueueArn">The sqs queue arn value.</param>
-    /// <param name="topicArn">The topic arn value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Ensures that the queue policy permits an Amazon SNS topic to send messages.</summary>
+    /// <param name="sqsQueueArn">The target Amazon SQS queue ARN.</param>
+    /// <param name="topicArn">The permitted Amazon SNS topic ARN.</param>
+    /// <param name="cancellationToken">The token used to cancel policy serialization.</param>
+    /// <returns><see langword="true"/> when the policy was changed; <see langword="false"/> when permission already existed.</returns>
     public async Task<bool> UpdatePolicyAsync(string sqsQueueArn, string topicArn, CancellationToken cancellationToken)
     {
         Used?.Invoke();

@@ -3,31 +3,25 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a transport ready filter implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Processes transport ready pipeline stages.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class TransportReadyFilter<T> :
     IFilter<T>
     where T : class, PipeContext
 {
     readonly ReceiveEndpointContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public TransportReadyFilter(ReceiveEndpointContext context)
     {
         _context = context;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(T context, IPipe<T> next)
     {
         await _context.TransportObservers.NotifyReadyAsync(_context.InputAddress).ConfigureAwait(false);
@@ -42,10 +36,8 @@ public class TransportReadyFilter<T> :
         await agent.Completed.ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateFilterScope("transportReady");

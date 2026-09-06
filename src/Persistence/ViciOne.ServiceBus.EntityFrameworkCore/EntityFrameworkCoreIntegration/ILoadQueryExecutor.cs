@@ -5,19 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Defines the contract for load query executor.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Loads one saga entity by correlation identifier using a configured EF Core query strategy.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public interface ILoadQueryExecutor<TSaga>
     where TSaga : class, ISaga
 {
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
-    /// <param name="dbContext">The db context value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
+    /// <summary>Loads the requested state.</summary>
+    /// <param name="dbContext">The DbContext that contains the saga set.</param>
+    /// <param name="correlationId">The saga correlation identifier.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The tracked saga entity, or <see langword="null"/> when no row matches.</returns>
     Task<TSaga?> LoadAsync(DbContext dbContext, Guid correlationId, CancellationToken cancellationToken);
 }

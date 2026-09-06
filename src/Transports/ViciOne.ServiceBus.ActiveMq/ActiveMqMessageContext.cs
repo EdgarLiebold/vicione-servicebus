@@ -2,27 +2,17 @@ using Apache.NMS;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Defines the contract for active mq message context.
-/// </summary>
+/// <summary>Exposes ActiveMQ-native state for a received message.</summary>
 public interface ActiveMqMessageContext
 {
-    /// <summary>
-    /// Gets the transport message value.
-    /// </summary>
+    /// <summary>Gets the underlying Apache NMS message.</summary>
     IMessage TransportMessage { get; }
 
-    /// <summary>
-    /// Gets the properties value.
-    /// </summary>
+    /// <summary>Gets the message's native primitive-property map.</summary>
     IPrimitiveMap Properties { get; }
 
-    /// <summary>
-    /// Gets the group id value.
-    /// </summary>
+    /// <summary>Gets the JMSX message-group identifier.</summary>
     string? GroupId { get; }
-    /// <summary>
-    /// Gets the group sequence value.
-    /// </summary>
+    /// <summary>Gets the JMSX message-group sequence number.</summary>
     int GroupSequence { get; }
 }

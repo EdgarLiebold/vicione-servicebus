@@ -1,15 +1,11 @@
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a pipe router implementation.
-/// </summary>
+/// <summary>Routes pipe operations.</summary>
 public class PipeRouter :
     DynamicRouter<PipeContext>,
     IPipeRouter
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public PipeRouter()
         : base(new PipeContextConverterFactory())
     {

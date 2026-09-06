@@ -2,9 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Resolves routes from the bus that owns the active send provider.
-/// </summary>
+/// <summary>Resolves routes from the bus that owns the active send provider.</summary>
 internal static class EndpointConvention
 {
     internal static IMessageRouteTable GetMessageRoutes(ISendEndpointProvider provider)

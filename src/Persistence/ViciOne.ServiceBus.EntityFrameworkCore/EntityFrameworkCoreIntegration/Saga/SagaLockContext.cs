@@ -3,17 +3,13 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
-/// <summary>
-/// Defines the contract for saga lock context.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Loads the saga rows selected by a repository query under the configured concurrency strategy.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public interface SagaLockContext<TSaga>
     where TSaga : class, ISaga
 {
-    /// <summary>
-    /// Execute the callback on each saga instance, and return a Task that waits on the results
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Loads and tracks the selected saga rows.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The selected saga entities in repository-defined order.</returns>
     Task<IList<TSaga>> LoadAsync(CancellationToken cancellationToken = default);
 }

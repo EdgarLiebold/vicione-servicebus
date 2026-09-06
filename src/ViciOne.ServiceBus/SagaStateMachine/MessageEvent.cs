@@ -2,34 +2,26 @@ using System;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a message event implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Carries the message event data.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class MessageEvent<TMessage> :
     TriggerEvent,
     Event<TMessage>,
     IEquatable<MessageEvent<TMessage>>
     where TMessage : class
 {
-    /// <summary>
-    /// Defines the instance value.
-    /// </summary>
+    /// <summary>Exposes the instance used by the containing type.</summary>
     public static readonly Event<TMessage> Instance = new MessageEvent<TMessage>(TypeCache<TMessage>.ShortName);
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="name">The name value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="name">The name.</param>
     public MessageEvent(string name)
         : base(name)
     {
     }
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public override void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this, x =>
@@ -37,10 +29,8 @@ public class MessageEvent<TMessage> :
         });
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public override void Probe(ProbeContext context)
     {
         base.Probe(context);
@@ -48,10 +38,8 @@ public class MessageEvent<TMessage> :
         context.Add("dataType", TypeCache<TMessage>.ShortName);
     }
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="other">The other value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="other">The other.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Equals(MessageEvent<TMessage>? other)
     {
@@ -62,19 +50,15 @@ public class MessageEvent<TMessage> :
         return Equals(other.Name, Name);
     }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the string representation of this instance.</summary>
+    /// <returns>The converted string.</returns>
     public override string ToString()
     {
         return $"{Name}<{typeof(TMessage).Name}> (Event)";
     }
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="obj">The obj value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="obj">The obj.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool Equals(object? obj)
     {
@@ -85,10 +69,8 @@ public class MessageEvent<TMessage> :
         return Equals(obj as MessageEvent<TMessage>);
     }
 
-    /// <summary>
-    /// Gets hash code.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets hash code.</summary>
+    /// <returns>The hash code for this instance.</returns>
     public override int GetHashCode()
     {
         return base.GetHashCode() * 27 + typeof(TMessage).GetHashCode();

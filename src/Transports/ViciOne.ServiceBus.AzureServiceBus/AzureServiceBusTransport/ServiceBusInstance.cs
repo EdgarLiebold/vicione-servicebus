@@ -4,22 +4,18 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus instance implementation.
-/// </summary>
+/// <summary>Represents a running Azure Service Bus bus and exposes connectable subscription endpoints.</summary>
 public class ServiceBusInstance :
     TransportBusInstance<IServiceBusReceiveEndpointConfigurator>,
     ISubscriptionEndpointConnector
 {
     readonly IServiceBusHost _host;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="busControl">The bus control value.</param>
-    /// <param name="host">The host value.</param>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="busRegistrationContext">The bus registration context value.</param>
+    /// <summary>Creates a running bus instance around its control and host.</summary>
+    /// <param name="busControl">The bus lifecycle control.</param>
+    /// <param name="host">The Azure Service Bus host.</param>
+    /// <param name="hostConfiguration">The active host configuration.</param>
+    /// <param name="busRegistrationContext">The service registration context.</param>
     public ServiceBusInstance(IBusControl busControl, IHost<IServiceBusReceiveEndpointConfigurator> host, IHostConfiguration hostConfiguration,
         IBusRegistrationContext busRegistrationContext)
         : base(busControl, host, hostConfiguration, busRegistrationContext)
@@ -27,13 +23,11 @@ public class ServiceBusInstance :
         _host = host as IServiceBusHost ?? throw new ArgumentException("Host was not an IServiceBusHost", nameof(host));
     }
 
-    /// <summary>
-    /// Connects subscription endpoint.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a subscription endpoint to the publish topic for a message contract.</summary>
+    /// <typeparam name="T">The subscribed message contract.</typeparam>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="configure">Optionally configures the subscription endpoint.</param>
+    /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
     public HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
         Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
         where T : class
@@ -41,26 +35,22 @@ public class ServiceBusInstance :
         return _host.ConnectSubscriptionEndpoint<T>(subscriptionName, configure);
     }
 
-    /// <summary>
-    /// Connects subscription endpoint.
-    /// </summary>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a subscription endpoint to a named topic.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="topicName">The namespace-relative topic name.</param>
+    /// <param name="configure">Optionally configures the subscription endpoint.</param>
+    /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
     public HostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
         Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
     {
         return _host.ConnectSubscriptionEndpoint(subscriptionName, topicName, configure);
     }
 
-    /// <summary>
-    /// Connects subscription endpoint.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a subscription endpoint and applies registration-based endpoint configuration.</summary>
+    /// <typeparam name="T">The subscribed message contract.</typeparam>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="configure">Optionally configures the endpoint with access to registration services.</param>
+    /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
     public HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
         Action<IBusRegistrationContext, IServiceBusSubscriptionEndpointConfigurator>? configure = null)
         where T : class
@@ -73,13 +63,11 @@ public class ServiceBusInstance :
         });
     }
 
-    /// <summary>
-    /// Connects subscription endpoint.
-    /// </summary>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a named-topic subscription and applies registration-based endpoint configuration.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="topicName">The namespace-relative topic name.</param>
+    /// <param name="configure">Optionally configures the endpoint with access to registration services.</param>
+    /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
     public HostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
         Action<IBusRegistrationContext, IServiceBusSubscriptionEndpointConfigurator>? configure = null)
     {

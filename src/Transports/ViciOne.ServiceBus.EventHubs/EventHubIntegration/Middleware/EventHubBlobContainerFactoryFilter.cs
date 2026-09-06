@@ -1,38 +1,31 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Azure;
 using Azure.Storage.Blobs;
 
 namespace ViciOne.ServiceBus.EventHubs.Middleware;
 
-/// <summary>
-/// Provides an event hub blob container factory filter implementation.
-/// </summary>
+/// <summary>Performs one-time Blob checkpoint-container setup before the Event Hubs processor pipeline continues.</summary>
 public class EventHubBlobContainerFactoryFilter :
     IFilter<ProcessorContext>
 {
-    readonly BlobContainerClient _blockClient;
+    readonly BlobContainerClient _blobContainerClient;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="blockClient">The block client value.</param>
-    public EventHubBlobContainerFactoryFilter(BlobContainerClient blockClient)
+    /// <summary>Creates the filter for the configured checkpoint container.</summary>
+    /// <param name="blobContainerClient">The Blob container client used for existence checks and creation.</param>
+    public EventHubBlobContainerFactoryFilter(BlobContainerClient blobContainerClient)
     {
-        _blockClient = blockClient;
+        _blobContainerClient = blobContainerClient ?? throw new ArgumentNullException(nameof(blobContainerClient));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs one-time container setup, invokes the processor pipeline, and evicts setup state when downstream processing faults.</summary>
+    /// <param name="context">The active Event Hubs processor context.</param>
+    /// <param name="next">The remaining processor pipeline.</param>
+    /// <returns>The continuation task returned by <paramref name="next"/> after the checkpoint container is available.</returns>
     public async Task SendAsync(ProcessorContext context, IPipe<ProcessorContext> next)
     {
         OneTimeContext<EventHubBlobContainerFactoryFilter> oneTimeContext = await context
-            .OneTimeSetupAsync<EventHubBlobContainerFactoryFilter>(() => CreateBlobIfNotExistsAsync(context.CancellationToken))
+            .OneTimeSetupAsync<EventHubBlobContainerFactoryFilter>(() => EnsureContainerExistsAsync(context.CancellationToken))
             .ConfigureAwait(false);
 
         try
@@ -46,32 +39,24 @@ public class EventHubBlobContainerFactoryFilter :
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The probe context receiving checkpoint-container URI and name.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("configureTopology");
-        scope.Add("Uri", _blockClient.Uri);
-        scope.Add("Name", _blockClient.Name);
+        scope.Add("Uri", _blobContainerClient.Uri);
+        scope.Add("Name", _blobContainerClient.Name);
     }
 
-    async Task<bool> CreateBlobIfNotExistsAsync(CancellationToken cancellationToken = default)
+    /// <summary>Creates the checkpoint container when it does not already exist.</summary>
+    /// <param name="cancellationToken">Cancels the existence check or container creation.</param>
+    /// <returns>A task that completes only after the container is known to exist.</returns>
+    internal async Task EnsureContainerExistsAsync(CancellationToken cancellationToken)
     {
-        Azure.Response<bool> exists = await _blockClient.ExistsAsync(cancellationToken).ConfigureAwait(false);
+        global::Azure.Response<bool> exists = await _blobContainerClient.ExistsAsync(cancellationToken).ConfigureAwait(false);
         if (exists.Value)
-            return true;
+            return;
 
-        try
-        {
-            await _blockClient.CreateIfNotExistsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-            return true;
-        }
-        catch (RequestFailedException exception)
-        {
-            LogContext.Warning?.Log(exception, "Azure Blob Container does not exist: {Address}", _blockClient.Uri);
-            return false;
-        }
+        await _blobContainerClient.CreateIfNotExistsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

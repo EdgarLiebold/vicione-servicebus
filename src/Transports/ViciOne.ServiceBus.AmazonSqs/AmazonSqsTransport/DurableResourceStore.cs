@@ -10,6 +10,8 @@ namespace ViciOne.ServiceBus.AmazonSqs;
 /// Connection-lifetime owner for durable transport resources. Creation is single-flight per key and caller cancellation
 /// cancels only that caller's wait. The store lifetime owns resource creation and disposal.
 /// </summary>
+/// <typeparam name="TKey">The resource lookup-key type.</typeparam>
+/// <typeparam name="TValue">The disposable resource type.</typeparam>
 sealed class DurableResourceStore<TKey, TValue> :
     IAsyncDisposable
     where TKey : notnull

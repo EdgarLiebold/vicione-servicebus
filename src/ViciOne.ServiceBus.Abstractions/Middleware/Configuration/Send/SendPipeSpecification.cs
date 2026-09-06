@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a send pipe specification implementation.
-/// </summary>
+/// <summary>Describes requirements for send pipe.</summary>
 public class SendPipeSpecification :
     ISendPipeConfigurator,
     ISendPipeSpecification
@@ -18,9 +16,7 @@ public class SendPipeSpecification :
     readonly SendPipeSpecificationObservable _observers;
     readonly List<IPipeSpecification<SendContext>> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public SendPipeSpecification()
     {
         _specifications = new List<IPipeSpecification<SendContext>>();
@@ -28,10 +24,8 @@ public class SendPipeSpecification :
         _observers = new SendPipeSpecificationObservable();
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<SendContext> specification)
     {
         ArgumentNullException.ThrowIfNull(specification);
@@ -54,20 +48,16 @@ public class SendPipeSpecification :
         messageSpecification.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Connects send pipe specification observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects send pipe specification observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendPipeSpecificationObserver(ISendPipeSpecificationObserver observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         lock (_lock)
@@ -78,11 +68,9 @@ public class SendPipeSpecification :
         }
     }
 
-    /// <summary>
-    /// Gets message specification.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message specification.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The message specification.</returns>
     public IMessageSendPipeSpecification<T> GetMessageSpecification<T>()
         where T : class
     {

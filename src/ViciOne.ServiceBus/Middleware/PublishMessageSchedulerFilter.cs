@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Adds the scheduler to the consume context, so that it can be used for message redelivery
-/// </summary>
+/// <summary>Adds the scheduler to the consume context, so that it can be used for message redelivery.</summary>
 public class PublishMessageSchedulerFilter :
     IFilter<ConsumeContext>
 {

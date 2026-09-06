@@ -1,18 +1,14 @@
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
-/// <summary>
-/// Provides a sql topic subscription configurator implementation.
-/// </summary>
+/// <summary>Configures sql topic subscription.</summary>
 public abstract class SqlTopicSubscriptionConfigurator :
     SqlTopicConfigurator,
     ISqlTopicSubscriptionConfigurator
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="subscriptionType">The subscription type value.</param>
-    /// <param name="routingKey">The routing key value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="topicName">The topic name.</param>
+    /// <param name="subscriptionType">The runtime subscription type used by the operation.</param>
+    /// <param name="routingKey">The routing key.</param>
     protected SqlTopicSubscriptionConfigurator(string topicName, SqlSubscriptionType subscriptionType = SqlSubscriptionType.All, string? routingKey = null)
         : base(topicName)
     {
@@ -20,12 +16,8 @@ public abstract class SqlTopicSubscriptionConfigurator :
         RoutingKey = routingKey;
     }
 
-    /// <summary>
-    /// Gets or sets the routing key value.
-    /// </summary>
+    /// <summary>Gets or sets the routing key.</summary>
     public string? RoutingKey { get; set; }
-    /// <summary>
-    /// Gets or sets the subscription type value.
-    /// </summary>
+    /// <summary>Gets or sets the subscription type.</summary>
     public SqlSubscriptionType SubscriptionType { get; set; }
 }

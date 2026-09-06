@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Events;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a start host handle implementation.
-/// </summary>
+/// <summary>Controls the lifetime of start host.</summary>
 public class StartHostHandle :
     HostHandle
 {
@@ -15,12 +13,10 @@ public class StartHostHandle :
     readonly BaseHost _host;
     readonly HostRiderHandle[] _riderHandles;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="host">The host value.</param>
-    /// <param name="handles">The handles value.</param>
-    /// <param name="riderHandles">The rider handles value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="host">The host.</param>
+    /// <param name="handles">The handles.</param>
+    /// <param name="riderHandles">The rider handles.</param>
     public StartHostHandle(BaseHost host, HostReceiveEndpointHandle[] handles, HostRiderHandle[] riderHandles)
     {
         _host = host;

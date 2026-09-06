@@ -1,16 +1,12 @@
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Defines the contract for in memory bus topology.
-/// </summary>
+/// <summary>Defines the operations required by in memory bus topology.</summary>
 public interface IInMemoryBusTopology :
     IBusTopology
 {
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The in memory message publish topology produced by the operation.</returns>
     new IInMemoryMessagePublishTopology<T> Publish<T>()
         where T : class;
 }

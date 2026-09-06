@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>
-/// A PipeContext, which as an agent can be Stopped, which disposes of the context making it unavailable
-/// </summary>
-/// <typeparam name="TContext"></typeparam>
+/// <summary>A PipeContext, which as an agent can be Stopped, which disposes of the context making it unavailable.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class PipeContextAgent<TContext> :
     Agent,
     IPipeContextAgent<TContext>
@@ -18,20 +16,16 @@ public class PipeContextAgent<TContext> :
     readonly TaskCompletionSource<DateTime> _inactive;
     readonly TimeProvider _timeProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public PipeContextAgent(TContext context)
         : this(Task.FromResult(context), context.GetTimeProvider())
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public PipeContextAgent(Task<TContext> context, TimeProvider? timeProvider = null)
     {
         _context = context;
@@ -48,7 +42,7 @@ public class PipeContextAgent<TContext> :
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
-        // dispose only once
+        // The first caller owns disposal; later calls observe the completed inactive signal.
         if (!_inactive.TrySetResult(_timeProvider.GetUtcNow().UtcDateTime))
             return;
 

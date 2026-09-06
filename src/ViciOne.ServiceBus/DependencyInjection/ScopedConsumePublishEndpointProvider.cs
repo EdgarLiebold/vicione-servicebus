@@ -3,9 +3,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>
-/// Provides a scoped consume publish endpoint provider implementation.
-/// </summary>
+/// <summary>Provides scoped consume publish endpoint services.</summary>
 public class ScopedConsumePublishEndpointProvider :
     IPublishEndpointProvider
 {
@@ -13,12 +11,10 @@ public class ScopedConsumePublishEndpointProvider :
     readonly IPublishEndpointProvider _provider;
     readonly IServiceProvider _serviceProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    /// <param name="consumeContext">The consume context value.</param>
-    /// <param name="serviceProvider">The service provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="consumeContext">The consume context.</param>
+    /// <param name="serviceProvider">The service provider.</param>
     public ScopedConsumePublishEndpointProvider(IPublishEndpointProvider provider, ConsumeContext consumeContext, IServiceProvider serviceProvider)
     {
         _provider = provider;

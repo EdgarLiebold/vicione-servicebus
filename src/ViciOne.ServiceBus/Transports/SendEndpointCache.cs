@@ -4,18 +4,15 @@ using ViciOne.ServiceBus.Caching;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Caches transport send endpoints by their normalized address key.
-/// </summary>
+/// <summary>Caches transport send endpoints by their normalized address key.</summary>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
 public class SendEndpointCache<TKey> :
     ISendEndpointCache<TKey>
     where TKey : notnull
 {
     readonly KeyedResourceCache<TKey, CachedSendEndpoint<TKey>> _cache;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public SendEndpointCache()
     {
         var options = new ResourceCacheOptions(SendEndpointCacheDefaults.Capacity, SendEndpointCacheDefaults.MinAge,
@@ -24,22 +21,18 @@ public class SendEndpointCache<TKey> :
         _cache = new KeyedResourceCache<TKey, CachedSendEndpoint<TKey>>(x => x.Key, options);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         return _cache.DisposeAsync();
     }
 
-    /// <summary>
-    /// Gets send endpoint.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Gets send endpoint.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public async Task<ISendEndpoint> GetSendEndpointAsync(TKey key, SendEndpointFactory<TKey> factory, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(factory);

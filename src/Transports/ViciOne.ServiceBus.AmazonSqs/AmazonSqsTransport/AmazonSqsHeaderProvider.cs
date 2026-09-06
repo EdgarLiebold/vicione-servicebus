@@ -9,32 +9,26 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides an amazon sqs header provider implementation.
-/// </summary>
+/// <summary>Reads service-bus headers from Amazon SQS message attributes and system attributes.</summary>
 public class AmazonSqsHeaderProvider :
     IHeaderProvider
 {
     readonly SqsMessageBody _body;
     readonly Message _message;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="body">The body value.</param>
+    /// <summary>Creates a header provider for a received Amazon SQS message.</summary>
+    /// <param name="message">The native queue message.</param>
+    /// <param name="body">The parsed message body, including an optional Amazon SNS topic ARN.</param>
     public AmazonSqsHeaderProvider(Message message, SqsMessageBody body)
     {
         _message = message;
         _body = body;
     }
 
-    /// <summary>
-    /// Attempts to get header.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Tries to read a message attribute, message identifier, topic ARN, or sent timestamp.</summary>
+    /// <param name="key">The header name.</param>
+    /// <param name="value">The header value, when available.</param>
+    /// <returns><see langword="true" /> when the header is available; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         if (_message.MessageAttributes != null && _message.MessageAttributes.TryGetValue(key, out var val))
@@ -74,10 +68,8 @@ public class AmazonSqsHeaderProvider :
         return false;
     }
 
-    /// <summary>
-    /// Gets all.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Enumerates the logical message identifier and all non-null string message attributes.</summary>
+    /// <returns>The available header name/value pairs.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
         if (!TryGetHeader(MessageHeaders.MessageId, out _))

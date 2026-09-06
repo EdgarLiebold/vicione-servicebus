@@ -38,9 +38,9 @@ readonly struct CronExpressionSummary
     public bool CalendarDayOfMonth { get; }
     public CronField Years { get; }
 
-    /// <summary>
-    /// Gets the expression set summary.
-    /// </summary>
+    /// <summary>Gets expression set summary.</summary>
+    /// <param name="data">The data.</param>
+    /// <returns>The expression set summary.</returns>
     static string GetExpressionSetSummary(CronField data)
     {
         if (data.Contains(CronExpressionConstants.NoSpec))

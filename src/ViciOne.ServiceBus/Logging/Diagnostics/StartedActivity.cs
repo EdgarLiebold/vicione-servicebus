@@ -4,33 +4,25 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Logging;
 
-/// <summary>
-/// Represents a started activity value.
-/// </summary>
+/// <summary>Represents a started activity.</summary>
 public readonly struct StartedActivity
 {
-    /// <summary>
-    /// Defines the activity value.
-    /// </summary>
+    /// <summary>Exposes the activity used by the containing type.</summary>
     public readonly Activity Activity;
     readonly TimeProvider _timeProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="activity">The activity value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="activity">The activity.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public StartedActivity(Activity activity, TimeProvider? timeProvider = null)
     {
         Activity = activity;
         _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    /// <summary>
-    /// Sets tag.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets tag.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">The value to process.</param>
     public void SetTag(string key, string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -39,11 +31,9 @@ public readonly struct StartedActivity
         ActivityObservation.TrySetTag(Activity, key, value);
     }
 
-    /// <summary>
-    /// Performs the update operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Updates the current value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     public void Update<T>(SendContext<T> context)
         where T : class
     {
@@ -51,11 +41,9 @@ public readonly struct StartedActivity
             SetTag(DiagnosticHeaders.Messaging.BodyLength, context.BodyLength.Value.ToString());
     }
 
-    /// <summary>
-    /// Adds exception event to the configuration.
-    /// </summary>
+    /// <summary>Adds exception event to the configuration.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="escaped">The escaped value.</param>
+    /// <param name="escaped">The escaped.</param>
     public void AddExceptionEvent(Exception exception, bool escaped = true)
     {
         exception = exception.GetBaseException() ?? exception;
@@ -76,9 +64,7 @@ public readonly struct StartedActivity
         ActivityObservation.TrySetStatus(Activity, ActivityStatusCode.Error, exceptionMessage);
     }
 
-    /// <summary>
-    /// Stops the configured component.
-    /// </summary>
+    /// <summary>Stops the configured component.</summary>
     public void Stop()
     {
         if (Activity.Status == ActivityStatusCode.Unset)

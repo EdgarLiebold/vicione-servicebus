@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides an event hub processor context implementation.
-/// </summary>
+/// <summary>Owns an Event Hubs processor client and composes internal and application partition callbacks.</summary>
 public class EventHubProcessorContext :
     BasePipeContext,
     ProcessorContext
@@ -22,14 +20,12 @@ public class EventHubProcessorContext :
     readonly Func<PartitionInitializingEventArgs, Task>? _partitionInitializingHandler;
     Action? _releaseClient;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="client">The client value.</param>
-    /// <param name="partitionInitializingHandler">The partition initializing handler value.</param>
-    /// <param name="partitionClosingHandler">The partition closing handler value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a processor context for one receive endpoint.</summary>
+    /// <param name="hostConfiguration">The bus host configuration used for receive logging.</param>
+    /// <param name="client">The Azure SDK event processor client.</param>
+    /// <param name="partitionInitializingHandler">The optional application partition-initializing handler.</param>
+    /// <param name="partitionClosingHandler">The optional application partition-closing handler.</param>
+    /// <param name="cancellationToken">Stops operations using this processor context.</param>
     public EventHubProcessorContext(IHostConfiguration hostConfiguration,
         EventProcessorClient client, Func<PartitionInitializingEventArgs, Task>? partitionInitializingHandler,
         Func<PartitionClosingEventArgs, Task>? partitionClosingHandler, CancellationToken cancellationToken)
@@ -43,17 +39,13 @@ public class EventHubProcessorContext :
         _partitionClosingHandler = partitionClosingHandler;
     }
 
-    /// <summary>
-    /// Gets the log context value.
-    /// </summary>
+    /// <summary>Gets the initialized receive logging context.</summary>
     public ILogContext LogContext => _hostConfiguration.ReceiveLogContext
         ?? throw new InvalidOperationException("The receive log context has not been initialized.");
 
-    /// <summary>
-    /// Gets client.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Subscribes composed partition callbacks and leases the owned processor client.</summary>
+    /// <param name="context">The internal callback target that maintains checkpoint state.</param>
+    /// <returns>The owned processor client.</returns>
     public EventProcessorClient GetClient(ProcessorClientBuilderContext context)
     {
         if (_releaseClient != null)
@@ -95,10 +87,8 @@ public class EventHubProcessorContext :
         return _client;
     }
 
-    /// <summary>
-    /// Performs the release client operation.
-    /// </summary>
-    /// <param name="processorLockContext">The processor lock context value.</param>
+    /// <summary>Removes the partition callbacks installed by the current client lease.</summary>
+    /// <param name="processorLockContext">The callback target whose lease is being released.</param>
     public void ReleaseClient(ProcessorClientBuilderContext processorLockContext)
     {
         _releaseClient?.Invoke();

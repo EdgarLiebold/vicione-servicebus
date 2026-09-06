@@ -4,26 +4,20 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Initializers.Variables;
 
-/// <summary>
-/// Provides an id variable implementation.
-/// </summary>
+/// <summary>Provides the variable value for id.</summary>
 public class IdVariable :
     IInitializerVariable<Guid>
 {
     readonly Guid _id;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public IdVariable()
     {
         _id = NewId.NextGuid();
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="id">The id.</param>
     public IdVariable(Guid id)
     {
         _id = id;
@@ -37,11 +31,9 @@ public class IdVariable :
         return Task.FromResult(timestampContext.Id);
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Guid" />.
-    /// </summary>
-    /// <param name="variable">The variable value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts a value to <see cref="Guid" />.</summary>
+    /// <param name="variable">The variable.</param>
+    /// <returns>The value produced by the operation.</returns>
     public static implicit operator Guid(IdVariable variable)
     {
         return variable._id;

@@ -3,18 +3,14 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Azure.Table;
 
-/// <summary>
-/// Provides extension methods for azure table repository registration.
-/// </summary>
+/// <summary>Adds Azure Table saga persistence to dependency-injection registrations.</summary>
 public static class AzureTableRepositoryRegistrationExtensions
 {
-    /// <summary>
-    /// Adds a Azure Table saga repository to the registration
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Configures an Azure Table repository for one registered saga type.</summary>
+    /// <typeparam name="T">The saga state persisted in Azure Table Storage.</typeparam>
+    /// <param name="configurator">The saga registration to update.</param>
+    /// <param name="configure">An optional callback that supplies the table client and key formatter.</param>
+    /// <returns>The same saga registration configurator.</returns>
     public static ISagaRegistrationConfigurator<T> AzureTableRepository<T>(this ISagaRegistrationConfigurator<T> configurator,
         Action<IAzureTableSagaRepositoryConfigurator<T>>? configure = null)
         where T : class, ISaga
@@ -32,12 +28,10 @@ public static class AzureTableRepositoryRegistrationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Configure the Job Service saga state machines to use Azure Table Storage
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Configure the Job Service saga state machines to use Azure Table Storage.</summary>
+    /// <param name="configurator">The Job Service saga registration to update.</param>
+    /// <param name="configure">The callback that supplies the table client for each Job Service saga type.</param>
+    /// <returns>The same Job Service saga registration configurator.</returns>
     public static IJobSagaRegistrationConfigurator AzureTableRepository(this IJobSagaRegistrationConfigurator configurator,
         Action<IAzureTableSagaRepositoryConfigurator> configure)
     {
@@ -51,11 +45,9 @@ public static class AzureTableRepositoryRegistrationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Use the Azure Table saga repository for sagas configured by type (without a specific generic call to AddSaga/AddSagaStateMachine)
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
+    /// <summary>Uses Azure Table Storage for sagas discovered and registered by runtime type.</summary>
+    /// <param name="configurator">The service registration configurator to update.</param>
+    /// <param name="configure">The callback that supplies the Azure Table client.</param>
     public static void SetAzureTableSagaRepositoryProvider(this IRegistrationConfigurator configurator,
         Action<IAzureTableSagaRepositoryConfigurator> configure)
     {

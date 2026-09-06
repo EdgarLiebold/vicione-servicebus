@@ -13,17 +13,15 @@ public sealed class BatchOptions :
     IConfigureReceiveEndpoint,
     ISpecification
 {
-    /// <summary>
-    /// Override the default receive endpoint configuration done by the batch options
-    /// </summary>
+    /// <summary>Override the default receive endpoint configuration done by the batch options.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="configurator">The configurator to update.</param>
     public delegate void ConfigurationCallback(string? name, IReceiveEndpointConfigurator configurator);
 
 
     ConfigurationCallback _configurationCallback;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public BatchOptions()
     {
         ConcurrencyLimit = 1;
@@ -34,45 +32,31 @@ public sealed class BatchOptions :
         _configurationCallback = DefaultConfigurationCallback;
     }
 
-    /// <summary>
-    /// The maximum number of messages in a single batch
-    /// </summary>
+    /// <summary>The maximum number of messages in a single batch.</summary>
     public int MessageLimit { get; set; }
 
-    /// <summary>
-    /// The number of batches which can be executed concurrently
-    /// </summary>
+    /// <summary>The number of batches which can be executed concurrently.</summary>
     public int ConcurrencyLimit { get; set; }
 
-    /// <summary>
-    /// The maximum time to wait before delivering a partial batch
-    /// </summary>
+    /// <summary>The maximum time to wait before delivering a partial batch.</summary>
     public TimeSpan TimeLimit { get; set; }
 
-    /// <summary>
-    /// The starting point for the <see cref="TimeLimit" />
-    /// </summary>
+    /// <summary>The starting point for the <see cref="TimeLimit" />.</summary>
     public BatchTimeLimitStart TimeLimitStart { get; set; }
 
-    /// <summary>
-    /// The property to group by
-    /// </summary>
+    /// <summary>The property to group by.</summary>
     public object? GroupKeyProvider { get; private set; }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="configurator">The configurator to update.</param>
     public void Configure(string? name, IReceiveEndpointConfigurator configurator)
     {
         _configurationCallback(name, configurator);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (TimeLimit <= TimeSpan.Zero)
@@ -85,11 +69,9 @@ public sealed class BatchOptions :
             yield return this.Failure("Batch", "TimeLimitStart", "Must be a defined BatchTimeLimitStart value");
     }
 
-    /// <summary>
-    /// Sets configuration callback.
-    /// </summary>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sets configuration callback.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The batch options produced by the operation.</returns>
     public BatchOptions SetConfigurationCallback(ConfigurationCallback callback)
     {
         if (callback == null)
@@ -109,50 +91,49 @@ public sealed class BatchOptions :
             configurator.ConcurrentMessageLimit = messageCapacity;
     }
 
-    /// <summary>
-    /// Sets the maximum number of messages in a single batch
-    /// </summary>
-    /// <param name="limit">The message limit</param>
-    /// <returns></returns>
+    /// <summary>Sets the maximum number of messages in a single batch.</summary>
+    /// <param name="limit">The message limit.</param>
+    /// <returns>The batch options produced by the operation.</returns>
     public BatchOptions SetMessageLimit(int limit)
     {
         MessageLimit = limit;
         return this;
     }
 
-    /// <summary>
-    /// Sets the number of batches which can be executed concurrently
-    /// </summary>
-    /// <param name="limit">The message limit</param>
+    /// <summary>Sets the number of batches which can be executed concurrently.</summary>
+    /// <param name="limit">The message limit.</param>
+    /// <returns>The batch options produced by the operation.</returns>
     public BatchOptions SetConcurrencyLimit(int limit)
     {
         ConcurrencyLimit = limit;
         return this;
     }
 
-    /// <summary>
-    /// Sets the maximum time to wait before delivering a partial batch
-    /// </summary>
-    /// <param name="limit">The message limit</param>
+    /// <summary>Sets the maximum time to wait before delivering a partial batch.</summary>
+    /// <param name="limit">The message limit.</param>
+    /// <returns>The batch options produced by the operation.</returns>
     public BatchOptions SetTimeLimit(TimeSpan limit)
     {
         TimeLimit = limit;
         return this;
     }
 
-    /// <summary>
-    /// Sets the starting point for the <see cref="TimeLimit" />
-    /// </summary>
-    /// <param name="timeLimitStart">The starting point</param>
+    /// <summary>Sets the starting point for the <see cref="TimeLimit" />.</summary>
+    /// <param name="timeLimitStart">The starting point.</param>
+    /// <returns>The batch options produced by the operation.</returns>
     public BatchOptions SetTimeLimitStart(BatchTimeLimitStart timeLimitStart)
     {
         TimeLimitStart = timeLimitStart;
         return this;
     }
 
-    /// <summary>
-    /// Sets the maximum time to wait before delivering a partial batch
-    /// </summary>
+    /// <summary>Sets the maximum time to wait before delivering a partial batch.</summary>
+    /// <param name="ms">The ms.</param>
+    /// <param name="s">The <c>s</c> value.</param>
+    /// <param name="m">The <c>m</c> value.</param>
+    /// <param name="h">The <c>h</c> value.</param>
+    /// <param name="d">The <c>d</c> value.</param>
+    /// <returns>The batch options produced by the operation.</returns>
     public BatchOptions SetTimeLimit(int? ms = default, int? s = default, int? m = default, int? h = default, int? d = default)
     {
         var timeSpan = new TimeSpan(d ?? 0, h ?? 0, m ?? 0, s ?? 0, ms ?? 0);
@@ -163,13 +144,11 @@ public sealed class BatchOptions :
         return this;
     }
 
-    /// <summary>
-    /// Performs the group by operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="provider">The service provider.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Groups values using the supplied key selector.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <returns>The batch options produced by the operation.</returns>
     public BatchOptions GroupBy<T, TProperty>(Func<ConsumeContext<T>, TProperty?> provider)
         where T : class
         where TProperty : struct
@@ -179,13 +158,11 @@ public sealed class BatchOptions :
         return this;
     }
 
-    /// <summary>
-    /// Performs the group by operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TProperty">The t property type.</typeparam>
-    /// <param name="provider">The service provider.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Groups values using the supplied key selector.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <returns>The batch options produced by the operation.</returns>
     public BatchOptions GroupBy<T, TProperty>(Func<ConsumeContext<T>, TProperty> provider)
         where T : class
         where TProperty : class

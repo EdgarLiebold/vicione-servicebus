@@ -2,14 +2,10 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Defines the contract for topic subscription handle.
-/// </summary>
+/// <summary>Identifies a topic-to-topic forwarding relationship stored in a broker-topology builder.</summary>
 public interface TopicSubscriptionHandle :
     EntityHandle
 {
-    /// <summary>
-    /// Gets the topic subscription value.
-    /// </summary>
+    /// <summary>Gets the forwarding relationship represented by the handle.</summary>
     TopicSubscription TopicSubscription { get; }
 }

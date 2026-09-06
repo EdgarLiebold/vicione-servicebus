@@ -1,13 +1,9 @@
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Defines the contract for stop supervisor context.
-/// </summary>
+/// <summary>Exposes state for stop supervisor operations.</summary>
 public interface StopSupervisorContext :
     StopContext
 {
-    /// <summary>
-    /// The agents available when the Stop was initiated
-    /// </summary>
+    /// <summary>The agents available when the Stop was initiated.</summary>
     IAgent[] Agents { get; }
 }

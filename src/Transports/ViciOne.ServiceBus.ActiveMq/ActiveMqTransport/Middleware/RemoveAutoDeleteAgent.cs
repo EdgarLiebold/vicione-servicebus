@@ -8,20 +8,16 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.ActiveMq.Middleware;
 
-/// <summary>
-/// Provides a remove auto delete agent implementation.
-/// </summary>
+/// <summary>Deletes auto-delete OpenWire topics and queues when an endpoint stops.</summary>
 public sealed class RemoveAutoDeleteAgent :
     Agent
 {
     readonly BrokerTopology _brokerTopology;
     readonly IConnectionContextSupervisor _connectionContextSupervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionContextSupervisor">The connection context supervisor value.</param>
-    /// <param name="brokerTopology">The broker topology value.</param>
+    /// <summary>Creates a ready cleanup agent for a deployed broker topology.</summary>
+    /// <param name="connectionContextSupervisor">The supervisor used to acquire the current connection.</param>
+    /// <param name="brokerTopology">The topology whose auto-delete entities are removed.</param>
     public RemoveAutoDeleteAgent(IConnectionContextSupervisor connectionContextSupervisor, BrokerTopology brokerTopology)
     {
         _brokerTopology = brokerTopology;
@@ -30,11 +26,9 @@ public sealed class RemoveAutoDeleteAgent :
         SetReady();
     }
 
-    /// <summary>
-    /// Stops agent.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deletes each unique auto-delete entity and then stops the base agent.</summary>
+    /// <param name="context">The agent stop context and cancellation token.</param>
+    /// <returns>A task that completes after cleanup and base-agent shutdown.</returns>
     protected override async Task StopAgentAsync(StopContext context)
     {
         var failures = new ActiveMqCleanupFailures();

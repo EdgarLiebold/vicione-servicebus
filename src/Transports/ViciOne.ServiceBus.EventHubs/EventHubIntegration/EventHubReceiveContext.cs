@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides an event hub receive context implementation.
-/// </summary>
+/// <summary>Adapts an Azure SDK event and partition context to the service-bus receive context.</summary>
 public sealed class EventHubReceiveContext :
     BaseReceiveContext,
     EventHubConsumeContext
@@ -19,11 +17,9 @@ public sealed class EventHubReceiveContext :
     readonly ProcessEventArgs _eventArgs;
     readonly EventData _eventData;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="eventArgs">The event args value.</param>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
+    /// <summary>Creates a receive context for one processed Event Hubs event.</summary>
+    /// <param name="eventArgs">The Azure SDK event-processing arguments.</param>
+    /// <param name="receiveEndpointContext">The owning receive-endpoint context.</param>
     public EventHubReceiveContext(ProcessEventArgs eventArgs, ReceiveEndpointContext receiveEndpointContext)
         : base(false, receiveEndpointContext)
     {
@@ -33,50 +29,30 @@ public sealed class EventHubReceiveContext :
         _body = new MemoryMessageBody(eventArgs.Data.Body);
     }
 
-    /// <summary>
-    /// Gets the header provider value.
-    /// </summary>
+    /// <summary>Gets a provider that exposes Event Hubs identifiers and application properties as message headers.</summary>
     protected override IHeaderProvider HeaderProvider => new EventHubHeaderProvider(_eventData);
 
-    /// <summary>
-    /// Gets the body value.
-    /// </summary>
+    /// <summary>Gets the event body after applying configured inbound message limits.</summary>
     public override MessageBody Body => EnforceMessageLimits(_body);
 
-    /// <summary>
-    /// Gets the enqueued time value.
-    /// </summary>
+    /// <summary>Gets the UTC instant at which Event Hubs accepted the event.</summary>
     public DateTimeOffset EnqueuedTime => _eventData.EnqueuedTime;
 
-    /// <summary>
-    /// Gets the offset string value.
-    /// </summary>
+    /// <summary>Gets the event's provider-defined partition offset.</summary>
     public string OffsetString => _eventData.OffsetString;
-    /// <summary>
-    /// Gets the partition id value.
-    /// </summary>
+    /// <summary>Gets the identifier of the partition that supplied the event.</summary>
     public string PartitionId => _eventArgs.Partition.PartitionId;
-    /// <summary>
-    /// Gets the partition key value.
-    /// </summary>
+    /// <summary>Gets the partition key attached to the event.</summary>
     public string PartitionKey => _eventData.PartitionKey;
-    /// <summary>
-    /// Gets the properties value.
-    /// </summary>
+    /// <summary>Gets the event's application properties.</summary>
     public IDictionary<string, object> Properties => _eventData.Properties;
-    /// <summary>
-    /// Gets the sequence number value.
-    /// </summary>
+    /// <summary>Gets the event's sequence number within its partition.</summary>
     public long SequenceNumber => _eventData.SequenceNumber;
-    /// <summary>
-    /// Gets the system properties value.
-    /// </summary>
+    /// <summary>Gets the event's system-managed Event Hubs properties.</summary>
     public IReadOnlyDictionary<string, object> SystemProperties => _eventData.SystemProperties;
 
-    /// <summary>
-    /// Gets content type.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Parses the provider content type or falls back to base receive-context detection.</summary>
+    /// <returns>The content type used to deserialize the event body.</returns>
     protected override ContentType GetContentType()
     {
         ContentType? contentType = default;

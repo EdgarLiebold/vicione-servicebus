@@ -8,10 +8,8 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an execute context retry pipe specification implementation.
-/// </summary>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Describes requirements for execute context retry pipe.</summary>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class ExecuteContextRetryPipeSpecification<TArguments> :
     ExceptionSpecification,
     IRetryConfigurator,
@@ -22,9 +20,7 @@ public class ExecuteContextRetryPipeSpecification<TArguments> :
     readonly RetryObservable _observers;
     RetryPolicyFactory _policyFactory = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public ExecuteContextRetryPipeSpecification(CancellationToken cancellationToken = default)
     {
@@ -32,10 +28,8 @@ public class ExecuteContextRetryPipeSpecification<TArguments> :
         _observers = new RetryObservable();
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPipeBuilder<ExecuteContext<TArguments>> builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -50,20 +44,16 @@ public class ExecuteContextRetryPipeSpecification<TArguments> :
         builder.AddFilter(new RetryFilter<ExecuteContext<TArguments>>(policy, _observers));
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_policyFactory == null)
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
-    /// <summary>
-    /// Sets retry policy.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Sets retry policy.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));

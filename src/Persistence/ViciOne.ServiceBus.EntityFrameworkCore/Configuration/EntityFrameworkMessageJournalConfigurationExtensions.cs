@@ -5,14 +5,17 @@ using ViciOne.ServiceBus.MessageJournal;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides extension methods for entity framework message journal configuration.
-/// </summary>
+/// <summary>Configures the bounded message journal to persist entries through EF Core.</summary>
 public static class EntityFrameworkMessageJournalConfigurationExtensions
 {
-    /// <summary>
-    /// Selects the Entity Framework journal store inside <c>bus.UseMessageJournal(...)</c> without opening a database connection.
-    /// </summary>
+    /// <summary>Selects the Entity Framework journal store inside <c>bus.UseMessageJournal(...)</c> without opening a database connection.</summary>
+    /// <typeparam name="TDbContext">The db context type.</typeparam>
+    /// <param name="configurator">The journal provider selector on which the EF Core store is selected.</param>
+    /// <param name="contextOptions">The preconfigured EF Core options used to create journal contexts.</param>
+    /// <param name="tableName">The relational table that stores journal entries.</param>
+    /// <param name="storeLimits">The entry-size, count, and retention bounds enforced by the store.</param>
+    /// <param name="schemaName">The relational schema, or <see langword="null"/> to use the provider default.</param>
+    /// <returns>The same journal configurator.</returns>
     public static IMessageJournalConfigurator UseEntityFramework<TDbContext>(
         this IMessageJournalConfigurator configurator,
         DbContextOptions<TDbContext> contextOptions,
@@ -33,6 +36,14 @@ public static class EntityFrameworkMessageJournalConfigurationExtensions
     /// Explicitly enables the bounded relational MessageJournal provider. Database schema creation
     /// remains an application/deployment responsibility and never occurs as a configuration side effect.
     /// </summary>
+    /// <param name="configurator">The bus journal configuration on which the EF Core store is enabled.</param>
+    /// <param name="contextOptions">The preconfigured EF Core options used to create journal contexts.</param>
+    /// <param name="tableName">The relational table that stores journal entries.</param>
+    /// <param name="policy">The policy that decides which message observations are recorded.</param>
+    /// <param name="storeLimits">The entry-size, count, and retention bounds enforced by the store.</param>
+    /// <param name="journalOptions">The sanitization and content-capture settings for each entry.</param>
+    /// <param name="schemaName">The relational schema, or <see langword="null"/> to use the provider default.</param>
+    /// <returns>A handle that disconnects the journal observer.</returns>
     public static ConnectHandle UseEntityFrameworkCoreMessageJournal(
         this IBusFactoryConfigurator configurator,
         DbContextOptions contextOptions,

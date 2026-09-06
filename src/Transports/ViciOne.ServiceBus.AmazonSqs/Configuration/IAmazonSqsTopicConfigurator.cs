@@ -2,41 +2,26 @@ using System;
 using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
-/// <summary>
-/// Configures an exchange for AmazonSQS
-/// </summary>
+/// <summary>Configures an Amazon SNS topic used by the transport.</summary>
 public interface IAmazonSqsTopicConfigurator
 {
-    /// <summary>
-    /// Specify the queue should be durable (survives broker restart) or in-memory
-    /// </summary>
-    /// <value>True for a durable queue, False for an in-memory queue</value>
+    /// <summary>Sets whether the topic is retained when its endpoint stops.</summary>
     bool Durable { set; }
 
-    /// <summary>
-    /// Specify that the queue (and the exchange of the same name) should be created as auto-delete
-    /// </summary>
+    /// <summary>Sets whether the transport deletes the topic when its endpoint stops.</summary>
     bool AutoDelete { set; }
 
-    /// <summary>
-    /// Additional <see href="https://docs.aws.amazon.com/sns/latest/api/API_SetTopicAttributes.html">attributes</see> for the topic.
-    /// </summary>
+    /// <summary>Gets optional <see href="https://docs.aws.amazon.com/sns/latest/api/API_SetTopicAttributes.html">Amazon SNS topic attributes</see>.</summary>
     IDictionary<string, object> TopicAttributes { get; }
 
-    /// <summary>
-    /// Additional <see href="https://docs.aws.amazon.com/sns/latest/api/API_SetSubscriptionAttributes.html">attributes</see> for the topic's subscription.
-    /// </summary>
+    /// <summary>Gets optional default <see href="https://docs.aws.amazon.com/sns/latest/api/API_SetSubscriptionAttributes.html">Amazon SNS subscription attributes</see>.</summary>
     IDictionary<string, object> TopicSubscriptionAttributes { get; }
 
-    /// <summary>
-    /// Collection of tags to assign to topic when created.
-    /// </summary>
+    /// <summary>Gets the tags assigned when the topic is created.</summary>
     IDictionary<string, string> TopicTags { get; }
 
-    /// <summary>
-    /// Gets endpoint address.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the topic endpoint address relative to an Amazon SQS host.</summary>
+    /// <param name="hostAddress">The Amazon SQS host address.</param>
+    /// <returns>The Amazon SNS topic endpoint address.</returns>
     AmazonSqsEndpointAddress GetEndpointAddress(Uri hostAddress);
 }

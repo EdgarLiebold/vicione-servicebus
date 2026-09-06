@@ -4,14 +4,10 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for health check options.
-/// </summary>
+/// <summary>Defines configuration options for health check.</summary>
 public interface IHealthCheckOptions
 {
-    /// <summary>
-    /// Set the health check name, overrides the default bus type name
-    /// </summary>
+    /// <summary>Set the health check name, overrides the default bus type name.</summary>
     public string? Name { get; }
 
     /// <summary>
@@ -20,8 +16,6 @@ public interface IHealthCheckOptions
     /// </summary>
     public HealthStatus? MinimalFailureStatus { get; }
 
-    /// <summary>
-    /// A list of tags that can be used to filter sets of health checks
-    /// </summary>
+    /// <summary>A list of tags that can be used to filter sets of health checks.</summary>
     public HashSet<string> Tags { get; }
 }

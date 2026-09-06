@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 
-/// <summary>
-/// Provides a list property converter implementation.
-/// </summary>
-/// <typeparam name="TElement">The t element type.</typeparam>
+/// <summary>Converts list property values.</summary>
+/// <typeparam name="TElement">The element type.</typeparam>
 public class ListPropertyConverter<TElement> :
     IPropertyConverter<List<TElement>, IEnumerable<TElement>>,
     IPropertyConverter<IList<TElement>, IEnumerable<TElement>>,
@@ -69,14 +67,12 @@ public class ListPropertyConverter<TElement> :
         }
     }
 
-    /// <summary>
-    /// Performs the convert operation.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="input">The input value.</param>
+    /// <summary>Converts the supplied value.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="input">The input.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the converted value.</returns>
     public Task<List<TElement>?> ConvertAsync<TMessage>(InitializeContext<TMessage> context, IEnumerable<TElement>? input, CancellationToken cancellationToken = default)
         where TMessage : class
     {
@@ -93,11 +89,9 @@ public class ListPropertyConverter<TElement> :
 }
 
 
-/// <summary>
-/// Provides a list property converter implementation.
-/// </summary>
-/// <typeparam name="TElement">The t element type.</typeparam>
-/// <typeparam name="TInputElement">The t input element type.</typeparam>
+/// <summary>Converts list property values.</summary>
+/// <typeparam name="TElement">The element type.</typeparam>
+/// <typeparam name="TInputElement">The input element type.</typeparam>
 public class ListPropertyConverter<TElement, TInputElement> :
     IPropertyConverter<List<TElement>, IEnumerable<TInputElement>>,
     IPropertyConverter<IList<TElement>, IEnumerable<TInputElement>>,
@@ -107,23 +101,19 @@ public class ListPropertyConverter<TElement, TInputElement> :
 {
     readonly IPropertyConverter<TElement, TInputElement> _converter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="converter">The converter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="converter">The converter.</param>
     public ListPropertyConverter(IPropertyConverter<TElement, TInputElement> converter)
     {
         _converter = converter;
     }
 
-    /// <summary>
-    /// Performs the convert operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="elements">The elements value.</param>
+    /// <summary>Converts the supplied value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="elements">The elements.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the converted value.</returns>
     public Task<ICollection<TElement>?> ConvertAsync<T>(InitializeContext<T> context, IEnumerable<TInputElement>? elements, CancellationToken cancellationToken = default)
         where T : class
     {

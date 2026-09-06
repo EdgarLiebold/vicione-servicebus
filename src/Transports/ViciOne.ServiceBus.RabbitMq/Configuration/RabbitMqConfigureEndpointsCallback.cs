@@ -1,10 +1,7 @@
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Represents the method that handles rabbit mq configure endpoints callback.
-/// </summary>
-/// <param name="context">The operation context.</param>
-/// <param name="queueName">The queue name value.</param>
-/// <param name="configurator">The configurator value.</param>
-/// <returns>The result of the operation.</returns>
+/// <summary>Configures a RabbitMQ receive endpoint after registrations have been applied.</summary>
+/// <param name="context">The registration context for resolving endpoint dependencies.</param>
+/// <param name="queueName">The endpoint queue name, when the endpoint has one.</param>
+/// <param name="configurator">The RabbitMQ receive-endpoint configurator.</param>
 public delegate void RabbitMqConfigureEndpointsCallback(IRegistrationContext context, string? queueName, IRabbitMqReceiveEndpointConfigurator configurator);

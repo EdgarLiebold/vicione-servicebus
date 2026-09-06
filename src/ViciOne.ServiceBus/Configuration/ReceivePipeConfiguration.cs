@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a receive pipe configuration implementation.
-/// </summary>
+/// <summary>Stores and validates receive pipe configuration.</summary>
 public class ReceivePipeConfiguration :
     IReceivePipeConfiguration,
     IReceivePipeConfigurator,
@@ -17,9 +15,7 @@ public class ReceivePipeConfiguration :
     readonly IBuildPipeConfigurator<ReceiveContext> _configurator;
     bool _created;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public ReceivePipeConfiguration()
     {
         _configurator = new PipeConfigurator<ReceiveContext>();
@@ -27,32 +23,22 @@ public class ReceivePipeConfiguration :
         ErrorConfigurator = new PipeConfigurator<ExceptionReceiveContext>();
     }
 
-    /// <summary>
-    /// Gets the specification value.
-    /// </summary>
+    /// <summary>Gets the specification.</summary>
     public ISpecification Specification => _configurator;
 
-    /// <summary>
-    /// Gets the configurator value.
-    /// </summary>
+    /// <summary>Gets the configurator.</summary>
     public IReceivePipeConfigurator Configurator => this;
 
-    /// <summary>
-    /// Gets the dead letter configurator value.
-    /// </summary>
+    /// <summary>Gets the dead letter configurator.</summary>
     public IBuildPipeConfigurator<ReceiveContext> DeadLetterConfigurator { get; }
 
-    /// <summary>
-    /// Gets the error configurator value.
-    /// </summary>
+    /// <summary>Gets the error configurator.</summary>
     public IBuildPipeConfigurator<ExceptionReceiveContext> ErrorConfigurator { get; }
 
-    /// <summary>
-    /// Creates pipe.
-    /// </summary>
-    /// <param name="consumePipe">The consume pipe value.</param>
-    /// <param name="serializers">The serializers value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates pipe.</summary>
+    /// <param name="consumePipe">The consume pipe.</param>
+    /// <param name="serializers">The serializers.</param>
+    /// <returns>The created pipe.</returns>
     public IReceivePipe CreatePipe(IConsumePipe consumePipe, ISerialization serializers)
     {
         if (_created)
@@ -71,19 +57,15 @@ public class ReceivePipeConfiguration :
         return new ReceivePipe(_configurator.Build(), consumePipe);
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<ReceiveContext> specification)
     {
         _configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return _configurator.Validate()

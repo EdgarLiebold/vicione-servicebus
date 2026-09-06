@@ -5,20 +5,16 @@ using ViciOne.ServiceBus.EventHubs.Checkpoints;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides a partition checkpoint data implementation.
-/// </summary>
+/// <summary>Owns the pending-event queue and batch checkpointer for one Event Hubs partition.</summary>
 public class PartitionCheckpointData
 {
     readonly CancellationTokenSource _cancellationTokenSource;
     readonly ICheckpointer _checkpointer;
     readonly PendingConfirmationCollection _pending;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="pending">The pending value.</param>
+    /// <summary>Creates partition checkpoint state using the endpoint's batching settings.</summary>
+    /// <param name="settings">The endpoint receive and checkpoint settings.</param>
+    /// <param name="pending">The collection shared for tracking unconfirmed events.</param>
     public PartitionCheckpointData(ReceiveSettings settings, PendingConfirmationCollection pending)
     {
         _cancellationTokenSource = new CancellationTokenSource();
@@ -26,27 +22,25 @@ public class PartitionCheckpointData
         _pending = pending;
     }
 
-    /// <summary>
-    /// Performs the pending operation.
-    /// </summary>
-    /// <param name="eventArgs">The event args value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers an event as unconfirmed and queues it for ordered checkpoint processing.</summary>
+    /// <param name="eventArgs">The Azure SDK event-processing arguments.</param>
+    /// <param name="cancellationToken">Cancels registration or queue admission.</param>
+    /// <returns>A task that completes when the event is queued.</returns>
     public Task PendingAsync(ProcessEventArgs eventArgs, CancellationToken cancellationToken = default)
     {
         var pendingConfirmation = _pending.Add(eventArgs);
         return _checkpointer.PendingAsync(pendingConfirmation, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the close operation.
-    /// </summary>
-    /// <param name="args">The args value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Stops this partition's checkpoint worker, draining on shutdown and canceling it for other close reasons.</summary>
+    /// <param name="args">The Azure SDK partition-closing arguments.</param>
+    /// <param name="cancellationToken">Cancels closure before it begins.</param>
+    /// <returns>A task that completes after the checkpoint worker stops.</returns>
     public async Task CloseAsync(PartitionClosingEventArgs args, CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); if (args.Reason != ProcessingStoppedReason.Shutdown)
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (args.Reason != ProcessingStoppedReason.Shutdown)
             _cancellationTokenSource.Cancel();
 
         await _checkpointer.DisposeAsync().ConfigureAwait(false);

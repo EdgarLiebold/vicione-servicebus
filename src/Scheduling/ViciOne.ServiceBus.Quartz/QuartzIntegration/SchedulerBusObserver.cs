@@ -4,9 +4,7 @@ using Quartz;
 
 namespace ViciOne.ServiceBus.Quartz;
 
-/// <summary>
-/// Used to start and stop an in-memory scheduler using Quartz
-/// </summary>
+/// <summary>Used to start and stop an in-memory scheduler using Quartz.</summary>
 internal sealed class SchedulerBusObserver :
     IBusObserver
 {
@@ -14,9 +12,7 @@ internal sealed class SchedulerBusObserver :
     readonly Uri _schedulerEndpointAddress;
     IScheduler? _scheduler;
 
-    /// <summary>
-    /// Creates the bus observer to initialize the Quartz scheduler.
-    /// </summary>
+    /// <summary>Creates the bus observer to initialize the Quartz scheduler.</summary>
     /// <param name="settings">Validated immutable scheduler settings.</param>
     public SchedulerBusObserver(QuartzSchedulerSettings settings)
     {

@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>
-/// Connects a handler to the inbound pipe of the receive endpoint
-/// </summary>
-/// <typeparam name="TResponse"></typeparam>
+/// <summary>Connects a handler to the inbound pipe of the receive endpoint.</summary>
+/// <typeparam name="TResponse">The response type.</typeparam>
 public class ResponseHandlerConfigurator<TResponse> :
     IHandlerConfigurator<TResponse>
     where TResponse : class
@@ -19,12 +17,10 @@ public class ResponseHandlerConfigurator<TResponse> :
     readonly Task _requestTask;
     readonly TaskScheduler _taskScheduler;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="taskScheduler">The task scheduler value.</param>
-    /// <param name="handler">The handler value.</param>
-    /// <param name="requestTask">The request task value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="taskScheduler">The task scheduler.</param>
+    /// <param name="handler">The handler.</param>
+    /// <param name="requestTask">The request task.</param>
     public ResponseHandlerConfigurator(TaskScheduler taskScheduler, MessageHandler<TResponse>? handler, Task requestTask)
     {
         _taskScheduler = taskScheduler;
@@ -35,31 +31,25 @@ public class ResponseHandlerConfigurator<TResponse> :
         _completed = TaskCompletionSources.Create<ConsumeContext<TResponse>>();
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumeContext<TResponse>> specification)
     {
         _pipeConfigurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Connects handler configuration observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects handler configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectHandlerConfigurationObserver(IHandlerConfigurationObserver observer)
     {
         return new EmptyConnectHandle();
     }
 
-    /// <summary>
-    /// Performs the connect operation.
-    /// </summary>
-    /// <param name="connector">The connector value.</param>
-    /// <param name="requestId">The request id value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects the configured observer or endpoint.</summary>
+    /// <param name="connector">The connector.</param>
+    /// <param name="requestId">The request id.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public HandlerConnectHandle<TResponse> Connect(IRequestPipeConnector connector, Guid requestId)
     {
         MessageHandler<TResponse> messageHandler = _handler != null ? AsyncMessageHandlerAsync : MessageHandlerAsync;

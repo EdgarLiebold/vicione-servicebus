@@ -6,80 +6,55 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// The host settings used to configure the service bus connection
-/// </summary>
+/// <summary>Describes an Azure Service Bus namespace connection and its retry policy.</summary>
 public interface ServiceBusHostSettings
 {
-    /// <summary>
-    /// The address of the service bus namespace (and accompanying service scope)
-    /// </summary>
+    /// <summary>Gets the namespace address and optional entity-path scope.</summary>
     Uri ServiceUri { get; }
 
-    /// <summary>
-    /// A custom client that will be used instead of one defined by the settings provided here.
-    /// </summary>
+    /// <summary>Gets the caller-supplied client used instead of constructing one from these settings.</summary>
     ServiceBusClient? ServiceBusClient { get; }
 
-    /// <summary>
-    /// A custom administration client that will be used instead of one defined by the settings provided here.
-    /// </summary>
+    /// <summary>Gets the caller-supplied administration client used instead of constructing one from these settings.</summary>
     ServiceBusAdministrationClient? ServiceBusAdministrationClient { get; }
 
-    /// <summary>
-    /// The named key to use to connect to the Service Bus
-    /// </summary>
+    /// <summary>Gets the Azure shared access key credential.</summary>
     /// <remarks>
     /// This property cannot be used if <see cref="SasCredential" /> or <see cref="TokenCredential" />
     /// is being used.
     /// </remarks>
     AzureNamedKeyCredential? NamedKeyCredential { get; }
 
-    /// <summary>
-    /// The shared access signature to use to connect to the Service Bus
-    /// </summary>
+    /// <summary>Gets the precomputed shared access signature.</summary>
     /// <remarks>
     /// This property cannot be used if <see cref="NamedKeyCredential" /> or <see cref="TokenCredential" />
     /// is being used.
     /// </remarks>
     AzureSasCredential? SasCredential { get; }
 
-    /// <summary>
-    /// The token credential to use to connect to the Service Bus
-    /// </summary>
+    /// <summary>Gets the Azure token credential.</summary>
     /// <remarks>
     /// This property cannot be used if <see cref="SasCredential" /> or <see cref="NamedKeyCredential" />
     /// is being used.
     /// </remarks>
     TokenCredential? TokenCredential { get; }
 
-    /// <summary>
-    /// The connection string to use to connect to the Service Bus
-    /// </summary>
+    /// <summary>Gets the Azure Service Bus connection string.</summary>
     /// <remarks>
-    /// If a credential is not part of the connection string, one of the other authentication
-    /// methods needs to be used. <see cref="NamedKeyCredential" /> or <see cref="SasCredential" />
-    /// or <see cref="TokenCredential" />
+    /// If the connection string contains no credential, configure exactly one of
+    /// <see cref="NamedKeyCredential" />, <see cref="SasCredential" />, or <see cref="TokenCredential" />.
     /// </remarks>
     string? ConnectionString { get; }
 
-    /// <summary>
-    /// The minimum back off interval for the exponential retry policy
-    /// </summary>
+    /// <summary>Gets the minimum delay used by the exponential retry policy.</summary>
     TimeSpan RetryMinBackoff { get; }
 
-    /// <summary>
-    /// The maximum back off interval for the exponential retry policy
-    /// </summary>
+    /// <summary>Gets the maximum delay used by the exponential retry policy.</summary>
     TimeSpan RetryMaxBackoff { get; }
 
-    /// <summary>
-    /// The retry limit for service bus operations
-    /// </summary>
+    /// <summary>Gets the maximum number of retries for an Azure SDK operation.</summary>
     int RetryLimit { get; }
 
-    /// <summary>
-    /// The type of transport to use AMQP TCP or AMQP Websockets
-    /// </summary>
+    /// <summary>Gets whether the Azure SDK uses AMQP over TCP or WebSockets.</summary>
     ServiceBusTransportType TransportType { get; }
 }

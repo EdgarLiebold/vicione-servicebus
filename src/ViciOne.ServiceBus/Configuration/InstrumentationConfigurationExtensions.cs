@@ -3,9 +3,7 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for instrumentation configuration.
-/// </summary>
+/// <summary>Provides extension methods for instrumentation configuration.</summary>
 public static class InstrumentationConfigurationExtensions
 {
     /// <summary>
@@ -13,6 +11,7 @@ public static class InstrumentationConfigurationExtensions
     /// configurations that do not use dependency injection. Applications choose their exporter
     /// through OpenTelemetry; the service bus exposes one stable, bounded telemetry schema.
     /// </summary>
+    /// <param name="configurator">The configurator to update.</param>
     public static void UseInstrumentation(this IBusFactoryConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);

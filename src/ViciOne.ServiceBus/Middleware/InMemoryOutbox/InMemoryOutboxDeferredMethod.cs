@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
-/// <summary>
-/// Provides an in memory outbox deferred method implementation.
-/// </summary>
+/// <summary>Invokes the registered method for in memory outbox deferred.</summary>
 public class InMemoryOutboxDeferredMethod :
     IDisposable
 {
@@ -14,20 +12,16 @@ public class InMemoryOutboxDeferredMethod :
     ExecutionContext? _executionContext;
     int _claimed;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="executionContext">The execution context value.</param>
-    /// <param name="method">The method value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="executionContext">The execution context.</param>
+    /// <param name="method">The method.</param>
     public InMemoryOutboxDeferredMethod(ExecutionContext? executionContext, Func<Task> method)
     {
         _executionContext = executionContext;
         _method = method;
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         if (Interlocked.Exchange(ref _claimed, 1) != 0)
@@ -36,11 +30,9 @@ public class InMemoryOutboxDeferredMethod :
         Interlocked.Exchange(ref _executionContext, null)?.Dispose();
     }
 
-    /// <summary>
-    /// Performs the run operation.
-    /// </summary>
+    /// <summary>Runs the configured operation.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task RunAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); if (Interlocked.Exchange(ref _claimed, 1) != 0)

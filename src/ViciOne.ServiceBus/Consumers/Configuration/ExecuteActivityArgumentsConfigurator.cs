@@ -1,10 +1,8 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an execute activity arguments configurator implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Configures execute activity arguments.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class ExecuteActivityArgumentsConfigurator<TActivity, TArguments> :
     IExecuteActivityArgumentsConfigurator<TArguments>
     where TActivity : class, IExecuteActivity<TArguments>
@@ -12,19 +10,15 @@ public class ExecuteActivityArgumentsConfigurator<TActivity, TArguments> :
 {
     readonly IPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> _configurator;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public ExecuteActivityArgumentsConfigurator(IPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> configurator)
     {
         _configurator = configurator;
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<ExecuteActivityContext<TArguments>> specification)
     {
         _configurator.AddPipeSpecification(specification);

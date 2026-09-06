@@ -2,16 +2,13 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>
-/// Specify the message type name for this message type
-/// </summary>
+/// <summary>Specify the message type name for this message type.</summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 public class MessageUrnAttribute :
     Attribute
 {
-    /// <summary>
-    /// </summary>
-    /// <param name="urn">The urn value to use for this message type.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="urn">The urn.</param>
     /// <param name="useDefaultPrefix">Prefixes with default scheme and namespace if true.</param>
     public MessageUrnAttribute(string urn, bool useDefaultPrefix = true)
     {
@@ -27,9 +24,7 @@ public class MessageUrnAttribute :
         Urn = FormatUrn(urn, useDefaultPrefix);
     }
 
-    /// <summary>
-    /// Gets the urn value.
-    /// </summary>
+    /// <summary>Gets the urn.</summary>
     public Uri Urn { get; }
 
     static Uri FormatUrn(string urn, bool useDefaultPrefix)

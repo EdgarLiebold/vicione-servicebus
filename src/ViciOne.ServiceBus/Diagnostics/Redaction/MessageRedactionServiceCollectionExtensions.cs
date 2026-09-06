@@ -8,6 +8,8 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class MessageRedactionServiceCollectionExtensions
 {
     /// <summary>Adds the conservative ServiceBus diagnostic redactor.</summary>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddViciOneMessageDiagnosticRedaction(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);

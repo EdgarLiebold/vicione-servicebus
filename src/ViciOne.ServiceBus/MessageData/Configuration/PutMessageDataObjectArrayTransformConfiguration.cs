@@ -7,12 +7,10 @@ using ViciOne.ServiceBus.Initializers.PropertyProviders;
 
 namespace ViciOne.ServiceBus.MessageData.Configuration;
 
-/// <summary>
-/// Provides a put message data object array transform configuration implementation.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
-/// <typeparam name="TProperty">The t property type.</typeparam>
-/// <typeparam name="TElement">The t element type.</typeparam>
+/// <summary>Stores and validates put message data object array transform configuration.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TProperty">The property type.</typeparam>
+/// <typeparam name="TElement">The element type.</typeparam>
 public class PutMessageDataObjectArrayTransformConfiguration<TInput, TProperty, TElement> :
     IMessageDataTransformConfiguration<TInput>
     where TInput : class
@@ -21,13 +19,11 @@ public class PutMessageDataObjectArrayTransformConfiguration<TInput, TProperty, 
     readonly PropertyInfo _property;
     readonly PutMessageDataTransformSpecification<TElement> _transformConfigurator;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="policy">The policy value.</param>
-    /// <param name="knownTypes">The known types value.</param>
-    /// <param name="property">The property value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="repository">The repository.</param>
+    /// <param name="policy">The policy.</param>
+    /// <param name="knownTypes">The known types.</param>
+    /// <param name="property">The property.</param>
     public PutMessageDataObjectArrayTransformConfiguration(IMessageDataRepository repository, MessageDataPolicy policy, IEnumerable<Type> knownTypes,
         PropertyInfo property)
     {
@@ -36,10 +32,8 @@ public class PutMessageDataObjectArrayTransformConfiguration<TInput, TProperty, 
         _transformConfigurator = new PutMessageDataTransformSpecification<TElement>(repository, policy, knownTypes);
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public void Apply(ITransformConfigurator<TInput> configurator)
     {
         if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TElement, TElement>? converter))

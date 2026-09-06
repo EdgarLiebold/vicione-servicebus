@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a system text json raw message serializer factory implementation.
-/// </summary>
+/// <summary>Creates system text json raw message serializer instances.</summary>
 public class SystemTextJsonRawMessageSerializerFactory :
     ISerializerFactory,
     IJsonSerializerFactory
@@ -15,10 +13,8 @@ public class SystemTextJsonRawMessageSerializerFactory :
     readonly RawSerializerOptions _rawOptions;
     readonly Lazy<SystemTextJsonRawMessageSerializer>? _serializer;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="options">The options that control the operation.</param>
     public SystemTextJsonRawMessageSerializerFactory(RawSerializerOptions options = RawSerializerOptions.Default)
     {
         _rawOptions = options;
@@ -30,24 +26,18 @@ public class SystemTextJsonRawMessageSerializerFactory :
         _serializer = new Lazy<SystemTextJsonRawMessageSerializer>(() => new SystemTextJsonRawMessageSerializer(options, rawOptions));
     }
 
-    /// <summary>
-    /// Gets the content type value.
-    /// </summary>
+    /// <summary>Gets the content type.</summary>
     public ContentType ContentType => SystemTextJsonRawMessageSerializer.JsonContentType;
 
-    /// <summary>
-    /// Creates serializer.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates serializer.</summary>
+    /// <returns>The created serializer.</returns>
     public IMessageSerializer CreateSerializer()
     {
         return GetSerializer();
     }
 
-    /// <summary>
-    /// Creates deserializer.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates deserializer.</summary>
+    /// <returns>The created deserializer.</returns>
     public IMessageDeserializer CreateDeserializer()
     {
         return GetSerializer();

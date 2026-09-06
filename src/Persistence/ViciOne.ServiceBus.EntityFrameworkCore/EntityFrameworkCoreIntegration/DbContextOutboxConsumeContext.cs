@@ -9,11 +9,9 @@ using ViciOne.ServiceBus.Middleware.Outbox;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides a db context outbox consume context implementation.
-/// </summary>
-/// <typeparam name="TDbContext">The t db context type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Coordinates one receive-side EF Core inbox transaction and its ordered outgoing messages.</summary>
+/// <typeparam name="TDbContext">The db context type.</typeparam>
+/// <typeparam name="TMessage">The consumed message contract.</typeparam>
 public class DbContextOutboxConsumeContext<TDbContext, TMessage> :
     OutboxConsumeContextProxy<TMessage>,
     DbTransactionContext
@@ -26,16 +24,14 @@ public class DbContextOutboxConsumeContext<TDbContext, TMessage> :
     readonly IDbContextTransaction _transaction;
     readonly EntityFrameworkOutboxWriteCoordinator _writeCoordinator;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="provider">The service provider.</param>
-    /// <param name="dbContext">The db context value.</param>
-    /// <param name="transaction">The transaction value.</param>
-    /// <param name="inboxState">The inbox state value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a context for an existing inbox row and database transaction.</summary>
+    /// <param name="context">The active message-consumption context.</param>
+    /// <param name="options">The receive-side outbox limits.</param>
+    /// <param name="provider">The scoped service provider exposed to the pipeline.</param>
+    /// <param name="dbContext">The DbContext that owns inbox and outbox changes.</param>
+    /// <param name="transaction">The transaction that fences this inbox row.</param>
+    /// <param name="inboxState">The tracked inbox row for the message and consumer.</param>
+    /// <param name="timeProvider">The source for consumed and delivered timestamps.</param>
     public DbContextOutboxConsumeContext(ConsumeContext<TMessage> context, OutboxConsumeOptions options, IServiceProvider provider, TDbContext dbContext,
         IDbContextTransaction transaction, InboxState inboxState, TimeProvider timeProvider)
         : base(context, options, provider)
@@ -48,43 +44,27 @@ public class DbContextOutboxConsumeContext<TDbContext, TMessage> :
         _writeCoordinator = new EntityFrameworkOutboxWriteCoordinator();
     }
 
-    /// <summary>
-    /// Gets the message id value.
-    /// </summary>
+    /// <summary>Gets the original message identifier recorded by the inbox.</summary>
     public override Guid? MessageId => _inboxState.MessageId;
 
-    /// <summary>
-    /// Gets or sets the continue processing value.
-    /// </summary>
+    /// <summary>Gets or sets whether the outbox pipeline must perform another delivery pass.</summary>
     public override bool ContinueProcessing { get; set; } = true;
 
-    /// <summary>
-    /// Gets the is message consumed value.
-    /// </summary>
+    /// <summary>Gets whether the inbox row records successful consumption.</summary>
     public override bool IsMessageConsumed => _inboxState.Consumed.HasValue;
-    /// <summary>
-    /// Gets the is outbox delivered value.
-    /// </summary>
+    /// <summary>Gets whether every outgoing message for this inbox row has been delivered.</summary>
     public override bool IsOutboxDelivered => _inboxState.Delivered.HasValue;
-    /// <summary>
-    /// Gets the receive count value.
-    /// </summary>
+    /// <summary>Gets the number of times the inbox row has been received.</summary>
     public override int ReceiveCount => _inboxState.ReceiveCount;
-    /// <summary>
-    /// Gets the last sequence number value.
-    /// </summary>
+    /// <summary>Gets the last outgoing sequence number recorded as delivered.</summary>
     public override long? LastSequenceNumber => _inboxState.LastSequenceNumber;
 
-    /// <summary>
-    /// Gets the transaction id value.
-    /// </summary>
+    /// <summary>Gets the identifier of the active EF Core transaction.</summary>
     public Guid TransactionId => _transaction.TransactionId;
 
-    /// <summary>
-    /// Sets consumed.
-    /// </summary>
+    /// <summary>Persists the current time as the inbox consumption timestamp.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task SetConsumedAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); _inboxState.Consumed = _timeProvider.GetUtcNow().UtcDateTime;
@@ -95,11 +75,9 @@ public class DbContextOutboxConsumeContext<TDbContext, TMessage> :
         LogContext.Debug?.Log("Outbox Consumed: {MessageId} {Consumed}", MessageId, _inboxState.Consumed);
     }
 
-    /// <summary>
-    /// Sets delivered.
-    /// </summary>
+    /// <summary>Persists the current time as the completed outbox-delivery timestamp.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task SetDeliveredAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); _inboxState.Delivered = _timeProvider.GetUtcNow().UtcDateTime;
@@ -110,11 +88,9 @@ public class DbContextOutboxConsumeContext<TDbContext, TMessage> :
         LogContext.Debug?.Log("Outbox Delivered: {MessageId} {Delivered}", MessageId, _inboxState.Delivered);
     }
 
-    /// <summary>
-    /// Performs the load outbox messages operation.
-    /// </summary>
+    /// <summary>Loads the next ordered batch of outgoing messages after the recorded sequence.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The ordered outgoing messages, bounded by the configured delivery limit plus one look-ahead row.</returns>
     public override async Task<List<OutboxMessageContext>> LoadOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var lastSequenceNumber = LastSequenceNumber ?? 0;
@@ -132,12 +108,10 @@ public class DbContextOutboxConsumeContext<TDbContext, TMessage> :
         return messages.Cast<OutboxMessageContext>().ToList();
     }
 
-    /// <summary>
-    /// Performs the notify outbox message delivered operation.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Advances the tracked last-delivered sequence to the supplied message.</summary>
+    /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override Task NotifyOutboxMessageDeliveredAsync(OutboxMessageContext message, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _inboxState.LastSequenceNumber = message.SequenceNumber;
@@ -146,11 +120,9 @@ public class DbContextOutboxConsumeContext<TDbContext, TMessage> :
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the remove outbox messages operation.
-    /// </summary>
+    /// <summary>Deletes every outgoing message associated with this inbox row.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var count = await _dbContext.Set<OutboxMessage>()
@@ -161,13 +133,11 @@ public class DbContextOutboxConsumeContext<TDbContext, TMessage> :
             LogContext.Debug?.Log("Outbox removed {Count} messages: {MessageId}", count, MessageId);
     }
 
-    /// <summary>
-    /// Adds send to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Stages an outgoing message in the same DbContext as the inbox row.</summary>
+    /// <typeparam name="T">The outgoing message contract.</typeparam>
+    /// <param name="context">The send context to serialize and persist.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {

@@ -9,21 +9,17 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.JobService;
 
-/// <summary>
-/// Provides extension methods for recurring job consumer.
-/// </summary>
+/// <summary>Provides extension methods for recurring job consumer.</summary>
 public static class RecurringJobConsumerExtensions
 {
-    /// <summary>
-    /// Add or update a recurring job
-    /// </summary>
-    /// <param name="client">An existing request client</param>
-    /// <param name="jobName"></param>
-    /// <param name="job"></param>
-    /// <param name="cronExpression">The scheduler cron expression</param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add or update a recurring job.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">An existing request client.</param>
+    /// <param name="jobName">The job name.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="cronExpression">The scheduler cron expression.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the add or update recurring job outcome.</returns>
     public static async Task<Guid> AddOrUpdateRecurringJobAsync<T>(this IRequestClient<SubmitJob<T>> client, string jobName, T job, string cronExpression,
         CancellationToken cancellationToken = default)
         where T : class
@@ -48,16 +44,14 @@ public static class RecurringJobConsumerExtensions
         return response.Message.JobId;
     }
 
-    /// <summary>
-    /// Add or update a recurring job
-    /// </summary>
-    /// <param name="client">An existing request client</param>
-    /// <param name="jobName"></param>
-    /// <param name="job"></param>
-    /// <param name="configure">Configure the optional recurring job schedule parameters</param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add or update a recurring job.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">An existing request client.</param>
+    /// <param name="jobName">The job name.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="configure">Configure the optional recurring job schedule parameters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the add or update recurring job outcome.</returns>
     public static Task<Guid> AddOrUpdateRecurringJobAsync<T>(this IRequestClient<SubmitJob<T>> client, string jobName, T job,
         Action<IRecurringJobScheduleConfigurator> configure, CancellationToken cancellationToken = default)
         where T : class
@@ -65,17 +59,15 @@ public static class RecurringJobConsumerExtensions
         return AddOrUpdateRecurringJobAsync(client, jobName, job, configure, null, cancellationToken);
     }
 
-    /// <summary>
-    /// Add or update a recurring job
-    /// </summary>
-    /// <param name="client">An existing request client</param>
-    /// <param name="jobName"></param>
-    /// <param name="job"></param>
-    /// <param name="configure">Configure the optional recurring job schedule parameters</param>
-    /// <param name="setJobProperties">Set job properties for the recurring job</param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add or update a recurring job.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">An existing request client.</param>
+    /// <param name="jobName">The job name.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="configure">Configure the optional recurring job schedule parameters.</param>
+    /// <param name="setJobProperties">Set job properties for the recurring job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the add or update recurring job outcome.</returns>
     public static async Task<Guid> AddOrUpdateRecurringJobAsync<T>(this IRequestClient<SubmitJob<T>> client, string jobName, T job,
         Action<IRecurringJobScheduleConfigurator> configure, Action<ISetPropertyCollection>? setJobProperties, CancellationToken cancellationToken = default)
         where T : class
@@ -111,16 +103,14 @@ public static class RecurringJobConsumerExtensions
         return response.Message.JobId;
     }
 
-    /// <summary>
-    /// Add or update a recurring job
-    /// </summary>
-    /// <param name="publishEndpoint">An available publish endpoint instance</param>
-    /// <param name="jobName"></param>
-    /// <param name="job"></param>
-    /// <param name="cronExpression">The scheduler cron expression</param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add or update a recurring job.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="publishEndpoint">An available publish endpoint instance.</param>
+    /// <param name="jobName">The job name.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="cronExpression">The scheduler cron expression.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the add or update recurring job outcome.</returns>
     public static async Task<Guid> AddOrUpdateRecurringJobAsync<T>(this IPublishEndpoint publishEndpoint, string jobName, T job, string cronExpression,
         CancellationToken cancellationToken = default)
         where T : class
@@ -145,16 +135,14 @@ public static class RecurringJobConsumerExtensions
         return jobId;
     }
 
-    /// <summary>
-    /// Add or update a recurring job
-    /// </summary>
-    /// <param name="publishEndpoint">An available publish endpoint instance</param>
-    /// <param name="jobName"></param>
-    /// <param name="job"></param>
-    /// <param name="configure">Configure the optional recurring job schedule parameters</param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add or update a recurring job.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="publishEndpoint">An available publish endpoint instance.</param>
+    /// <param name="jobName">The job name.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="configure">Configure the optional recurring job schedule parameters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the add or update recurring job outcome.</returns>
     public static Task<Guid> AddOrUpdateRecurringJobAsync<T>(this IPublishEndpoint publishEndpoint, string jobName, T job,
         Action<IRecurringJobScheduleConfigurator> configure, CancellationToken cancellationToken = default)
         where T : class
@@ -162,17 +150,15 @@ public static class RecurringJobConsumerExtensions
         return AddOrUpdateRecurringJobAsync(publishEndpoint, jobName, job, configure, null, cancellationToken);
     }
 
-    /// <summary>
-    /// Add or update a recurring job
-    /// </summary>
-    /// <param name="publishEndpoint">An available publish endpoint instance</param>
-    /// <param name="jobName"></param>
-    /// <param name="job"></param>
-    /// <param name="configure">Configure the optional recurring job schedule parameters</param>
-    /// <param name="setJobProperties">Set job properties for the recurring job</param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Add or update a recurring job.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="publishEndpoint">An available publish endpoint instance.</param>
+    /// <param name="jobName">The job name.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="configure">Configure the optional recurring job schedule parameters.</param>
+    /// <param name="setJobProperties">Set job properties for the recurring job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the add or update recurring job outcome.</returns>
     public static async Task<Guid> AddOrUpdateRecurringJobAsync<T>(this IPublishEndpoint publishEndpoint, string jobName, T job,
         Action<IRecurringJobScheduleConfigurator> configure, Action<ISetPropertyCollection>? setJobProperties, CancellationToken cancellationToken = default)
         where T : class
@@ -208,15 +194,13 @@ public static class RecurringJobConsumerExtensions
         return jobId;
     }
 
-    /// <summary>
-    /// Cancel a recurring job
-    /// </summary>
-    /// <param name="publishEndpoint">An available publish endpoint instance</param>
-    /// <param name="jobName"></param>
-    /// <param name="reason">The reason for canceling the job</param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Cancel a recurring job.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="publishEndpoint">An available publish endpoint instance.</param>
+    /// <param name="jobName">The job name.</param>
+    /// <param name="reason">The reason for canceling the job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the cancel recurring job outcome.</returns>
     public static async Task<Guid> CancelRecurringJobAsync<T>(this IPublishEndpoint publishEndpoint, string jobName, string reason,
         CancellationToken cancellationToken = default)
         where T : class
@@ -235,14 +219,12 @@ public static class RecurringJobConsumerExtensions
         return jobId;
     }
 
-    /// <summary>
-    /// Finalize a canceled recurring job
-    /// </summary>
-    /// <param name="publishEndpoint">An available publish endpoint instance</param>
-    /// <param name="jobName"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Finalize a canceled recurring job.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="publishEndpoint">An available publish endpoint instance.</param>
+    /// <param name="jobName">The job name.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the finalize recurring job outcome.</returns>
     public static async Task<Guid> FinalizeRecurringJobAsync<T>(this IPublishEndpoint publishEndpoint, string jobName, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -256,15 +238,13 @@ public static class RecurringJobConsumerExtensions
         return jobId;
     }
 
-    /// <summary>
-    /// Submits a job, returning the generated jobId
-    /// </summary>
-    /// <param name="publishEndpoint"></param>
-    /// <param name="start">The start time for the job</param>
-    /// <param name="job"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the generated jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
+    /// <param name="start">The start time for the job.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the schedule job outcome.</returns>
     public static async Task<Guid> ScheduleJobAsync<T>(this IPublishEndpoint publishEndpoint, DateTimeOffset start, T job,
         CancellationToken cancellationToken = default)
         where T : class
@@ -281,15 +261,13 @@ public static class RecurringJobConsumerExtensions
         return jobId;
     }
 
-    /// <summary>
-    /// Submits a job, returning the accepted jobId
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="start">The start time for the job</param>
-    /// <param name="job"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the accepted jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">The client.</param>
+    /// <param name="start">The start time for the job.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the schedule job outcome.</returns>
     public static async Task<Guid> ScheduleJobAsync<T>(this IRequestClient<SubmitJob<T>> client, DateTimeOffset start, T job,
         CancellationToken cancellationToken = default)
         where T : class
@@ -306,15 +284,13 @@ public static class RecurringJobConsumerExtensions
         return response.Message.JobId;
     }
 
-    /// <summary>
-    /// Submits a job, returning the accepted jobId
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="start">The start time for the job</param>
-    /// <param name="job"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the accepted jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">The client.</param>
+    /// <param name="start">The start time for the job.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the schedule job outcome.</returns>
     public static async Task<Guid> ScheduleJobAsync<T>(this IRequestClient<SubmitJob<T>> client, DateTimeOffset start, object job,
         CancellationToken cancellationToken = default)
         where T : class
@@ -333,16 +309,14 @@ public static class RecurringJobConsumerExtensions
         return response.Message.JobId;
     }
 
-    /// <summary>
-    /// Submits a job, returning the accepted jobId
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="jobId">Specify an explicit jobId for the job</param>
-    /// <param name="start">The start time for the job</param>
-    /// <param name="job"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the accepted jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">The client.</param>
+    /// <param name="jobId">Specify an explicit jobId for the job.</param>
+    /// <param name="start">The start time for the job.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the schedule job outcome.</returns>
     public static async Task<Guid> ScheduleJobAsync<T>(this IRequestClient<SubmitJob<T>> client, Guid jobId, DateTimeOffset start, T job,
         CancellationToken cancellationToken = default)
         where T : class
@@ -357,16 +331,14 @@ public static class RecurringJobConsumerExtensions
         return response.Message.JobId;
     }
 
-    /// <summary>
-    /// Submits a job, returning the accepted jobId
-    /// </summary>
-    /// <param name="client"></param>
-    /// <param name="jobId">Specify an explicit jobId for the job</param>
-    /// <param name="start">The start time for the job</param>
-    /// <param name="job"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Submits a job, returning the accepted jobId.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="client">The client.</param>
+    /// <param name="jobId">Specify an explicit jobId for the job.</param>
+    /// <param name="start">The start time for the job.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the schedule job outcome.</returns>
     public static async Task<Guid> ScheduleJobAsync<T>(this IRequestClient<SubmitJob<T>> client, Guid jobId, DateTimeOffset start, object job,
         CancellationToken cancellationToken = default)
         where T : class
@@ -383,13 +355,12 @@ public static class RecurringJobConsumerExtensions
         return response.Message.JobId;
     }
 
-    /// <summary>
-    /// Run a recurring job if it's currently waiting/scheduled to run
-    /// </summary>
-    /// <param name="publishEndpoint"></param>
-    /// <param name="jobName"></param>
-    /// <returns></returns>
+    /// <summary>Run a recurring job if it's currently waiting/scheduled to run.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
+    /// <param name="jobName">The job name.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task RunRecurringJobAsync<T>(this IPublishEndpoint publishEndpoint, string jobName, CancellationToken cancellationToken = default)
         where T : class
     {

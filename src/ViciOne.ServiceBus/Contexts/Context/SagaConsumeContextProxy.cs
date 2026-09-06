@@ -3,11 +3,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>
-/// A consumer instance merged with a message consume context
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
-/// <typeparam name="TMessage"></typeparam>
+/// <summary>A consumer instance merged with a message consume context.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class SagaConsumeContextProxy<TSaga, TMessage> :
     ConsumeContextProxy<TMessage>,
     SagaConsumeContext<TSaga, TMessage>
@@ -16,39 +14,29 @@ public class SagaConsumeContextProxy<TSaga, TMessage> :
 {
     readonly SagaConsumeContext<TSaga, TMessage> _sagaContext;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="sagaContext">The saga context value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="sagaContext">The saga context.</param>
     public SagaConsumeContextProxy(ConsumeContext<TMessage> context, SagaConsumeContext<TSaga, TMessage> sagaContext)
         : base(context)
     {
         _sagaContext = sagaContext;
     }
 
-    /// <summary>
-    /// Gets the correlation id value.
-    /// </summary>
+    /// <summary>Gets the correlation id.</summary>
     public override Guid? CorrelationId => Saga.CorrelationId;
 
-    /// <summary>
-    /// Gets the saga value.
-    /// </summary>
+    /// <summary>Gets the saga.</summary>
     public TSaga Saga => _sagaContext.Saga;
 
-    /// <summary>
-    /// Sets completed.
-    /// </summary>
+    /// <summary>Sets completed.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SetCompletedAsync(CancellationToken cancellationToken = default)
     {
         return _sagaContext.SetCompletedAsync(cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Gets the is completed value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether completed.</summary>
     public bool IsCompleted => _sagaContext.IsCompleted;
 }

@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// A connect handle is returned by a non-asynchronous resource that supports
-/// disconnection (such as removing an observer, etc.)
+/// disconnection (such as removing an observer, etc.).
 /// </summary>
 public interface ConnectHandle :
     IDisposable

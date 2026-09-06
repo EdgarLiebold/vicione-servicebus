@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.ActiveMq.Configuration;
 
-/// <summary>
-/// Provides an active mq bus factory configurator implementation.
-/// </summary>
+/// <summary>Configures an ActiveMQ bus, its host, endpoints, and transport topology.</summary>
 public class ActiveMqBusFactoryConfigurator :
     BusFactoryConfigurator,
     IActiveMqBusFactoryConfigurator,
@@ -17,10 +15,8 @@ public class ActiveMqBusFactoryConfigurator :
     readonly IActiveMqHostConfiguration _hostConfiguration;
     readonly ActiveMqQueueReceiveSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="busConfiguration">The bus configuration value.</param>
+    /// <summary>Creates a configurator for an ActiveMQ bus configuration.</summary>
+    /// <param name="busConfiguration">The mutable bus configuration.</param>
     public ActiveMqBusFactoryConfigurator(IActiveMqBusConfiguration busConfiguration)
         : base(busConfiguration)
     {
@@ -32,26 +28,20 @@ public class ActiveMqBusFactoryConfigurator :
         _settings = new ActiveMqQueueReceiveSettings(busConfiguration.BusEndpointConfiguration, queueName, false, true);
     }
 
-    /// <summary>
-    /// Gets or sets the durable value.
-    /// </summary>
+    /// <summary>Sets whether the bus endpoint queue persists across broker restarts.</summary>
     public bool Durable
     {
         set => _settings.Durable = value;
     }
 
-    /// <summary>
-    /// Gets or sets the auto delete value.
-    /// </summary>
+    /// <summary>Sets whether the broker removes the bus endpoint queue when it is no longer used.</summary>
     public bool AutoDelete
     {
         set => _settings.AutoDelete = value;
     }
 
-    /// <summary>
-    /// Performs the host operation.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Applies an immutable snapshot of the ActiveMQ host settings.</summary>
+    /// <param name="settings">The host settings to snapshot.</param>
     public void Host(ActiveMqHostSettings settings)
     {
         _busConfiguration.HostConfiguration.Settings = new ActiveMqHostSettingsSnapshot(settings);
@@ -71,11 +61,9 @@ public class ActiveMqBusFactoryConfigurator :
         configureTopology?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="configure">An optional callback that configures the message's publish topology.</param>
     public void Publish(Type messageType, Action<IActiveMqMessagePublishTopologyConfigurator>? configure = null)
     {
         var configurator = _busConfiguration.Topology.Publish.GetMessageTopology(messageType);
@@ -83,71 +71,55 @@ public class ActiveMqBusFactoryConfigurator :
         configure?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Gets the send topology value.
-    /// </summary>
+    /// <summary>Gets the ActiveMQ send-topology configurator.</summary>
     public new IActiveMqSendTopologyConfigurator SendTopology => _busConfiguration.Topology.Send;
-    /// <summary>
-    /// Gets the publish topology value.
-    /// </summary>
+    /// <summary>Gets the ActiveMQ publish-topology configurator.</summary>
     public new IActiveMqPublishTopologyConfigurator PublishTopology => _busConfiguration.Topology.Publish;
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Adds an ActiveMQ receive endpoint described by an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name.</param>
+    /// <param name="configureEndpoint">An optional callback that configures ActiveMQ-specific endpoint settings.</param>
     public void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IActiveMqReceiveEndpointConfigurator>? configureEndpoint)
     {
         _hostConfiguration.ReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Adds a receive endpoint described by an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name.</param>
+    /// <param name="configureEndpoint">An optional callback that configures transport-independent endpoint settings.</param>
     public void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint)
     {
         _hostConfiguration.ReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Adds an ActiveMQ receive endpoint for a queue.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configureEndpoint">The callback that configures ActiveMQ-specific endpoint settings.</param>
     public void ReceiveEndpoint(string queueName, Action<IActiveMqReceiveEndpointConfigurator> configureEndpoint)
     {
         _hostConfiguration.ReceiveEndpoint(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Adds a receive endpoint for an ActiveMQ queue.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configureEndpoint">The callback that configures transport-independent endpoint settings.</param>
     public void ReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint)
     {
         _hostConfiguration.ReceiveEndpoint(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Sets consumer endpoint queue name formatter.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
+    /// <summary>Sets the formatter used for virtual-topic consumer queue names.</summary>
+    /// <param name="formatter">The consumer queue-name formatter.</param>
     public void SetConsumerEndpointQueueNameFormatter(IActiveMqConsumerEndpointQueueNameFormatter formatter)
     {
         _busConfiguration.Topology.Consume.ConsumerEndpointQueueNameFormatter = formatter;
     }
 
-    /// <summary>
-    /// Performs the enable artemis compatibility operation.
-    /// </summary>
+    /// <summary>Enables ActiveMQ Artemis naming and AMQP delivery-delay behavior.</summary>
     public void EnableArtemisCompatibility()
     {
         SetConsumerEndpointQueueNameFormatter(new ArtemisConsumerEndpointQueueNameFormatter());
@@ -155,29 +127,23 @@ public class ActiveMqBusFactoryConfigurator :
         _hostConfiguration.IsArtemis = true;
     }
 
-    /// <summary>
-    /// Sets temporary queue name formatter.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
+    /// <summary>Sets the formatter used for temporary queue names.</summary>
+    /// <param name="formatter">The formatter, or <see langword="null" /> to restore generated names.</param>
     public void SetTemporaryQueueNameFormatter(IActiveMqTemporaryQueueNameFormatter? formatter)
     {
         _busConfiguration.Topology.Consume.TemporaryQueueNameFormatter = formatter;
     }
 
-    /// <summary>
-    /// Sets temporary queue name prefix.
-    /// </summary>
-    /// <param name="prefix">The prefix value.</param>
+    /// <summary>Sets a prefix for generated temporary queue names.</summary>
+    /// <param name="prefix">The prefix, or a blank value to remove the custom formatter.</param>
     public void SetTemporaryQueueNamePrefix(string prefix)
     {
         SetTemporaryQueueNameFormatter(string.IsNullOrWhiteSpace(prefix) ? null : new PrefixTemporaryQueueNameFormatter(prefix));
     }
 
-    /// <summary>
-    /// Creates bus endpoint configuration.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a receive-endpoint configuration for the bus endpoint.</summary>
+    /// <param name="configure">The callback that configures the bus endpoint.</param>
+    /// <returns>The configured bus receive endpoint.</returns>
     public IReceiveEndpointConfiguration CreateBusEndpointConfiguration(Action<IReceiveEndpointConfigurator> configure)
     {
         var queueName = _busConfiguration.Topology.Consume.CreateTemporaryQueueName("bus");
@@ -186,10 +152,8 @@ public class ActiveMqBusFactoryConfigurator :
         return _busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration(settings, _busConfiguration.BusEndpointConfiguration, configure);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         foreach (var result in base.Validate())

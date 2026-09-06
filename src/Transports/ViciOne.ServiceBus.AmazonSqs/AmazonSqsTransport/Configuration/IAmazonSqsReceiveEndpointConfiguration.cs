@@ -3,21 +3,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Configuration;
 
-/// <summary>
-/// Defines the contract for amazon sqs receive endpoint configuration.
-/// </summary>
+/// <summary>Defines the queue settings and host-registration contract of an Amazon SQS receive endpoint.</summary>
 public interface IAmazonSqsReceiveEndpointConfiguration :
     IReceiveEndpointConfiguration,
     IAmazonSqsEndpointConfiguration
 {
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the queue and receive settings.</summary>
     ReceiveSettings Settings { get; }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <param name="host">The host value.</param>
+    /// <summary>Builds and registers the receive endpoint.</summary>
+    /// <param name="host">The host that owns the endpoint.</param>
     void Build(IHost host);
 }

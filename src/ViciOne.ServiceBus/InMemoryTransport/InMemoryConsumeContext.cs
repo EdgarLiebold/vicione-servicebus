@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
-/// <summary>
-/// Defines the contract for in memory consume context.
-/// </summary>
+/// <summary>Exposes state for in memory consume operations.</summary>
 public interface InMemoryConsumeContext :
     RoutingKeyConsumeContext
 {

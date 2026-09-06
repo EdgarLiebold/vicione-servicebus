@@ -91,6 +91,33 @@ public sealed partial class SourceHygieneArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-COMMENTS", "provider-documentation-uses-provider-native-vocabulary")]
+    public void ProviderDocumentation_UsesProviderNativeVocabulary()
+    {
+        ProviderVocabularyRule[] rules =
+        [
+            new("src/Transports/ViciOne.ServiceBus.ActiveMq/", ActiveMqForeignVocabulary(), "ActiveMQ topic and selector vocabulary"),
+            new("src/Transports/ViciOne.ServiceBus.AmazonSqs/", AmazonSqsForeignVocabulary(), "Amazon SNS/SQS topic, subscription, and queue vocabulary"),
+            new("src/Transports/ViciOne.ServiceBus.AzureServiceBus/", AzureServiceBusForeignVocabulary(), "Azure topic, subscription, rule, and queue vocabulary"),
+            new("src/ViciOne.ServiceBus/SqlTransport/", SqlTransportForeignVocabulary(), "SQL topic, subscription, routing-key, and queue vocabulary"),
+        ];
+
+        string[] violations = ProductComments()
+            .Select(comment => (Comment: comment, Text: XmlMarkup().Replace(comment.Text, " ")))
+            .SelectMany(item => rules
+                .Where(rule => item.Comment.Path.StartsWith(rule.PathPrefix, StringComparison.Ordinal)
+                    && rule.ForeignVocabulary.IsMatch(item.Text))
+                .Select(rule => $"{Format(item.Comment)} (expected {rule.ExpectedVocabulary})"))
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.True(
+            violations.Length == 0,
+            "Provider documentation contains foreign transport vocabulary:"
+                + Environment.NewLine + string.Join(Environment.NewLine, violations));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-DEPENDENCY-OWNERSHIP", "expression-compiler-is-current-package-owned")]
     public void ExpressionCompiler_IsCurrentPackageOwnedAndNeverEmbedded()
     {
@@ -163,7 +190,9 @@ public sealed partial class SourceHygieneArchitectureTests
     private static partial Regex MaintenanceMarker();
 
     [GeneratedRegex(
-        @"this was disabled previously|not sure if|someday|haven't tested|later,\s*we'll|CreateAgent transfers",
+        @"this was disabled previously|not sure if|someday|haven't tested|later,\s*we'll|CreateAgent transfers|"
+        + @"not currently used|make it ""cute""|obsoletes? the previous|used to sit here|summary that said so|"
+        + @"a timer was disposed|auto-property would have been",
         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex HistoricalOrSpeculativeNarrative();
 
@@ -171,11 +200,29 @@ public sealed partial class SourceHygieneArchitectureTests
         @"The task which is completed once the (?:Send|Publish) is acknowledged by the broker|"
         + @"The time at which the message should be delivered to the queue|"
         + @"AWS SQS minimum for ChangeMessageVisibility|per AWS SQS API constraints|"
-        + @"mostly unused now|not used apparently|shutting it down for good|pushed from the broker",
+        + @"mostly unused now|not used apparently|shutting it down for good|pushed from the broker|"
+        + @"was has been|was already has been|same was Events|(?-i:\bTHe\b)|\boverriden\b",
         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex SemanticallyInvalidApiContract();
+
+    [GeneratedRegex(@"<[^>]+>", RegexOptions.CultureInvariant)]
+    private static partial Regex XmlMarkup();
+
+    [GeneratedRegex(@"\b(?:exchange|routing key)\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex ActiveMqForeignVocabulary();
+
+    [GeneratedRegex(@"\b(?:exchange|routing key|virtual host|broker restart)\b|pushed from the broker", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex AmazonSqsForeignVocabulary();
+
+    [GeneratedRegex(@"\b(?:exchange|routing key|RabbitMQ|Amazon ?SQS|SQS)\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex AzureServiceBusForeignVocabulary();
+
+    [GeneratedRegex(@"\b(?:exchange|RabbitMQ|Amazon ?SQS|SQS)\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex SqlTransportForeignVocabulary();
 
     private sealed record SourceComment(string Path, int LineNumber, string Text);
 
     private sealed record SourceSyntax(string Path, SyntaxNode Root);
+
+    private sealed record ProviderVocabularyRule(string PathPrefix, Regex ForeignVocabulary, string ExpectedVocabulary);
 }

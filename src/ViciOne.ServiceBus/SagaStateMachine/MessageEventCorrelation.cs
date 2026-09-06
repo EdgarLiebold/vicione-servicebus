@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a message event correlation implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Defines correlation for message event.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class MessageEventCorrelation<TSaga, TMessage> :
     EventCorrelation<TSaga, TMessage>
     where TSaga : class, SagaStateMachineInstance
@@ -23,18 +21,16 @@ public class MessageEventCorrelation<TSaga, TMessage> :
     readonly bool _readOnly;
     readonly ISagaFactory<TSaga, TMessage> _sagaFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="event">The event value.</param>
-    /// <param name="sagaFilterFactory">The saga filter factory value.</param>
-    /// <param name="messageFilter">The message filter value.</param>
-    /// <param name="missingPipe">The missing pipe value.</param>
-    /// <param name="sagaFactory">The saga factory value.</param>
-    /// <param name="insertOnInitial">The insert on initial value.</param>
-    /// <param name="readOnly">The read only value.</param>
-    /// <param name="configureConsumeTopology">The configure consume topology value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="machine">The machine.</param>
+    /// <param name="event">The event.</param>
+    /// <param name="sagaFilterFactory">The saga filter factory.</param>
+    /// <param name="messageFilter">The message filter.</param>
+    /// <param name="missingPipe">The missing pipe.</param>
+    /// <param name="sagaFactory">The saga factory.</param>
+    /// <param name="insertOnInitial">The insert on initial.</param>
+    /// <param name="readOnly">The read only.</param>
+    /// <param name="configureConsumeTopology">The configure consume topology.</param>
     public MessageEventCorrelation(SagaStateMachine<TSaga> machine, Event<TMessage> @event, SagaFilterFactory<TSaga, TMessage>? sagaFilterFactory,
         IFilter<ConsumeContext<TMessage>>? messageFilter, IPipe<ConsumeContext<TMessage>> missingPipe, ISagaFactory<TSaga, TMessage> sagaFactory,
         bool insertOnInitial, bool readOnly, bool configureConsumeTopology)
@@ -53,40 +49,26 @@ public class MessageEventCorrelation<TSaga, TMessage> :
         _includesInitial = new Lazy<bool>(() => IncludesInitial());
     }
 
-    /// <summary>
-    /// Gets the configure consume topology value.
-    /// </summary>
+    /// <summary>Gets the configure consume topology.</summary>
     public bool ConfigureConsumeTopology { get; }
 
-    /// <summary>
-    /// Gets the filter factory value.
-    /// </summary>
+    /// <summary>Gets the filter factory.</summary>
     public SagaFilterFactory<TSaga, TMessage>? FilterFactory { get; }
 
-    /// <summary>
-    /// Gets the event value.
-    /// </summary>
+    /// <summary>Gets the event.</summary>
     public Event<TMessage> Event { get; }
 
-    /// <summary>
-    /// Gets the data type value.
-    /// </summary>
+    /// <summary>Gets the data type.</summary>
     public Type DataType => typeof(TMessage);
 
-    /// <summary>
-    /// Gets the message filter value.
-    /// </summary>
+    /// <summary>Gets the message filter.</summary>
     public IFilter<ConsumeContext<TMessage>>? MessageFilter { get; }
 
-    /// <summary>
-    /// Gets the policy value.
-    /// </summary>
+    /// <summary>Gets the policy.</summary>
     public ISagaPolicy<TSaga, TMessage> Policy => _policy.Value;
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_insertOnInitial && _readOnly)

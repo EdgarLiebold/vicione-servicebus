@@ -2,18 +2,12 @@ using System;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Specifies the available publish broker topology options values.
-/// </summary>
+/// <summary>Controls how implemented-message exchange hierarchies are represented in RabbitMQ.</summary>
 [Flags]
 public enum PublishBrokerTopologyOptions
 {
-    /// <summary>
-    /// Indicates flatten hierarchy.
-    /// </summary>
+    /// <summary>Declares implemented message contracts without preserving parent-child exchange bindings.</summary>
     FlattenHierarchy = 0,
-    /// <summary>
-    /// Indicates maintain hierarchy.
-    /// </summary>
+    /// <summary>Preserves parent-child exchange bindings for directly implemented message contracts.</summary>
     MaintainHierarchy = 1
 }

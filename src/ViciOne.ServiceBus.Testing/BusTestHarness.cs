@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// A bus text fixture includes a single bus instance with one or more receiving endpoints.
-/// </summary>
+/// <summary>A bus text fixture includes a single bus instance with one or more receiving endpoints.</summary>
 public abstract class BusTestHarness :
     AsyncTestHarness,
     IBaseTestHarness
@@ -22,127 +20,87 @@ public abstract class BusTestHarness :
     BusTestReceiveObserver? _received;
     BusTestSendObserver? _sent;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     protected BusTestHarness()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     protected BusTestHarness(TimeProvider timeProvider)
         : base(timeProvider)
     {
     }
 
-    /// <summary>
-    /// Gets the bus control value.
-    /// </summary>
+    /// <summary>Gets the bus control.</summary>
     public IBusControl BusControl => _busControl ?? throw new InvalidOperationException("The bus test harness has not been started.");
 
-    /// <summary>
-    /// The address of the default bus endpoint, used as the SourceAddress for requests and published messages
-    /// </summary>
+    /// <summary>The address of the default bus endpoint, used as the SourceAddress for requests and published messages.</summary>
     public Uri BusAddress => BusControl.Address;
 
-    /// <summary>
-    /// The name of the input queue (for the default receive endpoint)
-    /// </summary>
+    /// <summary>The name of the input queue (for the default receive endpoint).</summary>
     public abstract string InputQueueName { get; }
 
-    /// <summary>
-    /// The address of the input queue receive endpoint
-    /// </summary>
+    /// <summary>The address of the input queue receive endpoint.</summary>
     public abstract Uri InputQueueAddress { get; }
 
-    /// <summary>
-    /// The send endpoint for the default bus endpoint
-    /// </summary>
+    /// <summary>The send endpoint for the default bus endpoint.</summary>
     public ISendEndpoint BusSendEndpoint => _busSendEndpoint ?? throw new InvalidOperationException("The bus test harness has not been started.");
 
-    /// <summary>
-    /// The send endpoint for the input queue receive endpoint
-    /// </summary>
+    /// <summary>The send endpoint for the input queue receive endpoint.</summary>
     public ISendEndpoint InputQueueSendEndpoint => _inputQueueSendEndpoint
         ?? throw new InvalidOperationException("The bus test harness has not been started.");
 
-    /// <summary>
-    /// Gets the bus value.
-    /// </summary>
+    /// <summary>Gets the bus.</summary>
     public IBus Bus => BusControl;
 
-    /// <summary>
-    /// Connects consume observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer) => Bus.ConnectConsumeObserver(observer);
-    /// <summary>
-    /// Connects publish observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects publish observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer) => Bus.ConnectPublishObserver(observer);
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects send observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer) => Bus.ConnectSendObserver(observer);
 
-    /// <summary>
-    /// Gets the sent value.
-    /// </summary>
+    /// <summary>Gets the sent.</summary>
     public ISentMessageList Sent => _sent?.Messages ?? throw new InvalidOperationException("The bus test harness has not been started.");
-    /// <summary>
-    /// Gets the cancellation token value.
-    /// </summary>
+    /// <summary>Gets the cancellation token.</summary>
     public CancellationToken CancellationToken => TestCancellationToken;
-    /// <summary>
-    /// Gets the consumed value.
-    /// </summary>
+    /// <summary>Gets the consumed.</summary>
     public IReceivedMessageList Consumed => _consumed?.Messages ?? throw new InvalidOperationException("The bus test harness has not been started.");
-    /// <summary>
-    /// Gets the published value.
-    /// </summary>
+    /// <summary>Gets the published.</summary>
     public IPublishedMessageList Published => _published?.Messages ?? throw new InvalidOperationException("The bus test harness has not been started.");
 
-    /// <summary>
-    /// Creates bus.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates bus.</summary>
+    /// <returns>A task that produces the created value.</returns>
     protected abstract Task<IBusControl> CreateBusAsync();
 
-    /// <summary>
-    /// Creates request client.
-    /// </summary>
-    /// <typeparam name="TRequest">The t request type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates request client.</summary>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <returns>The created request client.</returns>
     public virtual IRequestClient<TRequest> CreateRequestClient<TRequest>()
         where TRequest : class
     {
         return CreateRequestClient<TRequest>(InputQueueAddress);
     }
 
-    /// <summary>
-    /// Creates request client.
-    /// </summary>
-    /// <typeparam name="TRequest">The t request type.</typeparam>
-    /// <param name="destinationAddress">The destination address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates request client.</summary>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <param name="destinationAddress">The destination address.</param>
+    /// <returns>The created request client.</returns>
     public virtual IRequestClient<TRequest> CreateRequestClient<TRequest>(Uri destinationAddress)
         where TRequest : class
     {
         return Bus.CreateRequestClient<TRequest>(destinationAddress, TestTimeout);
     }
 
-    /// <summary>
-    /// Connects observers.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
+    /// <summary>Connects observers.</summary>
+    /// <param name="bus">The bus.</param>
     protected virtual void ConnectObservers(IBus bus)
     {
         bus.ConnectReceiveEndpointObserver(new TestReceiveEndpointObserver(
@@ -151,59 +109,41 @@ public abstract class BusTestHarness :
         OnConnectObservers?.Invoke(bus);
     }
 
-    /// <summary>
-    /// Configures bus.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Configures bus.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     protected virtual void ConfigureBus(IBusFactoryConfigurator configurator)
     {
         OnConfigureBus?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Configures receive endpoint.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Configures receive endpoint.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     protected virtual void ConfigureReceiveEndpoint(IReceiveEndpointConfigurator configurator)
     {
         OnConfigureReceiveEndpoint?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Performs the bus configured operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that bus has been configured.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     protected virtual void BusConfigured(IBusFactoryConfigurator configurator)
     {
         OnBusConfigured?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Occurs when pre create bus.
-    /// </summary>
+    /// <summary>Occurs when pre create bus.</summary>
     public event Action<BusTestHarness>? PreCreateBus;
-    /// <summary>
-    /// Occurs when on configure receive endpoint.
-    /// </summary>
+    /// <summary>Occurs when on configure receive endpoint.</summary>
     public event Action<IReceiveEndpointConfigurator>? OnConfigureReceiveEndpoint;
-    /// <summary>
-    /// Occurs when on configure bus.
-    /// </summary>
+    /// <summary>Occurs when on configure bus.</summary>
     public event Action<IBusFactoryConfigurator>? OnConfigureBus;
-    /// <summary>
-    /// Occurs when on bus configured.
-    /// </summary>
+    /// <summary>Occurs when on bus configured.</summary>
     public event Action<IBusFactoryConfigurator>? OnBusConfigured;
-    /// <summary>
-    /// Occurs when on connect observers.
-    /// </summary>
+    /// <summary>Occurs when on connect observers.</summary>
     public event Action<IBus>? OnConnectObservers;
 
-    /// <summary>
-    /// Starts the configured component.
-    /// </summary>
+    /// <summary>Starts the configured component.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public virtual async Task StartAsync(CancellationToken cancellationToken = default)
     {
         if (!cancellationToken.CanBeCanceled)
@@ -255,11 +195,9 @@ public abstract class BusTestHarness :
         ((ITestContextRetention)list).ConfigureRetention(ContextSaveMode, MaximumSavedContexts);
     }
 
-    /// <summary>
-    /// Stops the configured component.
-    /// </summary>
+    /// <summary>Stops the configured component.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public virtual async Task StopAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); try
@@ -285,19 +223,15 @@ public abstract class BusTestHarness :
         }
     }
 
-    /// <summary>
-    /// Performs the clean operation.
-    /// </summary>
+    /// <summary>Removes expired or obsolete entries.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public virtual async Task CleanAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public override void Dispose()
     {
         _consumed?.Dispose();
@@ -308,12 +242,10 @@ public abstract class BusTestHarness :
         base.Dispose();
     }
 
-    /// <summary>
-    /// Gets send endpoint.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Gets send endpoint.</summary>
+    /// <param name="address">The address.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public async Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
         return await BusControl.GetSendEndpointAsync(address, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -323,9 +255,9 @@ public abstract class BusTestHarness :
     /// Subscribes a message handler to the bus, which is disconnected after the message
     /// is received.
     /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <returns>An awaitable task completed when the message is received</returns>
+    /// <typeparam name="T">The message type.</typeparam>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>An awaitable task completed when the message is received.</returns>
     public Task<ConsumeContext<T>> SubscribeHandlerAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
@@ -353,10 +285,10 @@ public abstract class BusTestHarness :
     /// Subscribes a message handler to the bus, which is disconnected after the message
     /// is received.
     /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="filter">A filter that only completes the task if filter is true</param>
-    /// <returns>An awaitable task completed when the message is received</returns>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="filter">A filter that only completes the task if filter is true.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>An awaitable task completed when the message is received.</returns>
     public Task<ConsumeContext<T>> SubscribeHandlerAsync<T>(Func<ConsumeContext<T>, bool> filter, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -387,10 +319,10 @@ public abstract class BusTestHarness :
     /// Registers a handler on the receive endpoint that is cancelled when the test is canceled
     /// and completed when the message is received.
     /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="configurator">The endpoint configurator</param>
-    /// <returns></returns>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="configurator">The endpoint configurator.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the handled outcome.</returns>
     public Task<ConsumeContext<T>> HandledAsync<T>(IReceiveEndpointConfigurator configurator, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -405,11 +337,11 @@ public abstract class BusTestHarness :
     /// Registers a handler on the receive endpoint that is cancelled when the test is canceled
     /// and completed when the message is received.
     /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="configurator">The endpoint configurator</param>
-    /// <param name="filter">Filter the messages based on the handled consume context</param>
-    /// <returns></returns>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="configurator">The endpoint configurator.</param>
+    /// <param name="filter">Filter the messages based on the handled consume context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the handled outcome.</returns>
     public Task<ConsumeContext<T>> HandledAsync<T>(IReceiveEndpointConfigurator configurator, Func<ConsumeContext<T>, bool> filter, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -428,11 +360,11 @@ public abstract class BusTestHarness :
     /// Registers a handler on the receive endpoint that is cancelled when the test is canceled
     /// and completed when the message is received.
     /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="configurator">The endpoint configurator</param>
-    /// <param name="expectedCount">The expected number of messages</param>
-    /// <returns></returns>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="configurator">The endpoint configurator.</param>
+    /// <param name="expectedCount">The expected number of messages.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the handled outcome.</returns>
     public Task<ConsumeContext<T>> HandledAsync<T>(IReceiveEndpointConfigurator configurator, int expectedCount, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -453,11 +385,11 @@ public abstract class BusTestHarness :
     /// Registers a handler on the receive endpoint that is completed after the specified handler is
     /// executed and canceled if the test is canceled.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="handler"></param>
-    /// <returns></returns>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="handler">The handler.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the handler outcome.</returns>
     public Task<ConsumeContext<T>> HandlerAsync<T>(IReceiveEndpointConfigurator configurator, MessageHandler<T> handler, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -476,10 +408,10 @@ public abstract class BusTestHarness :
     /// Registers a consumer on the receive endpoint that is cancelled when the test is canceled
     /// and completed when the message is received.
     /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="configurator">The endpoint configurator</param>
-    /// <returns></returns>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="configurator">The endpoint configurator.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the handled by consumer outcome.</returns>
     public Task<ConsumeContext<T>> HandledByConsumerAsync<T>(IReceiveEndpointConfigurator configurator, CancellationToken cancellationToken = default)
         where T : class
     {

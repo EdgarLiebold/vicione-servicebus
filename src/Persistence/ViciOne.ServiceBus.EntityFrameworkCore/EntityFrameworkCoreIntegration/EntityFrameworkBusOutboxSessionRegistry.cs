@@ -8,6 +8,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// Caches exactly one transactional EF bus-outbox session per DbContext type for one bus and DI scope.
 /// Each cached session is also resolved through its own scoped DI descriptor, which owns disposal before the DbContext.
 /// </summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 internal sealed class EntityFrameworkBusOutboxSessionRegistry<TBus>
     where TBus : class, IBus
 {

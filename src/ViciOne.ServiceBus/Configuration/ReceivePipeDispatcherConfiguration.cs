@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a receive pipe dispatcher configuration implementation.
-/// </summary>
+/// <summary>Stores and validates receive pipe dispatcher configuration.</summary>
 public class ReceivePipeDispatcherConfiguration :
     ReceiverConfiguration,
     IReceiveEndpointConfigurator
@@ -14,11 +12,9 @@ public class ReceivePipeDispatcherConfiguration :
     readonly IReceiveEndpointConfiguration _endpointConfiguration;
     readonly IHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="endpointConfiguration">The endpoint configuration.</param>
     public ReceivePipeDispatcherConfiguration(IHostConfiguration hostConfiguration, IReceiveEndpointConfiguration endpointConfiguration)
         : base(endpointConfiguration)
     {
@@ -26,20 +22,16 @@ public class ReceivePipeDispatcherConfiguration :
         _endpointConfiguration = endpointConfiguration;
     }
 
-    /// <summary>
-    /// Connects receive endpoint observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive endpoint observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
     {
         return _endpointConfiguration.ConnectReceiveEndpointObserver(observer);
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the configured component.</summary>
+    /// <returns>The configured component.</returns>
     public IReceivePipeDispatcher Build()
     {
         IReadOnlyList<ValidationResult> result = Validate().ThrowIfContainsFailure($"{GetType().Name} configuration is invalid:");

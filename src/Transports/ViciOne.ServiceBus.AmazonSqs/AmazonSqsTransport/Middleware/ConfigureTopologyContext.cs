@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.AmazonSqs.Middleware;
 
-/// <summary>
-/// Defines the contract for configure topology context.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Marks one-time topology setup state for a specific entity-settings type.</summary>
+/// <typeparam name="T">The entity-settings type.</typeparam>
 public interface ConfigureTopologyContext<T>
     where T : class
 {

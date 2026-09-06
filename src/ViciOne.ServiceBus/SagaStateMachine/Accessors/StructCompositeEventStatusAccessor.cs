@@ -3,10 +3,8 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a struct composite event status accessor implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Provides access to struct composite event status.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class StructCompositeEventStatusAccessor<TSaga> :
     ICompositeEventStatusAccessor<TSaga>
     where TSaga : class
@@ -15,10 +13,8 @@ public class StructCompositeEventStatusAccessor<TSaga> :
     readonly IReadProperty<TSaga, CompositeEventStatus> _read;
     readonly IWriteProperty<TSaga, CompositeEventStatus> _write;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="propertyInfo">The property info value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="propertyInfo">The property info.</param>
     public StructCompositeEventStatusAccessor(PropertyInfo propertyInfo)
     {
         ArgumentNullException.ThrowIfNull(propertyInfo);
@@ -27,30 +23,24 @@ public class StructCompositeEventStatusAccessor<TSaga> :
         _name = propertyInfo.Name;
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Retrieves the requested value.</summary>
+    /// <param name="instance">The instance.</param>
+    /// <returns>The requested value.</returns>
     public CompositeEventStatus Get(TSaga instance)
     {
         return _read.Get(instance);
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
-    /// <param name="status">The status value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <param name="instance">The instance.</param>
+    /// <param name="status">The status.</param>
     public void Set(TSaga instance, CompositeEventStatus status)
     {
         _write.Set(instance, status);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.Add("property", _name);

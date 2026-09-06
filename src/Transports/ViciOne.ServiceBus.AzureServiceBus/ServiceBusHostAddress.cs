@@ -4,29 +4,19 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Represents a service bus host address value.
-/// </summary>
+/// <summary>Parses and formats an Azure Service Bus namespace address and optional scope.</summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct ServiceBusHostAddress
 {
-    /// <summary>
-    /// Defines the scheme value.
-    /// </summary>
+    /// <summary>The Azure Service Bus URI scheme.</summary>
     public readonly string Scheme;
-    /// <summary>
-    /// Defines the host value.
-    /// </summary>
+    /// <summary>The Azure Service Bus namespace host.</summary>
     public readonly string Host;
-    /// <summary>
-    /// Defines the scope value.
-    /// </summary>
+    /// <summary>The optional namespace-relative entity-path scope.</summary>
     public readonly string Scope;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Parses an absolute Azure Service Bus namespace address.</summary>
+    /// <param name="address">The namespace address to parse.</param>
     public ServiceBusHostAddress(Uri address)
     {
         ArgumentNullException.ThrowIfNull(address);
@@ -58,11 +48,9 @@ public readonly struct ServiceBusHostAddress
         scope = address.ParseHostPath();
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the namespace and optional scope as an absolute URI.</summary>
+    /// <param name="address">The host address to format.</param>
+    /// <returns>The absolute Azure Service Bus namespace URI.</returns>
     public static implicit operator Uri(in ServiceBusHostAddress address)
     {
         var builder = new UriBuilder

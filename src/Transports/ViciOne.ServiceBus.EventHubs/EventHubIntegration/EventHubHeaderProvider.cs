@@ -6,27 +6,21 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides an event hub header provider implementation.
-/// </summary>
+/// <summary>Exposes Event Hubs message identifiers and application properties as service-bus headers.</summary>
 public class EventHubHeaderProvider :
     IHeaderProvider
 {
     readonly EventData _eventData;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="eventData">The event data value.</param>
+    /// <summary>Creates a header provider for one Azure SDK event.</summary>
+    /// <param name="eventData">The event whose identifiers and properties are exposed.</param>
     public EventHubHeaderProvider(EventData eventData)
     {
         _eventData = eventData;
     }
 
-    /// <summary>
-    /// Gets all.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Enumerates non-null message identifiers and application properties.</summary>
+    /// <returns>The headers available on the event.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
         if (!string.IsNullOrWhiteSpace(_eventData.MessageId))
@@ -43,12 +37,10 @@ public class EventHubHeaderProvider :
         }
     }
 
-    /// <summary>
-    /// Attempts to get header.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Attempts to read a message identifier or application property by name.</summary>
+    /// <param name="key">The case-insensitive identifier name or exact application-property key.</param>
+    /// <param name="value">Receives the non-null header value when found.</param>
+    /// <returns><see langword="true" /> when a non-null value exists; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         if (nameof(MessageContext.MessageId).Equals(key, StringComparison.OrdinalIgnoreCase))

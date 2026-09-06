@@ -1,22 +1,14 @@
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Defines the contract for entity settings.
-/// </summary>
+/// <summary>Defines the name and lifecycle of an ActiveMQ queue or topic.</summary>
 public interface EntitySettings
 {
-    /// <summary>
-    /// The entity name (either a topic or a queue)
-    /// </summary>
+    /// <summary>Gets the queue or topic name.</summary>
     string EntityName { get; }
 
-    /// <summary>
-    /// True if messages should be persisted to disk for the queue
-    /// </summary>
+    /// <summary>Gets whether the entity persists across broker restarts.</summary>
     bool Durable { get; }
 
-    /// <summary>
-    /// True if the queue/exchange should automatically be deleted
-    /// </summary>
+    /// <summary>Gets whether the broker deletes the entity when its owning connection closes.</summary>
     bool AutoDelete { get; }
 }

@@ -20,9 +20,7 @@ public readonly struct NewId :
     IComparable,
     IFormattable
 {
-    /// <summary>
-    /// Defines the empty value.
-    /// </summary>
+    /// <summary>Exposes the empty used by the containing type.</summary>
     public static readonly NewId Empty = new NewId(0, 0, 0, 0);
 
     static readonly DashedHexFormatter BraceFormatter = new DashedHexFormatter('{', '}');
@@ -42,10 +40,8 @@ public readonly struct NewId :
     readonly int _c;
     readonly int _d;
 
-    /// <summary>
-    /// Creates a <see cref="NewId" /> from its canonical byte representation.
-    /// </summary>
-    /// <param name="bytes">The canonical 16-byte identifier representation.</param>
+    /// <summary>Creates a <see cref="NewId" /> from its canonical byte representation.</summary>
+    /// <param name="bytes">The bytes.</param>
     /// <exception cref="ArgumentException"><paramref name="bytes" /> does not contain exactly 16 bytes.</exception>
     public NewId(ReadOnlySpan<byte> bytes)
     {
@@ -55,10 +51,8 @@ public readonly struct NewId :
         FromByteArray(bytes, out this);
     }
 
-    /// <summary>
-    /// Creates a <see cref="NewId" /> from its encoded representation.
-    /// </summary>
-    /// <param name="value">The encoded identifier text.</param>
+    /// <summary>Creates a <see cref="NewId" /> from its encoded representation.</summary>
+    /// <param name="value">The value to process.</param>
     /// <exception cref="ArgumentException"><paramref name="value" /> is null, empty, or invalid.</exception>
     public NewId(string value)
     {
@@ -68,13 +62,11 @@ public readonly struct NewId :
         FromGuid(new Guid(value), out this);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="a">The a value.</param>
-    /// <param name="b">The b value.</param>
-    /// <param name="c">The c value.</param>
-    /// <param name="d">The d value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="a">The <c>a</c> value.</param>
+    /// <param name="b">The <c>b</c> value.</param>
+    /// <param name="c">The <c>c</c> value.</param>
+    /// <param name="d">The <c>d</c> value.</param>
     public NewId(int a, int b, int c, int d)
     {
         _a = a;
@@ -83,20 +75,18 @@ public readonly struct NewId :
         _d = d;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="a">The a value.</param>
-    /// <param name="b">The b value.</param>
-    /// <param name="c">The c value.</param>
-    /// <param name="d">The d value.</param>
-    /// <param name="e">The e value.</param>
-    /// <param name="f">The f value.</param>
-    /// <param name="g">The g value.</param>
-    /// <param name="h">The h value.</param>
-    /// <param name="i">The i value.</param>
-    /// <param name="j">The j value.</param>
-    /// <param name="k">The k value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="a">The <c>a</c> value.</param>
+    /// <param name="b">The <c>b</c> value.</param>
+    /// <param name="c">The <c>c</c> value.</param>
+    /// <param name="d">The <c>d</c> value.</param>
+    /// <param name="e">The <c>e</c> value.</param>
+    /// <param name="f">The <c>f</c> value.</param>
+    /// <param name="g">The <c>g</c> value.</param>
+    /// <param name="h">The <c>h</c> value.</param>
+    /// <param name="i">The <c>i</c> value.</param>
+    /// <param name="j">The <c>j</c> value.</param>
+    /// <param name="k">The <c>k</c> value.</param>
     public NewId(int a, short b, short c, byte d, byte e, byte f, byte g, byte h, byte i, byte j, byte k)
     {
         _a = (f << 24) | (g << 16) | (h << 8) | i;
@@ -105,9 +95,7 @@ public readonly struct NewId :
         _d = (int)(a & 0xFFFF0000) | ((a >> 8) & 0x00FF) | ((a << 8) & 0xFF00);
     }
 
-    /// <summary>
-    /// Gets the timestamp value.
-    /// </summary>
+    /// <summary>Gets the timestamp.</summary>
     public DateTimeOffset Timestamp
     {
         get
@@ -123,11 +111,9 @@ public readonly struct NewId :
         }
     }
 
-    /// <summary>
-    /// Compares this instance with the supplied value.
-    /// </summary>
-    /// <param name="obj">The obj value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Compares this instance with the supplied value.</summary>
+    /// <param name="obj">The obj.</param>
+    /// <returns>The int produced by the operation.</returns>
     public int CompareTo(object? obj)
     {
         if (obj == null)
@@ -138,11 +124,9 @@ public readonly struct NewId :
         throw new ArgumentException("Argument must be a NewId");
     }
 
-    /// <summary>
-    /// Compares this instance with the supplied value.
-    /// </summary>
-    /// <param name="other">The other value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Compares this instance with the supplied value.</summary>
+    /// <param name="other">The other.</param>
+    /// <returns>The int produced by the operation.</returns>
     public int CompareTo(NewId other)
     {
         if (_a != other._a)
@@ -157,22 +141,18 @@ public readonly struct NewId :
         return 0;
     }
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="other">The other value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="other">The other.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Equals(NewId other)
     {
         return other._a == _a && other._b == _b && other._c == _c && other._d == _d;
     }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <param name="format">The format value.</param>
-    /// <param name="formatProvider">The format provider value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the string representation of this instance.</summary>
+    /// <param name="format">The format.</param>
+    /// <param name="formatProvider">The format provider.</param>
+    /// <returns>The converted string.</returns>
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
         if (format == null || string.IsNullOrEmpty(format))
@@ -203,12 +183,10 @@ public readonly struct NewId :
         throw new FormatException("The format string was not valid");
     }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
-    /// <param name="sequential">The sequential value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the string representation of this instance.</summary>
+    /// <param name="formatter">The formatter.</param>
+    /// <param name="sequential">The sequential.</param>
+    /// <returns>The converted string.</returns>
     public string ToString(INewIdFormatter formatter, bool sequential = false)
     {
         ArgumentNullException.ThrowIfNull(formatter);
@@ -282,10 +260,8 @@ public readonly struct NewId :
 
     }
 
-    /// <summary>
-    /// Performs the to guid operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to guid.</summary>
+    /// <returns>The converted guid.</returns>
     public Guid ToGuid()
     {
         if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
@@ -310,10 +286,8 @@ public readonly struct NewId :
         return new Guid(a, b, c, d, e, f, g, h, i, j, k);
     }
 
-    /// <summary>
-    /// Performs the to sequential guid operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to sequential guid.</summary>
+    /// <returns>The converted sequential guid.</returns>
     public Guid ToSequentialGuid()
     {
         if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
@@ -338,32 +312,26 @@ public readonly struct NewId :
         return new Guid(a, b, c, d, e, f, g, h, i, j, k);
     }
 
-    /// <summary>
-    /// Performs the from guid operation.
-    /// </summary>
-    /// <param name="guid">The guid value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a value from guid.</summary>
+    /// <param name="guid">The guid.</param>
+    /// <returns>The new id produced by the operation.</returns>
     public static NewId FromGuid(in Guid guid)
     {
         FromGuid(guid, out var newId);
         return newId;
     }
 
-    /// <summary>
-    /// Performs the from sequential guid operation.
-    /// </summary>
-    /// <param name="guid">The guid value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a value from sequential guid.</summary>
+    /// <param name="guid">The guid.</param>
+    /// <returns>The new id produced by the operation.</returns>
     public static NewId FromSequentialGuid(in Guid guid)
     {
         FromSequentialByteArray(guid, out var newId);
         return newId;
     }
 
-    /// <summary>
-    /// Performs the to byte array operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to byte array.</summary>
+    /// <returns>The converted byte array.</returns>
     public byte[] ToByteArray()
     {
         var bytes = new byte[16];
@@ -402,29 +370,23 @@ public readonly struct NewId :
         bytes[0] = (byte)(_d >> 8);
     }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the string representation of this instance.</summary>
+    /// <returns>The converted string.</returns>
     public override string ToString()
     {
         return ToString("D", null);
     }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <param name="format">The format value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the string representation of this instance.</summary>
+    /// <param name="format">The format.</param>
+    /// <returns>The converted string.</returns>
     public string ToString(string? format)
     {
         return ToString(format, null);
     }
 
-    /// <summary>
-    /// Determines whether this instance equals the supplied value.
-    /// </summary>
-    /// <param name="obj">The obj value.</param>
+    /// <summary>Determines whether this instance equals the supplied value.</summary>
+    /// <param name="obj">The obj.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool Equals(object? obj)
     {
@@ -435,10 +397,8 @@ public readonly struct NewId :
         return Equals((NewId)obj);
     }
 
-    /// <summary>
-    /// Gets hash code.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets hash code.</summary>
+    /// <returns>The hash code for this instance.</returns>
     public override int GetHashCode()
     {
         unchecked
@@ -451,44 +411,36 @@ public readonly struct NewId :
         }
     }
 
-    /// <summary>
-    /// Applies the <c>==</c> operator.
-    /// </summary>
-    /// <param name="left">The left value.</param>
-    /// <param name="right">The right value.</param>
+    /// <summary>Applies the <c>==</c> operator.</summary>
+    /// <param name="left">The left.</param>
+    /// <param name="right">The right.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator ==(in NewId left, in NewId right)
     {
         return left._a == right._a && left._b == right._b && left._c == right._c && left._d == right._d;
     }
 
-    /// <summary>
-    /// Applies the <c>!=</c> operator.
-    /// </summary>
-    /// <param name="left">The left value.</param>
-    /// <param name="right">The right value.</param>
+    /// <summary>Applies the <c>!=</c> operator.</summary>
+    /// <param name="left">The left.</param>
+    /// <param name="right">The right.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator !=(in NewId left, in NewId right)
     {
         return !(left == right);
     }
 
-    /// <summary>
-    /// Applies the <c>&lt;</c> operator.
-    /// </summary>
-    /// <param name="left">The left value.</param>
-    /// <param name="right">The right value.</param>
+    /// <summary>Applies the <c>&lt;</c> operator.</summary>
+    /// <param name="left">The left.</param>
+    /// <param name="right">The right.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator <(in NewId left, in NewId right)
     {
         return left.CompareTo(right) < 0;
     }
 
-    /// <summary>
-    /// Applies the <c>&gt;</c> operator.
-    /// </summary>
-    /// <param name="left">The left value.</param>
-    /// <param name="right">The right value.</param>
+    /// <summary>Applies the <c>&gt;</c> operator.</summary>
+    /// <param name="left">The left.</param>
+    /// <param name="right">The right.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator >(in NewId left, in NewId right)
     {
@@ -497,21 +449,17 @@ public readonly struct NewId :
 
     static INewIdGenerator GetGenerator() => DefaultGenerator.Value;
 
-    /// <summary>
-    /// Generate a NewId
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Generate a NewId.</summary>
+    /// <returns>The new id produced by the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static NewId Next()
     {
         return GetGenerator().Next();
     }
 
-    /// <summary>
-    /// Generate an array of NewIds
-    /// </summary>
-    /// <param name="count">The number of NewIds to generate</param>
-    /// <returns></returns>
+    /// <summary>Generate an array of NewIds.</summary>
+    /// <param name="count">The number of NewIds to generate.</param>
+    /// <returns>The new id array produced by the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static NewId[] Next(int count)
     {
@@ -522,23 +470,19 @@ public readonly struct NewId :
         return ids;
     }
 
-    /// <summary>
-    /// Generate an array of NewIds
-    /// </summary>
-    /// <param name="index">The starting offset for the newly generated ids</param>
-    /// <param name="count">The number of NewIds to generate</param>
-    /// <param name="ids">An existing array</param>
-    /// <returns></returns>
+    /// <summary>Generate an array of NewIds.</summary>
+    /// <param name="ids">An existing array.</param>
+    /// <param name="index">The starting offset for the newly generated ids.</param>
+    /// <param name="count">The number of NewIds to generate.</param>
+    /// <returns>The array segment produced by the operation.</returns>
     public static ArraySegment<NewId> Next(NewId[] ids, int index, int count)
     {
         return GetGenerator().Next(ids, index, count);
     }
 
-    /// <summary>
-    /// Generate an array of NewIds
-    /// </summary>
-    /// <param name="count">The number of NewIds to generate</param>
-    /// <returns></returns>
+    /// <summary>Generate an array of NewIds.</summary>
+    /// <param name="count">The number of NewIds to generate.</param>
+    /// <returns>The guid array produced by the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Guid[] NextGuid(int count)
     {
@@ -549,41 +493,33 @@ public readonly struct NewId :
         return ids;
     }
 
-    /// <summary>
-    /// Generate an array of NewIds
-    /// </summary>
-    /// <param name="index">The starting offset for the newly generated ids</param>
-    /// <param name="count">The number of NewIds to generate</param>
-    /// <param name="ids">An existing array</param>
-    /// <returns></returns>
+    /// <summary>Generate an array of NewIds.</summary>
+    /// <param name="ids">An existing array.</param>
+    /// <param name="index">The starting offset for the newly generated ids.</param>
+    /// <param name="count">The number of NewIds to generate.</param>
+    /// <returns>The array segment produced by the operation.</returns>
     public static ArraySegment<Guid> NextGuid(Guid[] ids, int index, int count)
     {
         return GetGenerator().NextGuid(ids, index, count);
     }
 
-    /// <summary>
-    /// Generate a NewId, and return it as a Guid
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Generate a NewId, and return it as a Guid.</summary>
+    /// <returns>The guid produced by the operation.</returns>
     public static Guid NextGuid()
     {
         return GetGenerator().NextGuid();
     }
 
-    /// <summary>
-    /// Generate a NewId, and return it as a Guid in sequential format
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Generate a NewId, and return it as a Guid in sequential format.</summary>
+    /// <returns>The guid produced by the operation.</returns>
     public static Guid NextSequentialGuid()
     {
         return GetGenerator().NextSequentialGuid();
     }
 
-    /// <summary>
-    /// Generate an array of NewIds
-    /// </summary>
-    /// <param name="count">The number of NewIds to generate</param>
-    /// <returns></returns>
+    /// <summary>Generate an array of NewIds.</summary>
+    /// <param name="count">The number of NewIds to generate.</param>
+    /// <returns>The guid array produced by the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Guid[] NextSequentialGuid(int count)
     {
@@ -594,10 +530,11 @@ public readonly struct NewId :
         return ids;
     }
 
-    /// <summary>
-    /// Generate an array of NewIds, and return it as a Guid in sequential format
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Generate an array of NewIds, and return it as a Guid in sequential format.</summary>
+    /// <param name="ids">The ids.</param>
+    /// <param name="index">The index.</param>
+    /// <param name="count">The count.</param>
+    /// <returns>The array segment produced by the operation.</returns>
     public static ArraySegment<Guid> NextSequentialGuid(Guid[] ids, int index, int count)
     {
         return GetGenerator().NextSequentialGuid(ids, index, count);

@@ -1,24 +1,18 @@
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for rabbit mq queue endpoint configurator.
-/// </summary>
+/// <summary>Configures queue and consumer behavior for a RabbitMQ receive endpoint.</summary>
 public interface IRabbitMqQueueEndpointConfigurator :
     IRabbitMqQueueConfigurator
 {
     /// <summary>
-    /// Purge the messages from an existing queue on startup (note that upon reconnection to the server
-    /// the queue will not be purged again, only when the service is restarted).
+    /// Purges messages from an existing queue when the receive endpoint starts. Reconnecting an already
+    /// started endpoint does not purge the queue again.
     /// </summary>
     bool PurgeOnStartup { set; }
 
-    /// <summary>
-    /// Sets the priority of the consumer (optional, no default value specified)
-    /// </summary>
+    /// <summary>Sets the priority of the consumer (optional, no default value specified).</summary>
     int ConsumerPriority { set; }
 
-    /// <summary>
-    /// Should the consumer have exclusive access to the queue
-    /// </summary>
+    /// <summary>Specifies whether the broker permits only this consumer on the queue.</summary>
     bool ExclusiveConsumer { set; }
 }

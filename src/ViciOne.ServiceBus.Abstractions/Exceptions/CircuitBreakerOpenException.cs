@@ -1,17 +1,13 @@
 using System;
 
 namespace ViciOne.ServiceBus;
-/// <summary>
-/// The configured circuit breaker rejected an operation before it reached the protected pipe.
-/// </summary>
+/// <summary>The configured circuit breaker rejected an operation before it reached the protected pipe.</summary>
 public sealed class CircuitBreakerOpenException : ViciOneServiceBusException
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="retryAfter">The retry after value.</param>
-    /// <param name="probeInProgress">The probe in progress value.</param>
-    /// <param name="lastFailure">The last failure value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="retryAfter">The retry after.</param>
+    /// <param name="probeInProgress">The probe in progress.</param>
+    /// <param name="lastFailure">The last failure.</param>
     public CircuitBreakerOpenException(TimeSpan retryAfter, bool probeInProgress, Exception? lastFailure)
         : base(CreateMessage(retryAfter, probeInProgress), lastFailure)
     {
@@ -28,9 +24,7 @@ public sealed class CircuitBreakerOpenException : ViciOneServiceBusException
     /// </summary>
     public TimeSpan RetryAfter { get; }
 
-    /// <summary>
-    /// Indicates that the exclusive half-open probe is currently owned by another caller.
-    /// </summary>
+    /// <summary>Indicates that the exclusive half-open probe is currently owned by another caller.</summary>
     public bool ProbeInProgress { get; }
 
     private static string CreateMessage(TimeSpan retryAfter, bool probeInProgress) =>

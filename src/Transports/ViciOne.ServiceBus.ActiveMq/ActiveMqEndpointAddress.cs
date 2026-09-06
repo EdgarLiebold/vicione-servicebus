@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Represents an active mq endpoint address value.
-/// </summary>
+/// <summary>Represents a validated ActiveMQ queue or topic address.</summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct ActiveMqEndpointAddress
 {
@@ -20,63 +18,39 @@ public readonly struct ActiveMqEndpointAddress
     const string TypeKey = "type";
 
 
-    /// <summary>
-    /// Specifies the available address type values.
-    /// </summary>
+    /// <summary>Identifies the kind of ActiveMQ destination addressed by an endpoint.</summary>
     public enum AddressType
     {
-        /// <summary>
-        /// Indicates queue.
-        /// </summary>
+        /// <summary>Identifies a queue destination.</summary>
         Queue = 0,
-        /// <summary>
-        /// Indicates topic.
-        /// </summary>
+        /// <summary>Identifies a topic destination.</summary>
         Topic = 1
     }
 
 
     static readonly ITypeConverter<AddressType, string> _parseConverter = new EnumTypeConverter<AddressType>();
 
-    /// <summary>
-    /// Defines the scheme value.
-    /// </summary>
+    /// <summary>The transport scheme of the broker address.</summary>
     public readonly string Scheme;
-    /// <summary>
-    /// Defines the host value.
-    /// </summary>
+    /// <summary>The broker host name.</summary>
     public readonly string Host;
-    /// <summary>
-    /// Defines the port value.
-    /// </summary>
+    /// <summary>The explicitly configured broker port, when available.</summary>
     public readonly int? Port;
-    /// <summary>
-    /// Defines the virtual host value.
-    /// </summary>
+    /// <summary>Exposes the broker namespace path encoded in the endpoint address.</summary>
     public readonly string VirtualHost;
 
-    /// <summary>
-    /// Defines the name value.
-    /// </summary>
+    /// <summary>The queue or topic name.</summary>
     public readonly string Name;
-    /// <summary>
-    /// Defines the durable value.
-    /// </summary>
+    /// <summary>Whether the destination persists across broker restarts.</summary>
     public readonly bool Durable;
-    /// <summary>
-    /// Defines the auto delete value.
-    /// </summary>
+    /// <summary>Whether the broker removes the destination automatically when it is no longer used.</summary>
     public readonly bool AutoDelete;
-    /// <summary>
-    /// Defines the type value.
-    /// </summary>
+    /// <summary>The kind of broker destination.</summary>
     public readonly AddressType Type;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="address">The address value.</param>
+    /// <summary>Parses and validates a destination address relative to the configured ActiveMQ host.</summary>
+    /// <param name="hostAddress">The configured ActiveMQ broker address.</param>
+    /// <param name="address">The queue, topic, or full broker destination address to parse.</param>
     public ActiveMqEndpointAddress(Uri hostAddress, Uri address)
     {
         ArgumentNullException.ThrowIfNull(hostAddress);
@@ -173,14 +147,12 @@ public readonly struct ActiveMqEndpointAddress
             throw new ActiveMqTransportConfigurationException("A topic address cannot declare the queue address type.");
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="type">The type value.</param>
+    /// <summary>Creates an ActiveMQ destination address from explicit entity settings.</summary>
+    /// <param name="hostAddress">The configured ActiveMQ broker address.</param>
+    /// <param name="exchangeName">The queue or topic name.</param>
+    /// <param name="durable">Whether the destination persists across broker restarts.</param>
+    /// <param name="autoDelete">Whether the broker removes the destination automatically when it is no longer used.</param>
+    /// <param name="type">The kind of broker destination.</param>
     public ActiveMqEndpointAddress(Uri hostAddress, string exchangeName, bool durable = true, bool autoDelete = false, AddressType type = AddressType.Queue)
     {
         ArgumentNullException.ThrowIfNull(hostAddress);
@@ -263,11 +235,9 @@ public readonly struct ActiveMqEndpointAddress
         }
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts the destination address to its canonical absolute URI.</summary>
+    /// <param name="address">The destination address.</param>
+    /// <returns>An absolute URI containing the broker and destination options.</returns>
     public static implicit operator Uri(in ActiveMqEndpointAddress address)
     {
         var builder = new UriBuilder
@@ -287,9 +257,7 @@ public readonly struct ActiveMqEndpointAddress
 
     Uri DebuggerDisplay => this;
 
-    /// <summary>
-    /// Gets the topic address value.
-    /// </summary>
+    /// <summary>Gets a relative topic URI for the destination name and its options.</summary>
     public Uri TopicAddress
     {
         get

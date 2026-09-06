@@ -9,15 +9,14 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// Verifies that the configured EF provider/session gives Durable Sender admissions a synchronous durable-commit
 /// boundary. Providers not covered by the built-in validator must register a provider-certified implementation.
 /// </summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 public interface IEntityFrameworkDurableSendCommitDurabilityValidator<TBus>
     where TBus : class, IBus
 {
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <param name="dbContext">The db context value.</param>
+    /// <summary>Rejects provider settings that cannot guarantee a durable commit before admission returns.</summary>
+    /// <param name="dbContext">A context configured for the reliable-messaging database.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task ValidateAsync(
         DbContext dbContext,
         CancellationToken cancellationToken = default);

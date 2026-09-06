@@ -3,32 +3,26 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a context message factory implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Creates context message instances.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+/// <typeparam name="T">The value type.</typeparam>
 public class ContextMessageFactory<TContext, T>
     where TContext : class, ConsumeContext
     where T : class
 {
     readonly Func<TContext, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> _messageFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageFactory">The message factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="messageFactory">The message factory.</param>
     public ContextMessageFactory(Func<TContext, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>> messageFactory)
     {
         _messageFactory = messageFactory;
     }
 
-    /// <summary>
-    /// Gets message.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Gets message.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> GetMessageAsync(TContext context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>(cancellationToken); Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> result = _messageFactory(context);
@@ -43,13 +37,11 @@ public class ContextMessageFactory<TContext, T>
         return GetResultAsync();
     }
 
-    /// <summary>
-    /// Performs the use operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Applies the selected configuration.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UseAsync(TContext context, Func<TContext, global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>, Task> callback, CancellationToken cancellationToken = default)
     {
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> msgTask = GetMessageAsync(context, cancellationToken: cancellationToken);
@@ -66,14 +58,12 @@ public class ContextMessageFactory<TContext, T>
         return GetResultAsync();
     }
 
-    /// <summary>
-    /// Performs the use operation.
-    /// </summary>
-    /// <typeparam name="TResult">The t result type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Applies the selected configuration.</summary>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the use outcome.</returns>
     public Task<TResult> UseAsync<TResult>(TContext context, Func<TContext, global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>, Task<TResult>> callback, CancellationToken cancellationToken = default)
     {
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> msgTask = GetMessageAsync(context, cancellationToken: cancellationToken);
@@ -90,11 +80,9 @@ public class ContextMessageFactory<TContext, T>
         return GetResultAsync();
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="ContextMessageFactory&lt;TContext, T&gt;" />.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts a value to <see cref="ContextMessageFactory&lt;TContext, T&gt;" />.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <returns>The value produced by the operation.</returns>
     public static implicit operator ContextMessageFactory<TContext, T>(TaskMessageFactory<T> factory)
     {
         Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> message = factory.GetMessageAsync();

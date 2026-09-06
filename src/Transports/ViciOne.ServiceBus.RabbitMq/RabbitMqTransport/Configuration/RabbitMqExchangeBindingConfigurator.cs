@@ -4,21 +4,17 @@ using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Provides a rabbit mq exchange binding configurator implementation.
-/// </summary>
+/// <summary>Configures a RabbitMQ exchange and the binding that uses it.</summary>
 public abstract class RabbitMqExchangeBindingConfigurator :
     RabbitMqExchangeConfigurator,
     IRabbitMqExchangeBindingConfigurator
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="exchangeType">The exchange type value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="routingKey">The routing key value.</param>
+    /// <summary>Creates exchange and binding settings from explicit values.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="exchangeType">The RabbitMQ exchange type.</param>
+    /// <param name="durable">Whether the exchange survives broker restarts.</param>
+    /// <param name="autoDelete">Whether RabbitMQ deletes the exchange when unused.</param>
+    /// <param name="routingKey">The binding routing key, or an empty key when omitted.</param>
     protected RabbitMqExchangeBindingConfigurator(string exchangeName, string exchangeType, bool durable = true, bool autoDelete = false,
         string? routingKey = null)
         : base(exchangeName, exchangeType, durable, autoDelete)
@@ -28,11 +24,9 @@ public abstract class RabbitMqExchangeBindingConfigurator :
         BindingArguments = new Dictionary<string, object?>();
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="routingKey">The routing key value.</param>
+    /// <summary>Copies exchange settings and creates an empty binding-argument set.</summary>
+    /// <param name="exchange">The exchange settings to copy.</param>
+    /// <param name="routingKey">The binding routing key, or an empty key when omitted.</param>
     protected RabbitMqExchangeBindingConfigurator(Exchange exchange, string? routingKey = null)
         : base(exchange)
     {
@@ -41,16 +35,12 @@ public abstract class RabbitMqExchangeBindingConfigurator :
         BindingArguments = new Dictionary<string, object?>();
     }
 
-    /// <summary>
-    /// Gets the binding arguments value.
-    /// </summary>
+    /// <summary>Gets the binding arguments.</summary>
     public IDictionary<string, object?> BindingArguments { get; }
 
-    /// <summary>
-    /// Sets binding argument.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets a binding argument, or removes it when the value is <see langword="null" />.</summary>
+    /// <param name="key">The RabbitMQ binding-argument key.</param>
+    /// <param name="value">The argument value.</param>
     public void SetBindingArgument(string key, object? value)
     {
         if (key == null)
@@ -62,8 +52,6 @@ public abstract class RabbitMqExchangeBindingConfigurator :
             BindingArguments[key] = value;
     }
 
-    /// <summary>
-    /// Gets or sets the routing key value.
-    /// </summary>
+    /// <summary>Gets or sets the routing key.</summary>
     public string RoutingKey { get; set; }
 }

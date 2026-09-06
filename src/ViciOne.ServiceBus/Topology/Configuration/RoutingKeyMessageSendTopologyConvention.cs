@@ -2,20 +2,16 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a routing key message send topology convention implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Applies conventions for routing key message send topology.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class RoutingKeyMessageSendTopologyConvention<TMessage> :
     IRoutingKeyMessageSendTopologyConvention<TMessage>
     where TMessage : class
 {
     IMessageRoutingKeyFormatter<TMessage>? _formatter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="formatter">The formatter.</param>
     public RoutingKeyMessageSendTopologyConvention(IRoutingKeyFormatter? formatter)
     {
         if (formatter != null)
@@ -42,19 +38,15 @@ public class RoutingKeyMessageSendTopologyConvention<TMessage> :
         return convention != null;
     }
 
-    /// <summary>
-    /// Sets formatter.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
+    /// <summary>Sets formatter.</summary>
+    /// <param name="formatter">The formatter.</param>
     public void SetFormatter(IRoutingKeyFormatter formatter)
     {
         _formatter = new MessageRoutingKeyFormatter<TMessage>(formatter);
     }
 
-    /// <summary>
-    /// Sets formatter.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
+    /// <summary>Sets formatter.</summary>
+    /// <param name="formatter">The formatter.</param>
     public void SetFormatter(IMessageRoutingKeyFormatter<TMessage> formatter)
     {
         _formatter = formatter;

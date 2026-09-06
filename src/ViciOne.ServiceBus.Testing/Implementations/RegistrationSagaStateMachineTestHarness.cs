@@ -7,11 +7,9 @@ using ViciOne.ServiceBus.DependencyInjection.Testing;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
-/// <summary>
-/// Provides a registration saga state machine test harness implementation.
-/// </summary>
-/// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <summary>Provides a test harness for registration saga state machine test.</summary>
+/// <typeparam name="TStateMachine">The state machine type.</typeparam>
+/// <typeparam name="TInstance">The instance type.</typeparam>
 public class RegistrationSagaStateMachineTestHarness<TStateMachine, TInstance> :
     BaseSagaTestHarness<TInstance>,
     ISagaStateMachineTestHarness<TStateMachine, TInstance>
@@ -22,14 +20,12 @@ public class RegistrationSagaStateMachineTestHarness<TStateMachine, TInstance> :
     readonly IDisposable _eventObserverHandle;
     readonly IDisposable _stateObserverHandle;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="registration">The registration value.</param>
-    /// <param name="querySagaRepository">The query saga repository value.</param>
-    /// <param name="loadSagaRepository">The load saga repository value.</param>
-    /// <param name="stateMachine">The state machine value.</param>
-    /// <param name="testHarness">The test harness value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="registration">The registration.</param>
+    /// <param name="querySagaRepository">The query saga repository.</param>
+    /// <param name="loadSagaRepository">The load saga repository.</param>
+    /// <param name="stateMachine">The state machine.</param>
+    /// <param name="testHarness">The test harness.</param>
     public RegistrationSagaStateMachineTestHarness(SagaContainerTestHarnessRegistration<TInstance> registration,
         IQuerySagaRepository<TInstance>? querySagaRepository, ILoadSagaRepository<TInstance>? loadSagaRepository, TStateMachine stateMachine,
         ITestHarness testHarness)
@@ -44,52 +40,36 @@ public class RegistrationSagaStateMachineTestHarness<TStateMachine, TInstance> :
         Sagas = registration.Sagas;
     }
 
-    /// <summary>
-    /// Gets the consumed value.
-    /// </summary>
+    /// <summary>Gets the consumed.</summary>
     public IReceivedMessageList Consumed { get; }
 
-    /// <summary>
-    /// Gets the sagas value.
-    /// </summary>
+    /// <summary>Gets the sagas.</summary>
     public ISagaList<TInstance> Sagas { get; }
 
-    /// <summary>
-    /// Gets the created value.
-    /// </summary>
+    /// <summary>Gets the created.</summary>
     public ISagaList<TInstance> Created { get; }
 
-    /// <summary>
-    /// Gets the state machine value.
-    /// </summary>
+    /// <summary>Gets the state machine.</summary>
     public TStateMachine StateMachine { get; }
 
-    /// <summary>
-    /// Gets the events value.
-    /// </summary>
+    /// <summary>Gets the events.</summary>
     public IReadOnlyList<StateMachineEventObservation> Events => _observations.Events;
-    /// <summary>
-    /// Gets the state changes value.
-    /// </summary>
+    /// <summary>Gets the state changes.</summary>
     public IReadOnlyList<StateMachineStateChange> StateChanges => _observations.StateChanges;
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         _stateObserverHandle.Dispose();
         _eventObserverHandle.Dispose();
     }
 
-    /// <summary>
-    /// Waits until a saga exists with the specified correlationId in the specified state
-    /// </summary>
-    /// <param name="correlationId"></param>
-    /// <param name="stateSelector"></param>
-    /// <param name="timeout"></param>
-    /// <returns></returns>
+    /// <summary>Waits until a saga exists with the specified correlationId in the specified state.</summary>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="stateSelector">The state selector.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the exists outcome.</returns>
     public Task<Guid?> ExistsAsync(Guid correlationId, Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         var state = stateSelector(StateMachine);
@@ -97,14 +77,12 @@ public class RegistrationSagaStateMachineTestHarness<TStateMachine, TInstance> :
         return ExistsAsync(correlationId, state, timeout, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Waits until a saga exists with the specified correlationId in the specified state
-    /// </summary>
-    /// <param name="correlationId"></param>
-    /// <param name="state">The expected state</param>
-    /// <param name="timeout"></param>
-    /// <returns></returns>
+    /// <summary>Waits until a saga exists with the specified correlationId in the specified state.</summary>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="state">The expected state.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the exists outcome.</returns>
     public async Task<Guid?> ExistsAsync(Guid correlationId, State state, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         if (QuerySagaRepository == null)
@@ -119,14 +97,12 @@ public class RegistrationSagaStateMachineTestHarness<TStateMachine, TInstance> :
             timeout).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Waits until a saga exists with the specified correlationId in the specified state
-    /// </summary>
-    /// <param name="expression"></param>
-    /// <param name="stateSelector"></param>
-    /// <param name="timeout"></param>
-    /// <returns></returns>
+    /// <summary>Waits until a saga exists with the specified correlationId in the specified state.</summary>
+    /// <param name="expression">The expression.</param>
+    /// <param name="stateSelector">The state selector.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the exists outcome.</returns>
     public Task<IList<Guid>> ExistsAsync(Expression<Func<TInstance, bool>> expression, Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         var state = stateSelector(StateMachine);
@@ -134,14 +110,12 @@ public class RegistrationSagaStateMachineTestHarness<TStateMachine, TInstance> :
         return ExistsAsync(expression, state, timeout, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Waits until a saga exists with the specified correlationId in the specified state
-    /// </summary>
-    /// <param name="expression"></param>
-    /// <param name="state">The expected state</param>
-    /// <param name="timeout"></param>
-    /// <returns></returns>
+    /// <summary>Waits until a saga exists with the specified correlationId in the specified state.</summary>
+    /// <param name="expression">The expression.</param>
+    /// <param name="state">The expected state.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the exists outcome.</returns>
     public async Task<IList<Guid>> ExistsAsync(Expression<Func<TInstance, bool>> expression, State state, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         if (QuerySagaRepository == null)

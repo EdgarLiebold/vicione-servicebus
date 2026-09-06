@@ -6,44 +6,38 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides extension methods for service bus message scheduler bus.
-/// </summary>
+/// <summary>Creates and registers schedulers backed by Azure Service Bus scheduled enqueue.</summary>
 public static class ServiceBusMessageSchedulerBusExtensions
 {
     /// <summary>
-    /// Create a message scheduler that uses the Azure Service Bus ScheduleEnqueueTimeUtc property to
-    /// schedule messages.
-    /// NOTE that this should only be used to schedule messages outside of a message consumer. Consumers should
-    /// use the ScheduleSend extensions on ConsumeContext.
+    /// Creates a scheduler that sets the Azure Service Bus scheduled enqueue time on outgoing messages.
+    /// Use this bus-level scheduler outside a consumer; consumers should schedule through their
+    /// <see cref="ConsumeContext"/> so the operation retains consume-scope metadata.
     /// </summary>
-    /// <param name="bus"></param>
-    /// <param name="timeProvider"></param>
-    /// <returns></returns>
+    /// <param name="bus">The bus used to resolve send endpoints and topology.</param>
+    /// <param name="timeProvider">The optional time source used to calculate delays.</param>
+    /// <returns>A scheduler that delegates delayed delivery to Azure Service Bus.</returns>
     public static IMessageScheduler CreateServiceBusMessageScheduler(this IBus bus, TimeProvider? timeProvider = null)
     {
         return new MessageScheduler(new ServiceBusScheduleMessageProvider(bus), bus.Topology, timeProvider);
     }
 
     /// <summary>
-    /// Create a message scheduler that uses the Azure Service Bus ScheduleEnqueueTimeUtc property to
-    /// schedule messages.
-    /// NOTE that this should only be used to schedule messages outside of a message consumer. Consumers should
-    /// use the ScheduleSend extensions on ConsumeContext.
+    /// Creates a scheduler that sets the Azure Service Bus scheduled enqueue time on outgoing messages.
+    /// Use this provider-level scheduler outside a consumer; consumers should schedule through their
+    /// <see cref="ConsumeContext"/> so the operation retains consume-scope metadata.
     /// </summary>
-    /// <param name="sendEndpointProvider"></param>
-    /// <param name="busTopology"></param>
-    /// <param name="timeProvider"></param>
-    /// <returns></returns>
+    /// <param name="sendEndpointProvider">The provider used to resolve destination endpoints.</param>
+    /// <param name="busTopology">The topology used to obtain publish addresses.</param>
+    /// <param name="timeProvider">The optional time source used to calculate delays.</param>
+    /// <returns>A scheduler that delegates delayed delivery to Azure Service Bus.</returns>
     public static IMessageScheduler CreateServiceBusMessageScheduler(this ISendEndpointProvider sendEndpointProvider, IBusTopology busTopology, TimeProvider? timeProvider = null)
     {
         return new MessageScheduler(new ServiceBusScheduleMessageProvider(sendEndpointProvider), busTopology, timeProvider);
     }
 
-    /// <summary>
-    /// Add an <see cref="IMessageScheduler" /> to the container that uses the Azure message enqueue time to schedule messages.
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Registers a scoped scheduler for the default bus that delegates delayed delivery to Azure Service Bus.</summary>
+    /// <param name="configurator">The service registration to update.</param>
     public static void AddServiceBusMessageScheduler(this IRegistrationConfigurator configurator)
     {
         configurator.Services.TryAddScoped(provider =>
@@ -55,10 +49,9 @@ public static class ServiceBusMessageSchedulerBusExtensions
         });
     }
 
-    /// <summary>
-    /// Add an <see cref="IMessageScheduler" /> to the container that uses the Azure message enqueue time to schedule messages.
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Registers a scoped scheduler bound to the specified bus that delegates delayed delivery to Azure Service Bus.</summary>
+    /// <typeparam name="TBus">The named bus contract.</typeparam>
+    /// <param name="configurator">The named bus registration to update.</param>
     public static void AddServiceBusMessageScheduler<TBus>(this IBusRegistrationConfigurator<TBus> configurator)
         where TBus : class, IBus
     {

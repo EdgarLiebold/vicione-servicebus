@@ -1,25 +1,19 @@
 namespace ViciOne.ServiceBus.ActiveMq.Configuration;
 
-/// <summary>
-/// Provides an active mq queue binding configurator implementation.
-/// </summary>
+/// <summary>Configures an ActiveMQ queue binding and its optional message selector.</summary>
 public class ActiveMqQueueBindingConfigurator :
     ActiveMqQueueConfigurator,
     IActiveMqQueueBindingConfigurator
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
+    /// <summary>Creates a queue-binding configurator.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="durable">Whether the queue persists across broker restarts.</param>
+    /// <param name="autoDelete">Whether the broker removes the queue when it is no longer used.</param>
     protected ActiveMqQueueBindingConfigurator(string queueName, bool durable, bool autoDelete)
         : base(queueName, durable, autoDelete)
     {
     }
 
-    /// <summary>
-    /// Gets or sets the selector value.
-    /// </summary>
+    /// <summary>Gets or sets the Apache NMS message selector applied by the binding.</summary>
     public string? Selector { get; set; }
 }

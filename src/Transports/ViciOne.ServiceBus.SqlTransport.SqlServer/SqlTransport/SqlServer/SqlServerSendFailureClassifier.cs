@@ -2,9 +2,7 @@ using System;
 using Microsoft.Data.SqlClient;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
-/// <summary>
-/// Classifies SQL Server send failures from the provider's numeric error codes.
-/// </summary>
+/// <summary>Classifies SQL Server send failures from the provider's numeric error codes.</summary>
 public sealed class SqlServerSendFailureClassifier : ITransportSendFailureClassifier
 {
     /// <inheritdoc />

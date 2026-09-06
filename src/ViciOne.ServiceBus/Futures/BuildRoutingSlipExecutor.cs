@@ -3,31 +3,25 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Futures;
 
-/// <summary>
-/// Provides a build routing slip executor implementation.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Executes build routing slip operations.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class BuildRoutingSlipExecutor<TInput> :
     IRoutingSlipExecutor<TInput>
     where TInput : class
 {
     readonly BuildItineraryCallback<TInput> _buildItinerary;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="buildItinerary">The build itinerary value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="buildItinerary">The build itinerary.</param>
     public BuildRoutingSlipExecutor(BuildItineraryCallback<TInput> buildItinerary)
     {
         _buildItinerary = buildItinerary;
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         var trackingNumber = NewId.NextGuid();
@@ -48,8 +42,6 @@ public class BuildRoutingSlipExecutor<TInput> :
             context.Saga.Pending.Add(trackingNumber);
     }
 
-    /// <summary>
-    /// Gets or sets the track routing slip value.
-    /// </summary>
+    /// <summary>Gets or sets the track routing slip.</summary>
     public bool TrackRoutingSlip { get; set; }
 }

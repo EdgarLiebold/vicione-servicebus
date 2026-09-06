@@ -3,14 +3,10 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Defines the contract for event hub receive endpoint context.
-/// </summary>
+/// <summary>Provides receive-pipeline state and access to the Event Hubs processor supervisor.</summary>
 public interface IEventHubReceiveEndpointContext :
     ReceiveEndpointContext
 {
-    /// <summary>
-    /// Gets the context supervisor value.
-    /// </summary>
+    /// <summary>Gets the supervisor that owns the Event Hubs processor context.</summary>
     IProcessorContextSupervisor ContextSupervisor { get; }
 }

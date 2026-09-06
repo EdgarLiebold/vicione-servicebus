@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides a processor lock context implementation.
-/// </summary>
+/// <summary>Coordinates partition lifecycle, pending event confirmations, and batched checkpoints for one processor client.</summary>
 public class ProcessorLockContext :
     IProcessorLockContext,
     ProcessorClientBuilderContext
@@ -20,12 +18,10 @@ public class ProcessorLockContext :
     readonly PendingConfirmationCollection _pending;
     readonly ReceiveSettings _receiveSettings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="receiveSettings">The receive settings value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Leases the processor client and creates shared pending-confirmation state.</summary>
+    /// <param name="context">The processor context that owns the client.</param>
+    /// <param name="receiveSettings">The endpoint concurrency and checkpoint settings.</param>
+    /// <param name="cancellationToken">Cancels every outstanding confirmation.</param>
     public ProcessorLockContext(ProcessorContext context, ReceiveSettings receiveSettings, CancellationToken cancellationToken)
     {
         _context = context;
@@ -36,15 +32,11 @@ public class ProcessorLockContext :
         Client = context.GetClient(this);
     }
 
-    /// <summary>
-    /// Gets the client value.
-    /// </summary>
+    /// <summary>Gets the leased Azure SDK event processor client.</summary>
     public EventProcessorClient Client { get; }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the client lease and disposes pending-confirmation cancellation state.</summary>
+    /// <returns>A completed value task.</returns>
     public ValueTask DisposeAsync()
     {
         _context.ReleaseClient(this);
@@ -54,12 +46,10 @@ public class ProcessorLockContext :
         return default;
     }
 
-    /// <summary>
-    /// Performs the pending operation.
-    /// </summary>
-    /// <param name="eventArgs">The event args value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Registers an event with its partition's checkpoint queue when that partition is active.</summary>
+    /// <param name="eventArgs">The Azure SDK event-processing arguments.</param>
+    /// <param name="cancellationToken">Cancels registration or queue admission.</param>
+    /// <returns>A task that completes when the event is queued, or immediately when the partition is unknown.</returns>
     public Task PendingAsync(ProcessEventArgs eventArgs, CancellationToken cancellationToken = default)
     {
         LogContext.SetCurrentIfNull(_context.LogContext);
@@ -67,42 +57,42 @@ public class ProcessorLockContext :
         return _data.TryGetValue(eventArgs.Partition.PartitionId, out var data) ? data.PendingAsync(eventArgs, cancellationToken: cancellationToken) : Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <param name="eventArgs">The event args value.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Removes and faults the pending confirmation for an event.</summary>
+    /// <param name="eventArgs">The Azure SDK event-processing arguments.</param>
+    /// <param name="exception">The receive-pipeline failure.</param>
+    /// <param name="cancellationToken">Cancels fault reporting before it is applied.</param>
+    /// <returns>A completed task after the failure is recorded.</returns>
     public Task FaultedAsync(ProcessEventArgs eventArgs, Exception exception, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); LogContext.SetCurrentIfNull(_context.LogContext);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        LogContext.SetCurrentIfNull(_context.LogContext);
 
         _pending.Faulted(eventArgs, exception);
 
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
-    /// <param name="eventArgs">The event args value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Removes and completes the pending confirmation for an event.</summary>
+    /// <param name="eventArgs">The Azure SDK event-processing arguments.</param>
+    /// <param name="cancellationToken">Cancels completion reporting before it is applied.</param>
+    /// <returns>A completed task after success is recorded.</returns>
     public Task CompleteAsync(ProcessEventArgs eventArgs, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); LogContext.SetCurrentIfNull(_context.LogContext);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        LogContext.SetCurrentIfNull(_context.LogContext);
 
         _pending.Complete(eventArgs);
 
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Determines whether the current value can celed.
-    /// </summary>
-    /// <param name="eventArgs">The event args value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Removes and cancels the pending confirmation for an event.</summary>
+    /// <param name="eventArgs">The Azure SDK event-processing arguments.</param>
+    /// <param name="cancellationToken">The token that caused cancellation.</param>
     public void Canceled(ProcessEventArgs eventArgs, CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_context.LogContext);
@@ -110,15 +100,16 @@ public class ProcessorLockContext :
         _pending.Canceled(eventArgs, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the on partition initializing operation.
-    /// </summary>
-    /// <param name="eventArgs">The event args value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates checkpoint state before processing begins for a partition.</summary>
+    /// <param name="eventArgs">The Azure SDK partition-initializing arguments.</param>
+    /// <param name="cancellationToken">Cancels initialization before state is created.</param>
+    /// <returns>A completed task after partition state is registered.</returns>
     public Task OnPartitionInitializingAsync(PartitionInitializingEventArgs eventArgs, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); LogContext.SetCurrentIfNull(_context.LogContext);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        LogContext.SetCurrentIfNull(_context.LogContext);
 
         if (_data.TryAdd(eventArgs.PartitionId, _ => new PartitionCheckpointData(_receiveSettings, _pending)))
             LogContext.Info?.Log("Partition: {PartitionId} was initialized", eventArgs.PartitionId);
@@ -126,12 +117,10 @@ public class ProcessorLockContext :
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the on partition closing operation.
-    /// </summary>
-    /// <param name="eventArgs">The event args value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Removes and closes checkpoint state after processing stops for a partition.</summary>
+    /// <param name="eventArgs">The Azure SDK partition-closing arguments.</param>
+    /// <param name="cancellationToken">Cancels partition-state closure.</param>
+    /// <returns>A task that completes after partition state is closed, or immediately when no state exists.</returns>
     public Task OnPartitionClosingAsync(PartitionClosingEventArgs eventArgs, CancellationToken cancellationToken = default)
     {
         LogContext.SetCurrentIfNull(_context.LogContext);

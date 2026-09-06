@@ -2,14 +2,10 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Defines the contract for consumer handle.
-/// </summary>
+/// <summary>Identifies a consumer binding created by a broker-topology builder.</summary>
 public interface ConsumerHandle :
     EntityHandle
 {
-    /// <summary>
-    /// Gets the consumer value.
-    /// </summary>
+    /// <summary>Gets the represented consumer binding.</summary>
     Consumer Consumer { get; }
 }

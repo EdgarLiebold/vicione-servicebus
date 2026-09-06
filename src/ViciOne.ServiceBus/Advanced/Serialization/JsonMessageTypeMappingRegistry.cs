@@ -5,27 +5,23 @@ using ViciOne.ServiceBus.Serialization.JsonConverters;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 
-/// <summary>
-/// Registers JSON contract-to-implementation mappings contributed by optional capability packages.
-/// </summary>
+/// <summary>Registers JSON contract-to-implementation mappings contributed by optional capability packages.</summary>
 public static class JsonMessageTypeMappingRegistry
 {
     static readonly ConcurrentDictionary<Type, Type> ClosedMappings = new();
     static readonly ConcurrentDictionary<Type, Type> OpenMappings = new();
 
-    /// <summary>
-    /// Registers a closed message-contract mapping.
-    /// </summary>
+    /// <summary>Registers a closed message-contract mapping.</summary>
+    /// <typeparam name="TContract">The contract type.</typeparam>
+    /// <typeparam name="TImplementation">The implementation type.</typeparam>
     public static void Register<TContract, TImplementation>()
         where TContract : class
         where TImplementation : class, TContract =>
         Register(typeof(TContract), typeof(TImplementation), ClosedMappings, requireGenericDefinitions: false);
 
-    /// <summary>
-    /// Registers an open generic message-contract mapping.
-    /// </summary>
-    /// <param name="contractType">The open generic contract type.</param>
-    /// <param name="implementationType">The open generic implementation type.</param>
+    /// <summary>Registers an open generic message-contract mapping.</summary>
+    /// <param name="contractType">The runtime contract type used by the operation.</param>
+    /// <param name="implementationType">The runtime implementation type used by the operation.</param>
     public static void RegisterOpenGeneric(Type contractType, Type implementationType) =>
         Register(contractType, implementationType, OpenMappings, requireGenericDefinitions: true);
 

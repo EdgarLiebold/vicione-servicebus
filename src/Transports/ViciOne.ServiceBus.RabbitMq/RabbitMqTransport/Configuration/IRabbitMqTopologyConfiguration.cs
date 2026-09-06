@@ -2,24 +2,16 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Defines the contract for rabbit mq topology configuration.
-/// </summary>
+/// <summary>Combines RabbitMQ publish, send, and consume topology configuration.</summary>
 public interface IRabbitMqTopologyConfiguration :
     ITopologyConfiguration
 {
-    /// <summary>
-    /// Gets the publish value.
-    /// </summary>
+    /// <summary>Gets publish topology across message contracts.</summary>
     new IRabbitMqPublishTopologyConfigurator Publish { get; }
 
-    /// <summary>
-    /// Gets the send value.
-    /// </summary>
+    /// <summary>Gets send topology and generated fault-queue conventions.</summary>
     new IRabbitMqSendTopologyConfigurator Send { get; }
 
-    /// <summary>
-    /// Gets the consume value.
-    /// </summary>
+    /// <summary>Gets consume topology for the endpoint under construction.</summary>
     new IRabbitMqConsumeTopologyConfigurator Consume { get; }
 }

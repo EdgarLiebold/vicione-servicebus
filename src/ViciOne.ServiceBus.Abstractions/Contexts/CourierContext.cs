@@ -3,9 +3,7 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Defines the contract for courier context.
-/// </summary>
+/// <summary>Exposes state for courier operations.</summary>
 public interface CourierContext :
     ActivityContext,
     ConsumeContext<RoutingSlip>;

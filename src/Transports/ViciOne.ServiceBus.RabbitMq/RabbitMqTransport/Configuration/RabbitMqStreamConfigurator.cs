@@ -3,34 +3,26 @@ using RabbitMQ.Client;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Provides a rabbit mq stream configurator implementation.
-/// </summary>
+/// <summary>Writes RabbitMQ stream retention and consumer-offset arguments.</summary>
 public class RabbitMqStreamConfigurator :
     IRabbitMqStreamConfigurator
 {
     readonly RabbitMqReceiveSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Creates a stream configurator over receive queue and consumer settings.</summary>
+    /// <param name="settings">The RabbitMQ receive settings to update.</param>
     public RabbitMqStreamConfigurator(RabbitMqReceiveSettings settings)
     {
         _settings = settings;
     }
 
-    /// <summary>
-    /// Gets or sets the max length value.
-    /// </summary>
+    /// <summary>Sets the maximum retained stream length in bytes.</summary>
     public long MaxLength
     {
         set => _settings.QueueArguments[RabbitMQ.Client.Headers.XMaxLengthInBytes] = value;
     }
 
-    /// <summary>
-    /// Gets or sets the max age value.
-    /// </summary>
+    /// <summary>Sets maximum stream age using RabbitMQ's largest applicable whole-unit representation.</summary>
     public TimeSpan MaxAge
     {
         set
@@ -52,35 +44,27 @@ public class RabbitMqStreamConfigurator :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the max segment size value.
-    /// </summary>
+    /// <summary>Sets the maximum stream segment size in bytes.</summary>
     public long MaxSegmentSize
     {
         set => _settings.QueueArguments[RabbitMQ.Client.Headers.XStreamMaxSegmentSizeInBytes] = value;
     }
 
-    /// <summary>
-    /// Gets or sets the filter value.
-    /// </summary>
+    /// <summary>Sets the server-side stream filter value for this consumer.</summary>
     public string Filter
     {
         set => _settings.ConsumeArguments["x-stream-filter"] = value;
     }
 
-    /// <summary>
-    /// Performs the from offset operation.
-    /// </summary>
-    /// <param name="offset">The offset value.</param>
+    /// <summary>Starts consumption at an absolute stream offset.</summary>
+    /// <param name="offset">The first stream offset to consume.</param>
     public void FromOffset(long offset)
     {
         _settings.ConsumeArguments[RabbitMQ.Client.Headers.XStreamOffset] = offset;
     }
 
-    /// <summary>
-    /// Performs the from timestamp operation.
-    /// </summary>
-    /// <param name="timestamp">The timestamp value.</param>
+    /// <summary>Starts consumption at the first message at or after a UTC instant.</summary>
+    /// <param name="timestamp">The stream timestamp boundary.</param>
     public void FromTimestamp(DateTimeOffset timestamp)
     {
         timestamp = timestamp.ToUniversalTime();
@@ -88,25 +72,19 @@ public class RabbitMqStreamConfigurator :
         _settings.ConsumeArguments.SetAmqpTimestamp(RabbitMQ.Client.Headers.XStreamOffset, timestamp);
     }
 
-    /// <summary>
-    /// Performs the from first operation.
-    /// </summary>
+    /// <summary>Starts consumption at the first retained stream message.</summary>
     public void FromFirst()
     {
         _settings.ConsumeArguments[RabbitMQ.Client.Headers.XStreamOffset] = "first";
     }
 
-    /// <summary>
-    /// Performs the from last operation.
-    /// </summary>
+    /// <summary>Starts consumption with messages appended after the consumer begins.</summary>
     public void FromLast()
     {
         _settings.ConsumeArguments[RabbitMQ.Client.Headers.XStreamOffset] = "last";
     }
 
-    /// <summary>
-    /// Gets or sets the reference value.
-    /// </summary>
+    /// <summary>Sets the stable server-side consumer reference used for offset tracking.</summary>
     public string Reference
     {
         set => _settings.ConsumeArguments["name"] = value;

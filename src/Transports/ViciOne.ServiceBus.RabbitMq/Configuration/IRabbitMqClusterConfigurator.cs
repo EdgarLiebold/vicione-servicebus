@@ -1,13 +1,9 @@
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for rabbit mq cluster configurator.
-/// </summary>
+/// <summary>Configures RabbitMQ cluster nodes used for connection failover.</summary>
 public interface IRabbitMqClusterConfigurator
 {
-    /// <summary>
-    /// Add a node to the cluster, which may include a host name, and an option port number.
-    /// </summary>
-    /// <param name="nodeAddress">The node address</param>
+    /// <summary>Adds a cluster node address containing a host name and an optional port.</summary>
+    /// <param name="nodeAddress">The node address in <c>host</c> or <c>host:port</c> form.</param>
     void Node(string nodeAddress);
 }

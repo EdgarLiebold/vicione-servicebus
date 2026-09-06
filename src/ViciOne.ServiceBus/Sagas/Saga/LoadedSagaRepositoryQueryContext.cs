@@ -9,11 +9,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>
-/// For queries that load the actual saga instances
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
-/// <typeparam name="TMessage"></typeparam>
+/// <summary>For queries that load the actual saga instances.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class LoadedSagaRepositoryQueryContext<TSaga, TMessage> :
     ConsumeContextProxy<TMessage>,
     SagaRepositoryQueryContext<TSaga, TMessage>
@@ -23,11 +21,9 @@ public class LoadedSagaRepositoryQueryContext<TSaga, TMessage> :
     readonly IDictionary<Guid, TSaga> _index;
     readonly SagaRepositoryContext<TSaga, TMessage> _repositoryContext;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="repositoryContext">The repository context value.</param>
-    /// <param name="instances">The instances value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="repositoryContext">The repository context.</param>
+    /// <param name="instances">The instances.</param>
     public LoadedSagaRepositoryQueryContext(SagaRepositoryContext<TSaga, TMessage> repositoryContext, IEnumerable<TSaga> instances)
         : base(repositoryContext)
     {
@@ -36,39 +32,31 @@ public class LoadedSagaRepositoryQueryContext<TSaga, TMessage> :
         _index = instances.ToDictionary(x => x.CorrelationId);
     }
 
-    /// <summary>
-    /// Gets the count value.
-    /// </summary>
+    /// <summary>Gets the count.</summary>
     public int Count => _index.Count;
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="instance">The instance.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the add outcome.</returns>
     public Task<SagaConsumeContext<TSaga, TMessage>> AddAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
         return _repositoryContext.AddAsync(instance, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the insert operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Inserts the supplied value.</summary>
+    /// <param name="instance">The instance.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the insert outcome.</returns>
     public Task<SagaConsumeContext<TSaga, TMessage>?> InsertAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
         return _repositoryContext.InsertAsync(instance, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
-    /// <param name="correlationId">The correlation id value.</param>
+    /// <summary>Loads the requested state.</summary>
+    /// <param name="correlationId">The correlation id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the load outcome.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         if (_index.TryGetValue(correlationId, out var instance))
@@ -78,65 +66,53 @@ public class LoadedSagaRepositoryQueryContext<TSaga, TMessage> :
         return await _repositoryContext.LoadAsync(correlationId, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the save operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Persists the current state.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         return _repositoryContext.SaveAsync(context, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the discard operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Discards the current value.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         return _repositoryContext.DiscardAsync(context, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the undo operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Reverts the current operation.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         return _repositoryContext.UndoAsync(context, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the update operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Updates the current value.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         return _repositoryContext.UpdateAsync(context, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the delete operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Deletes the selected entity.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         return _repositoryContext.DeleteAsync(context, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Gets enumerator.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets enumerator.</summary>
+    /// <returns>The enumerator.</returns>
     public IEnumerator<Guid> GetEnumerator()
     {
         return _index.Keys.GetEnumerator();
@@ -147,14 +123,12 @@ public class LoadedSagaRepositoryQueryContext<TSaga, TMessage> :
         return GetEnumerator();
     }
 
-    /// <summary>
-    /// Creates saga consume context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="consumeContext">The consume context value.</param>
-    /// <param name="instance">The instance value.</param>
-    /// <param name="mode">The mode value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates saga consume context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="consumeContext">The consume context.</param>
+    /// <param name="instance">The instance.</param>
+    /// <param name="mode">The mode.</param>
+    /// <returns>A task that produces the created value.</returns>
     public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
         where T : class
     {
@@ -163,10 +137,8 @@ public class LoadedSagaRepositoryQueryContext<TSaga, TMessage> :
 }
 
 
-/// <summary>
-/// For queries that load the actual saga instances
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
+/// <summary>For queries that load the actual saga instances.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class LoadedSagaRepositoryQueryContext<TSaga> :
     BasePipeContext,
     SagaRepositoryQueryContext<TSaga>
@@ -175,11 +147,9 @@ public class LoadedSagaRepositoryQueryContext<TSaga> :
     readonly IDictionary<Guid, TSaga> _index;
     readonly QuerySagaRepositoryContext<TSaga> _querySagaRepositoryContext;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="querySagaRepositoryContext">The query saga repository context value.</param>
-    /// <param name="instances">The instances value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="querySagaRepositoryContext">The query saga repository context.</param>
+    /// <param name="instances">The instances.</param>
     public LoadedSagaRepositoryQueryContext(QuerySagaRepositoryContext<TSaga> querySagaRepositoryContext, IEnumerable<TSaga> instances)
         : base(querySagaRepositoryContext)
     {
@@ -188,26 +158,20 @@ public class LoadedSagaRepositoryQueryContext<TSaga> :
         _index = instances.ToDictionary(x => x.CorrelationId);
     }
 
-    /// <summary>
-    /// Gets the count value.
-    /// </summary>
+    /// <summary>Gets the count.</summary>
     public int Count => _index.Count;
 
-    /// <summary>
-    /// Performs the query operation.
-    /// </summary>
-    /// <param name="query">The query value.</param>
+    /// <summary>Queries the configured data source.</summary>
+    /// <param name="query">The query.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the query outcome.</returns>
     public Task<SagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
     {
         return _querySagaRepositoryContext.QueryAsync(query, cancellationToken);
     }
 
-    /// <summary>
-    /// Gets enumerator.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets enumerator.</summary>
+    /// <returns>The enumerator.</returns>
     public IEnumerator<Guid> GetEnumerator()
     {
         return _index.Keys.GetEnumerator();

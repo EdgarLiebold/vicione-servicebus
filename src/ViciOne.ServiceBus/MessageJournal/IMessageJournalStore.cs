@@ -2,25 +2,19 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.MessageJournal;
-/// <summary>
-/// Persists sanitized message-journal entries within declared finite limits.
-/// </summary>
+/// <summary>Persists sanitized message-journal entries within declared finite limits.</summary>
 /// <remarks>
 /// This is an optional diagnostic journal, never the ViciOne Suite audit owner. Implementations must
 /// enforce <see cref="Limits"/> on every append and must not create a queue in front of persistence.
 /// </remarks>
 public interface IMessageJournalStore
 {
-    /// <summary>
-    /// Gets the limits value.
-    /// </summary>
+    /// <summary>Gets the limits.</summary>
     MessageJournalStoreLimits Limits { get; }
 
-    /// <summary>
-    /// Performs the append operation.
-    /// </summary>
-    /// <param name="entry">The entry value.</param>
+    /// <summary>Appends the supplied value.</summary>
+    /// <param name="entry">The entry.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     ValueTask AppendAsync(MessageJournalEntry entry, CancellationToken cancellationToken);
 }

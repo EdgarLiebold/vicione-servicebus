@@ -8,30 +8,25 @@ namespace ViciOne.ServiceBus.RabbitMq;
 /// </summary>
 public interface IRabbitMqQueueOperations
 {
-    /// <summary>
-    /// Performs the redrive faulted messages operation.
-    /// </summary>
-    /// <param name="request">The request value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Moves faulted messages back to the delivery queue.</summary>
+    /// <param name="request">The bounded scan, selection, and destination settings.</param>
+    /// <param name="cancellationToken">Cancellation for broker topology checks and message transfer.</param>
+    /// <returns>The counts and termination condition of the redrive attempt.</returns>
     Task<RabbitMqFaultRedriveResult> RedriveFaultedMessagesAsync(
         RabbitMqFaultRedriveRequest request,
         CancellationToken cancellationToken = default);
 }
 
 
-/// <summary>
-/// Administrative RabbitMQ queue operations bound to one explicit bus instance.
-/// </summary>
+/// <summary>Administrative RabbitMQ queue operations bound to one explicit bus instance.</summary>
+/// <typeparam name="TBus">The bus instance whose RabbitMQ endpoint owns the queues.</typeparam>
 public interface IRabbitMqQueueOperations<TBus>
     where TBus : class, IBus
 {
-    /// <summary>
-    /// Performs the redrive faulted messages operation.
-    /// </summary>
-    /// <param name="request">The request value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Moves faulted messages back to the delivery queue.</summary>
+    /// <param name="request">The bounded scan, selection, and destination settings.</param>
+    /// <param name="cancellationToken">Cancellation for broker topology checks and message transfer.</param>
+    /// <returns>The counts and termination condition of the redrive attempt.</returns>
     Task<RabbitMqFaultRedriveResult> RedriveFaultedMessagesAsync(
         RabbitMqFaultRedriveRequest request,
         CancellationToken cancellationToken = default);

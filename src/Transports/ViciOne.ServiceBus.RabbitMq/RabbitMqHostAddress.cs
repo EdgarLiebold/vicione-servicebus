@@ -6,25 +6,17 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Represents a rabbit mq host address value.
-/// </summary>
+/// <summary>Parses and normalizes a RabbitMQ host address and host-level query options.</summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct RabbitMqHostAddress
 {
-    /// <summary>
-    /// Defines the rabbit mq scheme value.
-    /// </summary>
+    /// <summary>The plain-text RabbitMQ transport URI scheme.</summary>
     public const string RabbitMqScheme = "rabbitmq";
-    /// <summary>
-    /// Defines the rabbit mq secure scheme value.
-    /// </summary>
+    /// <summary>The TLS RabbitMQ transport URI scheme.</summary>
     public const string RabbitMqSecureScheme = "rabbitmqs";
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Parses a RabbitMQ or AMQP host URI.</summary>
+    /// <param name="address">The host URI, including optional heartbeat, prefetch, and time-to-live query options.</param>
     public RabbitMqHostAddress(Uri address)
     {
         ArgumentNullException.ThrowIfNull(address);
@@ -70,13 +62,11 @@ public readonly struct RabbitMqHostAddress
         }
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="host">The host value.</param>
-    /// <param name="port">The port value.</param>
-    /// <param name="virtualHost">The virtual host value.</param>
-    /// <param name="useTls">The use tls value.</param>
+    /// <summary>Creates a host address from explicit connection components.</summary>
+    /// <param name="host">The broker host name.</param>
+    /// <param name="port">The AMQP port, or the scheme default when omitted or zero.</param>
+    /// <param name="virtualHost">The RabbitMQ virtual host, or the root virtual host when omitted.</param>
+    /// <param name="useTls">Whether to use the TLS transport scheme.</param>
     public RabbitMqHostAddress(string? host, int? port, string? virtualHost, bool useTls = false)
     {
         Host = string.IsNullOrWhiteSpace(host)
@@ -97,40 +87,24 @@ public readonly struct RabbitMqHostAddress
         TimeToLive = null;
     }
 
-    /// <summary>
-    /// Gets the scheme value.
-    /// </summary>
+    /// <summary>Gets the normalized RabbitMQ or AMQP URI scheme.</summary>
     public string Scheme { get; }
-    /// <summary>
-    /// Gets the host value.
-    /// </summary>
+    /// <summary>Gets the broker host name.</summary>
     public string Host { get; }
-    /// <summary>
-    /// Gets the port value.
-    /// </summary>
+    /// <summary>Gets the AMQP port.</summary>
     public int Port { get; }
-    /// <summary>
-    /// Gets the virtual host value.
-    /// </summary>
+    /// <summary>Gets the RabbitMQ virtual host.</summary>
     public string VirtualHost { get; }
-    /// <summary>
-    /// Gets the heartbeat value.
-    /// </summary>
+    /// <summary>Gets the optional requested heartbeat in seconds.</summary>
     public ushort? Heartbeat { get; }
-    /// <summary>
-    /// Gets the prefetch value.
-    /// </summary>
+    /// <summary>Gets the optional endpoint prefetch limit carried by the full URI.</summary>
     public ushort? Prefetch { get; }
-    /// <summary>
-    /// Gets the time to live value.
-    /// </summary>
+    /// <summary>Gets the optional endpoint queue time-to-live in milliseconds carried by the full URI.</summary>
     public int? TimeToLive { get; }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a RabbitMQ host URI from the normalized settings.</summary>
+    /// <param name="address">The host settings to serialize.</param>
+    /// <returns>The RabbitMQ host URI.</returns>
     public static implicit operator Uri(in RabbitMqHostAddress address)
     {
         var builder = new UriBuilder

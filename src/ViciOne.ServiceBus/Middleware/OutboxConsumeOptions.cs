@@ -2,28 +2,18 @@ using System;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Defines configuration options for outbox consume.
-/// </summary>
+/// <summary>Defines configuration options for outbox consume.</summary>
 public sealed class OutboxConsumeOptions
 {
-    /// <summary>
-    /// The generated identifier for the consumer based upon endpoint name
-    /// </summary>
+    /// <summary>The generated identifier for the consumer based upon endpoint name.</summary>
     public required Guid ConsumerId { get; init; }
 
-    /// <summary>
-    /// The display name of the consumer type
-    /// </summary>
+    /// <summary>The display name of the consumer type.</summary>
     public required string ConsumerType { get; init; }
-    /// <summary>
-    /// The number of message to deliver at a time from the outbox
-    /// </summary>
+    /// <summary>The number of message to deliver at a time from the outbox.</summary>
     public required int MessageDeliveryLimit { get; init; }
 
-    /// <summary>
-    /// The time to wait when delivering a message to the broker
-    /// </summary>
+    /// <summary>The time to wait when delivering a message to the broker.</summary>
     public required TimeSpan MessageDeliveryTimeout { get; init; }
 
     internal void Validate()

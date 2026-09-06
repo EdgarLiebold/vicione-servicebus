@@ -11,9 +11,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus connection context implementation.
-/// </summary>
+/// <summary>Wraps Azure Service Bus messaging and administration clients for one namespace.</summary>
 public class ServiceBusConnectionContext :
     BasePipeContext,
     ConnectionContext,
@@ -22,12 +20,10 @@ public class ServiceBusConnectionContext :
     readonly ServiceBusAdministrationClient _administrationClient;
     readonly ServiceBusClient _client;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="client">The client value.</param>
-    /// <param name="administrationClient">The administration client value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Initializes the namespace context from messaging and administration clients.</summary>
+    /// <param name="client">The client used for senders and processors.</param>
+    /// <param name="administrationClient">The client used to create, inspect, update, and delete entities.</param>
+    /// <param name="cancellationToken">The token that ends the context lifetime.</param>
     public ServiceBusConnectionContext(ServiceBusClient client, ServiceBusAdministrationClient administrationClient, CancellationToken cancellationToken)
         : base(cancellationToken)
     {
@@ -36,69 +32,55 @@ public class ServiceBusConnectionContext :
         Endpoint = new Uri($"sb://{_client.FullyQualifiedNamespace}");
     }
 
-    /// <summary>
-    /// Gets the endpoint value.
-    /// </summary>
+    /// <summary>Gets the namespace URI derived from the messaging client.</summary>
     public Uri Endpoint { get; }
 
-    /// <summary>
-    /// Creates queue processor.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a non-session processor for a queue.</summary>
+    /// <param name="settings">The queue and processor settings.</param>
+    /// <returns>The configured queue processor.</returns>
     public ServiceBusProcessor CreateQueueProcessor(ReceiveSettings settings)
     {
         return _client.CreateProcessor(settings.Path, GetProcessorOptions(settings));
     }
 
-    /// <summary>
-    /// Creates queue session processor.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a session-aware processor for a queue.</summary>
+    /// <param name="settings">The queue and session-processor settings.</param>
+    /// <returns>The configured queue session processor.</returns>
     public ServiceBusSessionProcessor CreateQueueSessionProcessor(ReceiveSettings settings)
     {
         return _client.CreateSessionProcessor(settings.Path, GetSessionProcessorOptions(settings));
     }
 
-    /// <summary>
-    /// Creates subscription processor.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a non-session processor for a topic subscription.</summary>
+    /// <param name="settings">The topic, subscription, and processor settings.</param>
+    /// <returns>The configured subscription processor.</returns>
     public ServiceBusProcessor CreateSubscriptionProcessor(SubscriptionSettings settings)
     {
         return _client.CreateProcessor(settings.CreateTopicOptions.Name, settings.CreateSubscriptionOptions.SubscriptionName,
             GetProcessorOptions(settings));
     }
 
-    /// <summary>
-    /// Creates subscription session processor.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a session-aware processor for a topic subscription.</summary>
+    /// <param name="settings">The topic, subscription, and session-processor settings.</param>
+    /// <returns>The configured subscription session processor.</returns>
     public ServiceBusSessionProcessor CreateSubscriptionSessionProcessor(SubscriptionSettings settings)
     {
         return _client.CreateSessionProcessor(settings.CreateTopicOptions.Name, settings.CreateSubscriptionOptions.SubscriptionName,
             GetSessionProcessorOptions(settings));
     }
 
-    /// <summary>
-    /// Creates message sender.
-    /// </summary>
-    /// <param name="entityPath">The entity path value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a sender for a queue or topic entity.</summary>
+    /// <param name="entityPath">The entity path relative to the namespace.</param>
+    /// <returns>The Azure Service Bus sender.</returns>
     public ServiceBusSender CreateMessageSender(string entityPath)
     {
         return _client.CreateSender(entityPath);
     }
 
-    /// <summary>
-    /// Creates queue.
-    /// </summary>
-    /// <param name="createQueueOptions">The create queue options value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns an existing queue or creates it atomically when it is absent.</summary>
+    /// <param name="createQueueOptions">The desired queue properties.</param>
+    /// <param name="cancellationToken">The token that cancels administration requests.</param>
+    /// <returns>A task that produces the existing or newly created queue properties.</returns>
     public async Task<QueueProperties> CreateQueueAsync(CreateQueueOptions createQueueOptions, CancellationToken cancellationToken)
     {
         QueueProperties? queueProperties = null;
@@ -139,12 +121,10 @@ public class ServiceBusConnectionContext :
         return queueProperties;
     }
 
-    /// <summary>
-    /// Creates topic.
-    /// </summary>
-    /// <param name="createTopicOptions">The create topic options value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns an existing topic or creates it atomically when it is absent.</summary>
+    /// <param name="createTopicOptions">The desired topic properties.</param>
+    /// <param name="cancellationToken">The token that cancels administration requests.</param>
+    /// <returns>A task that produces the existing or newly created topic properties.</returns>
     public async Task<TopicProperties> CreateTopicAsync(CreateTopicOptions createTopicOptions, CancellationToken cancellationToken)
     {
         TopicProperties? topicProperties = null;
@@ -182,14 +162,12 @@ public class ServiceBusConnectionContext :
         return topicProperties;
     }
 
-    /// <summary>
-    /// Creates topic subscription.
-    /// </summary>
-    /// <param name="createSubscriptionOptions">The create subscription options value.</param>
-    /// <param name="rule">The rule value.</param>
-    /// <param name="filter">The filter value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a subscription when absent, or reconciles its forwarding, delivery, and initial-rule settings when present.</summary>
+    /// <param name="createSubscriptionOptions">The desired subscription properties.</param>
+    /// <param name="rule">An optional complete initial rule.</param>
+    /// <param name="filter">An optional filter for the generated initial rule.</param>
+    /// <param name="cancellationToken">The token that cancels administration requests.</param>
+    /// <returns>A task that produces the reconciled subscription properties.</returns>
     public async Task<SubscriptionProperties> CreateTopicSubscriptionAsync(CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions? rule,
         RuleFilter? filter, CancellationToken cancellationToken)
     {
@@ -314,12 +292,10 @@ public class ServiceBusConnectionContext :
         return subscriptionProperties;
     }
 
-    /// <summary>
-    /// Performs the delete topic subscription operation.
-    /// </summary>
-    /// <param name="subscriptionOptions">The subscription options value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Attempts to delete a subscription, treating absence as success and logging other failures.</summary>
+    /// <param name="subscriptionOptions">Options identifying the topic and subscription.</param>
+    /// <param name="cancellationToken">The token that cancels the deletion request.</param>
+    /// <returns>A task that completes after the deletion attempt.</returns>
     public async Task DeleteTopicSubscriptionAsync(CreateSubscriptionOptions subscriptionOptions, CancellationToken cancellationToken)
     {
         try
@@ -338,10 +314,8 @@ public class ServiceBusConnectionContext :
         }
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Disposes the namespace messaging client.</summary>
+    /// <returns>A task that completes when the client has released its resources.</returns>
     public async ValueTask DisposeAsync()
     {
         var address = _client.FullyQualifiedNamespace;

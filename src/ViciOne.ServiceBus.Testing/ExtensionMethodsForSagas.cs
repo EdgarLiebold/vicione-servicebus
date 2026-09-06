@@ -8,38 +8,32 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides an extension methods for sagas implementation.
-/// </summary>
+/// <summary>Provides test-harness operations for observing saga instances.</summary>
 public static class ExtensionMethodsForSagas
 {
     static readonly TimeSpan _pollInterval = TimeSpan.FromMilliseconds(10);
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this ISagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
     {
         return repository.ShouldContainSagaAsync(correlationId, timeout, TimeProvider.System, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this ISagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout,
         TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
@@ -56,31 +50,27 @@ public static class ExtensionMethodsForSagas
         return TaskResults.FaultedAsync<Guid?>(new ArgumentException("The repository must support loading or querying sagas", nameof(repository)), cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this ILoadSagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
     {
         return repository.ShouldContainSagaAsync(correlationId, timeout, TimeProvider.System, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this ILoadSagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout,
         TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
@@ -90,31 +80,27 @@ public static class ExtensionMethodsForSagas
             sagaId => sagaId.HasValue, timeout, timeProvider);
     }
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this IQuerySagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
     {
         return repository.ShouldContainSagaAsync(correlationId, timeout, TimeProvider.System, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this IQuerySagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout,
         TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
@@ -125,16 +111,14 @@ public static class ExtensionMethodsForSagas
             sagaId => sagaId.HasValue && sagaId.Value != Guid.Empty, timeout, timeProvider);
     }
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="condition">The condition.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this ISagaRepository<TSaga> repository, Guid correlationId, Func<TSaga, bool> condition,
         TimeSpan timeout, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
@@ -142,17 +126,15 @@ public static class ExtensionMethodsForSagas
         return repository.ShouldContainSagaAsync(correlationId, condition, timeout, TimeProvider.System, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="condition">The condition.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this ISagaRepository<TSaga> repository, Guid correlationId, Func<TSaga, bool> condition,
         TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
@@ -167,16 +149,14 @@ public static class ExtensionMethodsForSagas
         return TaskResults.FaultedAsync<Guid?>(new ArgumentException("The repository must support loading sagas", nameof(repository)), cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="condition">The condition.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this ILoadSagaRepository<TSaga> repository, Guid correlationId, Func<TSaga, bool> condition,
         TimeSpan timeout, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
@@ -184,17 +164,15 @@ public static class ExtensionMethodsForSagas
         return repository.ShouldContainSagaAsync(correlationId, condition, timeout, TimeProvider.System, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="condition">The condition.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this ILoadSagaRepository<TSaga> repository, Guid correlationId, Func<TSaga, bool> condition,
         TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
@@ -208,31 +186,27 @@ public static class ExtensionMethodsForSagas
         }, sagaId => sagaId.HasValue, timeout, timeProvider);
     }
 
-    /// <summary>
-    /// Performs the should not contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should not contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should not contain saga outcome.</returns>
     public static Task<Guid?> ShouldNotContainSagaAsync<TSaga>(this ISagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
     {
         return repository.ShouldNotContainSagaAsync(correlationId, timeout, TimeProvider.System, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should not contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should not contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should not contain saga outcome.</returns>
     public static Task<Guid?> ShouldNotContainSagaAsync<TSaga>(this ISagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout,
         TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
@@ -249,31 +223,27 @@ public static class ExtensionMethodsForSagas
         return TaskResults.FaultedAsync<Guid?>(new ArgumentException("The repository must support loading or querying sagas", nameof(repository)), cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should not contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should not contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should not contain saga outcome.</returns>
     public static Task<Guid?> ShouldNotContainSagaAsync<TSaga>(this ILoadSagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
     {
         return repository.ShouldNotContainSagaAsync(correlationId, timeout, TimeProvider.System, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should not contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should not contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should not contain saga outcome.</returns>
     public static Task<Guid?> ShouldNotContainSagaAsync<TSaga>(this ILoadSagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout,
         TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
@@ -283,31 +253,27 @@ public static class ExtensionMethodsForSagas
             sagaId => !sagaId.HasValue, timeout, timeProvider);
     }
 
-    /// <summary>
-    /// Performs the should not contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should not contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should not contain saga outcome.</returns>
     public static Task<Guid?> ShouldNotContainSagaAsync<TSaga>(this IQuerySagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
     {
         return repository.ShouldNotContainSagaAsync(correlationId, timeout, TimeProvider.System, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should not contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should not contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should not contain saga outcome.</returns>
     public static Task<Guid?> ShouldNotContainSagaAsync<TSaga>(this IQuerySagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout,
         TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
@@ -318,15 +284,13 @@ public static class ExtensionMethodsForSagas
             sagaId => !sagaId.HasValue || sagaId.Value == Guid.Empty, timeout, timeProvider);
     }
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="filter">The filter value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this ISagaRepository<TSaga> repository, Expression<Func<TSaga, bool>> filter,
         TimeSpan timeout, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
@@ -334,16 +298,14 @@ public static class ExtensionMethodsForSagas
         return repository.ShouldContainSagaAsync(filter, timeout, TimeProvider.System, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="filter">The filter value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this ISagaRepository<TSaga> repository, Expression<Func<TSaga, bool>> filter,
         TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
@@ -358,15 +320,13 @@ public static class ExtensionMethodsForSagas
         return TaskResults.FaultedAsync<Guid?>(new ArgumentException("The repository must support querying sagas", nameof(repository)), cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="filter">The filter value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this IQuerySagaRepository<TSaga> repository, Expression<Func<TSaga, bool>> filter,
         TimeSpan timeout, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
@@ -374,16 +334,14 @@ public static class ExtensionMethodsForSagas
         return repository.ShouldContainSagaAsync(filter, timeout, TimeProvider.System, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="filter">The filter value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should contain contain saga.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga outcome.</returns>
     public static Task<Guid?> ShouldContainSagaAsync<TSaga>(this IQuerySagaRepository<TSaga> repository, Expression<Func<TSaga, bool>> filter,
         TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga

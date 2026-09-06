@@ -3,9 +3,7 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>
-/// Provides a queue subscription entity implementation.
-/// </summary>
+/// <summary>Represents the queue subscription topology entity.</summary>
 public class QueueSubscriptionEntity :
     TopicToQueueSubscription,
     QueueSubscriptionHandle
@@ -13,14 +11,12 @@ public class QueueSubscriptionEntity :
     readonly QueueEntity _queue;
     readonly TopicEntity _topic;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="subscriptionType">The subscription type value.</param>
-    /// <param name="routingKey">The routing key value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="id">The id.</param>
+    /// <param name="topic">The topic.</param>
+    /// <param name="queue">The queue.</param>
+    /// <param name="subscriptionType">The runtime subscription type used by the operation.</param>
+    /// <param name="routingKey">The routing key.</param>
     public QueueSubscriptionEntity(long id, TopicEntity topic, QueueEntity queue, SqlSubscriptionType subscriptionType, string? routingKey)
     {
         Id = id;
@@ -30,41 +26,25 @@ public class QueueSubscriptionEntity :
         _queue = queue;
     }
 
-    /// <summary>
-    /// Gets the entity comparer value.
-    /// </summary>
+    /// <summary>Gets the entity comparer.</summary>
     public static IEqualityComparer<QueueSubscriptionEntity> EntityComparer { get; } = new QueueSubscriptionEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the id.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the subscription value.
-    /// </summary>
+    /// <summary>Gets the subscription.</summary>
     public TopicToQueueSubscription Subscription => this;
-    /// <summary>
-    /// Gets the subscription type value.
-    /// </summary>
+    /// <summary>Gets the subscription type.</summary>
     public SqlSubscriptionType SubscriptionType { get; }
 
-    /// <summary>
-    /// Gets the source value.
-    /// </summary>
+    /// <summary>Gets the source.</summary>
     public Topic Source => _topic.Topic;
-    /// <summary>
-    /// Gets the destination value.
-    /// </summary>
+    /// <summary>Gets the destination.</summary>
     public Queue Destination => _queue.Queue;
-    /// <summary>
-    /// Gets the routing key value.
-    /// </summary>
+    /// <summary>Gets the routing key.</summary>
     public string? RoutingKey { get; }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the string representation of this instance.</summary>
+    /// <returns>The converted string.</returns>
     public override string ToString()
     {
         return string.Join(", ",

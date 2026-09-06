@@ -4,18 +4,14 @@ using Microsoft.Extensions.Options;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines configuration options for validate vici one service bus host.
-/// </summary>
+/// <summary>Defines configuration options for validate vici one service bus host.</summary>
 public sealed class ValidateViciOneServiceBusHostOptions :
     IValidateOptions<ViciOneServiceBusHostOptions>
 {
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <returns>The validation failures.</returns>
     public ValidateOptionsResult Validate(string? name, ViciOneServiceBusHostOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);

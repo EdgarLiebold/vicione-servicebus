@@ -10,9 +10,7 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Quartz;
 
-/// <summary>
-/// Provides a scheduled message job implementation.
-/// </summary>
+/// <summary>Forwards a persisted scheduled message when its Quartz trigger fires.</summary>
 public class ScheduledMessageJob :
     IJob
 {
@@ -22,18 +20,14 @@ public class ScheduledMessageJob :
     readonly IBus? _bus;
     readonly TimeProvider? _timeProvider;
 
-    /// <summary>
-    /// Creates a job for Quartz standalone schedulers. The bus and time provider are resolved from the scheduler context.
-    /// </summary>
+    /// <summary>Creates a job for Quartz standalone schedulers. The bus and time provider are resolved from the scheduler context.</summary>
     public ScheduledMessageJob()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Creates a job with explicit bus and time-source dependencies.</summary>
+    /// <param name="bus">The bus used to resolve the destination endpoint.</param>
+    /// <param name="timeProvider">The clock used to derive the remaining message time to live.</param>
     public ScheduledMessageJob(IBus bus, TimeProvider timeProvider)
     {
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
@@ -45,11 +39,10 @@ public class ScheduledMessageJob :
         return ExecuteAsync(context, cancellationToken);
     }
 
-    /// <summary>
-    /// Executes the scheduled message job.
-    /// </summary>
-    /// <param name="context">The context for the operation.</param>
+    /// <summary>Reconstructs and sends the persisted message for the fired trigger.</summary>
+    /// <param name="context">The fired Quartz job context and merged job data.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask ExecuteAsync(IJobExecutionContext context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);

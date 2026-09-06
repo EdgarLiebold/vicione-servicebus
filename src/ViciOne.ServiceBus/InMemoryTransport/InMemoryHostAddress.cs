@@ -4,31 +4,21 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Represents an in memory host address value.
-/// </summary>
+/// <summary>Represents an in memory host address.</summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct InMemoryHostAddress
 {
     const string InMemorySchema = "loopback";
 
-    /// <summary>
-    /// Defines the scheme value.
-    /// </summary>
+    /// <summary>Exposes the scheme used by the containing type.</summary>
     public readonly string Scheme;
-    /// <summary>
-    /// Defines the host value.
-    /// </summary>
+    /// <summary>Exposes the host used by the containing type.</summary>
     public readonly string Host;
-    /// <summary>
-    /// Defines the virtual host value.
-    /// </summary>
+    /// <summary>Exposes the virtual host used by the containing type.</summary>
     public readonly string VirtualHost;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="address">The address.</param>
     public InMemoryHostAddress(Uri address)
     {
         Scheme = null!;
@@ -54,11 +44,9 @@ public readonly struct InMemoryHostAddress
         virtualHost = address.ParseHostPath();
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts a value to <see cref="Uri" />.</summary>
+    /// <param name="address">The address.</param>
+    /// <returns>The value produced by the operation.</returns>
     public static implicit operator Uri(in InMemoryHostAddress address)
     {
         var builder = new UriBuilder

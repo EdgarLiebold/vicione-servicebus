@@ -2,17 +2,13 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureTable;
 
-/// <summary>
-/// Defines the contract for saga key formatter.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Maps saga correlation identifiers to Azure Table partition and row keys.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public interface ISagaKeyFormatter<in TSaga>
     where TSaga : class, ISaga
 {
-    /// <summary>
-    /// Performs the format operation.
-    /// </summary>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the keys used to address a saga entity.</summary>
+    /// <param name="correlationId">The non-empty saga correlation identifier.</param>
+    /// <returns>The partition key and row key for the saga entity.</returns>
     (string partitionKey, string rowKey) Format(Guid correlationId);
 }

@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.SqlTransport.Topology;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport.Middleware;
-/// <summary>
-/// Configures the broker with the supplied topology once the model is created, to ensure
-/// that the exchanges, queues, and bindings for the model are properly configured in SQS.
-/// </summary>
+/// <summary>Materializes the configured SQL queues, topics, and subscriptions before the client pipeline runs.</summary>
+/// <typeparam name="TSettings">The settings type.</typeparam>
 public class ConfigureSqlTopologyFilter<TSettings> :
     IFilter<ClientContext>
     where TSettings : class
@@ -17,12 +15,10 @@ public class ConfigureSqlTopologyFilter<TSettings> :
     readonly SqlReceiveEndpointContext? _context;
     readonly TSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="brokerTopology">The broker topology value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="settings">The settings that control the operation.</param>
+    /// <param name="brokerTopology">The broker topology.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public ConfigureSqlTopologyFilter(TSettings settings, BrokerTopology brokerTopology, SqlReceiveEndpointContext? context = null)
     {
         _settings = settings;
@@ -30,12 +26,10 @@ public class ConfigureSqlTopologyFilter<TSettings> :
         _context = context;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ClientContext context, IPipe<ClientContext> next)
     {
         OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await context.OneTimeSetupAsync<ConfigureTopologyContext<TSettings>>(() =>
@@ -57,10 +51,8 @@ public class ConfigureSqlTopologyFilter<TSettings> :
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("configureTopology");

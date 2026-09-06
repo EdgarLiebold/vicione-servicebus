@@ -3,18 +3,15 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>
-/// Receives messages from a queue
-/// </summary>
+/// <summary>Receives messages from a queue.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface IMessageReceiver<in T> :
     IProbeSite
     where T : class
 {
-    /// <summary>
-    /// Performs the deliver operation.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Delivers the current message.</summary>
+    /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task DeliverAsync(T message, CancellationToken cancellationToken);
 }

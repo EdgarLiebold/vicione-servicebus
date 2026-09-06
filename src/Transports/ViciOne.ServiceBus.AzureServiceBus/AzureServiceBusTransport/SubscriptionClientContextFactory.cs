@@ -2,32 +2,26 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a subscription client context factory implementation.
-/// </summary>
+/// <summary>Creates supervised Azure Service Bus subscription processor contexts.</summary>
 public class SubscriptionClientContextFactory :
     ClientContextFactory
 {
     readonly SubscriptionSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Creates a factory for one topic subscription endpoint.</summary>
+    /// <param name="supervisor">The namespace connection supervisor.</param>
+    /// <param name="settings">The subscription entity and processor settings.</param>
     public SubscriptionClientContextFactory(IConnectionContextSupervisor supervisor, SubscriptionSettings settings)
         : base(supervisor, settings)
     {
         _settings = settings;
     }
 
-    /// <summary>
-    /// Creates client context.
-    /// </summary>
-    /// <param name="connectionContext">The connection context value.</param>
-    /// <param name="inputAddress">The input address value.</param>
-    /// <param name="agent">The agent value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a subscription processor context on an active namespace connection.</summary>
+    /// <param name="connectionContext">The active namespace connection.</param>
+    /// <param name="inputAddress">The absolute subscription input address.</param>
+    /// <param name="agent">The agent notified when the processor faults.</param>
+    /// <returns>The subscription processor context.</returns>
     protected override ClientContext CreateClientContext(ConnectionContext connectionContext, Uri inputAddress, IAgent agent)
     {
         return new SubscriptionClientContext(connectionContext, inputAddress, _settings, agent);

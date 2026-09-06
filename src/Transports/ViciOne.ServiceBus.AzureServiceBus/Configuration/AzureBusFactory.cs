@@ -5,16 +5,12 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an azure bus factory implementation.
-/// </summary>
+/// <summary>Creates Azure Service Bus controls and their message topology.</summary>
 public static class AzureBusFactory
 {
-    /// <summary>
-    /// Creates an Azure Service Bus instance using the supplied transport configuration.
-    /// </summary>
-    /// <param name="configure">The configuration callback to configure the bus</param>
-    /// <returns>The configured bus.</returns>
+    /// <summary>Creates an Azure Service Bus instance using the supplied transport configuration.</summary>
+    /// <param name="configure">The configuration callback to configure the bus.</param>
+    /// <returns>The configured bus control.</returns>
     public static IBusControl CreateUsingServiceBus(Action<IServiceBusBusFactoryConfigurator> configure)
     {
         var topologyConfiguration = new ServiceBusTopologyConfiguration(CreateMessageTopology());
@@ -27,10 +23,8 @@ public static class AzureBusFactory
         return configurator.Build(busConfiguration);
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates message topology using Azure Service Bus-compatible entity names.</summary>
+    /// <returns>A new message-topology configurator.</returns>
     public static IMessageTopologyConfigurator CreateMessageTopology()
     {
         return new MessageTopology(Cached.EntityNameFormatter);

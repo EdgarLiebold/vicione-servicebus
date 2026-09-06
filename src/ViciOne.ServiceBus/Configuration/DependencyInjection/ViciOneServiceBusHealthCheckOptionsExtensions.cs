@@ -4,17 +4,13 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for vici one service bus health check options.
-/// </summary>
+/// <summary>Provides extension methods for vici one service bus health check options.</summary>
 public static class ViciOneServiceBusHealthCheckOptionsExtensions
 {
-    /// <summary>
-    /// Configure the health check options for this bus
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="callback"></param>
-    /// <returns></returns>
+    /// <summary>Configure the health check options for this bus.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The bus registration configurator produced by the operation.</returns>
     public static IBusRegistrationConfigurator ConfigureHealthCheckOptions(this IBusRegistrationConfigurator configurator,
         Action<IHealthCheckOptionsConfigurator>? callback)
     {
@@ -37,12 +33,11 @@ public static class ViciOneServiceBusHealthCheckOptionsExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Configure the health check options for this bus
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="callback"></param>
-    /// <returns></returns>
+    /// <summary>Configure the health check options for this bus.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The bus registration configurator produced by the operation.</returns>
     public static IBusRegistrationConfigurator<T> ConfigureHealthCheckOptions<T>(this IBusRegistrationConfigurator<T> configurator,
         Action<IHealthCheckOptionsConfigurator>? callback)
         where T : class, IBus

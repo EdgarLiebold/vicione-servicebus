@@ -4,21 +4,17 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.DynamoDb.Saga;
 
-/// <summary>
-/// Provides a dynamo db saga repository implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Creates versioned saga repositories backed by Amazon DynamoDB.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public static class DynamoDbSagaRepository<TSaga>
     where TSaga : class, ISagaVersion
 {
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="dynamoDbFactory">The dynamo db factory value.</param>
-    /// <param name="tableName">The table name value.</param>
-    /// <param name="expiration">The expiration value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a repository with caller-defined context resolution and optional document expiration.</summary>
+    /// <param name="dynamoDbFactory">The factory that supplies the AWS object-persistence context for each repository operation.</param>
+    /// <param name="tableName">The Amazon DynamoDB table that stores saga documents.</param>
+    /// <param name="expiration">An optional relative lifetime written to each saga document.</param>
+    /// <param name="timeProvider">The time source used to calculate document expiration, or <see langword="null"/> to use system time.</param>
+    /// <returns>An Amazon DynamoDB-backed saga repository.</returns>
     public static ISagaRepository<TSaga> Create(Func<IDynamoDBContext> dynamoDbFactory, string tableName, TimeSpan? expiration = null,
         TimeProvider? timeProvider = null)
     {

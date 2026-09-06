@@ -6,9 +6,7 @@ using System.Text.Json.Nodes;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Used to serialize an existing deserialized message when a message is forwarded, scheduled, etc.
-/// </summary>
+/// <summary>Used to serialize an existing deserialized message when a message is forwarded, scheduled, etc.</summary>
 public class SystemTextJsonBodyMessageSerializer :
     RawMessageSerializer,
     IMessageSerializer
@@ -19,13 +17,11 @@ public class SystemTextJsonBodyMessageSerializer :
     readonly RawSerializerOptions? _rawOptions;
     object? _message;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="envelope">The envelope value.</param>
-    /// <param name="contentType">The content type value.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="messageTypes">The message types value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="envelope">The envelope.</param>
+    /// <param name="contentType">The runtime content type used by the operation.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="messageTypes">The message types.</param>
     public SystemTextJsonBodyMessageSerializer(MessageEnvelope envelope, ContentType contentType, JsonSerializerOptions options,
         string[]? messageTypes = null)
     {
@@ -38,14 +34,12 @@ public class SystemTextJsonBodyMessageSerializer :
         ContentType = contentType;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="contentType">The content type value.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="rawOptions">The raw options value.</param>
-    /// <param name="messageTypes">The message types value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="contentType">The runtime content type used by the operation.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="rawOptions">The raw options.</param>
+    /// <param name="messageTypes">The message types.</param>
     public SystemTextJsonBodyMessageSerializer(object message, ContentType contentType, JsonSerializerOptions options, RawSerializerOptions rawOptions,
         string[]? messageTypes = null)
     {
@@ -64,17 +58,13 @@ public class SystemTextJsonBodyMessageSerializer :
         ContentType = contentType;
     }
 
-    /// <summary>
-    /// Gets the content type value.
-    /// </summary>
+    /// <summary>Gets the content type.</summary>
     public ContentType ContentType { get; }
 
-    /// <summary>
-    /// Gets message body.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message body.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The message body.</returns>
     public MessageBody GetMessageBody<T>(SendContext<T> context)
         where T : class
     {
@@ -94,10 +84,8 @@ public class SystemTextJsonBodyMessageSerializer :
         return new SystemTextJsonMessageBody<T>(context, _options, _envelope);
     }
 
-    /// <summary>
-    /// Performs the overlay operation.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Overlays the supplied values on the current message.</summary>
+    /// <param name="message">The message to process.</param>
     public void Overlay(object message)
     {
         if (_message is JsonElement element)

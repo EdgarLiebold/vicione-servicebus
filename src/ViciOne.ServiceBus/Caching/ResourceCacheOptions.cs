@@ -3,21 +3,17 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.Caching;
 
-/// <summary>
-/// Immutable runtime policy used by <see cref="ResourceCache{TValue}"/>.
-/// </summary>
+/// <summary>Immutable runtime policy used by <see cref="ResourceCache{TValue}"/>.</summary>
 public sealed class ResourceCacheOptions
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="capacity">The capacity value.</param>
-    /// <param name="minAge">The min age value.</param>
-    /// <param name="maxAge">The max age value.</param>
-    /// <param name="expirationMode">The expiration mode value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
-    /// <param name="lifetimeCancellationToken">The lifetime cancellation token value.</param>
-    /// <param name="cleanupInterval">The cleanup interval value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="capacity">The capacity.</param>
+    /// <param name="minAge">The min age.</param>
+    /// <param name="maxAge">The max age.</param>
+    /// <param name="expirationMode">The expiration mode.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <param name="lifetimeCancellationToken">The lifetime cancellation token.</param>
+    /// <param name="cleanupInterval">The cleanup interval.</param>
     public ResourceCacheOptions(int capacity = 1000, TimeSpan? minAge = null, TimeSpan? maxAge = null,
         ResourceCacheExpirationMode expirationMode = ResourceCacheExpirationMode.Sliding, TimeProvider? timeProvider = null,
         CancellationToken lifetimeCancellationToken = default, TimeSpan? cleanupInterval = null)
@@ -48,33 +44,19 @@ public sealed class ResourceCacheOptions
         LifetimeCancellationToken = lifetimeCancellationToken;
     }
 
-    /// <summary>
-    /// Gets the capacity value.
-    /// </summary>
+    /// <summary>Gets the capacity.</summary>
     public int Capacity { get; }
-    /// <summary>
-    /// Gets the min age value.
-    /// </summary>
+    /// <summary>Gets the min age.</summary>
     public TimeSpan MinAge { get; }
-    /// <summary>
-    /// Gets the max age value.
-    /// </summary>
+    /// <summary>Gets the max age.</summary>
     public TimeSpan MaxAge { get; }
-    /// <summary>
-    /// Gets the cleanup interval value.
-    /// </summary>
+    /// <summary>Gets the cleanup interval.</summary>
     public TimeSpan CleanupInterval { get; }
-    /// <summary>
-    /// Gets the expiration mode value.
-    /// </summary>
+    /// <summary>Gets the expiration mode.</summary>
     public ResourceCacheExpirationMode ExpirationMode { get; }
-    /// <summary>
-    /// Gets the time provider value.
-    /// </summary>
+    /// <summary>Gets the time provider.</summary>
     public TimeProvider TimeProvider { get; }
-    /// <summary>
-    /// Gets the lifetime cancellation token value.
-    /// </summary>
+    /// <summary>Gets the lifetime cancellation token.</summary>
     public CancellationToken LifetimeCancellationToken { get; }
 
     static TimeSpan CalculateCleanupInterval(TimeSpan maxAge)

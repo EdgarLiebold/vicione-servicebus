@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq send transport provider implementation.
-/// </summary>
+/// <summary>Creates RabbitMQ send transports from the endpoint's shared channel supervisor.</summary>
 public class RabbitMqSendTransportProvider :
     ISendTransportProvider
 {
@@ -14,11 +12,9 @@ public class RabbitMqSendTransportProvider :
     readonly IChannelContextSupervisor _channelContextSupervisor;
     readonly RabbitMqReceiveEndpointContext _receiveEndpointContext;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionContextSupervisor">The connection context supervisor value.</param>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
+    /// <summary>Creates a provider bound to a connection and receive endpoint.</summary>
+    /// <param name="connectionContextSupervisor">The RabbitMQ connection supervisor.</param>
+    /// <param name="receiveEndpointContext">The endpoint that owns send transports.</param>
     public RabbitMqSendTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, RabbitMqReceiveEndpointContext receiveEndpointContext)
     {
         _connectionContextSupervisor = connectionContextSupervisor;
@@ -26,22 +22,18 @@ public class RabbitMqSendTransportProvider :
         _receiveEndpointContext = receiveEndpointContext;
     }
 
-    /// <summary>
-    /// Performs the normalize address operation.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Resolves a full or short destination address against the configured host.</summary>
+    /// <param name="address">The destination address to resolve.</param>
+    /// <returns>The full RabbitMQ destination URI.</returns>
     public Uri NormalizeAddress(Uri address)
     {
         return _connectionContextSupervisor.NormalizeAddress(address);
     }
 
-    /// <summary>
-    /// Gets send transport.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets a send transport for a RabbitMQ destination address.</summary>
+    /// <param name="address">The full or short destination address.</param>
+    /// <param name="cancellationToken">Cancellation checked before transport creation.</param>
+    /// <returns>The configured RabbitMQ send transport.</returns>
     public Task<ISendTransport> GetSendTransportAsync(Uri address, CancellationToken cancellationToken = default)
     {
         return _connectionContextSupervisor.CreateSendTransportAsync(_receiveEndpointContext, _channelContextSupervisor, address, cancellationToken: cancellationToken);

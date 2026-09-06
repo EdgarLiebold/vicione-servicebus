@@ -5,21 +5,17 @@ namespace ViciOne.ServiceBus.Internals;
 
 static class StringExtensions
 {
-    /// <summary>
-    /// Allows null-safe trimming of string.
-    /// </summary>
-    /// <param name="s"></param>
-    /// <returns></returns>
+    /// <summary>Allows null-safe trimming of string.</summary>
+    /// <param name="s">The <c>s</c> value.</param>
+    /// <returns>The string produced by the operation.</returns>
     internal static string? NullSafeTrim(this string? s)
     {
         return s?.Trim();
     }
 
-    /// <summary>
-    /// Trims string and if resulting string is empty, null is returned.
-    /// </summary>
-    /// <param name="s"></param>
-    /// <returns></returns>
+    /// <summary>Trims string and if resulting string is empty, null is returned.</summary>
+    /// <param name="s">The <c>s</c> value.</param>
+    /// <returns>The string produced by the operation.</returns>
     internal static string? TrimEmptyToNull(this string? s)
     {
         if (s is null)
@@ -33,7 +29,6 @@ static class StringExtensions
         return s;
     }
 
-    // based on https://www.meziantou.net/split-a-string-into-lines-without-allocation.htm
     internal static StringSplitEnumerator SpanSplit(this string str, char ch1, char ch2 = char.MinValue)
     {
         return SpanSplit(str.AsSpan(), ch1, ch2);
@@ -45,7 +40,7 @@ static class StringExtensions
     }
 
 
-    // Must be a ref struct as it contains a ReadOnlySpan<char>
+    // A ref struct confines the enumerator's ReadOnlySpan<char> to the stack.
     [StructLayout(LayoutKind.Auto)]
     internal ref struct StringSplitEnumerator
     {
@@ -61,7 +56,7 @@ static class StringExtensions
             Current = default;
         }
 
-        // Needed to be compatible with the foreach operator
+        // Supports compiler pattern-based foreach enumeration.
         public StringSplitEnumerator GetEnumerator()
         {
             return this;
@@ -105,18 +100,14 @@ static class StringExtensions
         public ReadOnlySpan<char> Token { get; }
         public ReadOnlySpan<char> Separator { get; }
 
-        // This method allow to deconstruct the type, so you can write any of the following code
-        // foreach (var entry in str.SplitLines()) { _ = entry.Line; }
-        // foreach (var (line, endOfLine) in str.SplitLines()) { _ = line; }
-        // https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/functional/deconstruct?WT.mc_id=DT-MVP-5003978#deconstructing-user-defined-types
+        // Exposes token and separator through tuple deconstruction.
         public void Deconstruct(out ReadOnlySpan<char> line, out ReadOnlySpan<char> separator)
         {
             line = Token;
             separator = Separator;
         }
 
-        // This method allow to implicitly cast the type into a ReadOnlySpan<char>, so you can write the following code
-        // foreach (ReadOnlySpan<char> entry in str.SplitLines())
+        // Projects an entry to its token span.
         public static implicit operator ReadOnlySpan<char>(StringSplitEntry entry)
         {
             return entry.Token;

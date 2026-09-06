@@ -3,18 +3,14 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport.Middleware;
 
-/// <summary>
-/// A filter that uses the model context to create a basic consumer and connect it to the model
-/// </summary>
+/// <summary>A filter that uses the model context to create a basic consumer and connect it to the model.</summary>
 public class SqlConsumerFilter :
     IFilter<ClientContext>
 {
     readonly SqlReceiveEndpointContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public SqlConsumerFilter(SqlReceiveEndpointContext context)
     {
         _context = context;

@@ -3,19 +3,18 @@ using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Provides extension methods for state machine.
-/// </summary>
+/// <summary>Provides extension methods for state machine.</summary>
 public static class StateMachineExtensions
 {
     /// <summary>
     /// Transition a state machine instance to a specific state, producing any events related
-    /// to the transaction such as leaving the previous state and entering the target state
+    /// to the transaction such as leaving the previous state and entering the target state.
     /// </summary>
-    /// <typeparam name="TSaga">The state instance type</typeparam>
-    /// <param name="context"></param>
-    /// <param name="state">The target state</param>
+    /// <typeparam name="TSaga">The state instance type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="state">The target state.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task TransitionToStateAsync<TSaga>(this BehaviorContext<TSaga> context, State state, CancellationToken cancellationToken = default)
         where TSaga : class, SagaStateMachineInstance
     {

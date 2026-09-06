@@ -1,14 +1,10 @@
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus topic configurator.
-/// </summary>
+/// <summary>Configures and validates Azure Service Bus topic creation properties.</summary>
 public interface IServiceBusTopicConfigurator :
     IServiceBusMessageEntityConfigurator,
     ISpecification
 {
-    /// <summary>
-    /// If True, the topic will deliver messages to subscriptions in order
-    /// </summary>
+    /// <summary>Sets whether the topic supports ordered delivery to subscriptions.</summary>
     bool? SupportOrdering { set; }
 }

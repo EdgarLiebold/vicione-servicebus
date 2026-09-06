@@ -3,24 +3,18 @@ using System.Text.RegularExpressions;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a service bus entity name validator implementation.
-/// </summary>
+/// <summary>Validates Azure Service Bus entity paths against transport length and character constraints.</summary>
 public class ServiceBusEntityNameValidator :
     IEntityNameValidator
 {
     const int MaxLength = 260;
     static readonly Regex _regex = new Regex(@"^[A-Za-z0-9\-_\.:\/\$]+$", RegexOptions.Compiled);
 
-    /// <summary>
-    /// Gets the validator value.
-    /// </summary>
+    /// <summary>Gets the shared entity-path validator.</summary>
     public static IEntityNameValidator Validator => Cached.EntityNameValidator;
 
-    /// <summary>
-    /// Performs the throw if invalid entity name operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
+    /// <summary>Throws a configuration exception when an entity path is invalid.</summary>
+    /// <param name="name">The candidate entity path.</param>
     public void ThrowIfInvalidEntityName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -34,11 +28,9 @@ public class ServiceBusEntityNameValidator :
         }
     }
 
-    /// <summary>
-    /// Determines whether valid entity name.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether an entity path is non-empty, no longer than 260 characters, and contains only supported characters.</summary>
+    /// <param name="name">The candidate entity path.</param>
+    /// <returns><see langword="true"/> when the path is valid; otherwise, <see langword="false"/>.</returns>
     public bool IsValidEntityName(string name)
     {
         return !string.IsNullOrWhiteSpace(name) && name.Length <= MaxLength && _regex.IsMatch(name);

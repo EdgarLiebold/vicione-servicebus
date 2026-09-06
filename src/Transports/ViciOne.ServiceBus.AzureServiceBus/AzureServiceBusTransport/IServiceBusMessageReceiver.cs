@@ -4,16 +4,12 @@ using Azure.Messaging.ServiceBus;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus message receiver.
-/// </summary>
+/// <summary>Dispatches an Azure Service Bus delivery into a receive pipeline.</summary>
 public interface IServiceBusMessageReceiver
 {
-    /// <summary>
-    /// Handles the <paramref name="message" />
-    /// </summary>
-    /// <param name="message"></param>
-    /// <param name="cancellationToken">Specify an optional cancellationToken</param>
-    /// <returns></returns>
+    /// <summary>Processes a received Azure Service Bus message.</summary>
+    /// <param name="message">The broker delivery to process.</param>
+    /// <param name="cancellationToken">Cancels pipeline processing.</param>
+    /// <returns>The dispatch task for the configured receive pipeline.</returns>
     Task HandleAsync(ServiceBusReceivedMessage message, CancellationToken cancellationToken = default);
 }

@@ -2,33 +2,25 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Represents an error related to service bus connection.
-/// </summary>
+/// <summary>Indicates that an Azure Service Bus namespace connection could not be established or maintained.</summary>
 public class ServiceBusConnectionException :
     ConnectionException
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Creates a connection exception without diagnostic details.</summary>
     public ServiceBusConnectionException()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Creates a connection exception with diagnostic details.</summary>
+    /// <param name="message">A description of the connection failure.</param>
     public ServiceBusConnectionException(string message)
         : base(message)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="innerException">The inner exception value.</param>
+    /// <summary>Creates a connection exception and classifies authorization failures as non-transient.</summary>
+    /// <param name="message">A description of the connection failure.</param>
+    /// <param name="innerException">The provider exception that caused the failure.</param>
     public ServiceBusConnectionException(string message, Exception innerException)
         : base(message, innerException, IsExceptionTransient(innerException))
     {

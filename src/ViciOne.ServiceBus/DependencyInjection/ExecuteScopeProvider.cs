@@ -6,33 +6,32 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>
-/// Creates dependency-injection scopes for execute pipeline contexts.
-/// </summary>
+/// <summary>Creates dependency-injection scopes for execute pipeline contexts.</summary>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public sealed class ExecuteScopeProvider<TArguments> :
     BaseConsumeScopeProvider,
     IProbeSite
     where TArguments : class
 {
-    /// <summary>
-    /// Initializes the provider from a registration context.
-    /// </summary>
+    /// <summary>Initializes the provider from a registration context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public ExecuteScopeProvider(IRegistrationContext context)
         : base(context)
     {
     }
 
-    /// <summary>
-    /// Initializes the provider from an explicit service provider and context setter.
-    /// </summary>
+    /// <summary>Initializes the provider from an explicit service provider and context setter.</summary>
+    /// <param name="serviceProvider">The service provider.</param>
+    /// <param name="setScopedConsumeContext">The set scoped consume context.</param>
     public ExecuteScopeProvider(IServiceProvider serviceProvider, ISetScopedConsumeContext setScopedConsumeContext)
         : base(serviceProvider, setScopedConsumeContext)
     {
     }
 
-    /// <summary>
-    /// Gets the scoped execute context.
-    /// </summary>
+    /// <summary>Gets scope.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the requested value.</returns>
     public ValueTask<IExecuteScopeContext<TArguments>> GetScopeAsync(ExecuteContext<TArguments> context,
         CancellationToken cancellationToken = default)
     {

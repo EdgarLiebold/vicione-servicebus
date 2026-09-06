@@ -4,29 +4,23 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
-/// <summary>
-/// Provides a saga repository registration configurator implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Configures saga repository registration.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class SagaRepositoryRegistrationConfigurator<TSaga> :
     ISagaRepositoryRegistrationConfigurator<TSaga>
     where TSaga : class, ISaga
 {
     readonly IServiceCollection _collection;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="collection">The collection value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="collection">The collection.</param>
     public SagaRepositoryRegistrationConfigurator(IServiceCollection collection)
     {
         _collection = collection;
     }
 
-    /// <summary>
-    /// Gets enumerator.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets enumerator.</summary>
+    /// <returns>The enumerator.</returns>
     public IEnumerator<ServiceDescriptor> GetEnumerator()
     {
         return _collection.GetEnumerator();
@@ -37,96 +31,74 @@ public class SagaRepositoryRegistrationConfigurator<TSaga> :
         return ((IEnumerable)_collection).GetEnumerator();
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="item">The item value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="item">The item.</param>
     public void Add(ServiceDescriptor item)
     {
         _collection.Add(item);
     }
 
-    /// <summary>
-    /// Performs the clear operation.
-    /// </summary>
+    /// <summary>Removes every item from the current collection.</summary>
     public void Clear()
     {
         _collection.Clear();
     }
 
-    /// <summary>
-    /// Performs the contains operation.
-    /// </summary>
-    /// <param name="item">The item value.</param>
+    /// <summary>Determines whether the current collection contains the supplied value.</summary>
+    /// <param name="item">The item.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Contains(ServiceDescriptor item)
     {
         return _collection.Contains(item);
     }
 
-    /// <summary>
-    /// Performs the copy to operation.
-    /// </summary>
-    /// <param name="array">The array value.</param>
-    /// <param name="arrayIndex">The array index value.</param>
+    /// <summary>Copies the current collection to the supplied destination.</summary>
+    /// <param name="array">The array.</param>
+    /// <param name="arrayIndex">The array index.</param>
     public void CopyTo(ServiceDescriptor[] array, int arrayIndex)
     {
         _collection.CopyTo(array, arrayIndex);
     }
 
-    /// <summary>
-    /// Performs the remove operation.
-    /// </summary>
-    /// <param name="item">The item value.</param>
+    /// <summary>Removes the selected value.</summary>
+    /// <param name="item">The item.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Remove(ServiceDescriptor item)
     {
         return _collection.Remove(item);
     }
 
-    /// <summary>
-    /// Gets the count value.
-    /// </summary>
+    /// <summary>Gets the count.</summary>
     public int Count => _collection.Count;
 
-    /// <summary>
-    /// Gets the is read only value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether read only.</summary>
     public bool IsReadOnly => _collection.IsReadOnly;
 
-    /// <summary>
-    /// Performs the index of operation.
-    /// </summary>
-    /// <param name="item">The item value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the index of the supplied value.</summary>
+    /// <param name="item">The item.</param>
+    /// <returns>The int produced by the operation.</returns>
     public int IndexOf(ServiceDescriptor item)
     {
         return _collection.IndexOf(item);
     }
 
-    /// <summary>
-    /// Performs the insert operation.
-    /// </summary>
-    /// <param name="index">The index value.</param>
-    /// <param name="item">The item value.</param>
+    /// <summary>Inserts the supplied value.</summary>
+    /// <param name="index">The index.</param>
+    /// <param name="item">The item.</param>
     public void Insert(int index, ServiceDescriptor item)
     {
         _collection.Insert(index, item);
     }
 
-    /// <summary>
-    /// Performs the remove at operation.
-    /// </summary>
-    /// <param name="index">The index value.</param>
+    /// <summary>Removes at.</summary>
+    /// <param name="index">The index.</param>
     public void RemoveAt(int index)
     {
         _collection.RemoveAt(index);
     }
 
-    /// <summary>
-    /// Gets or sets the value at the specified index.
-    /// </summary>
-    /// <param name="index">The index value.</param>
+    /// <summary>Gets or sets the value at the specified index.</summary>
+    /// <param name="index">The index.</param>
     public ServiceDescriptor this[int index]
     {
         get => _collection[index];

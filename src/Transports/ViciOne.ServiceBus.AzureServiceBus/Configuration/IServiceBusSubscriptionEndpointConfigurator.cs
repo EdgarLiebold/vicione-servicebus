@@ -2,20 +2,14 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Configure an Azure Service Bus receive endpoint
-/// </summary>
+/// <summary>Configures an Azure Service Bus topic-subscription receive endpoint.</summary>
 public interface IServiceBusSubscriptionEndpointConfigurator :
     IReceiveEndpointConfigurator,
     IServiceBusEndpointConfigurator
 {
-    /// <summary>
-    /// Specify the filter for the subscription
-    /// </summary>
+    /// <summary>Sets the filter for the subscription's default rule.</summary>
     RuleFilter Filter { set; }
 
-    /// <summary>
-    /// Specify a rule for the subscription
-    /// </summary>
+    /// <summary>Sets the complete rule created with the subscription.</summary>
     CreateRuleOptions Rule { set; }
 }

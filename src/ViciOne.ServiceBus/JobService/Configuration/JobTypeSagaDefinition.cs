@@ -8,31 +8,25 @@ using JobServiceState = ViciOne.ServiceBus.JobService.JobService;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a job type saga definition implementation.
-/// </summary>
+/// <summary>Defines configuration for job type saga.</summary>
 public class JobTypeSagaDefinition :
     SagaDefinition<JobTypeSaga>
 {
     readonly JobSagaOptions _options;
     readonly JobSagaSettingsConfigurator _setOptions;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="options">The options that control the operation.</param>
     public JobTypeSagaDefinition(IOptions<JobSagaOptions> options)
     {
         _options = options.Value;
         _setOptions = _options;
     }
 
-    /// <summary>
-    /// Configures saga.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="sagaConfigurator">The saga configurator value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Configures saga.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="sagaConfigurator">The saga configurator.</param>
+    /// <param name="context">The context associated with the operation.</param>
     protected override void ConfigureSaga(IReceiveEndpointConfigurator configurator, ISagaConfigurator<JobTypeSaga> sagaConfigurator,
         IRegistrationContext context)
     {

@@ -3,30 +3,24 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.MessageData.Conventions;
 
-/// <summary>
-/// Provides a message data send topology convention implementation.
-/// </summary>
+/// <summary>Applies conventions for message data send topology.</summary>
 public class MessageDataSendTopologyConvention :
     ISendTopologyConvention
 {
     readonly ITopologyConventionCache<IMessageSendTopologyConvention> _cache;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="policy">The policy value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="repository">The repository.</param>
+    /// <param name="policy">The policy.</param>
     public MessageDataSendTopologyConvention(IMessageDataRepository repository, MessageDataPolicy policy)
     {
         _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(typeof(MessageDataMessageSendTopologyConvention<>),
             new Factory(repository, policy));
     }
 
-    /// <summary>
-    /// Attempts to get message send topology convention.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="convention">The convention value.</param>
+    /// <summary>Attempts to get message send topology convention.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="convention">Receives the convention produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetMessageSendTopologyConvention<T>([NotNullWhen(true)] out IMessageSendTopologyConvention<T>? convention)
         where T : class

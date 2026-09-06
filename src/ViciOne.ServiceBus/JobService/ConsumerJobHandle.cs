@@ -4,10 +4,8 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.JobService;
 
-/// <summary>
-/// Provides a consumer job handle implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Controls the lifetime of consumer job.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class ConsumerJobHandle<T> :
     JobHandle
     where T : class
@@ -15,12 +13,10 @@ public class ConsumerJobHandle<T> :
     readonly ConsumeJobContext<T> _context;
     readonly TimeSpan _jobCancellationTimeout;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="task">The task value.</param>
-    /// <param name="jobCancellationTimeout">The job cancellation timeout value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="task">The task.</param>
+    /// <param name="jobCancellationTimeout">The job cancellation timeout.</param>
     public ConsumerJobHandle(ConsumeJobContext<T> context, Task task, TimeSpan jobCancellationTimeout)
     {
         _context = context;
@@ -28,21 +24,15 @@ public class ConsumerJobHandle<T> :
         JobTask = task;
     }
 
-    /// <summary>
-    /// Gets the job id value.
-    /// </summary>
+    /// <summary>Gets the job id.</summary>
     public Guid JobId => _context.JobId;
-    /// <summary>
-    /// Gets the job task value.
-    /// </summary>
+    /// <summary>Gets the job task.</summary>
     public Task JobTask { get; }
 
-    /// <summary>
-    /// Cancels the running job and waits for it to observe cancellation.
-    /// </summary>
-    /// <param name="reason">The reason value.</param>
+    /// <summary>Cancels the running job and waits for it to observe cancellation.</summary>
+    /// <param name="reason">The reason.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CancelAsync(string? reason, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -60,10 +50,8 @@ public class ConsumerJobHandle<T> :
         }
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         return _context.DisposeAsync();

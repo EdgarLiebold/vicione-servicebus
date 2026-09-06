@@ -3,11 +3,9 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a catch exception activity binder implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TException">The t exception type.</typeparam>
+/// <summary>Binds catch exception activity activities to the pipeline.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TException">The exception handled by the member.</typeparam>
 public class CatchExceptionActivityBinder<TInstance, TException> :
     ExceptionActivityBinder<TInstance, TException>
     where TInstance : class, SagaStateMachineInstance
@@ -16,11 +14,9 @@ public class CatchExceptionActivityBinder<TInstance, TException> :
     readonly IActivityBinder<TInstance>[] _activities;
     readonly StateMachine<TInstance> _machine;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="event">The event value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="machine">The machine.</param>
+    /// <param name="event">The event.</param>
     public CatchExceptionActivityBinder(StateMachine<TInstance> machine, Event @event)
     {
         _activities = [];
@@ -40,30 +36,22 @@ public class CatchExceptionActivityBinder<TInstance, TException> :
         Event = @event;
     }
 
-    /// <summary>
-    /// Gets the event value.
-    /// </summary>
+    /// <summary>Gets the event.</summary>
     public Event Event { get; }
 
-    /// <summary>
-    /// Gets state activity binders.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets state activity binders.</summary>
+    /// <returns>The state activity binders.</returns>
     public IEnumerable<IActivityBinder<TInstance>> GetStateActivityBinders()
     {
         return _activities;
     }
 
-    /// <summary>
-    /// Gets the state machine value.
-    /// </summary>
+    /// <summary>Gets the state machine.</summary>
     public StateMachine<TInstance> StateMachine => _machine;
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="activity">The activity value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="activity">The activity.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TInstance, TException> Add(IStateMachineActivity<TInstance> activity)
     {
         IActivityBinder<TInstance> activityBinder = new ExecuteActivityBinder<TInstance>(Event, activity);
@@ -71,12 +59,10 @@ public class CatchExceptionActivityBinder<TInstance, TException> :
         return new CatchExceptionActivityBinder<TInstance, TException>(_machine, Event, _activities, activityBinder);
     }
 
-    /// <summary>
-    /// Performs the catch operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="activityCallback">The activity callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds a fault-handling branch.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="activityCallback">The activity callback.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TInstance, TException> Catch<T>(
         Func<ExceptionActivityBinder<TInstance, T>, ExceptionActivityBinder<TInstance, T>> activityCallback)
         where T : Exception
@@ -90,37 +76,31 @@ public class CatchExceptionActivityBinder<TInstance, TException> :
         return new CatchExceptionActivityBinder<TInstance, TException>(_machine, Event, _activities, activityBinder);
     }
 
-    /// <summary>
-    /// Performs the if operation.
-    /// </summary>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="activityCallback">The activity callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds a conditional branch.</summary>
+    /// <param name="condition">The condition.</param>
+    /// <param name="activityCallback">The activity callback.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TInstance, TException> If(StateMachineExceptionCondition<TInstance, TException> condition,
         Func<ExceptionActivityBinder<TInstance, TException>, ExceptionActivityBinder<TInstance, TException>> activityCallback)
     {
         return IfElse(condition, activityCallback, b => b);
     }
 
-    /// <summary>
-    /// Performs the if operation.
-    /// </summary>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="activityCallback">The activity callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds a conditional branch.</summary>
+    /// <param name="condition">The condition.</param>
+    /// <param name="activityCallback">The activity callback.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TInstance, TException> IfAsync(StateMachineAsyncExceptionCondition<TInstance, TException> condition,
         Func<ExceptionActivityBinder<TInstance, TException>, ExceptionActivityBinder<TInstance, TException>> activityCallback)
     {
         return IfElseAsync(condition, activityCallback, b => b);
     }
 
-    /// <summary>
-    /// Performs the if else operation.
-    /// </summary>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="thenActivityCallback">The then activity callback value.</param>
-    /// <param name="elseActivityCallback">The else activity callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds conditional success and alternative branches.</summary>
+    /// <param name="condition">The condition.</param>
+    /// <param name="thenActivityCallback">The then activity callback.</param>
+    /// <param name="elseActivityCallback">The else activity callback.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TInstance, TException> IfElse(StateMachineExceptionCondition<TInstance, TException> condition,
         Func<ExceptionActivityBinder<TInstance, TException>, ExceptionActivityBinder<TInstance, TException>> thenActivityCallback,
         Func<ExceptionActivityBinder<TInstance, TException>, ExceptionActivityBinder<TInstance, TException>> elseActivityCallback)
@@ -133,13 +113,11 @@ public class CatchExceptionActivityBinder<TInstance, TException> :
         return new CatchExceptionActivityBinder<TInstance, TException>(_machine, Event, _activities, conditionBinder);
     }
 
-    /// <summary>
-    /// Performs the if else operation.
-    /// </summary>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="thenActivityCallback">The then activity callback value.</param>
-    /// <param name="elseActivityCallback">The else activity callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds conditional success and alternative branches.</summary>
+    /// <param name="condition">The condition.</param>
+    /// <param name="thenActivityCallback">The then activity callback.</param>
+    /// <param name="elseActivityCallback">The else activity callback.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TInstance, TException> IfElseAsync(StateMachineAsyncExceptionCondition<TInstance, TException> condition,
         Func<ExceptionActivityBinder<TInstance, TException>, ExceptionActivityBinder<TInstance, TException>> thenActivityCallback,
         Func<ExceptionActivityBinder<TInstance, TException>, ExceptionActivityBinder<TInstance, TException>> elseActivityCallback)
@@ -161,12 +139,10 @@ public class CatchExceptionActivityBinder<TInstance, TException> :
 }
 
 
-/// <summary>
-/// Provides a catch exception activity binder implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TData">The t data type.</typeparam>
-/// <typeparam name="TException">The t exception type.</typeparam>
+/// <summary>Binds catch exception activity activities to the pipeline.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TData">The data type.</typeparam>
+/// <typeparam name="TException">The exception handled by the member.</typeparam>
 public class CatchExceptionActivityBinder<TInstance, TData, TException> :
     ExceptionActivityBinder<TInstance, TData, TException>
     where TInstance : class, SagaStateMachineInstance
@@ -176,11 +152,9 @@ public class CatchExceptionActivityBinder<TInstance, TData, TException> :
     readonly IActivityBinder<TInstance>[] _activities;
     readonly StateMachine<TInstance> _machine;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="event">The event value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="machine">The machine.</param>
+    /// <param name="event">The event.</param>
     public CatchExceptionActivityBinder(StateMachine<TInstance> machine, Event<TData> @event)
     {
         _activities = [];
@@ -200,30 +174,22 @@ public class CatchExceptionActivityBinder<TInstance, TData, TException> :
         Event = @event;
     }
 
-    /// <summary>
-    /// Gets the event value.
-    /// </summary>
+    /// <summary>Gets the event.</summary>
     public Event<TData> Event { get; }
 
-    /// <summary>
-    /// Gets state activity binders.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets state activity binders.</summary>
+    /// <returns>The state activity binders.</returns>
     public IEnumerable<IActivityBinder<TInstance>> GetStateActivityBinders()
     {
         return _activities;
     }
 
-    /// <summary>
-    /// Gets the state machine value.
-    /// </summary>
+    /// <summary>Gets the state machine.</summary>
     public StateMachine<TInstance> StateMachine => _machine;
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="activity">The activity value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="activity">The activity.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TInstance, TData, TException> Add(IStateMachineActivity<TInstance> activity)
     {
         IActivityBinder<TInstance> activityBinder = new ExecuteActivityBinder<TInstance>(Event, activity);
@@ -231,11 +197,9 @@ public class CatchExceptionActivityBinder<TInstance, TData, TException> :
         return new CatchExceptionActivityBinder<TInstance, TData, TException>(_machine, Event, _activities, activityBinder);
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="activity">The activity value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="activity">The activity.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TInstance, TData, TException> Add(IStateMachineActivity<TInstance, TData> activity)
     {
         var converterActivity = new DataConverterActivity<TInstance, TData>(activity);
@@ -245,12 +209,10 @@ public class CatchExceptionActivityBinder<TInstance, TData, TException> :
         return new CatchExceptionActivityBinder<TInstance, TData, TException>(_machine, Event, _activities, activityBinder);
     }
 
-    /// <summary>
-    /// Performs the catch operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="activityCallback">The activity callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds a fault-handling branch.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="activityCallback">The activity callback.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TInstance, TData, TException> Catch<T>(
         Func<ExceptionActivityBinder<TInstance, TData, T>, ExceptionActivityBinder<TInstance, TData, T>> activityCallback)
         where T : Exception
@@ -264,37 +226,31 @@ public class CatchExceptionActivityBinder<TInstance, TData, TException> :
         return new CatchExceptionActivityBinder<TInstance, TData, TException>(_machine, Event, _activities, activityBinder);
     }
 
-    /// <summary>
-    /// Performs the if operation.
-    /// </summary>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="activityCallback">The activity callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds a conditional branch.</summary>
+    /// <param name="condition">The condition.</param>
+    /// <param name="activityCallback">The activity callback.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TInstance, TData, TException> If(StateMachineExceptionCondition<TInstance, TData, TException> condition,
         Func<ExceptionActivityBinder<TInstance, TData, TException>, ExceptionActivityBinder<TInstance, TData, TException>> activityCallback)
     {
         return IfElse(condition, activityCallback, b => b);
     }
 
-    /// <summary>
-    /// Performs the if operation.
-    /// </summary>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="activityCallback">The activity callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds a conditional branch.</summary>
+    /// <param name="condition">The condition.</param>
+    /// <param name="activityCallback">The activity callback.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TInstance, TData, TException> IfAsync(StateMachineAsyncExceptionCondition<TInstance, TData, TException> condition,
         Func<ExceptionActivityBinder<TInstance, TData, TException>, ExceptionActivityBinder<TInstance, TData, TException>> activityCallback)
     {
         return IfElseAsync(condition, activityCallback, b => b);
     }
 
-    /// <summary>
-    /// Performs the if else operation.
-    /// </summary>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="thenActivityCallback">The then activity callback value.</param>
-    /// <param name="elseActivityCallback">The else activity callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds conditional success and alternative branches.</summary>
+    /// <param name="condition">The condition.</param>
+    /// <param name="thenActivityCallback">The then activity callback.</param>
+    /// <param name="elseActivityCallback">The else activity callback.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TInstance, TData, TException> IfElse(StateMachineExceptionCondition<TInstance, TData, TException> condition,
         Func<ExceptionActivityBinder<TInstance, TData, TException>, ExceptionActivityBinder<TInstance, TData, TException>> thenActivityCallback,
         Func<ExceptionActivityBinder<TInstance, TData, TException>, ExceptionActivityBinder<TInstance, TData, TException>> elseActivityCallback)
@@ -307,13 +263,11 @@ public class CatchExceptionActivityBinder<TInstance, TData, TException> :
         return new CatchExceptionActivityBinder<TInstance, TData, TException>(_machine, Event, _activities, conditionBinder);
     }
 
-    /// <summary>
-    /// Performs the if else operation.
-    /// </summary>
-    /// <param name="condition">The condition value.</param>
-    /// <param name="thenActivityCallback">The then activity callback value.</param>
-    /// <param name="elseActivityCallback">The else activity callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds conditional success and alternative branches.</summary>
+    /// <param name="condition">The condition.</param>
+    /// <param name="thenActivityCallback">The then activity callback.</param>
+    /// <param name="elseActivityCallback">The else activity callback.</param>
+    /// <returns>The exception activity binder produced by the operation.</returns>
     public ExceptionActivityBinder<TInstance, TData, TException> IfElseAsync(StateMachineAsyncExceptionCondition<TInstance, TData, TException> condition,
         Func<ExceptionActivityBinder<TInstance, TData, TException>, ExceptionActivityBinder<TInstance, TData, TException>> thenActivityCallback,
         Func<ExceptionActivityBinder<TInstance, TData, TException>, ExceptionActivityBinder<TInstance, TData, TException>> elseActivityCallback)

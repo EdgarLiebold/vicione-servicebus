@@ -4,17 +4,13 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for response.
-/// </summary>
+/// <summary>Provides extension methods for response.</summary>
 public static class ResponseExtensions
 {
-    /// <summary>
-    /// Used for pattern matching via (response,message)
-    /// </summary>
-    /// <param name="response"></param>
-    /// <param name="context"></param>
-    /// <param name="message"></param>
+    /// <summary>Used for pattern matching via (response,message).</summary>
+    /// <param name="response">The response.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="message">Receives the message produced by the operation.</param>
     public static void Deconstruct(this Response response, out Response context, out object message)
     {
         context = response;
@@ -25,10 +21,10 @@ public static class ResponseExtensions
     /// Returns true if the response type is explicitly accepted, or if the accept response header is
     /// not present (downlevel client).
     /// </summary>
-    /// <param name="context">The consumed message context</param>
-    /// <param name="defaultIfHeaderNotFound">Value to return if header was not present</param>
-    /// <typeparam name="T">The response type</typeparam>
-    /// <returns>True if explicitly support or header is missing, otherwise false</returns>
+    /// <typeparam name="T">The response type.</typeparam>
+    /// <param name="context">The consumed message context.</param>
+    /// <param name="defaultIfHeaderNotFound">Value to return if header was not present.</param>
+    /// <returns>True if explicitly support or header is missing, otherwise false.</returns>
     public static bool IsResponseAccepted<T>(this ConsumeContext context, bool defaultIfHeaderNotFound = true)
         where T : class
     {

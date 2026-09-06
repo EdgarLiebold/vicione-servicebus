@@ -5,18 +5,14 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// A convention that looks for IConsumerOfBatchOfT message types
-/// </summary>
-/// <typeparam name="T"></typeparam>
+/// <summary>A convention that looks for IConsumerOfBatchOfT message types.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class BatchConsumerMessageConvention<T> :
     IConsumerMessageConvention
     where T : class
 {
-    /// <summary>
-    /// Gets message types.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message types.</summary>
+    /// <returns>The message types.</returns>
     public IEnumerable<IMessageInterfaceType> GetMessageTypes()
     {
         var consumerType = typeof(T);

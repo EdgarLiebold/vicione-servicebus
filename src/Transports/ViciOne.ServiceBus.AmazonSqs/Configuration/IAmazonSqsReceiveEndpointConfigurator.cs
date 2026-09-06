@@ -2,29 +2,28 @@ using System;
 using ViciOne.ServiceBus.AmazonSqs;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
-/// <summary>
-/// Configure a receiving AmazonSQS endpoint
-/// </summary>
+/// <summary>Configures an Amazon SQS receive endpoint and its Amazon SNS subscriptions.</summary>
 public interface IAmazonSqsReceiveEndpointConfigurator :
     IReceiveEndpointConfigurator,
     IAmazonSqsQueueEndpointConfigurator
 {
     /// <summary>
     /// The number of seconds to wait before allowing SQS to redeliver the message when faults are returned back to SQS.
-    /// Defaults to 0.
+    /// Defaults to 1 second.
     /// </summary>
     int RedeliverVisibilityTimeout { set; }
 
     /// <summary>
-    /// Set number of concurrent messages per MessageGroupId, higher value will increase throughput but will break delivery order (default: 1).
+    /// Sets the number of concurrent deliveries per <c>MessageGroupId</c>. Values above one increase throughput but permit completion out of order.
+    /// The default is one.
     /// This applies to FIFO queues only.
     /// </summary>
     int ConcurrentDeliveryLimit { set; }
 
     /// <summary>
-    /// Sets the maximum duration to extend the visibility timeout for a message.
+    /// Sets the maximum total duration for automatic message-visibility renewal.
     /// Must not exceed 12 hours, as per
-    /// <see href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html"></see>.
+    /// <see href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html" />.
     /// If a value greater than 12 hours is provided, it will be clamped to <c>TimeSpan.FromHours(12)</c>.
     /// Defaults to 12 hours.
     /// </summary>
@@ -38,35 +37,25 @@ public interface IAmazonSqsReceiveEndpointConfigurator :
     /// </summary>
     int MaxVisibilityTimeoutRenewal { set; }
 
-    /// <summary>
-    /// Subscribes the receive endpoint queue to the topic for the specified message type.
-    /// </summary>
+    /// <summary>Subscribes the receive endpoint queue to the topic for the specified message type.</summary>
     /// <typeparam name="T">The message type whose topic is subscribed.</typeparam>
+    /// <param name="callback">An optional callback that configures the topic subscription.</param>
     void Subscribe<T>(Action<IAmazonSqsTopicSubscriptionConfigurator>? callback = null)
         where T : class;
 
-    /// <summary>
-    /// Subscribes the receive endpoint queue to an Amazon SNS topic.
-    /// </summary>
+    /// <summary>Subscribes the receive endpoint queue to an Amazon SNS topic.</summary>
     /// <param name="topicName">The topic name.</param>
     /// <param name="callback">An optional callback that configures the topic subscription.</param>
     void Subscribe(string topicName, Action<IAmazonSqsTopicSubscriptionConfigurator>? callback = null);
 
-    /// <summary>
-    /// Configures client.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures filters in the Amazon client-context pipeline.</summary>
+    /// <param name="configure">The callback that updates the client-context pipe.</param>
     void ConfigureClient(Action<IPipeConfigurator<ClientContext>>? configure);
 
-    /// <summary>
-    /// Configures connection.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures filters in the Amazon connection-context pipeline.</summary>
+    /// <param name="configure">The callback that updates the connection-context pipe.</param>
     void ConfigureConnection(Action<IPipeConfigurator<ConnectionContext>>? configure);
 
-    /// <summary>
-    /// FIFO queues deliver messages to consumers partitioned by MessageGroupId, in SequenceNumber order. Calling this method will
-    /// disable that behavior.
-    /// </summary>
+    /// <summary>Disables FIFO message-group partitioning and sequence ordering.</summary>
     void DisableMessageOrdering();
 }

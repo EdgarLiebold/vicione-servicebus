@@ -8,20 +8,16 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Middleware;
 
-/// <summary>
-/// Provides a remove amazon sqs topology agent implementation.
-/// </summary>
+/// <summary>Deletes auto-delete Amazon SQS queues and Amazon SNS topics when its endpoint stops.</summary>
 public sealed class RemoveAmazonSqsTopologyAgent :
     Agent
 {
     readonly BrokerTopology _brokerTopology;
     readonly ClientContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="brokerTopology">The broker topology value.</param>
+    /// <summary>Initializes a topology-removal agent in the ready state.</summary>
+    /// <param name="context">The client context used for entity deletion.</param>
+    /// <param name="brokerTopology">The topology whose auto-delete entities are owned by the endpoint.</param>
     public RemoveAmazonSqsTopologyAgent(ClientContext context, BrokerTopology brokerTopology)
     {
         _brokerTopology = brokerTopology;
@@ -30,11 +26,9 @@ public sealed class RemoveAmazonSqsTopologyAgent :
         SetReady();
     }
 
-    /// <summary>
-    /// Stops agent.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deletes auto-delete entities and then stops the agent.</summary>
+    /// <param name="context">The stop context whose token cancels topology deletion.</param>
+    /// <returns>A task that completes when deletion has been attempted and the agent has stopped.</returns>
     protected override async Task StopAgentAsync(StopContext context)
     {
         try

@@ -2,14 +2,10 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for rabbit mq delivery metrics.
-/// </summary>
+/// <summary>Adds the broker-assigned consumer tag to receive-delivery metrics.</summary>
 public interface RabbitMqDeliveryMetrics :
     DeliveryMetrics
 {
-    /// <summary>
-    /// The consumer tag that was assigned to the consumer by the broker
-    /// </summary>
+    /// <summary>The consumer tag that was assigned to the consumer by the broker.</summary>
     string ConsumerTag { get; }
 }

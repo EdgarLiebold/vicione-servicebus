@@ -8,19 +8,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Provides a rabbit mq registration bus factory implementation.
-/// </summary>
+/// <summary>Creates RabbitMQ bus instances from dependency-injection registrations and named options.</summary>
 public class RabbitMqRegistrationBusFactory :
     TransportRegistrationBusFactory<IRabbitMqReceiveEndpointConfigurator>
 {
     readonly RabbitMqBusConfiguration _busConfiguration;
     readonly Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator> _configure;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Creates a registration factory with an optional RabbitMQ bus callback.</summary>
+    /// <param name="configure">The callback applied after named transport options.</param>
     public RabbitMqRegistrationBusFactory(Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator>? configure)
         : this(new RabbitMqBusConfiguration(new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology())), configure)
     {
@@ -35,13 +31,11 @@ public class RabbitMqRegistrationBusFactory :
         _busConfiguration = busConfiguration;
     }
 
-    /// <summary>
-    /// Creates bus.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="specifications">The specifications value.</param>
-    /// <param name="busName">The bus name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds a RabbitMQ bus from the requested named options and registrations.</summary>
+    /// <param name="context">The bus registration context.</param>
+    /// <param name="specifications">The bus-instance specifications to apply.</param>
+    /// <param name="busName">The named-options key.</param>
+    /// <returns>The configured RabbitMQ bus instance.</returns>
     public override IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
     {
         var configurator = new RabbitMqBusFactoryConfigurator(_busConfiguration);

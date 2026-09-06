@@ -2,9 +2,7 @@ using System;
 using RabbitMQ.Client.Exceptions;
 
 namespace ViciOne.ServiceBus.RabbitMq;
-/// <summary>
-/// Classifies RabbitMQ send failures using exception identity and AMQP reply codes.
-/// </summary>
+/// <summary>Classifies RabbitMQ send failures using exception identity and AMQP reply codes.</summary>
 public sealed class RabbitMqSendFailureClassifier : ITransportSendFailureClassifier
 {
     const ushort ContentTooLarge = 311;
@@ -13,12 +11,10 @@ public sealed class RabbitMqSendFailureClassifier : ITransportSendFailureClassif
     const ushort NotAllowed = 530;
     const ushort NotImplemented = 540;
 
-    /// <summary>
-    /// Performs the try classify operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="failureKind">The failure kind value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Classifies known RabbitMQ authentication, shutdown-reply, and connection failures.</summary>
+    /// <param name="exception">The exception chain to inspect.</param>
+    /// <param name="failureKind">The permanent, transient, or unclassified outcome.</param>
+    /// <returns><see langword="true" /> when the chain contains a recognized RabbitMQ failure.</returns>
     public bool TryClassify(Exception exception, out TransportSendFailureKind failureKind)
     {
         ArgumentNullException.ThrowIfNull(exception);

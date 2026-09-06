@@ -5,63 +5,39 @@ using ViciOne.ServiceBus.SqlTransport.Configuration;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Settings to configure a DbTransport host explicitly without requiring the fluent interface
-/// </summary>
+/// <summary>Settings to configure a DbTransport host explicitly without requiring the fluent interface.</summary>
 public interface SqlHostSettings :
     ISpecification
 {
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the host address.</summary>
     Uri HostAddress { get; }
 
-    /// <summary>
-    /// Gets the connection tag value.
-    /// </summary>
+    /// <summary>Gets the connection tag.</summary>
     string? ConnectionTag { get; }
 
-    /// <summary>
-    /// Gets the virtual host value.
-    /// </summary>
+    /// <summary>Gets the virtual host.</summary>
     string? VirtualHost { get; }
-    /// <summary>
-    /// Gets the area value.
-    /// </summary>
+    /// <summary>Gets the area.</summary>
     string? Area { get; }
 
-    /// <summary>
-    /// Gets the isolation level value.
-    /// </summary>
+    /// <summary>Gets the isolation level.</summary>
     IsolationLevel IsolationLevel { get; }
 
-    /// <summary>
-    /// Gets the connection limit value.
-    /// </summary>
+    /// <summary>Gets the connection limit.</summary>
     int ConnectionLimit { get; }
 
-    /// <summary>
-    /// Gets the maintenance enabled value.
-    /// </summary>
+    /// <summary>Gets the maintenance enabled.</summary>
     bool MaintenanceEnabled { get; }
-    /// <summary>
-    /// Gets the maintenance interval value.
-    /// </summary>
+    /// <summary>Gets the maintenance interval.</summary>
     TimeSpan MaintenanceInterval { get; }
-    /// <summary>
-    /// Gets the queue cleanup interval value.
-    /// </summary>
+    /// <summary>Gets the queue cleanup interval.</summary>
     TimeSpan QueueCleanupInterval { get; }
-    /// <summary>
-    /// Gets the maintenance batch size value.
-    /// </summary>
+    /// <summary>Gets the maintenance batch size.</summary>
     int MaintenanceBatchSize { get; }
 
-    /// <summary>
-    /// Creates connection context factory.
-    /// </summary>
-    /// <param name="configuration">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates connection context factory.</summary>
+    /// <param name="configuration">The callback used to configure the component.</param>
+    /// <returns>The created connection context factory.</returns>
     ConnectionContextFactory CreateConnectionContextFactory(ISqlHostConfiguration configuration);
 
 }

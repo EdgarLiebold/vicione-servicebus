@@ -4,22 +4,14 @@ using ViciOne.ServiceBus.Contracts.JobService;
 
 namespace ViciOne.ServiceBus.JobService.Messages;
 
-/// <summary>
-/// Provides a save job state command implementation.
-/// </summary>
+/// <summary>Carries the command for save job state.</summary>
 public class SaveJobStateCommand :
     SaveJobState
 {
-    /// <summary>
-    /// Gets or sets the job id value.
-    /// </summary>
+    /// <summary>Gets or sets the job id.</summary>
     public Guid JobId { get; set; }
-    /// <summary>
-    /// Gets or sets the attempt id value.
-    /// </summary>
+    /// <summary>Gets or sets the attempt id.</summary>
     public Guid AttemptId { get; set; }
-    /// <summary>
-    /// Gets or sets the job state value.
-    /// </summary>
+    /// <summary>Gets or sets the job state.</summary>
     public Dictionary<string, object>? JobState { get; set; }
 }

@@ -3,151 +3,123 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Defines the contract for execute context.
-/// </summary>
+/// <summary>Exposes state for execute operations.</summary>
 public interface ExecuteContext :
     ActivityContext
 {
-    /// <summary>
-    /// Set the execution result, which completes the activity
-    /// </summary>
+    /// <summary>Set the execution result, which completes the activity.</summary>
     ExecutionResult Result { get; set; }
 
-    /// <summary>
-    /// Completes the execution, without passing a compensating log entry
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Completes the execution, without passing a compensating log entry.</summary>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult Completed();
 
-    /// <summary>
-    /// Completes the execution, without passing a compensating log entry
-    /// </summary>
-    /// <param name="callback">Configure the routing slip options</param>
-    /// <returns></returns>
+    /// <summary>Completes the execution, without passing a compensating log entry.</summary>
+    /// <param name="callback">Configure the routing slip options.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult Completed(ConfigureCompletedActivityOptionsCallback callback);
 
-    /// <summary>
-    /// Completes the execution, passing updated variables to the routing slip
-    /// </summary>
-    /// <param name="variables"></param>
-    /// <returns></returns>
+    /// <summary>Completes the execution, passing updated variables to the routing slip.</summary>
+    /// <param name="variables">The variables.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult CompletedWithVariables(IEnumerable<KeyValuePair<string, object>> variables);
 
-    /// <summary>
-    /// Completes the execution, passing updated variables to the routing slip
-    /// </summary>
-    /// <param name="variables"></param>
-    /// <returns></returns>
+    /// <summary>Completes the execution, passing updated variables to the routing slip.</summary>
+    /// <param name="variables">The variables.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult CompletedWithVariables(object variables);
 
-    /// <summary>
-    /// Completes the activity, passing a compensation log entry
-    /// </summary>
-    /// <typeparam name="TLog"></typeparam>
-    /// <param name="log"></param>
-    /// <returns></returns>
+    /// <summary>Completes the activity, passing a compensation log entry.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult Completed<TLog>(TLog log)
         where TLog : class;
 
-    /// <summary>
-    /// Completes the activity, passing a compensation log entry
-    /// </summary>
-    /// <typeparam name="TLog"></typeparam>
-    /// <param name="log"></param>
-    /// <param name="callback">Configure the routing slip options</param>
-    /// <returns></returns>
+    /// <summary>Completes the activity, passing a compensation log entry.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <param name="callback">Configure the routing slip options.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult Completed<TLog>(TLog log, ConfigureCompletedActivityOptionsCallback callback)
         where TLog : class;
 
-    /// <summary>
-    /// Completes the activity, passing a compensation log entry
-    /// </summary>
-    /// <typeparam name="TLog"></typeparam>
-    /// <param name="logValues">An object to initialize the log properties</param>
-    /// <returns></returns>
+    /// <summary>Completes the activity, passing a compensation log entry.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="logValues">An object to initialize the log properties.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult Completed<TLog>(object logValues)
         where TLog : class;
 
-    /// <summary>
-    /// Completes the activity, passing a compensation log entry
-    /// </summary>
-    /// <typeparam name="TLog"></typeparam>
-    /// <param name="logValues">An object to initialize the log properties</param>
-    /// <param name="callback">Configure the routing slip options</param>
-    /// <returns></returns>
+    /// <summary>Completes the activity, passing a compensation log entry.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="logValues">An object to initialize the log properties.</param>
+    /// <param name="callback">Configure the routing slip options.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult Completed<TLog>(object logValues, ConfigureCompletedActivityOptionsCallback callback)
         where TLog : class;
 
     /// <summary>
     /// Completes the activity, passing a compensation log entry and additional variables to set on
-    /// the routing slip
+    /// the routing slip.
     /// </summary>
-    /// <typeparam name="TLog"></typeparam>
-    /// <param name="log"></param>
-    /// <param name="variables">An anonymous object of values to add/set as variables on the routing slip</param>
-    /// <returns></returns>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <param name="variables">An anonymous object of values to add/set as variables on the routing slip.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult CompletedWithVariables<TLog>(TLog log, object variables)
         where TLog : class;
 
     /// <summary>
     /// Completes the activity, passing a compensation log entry and additional variables to set on
-    /// the routing slip
+    /// the routing slip.
     /// </summary>
-    /// <typeparam name="TLog"></typeparam>
-    /// <param name="logValues"></param>
-    /// <param name="variables">An anonymous object of values to add/set as variables on the routing slip</param>
-    /// <returns></returns>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="logValues">The log values.</param>
+    /// <param name="variables">An anonymous object of values to add/set as variables on the routing slip.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult CompletedWithVariables<TLog>(object logValues, object variables)
         where TLog : class;
 
     /// <summary>
     /// Completes the activity, passing a compensation log entry and additional variables to set on
-    /// the routing slip
+    /// the routing slip.
     /// </summary>
-    /// <typeparam name="TLog"></typeparam>
-    /// <param name="log"></param>
-    /// <param name="variables">An dictionary of values to add/set as variables on the routing slip</param>
-    /// <returns></returns>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <param name="variables">An dictionary of values to add/set as variables on the routing slip.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult CompletedWithVariables<TLog>(TLog log, IEnumerable<KeyValuePair<string, object>> variables)
         where TLog : class;
 
-    /// <summary>
-    /// Revises the remaining itinerary.
-    /// </summary>
-    /// <param name="buildItinerary">The itinerary callback.</param>
-    /// <returns>The execution result.</returns>
+    /// <summary>Revises the remaining itinerary.</summary>
+    /// <param name="buildItinerary">The build itinerary.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult ReviseItinerary(Action<IItineraryBuilder> buildItinerary);
 
-    /// <summary>
-    /// Revises the remaining itinerary and records a compensation log.
-    /// </summary>
-    /// <typeparam name="TLog">The compensation-log type.</typeparam>
-    /// <param name="log">The compensation log.</param>
-    /// <param name="buildItinerary">The itinerary callback.</param>
-    /// <returns>The execution result.</returns>
+    /// <summary>Revises the remaining itinerary and records a compensation log.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <param name="buildItinerary">The build itinerary.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult ReviseItinerary<TLog>(TLog log, Action<IItineraryBuilder> buildItinerary)
         where TLog : class;
 
-    /// <summary>
-    /// Revises the remaining itinerary and records a compensation log and variables.
-    /// </summary>
-    /// <typeparam name="TLog">The compensation-log type.</typeparam>
-    /// <param name="log">The compensation log.</param>
-    /// <param name="variables">The updated variables.</param>
-    /// <param name="buildItinerary">The itinerary callback.</param>
-    /// <returns>The execution result.</returns>
+    /// <summary>Revises the remaining itinerary and records a compensation log and variables.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <param name="variables">The variables.</param>
+    /// <param name="buildItinerary">The build itinerary.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult ReviseItinerary<TLog>(TLog log, object variables, Action<IItineraryBuilder> buildItinerary)
         where TLog : class;
 
-    /// <summary>
-    /// Revises the remaining itinerary and records a compensation log and variables.
-    /// </summary>
-    /// <typeparam name="TLog">The compensation-log type.</typeparam>
-    /// <param name="log">The compensation log.</param>
-    /// <param name="variables">The updated variables.</param>
-    /// <param name="buildItinerary">The itinerary callback.</param>
-    /// <returns>The execution result.</returns>
+    /// <summary>Revises the remaining itinerary and records a compensation log and variables.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <param name="variables">The variables.</param>
+    /// <param name="buildItinerary">The build itinerary.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult ReviseItinerary<TLog>(TLog log, IEnumerable<KeyValuePair<string, object>> variables,
         Action<IItineraryBuilder> buildItinerary)
         where TLog : class;
@@ -156,82 +128,73 @@ public interface ExecuteContext :
     /// Terminate the routing slip (with extreme prejudice), completing it but discarding any remaining itinerary
     /// activities.
     /// </summary>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult Terminate();
 
     /// <summary>
     /// Terminate the routing slip (with extreme prejudice), completing it but discarding any remaining itinerary
     /// activities.
-    /// <param name="variables">An dictionary of values to add/set as variables on the routing slip</param>
     /// </summary>
+    /// <param name="variables">The variables.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult Terminate(object variables);
 
     /// <summary>
     /// Terminate the routing slip (with extreme prejudice), completing it but discarding any remaining itinerary
     /// activities.
-    /// <param name="variables">An dictionary of values to add/set as variables on the routing slip</param>
     /// </summary>
+    /// <param name="variables">The variables.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult Terminate(IEnumerable<KeyValuePair<string, object>> variables);
 
-    /// <summary>
-    /// The activity Faulted for an unknown reason, but compensation should be triggered
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>The activity Faulted for an unknown reason, but compensation should be triggered.</summary>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult Faulted();
 
-    /// <summary>
-    /// The activity Faulted, and compensation should be triggered
-    /// </summary>
-    /// <param name="exception"></param>
-    /// <returns></returns>
+    /// <summary>The activity Faulted, and compensation should be triggered.</summary>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult Faulted(Exception exception);
 
-    /// <summary>
-    /// The activity Faulted, and compensation should be triggered
-    /// </summary>
-    /// <param name="exception"></param>
-    /// <param name="callback">Set additional options for the compensated activities</param>
-    /// <returns></returns>
+    /// <summary>The activity Faulted, and compensation should be triggered.</summary>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="callback">Set additional options for the compensated activities.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult Faulted(Exception exception, ConfigureFaultedActivityOptionsCallback callback);
 
     /// <summary>
     /// The activity Faulted with no exception, but compensation should be triggered and passing additional variables to set on
-    /// the routing slip
+    /// the routing slip.
     /// </summary>
-    /// <param name="exception"></param>
-    /// <param name="variables">An anonymous object of values to add/set as variables on the routing slip</param>
-    /// <returns></returns>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="variables">An anonymous object of values to add/set as variables on the routing slip.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult FaultedWithVariables(Exception exception, object variables);
 
     /// <summary>
     /// The activity Faulted with no exception, but compensation should be triggered and passing additional variables to set on
-    /// the routing slip
+    /// the routing slip.
     /// </summary>
-    /// <param name="exception"></param>
-    /// <param name="variables">An dictionary of values to add/set as variables on the routing slip</param>
-    /// <returns></returns>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="variables">An dictionary of values to add/set as variables on the routing slip.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     ExecutionResult FaultedWithVariables(Exception exception, IEnumerable<KeyValuePair<string, object>> variables);
 }
 
 
-/// <summary>
-/// Defines the contract for execute context.
-/// </summary>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Exposes state for execute operations.</summary>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public interface ExecuteContext<out TArguments> :
     ExecuteContext
     where TArguments : class
 {
-    /// <summary>
-    /// The arguments from the routing slip for this activity
-    /// </summary>
+    /// <summary>The arguments from the routing slip for this activity.</summary>
     TArguments Arguments { get; }
 
-    /// <summary>
-    /// Creates activity context.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <param name="activity">The activity value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates activity context.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <param name="activity">The activity.</param>
+    /// <returns>The created activity context.</returns>
     ExecuteActivityContext<TActivity, TArguments> CreateActivityContext<TActivity>(TActivity activity)
         where TActivity : class;
 }

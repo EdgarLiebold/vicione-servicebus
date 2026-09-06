@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>
-/// Provides an execute context proxy implementation.
-/// </summary>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Forwards execute context operations to an underlying context.</summary>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class ExecuteContextProxy<TArguments> :
     ActivityContextProxy,
     ExecuteContext<TArguments>
@@ -14,11 +12,9 @@ public class ExecuteContextProxy<TArguments> :
 {
     readonly ExecuteContext<TArguments> _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="arguments">The arguments value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="arguments">The arguments.</param>
     public ExecuteContextProxy(ExecuteContext<TArguments> context, TArguments arguments)
         : base(context)
     {
@@ -26,10 +22,8 @@ public class ExecuteContextProxy<TArguments> :
         Arguments = arguments;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     protected ExecuteContextProxy(ExecuteContext<TArguments> context)
         : base(context)
     {
@@ -37,287 +31,235 @@ public class ExecuteContextProxy<TArguments> :
         Arguments = context.Arguments;
     }
 
-    /// <summary>
-    /// Gets the arguments value.
-    /// </summary>
+    /// <summary>Gets the arguments.</summary>
     public TArguments Arguments { get; }
 
-    /// <summary>
-    /// Gets or sets the result value.
-    /// </summary>
+    /// <summary>Gets or sets the result.</summary>
     public ExecutionResult Result
     {
         get => _context.Result;
         set => _context.Result = value;
     }
 
-    /// <summary>
-    /// Creates activity context.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <param name="activity">The activity value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates activity context.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <param name="activity">The activity.</param>
+    /// <returns>The created activity context.</returns>
     public ExecuteActivityContext<TActivity, TArguments> CreateActivityContext<TActivity>(TActivity activity)
         where TActivity : class
     {
         return new HostExecuteActivityContext<TActivity, TArguments>(activity, this);
     }
 
-    /// <summary>
-    /// Performs the completed operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports successful completion.</summary>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Completed()
     {
         return _context.Completed();
     }
 
-    /// <summary>
-    /// Performs the completed operation.
-    /// </summary>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports successful completion.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Completed(ConfigureCompletedActivityOptionsCallback callback)
     {
         return _context.Completed(callback);
     }
 
-    /// <summary>
-    /// Performs the completed with variables operation.
-    /// </summary>
-    /// <param name="variables">The variables value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes d with variables.</summary>
+    /// <param name="variables">The variables.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult CompletedWithVariables(IEnumerable<KeyValuePair<string, object>> variables)
     {
         return _context.CompletedWithVariables(variables);
     }
 
-    /// <summary>
-    /// Performs the completed with variables operation.
-    /// </summary>
-    /// <param name="variables">The variables value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes d with variables.</summary>
+    /// <param name="variables">The variables.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult CompletedWithVariables(object variables)
     {
         return _context.CompletedWithVariables(variables);
     }
 
-    /// <summary>
-    /// Performs the completed operation.
-    /// </summary>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="log">The log value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports successful completion.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Completed<TLog>(TLog log)
         where TLog : class
     {
         return _context.Completed(log);
     }
 
-    /// <summary>
-    /// Performs the completed operation.
-    /// </summary>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="log">The log value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports successful completion.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Completed<TLog>(TLog log, ConfigureCompletedActivityOptionsCallback callback)
         where TLog : class
     {
         return _context.Completed(log, callback);
     }
 
-    /// <summary>
-    /// Performs the completed operation.
-    /// </summary>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="logValues">The log values value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports successful completion.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="logValues">The log values.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Completed<TLog>(object logValues)
         where TLog : class
     {
         return _context.Completed<TLog>(logValues);
     }
 
-    /// <summary>
-    /// Performs the completed operation.
-    /// </summary>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="logValues">The log values value.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports successful completion.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="logValues">The log values.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Completed<TLog>(object logValues, ConfigureCompletedActivityOptionsCallback callback)
         where TLog : class
     {
         return _context.Completed<TLog>(logValues, callback);
     }
 
-    /// <summary>
-    /// Performs the completed with variables operation.
-    /// </summary>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="log">The log value.</param>
-    /// <param name="variables">The variables value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes d with variables.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <param name="variables">The variables.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult CompletedWithVariables<TLog>(TLog log, object variables)
         where TLog : class
     {
         return _context.CompletedWithVariables(log, variables);
     }
 
-    /// <summary>
-    /// Performs the completed with variables operation.
-    /// </summary>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="logValues">The log values value.</param>
-    /// <param name="variables">The variables value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes d with variables.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="logValues">The log values.</param>
+    /// <param name="variables">The variables.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult CompletedWithVariables<TLog>(object logValues, object variables)
         where TLog : class
     {
         return _context.CompletedWithVariables<TLog>(logValues, variables);
     }
 
-    /// <summary>
-    /// Performs the completed with variables operation.
-    /// </summary>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="log">The log value.</param>
-    /// <param name="variables">The variables value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes d with variables.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <param name="variables">The variables.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult CompletedWithVariables<TLog>(TLog log, IEnumerable<KeyValuePair<string, object>> variables)
         where TLog : class
     {
         return _context.CompletedWithVariables(log, variables);
     }
 
-    /// <summary>
-    /// Performs the revise itinerary operation.
-    /// </summary>
-    /// <param name="buildItinerary">The build itinerary value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Revises itinerary.</summary>
+    /// <param name="buildItinerary">The build itinerary.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult ReviseItinerary(Action<IItineraryBuilder> buildItinerary)
     {
         return _context.ReviseItinerary(buildItinerary);
     }
 
-    /// <summary>
-    /// Performs the revise itinerary operation.
-    /// </summary>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="log">The log value.</param>
-    /// <param name="buildItinerary">The build itinerary value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Revises itinerary.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <param name="buildItinerary">The build itinerary.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult ReviseItinerary<TLog>(TLog log, Action<IItineraryBuilder> buildItinerary)
         where TLog : class
     {
         return _context.ReviseItinerary(log, buildItinerary);
     }
 
-    /// <summary>
-    /// Performs the revise itinerary operation.
-    /// </summary>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="log">The log value.</param>
-    /// <param name="variables">The variables value.</param>
-    /// <param name="buildItinerary">The build itinerary value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Revises itinerary.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <param name="variables">The variables.</param>
+    /// <param name="buildItinerary">The build itinerary.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult ReviseItinerary<TLog>(TLog log, object variables, Action<IItineraryBuilder> buildItinerary)
         where TLog : class
     {
         return _context.ReviseItinerary(log, variables, buildItinerary);
     }
 
-    /// <summary>
-    /// Performs the revise itinerary operation.
-    /// </summary>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="log">The log value.</param>
-    /// <param name="variables">The variables value.</param>
-    /// <param name="buildItinerary">The build itinerary value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Revises itinerary.</summary>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="log">The log.</param>
+    /// <param name="variables">The variables.</param>
+    /// <param name="buildItinerary">The build itinerary.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult ReviseItinerary<TLog>(TLog log, IEnumerable<KeyValuePair<string, object>> variables, Action<IItineraryBuilder> buildItinerary)
         where TLog : class
     {
         return _context.ReviseItinerary(log, variables, buildItinerary);
     }
 
-    /// <summary>
-    /// Performs the terminate operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Terminates the current operation.</summary>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Terminate()
     {
         return _context.Terminate();
     }
 
-    /// <summary>
-    /// Performs the terminate operation.
-    /// </summary>
-    /// <param name="variables">The variables value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Terminates the current operation.</summary>
+    /// <param name="variables">The variables.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Terminate(object variables)
     {
         return _context.Terminate(variables);
     }
 
-    /// <summary>
-    /// Performs the terminate operation.
-    /// </summary>
-    /// <param name="variables">The variables value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Terminates the current operation.</summary>
+    /// <param name="variables">The variables.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Terminate(IEnumerable<KeyValuePair<string, object>> variables)
     {
         return _context.Terminate(variables);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Faulted()
     {
         return _context.Faulted();
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
+    /// <summary>Reports that the operation has faulted.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Faulted(Exception exception)
     {
         return _context.Faulted(exception);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
+    /// <summary>Reports that the operation has faulted.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Faulted(Exception exception, ConfigureFaultedActivityOptionsCallback callback)
     {
         return _context.Faulted(exception, callback);
     }
 
-    /// <summary>
-    /// Performs the faulted with variables operation.
-    /// </summary>
+    /// <summary>Reports a fault together with the supplied routing-slip variables.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="variables">The variables value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="variables">The variables.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult FaultedWithVariables(Exception exception, object variables)
     {
         return _context.FaultedWithVariables(exception, variables);
     }
 
-    /// <summary>
-    /// Performs the faulted with variables operation.
-    /// </summary>
+    /// <summary>Reports a fault together with the supplied routing-slip variables.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="variables">The variables value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="variables">The variables.</param>
+    /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult FaultedWithVariables(Exception exception, IEnumerable<KeyValuePair<string, object>> variables)
     {
         return _context.FaultedWithVariables(exception, variables);

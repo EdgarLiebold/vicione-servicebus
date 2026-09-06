@@ -3,20 +3,16 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Initializers.Contexts;
 
-/// <summary>
-/// Provides a dynamic initialize context implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Carries state for dynamic initialize operations.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class DynamicInitializeContext<TMessage> :
     ProxyPipeContext,
     InitializeContext<TMessage>
     where TMessage : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="message">The message value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="message">The message to process.</param>
     public DynamicInitializeContext(InitializeContext context, TMessage message)
         : base(context)
     {
@@ -27,42 +23,30 @@ public class DynamicInitializeContext<TMessage> :
         Parent = context;
     }
 
-    /// <summary>
-    /// Gets the message value.
-    /// </summary>
+    /// <summary>Gets the message.</summary>
     public TMessage Message { get; }
-    /// <summary>
-    /// Gets the message type value.
-    /// </summary>
+    /// <summary>Gets the message type.</summary>
     public Type MessageType { get; }
 
-    /// <summary>
-    /// Gets the depth value.
-    /// </summary>
+    /// <summary>Gets the depth.</summary>
     public int Depth { get; }
 
-    /// <summary>
-    /// Gets the parent value.
-    /// </summary>
+    /// <summary>Gets the parent.</summary>
     public InitializeContext Parent { get; }
 
-    /// <summary>
-    /// Creates input context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="input">The input value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates input context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="input">The input.</param>
+    /// <returns>The created input context.</returns>
     public InitializeContext<TMessage, T> CreateInputContext<T>(T input)
         where T : class
     {
         return new DynamicInitializeContext<TMessage, T>(this, Message, input);
     }
 
-    /// <summary>
-    /// Attempts to get parent.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="parentContext">The parent context value.</param>
+    /// <summary>Attempts to get parent.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="parentContext">Receives the parent context produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetParent<T>([NotNullWhen(true)] out InitializeContext<T>? parentContext)
         where T : class
@@ -83,12 +67,10 @@ public class DynamicInitializeContext<TMessage> :
         return false;
     }
 
-    /// <summary>
-    /// Creates message context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates message context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <returns>The created message context.</returns>
     public InitializeContext<T> CreateMessageContext<T>(T message)
         where T : class
     {
@@ -97,35 +79,27 @@ public class DynamicInitializeContext<TMessage> :
 }
 
 
-/// <summary>
-/// Provides a dynamic initialize context implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Carries state for dynamic initialize operations.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class DynamicInitializeContext<TMessage, TInput> :
     DynamicInitializeContext<TMessage>,
     InitializeContext<TMessage, TInput>
     where TMessage : class
     where TInput : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="input">The input value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="message">The message to process.</param>
+    /// <param name="input">The input.</param>
     public DynamicInitializeContext(InitializeContext context, TMessage message, TInput input)
         : base(context, message)
     {
         HasInput = (Input = input) != null;
     }
 
-    /// <summary>
-    /// Gets the has input value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether this instance has input.</summary>
     public bool HasInput { get; }
-    /// <summary>
-    /// Gets the input value.
-    /// </summary>
+    /// <summary>Gets the input.</summary>
     public TInput Input { get; } = null!;
 }

@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Middleware;
 
-/// <summary>
-/// Adds the service bus message scheduler filter
-/// </summary>
+/// <summary>Adds an Azure Service Bus-backed message scheduler to each consume context.</summary>
 public class ServiceBusMessageSchedulerFilter :
     IFilter<ConsumeContext>
 {

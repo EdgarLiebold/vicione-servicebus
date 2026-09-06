@@ -2,15 +2,11 @@ using ViciOne.ServiceBus.AmazonSqs.Topology;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Defines the contract for send settings.
-/// </summary>
+/// <summary>Defines Amazon SQS entity and topology settings for a send destination.</summary>
 public interface SendSettings :
     EntitySettings
 {
-    /// <summary>
-    /// Return the BrokerTopology to apply at startup (to create exchange and queue if binding is specified)
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Creates the topic, queue, and subscription topology required by this send destination.</summary>
+    /// <returns>The broker topology.</returns>
     BrokerTopology GetBrokerTopology();
 }

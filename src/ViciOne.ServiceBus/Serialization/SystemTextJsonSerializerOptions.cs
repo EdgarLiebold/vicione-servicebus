@@ -5,15 +5,11 @@ using ViciOne.ServiceBus.Serialization.JsonConverters;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Creates isolated System.Text.Json option graphs for message serialization.
-/// </summary>
+/// <summary>Creates isolated System.Text.Json option graphs for message serialization.</summary>
 public static class SystemTextJsonSerializerOptions
 {
-    /// <summary>
-    /// Creates default.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates default.</summary>
+    /// <returns>The created default.</returns>
     public static JsonSerializerOptions CreateDefault()
     {
         var options = new JsonSerializerOptions

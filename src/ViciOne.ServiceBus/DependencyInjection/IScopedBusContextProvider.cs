@@ -1,14 +1,10 @@
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>
-/// Defines the contract for scoped bus context provider.
-/// </summary>
-/// <typeparam name="TBus">The t bus type.</typeparam>
+/// <summary>Provides scoped bus context services.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 public interface IScopedBusContextProvider<TBus>
     where TBus : class, IBus
 {
-    /// <summary>
-    /// Gets the context value.
-    /// </summary>
+    /// <summary>Gets the context.</summary>
     ScopedBusContext Context { get; }
 }

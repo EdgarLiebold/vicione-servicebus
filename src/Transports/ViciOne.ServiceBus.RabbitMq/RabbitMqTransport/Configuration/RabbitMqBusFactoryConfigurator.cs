@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Provides a rabbit mq bus factory configurator implementation.
-/// </summary>
+/// <summary>Builds a RabbitMQ bus and delegates receive-endpoint creation to its host configuration.</summary>
 public class RabbitMqBusFactoryConfigurator :
     BusFactoryConfigurator,
     IRabbitMqBusFactoryConfigurator,
@@ -16,10 +14,8 @@ public class RabbitMqBusFactoryConfigurator :
     readonly IRabbitMqHostConfiguration _hostConfiguration;
     readonly RabbitMqReceiveSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="busConfiguration">The bus configuration value.</param>
+    /// <summary>Creates a factory configurator with a temporary default bus endpoint.</summary>
+    /// <param name="busConfiguration">The RabbitMQ bus configuration to update.</param>
     public RabbitMqBusFactoryConfigurator(IRabbitMqBusConfiguration busConfiguration)
         : base(busConfiguration)
     {
@@ -34,20 +30,16 @@ public class RabbitMqBusFactoryConfigurator :
         };
     }
 
-    /// <summary>
-    /// Creates bus endpoint configuration.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the receive configuration for the temporary bus endpoint.</summary>
+    /// <param name="configure">The provider-neutral endpoint configuration callback.</param>
+    /// <returns>The configured bus receive endpoint.</returns>
     public IReceiveEndpointConfiguration CreateBusEndpointConfiguration(Action<IReceiveEndpointConfigurator> configure)
     {
         return _busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration(_settings, _busConfiguration.BusEndpointConfiguration, configure);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the provider-neutral bus settings and the RabbitMQ bus endpoint queue name.</summary>
+    /// <returns>All bus-factory validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         foreach (var result in base.Validate())
@@ -57,158 +49,122 @@ public class RabbitMqBusFactoryConfigurator :
             yield return this.Failure("Bus", "The bus queue name must not be null or empty");
     }
 
-    /// <summary>
-    /// Gets or sets the durable value.
-    /// </summary>
+    /// <summary>Sets whether the bus endpoint queue survives broker restarts.</summary>
     public bool Durable
     {
         set => _settings.Durable = value;
     }
 
-    /// <summary>
-    /// Gets or sets the exclusive value.
-    /// </summary>
+    /// <summary>Sets whether the bus endpoint queue is exclusive to this connection.</summary>
     public bool Exclusive
     {
         set => _settings.Exclusive = value;
     }
 
-    /// <summary>
-    /// Gets or sets the auto delete value.
-    /// </summary>
+    /// <summary>Sets whether RabbitMQ deletes the bus endpoint topology when unused.</summary>
     public bool AutoDelete
     {
         set => _settings.AutoDelete = value;
     }
 
-    /// <summary>
-    /// Gets or sets the exchange type value.
-    /// </summary>
+    /// <summary>Sets the bus endpoint exchange type.</summary>
     public string ExchangeType
     {
         set => _settings.ExchangeType = value;
     }
 
-    /// <summary>
-    /// Gets or sets the purge on startup value.
-    /// </summary>
+    /// <summary>Sets whether the bus endpoint queue is purged on first startup.</summary>
     public bool PurgeOnStartup
     {
         set => _settings.PurgeOnStartup = value;
     }
 
-    /// <summary>
-    /// Gets or sets the consumer priority value.
-    /// </summary>
+    /// <summary>Sets the bus endpoint consumer priority.</summary>
     public int ConsumerPriority
     {
         set => _settings.ConsumerPriority = value;
     }
 
-    /// <summary>
-    /// Gets or sets the exclusive consumer value.
-    /// </summary>
+    /// <summary>Sets whether the broker permits only this consumer on the bus endpoint queue.</summary>
     public bool ExclusiveConsumer
     {
         set => _settings.ExclusiveConsumer = value;
     }
 
-    /// <summary>
-    /// Gets or sets the lazy value.
-    /// </summary>
+    /// <summary>Sets whether the bus endpoint uses RabbitMQ lazy-queue storage.</summary>
     public bool Lazy
     {
         set => _settings.Lazy = value;
     }
 
-    /// <summary>
-    /// Gets or sets the queue expiration value.
-    /// </summary>
+    /// <summary>Sets the unused-queue expiration for the bus endpoint.</summary>
     public TimeSpan? QueueExpiration
     {
         set => _settings.QueueExpiration = value;
     }
 
-    /// <summary>
-    /// Gets or sets the single active consumer value.
-    /// </summary>
+    /// <summary>Sets whether the bus endpoint uses RabbitMQ single-active-consumer semantics.</summary>
     public bool SingleActiveConsumer
     {
         set => _settings.SingleActiveConsumer = value;
     }
 
-    /// <summary>
-    /// Sets queue argument.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets or removes a bus endpoint queue argument.</summary>
+    /// <param name="key">The RabbitMQ queue-argument key.</param>
+    /// <param name="value">The argument value, or <see langword="null" /> to remove it.</param>
     public void SetQueueArgument(string key, object? value)
     {
         _settings.SetQueueArgument(key, value);
     }
 
-    /// <summary>
-    /// Sets queue argument.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets a bus endpoint queue argument from a duration converted to milliseconds.</summary>
+    /// <param name="key">The RabbitMQ queue-argument key.</param>
+    /// <param name="value">The duration to convert.</param>
     public void SetQueueArgument(string key, TimeSpan value)
     {
         _settings.SetQueueArgument(key, value);
     }
 
-    /// <summary>
-    /// Sets exchange argument.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets or removes a bus endpoint exchange argument.</summary>
+    /// <param name="key">The RabbitMQ exchange-argument key.</param>
+    /// <param name="value">The argument value, or <see langword="null" /> to remove it.</param>
     public void SetExchangeArgument(string key, object? value)
     {
         _settings.SetExchangeArgument(key, value);
     }
 
-    /// <summary>
-    /// Sets exchange argument.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets a bus endpoint exchange argument from a duration converted to milliseconds.</summary>
+    /// <param name="key">The RabbitMQ exchange-argument key.</param>
+    /// <param name="value">The duration to convert.</param>
     public void SetExchangeArgument(string key, TimeSpan value)
     {
         _settings.SetExchangeArgument(key, value);
     }
 
-    /// <summary>
-    /// Performs the enable priority operation.
-    /// </summary>
-    /// <param name="maxPriority">The max priority value.</param>
+    /// <summary>Enables priority delivery on the bus endpoint queue.</summary>
+    /// <param name="maxPriority">The highest accepted message priority.</param>
     public void EnablePriority(byte maxPriority)
     {
         _settings.EnablePriority(maxPriority);
     }
 
-    /// <summary>
-    /// Sets quorum queue.
-    /// </summary>
-    /// <param name="replicationFactor">The replication factor value.</param>
+    /// <summary>Configures the bus endpoint as a RabbitMQ quorum queue.</summary>
+    /// <param name="replicationFactor">The optional initial quorum-group size.</param>
     public void SetQuorumQueue(int? replicationFactor = default)
     {
         _settings.SetQuorumQueue(replicationFactor);
     }
 
-    /// <summary>
-    /// Performs the host operation.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Applies the host configuration.</summary>
+    /// <param name="settings">The effective RabbitMQ connection settings.</param>
     public void Host(RabbitMqHostSettings settings)
     {
         _busConfiguration.HostConfiguration.Settings = settings;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configureTopology">The configure topology value.</param>
+    /// <summary>Configures send topology for a message contract.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="configureTopology">An optional callback that customizes message send topology.</param>
     public void Send<T>(Action<IRabbitMqMessageSendTopologyConfigurator<T>>? configureTopology)
         where T : class
     {
@@ -217,11 +173,9 @@ public class RabbitMqBusFactoryConfigurator :
         configureTopology?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configureTopology">The configure topology value.</param>
+    /// <summary>Configures publish topology for a message contract.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="configureTopology">An optional callback that customizes message publish topology.</param>
     public void Publish<T>(Action<IRabbitMqMessagePublishTopologyConfigurator<T>>? configureTopology)
         where T : class
     {
@@ -230,11 +184,9 @@ public class RabbitMqBusFactoryConfigurator :
         configureTopology?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures publish topology for a runtime message-contract type.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="configure">An optional callback that customizes message publish topology.</param>
     public void Publish(Type messageType, Action<IRabbitMqMessagePublishTopologyConfigurator>? configure = null)
     {
         var configurator = _busConfiguration.Topology.Publish.GetMessageTopology(messageType);
@@ -242,64 +194,50 @@ public class RabbitMqBusFactoryConfigurator :
         configure?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Gets the send topology value.
-    /// </summary>
+    /// <summary>Gets the send topology.</summary>
     public new IRabbitMqSendTopologyConfigurator SendTopology => _busConfiguration.Topology.Send;
-    /// <summary>
-    /// Gets the publish topology value.
-    /// </summary>
+    /// <summary>Gets the publish topology.</summary>
     public new IRabbitMqPublishTopologyConfigurator PublishTopology => _busConfiguration.Topology.Publish;
 
-    /// <summary>
-    /// Performs the override default bus endpoint queue name operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
+    /// <summary>Overrides the exchange and queue name of the bus endpoint.</summary>
+    /// <param name="queueName">The replacement bus-endpoint entity name.</param>
     public void OverrideDefaultBusEndpointQueueName(string queueName)
     {
         _settings.ExchangeName = queueName;
         _settings.QueueName = queueName;
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Creates a RabbitMQ receive endpoint from an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
+    /// <param name="configureEndpoint">An optional RabbitMQ endpoint callback.</param>
     public void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IRabbitMqReceiveEndpointConfigurator>? configureEndpoint)
     {
         _hostConfiguration.ReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Creates a RabbitMQ receive endpoint from an endpoint definition and provider-neutral callback.</summary>
+    /// <param name="definition">The endpoint definition that supplies queue and concurrency settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or the default formatter when omitted.</param>
+    /// <param name="configureEndpoint">An optional provider-neutral endpoint callback.</param>
     public void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint)
     {
         _hostConfiguration.ReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Creates a RabbitMQ receive endpoint for an explicit queue name.</summary>
+    /// <param name="queueName">The receive queue name.</param>
+    /// <param name="configureEndpoint">The RabbitMQ endpoint callback.</param>
     public void ReceiveEndpoint(string queueName, Action<IRabbitMqReceiveEndpointConfigurator> configureEndpoint)
     {
         _hostConfiguration.ReceiveEndpoint(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Creates a RabbitMQ receive endpoint for an explicit queue name.</summary>
+    /// <param name="queueName">The receive queue name.</param>
+    /// <param name="configureEndpoint">The provider-neutral endpoint callback.</param>
     public void ReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint)
     {
         _hostConfiguration.ReceiveEndpoint(queueName, configureEndpoint);

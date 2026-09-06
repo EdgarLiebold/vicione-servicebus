@@ -4,11 +4,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a timeout filter implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
-/// <typeparam name="TResult">The t result type.</typeparam>
+/// <summary>Processes timeout pipeline stages.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+/// <typeparam name="TResult">The result produced by the operation.</typeparam>
 public sealed class TimeoutFilter<TContext, TResult> :
     IFilter<TContext>
     where TContext : class, PipeContext
@@ -18,22 +16,18 @@ public sealed class TimeoutFilter<TContext, TResult> :
     readonly TimeProvider? _timeProvider;
     readonly TimeSpan _timeout;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="contextFactory">The context factory value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="contextFactory">The context factory.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     public TimeoutFilter(Func<TContext, CancellationToken, TResult> contextFactory, TimeSpan timeout)
         : this(contextFactory, timeout, null, useContextTimeProvider: true)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="contextFactory">The context factory value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="contextFactory">The context factory.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public TimeoutFilter(Func<TContext, CancellationToken, TResult> contextFactory, TimeSpan timeout, TimeProvider timeProvider)
         : this(contextFactory, timeout, timeProvider, useContextTimeProvider: false)
     {
@@ -53,12 +47,10 @@ public sealed class TimeoutFilter<TContext, TResult> :
         _timeout = timeout;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -92,10 +84,8 @@ public sealed class TimeoutFilter<TContext, TResult> :
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("timeout");

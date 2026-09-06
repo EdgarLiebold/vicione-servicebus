@@ -4,10 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>
-/// Provides a created execute scope context implementation.
-/// </summary>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Carries state for created execute scope operations.</summary>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class CreatedExecuteScopeContext<TArguments> :
     IExecuteScopeContext<TArguments>
     where TArguments : class
@@ -15,12 +13,10 @@ public class CreatedExecuteScopeContext<TArguments> :
     readonly IDisposable _disposable;
     readonly IServiceScope _scope;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="scope">The scope value.</param>
-    /// <param name="disposable">The disposable value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="scope">The scope.</param>
+    /// <param name="disposable">The disposable.</param>
     public CreatedExecuteScopeContext(ExecuteContext<TArguments> context, IServiceScope scope, IDisposable disposable)
     {
         _scope = scope;
@@ -28,15 +24,11 @@ public class CreatedExecuteScopeContext<TArguments> :
         Context = context;
     }
 
-    /// <summary>
-    /// Gets the context value.
-    /// </summary>
+    /// <summary>Gets the context.</summary>
     public ExecuteContext<TArguments> Context { get; }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         _disposable?.Dispose();
@@ -48,11 +40,9 @@ public class CreatedExecuteScopeContext<TArguments> :
         return default;
     }
 
-    /// <summary>
-    /// Gets service.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets service.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The service.</returns>
     public T GetService<T>()
         where T : class
     {

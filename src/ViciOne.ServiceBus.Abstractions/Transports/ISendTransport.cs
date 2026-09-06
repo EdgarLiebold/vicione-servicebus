@@ -3,20 +3,16 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Defines the contract for send transport.
-/// </summary>
+/// <summary>Defines the operations required by send transport.</summary>
 public interface ISendTransport :
     ISendObserverConnector
 {
-    /// <summary>
-    /// Creates send context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Creates send context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the created value.</returns>
     Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class;
 
@@ -26,10 +22,10 @@ public interface ISendTransport :
     /// The transport specifies the defaults for the message as configured, and then allows the
     /// caller to modify the send context to include the required settings (durable, mandatory, etc.).
     /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="message"></param>
-    /// <param name="pipe">The pipe invoked when sending a message, to do extra stuff</param>
-    /// <param name="cancellationToken">Cancel the send operation (if possible)</param>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipe invoked when sending a message, to do extra stuff.</param>
+    /// <param name="cancellationToken">Cancel the send operation (if possible).</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class;

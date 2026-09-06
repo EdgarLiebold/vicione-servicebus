@@ -3,23 +3,19 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides a topic entity implementation.
-/// </summary>
+/// <summary>Represents a deduplicated Amazon SNS topic topology entity.</summary>
 public class TopicEntity :
     Topic,
     TopicHandle
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="topicAttributes">The topic attributes value.</param>
-    /// <param name="topicSubscriptionAttributes">The topic subscription attributes value.</param>
-    /// <param name="topicTags">The topic tags value.</param>
+    /// <summary>Initializes an Amazon SNS topic topology entity and supplies raw delivery as the subscription default.</summary>
+    /// <param name="id">The builder-assigned entity identifier.</param>
+    /// <param name="name">The topic name.</param>
+    /// <param name="durable">Whether the topic is retained when its endpoint stops.</param>
+    /// <param name="autoDelete">Whether the topic is deleted when its endpoint stops.</param>
+    /// <param name="topicAttributes">Optional Amazon SNS topic attributes.</param>
+    /// <param name="topicSubscriptionAttributes">Optional default Amazon SNS subscription attributes.</param>
+    /// <param name="topicTags">Optional topic tags.</param>
     public TopicEntity(long id, string name, bool durable, bool autoDelete, IDictionary<string, object>? topicAttributes = null,
         IDictionary<string, object>? topicSubscriptionAttributes = null, IDictionary<string, string>? topicTags = null)
     {
@@ -31,56 +27,34 @@ public class TopicEntity :
         TopicSubscriptionAttributes = topicSubscriptionAttributes ?? new Dictionary<string, object>();
         TopicTags = topicTags ?? new Dictionary<string, string>();
 
-        EnsureRawDeliveryIsSet();
+        SetRawDeliveryDefault();
     }
 
-    /// <summary>
-    /// Gets the name comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that identifies topics by name.</summary>
     public static IEqualityComparer<TopicEntity> NameComparer { get; } = new NameEqualityComparer();
 
-    /// <summary>
-    /// Gets the entity comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that identifies topics by name and lifetime.</summary>
     public static IEqualityComparer<TopicEntity> EntityComparer { get; } = new TopicEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the entity name value.
-    /// </summary>
+    /// <inheritdoc />
     public string EntityName { get; }
-    /// <summary>
-    /// Gets the durable value.
-    /// </summary>
+    /// <inheritdoc />
     public bool Durable { get; }
-    /// <summary>
-    /// Gets the auto delete value.
-    /// </summary>
+    /// <inheritdoc />
     public bool AutoDelete { get; }
-    /// <summary>
-    /// Gets the topic attributes value.
-    /// </summary>
+    /// <inheritdoc />
     public IDictionary<string, object> TopicAttributes { get; }
-    /// <summary>
-    /// Gets the topic subscription attributes value.
-    /// </summary>
+    /// <inheritdoc />
     public IDictionary<string, object> TopicSubscriptionAttributes { get; }
-    /// <summary>
-    /// Gets the topic tags value.
-    /// </summary>
+    /// <inheritdoc />
     public IDictionary<string, string> TopicTags { get; }
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the builder-assigned entity identifier.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the topic value.
-    /// </summary>
+    /// <summary>Gets this entity as a topic declaration.</summary>
     public Topic Topic => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the topic name, lifetime, tags, and attributes for diagnostics.</summary>
+    /// <returns>The diagnostic topic description.</returns>
     public override string ToString()
     {
         return string.Join(", ",
@@ -97,9 +71,9 @@ public class TopicEntity :
             }.Where(x => !string.IsNullOrWhiteSpace(x)));
     }
 
-    void EnsureRawDeliveryIsSet()
+    void SetRawDeliveryDefault()
     {
-        TopicSubscriptionAttributes["RawMessageDelivery"] = "true";
+        TopicSubscriptionAttributes.TryAdd("RawMessageDelivery", "true");
     }
 
 

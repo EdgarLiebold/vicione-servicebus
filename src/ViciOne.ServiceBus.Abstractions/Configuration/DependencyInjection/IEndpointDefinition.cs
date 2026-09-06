@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines an endpoint in a transport-independent way
-/// </summary>
+/// <summary>Defines an endpoint in a transport-independent way.</summary>
 public interface IEndpointDefinition
 {
     /// <summary>
@@ -24,33 +22,25 @@ public interface IEndpointDefinition
     /// </summary>
     int? ConcurrentMessageLimit { get; }
 
-    /// <summary>
-    /// If true, configure the broker topology, which may include binding exchanges, subscribing to topics, etc.
-    /// </summary>
+    /// <summary>If true, configure the broker topology, which may include binding exchanges, subscribing to topics, etc.</summary>
     bool ConfigureConsumeTopology { get; }
 
-    /// <summary>
-    /// Return the endpoint name for the consumer, using the specified formatter if necessary.
-    /// </summary>
-    /// <param name="formatter"></param>
-    /// <returns></returns>
+    /// <summary>Return the endpoint name for the consumer, using the specified formatter if necessary.</summary>
+    /// <param name="formatter">The formatter.</param>
+    /// <returns>The endpoint name.</returns>
     string GetEndpointName(IEndpointNameFormatter formatter);
 
-    /// <summary>
-    /// Configure the endpoint, as provided by the transport-specific receive endpoint configurator
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="context"></param>
-    /// <typeparam name="T"></typeparam>
+    /// <summary>Configure the endpoint, as provided by the transport-specific receive endpoint configurator.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
     void Configure<T>(T configurator, IRegistrationContext? context = null)
         where T : IReceiveEndpointConfigurator;
 }
 
 
-/// <summary>
-/// Defines the contract for endpoint definition.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Defines the operations required by endpoint definition.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface IEndpointDefinition<T> :
     IEndpointDefinition
     where T : class

@@ -11,11 +11,9 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.AzureTable.Saga;
 
-/// <summary>
-/// Provides an azure table saga repository context implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Applies saga repository operations to Azure Table entities within a message consume context.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
     ConsumeContextScope<TMessage>,
     SagaRepositoryContext<TSaga, TMessage>
@@ -26,12 +24,10 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
     readonly DatabaseContext<TSaga> _context;
     readonly ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> _factory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="consumeContext">The consume context value.</param>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Creates a repository context for one consumed message.</summary>
+    /// <param name="context">The Azure Table access components for the saga type.</param>
+    /// <param name="consumeContext">The message consume context that owns cancellation and logging.</param>
+    /// <param name="factory">The factory that wraps saga instances in consume contexts.</param>
     public AzureTableSagaRepositoryContext(DatabaseContext<TSaga> context, ConsumeContext<TMessage> consumeContext,
         ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory)
         : base(RequireConsumeContext(consumeContext))
@@ -44,23 +40,19 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         _factory = factory;
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Wraps a new saga instance in an add-mode consume context without persisting it.</summary>
+    /// <param name="instance">The new saga instance.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task whose result is the add-mode saga consume context.</returns>
     public Task<SagaConsumeContext<TSaga, TMessage>> AddAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga, TMessage>>(cancellationToken); return _factory.CreateSagaConsumeContextAsync(_context, _consumeContext, instance, SagaConsumeContextMode.Add);
     }
 
-    /// <summary>
-    /// Performs the insert operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Inserts a saga entity and returns its insert-mode consume context.</summary>
+    /// <param name="instance">The saga instance to insert.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task whose result is the insert-mode context, or <see langword="null"/> when the entity already exists.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>?> InsertAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(instance);
@@ -80,12 +72,10 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Loads a saga by its formatted correlation key and attaches its entity tag for later optimistic writes.</summary>
+    /// <param name="correlationId">The non-empty saga correlation identifier.</param>
+    /// <param name="cancellationToken">The operation token required by the repository contract; Azure I/O currently uses the surrounding consume-context token.</param>
+    /// <returns>A task whose result is the load-mode saga context, or <see langword="null"/> when no entity exists.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         var (partitionKey, rowKey) = _context.Format(correlationId);
@@ -103,24 +93,20 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         return default;
     }
 
-    /// <summary>
-    /// Performs the save operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Inserts the saga from a consume context as a new Azure Table entity.</summary>
+    /// <param name="context">The saga consume context whose instance is inserted.</param>
+    /// <param name="cancellationToken">The token checked before the insert; Azure I/O uses the surrounding consume-context token.</param>
+    /// <returns>A task that completes when Azure Table accepts the entity insertion.</returns>
     public Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); (Task<global::Azure.Response> insert, _) = TableInsert(context.Saga);
         return insert;
     }
 
-    /// <summary>
-    /// Performs the update operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Replaces a persisted saga entity when its loaded entity tag still matches.</summary>
+    /// <param name="context">The saga consume context containing the instance and loaded entity tag.</param>
+    /// <param name="cancellationToken">The token checked before the update; Azure I/O uses the cancellation token carried by <paramref name="context"/>.</param>
+    /// <returns>A task that completes when Azure Table commits the optimistic replacement.</returns>
     public async Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var instance = context.Saga;
@@ -149,12 +135,10 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>
-    /// Performs the delete operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deletes a persisted saga entity when its loaded entity tag still matches.</summary>
+    /// <param name="context">The saga consume context containing the instance and loaded entity tag.</param>
+    /// <param name="cancellationToken">The token checked before deletion; Azure I/O uses the cancellation token carried by <paramref name="context"/>.</param>
+    /// <returns>A task that completes when Azure Table commits the optimistic deletion.</returns>
     public async Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var instance = context.Saga;
@@ -181,36 +165,30 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>
-    /// Performs the discard operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes an uncommitted discard without writing to Azure Table.</summary>
+    /// <param name="context">The saga context being discarded.</param>
+    /// <param name="cancellationToken">The token checked before completing the no-op.</param>
+    /// <returns>An already-completed task unless cancellation was requested.</returns>
     public Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the undo operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes an undo request without compensating Azure Table state.</summary>
+    /// <param name="context">The saga context whose operation is being undone.</param>
+    /// <param name="cancellationToken">The token checked before completing the no-op.</param>
+    /// <returns>An already-completed task unless cancellation was requested.</returns>
     public Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Creates saga consume context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="consumeContext">The consume context value.</param>
-    /// <param name="instance">The instance value.</param>
-    /// <param name="mode">The mode value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Wraps a saga instance in a consume context for another message type.</summary>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="consumeContext">The message consume context to wrap.</param>
+    /// <param name="instance">The saga instance associated with the message.</param>
+    /// <param name="mode">The repository operation mode represented by the new context.</param>
+    /// <returns>A task whose result is the saga consume context.</returns>
     public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
         where T : class
     {

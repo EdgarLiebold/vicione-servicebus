@@ -4,11 +4,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Initializers.Factories;
 
-/// <summary>
-/// Provides a message initializer builder implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Builds message initializer components.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class MessageInitializerBuilder<TMessage, TInput> :
     IMessageInitializerBuilder<TMessage, TInput>
     where TMessage : class
@@ -19,10 +17,8 @@ public class MessageInitializerBuilder<TMessage, TInput> :
     readonly HashSet<string> _inputPropertyUsed;
     readonly IMessageFactory<TMessage>? _messageFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageFactory">The message factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="messageFactory">The message factory.</param>
     public MessageInitializerBuilder(IMessageFactory<TMessage>? messageFactory)
     {
         if (!MessageTypeCache<TMessage>.IsValidMessageType)
@@ -35,67 +31,53 @@ public class MessageInitializerBuilder<TMessage, TInput> :
         _inputPropertyUsed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="propertyName">The property name value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="propertyName">The property name.</param>
+    /// <param name="initializer">The initializer.</param>
     public void Add(string propertyName, IPropertyInitializer<TMessage> initializer)
     {
         _initializers[propertyName] = new PropertyAdapter(initializer);
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="propertyName">The property name value.</param>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="propertyName">The property name.</param>
+    /// <param name="initializer">The initializer.</param>
     public void Add(string propertyName, IPropertyInitializer<TMessage, TInput> initializer)
     {
         _initializers[propertyName] = initializer;
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="initializer">The initializer.</param>
     public void Add(IHeaderInitializer<TMessage> initializer)
     {
         _headerInitializers.Add(new HeaderAdapter(initializer));
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="initializer">The initializer.</param>
     public void Add(IHeaderInitializer<TMessage, TInput> initializer)
     {
         _headerInitializers.Add(initializer);
     }
 
-    /// <summary>
-    /// Determines whether input property used.
-    /// </summary>
-    /// <param name="propertyName">The property name value.</param>
+    /// <summary>Determines whether input property used.</summary>
+    /// <param name="propertyName">The property name.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsInputPropertyUsed(string propertyName)
     {
         return _inputPropertyUsed.Contains(propertyName);
     }
 
-    /// <summary>
-    /// Sets input property used.
-    /// </summary>
-    /// <param name="propertyName">The property name value.</param>
+    /// <summary>Sets input property used.</summary>
+    /// <param name="propertyName">The property name.</param>
     public void SetInputPropertyUsed(string propertyName)
     {
         _inputPropertyUsed.Add(propertyName);
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the configured component.</summary>
+    /// <returns>The configured component.</returns>
     public IMessageInitializer<TMessage> Build()
     {
         IMessageFactory<TMessage> messageFactory = _messageFactory ?? MessageFactoryCache<TMessage>.Factory;

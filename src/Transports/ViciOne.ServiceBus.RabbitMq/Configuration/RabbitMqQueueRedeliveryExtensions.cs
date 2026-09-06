@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.RabbitMq.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides extension methods for rabbit mq queue redelivery.
-/// </summary>
+/// <summary>Configures RabbitMQ-native delayed redelivery through predeclared TTL queues.</summary>
 public static class RabbitMqQueueRedeliveryExtensions
 {
     /// <summary>
@@ -14,6 +12,8 @@ public static class RabbitMqQueueRedeliveryExtensions
     /// RabbitMQ-native predeclared TTL/DLX queues. This is the preferred RabbitMQ companion to
     /// <see cref="TechnicalRetryConfigurationExtensions.UseTechnicalMessageRetry" />.
     /// </summary>
+    /// <param name="configurator">The RabbitMQ receive-endpoint configurator.</param>
+    /// <param name="classifier">The failure classifier, or the canonical technical classifier when omitted.</param>
     public static void UseTechnicalQueueRedelivery(this IRabbitMqReceiveEndpointConfigurator configurator,
         ITechnicalFailureClassifier? classifier = null)
     {
@@ -29,6 +29,8 @@ public static class RabbitMqQueueRedeliveryExtensions
     /// Configures RabbitMQ-native technical redelivery through a finite set of predeclared TTL/DLX
     /// queues. This path does not require the delayed-message exchange plugin.
     /// </summary>
+    /// <param name="configurator">The RabbitMQ receive-endpoint configurator.</param>
+    /// <param name="intervals">The finite set of delay intervals to predeclare.</param>
     public static void UseQueueRedelivery(this IRabbitMqReceiveEndpointConfigurator configurator, params TimeSpan[] intervals)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -46,6 +48,9 @@ public static class RabbitMqQueueRedeliveryExtensions
     /// Configures finite RabbitMQ-native technical redelivery and allows exception selection to be
     /// refined. Runtime delay values outside the declared set are rejected.
     /// </summary>
+    /// <param name="configurator">The RabbitMQ receive-endpoint configurator.</param>
+    /// <param name="intervals">The finite set of delay intervals to predeclare.</param>
+    /// <param name="configure">The callback that selects which exceptions are redelivered.</param>
     public static void UseQueueRedelivery(this IRabbitMqReceiveEndpointConfigurator configurator, TimeSpan[] intervals,
         Action<IRedeliveryConfigurator> configure)
     {

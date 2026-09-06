@@ -5,30 +5,24 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for bus factory.
-/// </summary>
+/// <summary>Provides extension methods for bus factory.</summary>
 public static class BusFactoryExtensions
 {
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="busConfiguration">The bus configuration value.</param>
-    /// <param name="dependencies">The dependencies value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the configured component.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="busConfiguration">The bus configuration.</param>
+    /// <param name="dependencies">The dependencies.</param>
+    /// <returns>The configured component.</returns>
     public static IBusControl Build(this IBusFactory factory, IBusConfiguration busConfiguration, IEnumerable<ISpecification> dependencies)
     {
         return Build(factory, busConfiguration, factory.Validate()
             .Concat(dependencies.SelectMany(x => x.Validate())));
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="busConfiguration">The bus configuration value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the configured component.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="busConfiguration">The bus configuration.</param>
+    /// <returns>The configured component.</returns>
     public static IBusControl Build(this IBusFactory factory, IBusConfiguration busConfiguration)
     {
         return Build(factory, busConfiguration, factory.Validate());

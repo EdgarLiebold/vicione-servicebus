@@ -8,10 +8,8 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
-/// <summary>
-/// Provides an async element list implementation.
-/// </summary>
-/// <typeparam name="TElement">The t element type.</typeparam>
+/// <summary>Stores a list of async element values.</summary>
+/// <typeparam name="TElement">The element type.</typeparam>
 public abstract class AsyncElementList<TElement> :
     IAsyncElementList<TElement>,
     ITestContextRetention
@@ -26,22 +24,18 @@ public abstract class AsyncElementList<TElement> :
     TestContextSaveMode _saveMode = TestContextSaveMode.All;
     int _maximumSavedElements = 4096;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="testCompleted">The test completed value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="testCompleted">The test completed.</param>
     protected AsyncElementList(TimeSpan timeout, CancellationToken testCompleted = default)
         : this(timeout, testCompleted, TimeProvider.System)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="testCompleted">The test completed value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="testCompleted">The test completed.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     protected AsyncElementList(TimeSpan timeout, CancellationToken testCompleted, TimeProvider timeProvider)
     {
         _timeout = timeout;
@@ -53,14 +47,10 @@ public abstract class AsyncElementList<TElement> :
         _channels = new Connectable<Channel<TElement>>();
     }
 
-    /// <summary>
-    /// Gets the time provider value.
-    /// </summary>
+    /// <summary>Gets the time provider.</summary>
     protected TimeProvider TimeProvider => _timeProvider;
 
-    /// <summary>
-    /// Gets the count value.
-    /// </summary>
+    /// <summary>Gets the count.</summary>
     public int Count
     {
         get
@@ -70,20 +60,14 @@ public abstract class AsyncElementList<TElement> :
         }
     }
 
-    /// <summary>
-    /// Gets the save mode value.
-    /// </summary>
+    /// <summary>Gets the save mode.</summary>
     public TestContextSaveMode SaveMode => _saveMode;
 
-    /// <summary>
-    /// Gets the maximum saved elements value.
-    /// </summary>
+    /// <summary>Gets the maximum saved elements.</summary>
     public int MaximumSavedElements => _maximumSavedElements;
 
-    /// <summary>
-    /// Performs the snapshot operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Captures the current state.</summary>
+    /// <returns>The read only list produced by the operation.</returns>
     public IReadOnlyList<TElement> Snapshot()
     {
         lock (_messages)
@@ -112,12 +96,10 @@ public abstract class AsyncElementList<TElement> :
         }
     }
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects the matching value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>An asynchronous sequence containing the selected value.</returns>
     public async IAsyncEnumerable<TElement> SelectAsync(FilterDelegate<TElement> filter,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
@@ -179,12 +161,10 @@ public abstract class AsyncElementList<TElement> :
         }
     }
 
-    /// <summary>
-    /// Performs the any operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects any matching value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the any outcome.</returns>
     public async Task<bool> AnyAsync(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default)
     {
         try
@@ -199,12 +179,10 @@ public abstract class AsyncElementList<TElement> :
         return false;
     }
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects the matching value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The selected value.</returns>
     public IEnumerable<TElement> Select(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(filter);
@@ -259,10 +237,8 @@ public abstract class AsyncElementList<TElement> :
         }
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     protected void Add(TElement context)
     {
         if (!context.ElementId.HasValue)

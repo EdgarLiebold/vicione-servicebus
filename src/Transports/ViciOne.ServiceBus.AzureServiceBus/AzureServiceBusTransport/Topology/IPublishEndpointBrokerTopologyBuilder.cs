@@ -1,19 +1,13 @@
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// A builder for creating the topology when publishing a message
-/// </summary>
+/// <summary>Builds the topic and optional hierarchy subscriptions required to publish a message contract.</summary>
 public interface IPublishEndpointBrokerTopologyBuilder :
     IBrokerTopologyBuilder
 {
-    /// <summary>
-    /// The topic to which the message is published
-    /// </summary>
+    /// <summary>Gets or sets the topic to which the current message contract is published.</summary>
     TopicHandle? Topic { get; set; }
 
-    /// <summary>
-    /// Create an implemented builder which can be passed to implemented types
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Creates a child builder for an implemented message contract.</summary>
+    /// <returns>A hierarchy-aware child builder, or this builder when implemented contracts are flattened.</returns>
     IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder();
 }

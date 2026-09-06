@@ -8,8 +8,6 @@ namespace ViciOne.ServiceBus.SqlTransport.Topology;
 public interface IReceiveEndpointBrokerTopologyBuilder :
     IBrokerTopologyBuilder
 {
-    /// <summary>
-    /// A handle to the consuming queue
-    /// </summary>
+    /// <summary>A handle to the consuming queue.</summary>
     QueueHandle Queue { get; }
 }

@@ -3,27 +3,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Defines the contract for saga class map.
-/// </summary>
+/// <summary>Applies an EF Core mapping for one saga entity type.</summary>
 public interface ISagaClassMap
 {
-    /// <summary>
-    /// Gets the saga type value.
-    /// </summary>
+    /// <summary>Gets the saga entity type configured by this map.</summary>
     Type SagaType { get; }
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="model">The model value.</param>
+    /// <summary>Adds the saga mapping to an EF Core model.</summary>
+    /// <param name="model">The model builder to configure.</param>
     void Configure(ModelBuilder model);
 }
 
 
-/// <summary>
-/// Defines the contract for saga class map.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Identifies an EF Core saga map for a specific saga type.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public interface ISagaClassMap<TSaga> :
     ISagaClassMap
     where TSaga : class, ISaga

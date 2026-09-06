@@ -2,9 +2,7 @@ using RabbitMQ.Client;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a fanout exchange type selector implementation.
-/// </summary>
+/// <summary>Selects RabbitMQ fanout exchanges for every message type and entity name.</summary>
 public class FanoutExchangeTypeSelector :
     IExchangeTypeSelector
 {
@@ -13,8 +11,6 @@ public class FanoutExchangeTypeSelector :
         return ExchangeType.Fanout;
     }
 
-    /// <summary>
-    /// Gets the default exchange type value.
-    /// </summary>
+    /// <summary>Gets the RabbitMQ fanout exchange type.</summary>
     public string DefaultExchangeType => ExchangeType.Fanout;
 }

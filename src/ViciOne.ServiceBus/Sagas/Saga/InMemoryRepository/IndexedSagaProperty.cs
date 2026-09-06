@@ -6,11 +6,9 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>
-/// A dictionary index of the sagas
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
-/// <typeparam name="TProperty"></typeparam>
+/// <summary>A dictionary index of the sagas.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TProperty">The property type.</typeparam>
 public class IndexedSagaProperty<TSaga, TProperty> :
     IIndexedSagaProperty<TSaga>
     where TSaga : class, ISaga
@@ -19,25 +17,19 @@ public class IndexedSagaProperty<TSaga, TProperty> :
     readonly Func<TSaga, TProperty> _getProperty;
     readonly IDictionary<TProperty, HashSet<SagaInstance<TSaga>>> _values;
 
-    /// <summary>
-    /// Creates an index for the specified property of a saga
-    /// </summary>
-    /// <param name="propertyInfo"></param>
+    /// <summary>Creates an index for the specified property of a saga.</summary>
+    /// <param name="propertyInfo">The property info.</param>
     public IndexedSagaProperty(PropertyInfo propertyInfo)
     {
         _values = new Dictionary<TProperty, HashSet<SagaInstance<TSaga>>>();
         _getProperty = GetGetMethod(propertyInfo);
     }
 
-    /// <summary>
-    /// Gets the count value.
-    /// </summary>
+    /// <summary>Gets the count.</summary>
     public int Count => _values.Count;
 
-    /// <summary>
-    /// Gets or sets the value at the specified index.
-    /// </summary>
-    /// <param name="key">The key value.</param>
+    /// <summary>Gets or sets the value at the specified index.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
     public SagaInstance<TSaga>? this[object key]
     {
         get
@@ -51,10 +43,8 @@ public class IndexedSagaProperty<TSaga, TProperty> :
         }
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="newItem">The new item value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="newItem">The new item.</param>
     public void Add(SagaInstance<TSaga> newItem)
     {
         var key = _getProperty(newItem.Instance);
@@ -68,10 +58,8 @@ public class IndexedSagaProperty<TSaga, TProperty> :
         hashSet.Add(newItem);
     }
 
-    /// <summary>
-    /// Performs the remove operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Removes the selected value.</summary>
+    /// <param name="instance">The instance.</param>
     public void Remove(SagaInstance<TSaga> instance)
     {
         var key = _getProperty(instance.Instance);
@@ -83,22 +71,18 @@ public class IndexedSagaProperty<TSaga, TProperty> :
             _values.Remove(key);
     }
 
-    /// <summary>
-    /// Performs the where operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Filters values using the supplied predicate.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <returns>The enumerable produced by the operation.</returns>
     public IEnumerable<SagaInstance<TSaga>> Where(Func<TSaga, bool> filter)
     {
         return _values.Values.SelectMany(x => x).Where(x => filter(x.Instance));
     }
 
-    /// <summary>
-    /// Performs the where operation.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="filter">The filter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Filters values using the supplied predicate.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <returns>The enumerable produced by the operation.</returns>
     public IEnumerable<SagaInstance<TSaga>> Where(object key, Func<TSaga, bool> filter)
     {
         var keyValue = (TProperty)key;
@@ -109,12 +93,10 @@ public class IndexedSagaProperty<TSaga, TProperty> :
         return Enumerable.Empty<SagaInstance<TSaga>>();
     }
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <typeparam name="TResult">The t result type.</typeparam>
-    /// <param name="transformer">The transformer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Selects the matching value.</summary>
+    /// <typeparam name="TResult">The result produced by the operation.</typeparam>
+    /// <param name="transformer">The transformer.</param>
+    /// <returns>The selected value.</returns>
     public IEnumerable<TResult> Select<TResult>(Func<TSaga, TResult> transformer)
     {
         return _values.Values.SelectMany(x => x).Select(x => transformer(x.Instance));

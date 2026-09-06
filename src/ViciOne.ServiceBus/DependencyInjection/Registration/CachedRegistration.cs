@@ -2,14 +2,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
-/// <summary>
-/// Defines the contract for cached registration.
-/// </summary>
+/// <summary>Defines the operations required by cached registration.</summary>
 public interface CachedRegistration
 {
-    /// <summary>
-    /// Performs the register operation.
-    /// </summary>
-    /// <param name="collection">The collection value.</param>
+    /// <summary>Registers the supplied component.</summary>
+    /// <param name="collection">The collection.</param>
     void Register(IServiceCollection collection);
 }

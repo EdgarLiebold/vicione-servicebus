@@ -5,9 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a registration context implementation.
-/// </summary>
+/// <summary>Carries state for registration operations.</summary>
 public class RegistrationContext :
     IRegistrationContext,
     ISetScopedConsumeContext
@@ -16,12 +14,10 @@ public class RegistrationContext :
     readonly IServiceProvider _provider;
     readonly ISetScopedConsumeContext _setScopedConsumeContext;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    /// <param name="selector">The selector value.</param>
-    /// <param name="setScopedConsumeContext">The set scoped consume context value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="selector">The selector.</param>
+    /// <param name="setScopedConsumeContext">The set scoped consume context.</param>
     public RegistrationContext(IServiceProvider provider, IContainerSelector selector, ISetScopedConsumeContext setScopedConsumeContext)
     {
         Selector = selector;
@@ -31,16 +27,12 @@ public class RegistrationContext :
         _configuredTypes = new HashSet<Type>();
     }
 
-    /// <summary>
-    /// Gets the selector value.
-    /// </summary>
+    /// <summary>Gets the selector.</summary>
     protected IContainerSelector Selector { get; }
 
-    /// <summary>
-    /// Configures consumer.
-    /// </summary>
-    /// <param name="consumerType">The consumer type value.</param>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Configures consumer.</summary>
+    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
+    /// <param name="configurator">The configurator to update.</param>
     public void ConfigureConsumer(Type consumerType, IReceiveEndpointConfigurator configurator)
     {
         if (!Selector.TryGetRegistration<IConsumerRegistration>(_provider, consumerType, out var consumer))
@@ -50,12 +42,10 @@ public class RegistrationContext :
         _configuredTypes.Add(consumerType);
     }
 
-    /// <summary>
-    /// Configures consumer.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures consumer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void ConfigureConsumer<T>(IReceiveEndpointConfigurator configurator, Action<IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
     {
@@ -69,10 +59,8 @@ public class RegistrationContext :
         _configuredTypes.Add(typeof(T));
     }
 
-    /// <summary>
-    /// Configures consumers.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Configures consumers.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public void ConfigureConsumers(IReceiveEndpointConfigurator configurator)
     {
         foreach (var consumer in Selector.GetRegistrations<IConsumerRegistration>(_provider).Where(x => !WasConfigured(x.Type)))
@@ -82,10 +70,8 @@ public class RegistrationContext :
         }
     }
 
-    /// <summary>
-    /// Configures every registered handler category on the receive endpoint.
-    /// </summary>
-    /// <param name="configurator">The receive endpoint configurator.</param>
+    /// <summary>Configures every registered handler category on the receive endpoint.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public void ConfigureConsumerKinds(IReceiveEndpointConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -103,11 +89,9 @@ public class RegistrationContext :
         }
     }
 
-    /// <summary>
-    /// Configures saga.
-    /// </summary>
-    /// <param name="sagaType">The saga type value.</param>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Configures saga.</summary>
+    /// <param name="sagaType">The runtime saga type used by the operation.</param>
+    /// <param name="configurator">The configurator to update.</param>
     public void ConfigureSaga(Type sagaType, IReceiveEndpointConfigurator configurator)
     {
         IConsumerKind sagaKind = GetConsumerKind("Saga");
@@ -117,12 +101,10 @@ public class RegistrationContext :
         _configuredTypes.Add(sagaType);
     }
 
-    /// <summary>
-    /// Configures saga.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures saga.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void ConfigureSaga<T>(IReceiveEndpointConfigurator configurator, Action<ISagaConfigurator<T>>? configure = null)
         where T : class
     {
@@ -133,10 +115,8 @@ public class RegistrationContext :
         _configuredTypes.Add(typeof(T));
     }
 
-    /// <summary>
-    /// Configures sagas.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Configures sagas.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public void ConfigureSagas(IReceiveEndpointConfigurator configurator)
     {
         IConsumerKind sagaKind = GetConsumerKind("Saga");
@@ -144,11 +124,9 @@ public class RegistrationContext :
             _configuredTypes.Add(configuredType);
     }
 
-    /// <summary>
-    /// Configures execute activity.
-    /// </summary>
-    /// <param name="activityType">The activity type value.</param>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Configures execute activity.</summary>
+    /// <param name="activityType">The runtime activity type used by the operation.</param>
+    /// <param name="configurator">The configurator to update.</param>
     public void ConfigureExecuteActivity(Type activityType, IReceiveEndpointConfigurator configurator)
     {
         IConsumerKind activityKind = GetConsumerKind("ExecuteActivity");
@@ -158,12 +136,10 @@ public class RegistrationContext :
         _configuredTypes.Add(activityType);
     }
 
-    /// <summary>
-    /// Configures activity.
-    /// </summary>
-    /// <param name="activityType">The activity type value.</param>
-    /// <param name="executeEndpointConfigurator">The execute endpoint configurator value.</param>
-    /// <param name="compensateEndpointConfigurator">The compensate endpoint configurator value.</param>
+    /// <summary>Configures activity.</summary>
+    /// <param name="activityType">The runtime activity type used by the operation.</param>
+    /// <param name="executeEndpointConfigurator">The execute endpoint configurator.</param>
+    /// <param name="compensateEndpointConfigurator">The compensate endpoint configurator.</param>
     public void ConfigureActivity(Type activityType, IReceiveEndpointConfigurator executeEndpointConfigurator,
         IReceiveEndpointConfigurator compensateEndpointConfigurator)
     {
@@ -174,12 +150,10 @@ public class RegistrationContext :
         _configuredTypes.Add(activityType);
     }
 
-    /// <summary>
-    /// Configures activity execute.
-    /// </summary>
-    /// <param name="activityType">The activity type value.</param>
-    /// <param name="executeEndpointConfigurator">The execute endpoint configurator value.</param>
-    /// <param name="compensateAddress">The compensate address value.</param>
+    /// <summary>Configures activity execute.</summary>
+    /// <param name="activityType">The runtime activity type used by the operation.</param>
+    /// <param name="executeEndpointConfigurator">The execute endpoint configurator.</param>
+    /// <param name="compensateAddress">The compensate address.</param>
     public void ConfigureActivityExecute(Type activityType, IReceiveEndpointConfigurator executeEndpointConfigurator, Uri compensateAddress)
     {
         IConsumerKind activityKind = GetConsumerKind("Activity");
@@ -189,11 +163,9 @@ public class RegistrationContext :
         _configuredTypes.Add(activityType);
     }
 
-    /// <summary>
-    /// Configures activity compensate.
-    /// </summary>
-    /// <param name="activityType">The activity type value.</param>
-    /// <param name="compensateEndpointConfigurator">The compensate endpoint configurator value.</param>
+    /// <summary>Configures activity compensate.</summary>
+    /// <param name="activityType">The runtime activity type used by the operation.</param>
+    /// <param name="compensateEndpointConfigurator">The compensate endpoint configurator.</param>
     public void ConfigureActivityCompensate(Type activityType, IReceiveEndpointConfigurator compensateEndpointConfigurator)
     {
         IConsumerKind activityKind = GetConsumerKind("Activity");
@@ -203,11 +175,9 @@ public class RegistrationContext :
         _configuredTypes.Add(activityType);
     }
 
-    /// <summary>
-    /// Configures future.
-    /// </summary>
-    /// <param name="futureType">The future type value.</param>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Configures future.</summary>
+    /// <param name="futureType">The runtime future type used by the operation.</param>
+    /// <param name="configurator">The configurator to update.</param>
     public void ConfigureFuture(Type futureType, IReceiveEndpointConfigurator configurator)
     {
         IConsumerKind futureKind = GetConsumerKind("Future");
@@ -217,11 +187,9 @@ public class RegistrationContext :
         _configuredTypes.Add(futureType);
     }
 
-    /// <summary>
-    /// Configures future.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Configures future.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void ConfigureFuture<T>(IReceiveEndpointConfigurator configurator)
         where T : class
     {
@@ -232,11 +200,9 @@ public class RegistrationContext :
         _configuredTypes.Add(typeof(T));
     }
 
-    /// <summary>
-    /// Gets service.
-    /// </summary>
-    /// <param name="serviceType">The service type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets service.</summary>
+    /// <param name="serviceType">The runtime service type used by the operation.</param>
+    /// <returns>The service.</returns>
     public object? GetService(Type serviceType)
     {
         if (serviceType == typeof(IContainerSelector))
@@ -245,31 +211,25 @@ public class RegistrationContext :
         return _provider.GetService(serviceType);
     }
 
-    /// <summary>
-    /// Performs the push context operation.
-    /// </summary>
-    /// <param name="scope">The scope value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Pushes context.</summary>
+    /// <param name="scope">The scope.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The disposable produced by the operation.</returns>
     public IDisposable PushContext(IServiceScope scope, ConsumeContext context)
     {
         return _setScopedConsumeContext.PushContext(scope, context);
     }
 
-    /// <summary>
-    /// Performs the was configured operation.
-    /// </summary>
-    /// <param name="type">The type value.</param>
+    /// <summary>Determines whether the specified type has already been configured.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     protected bool WasConfigured(Type type)
     {
         return _configuredTypes.Contains(type);
     }
 
-    /// <summary>
-    /// Records a handler type as configured for this registration context.
-    /// </summary>
-    /// <param name="type">The configured handler type.</param>
+    /// <summary>Records a handler type as configured for this registration context.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
     protected void MarkConfigured(Type type)
     {
         _configuredTypes.Add(type);

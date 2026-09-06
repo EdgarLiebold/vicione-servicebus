@@ -6,71 +6,47 @@ using ViciOne.ServiceBus.RabbitMq.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// A RabbitMQ connection
-/// </summary>
+/// <summary>Exposes a RabbitMQ connection and the transport settings shared by its channels.</summary>
 public interface ConnectionContext :
     PipeContext
 {
-    /// <summary>
-    /// The RabbitMQ Connection
-    /// </summary>
+    /// <summary>Gets the RabbitMQ client connection.</summary>
     IConnection Connection { get; }
 
-    /// <summary>
-    /// The connection description, useful to debug output
-    /// </summary>
+    /// <summary>Gets the sanitized connection description used in diagnostics.</summary>
     string Description { get; }
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the host address.</summary>
     Uri HostAddress { get; }
 
-    /// <summary>
-    /// Gets the publisher confirmation value.
-    /// </summary>
+    /// <summary>Gets whether channels use RabbitMQ publisher confirmations.</summary>
     bool PublisherConfirmation { get; }
 
-    /// <summary>
-    /// Gets the batch settings value.
-    /// </summary>
+    /// <summary>Gets client-side publish-batch settings.</summary>
     BatchSettings BatchSettings { get; }
 
-    /// <summary>
-    /// Gets the continuation timeout value.
-    /// </summary>
+    /// <summary>Gets the timeout for RabbitMQ client RPC continuations.</summary>
     TimeSpan ContinuationTimeout { get; }
 
-    /// <summary>
-    /// The time to wait during shutdown of any dependencies before giving up and killing things
-    /// </summary>
+    /// <summary>Gets the maximum time allowed for dependent transport agents to stop.</summary>
     TimeSpan StopTimeout { get; }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets bus-level RabbitMQ topology.</summary>
     IRabbitMqBusTopology Topology { get; }
 
-    /// <summary>
-    /// Gets the topology entity cache value.
-    /// </summary>
+    /// <summary>Gets the per-connection cache of successfully declared broker entities.</summary>
     RabbitMqTopologyEntityCache TopologyEntityCache { get; }
 
-    /// <summary>
-    /// Create a channel on the connection
-    /// </summary>
-    /// <returns></returns>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit used by the operation.</param>
+    /// <summary>Creates and configures a RabbitMQ channel on this connection.</summary>
+    /// <param name="concurrentMessageLimit">The optional consumer concurrency used to size prefetch.</param>
+    /// <param name="cancellationToken">Cancellation for channel creation.</param>
+    /// <returns>The open RabbitMQ channel.</returns>
     Task<IChannel> CreateChannelAsync(ushort? concurrentMessageLimit, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Create a channel, and return the <see cref="ChannelContext" />.
-    /// </summary>
-    /// <param name="agent"></param>
-    /// <param name="concurrentMessageLimit"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <summary>Creates a channel and wraps it in a lifetime-managed <see cref="ChannelContext" />.</summary>
+    /// <param name="agent">The transport agent that owns the channel.</param>
+    /// <param name="concurrentMessageLimit">The optional consumer concurrency used to size prefetch.</param>
+    /// <param name="cancellationToken">Cancellation for channel creation.</param>
+    /// <returns>The active RabbitMQ channel context.</returns>
     Task<ChannelContext> CreateChannelContextAsync(IAgent agent, ushort? concurrentMessageLimit, CancellationToken cancellationToken);
 }

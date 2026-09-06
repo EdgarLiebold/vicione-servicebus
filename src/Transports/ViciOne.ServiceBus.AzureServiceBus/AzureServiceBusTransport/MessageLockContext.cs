@@ -3,36 +3,26 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for message lock context.
-/// </summary>
+/// <summary>Settles a received Azure Service Bus message while its delivery lock is held.</summary>
 public interface MessageLockContext
 {
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes the message so it is removed from the entity.</summary>
+    /// <param name="cancellationToken">Cancels broker settlement.</param>
+    /// <returns>A task that completes when the broker accepts settlement.</returns>
     Task CompleteAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the abandon operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Abandons the message so Azure Service Bus can make it available for redelivery.</summary>
+    /// <param name="exception">The processing failure recorded with the delivery.</param>
+    /// <param name="cancellationToken">Cancels broker settlement.</param>
+    /// <returns>A task that completes when the broker accepts settlement.</returns>
     Task AbandonAsync(Exception exception, CancellationToken cancellationToken = default);
-    /// <summary>
-    /// Performs the dead letter operation.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Moves the message to the entity's dead-letter subqueue.</summary>
+    /// <param name="cancellationToken">Cancels broker settlement.</param>
+    /// <returns>A task that completes when the broker accepts settlement.</returns>
     Task DeadLetterAsync(CancellationToken cancellationToken = default);
-    /// <summary>
-    /// Performs the dead letter operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Moves the message to the entity's dead-letter subqueue with failure details.</summary>
+    /// <param name="exception">The processing failure recorded as the dead-letter reason.</param>
+    /// <param name="cancellationToken">Cancels broker settlement.</param>
+    /// <returns>A task that completes when the broker accepts settlement.</returns>
     Task DeadLetterAsync(Exception exception, CancellationToken cancellationToken = default);
 }

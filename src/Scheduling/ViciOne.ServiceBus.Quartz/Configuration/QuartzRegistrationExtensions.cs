@@ -7,17 +7,15 @@ using ViciOne.ServiceBus.Quartz;
 
 namespace ViciOne.ServiceBus.Quartz;
 
-/// <summary>
-/// Provides extension methods for quartz registration.
-/// </summary>
+/// <summary>Registers Quartz scheduling consumers and their shared receive endpoint.</summary>
 public static class QuartzRegistrationExtensions
 {
     /// <summary>
     /// Add the Quartz consumers to the bus, using <see cref="QuartzEndpointOptions" /> for configuration. Also registers the
     /// Quartz Bus Observer, so that Quartz is started/stopped with the bus.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure">Configure the Quartz options</param>
+    /// <param name="configurator">The bus registration to update.</param>
+    /// <param name="configure">An optional callback for queue, concurrency, and time-zone resolution.</param>
     public static void AddQuartzConsumers(this IBusRegistrationConfigurator configurator, Action<QuartzEndpointOptions>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -50,11 +48,9 @@ public static class QuartzRegistrationExtensions
         configurator.AddConsumer<ResumeScheduledMessageConsumer, ResumeScheduledMessageConsumerDefinition>();
     }
 
-    /// <summary>
-    /// When manually configuring a receive endpoint, configure the Quartz consumers for this endpoint
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="context"></param>
+    /// <summary>Adds all four registered Quartz scheduling consumers to a manually configured receive endpoint.</summary>
+    /// <param name="configurator">The receive endpoint to configure.</param>
+    /// <param name="context">The bus registration context that resolves the consumers.</param>
     public static void ConfigureQuartzConsumers(this IReceiveEndpointConfigurator configurator, IBusRegistrationContext context)
     {
         ArgumentNullException.ThrowIfNull(configurator);

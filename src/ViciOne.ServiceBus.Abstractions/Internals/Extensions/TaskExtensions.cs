@@ -194,11 +194,9 @@ internal static class TaskExtensions
             : "Operation timed out";
     }
 
-    /// <summary>
-    /// Returns true if a Task was ran to completion (without being cancelled or faulted)
-    /// </summary>
-    /// <param name="task"></param>
-    /// <returns></returns>
+    /// <summary>Returns true if a Task was ran to completion (without being cancelled or faulted).</summary>
+    /// <param name="task">The task.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsCompletedSuccessfully(this Task task)
     {
         return task.Status == TaskStatus.RanToCompletion;
@@ -261,13 +259,11 @@ internal static class TaskExtensions
         }
     }
 
-    /// <summary>
-    /// Register a callback on the <paramref name="cancellationToken" /> which completes the resulting task.
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <param name="cancelTask"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
+    /// <summary>Register a callback on the <paramref name="cancellationToken" /> which completes the resulting task.</summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="cancelTask">Receives the cancel task produced by the operation.</param>
+    /// <returns>The cancellation token registration produced by the operation.</returns>
+    /// <exception cref="ArgumentException">Thrown when an argument does not satisfy the operation contract.</exception>
     static CancellationTokenRegistration RegisterTask(CancellationToken cancellationToken, out Task cancelTask)
     {
         if (!cancellationToken.CanBeCanceled)

@@ -4,19 +4,15 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for publish execute.
-/// </summary>
+/// <summary>Provides extension methods for publish execute.</summary>
 public static class PublishExecuteExtensions
 {
-    /// <summary>
-    /// Publish a message, using a callback to modify the publish context instead of building a pipe from scratch
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="message">The message</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Publish a message, using a callback to modify the publish context instead of building a pipe from scratch.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync<T>(this IPublishEndpoint endpoint, T message, Action<PublishContext<T>> callback,
         CancellationToken cancellationToken = default)
@@ -25,14 +21,12 @@ public static class PublishExecuteExtensions
         return endpoint.PublishAsync(message, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Publish a message, using a callback to modify the publish context instead of building a pipe from scratch
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="message">The message</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Publish a message, using a callback to modify the publish context instead of building a pipe from scratch.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync<T>(this IPublishEndpoint endpoint, T message, Func<PublishContext<T>, Task> callback,
         CancellationToken cancellationToken = default)
@@ -41,13 +35,11 @@ public static class PublishExecuteExtensions
         return endpoint.PublishAsync(message, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Publish a message, using a callback to modify the publish context instead of building a pipe from scratch
-    /// </summary>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="message">The message</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Publish a message, using a callback to modify the publish context instead of building a pipe from scratch.</summary>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync(this IPublishEndpoint endpoint, object message, Action<PublishContext> callback,
         CancellationToken cancellationToken = default)
@@ -55,13 +47,11 @@ public static class PublishExecuteExtensions
         return endpoint.PublishAsync(message, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Publish a message, using a callback to modify the publish context instead of building a pipe from scratch
-    /// </summary>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="message">The message</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Publish a message, using a callback to modify the publish context instead of building a pipe from scratch.</summary>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync(this IPublishEndpoint endpoint, object message, Func<PublishContext, Task> callback,
         CancellationToken cancellationToken = default)
@@ -69,14 +59,12 @@ public static class PublishExecuteExtensions
         return endpoint.PublishAsync(message, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Publish a message, using a callback to modify the publish context instead of building a pipe from scratch
-    /// </summary>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="message">The message</param>
-    /// <param name="messageType">The message type to send the object as</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Publish a message, using a callback to modify the publish context instead of building a pipe from scratch.</summary>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="messageType">The message type to send the object as.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync(this IPublishEndpoint endpoint, object message, Type messageType, Action<PublishContext> callback,
         CancellationToken cancellationToken = default)
@@ -84,14 +72,12 @@ public static class PublishExecuteExtensions
         return endpoint.PublishAsync(message, messageType, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Publish a message, using a callback to modify the publish context instead of building a pipe from scratch
-    /// </summary>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="message">The message</param>
-    /// <param name="messageType">The message type to send the object as</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Publish a message, using a callback to modify the publish context instead of building a pipe from scratch.</summary>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="messageType">The message type to send the object as.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync(this IPublishEndpoint endpoint, object message, Type messageType, Func<PublishContext, Task> callback,
         CancellationToken cancellationToken = default)
@@ -99,14 +85,12 @@ public static class PublishExecuteExtensions
         return endpoint.PublishAsync(message, messageType, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Publish a message, using a callback to modify the publish context instead of building a pipe from scratch
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="values">The values that map to the object</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Publish a message, using a callback to modify the publish context instead of building a pipe from scratch.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="values">The values that map to the object.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync<T>(this IPublishEndpoint endpoint, object values, Action<PublishContext<T>> callback,
         CancellationToken cancellationToken = default)
@@ -115,14 +99,12 @@ public static class PublishExecuteExtensions
         return endpoint.PublishAsync(values, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Publish a message, using a callback to modify the publish context instead of building a pipe from scratch
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="endpoint">The endpoint to send the message</param>
-    /// <param name="values">The values that map to the object</param>
-    /// <param name="callback">The callback for the send context</param>
-    /// <param name="cancellationToken">To cancel the send from happening</param>
+    /// <summary>Publish a message, using a callback to modify the publish context instead of building a pipe from scratch.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="endpoint">The endpoint to send the message.</param>
+    /// <param name="values">The values that map to the object.</param>
+    /// <param name="callback">The callback for the send context.</param>
+    /// <param name="cancellationToken">To cancel the send from happening.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync<T>(this IPublishEndpoint endpoint, object values, Func<PublishContext<T>, Task> callback,
         CancellationToken cancellationToken = default)
@@ -131,45 +113,37 @@ public static class PublishExecuteExtensions
         return endpoint.PublishAsync(values, callback.ToPipe(), cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the to pipe operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The converted pipe.</returns>
     public static IPipe<PublishContext<T>> ToPipe<T>(this Action<PublishContext<T>> callback)
         where T : class
     {
         return new PublishContextPipe<T>(callback);
     }
 
-    /// <summary>
-    /// Performs the to pipe operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The converted pipe.</returns>
     public static IPipe<PublishContext<T>> ToPipe<T>(this Func<PublishContext<T>, Task> callback)
         where T : class
     {
         return new PublishContextAsyncPipe<T>(callback);
     }
 
-    /// <summary>
-    /// Performs the to pipe operation.
-    /// </summary>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to pipe.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The converted pipe.</returns>
     public static IPipe<PublishContext> ToPipe(this Action<PublishContext> callback)
     {
         return new PublishContextPipe(callback);
     }
 
-    /// <summary>
-    /// Performs the to pipe operation.
-    /// </summary>
-    /// <param name="callback">The callback value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to pipe.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <returns>The converted pipe.</returns>
     public static IPipe<PublishContext> ToPipe(this Func<PublishContext, Task> callback)
     {
         return new PublishContextAsyncPipe(callback);

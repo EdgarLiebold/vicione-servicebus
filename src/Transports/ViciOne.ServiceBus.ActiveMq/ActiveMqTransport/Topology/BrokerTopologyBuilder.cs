@@ -3,28 +3,18 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides a broker topology builder implementation.
-/// </summary>
+/// <summary>Builds de-duplicated ActiveMQ topic, queue, and consumer entities.</summary>
 public abstract class BrokerTopologyBuilder
 {
-    /// <summary>
-    /// Defines the consumers value.
-    /// </summary>
+    /// <summary>The consumer bindings indexed by identity and destination name.</summary>
     protected readonly NamedEntityCollection<ConsumerEntity, ConsumerHandle> Consumers;
-    /// <summary>
-    /// Defines the queues value.
-    /// </summary>
+    /// <summary>The queues indexed by identity and entity name.</summary>
     protected readonly NamedEntityCollection<QueueEntity, QueueHandle> Queues;
-    /// <summary>
-    /// Defines the topics value.
-    /// </summary>
+    /// <summary>The topics indexed by identity and entity name.</summary>
     protected readonly NamedEntityCollection<TopicEntity, TopicHandle> Topics;
     long _nextId;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Creates empty named collections for broker entities.</summary>
     protected BrokerTopologyBuilder()
     {
         Topics = new NamedEntityCollection<TopicEntity, TopicHandle>(TopicEntity.EntityComparer, TopicEntity.NameComparer);
@@ -38,13 +28,11 @@ public abstract class BrokerTopologyBuilder
         return Interlocked.Increment(ref _nextId);
     }
 
-    /// <summary>
-    /// Creates topic.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets or adds a topic with the specified lifecycle settings.</summary>
+    /// <param name="name">The topic name.</param>
+    /// <param name="durable">Whether the topic persists across broker restarts.</param>
+    /// <param name="autoDelete">Whether the broker removes the topic when it is no longer used.</param>
+    /// <returns>A handle for the de-duplicated topic.</returns>
     public TopicHandle CreateTopic(string name, bool durable, bool autoDelete)
     {
         var id = GetNextId();
@@ -54,13 +42,11 @@ public abstract class BrokerTopologyBuilder
         return Topics.GetOrAdd(exchange);
     }
 
-    /// <summary>
-    /// Creates queue.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets or adds a queue with the specified lifecycle settings.</summary>
+    /// <param name="name">The queue name.</param>
+    /// <param name="durable">Whether the queue persists across broker restarts.</param>
+    /// <param name="autoDelete">Whether the broker removes the queue when it is no longer used.</param>
+    /// <returns>A handle for the de-duplicated queue.</returns>
     public QueueHandle CreateQueue(string name, bool durable, bool autoDelete)
     {
         var id = GetNextId();
@@ -70,15 +56,13 @@ public abstract class BrokerTopologyBuilder
         return Queues.GetOrAdd(queue);
     }
 
-    /// <summary>
-    /// Performs the bind consumer operation.
-    /// </summary>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="selector">The selector value.</param>
-    /// <param name="consumerName">The consumer name value.</param>
-    /// <param name="shared">The shared value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets or adds a consumer binding from a topic to a queue or named topic subscription.</summary>
+    /// <param name="topic">The source topic handle.</param>
+    /// <param name="queue">The destination queue, or <see langword="null" /> for a direct topic consumer.</param>
+    /// <param name="selector">An optional Apache NMS message selector.</param>
+    /// <param name="consumerName">An optional native subscription name.</param>
+    /// <param name="shared">Whether the named topic subscription is shared.</param>
+    /// <returns>A handle for the de-duplicated consumer binding.</returns>
     public ConsumerHandle BindConsumer(TopicHandle topic, QueueHandle? queue, string? selector, string? consumerName = null, bool shared = false)
     {
         var id = GetNextId();

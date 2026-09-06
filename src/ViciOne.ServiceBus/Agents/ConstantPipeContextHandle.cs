@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>
-/// Provides a constant pipe context handle implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Controls the lifetime of constant pipe context.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class ConstantPipeContextHandle<TContext> :
     PipeContextHandle<TContext>
     where TContext : class, PipeContext
@@ -14,10 +12,8 @@ public class ConstantPipeContextHandle<TContext> :
     readonly TContext _context;
     bool _disposed;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public ConstantPipeContextHandle(TContext context)
     {
         _context = context;
@@ -45,8 +41,6 @@ public class ConstantPipeContextHandle<TContext> :
 
     bool PipeContextHandle<TContext>.IsDisposed => _disposed;
 
-    /// <summary>
-    /// Gets the context value.
-    /// </summary>
+    /// <summary>Gets the context.</summary>
     public Task<TContext> Context { get; }
 }

@@ -6,11 +6,9 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
-/// <summary>
-/// Provides an execute activity registration implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Registers execute activity services.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class ExecuteActivityRegistration<TActivity, TArguments> :
     IExecuteActivityRegistration
     where TActivity : class, IExecuteActivity<TArguments>
@@ -20,10 +18,8 @@ public class ExecuteActivityRegistration<TActivity, TArguments> :
     readonly IContainerSelector _selector;
     IExecuteActivityDefinition<TActivity, TArguments> _definition = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="selector">The selector value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="selector">The selector.</param>
     public ExecuteActivityRegistration(IContainerSelector selector)
     {
         _selector = selector;
@@ -31,14 +27,10 @@ public class ExecuteActivityRegistration<TActivity, TArguments> :
         IncludeInConfigureEndpoints = !Type.HasAttribute<ExcludeFromConfigureEndpointsAttribute>();
     }
 
-    /// <summary>
-    /// Gets the type value.
-    /// </summary>
+    /// <summary>Gets the type.</summary>
     public Type Type => typeof(TActivity);
 
-    /// <summary>
-    /// Gets or sets the include in configure endpoints value.
-    /// </summary>
+    /// <summary>Gets or sets the include in configure endpoints.</summary>
     public bool IncludeInConfigureEndpoints { get; set; }
 
     void IExecuteActivityRegistration.AddConfigureAction<T, TArgs>(Action<IRegistrationContext, IExecuteActivityConfigurator<T, TArgs>>? configure)
@@ -47,11 +39,9 @@ public class ExecuteActivityRegistration<TActivity, TArguments> :
             _configureActions.Add(action);
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
     {
         var executeActivityScopeProvider = new ExecuteActivityScopeProvider<TActivity, TArguments>(context);

@@ -1,16 +1,12 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a message session saga repository registration provider implementation.
-/// </summary>
+/// <summary>Applies Azure Service Bus session persistence to convention-based saga registrations.</summary>
 public class MessageSessionSagaRepositoryRegistrationProvider :
     ISagaRepositoryRegistrationProvider
 {
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Configures the saga registration to store state in its Azure Service Bus session.</summary>
+    /// <typeparam name="TSaga">The saga state type.</typeparam>
+    /// <param name="configurator">The saga registration to configure.</param>
     public virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
         where TSaga : class, ISaga
     {

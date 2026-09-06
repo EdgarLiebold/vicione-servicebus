@@ -4,10 +4,10 @@ namespace ViciOne.ServiceBus.Middleware;
 
 /// <summary>
 /// Splits a context item off the pipe and carries it out-of-band to be merged
-/// once the next filter has completed
+/// once the next filter has completed.
 /// </summary>
-/// <typeparam name="TSaga"></typeparam>
-/// <typeparam name="TMessage"></typeparam>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class SagaSplitFilter<TSaga, TMessage> :
     IFilter<SagaConsumeContext<TSaga, TMessage>>
     where TMessage : class
@@ -15,10 +15,8 @@ public class SagaSplitFilter<TSaga, TMessage> :
 {
     readonly IFilter<SagaConsumeContext<TSaga>> _next;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="next">The next value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="next">The next pipeline stage to invoke.</param>
     public SagaSplitFilter(IFilter<SagaConsumeContext<TSaga>> next)
     {
         _next = next;
@@ -32,12 +30,10 @@ public class SagaSplitFilter<TSaga, TMessage> :
         _next.Probe(scope);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
         var mergePipe = new SagaMergePipe<TSaga, TMessage>(next);

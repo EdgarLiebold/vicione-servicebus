@@ -1,17 +1,13 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a topology consume pipe specification observer implementation.
-/// </summary>
+/// <summary>Observes topology consume pipe specification events.</summary>
 public class TopologyConsumePipeSpecificationObserver :
     IConsumePipeSpecificationObserver
 {
     readonly IConsumeTopology _topology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topology">The topology value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="topology">The topology.</param>
     public TopologyConsumePipeSpecificationObserver(IConsumeTopology topology)
     {
         _topology = topology;

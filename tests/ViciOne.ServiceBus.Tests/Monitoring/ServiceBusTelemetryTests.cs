@@ -78,6 +78,7 @@ public sealed class ServiceBusTelemetryTests
             ["activemq"] = ServiceBusTelemetry.MessagingSystems.ActiveMq,
             ["amazon_sqs"] = ServiceBusTelemetry.MessagingSystems.AmazonSqs,
             ["amazonsqs"] = ServiceBusTelemetry.MessagingSystems.AmazonSqs,
+            ["aws.sns"] = ServiceBusTelemetry.MessagingSystems.AmazonSns,
             ["aws-sqs"] = ServiceBusTelemetry.MessagingSystems.AmazonSqs,
             ["aws_sqs"] = ServiceBusTelemetry.MessagingSystems.AmazonSqs,
             ["azure-service-bus"] = ServiceBusTelemetry.MessagingSystems.AzureServiceBus,

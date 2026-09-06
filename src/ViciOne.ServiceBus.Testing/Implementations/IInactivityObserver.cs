@@ -2,26 +2,18 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
-/// <summary>
-/// Defines the contract for inactivity observer.
-/// </summary>
+/// <summary>Receives notifications about inactivity events.</summary>
 public interface IInactivityObserver
 {
-    /// <summary>
-    /// Connects ed.
-    /// </summary>
+    /// <summary>Connects ed.</summary>
     /// <param name="source">The source value.</param>
     void Connected(IInactivityObservationSource source);
 
-    /// <summary>
-    /// Performs the no activity operation.
-    /// </summary>
+    /// <summary>Selects a transition without an activity.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task NoActivityAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the force inactive operation.
-    /// </summary>
+    /// <summary>Forces inactive.</summary>
     void ForceInactive();
 }

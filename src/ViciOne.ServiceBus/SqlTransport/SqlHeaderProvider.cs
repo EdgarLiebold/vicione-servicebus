@@ -5,37 +5,29 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>
-/// Provides a sql header provider implementation.
-/// </summary>
+/// <summary>Provides sql header services.</summary>
 public class SqlHeaderProvider :
     IHeaderProvider
 {
     readonly SqlTransportMessage _message;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="message">The message to process.</param>
     public SqlHeaderProvider(SqlTransportMessage message)
     {
         _message = message;
     }
 
-    /// <summary>
-    /// Gets all.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets all.</summary>
+    /// <returns>The all.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
         return _message.GetHeaders().GetAll().Concat(_message.GetTransportHeaders().GetAll());
     }
 
-    /// <summary>
-    /// Attempts to get header.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Attempts to get header.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">Receives the value produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {

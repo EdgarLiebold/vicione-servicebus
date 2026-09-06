@@ -9,6 +9,7 @@ namespace ViciOne.ServiceBus.Operations;
 /// Readiness-oriented durable-sender health check. It reports durable backlog/quarantine state without
 /// exposing payloads, destinations, message identifiers or exception messages.
 /// </summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 internal sealed class DurableSenderHealthCheck<TBus> : IHealthCheck
     where TBus : class, IBus
 {

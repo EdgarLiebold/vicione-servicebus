@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Used to bind an exchange to the consuming queue's exchange
-/// </summary>
+/// <summary>Declares a nested exchange and binds it to the current consume-topology exchange.</summary>
 public class ExchangeToExchangeBindingConsumeTopologySpecification :
     RabbitMqExchangeBindingConfigurator,
     IRabbitMqExchangeToExchangeBindingConfigurator,
@@ -14,38 +12,32 @@ public class ExchangeToExchangeBindingConsumeTopologySpecification :
 {
     readonly List<IRabbitMqConsumeTopologySpecification> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="exchangeType">The exchange type value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
+    /// <summary>Creates a nested consume binding from explicit exchange settings.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="exchangeType">The RabbitMQ exchange type.</param>
+    /// <param name="durable">Whether the exchange survives broker restarts.</param>
+    /// <param name="autoDelete">Whether RabbitMQ deletes the exchange when unused.</param>
     public ExchangeToExchangeBindingConsumeTopologySpecification(string exchangeName, string exchangeType, bool durable = true, bool autoDelete = false)
         : base(exchangeName, exchangeType, durable, autoDelete)
     {
         _specifications = new List<IRabbitMqConsumeTopologySpecification>();
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports no additional validation failures for this declarative topology fragment.</summary>
+    /// <returns>An empty sequence.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Declares this source exchange, binds it to the current exchange, and applies nested source bindings.</summary>
+    /// <param name="builder">The receive-endpoint topology builder whose binding cursor is restored before returning.</param>
     public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
     {
         if (builder.BoundExchange == null)
             throw new ArgumentException("The builder should have an already bound exchange", nameof(builder));
 
-        // save this, since it must be restored on exit
+        // Nested specifications temporarily replace this cursor and must restore it before returning.
         var boundExchange = builder.BoundExchange;
 
         var exchangeHandle = builder.ExchangeDeclare(ExchangeName, ExchangeType, Durable, AutoDelete, ExchangeArguments);
@@ -60,11 +52,9 @@ public class ExchangeToExchangeBindingConsumeTopologySpecification :
         builder.BoundExchange = boundExchange;
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Adds another source exchange that feeds this exchange.</summary>
+    /// <param name="exchangeName">The nested exchange name.</param>
+    /// <param name="configure">An optional callback that customizes the nested exchange and binding.</param>
     public void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator>? configure)
     {
         if (string.IsNullOrWhiteSpace(exchangeName))

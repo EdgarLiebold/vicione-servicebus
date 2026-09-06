@@ -8,8 +8,8 @@ namespace ViciOne.ServiceBus.Configuration;
 /// filter that invokes the consume method is passed in, so that a consumer interface with a
 /// different consume signature can be bound through the same connector.
 /// </summary>
-/// <typeparam name="TConsumer">The consumer type</typeparam>
-/// <typeparam name="TMessage">The message type</typeparam>
+/// <typeparam name="TConsumer">The consumer type.</typeparam>
+/// <typeparam name="TMessage">The message type.</typeparam>
 public class InstanceMessageConnector<TConsumer, TMessage> :
     IInstanceMessageConnector<TConsumer>
     where TConsumer : class
@@ -17,10 +17,8 @@ public class InstanceMessageConnector<TConsumer, TMessage> :
 {
     readonly IFilter<ConsumerConsumeContext<TConsumer, TMessage>> _consumeFilter;
 
-    /// <summary>
-    /// Constructs the instance connector
-    /// </summary>
-    /// <param name="consumeFilter">The consume method invocation filter</param>
+    /// <summary>Constructs the instance connector.</summary>
+    /// <param name="consumeFilter">The consume method invocation filter.</param>
     public InstanceMessageConnector(IFilter<ConsumerConsumeContext<TConsumer, TMessage>> consumeFilter)
     {
         _consumeFilter = consumeFilter;
@@ -28,13 +26,11 @@ public class InstanceMessageConnector<TConsumer, TMessage> :
 
     Type IInstanceMessageConnector.MessageType => typeof(TMessage);
 
-    /// <summary>
-    /// Connects instance.
-    /// </summary>
-    /// <param name="pipeConnector">The pipe connector value.</param>
-    /// <param name="instance">The instance value.</param>
-    /// <param name="specification">The specification value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects instance.</summary>
+    /// <param name="pipeConnector">The pipe connector.</param>
+    /// <param name="instance">The instance.</param>
+    /// <param name="specification">The specification.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectInstance(IConsumePipeConnector pipeConnector, TConsumer instance, IConsumerSpecification<TConsumer> specification)
     {
         if (pipeConnector == null)
@@ -58,10 +54,8 @@ public class InstanceMessageConnector<TConsumer, TMessage> :
         return pipeConnector.ConnectConsumePipe(messagePipe);
     }
 
-    /// <summary>
-    /// Creates consumer message specification.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates consumer message specification.</summary>
+    /// <returns>The created consumer message specification.</returns>
     public IConsumerMessageSpecification<TConsumer> CreateConsumerMessageSpecification()
     {
         return new ConsumerMessageSpecification<TConsumer, TMessage>();

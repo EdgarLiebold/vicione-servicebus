@@ -2,23 +2,15 @@ using System;
 
 namespace ViciOne.ServiceBus.RabbitMq.Contracts;
 
-/// <summary>
-/// Published/Returned when the prefetch count of a receive endpoint is updated
-/// </summary>
+/// <summary>Reports the new prefetch count applied to a RabbitMQ receive endpoint.</summary>
 public interface PrefetchCountUpdated
 {
-    /// <summary>
-    /// The time the prefetch count was updated
-    /// </summary>
+    /// <summary>The time the prefetch count was updated.</summary>
     DateTimeOffset Timestamp { get; }
 
-    /// <summary>
-    /// The name of the queue that was updated
-    /// </summary>
+    /// <summary>The name of the queue that was updated.</summary>
     string QueueName { get; }
 
-    /// <summary>
-    /// The new prefetch count of the receive endpoint
-    /// </summary>
+    /// <summary>The new prefetch count of the receive endpoint.</summary>
     ushort PrefetchCount { get; }
 }

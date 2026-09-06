@@ -3,31 +3,25 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Events;
 
-/// <summary>
-/// Provides a receive fault event implementation.
-/// </summary>
+/// <summary>Carries the receive fault event data.</summary>
 public class ReceiveFaultEvent :
     ReceiveFault
 {
     const int MaximumExceptionCount = 16;
 
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public ReceiveFaultEvent()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="host">The host value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="host">The host.</param>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="contentType">The content type value.</param>
-    /// <param name="faultedMessageId">The faulted message id value.</param>
-    /// <param name="faultMessageTypes">The fault message types value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <param name="contentType">The runtime content type used by the operation.</param>
+    /// <param name="faultedMessageId">The faulted message id.</param>
+    /// <param name="faultMessageTypes">The fault message types.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public ReceiveFaultEvent(HostInfo host, Exception exception, string? contentType, Guid? faultedMessageId, string[]? faultMessageTypes,
         TimeProvider? timeProvider = null)
     {
@@ -46,32 +40,18 @@ public class ReceiveFaultEvent :
             ?? [new FaultExceptionInfo(exception)];
     }
 
-    /// <summary>
-    /// Gets or sets the fault id value.
-    /// </summary>
+    /// <summary>Gets or sets the fault id.</summary>
     public Guid FaultId { get; set; }
-    /// <summary>
-    /// Gets or sets the timestamp value.
-    /// </summary>
+    /// <summary>Gets or sets the timestamp.</summary>
     public DateTimeOffset Timestamp { get; set; }
-    /// <summary>
-    /// Gets or sets the faulted message id value.
-    /// </summary>
+    /// <summary>Gets or sets the faulted message id.</summary>
     public Guid? FaultedMessageId { get; set; }
-    /// <summary>
-    /// Gets or sets the exceptions value.
-    /// </summary>
+    /// <summary>Gets or sets the exceptions.</summary>
     public ExceptionInfo[] Exceptions { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the host value.
-    /// </summary>
+    /// <summary>Gets or sets the host.</summary>
     public HostInfo Host { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the fault message types value.
-    /// </summary>
+    /// <summary>Gets or sets the fault message types.</summary>
     public string[] FaultMessageTypes { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the content type value.
-    /// </summary>
+    /// <summary>Gets or sets the content type.</summary>
     public string? ContentType { get; set; }
 }

@@ -1,36 +1,28 @@
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Defines the contract for broker topology builder.
-/// </summary>
+/// <summary>Creates de-duplicated ActiveMQ topic, queue, and consumer declarations.</summary>
 public interface IBrokerTopologyBuilder
 {
-    /// <summary>
-    /// Declares an exchange
-    /// </summary>
-    /// <param name="name">The exchange name</param>
-    /// <param name="durable">A durable exchange survives a broker restart</param>
-    /// <param name="autoDelete">Automatically delete if the broker connection is closed</param>
-    /// <returns>An entity handle used to reference the exchange in subsequent calls</returns>
+    /// <summary>Declares a topic.</summary>
+    /// <param name="name">The topic name.</param>
+    /// <param name="durable">Whether the topic persists across broker restarts.</param>
+    /// <param name="autoDelete">Whether the broker removes the topic when it is no longer used.</param>
+    /// <returns>A handle for the de-duplicated topic.</returns>
     TopicHandle CreateTopic(string name, bool durable, bool autoDelete);
 
-    /// <summary>
-    /// Declares a queue
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="durable">A durable exchange survives a broker restart</param>
-    /// <param name="autoDelete"></param>
-    /// <returns></returns>
+    /// <summary>Declares a queue.</summary>
+    /// <param name="name">The queue name.</param>
+    /// <param name="durable">Whether the queue persists across broker restarts.</param>
+    /// <param name="autoDelete">Whether the broker removes the queue when it is no longer used.</param>
+    /// <returns>A handle for the de-duplicated queue.</returns>
     QueueHandle CreateQueue(string name, bool durable, bool autoDelete);
 
-    /// <summary>
-    /// Binds an exchange to a queue, with the specified routing key and arguments
-    /// </summary>
-    /// <param name="topic"></param>
-    /// <param name="queue"></param>
-    /// <param name="selector"></param>
-    /// <param name="consumerName"></param>
-    /// <param name="shared"></param>
-    /// <returns></returns>
+    /// <summary>Creates a consumer binding from a topic to a queue or named topic subscription.</summary>
+    /// <param name="topic">The source topic handle.</param>
+    /// <param name="queue">The destination queue, or <see langword="null" /> for direct topic consumption.</param>
+    /// <param name="selector">An optional Apache NMS message selector.</param>
+    /// <param name="consumerName">An optional native subscription name.</param>
+    /// <param name="shared">Whether the named topic subscription is shared.</param>
+    /// <returns>A handle for the de-duplicated consumer binding.</returns>
     ConsumerHandle BindConsumer(TopicHandle topic, QueueHandle? queue, string? selector, string? consumerName = null, bool shared = false);
 }

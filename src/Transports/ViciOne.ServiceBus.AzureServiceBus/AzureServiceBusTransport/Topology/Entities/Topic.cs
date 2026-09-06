@@ -2,13 +2,9 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// The exchange details used to declare the exchange to Azure Service Bus
-/// </summary>
+/// <summary>Describes an Azure Service Bus topic declaration.</summary>
 public interface Topic
 {
-    /// <summary>
-    /// Gets the create topic options value.
-    /// </summary>
+    /// <summary>Gets the Azure topic declaration options.</summary>
     CreateTopicOptions CreateTopicOptions { get; }
 }

@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>
-/// An active reference to a pipe context, which is managed by an existing pipe context handle.
-/// </summary>
-/// <typeparam name="TContext"></typeparam>
+/// <summary>An active reference to a pipe context, which is managed by an existing pipe context handle.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class ActivePipeContext<TContext> :
     ActivePipeContextHandle<TContext>
     where TContext : class, PipeContext
@@ -18,8 +16,8 @@ public class ActivePipeContext<TContext> :
     /// Creates an active handle backed by the supplied context task and managed by
     /// <paramref name="contextHandle"/>.
     /// </summary>
-    /// <param name="contextHandle">The context handle of the actual context which is being used</param>
-    /// <param name="context">The actual context, which should be a completed Task</param>
+    /// <param name="contextHandle">The context handle of the actual context which is being used.</param>
+    /// <param name="context">The actual context, which should be a completed Task.</param>
     public ActivePipeContext(PipeContextHandle<TContext> contextHandle, Task<TContext> context)
     {
         _contextHandle = contextHandle;
@@ -30,8 +28,8 @@ public class ActivePipeContext<TContext> :
     /// Creates an active handle for an already available context managed by
     /// <paramref name="contextHandle"/>.
     /// </summary>
-    /// <param name="contextHandle">The context handle of the actual context which is being used</param>
-    /// <param name="context">The actual context</param>
+    /// <param name="contextHandle">The context handle of the actual context which is being used.</param>
+    /// <param name="context">The actual context.</param>
     public ActivePipeContext(PipeContextHandle<TContext> contextHandle, TContext context)
     {
         _contextHandle = contextHandle;
@@ -48,10 +46,8 @@ public class ActivePipeContext<TContext> :
         await _contextHandle.DisposeAsync().ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         // The owning context handle controls the underlying context lifetime.

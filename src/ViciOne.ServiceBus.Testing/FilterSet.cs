@@ -4,10 +4,8 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides a filter set implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Stores a unique set of filter values.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class FilterSet<T>
     where T : class
 {
@@ -16,19 +14,15 @@ public class FilterSet<T>
     FilterDelegate<T> _any = x => true;
     FilterDelegate<T> _notAny = x => false;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     protected FilterSet()
     {
         _list = new List<FilterDelegate<T>>();
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <returns>The filter set produced by the operation.</returns>
     protected FilterSet<T> Add(FilterDelegate<T> filter)
     {
         ArgumentNullException.ThrowIfNull(filter);
@@ -42,40 +36,32 @@ public class FilterSet<T>
         return this;
     }
 
-    /// <summary>
-    /// Performs the all operation.
-    /// </summary>
-    /// <param name="target">The target value.</param>
+    /// <summary>Returns every available value.</summary>
+    /// <param name="target">The target.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool All(T target)
     {
         return _all(target);
     }
 
-    /// <summary>
-    /// Performs the any operation.
-    /// </summary>
-    /// <param name="target">The target value.</param>
+    /// <summary>Selects any matching value.</summary>
+    /// <param name="target">The target.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Any(T target)
     {
         return _any(target);
     }
 
-    /// <summary>
-    /// Performs the not any operation.
-    /// </summary>
-    /// <param name="target">The target value.</param>
+    /// <summary>Determines whether no matching value exists.</summary>
+    /// <param name="target">The target.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool NotAny(T target)
     {
         return _notAny(target);
     }
 
-    /// <summary>
-    /// Performs the none operation.
-    /// </summary>
-    /// <param name="target">The target value.</param>
+    /// <summary>Selects no values.</summary>
+    /// <param name="target">The target.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool None(T target)
     {

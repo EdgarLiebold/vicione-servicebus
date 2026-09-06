@@ -2,14 +2,10 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Defines the contract for topic handle.
-/// </summary>
+/// <summary>Identifies a topic declaration created by a broker-topology builder.</summary>
 public interface TopicHandle :
     EntityHandle
 {
-    /// <summary>
-    /// Gets the topic value.
-    /// </summary>
+    /// <summary>Gets the represented topic declaration.</summary>
     Topic Topic { get; }
 }

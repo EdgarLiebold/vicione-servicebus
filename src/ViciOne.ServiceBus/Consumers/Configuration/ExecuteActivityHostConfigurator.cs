@@ -8,11 +8,9 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an execute activity host configurator implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Configures execute activity host.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class ExecuteActivityHostConfigurator<TActivity, TArguments> :
     IExecuteActivityConfigurator<TActivity, TArguments>,
     IReceiveEndpointSpecification
@@ -28,11 +26,9 @@ public class ExecuteActivityHostConfigurator<TActivity, TArguments> :
     readonly RoutingSlipConfigurator _routingSlipConfigurator;
     readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="activityFactory">The activity factory value.</param>
-    /// <param name="observer">The observer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="activityFactory">The activity factory.</param>
+    /// <param name="observer">The observer to connect.</param>
     public ExecuteActivityHostConfigurator(IExecuteActivityFactory<TActivity, TArguments> activityFactory, IActivityConfigurationObserver observer)
     {
         _activityFactory = activityFactory ?? throw new ArgumentNullException(nameof(activityFactory));
@@ -47,12 +43,10 @@ public class ExecuteActivityHostConfigurator<TActivity, TArguments> :
         _configurationObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="activityFactory">The activity factory value.</param>
-    /// <param name="compensateAddress">The compensate address value.</param>
-    /// <param name="observer">The observer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="activityFactory">The activity factory.</param>
+    /// <param name="compensateAddress">The compensate address.</param>
+    /// <param name="observer">The observer to connect.</param>
     public ExecuteActivityHostConfigurator(IExecuteActivityFactory<TActivity, TArguments> activityFactory, Uri compensateAddress,
         IActivityConfigurationObserver observer)
         : this(activityFactory, observer)
@@ -60,29 +54,21 @@ public class ExecuteActivityHostConfigurator<TActivity, TArguments> :
         _compensateAddress = compensateAddress ?? throw new ArgumentNullException(nameof(compensateAddress));
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<ExecuteActivityContext<TActivity, TArguments>> specification)
     {
         _activityPipeConfigurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Gets or sets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets or sets the concurrent message limit.</summary>
     public int? ConcurrentMessageLimit { get; set; }
 
-    /// <summary>
-    /// Gets the routing-slip message type hosted by this activity pipeline.
-    /// </summary>
+    /// <summary>Gets the message type.</summary>
     public Type MessageType => typeof(RoutingSlip);
 
-    /// <summary>
-    /// Performs the arguments operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Adds the supplied activity arguments.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void Arguments(Action<IExecuteArgumentsConfigurator<TArguments>> configure)
     {
         var configurator = new ExecuteArgumentsConfigurator<TArguments>(_executePipeConfigurator);
@@ -90,10 +76,8 @@ public class ExecuteActivityHostConfigurator<TActivity, TArguments> :
         configure?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Performs the activity arguments operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Adds arguments for the routing-slip activity.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void ActivityArguments(Action<IExecuteActivityArgumentsConfigurator<TArguments>> configure)
     {
         var configurator = new ExecuteActivityArgumentsConfigurator<TActivity, TArguments>(_activityPipeConfigurator);
@@ -101,20 +85,16 @@ public class ExecuteActivityHostConfigurator<TActivity, TArguments> :
         configure?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Performs the routing slip operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Creates or configures the routing slip.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void RoutingSlip(Action<IRoutingSlipConfigurator> configure)
     {
         configure?.Invoke(_routingSlipConfigurator);
     }
 
-    /// <summary>
-    /// Configures the activity transport-message pipeline.
-    /// </summary>
-    /// <typeparam name="TMessage">The activity transport-message type.</typeparam>
-    /// <param name="configure">The message-pipeline callback.</param>
+    /// <summary>Configures the activity transport-message pipeline.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void Message<TMessage>(Action<IActivityMessageConfigurator<TMessage>> configure)
         where TMessage : class
     {
@@ -126,20 +106,16 @@ public class ExecuteActivityHostConfigurator<TActivity, TArguments> :
         configure((IActivityMessageConfigurator<TMessage>)(object)_routingSlipConfigurator);
     }
 
-    /// <summary>
-    /// Connects activity observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects activity observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectActivityObserver(IActivityObserver observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         _configurationNotification.EnsureNotified(() =>
@@ -159,10 +135,8 @@ public class ExecuteActivityHostConfigurator<TActivity, TArguments> :
             .ToArray();
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Configure(IReceiveEndpointBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);

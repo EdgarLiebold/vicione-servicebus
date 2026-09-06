@@ -3,18 +3,14 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a rethrow error transport filter implementation.
-/// </summary>
+/// <summary>Processes rethrow error transport pipeline stages.</summary>
 public class RethrowErrorTransportFilter :
     IFilter<ExceptionReceiveContext>
 {
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
     {
         if (!context.IsFaulted)
@@ -23,10 +19,8 @@ public class RethrowErrorTransportFilter :
         context.Exception.Rethrow();
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateScope("log-fault");

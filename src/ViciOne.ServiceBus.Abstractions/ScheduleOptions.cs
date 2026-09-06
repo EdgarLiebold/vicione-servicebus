@@ -3,29 +3,27 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>
-/// Configures application-level metadata for a scheduled message.
-/// </summary>
+/// <summary>Configures application-level metadata for a scheduled message.</summary>
 public sealed record ScheduleOptions
 {
-    /// <summary>Gets the application-defined message headers.</summary>
+    /// <summary>Gets or sets the headers.</summary>
     public IReadOnlyDictionary<string, object?> Headers { get; init; } = FrozenDictionary<string, object?>.Empty;
 
-    /// <summary>Gets the maximum lifetime of the message after it becomes due.</summary>
+    /// <summary>Gets or sets the time to live.</summary>
     public TimeSpan? TimeToLive { get; init; }
 
-    /// <summary>Gets the correlation identifier.</summary>
+    /// <summary>Gets or sets the correlation id.</summary>
     public Guid? CorrelationId { get; init; }
 
-    /// <summary>Gets the conversation identifier.</summary>
+    /// <summary>Gets or sets the conversation id.</summary>
     public Guid? ConversationId { get; init; }
 
-    /// <summary>Gets the message identifier.</summary>
+    /// <summary>Gets or sets the message id.</summary>
     public Guid? MessageId { get; init; }
 
-    /// <summary>Gets the request identifier.</summary>
+    /// <summary>Gets or sets the request id.</summary>
     public Guid? RequestId { get; init; }
 
-    /// <summary>Gets the provider-neutral partition key.</summary>
+    /// <summary>Gets or sets the partition key.</summary>
     public string? PartitionKey { get; init; }
 }

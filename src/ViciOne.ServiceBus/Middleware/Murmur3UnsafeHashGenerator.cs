@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a murmur3 unsafe hash generator implementation.
-/// </summary>
+/// <summary>Generates murmur3 unsafe hash values.</summary>
 public class Murmur3UnsafeHashGenerator :
     IHashGenerator
 {
@@ -11,11 +9,9 @@ public class Murmur3UnsafeHashGenerator :
     const uint C1 = 0xcc9e2d51;
     const uint C2 = 0x1b873593;
 
-    /// <summary>
-    /// Determines whether the current value has h.
-    /// </summary>
-    /// <param name="data">The data value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Computes a hash code for the supplied value.</summary>
+    /// <param name="data">The data.</param>
+    /// <returns>The uint produced by the operation.</returns>
     public unsafe uint Hash(byte[] data)
     {
         fixed (byte* input = &data[0])
@@ -24,11 +20,9 @@ public class Murmur3UnsafeHashGenerator :
         }
     }
 
-    /// <summary>
-    /// Determines whether the current value has h.
-    /// </summary>
-    /// <param name="s">The s value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Computes a hash code for the supplied value.</summary>
+    /// <param name="s">The <c>s</c> value.</param>
+    /// <returns>The uint produced by the operation.</returns>
     public unsafe uint Hash(string s)
     {
         var data = s.ToCharArray();
@@ -38,14 +32,12 @@ public class Murmur3UnsafeHashGenerator :
         }
     }
 
-    /// <summary>
-    /// Determines whether the current value has h.
-    /// </summary>
-    /// <param name="data">The data value.</param>
-    /// <param name="offset">The offset value.</param>
-    /// <param name="count">The count value.</param>
-    /// <param name="seed">The seed value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Computes a hash code for the supplied value.</summary>
+    /// <param name="data">The data.</param>
+    /// <param name="offset">The offset.</param>
+    /// <param name="count">The count.</param>
+    /// <param name="seed">The seed.</param>
+    /// <returns>The uint produced by the operation.</returns>
     public unsafe uint Hash(byte[] data, int offset, uint count, uint seed)
     {
         fixed (byte* input = &data[offset])
@@ -58,9 +50,6 @@ public class Murmur3UnsafeHashGenerator :
     {
         var nblocks = len / 4;
         var h1 = seed;
-
-        //----------
-        // body
 
         uint k1;
         var block = (uint*)data;
@@ -77,10 +66,6 @@ public class Murmur3UnsafeHashGenerator :
             h1 = h1 * 5 + 0xe6546b64;
         }
 
-        //----------
-        // tail
-
-
         k1 = 0;
         var rem = len & 3;
         var tail = (byte*)block;
@@ -96,9 +81,6 @@ public class Murmur3UnsafeHashGenerator :
             k1 *= C2;
             h1 ^= k1;
         }
-
-        //----------
-        // finalization
 
         h1 ^= len;
 

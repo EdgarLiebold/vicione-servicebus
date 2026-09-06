@@ -6,5 +6,6 @@ namespace ViciOne.ServiceBus.Providers.Transports;
 public interface IDbMessageConsumeTopologyConfigurator : IMessageConsumeTopologyConfigurator
 {
     /// <summary>Applies the configured message topology to the endpoint topology builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     void Apply(IReceiveEndpointBrokerTopologyBuilder builder);
 }

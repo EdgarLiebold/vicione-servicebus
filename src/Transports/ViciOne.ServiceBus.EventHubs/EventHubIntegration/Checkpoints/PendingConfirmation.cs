@@ -7,19 +7,15 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.EventHubs.Checkpoints;
 
-/// <summary>
-/// Provides a pending confirmation implementation.
-/// </summary>
+/// <summary>Tracks receive-pipeline completion and checkpoint state for one Event Hubs event.</summary>
 public class PendingConfirmation :
     IPendingConfirmation
 {
     readonly TaskCompletionSource<string> _source;
     ProcessEventArgs _eventArgs;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="eventArgs">The event args value.</param>
+    /// <summary>Creates a pending confirmation for the supplied event.</summary>
+    /// <param name="eventArgs">The Azure SDK event-processing arguments.</param>
     public PendingConfirmation(ProcessEventArgs eventArgs)
     {
         _eventArgs = eventArgs;
@@ -28,61 +24,45 @@ public class PendingConfirmation :
 
     Uri Topic => new Uri($"topic:{Partition.EventHubName}");
 
-    /// <summary>
-    /// Gets the partition value.
-    /// </summary>
+    /// <summary>Gets the partition that supplied the event.</summary>
     public PartitionContext Partition => _eventArgs.Partition;
 
-    /// <summary>
-    /// Gets the offset string value.
-    /// </summary>
+    /// <summary>Gets the event's provider-defined offset.</summary>
     public string OffsetString => _eventArgs.Data.OffsetString;
 
-    /// <summary>
-    /// Gets the confirmed value.
-    /// </summary>
+    /// <summary>Gets the task that represents receive-pipeline completion.</summary>
     public Task Confirmed => _source.Task;
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
+    /// <summary>Marks the receive pipeline as successfully completed.</summary>
     public void Complete()
     {
         _source.TrySetResult(OffsetString);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Marks message consumption as failed.</summary>
+    /// <param name="exception">The receive-pipeline failure.</param>
     public void Faulted(Exception exception)
     {
         _source.TrySetException(new MessageNotConsumedException(Topic, "Message not consumed", exception));
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Marks the confirmation as failed with an argument error.</summary>
+    /// <param name="message">The error description.</param>
     public void Faulted(string message)
     {
         _source.TrySetException(new ArgumentException(message));
     }
 
-    /// <summary>
-    /// Determines whether the current value can celed.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Marks message consumption as canceled.</summary>
+    /// <param name="cancellationToken">The token that caused cancellation.</param>
     public void Canceled(CancellationToken cancellationToken)
     {
         _source.TrySetCanceled(cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the checkpoint operation.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Updates the Event Hubs checkpoint through this event.</summary>
+    /// <param name="cancellationToken">Cancels the checkpoint update.</param>
+    /// <returns>The Azure SDK operation that advances the partition checkpoint through this event.</returns>
     public Task CheckpointAsync(CancellationToken cancellationToken)
     {
         return _eventArgs.UpdateCheckpointAsync(cancellationToken);

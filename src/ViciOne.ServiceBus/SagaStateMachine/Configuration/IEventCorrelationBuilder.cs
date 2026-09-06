@@ -1,13 +1,9 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for event correlation builder.
-/// </summary>
+/// <summary>Builds event correlation components.</summary>
 public interface IEventCorrelationBuilder
 {
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the configured component.</summary>
+    /// <returns>The configured component.</returns>
     EventCorrelation Build();
 }

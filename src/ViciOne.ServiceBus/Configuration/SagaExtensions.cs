@@ -3,19 +3,14 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for saga.
-/// </summary>
+/// <summary>Provides extension methods for saga.</summary>
 public static class SagaExtensions
 {
-    /// <summary>
-    /// Configure a saga subscription
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="sagaRepository"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Configure a saga subscription.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="sagaRepository">The saga repository.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void Saga<T>(this IReceiveEndpointConfigurator configurator, ISagaRepository<T> sagaRepository,
         Action<ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga
@@ -34,13 +29,12 @@ public static class SagaExtensions
         configurator.AddEndpointSpecification(sagaConfigurator);
     }
 
-    /// <summary>
-    /// Connects the saga to the bus
-    /// </summary>
-    /// <typeparam name="T">The saga type</typeparam>
-    /// <param name="connector">The bus to which the saga is to be connected</param>
-    /// <param name="sagaRepository">The saga repository</param>
-    /// <param name="pipeSpecifications"></param>
+    /// <summary>Connects the saga to the bus.</summary>
+    /// <typeparam name="T">The saga type.</typeparam>
+    /// <param name="connector">The bus to which the saga is to be connected.</param>
+    /// <param name="sagaRepository">The saga repository.</param>
+    /// <param name="pipeSpecifications">The pipe specifications.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectSaga<T>(this IConsumePipeConnector connector, ISagaRepository<T> sagaRepository,
         params IPipeSpecification<SagaConsumeContext<T>>[] pipeSpecifications)
         where T : class, ISaga

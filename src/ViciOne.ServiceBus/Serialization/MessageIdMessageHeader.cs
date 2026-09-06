@@ -5,37 +5,29 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a message id message header implementation.
-/// </summary>
+/// <summary>Carries the message id message header value.</summary>
 public class MessageIdMessageHeader :
     Headers
 {
     readonly Guid _messageId;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageId">The message id value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="messageId">The message id.</param>
     public MessageIdMessageHeader(Guid messageId)
     {
         _messageId = messageId;
     }
 
-    /// <summary>
-    /// Gets all.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets all.</summary>
+    /// <returns>The all.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
         yield return new KeyValuePair<string, object>(nameof(MessageContext.MessageId), _messageId);
     }
 
-    /// <summary>
-    /// Attempts to get header.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Attempts to get header.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">Receives the value produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
@@ -61,13 +53,11 @@ public class MessageIdMessageHeader :
         return defaultValue;
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Retrieves the requested value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The requested value.</returns>
     public T? Get<T>(string key, T? defaultValue = null)
         where T : struct
     {
@@ -81,10 +71,8 @@ public class MessageIdMessageHeader :
         return defaultValue;
     }
 
-    /// <summary>
-    /// Gets enumerator.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets enumerator.</summary>
+    /// <returns>The enumerator.</returns>
     public IEnumerator<HeaderValue> GetEnumerator()
     {
         yield return new HeaderValue(nameof(MessageContext.MessageId), _messageId);

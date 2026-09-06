@@ -9,19 +9,18 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for saga registration.
-/// </summary>
+/// <summary>Provides extension methods for saga registration.</summary>
 public static class SagaRegistrationExtensions
 {
     /// <summary>
     /// Adds a class-based saga and allows endpoint configuration. State-machine sagas are registered
     /// through the dedicated <c>AddSagaStateMachine</c> family.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <typeparam name="T">The saga type</typeparam>
-    /// <typeparam name="TDefinition">The saga definition type</typeparam>
+    /// <typeparam name="T">The saga type.</typeparam>
+    /// <typeparam name="TDefinition">The saga definition type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The saga registration configurator produced by the operation.</returns>
     public static ISagaRegistrationConfigurator<T> AddSaga<T, TDefinition>(this IRegistrationConfigurator configurator,
         Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga
@@ -30,12 +29,10 @@ public static class SagaRegistrationExtensions
         return SagaRegistrationConfiguratorExtensions.AddSaga(configurator, typeof(TDefinition), configure);
     }
 
-    /// <summary>
-    /// Adds all sagas in the specified assemblies. If using state machine sagas, they should be added first using AddSagaStateMachines.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="filter"></param>
-    /// <param name="assemblies">The assemblies to scan for consumers</param>
+    /// <summary>Adds all sagas in the specified assemblies. If using state machine sagas, they should be added first using AddSagaStateMachines.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="assemblies">The assemblies to scan for consumers.</param>
     public static void AddSagas(this IRegistrationConfigurator configurator, Func<Type, bool> filter, params Assembly[] assemblies)
     {
         if (assemblies.Length == 0)
@@ -46,11 +43,9 @@ public static class SagaRegistrationExtensions
         AddSagas(configurator, filter, types.FindTypes(TypeClassification.Concrete | TypeClassification.Closed).ToArray());
     }
 
-    /// <summary>
-    /// Adds all sagas in the specified assemblies. If using state machine sagas, they should be added first using AddSagaStateMachines.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="assemblies">The assemblies to scan for consumers</param>
+    /// <summary>Adds all sagas in the specified assemblies. If using state machine sagas, they should be added first using AddSagaStateMachines.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="assemblies">The assemblies to scan for consumers.</param>
     public static void AddSagas(this IRegistrationConfigurator configurator, params Assembly[] assemblies)
     {
         if (assemblies.Length == 0)
@@ -65,8 +60,9 @@ public static class SagaRegistrationExtensions
     /// Adds all sagas in the specified assemblies matching the namespace. If you are using both state machine and regular sagas, be
     /// sure to call AddSagaStateMachinesFromNamespaceContaining prior to calling this one.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="filter"></param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public static void AddSagasFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool>? filter = null)
     {
         AddSagasFromNamespaceContaining(configurator, typeof(T), filter);
@@ -76,9 +72,9 @@ public static class SagaRegistrationExtensions
     /// Adds all sagas in the specified assemblies matching the namespace. If you are using both state machine and regular sagas, be
     /// sure to call AddSagaStateMachinesFromNamespaceContaining prior to calling this one.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="type">The type to use to identify the assembly and namespace to scan</param>
-    /// <param name="filter"></param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="type">The type to use to identify the assembly and namespace to scan.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public static void AddSagasFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool>? filter = null)
     {
         if (type == null)
@@ -90,22 +86,18 @@ public static class SagaRegistrationExtensions
         AddSagas(configurator, filter, FindTypesInNamespace(type, SagaRegistrationMetadata.IsSagaOrDefinition));
     }
 
-    /// <summary>
-    /// Adds the specified saga and saga definition types
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="types">The state machine types to add</param>
+    /// <summary>Adds the specified saga and saga definition types.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="types">The state machine types to add.</param>
     public static void AddSagas(this IRegistrationConfigurator configurator, params Type[] types)
     {
         AddSagas(configurator, null, types);
     }
 
-    /// <summary>
-    /// Adds the specified saga types
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="filter"></param>
-    /// <param name="types">The state machine types to add</param>
+    /// <summary>Adds the specified saga types.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="types">The state machine types to add.</param>
     public static void AddSagas(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Type[] types)
     {
         filter ??= t => true;
@@ -131,11 +123,12 @@ public static class SagaRegistrationExtensions
     /// Adds a SagaStateMachine to the registry and updates the registrar prior to registering so that the default
     /// saga registrar isn't notified.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <typeparam name="TStateMachine">The state machine type</typeparam>
-    /// <typeparam name="T">The state machine instance type</typeparam>
-    /// <typeparam name="TDefinition">The saga definition type</typeparam>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <typeparam name="T">The state machine instance type.</typeparam>
+    /// <typeparam name="TDefinition">The saga definition type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The saga registration configurator produced by the operation.</returns>
     public static ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T, TDefinition>(this IRegistrationConfigurator configurator,
         Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
         where T : class, SagaStateMachineInstance
@@ -149,8 +142,8 @@ public static class SagaRegistrationExtensions
     /// Adds SagaStateMachines to the registry, using the factory method, and updates the registrar prior to registering so that the default
     /// saga registrar isn't notified.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="assemblies">The assemblies to scan for state machines</param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="assemblies">The assemblies to scan for state machines.</param>
     public static void AddSagaStateMachines(this IRegistrationConfigurator configurator, params Assembly[] assemblies)
     {
         if (assemblies.Length == 0)
@@ -166,8 +159,9 @@ public static class SagaRegistrationExtensions
     /// Adds all saga state machines in the specified assemblies matching the namespace. If you are using both state machine and regular sagas, be
     /// sure to call AddSagasFromNamespaceContaining after calling this one.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="filter"></param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public static void AddSagaStateMachinesFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool>? filter = null)
     {
         AddSagaStateMachinesFromNamespaceContaining(configurator, typeof(T), filter);
@@ -177,9 +171,9 @@ public static class SagaRegistrationExtensions
     /// Adds all saga state machines in the specified assemblies matching the namespace. If you are using both state machine and regular sagas, be
     /// sure to call AddSagasFromNamespaceContaining after calling this one.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="type">The type to use to identify the assembly and namespace to scan</param>
-    /// <param name="filter"></param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="type">The type to use to identify the assembly and namespace to scan.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public static void AddSagaStateMachinesFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool>? filter = null)
     {
         if (type == null)
@@ -196,8 +190,8 @@ public static class SagaRegistrationExtensions
     /// Adds SagaStateMachines to the registry, using the factory method, and updates the registrar prior to registering so that the default
     /// saga registrar isn't notified.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="types">The state machine types to add</param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="types">The state machine types to add.</param>
     public static void AddSagaStateMachines(this IRegistrationConfigurator configurator, params Type[] types)
     {
         AddSagaStateMachines(configurator, null, types);
@@ -207,9 +201,9 @@ public static class SagaRegistrationExtensions
     /// Adds SagaStateMachines to the registry, using the factory method, and updates the registrar prior to registering so that the default
     /// saga registrar isn't notified.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="filter"></param>
-    /// <param name="types">The state machine types to add</param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="types">The state machine types to add.</param>
     public static void AddSagaStateMachines(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Type[] types)
     {
         filter ??= t => true;

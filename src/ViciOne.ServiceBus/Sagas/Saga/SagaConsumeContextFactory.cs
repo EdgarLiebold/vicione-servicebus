@@ -3,25 +3,21 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>
-/// Provides a saga consume context factory implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Creates saga consume context instances.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class SagaConsumeContextFactory<TContext, TSaga> :
     ISagaConsumeContextFactory<TContext, TSaga>
     where TSaga : class, ISaga
     where TContext : class
 {
-    /// <summary>
-    /// Creates saga consume context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="consumeContext">The consume context value.</param>
-    /// <param name="instance">The instance value.</param>
-    /// <param name="mode">The mode value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates saga consume context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="consumeContext">The consume context.</param>
+    /// <param name="instance">The instance.</param>
+    /// <param name="mode">The mode.</param>
+    /// <returns>A task that produces the created value.</returns>
     public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(TContext context, ConsumeContext<T> consumeContext, TSaga instance,
         SagaConsumeContextMode mode)
         where T : class

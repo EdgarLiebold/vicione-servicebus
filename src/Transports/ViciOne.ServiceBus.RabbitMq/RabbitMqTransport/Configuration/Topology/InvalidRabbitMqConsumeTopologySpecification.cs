@@ -3,39 +3,31 @@ using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Provides an invalid rabbit mq consume topology specification implementation.
-/// </summary>
+/// <summary>Retains a consume-topology validation failure without applying broker entities.</summary>
 public class InvalidRabbitMqConsumeTopologySpecification :
     IRabbitMqConsumeTopologySpecification
 {
     readonly string _key;
     readonly string _message;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="message">The message value.</param>
+    /// <summary>Creates a validation-only topology specification.</summary>
+    /// <param name="key">The configuration key associated with the failure.</param>
+    /// <param name="message">The validation failure description.</param>
     public InvalidRabbitMqConsumeTopologySpecification(string key, string message)
     {
         _key = key;
         _message = message;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the retained consume-topology validation failure.</summary>
+    /// <returns>A sequence containing the retained failure.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield return this.Failure(_key, _message);
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Leaves the broker topology unchanged because this specification represents only a validation failure.</summary>
+    /// <param name="builder">The receive-endpoint builder that remains unchanged.</param>
     public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
     {
     }

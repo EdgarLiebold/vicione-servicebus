@@ -6,17 +6,13 @@ using ViciOne.ServiceBus.Testing;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Testing;
 
-/// <summary>
-/// Provides extension methods for service bus dependency injection testing.
-/// </summary>
+/// <summary>Adds Azure Service Bus test-harness services to dependency injection.</summary>
 public static class ServiceBusDependencyInjectionTestingExtensions
 {
-    /// <summary>
-    /// Specify the test and/or the test inactivity timeouts that should be used by the test harness.
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Registers namespace-cleanup options and the test-harness hosted service.</summary>
+    /// <param name="services">The service collection to configure before registering the bus.</param>
+    /// <param name="configure">An optional callback that configures namespace cleanup.</param>
+    /// <returns>The same service collection.</returns>
     public static IServiceCollection ConfigureServiceBusTestOptions(this IServiceCollection services, Action<AzureServiceBusTestHarnessOptions>? configure)
     {
         var descriptor = services.FirstOrDefault(x => x.ServiceType == typeof(IBus));

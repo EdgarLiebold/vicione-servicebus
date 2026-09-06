@@ -3,20 +3,15 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for saga state machine receive endpoint.
-/// </summary>
+/// <summary>Provides extension methods for saga state machine receive endpoint.</summary>
 public static class SagaStateMachineReceiveEndpointExtensions
 {
-    /// <summary>
-    /// Subscribe a state machine saga to the endpoint
-    /// </summary>
-    /// <typeparam name="TInstance">The state machine instance type</typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="stateMachine">The state machine</param>
-    /// <param name="repository">The saga repository for the instances</param>
-    /// <param name="configure">Optionally configure the saga</param>
-    /// <returns></returns>
+    /// <summary>Subscribe a state machine saga to the endpoint.</summary>
+    /// <typeparam name="TInstance">The state machine instance type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="stateMachine">The state machine.</param>
+    /// <param name="repository">The saga repository for the instances.</param>
+    /// <param name="configure">Optionally configure the saga.</param>
     public static void StateMachineSaga<TInstance>(this IReceiveEndpointConfigurator configurator, SagaStateMachine<TInstance> stateMachine,
         ISagaRepository<TInstance> repository, Action<ISagaConfigurator<TInstance>>? configure = null)
         where TInstance : class, SagaStateMachineInstance
@@ -32,15 +27,13 @@ public static class SagaStateMachineReceiveEndpointExtensions
         configurator.AddEndpointSpecification(stateMachineConfigurator);
     }
 
-    /// <summary>
-    /// Connects state machine saga.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="bus">The bus value.</param>
-    /// <param name="stateMachine">The state machine value.</param>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects state machine saga.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="bus">The bus.</param>
+    /// <param name="stateMachine">The state machine.</param>
+    /// <param name="repository">The repository.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectStateMachineSaga<TInstance>(this IConsumePipeConnector bus, SagaStateMachine<TInstance> stateMachine,
         ISagaRepository<TInstance> repository, Action<ISagaConfigurator<TInstance>>? configure = null)
         where TInstance : class, SagaStateMachineInstance

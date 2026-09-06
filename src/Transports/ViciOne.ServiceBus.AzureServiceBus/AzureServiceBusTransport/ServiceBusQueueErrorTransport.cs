@@ -4,29 +4,23 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus queue error transport implementation.
-/// </summary>
+/// <summary>Copies faulted Azure Service Bus deliveries to the configured error queue.</summary>
 public class ServiceBusQueueErrorTransport :
     ServiceBusQueueMoveTransport,
     IErrorTransport
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Creates an error transport for a destination entity.</summary>
+    /// <param name="supervisor">The namespace connection supervisor.</param>
+    /// <param name="settings">The error-queue declaration and sender settings.</param>
     public ServiceBusQueueErrorTransport(IConnectionContextSupervisor supervisor, SendSettings settings)
         : base(supervisor, settings)
     {
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Copies a faulted delivery to the error queue with exception headers and a bounded time to live.</summary>
+    /// <param name="context">The failed receive context.</param>
+    /// <param name="cancellationToken">Rejects the move when cancellation has already been requested.</param>
+    /// <returns>A task that completes when the copied message has been sent.</returns>
     public Task SendAsync(ExceptionReceiveContext context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); void PreSend(ServiceBusMessage message, SendHeaders headers)

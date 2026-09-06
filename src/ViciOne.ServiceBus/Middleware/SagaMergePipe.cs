@@ -3,11 +3,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Merges the out-of-band message back into the pipe
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
-/// <typeparam name="TMessage"></typeparam>
+/// <summary>Merges the out-of-band message back into the pipe.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class SagaMergePipe<TSaga, TMessage> :
     IPipe<SagaConsumeContext<TSaga>>
     where TMessage : class
@@ -15,10 +13,8 @@ public class SagaMergePipe<TSaga, TMessage> :
 {
     readonly IPipe<SagaConsumeContext<TSaga, TMessage>> _output;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="output">The output value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="output">The output.</param>
     public SagaMergePipe(IPipe<SagaConsumeContext<TSaga, TMessage>> output)
     {
         _output = output;
@@ -36,11 +32,9 @@ public class SagaMergePipe<TSaga, TMessage> :
         _output.Probe(scope);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(SagaConsumeContext<TSaga> context)
     {
         if (context is SagaConsumeContext<TSaga, TMessage> consumerContext)

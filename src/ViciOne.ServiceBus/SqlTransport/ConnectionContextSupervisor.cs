@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>
-/// Provides a connection context supervisor implementation.
-/// </summary>
+/// <summary>Supervises the lifecycle of connection context.</summary>
 public class ConnectionContextSupervisor :
     TransportPipeContextSupervisor<ConnectionContext>,
     IConnectionContextSupervisor
@@ -17,12 +15,10 @@ public class ConnectionContextSupervisor :
     readonly ISqlHostConfiguration _hostConfiguration;
     readonly ISqlTopologyConfiguration _topologyConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
-    /// <param name="connectionContextFactory">The connection context factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="topologyConfiguration">The topology configuration.</param>
+    /// <param name="connectionContextFactory">The connection context factory.</param>
     public ConnectionContextSupervisor(ISqlHostConfiguration hostConfiguration, ISqlTopologyConfiguration topologyConfiguration,
         IPipeContextFactory<ConnectionContext> connectionContextFactory)
         : base(connectionContextFactory)
@@ -31,24 +27,20 @@ public class ConnectionContextSupervisor :
         _topologyConfiguration = topologyConfiguration;
     }
 
-    /// <summary>
-    /// Performs the normalize address operation.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Normalizes address.</summary>
+    /// <param name="address">The address.</param>
+    /// <returns>The uri produced by the operation.</returns>
     public Uri NormalizeAddress(Uri address)
     {
         return new SqlEndpointAddress(_hostConfiguration.HostAddress, address);
     }
 
-    /// <summary>
-    /// Creates publish transport.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="publishAddress">The publish address value.</param>
+    /// <summary>Creates publish transport.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="publishAddress">The publish address.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the created value.</returns>
     public Task<ISendTransport> CreatePublishTransportAsync<T>(SqlReceiveEndpointContext context, Uri? publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -68,13 +60,11 @@ public class ConnectionContextSupervisor :
             new TopicSendTransportContext(_hostConfiguration, context, supervisor, configureTopology, settings.EntityName));
     }
 
-    /// <summary>
-    /// Creates send transport.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="address">The address value.</param>
+    /// <summary>Creates send transport.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="address">The address.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the created value.</returns>
     public Task<ISendTransport> CreateSendTransportAsync(SqlReceiveEndpointContext context, Uri address, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Transports.ISendTransport>(cancellationToken); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);

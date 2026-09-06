@@ -2,9 +2,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Creates and caches a session on the connection
-/// </summary>
+/// <summary>Supervises reusable Apache NMS session contexts for a connection.</summary>
 public interface ISessionContextSupervisor :
     ITransportSupervisor<SessionContext>
 {

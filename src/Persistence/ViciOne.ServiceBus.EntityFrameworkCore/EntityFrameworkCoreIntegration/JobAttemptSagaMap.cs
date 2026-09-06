@@ -3,28 +3,22 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides a job attempt saga map implementation.
-/// </summary>
+/// <summary>Maps job-attempt saga state, its job relationship, uniqueness constraint, and optional row version.</summary>
 public class JobAttemptSagaMap :
     SagaClassMap<JobAttemptSaga>
 {
     readonly bool _optimistic;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="optimistic">The optimistic value.</param>
+    /// <summary>Initializes a job-attempt saga mapping with the selected concurrency model.</summary>
+    /// <param name="optimistic"><see langword="true"/> to map <c>RowVersion</c>; otherwise it is ignored.</param>
     public JobAttemptSagaMap(bool optimistic)
     {
         _optimistic = optimistic;
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="entity">The entity value.</param>
-    /// <param name="model">The model value.</param>
+    /// <summary>Configures job-attempt properties and the cascading job relationship.</summary>
+    /// <param name="entity">The job-attempt saga entity builder.</param>
+    /// <param name="model">The containing EF Core model builder.</param>
     protected override void Configure(EntityTypeBuilder<JobAttemptSaga> entity, ModelBuilder model)
     {
         entity.OptOutOfEntityFrameworkConventions();

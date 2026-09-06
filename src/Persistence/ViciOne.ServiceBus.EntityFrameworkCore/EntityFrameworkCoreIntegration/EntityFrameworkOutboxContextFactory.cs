@@ -10,10 +10,8 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides an entity framework outbox context factory implementation.
-/// </summary>
-/// <typeparam name="TDbContext">The t db context type.</typeparam>
+/// <summary>Creates receive-side EF Core inbox/outbox transactions with provider-specific row locking.</summary>
+/// <typeparam name="TDbContext">The db context type.</typeparam>
 public class EntityFrameworkOutboxContextFactory<TDbContext> :
     IOutboxContextFactory<TDbContext>
     where TDbContext : DbContext
@@ -25,13 +23,11 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
     readonly TimeProvider _timeProvider;
     string? _lockStatement;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="dbContext">The db context value.</param>
-    /// <param name="provider">The service provider.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes the factory for a scoped DbContext.</summary>
+    /// <param name="dbContext">The DbContext that stores inbox and outgoing-message rows.</param>
+    /// <param name="provider">The scoped service provider exposed to outbox contexts.</param>
+    /// <param name="options">The configured transaction isolation and lock-statement provider.</param>
+    /// <param name="timeProvider">The source for inbox and diagnostic timestamps.</param>
     public EntityFrameworkOutboxContextFactory(TDbContext dbContext, IServiceProvider provider, IOptions<EntityFrameworkOutboxOptions<TDbContext>> options,
         TimeProvider timeProvider)
     {
@@ -42,15 +38,13 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
         _isolationLevel = options.Value.IsolationLevel;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="next">The next value.</param>
+    /// <summary>Runs the receive pipeline within a transaction locked by message and consumer identity.</summary>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="context">The active consumption context.</param>
+    /// <param name="options">The consumer identity and receive-side outbox limits.</param>
+    /// <param name="next">The outbox pipeline to execute after the inbox row is loaded.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync<T>(ConsumeContext<T> context, OutboxConsumeOptions options, IPipe<OutboxConsumeContext<T>> next, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -150,7 +144,6 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
                 }
                 catch (Exception)
                 {
-                    //
                 }
 
                 throw;
@@ -171,10 +164,8 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds the EF Core provider identity to the pipeline probe.</summary>
+    /// <param name="context">The probe context to populate.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("outboxContextFactory");

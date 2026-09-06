@@ -5,18 +5,14 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
-/// <summary>
-/// Buffers activity side effects while preserving activity execution metadata.
-/// </summary>
+/// <summary>Buffers activity side effects while preserving activity execution metadata.</summary>
 public abstract class InMemoryOutboxActivityContextProxy :
     InMemoryOutboxConsumeContext,
     ActivityContext
 {
     readonly ActivityContext _activityContext;
 
-    /// <summary>
-    /// Initializes the outbox context for the specified activity context.
-    /// </summary>
+    /// <summary>Initializes the outbox context for the specified activity context.</summary>
     /// <param name="activityContext">The activity context.</param>
     protected InMemoryOutboxActivityContextProxy(ActivityContext activityContext)
         : base(activityContext)

@@ -2,16 +2,15 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.MessagePack;
 
-/// <summary>
-/// Provides extension methods for message pack configuration.
-/// </summary>
+/// <summary>Registers MessagePack envelope serialization with bus and receive-endpoint configurators.</summary>
 public static class MessagePackConfigurationExtensions
 {
-    /// <summary>
-    /// Use the MessagePack serializer as the default serializer for the receive endpoint
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="isDefault"></param>
+    /// <summary>Registers MessagePack for both serialization and deserialization on a receive endpoint.</summary>
+    /// <param name="configurator">The receive endpoint to configure.</param>
+    /// <param name="isDefault">
+    /// <see langword="true" /> to select MessagePack for outgoing messages and for incoming messages
+    /// without a content type; <see langword="false" /> to register it without changing either default.
+    /// </param>
     public static void UseMessagePackSerializer(this IReceiveEndpointConfigurator configurator, bool isDefault = true)
     {
         var factory = new MessagePackSerializerFactory();
@@ -20,11 +19,12 @@ public static class MessagePackConfigurationExtensions
         configurator.AddDeserializer(factory, isDefault);
     }
 
-    /// <summary>
-    /// Use the MessagePack serializer
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="isDefault"></param>
+    /// <summary>Registers MessagePack for both serialization and deserialization on the bus.</summary>
+    /// <param name="configurator">The bus to configure.</param>
+    /// <param name="isDefault">
+    /// <see langword="true" /> to select MessagePack for outgoing messages and for incoming messages
+    /// without a content type; <see langword="false" /> to register it without changing either default.
+    /// </param>
     public static void UseMessagePackSerializer(this IBusFactoryConfigurator configurator, bool isDefault = true)
     {
         var factory = new MessagePackSerializerFactory();
@@ -33,11 +33,12 @@ public static class MessagePackConfigurationExtensions
         configurator.AddDeserializer(factory, isDefault);
     }
 
-    /// <summary>
-    /// Use the MessagePack deserializer, optionally setting it as the default message deserializer if no content type is found.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="isDefault"></param>
+    /// <summary>Registers MessagePack deserialization without adding it as an outgoing serializer.</summary>
+    /// <param name="configurator">The bus to configure.</param>
+    /// <param name="isDefault">
+    /// <see langword="true" /> to use MessagePack when an incoming message has no content type;
+    /// otherwise, <see langword="false" />.
+    /// </param>
     public static void UseMessagePackDeserializer(this IBusFactoryConfigurator configurator, bool isDefault = false)
     {
         var factory = new MessagePackSerializerFactory();

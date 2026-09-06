@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>
-/// Provides an in memory receive endpoint configuration implementation.
-/// </summary>
+/// <summary>Stores and validates in memory receive endpoint configuration.</summary>
 public class InMemoryReceiveEndpointConfiguration :
     ReceiveEndpointConfiguration,
     IInMemoryReceiveEndpointConfiguration,
@@ -17,12 +15,10 @@ public class InMemoryReceiveEndpointConfiguration :
     readonly IInMemoryHostConfiguration _hostConfiguration;
     readonly string _queueName;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="endpointConfiguration">The endpoint configuration.</param>
     public InMemoryReceiveEndpointConfiguration(IInMemoryHostConfiguration hostConfiguration, string queueName,
         IInMemoryEndpointConfiguration endpointConfiguration)
         : base(hostConfiguration, endpointConfiguration)
@@ -43,29 +39,21 @@ public class InMemoryReceiveEndpointConfiguration :
 
     IInMemoryTopologyConfiguration IInMemoryEndpointConfiguration.Topology => _endpointConfiguration.Topology;
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the host address.</summary>
     public override Uri HostAddress { get; }
 
-    /// <summary>
-    /// Gets the input address value.
-    /// </summary>
+    /// <summary>Gets the input address.</summary>
     public override Uri InputAddress { get; }
 
-    /// <summary>
-    /// Creates receive endpoint context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates receive endpoint context.</summary>
+    /// <returns>The created receive endpoint context.</returns>
     public override ReceiveEndpointContext CreateReceiveEndpointContext()
     {
         return CreateInMemoryReceiveEndpointContext();
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <param name="host">The host value.</param>
+    /// <summary>Builds the configured component.</summary>
+    /// <param name="host">The host.</param>
     public void Build(IHost host)
     {
         var context = CreateInMemoryReceiveEndpointContext();
@@ -79,12 +67,10 @@ public class InMemoryReceiveEndpointConfiguration :
         ReceiveEndpoint = receiveEndpoint;
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="exchangeType">The exchange type value.</param>
-    /// <param name="routingKey">The routing key value.</param>
+    /// <summary>Binds the configured entities.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
+    /// <param name="routingKey">The routing key.</param>
     public void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default)
     {
         if (exchangeName == null)
@@ -93,12 +79,10 @@ public class InMemoryReceiveEndpointConfiguration :
         _endpointConfiguration.Topology.Consume.Bind(exchangeName, exchangeType, routingKey);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="exchangeType">The exchange type value.</param>
-    /// <param name="routingKey">The routing key value.</param>
+    /// <summary>Binds the configured entities.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
+    /// <param name="routingKey">The routing key.</param>
     public void Bind<T>(ExchangeType exchangeType, string? routingKey = default)
         where T : class
     {

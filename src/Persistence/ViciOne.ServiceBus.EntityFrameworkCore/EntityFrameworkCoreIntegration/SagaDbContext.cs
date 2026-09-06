@@ -3,30 +3,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides a saga db context implementation.
-/// </summary>
+/// <summary>Applies a declared set of saga mappings when EF Core builds the model.</summary>
 public abstract class SagaDbContext :
     DbContext
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes the saga DbContext with provider-specific EF Core options.</summary>
+    /// <param name="options">The options configured by the derived DbContext type.</param>
     protected SagaDbContext(DbContextOptions options)
         : base(options)
     {
     }
 
-    /// <summary>
-    /// Gets the configurations value.
-    /// </summary>
+    /// <summary>Gets the saga entity mappings included in this context.</summary>
     protected abstract IEnumerable<ISagaClassMap> Configurations { get; }
 
-    /// <summary>
-    /// Performs the on model creating operation.
-    /// </summary>
-    /// <param name="modelBuilder">The model builder value.</param>
+    /// <summary>Applies each configured saga mapping to the EF Core model.</summary>
+    /// <param name="modelBuilder">The model builder to configure.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

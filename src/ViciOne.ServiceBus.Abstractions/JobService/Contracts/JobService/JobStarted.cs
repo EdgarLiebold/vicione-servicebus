@@ -2,56 +2,37 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
-/// <summary>
-/// Event published when a node starts processing a job
-/// </summary>
+/// <summary>Event published when a node starts processing a job.</summary>
 public interface JobStarted
 {
-    /// <summary>
-    /// The job identifier
-    /// </summary>
+    /// <summary>The job identifier.</summary>
     Guid JobId { get; }
 
-    /// <summary>
-    /// Identifies this attempt to run the job
-    /// </summary>
+    /// <summary>Identifies this attempt to run the job.</summary>
     Guid AttemptId { get; }
 
-    /// <summary>
-    /// Zero if the job is being started for the first time, otherwise, the number of previous failures
-    /// </summary>
+    /// <summary>Zero if the job is being started for the first time, otherwise, the number of previous failures.</summary>
     int RetryAttempt { get; }
 
-    /// <summary>
-    /// The time the job was started
-    /// </summary>
+    /// <summary>The time the job was started.</summary>
     DateTimeOffset Timestamp { get; }
 }
 
 
-/// <summary>
-/// Event published when a node starts processing a job (separately from <see cref="JobStarted"/>)
-/// </summary>
+/// <summary>Event published when a node starts processing a job (separately from <see cref="JobStarted"/>).</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface JobStarted<T>
     where T : class
 {
-    /// <summary>
-    /// The job identifier
-    /// </summary>
+    /// <summary>The job identifier.</summary>
     Guid JobId { get; }
 
-    /// <summary>
-    /// Identifies this attempt to run the job
-    /// </summary>
+    /// <summary>Identifies this attempt to run the job.</summary>
     Guid AttemptId { get; }
 
-    /// <summary>
-    /// Zero if the job is being started for the first time, otherwise, the number of previous failures
-    /// </summary>
+    /// <summary>Zero if the job is being started for the first time, otherwise, the number of previous failures.</summary>
     int RetryAttempt { get; }
 
-    /// <summary>
-    /// The time the job was started
-    /// </summary>
+    /// <summary>The time the job was started.</summary>
     DateTimeOffset Timestamp { get; }
 }

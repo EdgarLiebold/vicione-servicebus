@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides an activity behavior builder implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Builds activity behavior components.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class ActivityBehaviorBuilder<TSaga> :
     IBehaviorBuilder<TSaga>
     where TSaga : class, SagaStateMachineInstance
@@ -14,24 +12,18 @@ public class ActivityBehaviorBuilder<TSaga> :
     readonly List<IStateMachineActivity<TSaga>> _activities;
     readonly Lazy<IBehavior<TSaga>> _behavior;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public ActivityBehaviorBuilder()
     {
         _activities = new List<IStateMachineActivity<TSaga>>();
         _behavior = new Lazy<IBehavior<TSaga>>(CreateBehavior);
     }
 
-    /// <summary>
-    /// Gets the behavior value.
-    /// </summary>
+    /// <summary>Gets the behavior.</summary>
     public IBehavior<TSaga> Behavior => _behavior.Value;
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="activity">The activity value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="activity">The activity.</param>
     public void Add(IStateMachineActivity<TSaga> activity)
     {
         if (_behavior.IsValueCreated)

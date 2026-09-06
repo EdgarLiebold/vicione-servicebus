@@ -9,10 +9,8 @@ using RabbitMQ.Client.Exceptions;
 using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Middleware;
-/// <summary>
-/// Configures the broker with the supplied topology once the channel is created, to ensure
-/// that the exchanges, queues, and bindings for the channel are properly configured in RabbitMQ.
-/// </summary>
+/// <summary>Declares the required exchanges, queues, and bindings once for each RabbitMQ channel context.</summary>
+/// <typeparam name="TSettings">The settings type.</typeparam>
 public class ConfigureRabbitMqTopologyFilter<TSettings> :
     IFilter<ChannelContext>
     where TSettings : class
@@ -20,23 +18,19 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
     readonly BrokerTopology _brokerTopology;
     readonly TSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="brokerTopology">The broker topology value.</param>
+    /// <summary>Creates a filter for an immutable broker-topology plan.</summary>
+    /// <param name="settings">The transport settings exposed as a channel payload.</param>
+    /// <param name="brokerTopology">The exchanges, queues, and bindings to declare.</param>
     public ConfigureRabbitMqTopologyFilter(TSettings settings, BrokerTopology brokerTopology)
     {
         _settings = settings;
         _brokerTopology = brokerTopology;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Ensures topology once per context, then invokes the remaining channel pipeline.</summary>
+    /// <param name="context">The active RabbitMQ channel context.</param>
+    /// <param name="next">The remainder of the channel pipeline.</param>
+    /// <returns>A task that completes with the remaining pipeline.</returns>
     public async Task SendAsync(ChannelContext context, IPipe<ChannelContext> next)
     {
         OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await ConfigureAsync(context, context.CancellationToken);
@@ -54,10 +48,8 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds the planned broker topology to the diagnostic probe.</summary>
+    /// <param name="context">The probe context that receives the topology.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("configureTopology");
@@ -65,12 +57,10 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
         _brokerTopology.Probe(scope);
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs or joins the one-time topology declaration for a channel context.</summary>
+    /// <param name="context">The active RabbitMQ channel context.</param>
+    /// <param name="cancellationToken">Cancellation while waiting for topology declaration.</param>
+    /// <returns>The one-time setup handle, which can evict the cached result after downstream failure.</returns>
     public async Task<OneTimeContext<ConfigureTopologyContext<TSettings>>> ConfigureAsync(ChannelContext context, CancellationToken cancellationToken)
     {
         return await context.OneTimeSetupAsync<ConfigureTopologyContext<TSettings>>(() =>
@@ -83,20 +73,16 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
     /// <summary>
     /// Declares the topology one operation at a time, and stops at the first failure.
     /// <para>
-    /// These operations share one channel, and the first error the broker answers with closes it. Run
-    /// in parallel through Task.WhenAll, the others then failed against a channel that was already
-    /// going away, and whichever of those failures the await happened to surface could hide the one
-    /// that mattered. Sequential execution means the first failure is the broker's own, every time.
+    /// All operations share one channel, and a broker error closes that channel. Sequential execution
+    /// preserves the first broker failure as the reported cause.
     /// </para>
     /// <para>
-    /// The ObjectDisposedException handler that used to sit here is gone. It replaced a local failure
-    /// with a fabricated ShutdownEventArgs claiming ShutdownInitiator.Peer — a broker answer that never
-    /// existed — and that fabrication is what the channel ownership now makes unnecessary: an operation
-    /// holds a lease, so the channel is not disposed underneath it.
+    /// Each operation holds a channel lease, preventing disposal while the declaration or binding is active.
     /// </para>
     /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="context">The context for the operation.</param>
+    /// <param name="context">The channel context used for every declaration and binding.</param>
+    /// <param name="cancellationToken">Cancellation while declaring or binding topology.</param>
+    /// <returns>A task that completes when the entire topology has been declared.</returns>
     async Task ConfigureTopologyAsync(ChannelContext context, CancellationToken cancellationToken)
     {
         foreach (var queue in _brokerTopology.Queues)

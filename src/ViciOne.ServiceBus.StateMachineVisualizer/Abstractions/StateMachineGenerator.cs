@@ -5,20 +5,14 @@ using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Visualizer.Abstractions;
 
-/// <summary>
-/// Provides a state machine generator implementation.
-/// </summary>
+/// <summary>Generates state machine values.</summary>
 public abstract class StateMachineGenerator
 {
-    /// <summary>
-    /// Defines the graph value.
-    /// </summary>
+    /// <summary>Exposes the graph used by the containing type.</summary>
     protected readonly AdjacencyGraph<Vertex, Edge<Vertex>> Graph;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="data">The data value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="data">The data.</param>
     public StateMachineGenerator(StateMachineGraph data)
     {
         Graph = CreateAdjacencyGraph(data);

@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 
-/// <summary>
-/// Provides an in memory outbox message repository implementation.
-/// </summary>
+/// <summary>Stores and retrieves in memory outbox message data.</summary>
 public class InMemoryOutboxMessageRepository
 {
     readonly Dictionary<InMemoryInboxMessageKey, InMemoryInboxMessage> _dictionary;
@@ -16,33 +14,27 @@ public class InMemoryOutboxMessageRepository
     readonly SemaphoreSlim _inUse = new SemaphoreSlim(1);
     readonly TimeProvider _timeProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public InMemoryOutboxMessageRepository(TimeProvider? timeProvider = null)
     {
         _dictionary = new Dictionary<InMemoryInboxMessageKey, InMemoryInboxMessage>(InMemoryInboxMessageKey.Comparer);
         _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    /// <summary>
-    /// Performs the mark in use operation.
-    /// </summary>
+    /// <summary>Marks in use.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task MarkInUseAsync(CancellationToken cancellationToken)
     {
         return _inUse.WaitAsync(cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the lock operation.
-    /// </summary>
-    /// <param name="messageId">The message id value.</param>
-    /// <param name="consumerId">The consumer id value.</param>
+    /// <summary>Acquires the configured lock.</summary>
+    /// <param name="messageId">The message id.</param>
+    /// <param name="consumerId">The consumer id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the lock outcome.</returns>
     public async Task<InMemoryInboxMessage> LockAsync(Guid messageId, Guid consumerId, CancellationToken cancellationToken)
     {
         var key = new InMemoryInboxMessageKey(messageId, consumerId);
@@ -58,9 +50,7 @@ public class InMemoryOutboxMessageRepository
         return existing;
     }
 
-    /// <summary>
-    /// Performs the release operation.
-    /// </summary>
+    /// <summary>Releases the owned resource.</summary>
     public void Release()
     {
         _inUse.Release();

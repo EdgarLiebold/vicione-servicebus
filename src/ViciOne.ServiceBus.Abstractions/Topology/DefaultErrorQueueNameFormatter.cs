@@ -1,23 +1,17 @@
 namespace ViciOne.ServiceBus.Topology;
 
-/// <summary>
-/// Provides a default error queue name formatter implementation.
-/// </summary>
+/// <summary>Formats default error queue name values.</summary>
 public class DefaultErrorQueueNameFormatter :
     IErrorQueueNameFormatter
 {
     const string ErrorQueueSuffix = "_error";
 
-    /// <summary>
-    /// Defines the instance value.
-    /// </summary>
+    /// <summary>Exposes the instance used by the containing type.</summary>
     public static readonly IErrorQueueNameFormatter Instance = new DefaultErrorQueueNameFormatter();
 
-    /// <summary>
-    /// Performs the format error queue name operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats error queue name.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <returns>The formatted error queue name.</returns>
     public string FormatErrorQueueName(string queueName)
     {
         return queueName + ErrorQueueSuffix;

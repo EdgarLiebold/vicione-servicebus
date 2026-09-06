@@ -3,20 +3,16 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Forks a single pipe into two pipes, which are executed concurrently
-/// </summary>
-/// <typeparam name="TContext"></typeparam>
+/// <summary>Forks a single pipe into two pipes, which are executed concurrently.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class ForkFilter<TContext> :
     IFilter<TContext>
     where TContext : class, PipeContext
 {
     readonly IPipe<TContext> _pipe;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     public ForkFilter(IPipe<TContext> pipe)
     {
         _pipe = pipe ?? throw new ArgumentNullException(nameof(pipe));

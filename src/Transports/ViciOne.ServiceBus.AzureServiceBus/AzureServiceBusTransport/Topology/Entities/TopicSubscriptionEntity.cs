@@ -4,9 +4,7 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a topic subscription entity implementation.
-/// </summary>
+/// <summary>Represents a topic subscription that forwards matching messages to another topic.</summary>
 public class TopicSubscriptionEntity :
     TopicSubscription,
     TopicSubscriptionHandle
@@ -15,16 +13,14 @@ public class TopicSubscriptionEntity :
     readonly TopicEntity _source;
     readonly SubscriptionEntity _subscription;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="subscriptionId">The subscription id value.</param>
-    /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="createSubscriptionOptions">The create subscription options value.</param>
-    /// <param name="rule">The rule value.</param>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Creates a topology relationship from a source topic to a destination topic.</summary>
+    /// <param name="id">The relationship's topology-local identifier.</param>
+    /// <param name="subscriptionId">The forwarding subscription's topology-local identifier.</param>
+    /// <param name="source">The source topic.</param>
+    /// <param name="destination">The forwarding destination topic.</param>
+    /// <param name="createSubscriptionOptions">The Azure forwarding subscription declaration options.</param>
+    /// <param name="rule">The optional initial subscription rule.</param>
+    /// <param name="filter">The optional broker rule filter.</param>
     public TopicSubscriptionEntity(long id, long subscriptionId, TopicEntity source, TopicEntity destination,
         CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions? rule = null, RuleFilter? filter = null)
     {
@@ -34,41 +30,25 @@ public class TopicSubscriptionEntity :
         _subscription = new SubscriptionEntity(subscriptionId, source, createSubscriptionOptions, rule, filter);
     }
 
-    /// <summary>
-    /// Gets the entity comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that considers complete source, destination, and subscription declarations.</summary>
     public static IEqualityComparer<TopicSubscriptionEntity> EntityComparer { get; } = new TopicSubscriptionEntityEqualityComparer();
-    /// <summary>
-    /// Gets the name comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that considers source, destination, and subscription names.</summary>
     public static IEqualityComparer<TopicSubscriptionEntity> NameComparer { get; } = new NameEqualityComparer();
 
-    /// <summary>
-    /// Gets the source value.
-    /// </summary>
+    /// <summary>Gets the source topic.</summary>
     public Topic Source => _source.Topic;
-    /// <summary>
-    /// Gets the destination value.
-    /// </summary>
+    /// <summary>Gets the forwarding destination topic.</summary>
     public Topic Destination => _destination.Topic;
-    /// <summary>
-    /// Gets the subscription value.
-    /// </summary>
+    /// <summary>Gets the forwarding subscription.</summary>
     public Subscription Subscription => _subscription.Subscription;
 
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the relationship's topology-local identifier.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the topic subscription value.
-    /// </summary>
+    /// <summary>Gets this entity through the read-only topic-subscription contract.</summary>
     public TopicSubscription TopicSubscription => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the source topic, destination topic, and forwarding subscription for diagnostics.</summary>
+    /// <returns>A diagnostic string containing source, destination, and subscription names.</returns>
     public override string ToString()
     {
         return string.Join(", ",

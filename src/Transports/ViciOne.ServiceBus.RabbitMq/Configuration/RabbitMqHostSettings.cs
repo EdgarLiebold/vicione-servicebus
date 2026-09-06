@@ -9,160 +9,108 @@ using ViciOne.ServiceBus.RabbitMq.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Settings to configure a RabbitMQ host explicitly without requiring the fluent interface
-/// </summary>
+/// <summary>Settings to configure a RabbitMQ host explicitly without requiring the fluent interface.</summary>
 public interface RabbitMqHostSettings
 {
-    /// <summary>
-    /// The RabbitMQ host to connect to (should be a valid hostname)
-    /// </summary>
+    /// <summary>The RabbitMQ host to connect to (should be a valid hostname).</summary>
     string? Host { get; }
 
-    /// <summary>
-    /// The RabbitMQ port to connect
-    /// </summary>
+    /// <summary>The RabbitMQ AMQP port.</summary>
     int Port { get; }
 
-    /// <summary>
-    /// The virtual host for the connection
-    /// </summary>
+    /// <summary>The virtual host for the connection.</summary>
     string? VirtualHost { get; }
 
-    /// <summary>
-    /// The Username for connecting to the host
-    /// </summary>
+    /// <summary>The user name passed to RabbitMQ when password authentication is used.</summary>
     string? Username { get; }
 
-    /// <summary>
-    /// The password for connection to the host
-    /// MAYBE this should be a SecureString instead of a regular string
-    /// </summary>
+    /// <summary>Gets the password passed to the RabbitMQ client when username-and-password authentication is used.</summary>
     string? Password { get; }
 
-    /// <summary>
-    /// The heartbeat interval (in seconds) to keep the host connection alive
-    /// </summary>
+    /// <summary>The requested connection heartbeat interval.</summary>
     TimeSpan Heartbeat { get; }
 
-    /// <summary>
-    /// True if SSL is required
-    /// </summary>
+    /// <summary>Indicates whether the connection uses TLS.</summary>
     bool Ssl { get; }
 
-    /// <summary>
-    /// TLS protocol selection. The default is <see cref="SslProtocols.None" />, allowing the operating system to negotiate enabled secure protocols.
-    /// </summary>
+    /// <summary>TLS protocol selection. The default is <see cref="SslProtocols.None" />, allowing the operating system to negotiate enabled secure protocols.</summary>
     SslProtocols SslProtocol { get; }
 
-    /// <summary>
-    /// The server name specified on the certificate for the RabbitMQ server
-    /// </summary>
+    /// <summary>The server name specified on the certificate for the RabbitMQ server.</summary>
     string? SslServerName { get; }
 
-    /// <summary>
-    /// The acceptable policy errors for the SSL connection
-    /// </summary>
+    /// <summary>The server-certificate policy errors the TLS connection is allowed to ignore.</summary>
     SslPolicyErrors AcceptablePolicyErrors { get; }
 
-    /// <summary>
-    /// The path to the client certificate if client certificate authentication is used
-    /// </summary>
+    /// <summary>The path to the client certificate if client certificate authentication is used.</summary>
     string? ClientCertificatePath { get; }
 
-    /// <summary>
-    /// The passphrase for the client certificate found using the <see cref="ClientCertificatePath" />, not required if <see cref="ClientCertificate" /> is populated
-    /// </summary>
+    /// <summary>The passphrase for the client certificate found using the <see cref="ClientCertificatePath" />, not required if <see cref="ClientCertificate" /> is populated.</summary>
     string? ClientCertificatePassphrase { get; }
 
     /// <summary>
     /// A certificate to use for client certificate authentication, if not set then the <see cref="ClientCertificatePath" /> and
-    /// <see cref="ClientCertificatePassphrase" /> will be used
+    /// <see cref="ClientCertificatePassphrase" /> will be used.
     /// </summary>
     X509Certificate? ClientCertificate { get; }
 
-    /// <summary>
-    /// Whether the client certificate should be used for logging in to RabbitMQ, ignoring any username and password set
-    /// </summary>
+    /// <summary>Whether the client certificate should be used for logging in to RabbitMQ, ignoring any username and password set.</summary>
     /// <remarks>
     /// RabbitMQ must be configured correctly for this to work, including enabling the rabbitmq_auth_mechanism_ssl plugin
     /// </remarks>
     bool UseClientCertificateAsAuthenticationIdentity { get; }
 
     /// <summary>
-    /// An optional client specified SSL certificate selection callback.  If this is not specified,
+    /// An optional client-certificate selection callback. If this is not specified,
     /// the first valid certificate found will be used.
     /// </summary>
     LocalCertificateSelectionCallback? CertificateSelectionCallback { get; set; }
 
     /// <summary>
-    /// An optional client specified SSL certificate validation callback.  If this is not specified,
+    /// An optional server-certificate validation callback. If this is not specified,
     /// the default callback will be used in conjunction with the <see cref="P:RabbitMQ.Client.SslOption.AcceptablePolicyErrors" /> property to
     /// determine if the remote server certificate is valid.
     /// </summary>
     RemoteCertificateValidationCallback? CertificateValidationCallback { get; set; }
 
-    /// <summary>
-    /// The host name selector if used to choose which server to connect
-    /// </summary>
+    /// <summary>The optional endpoint resolver used to select a cluster node for each connection attempt.</summary>
     IRabbitMqEndpointResolver? EndpointResolver { get; }
 
-    /// <summary>
-    /// The client-provided name for the connection (displayed in RabbitMQ admin panel)
-    /// </summary>
+    /// <summary>The client-provided name for the connection (displayed in RabbitMQ admin panel).</summary>
     string? ClientProvidedName { get; }
 
-    /// <summary>
-    /// Returns the host address
-    /// </summary>
+    /// <summary>Gets the normalized RabbitMQ transport address.</summary>
     Uri HostAddress { get; }
 
-    /// <summary>
-    /// True if the publisher should confirm acceptance of messages
-    /// </summary>
+    /// <summary>Indicates whether RabbitMQ publisher confirmations are enabled.</summary>
     bool PublisherConfirmation { get; }
 
-    /// <summary>
-    /// The maximum number of channels for the connection
-    /// </summary>
+    /// <summary>The maximum number of channels for the connection.</summary>
     ushort RequestedChannelMax { get; }
 
-    /// <summary>
-    /// The requested connection timeout, in milliseconds
-    /// </summary>
+    /// <summary>The requested connection timeout, in milliseconds.</summary>
     TimeSpan RequestedConnectionTimeout { get; }
 
-    /// <summary>
-    /// Batch settings used for the batch publish
-    /// </summary>
+    /// <summary>Gets the client-side publish-batch settings.</summary>
     BatchSettings BatchSettings { get; }
 
-    /// <summary>
-    /// The confirmation timeout for RPC commands via the channel
-    /// </summary>
+    /// <summary>Gets the timeout for RabbitMQ client RPC continuations.</summary>
     TimeSpan ContinuationTimeout { get; }
 
-    /// <summary>
-    /// Configure the Max message size for RabbitMQ.Client
-    /// </summary>
+    /// <summary>Gets the optional maximum inbound message-body size accepted by RabbitMQ.Client.</summary>
     uint? MaxMessageSize { get; }
 
-    /// <summary>
-    /// The credential provider, overriding the default username/password credentials
-    /// </summary>
+    /// <summary>The credential provider, overriding the default username/password credentials.</summary>
     ICredentialsProvider? CredentialsProvider { get; }
 
-    /// <summary>
-    /// The requested maximum frame size
-    /// </summary>
+    /// <summary>The requested maximum frame size.</summary>
     uint? RequestedFrameMax { get; }
 
     /// <summary>
-    /// Called prior to the connection factory being used to connect, so that any settings can be updated.
-    /// Typically this would be the username/password in response to an expired token, etc.
+    /// Refreshes mutable connection-factory settings immediately before a connection attempt.
     /// </summary>
-    /// <param name="connectionFactory"></param>
-    /// <returns></returns>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="connectionFactory">The RabbitMQ client factory that will create the connection.</param>
+    /// <param name="cancellationToken">Cancellation checked before invoking the refresh callback.</param>
+    /// <returns>A task that completes when the factory settings have been refreshed.</returns>
     Task RefreshAsync(ConnectionFactory connectionFactory, CancellationToken cancellationToken = default);
 }

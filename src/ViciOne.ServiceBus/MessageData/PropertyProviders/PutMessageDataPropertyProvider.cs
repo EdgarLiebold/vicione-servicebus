@@ -8,11 +8,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.MessageData.PropertyProviders;
 
-/// <summary>
-/// Provides a put message data property provider implementation.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
-/// <typeparam name="TValue">The t value type.</typeparam>
+/// <summary>Provides put message data property services.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TValue">The value stored by the member.</typeparam>
 public class PutMessageDataPropertyProvider<TInput, TValue> :
     IPropertyProvider<TInput, MessageData<TValue>>
     where TInput : class
@@ -21,12 +19,10 @@ public class PutMessageDataPropertyProvider<TInput, TValue> :
     readonly IMessageDataRepository _repository;
     readonly MessageDataPolicy _policy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="inputProvider">The input provider value.</param>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="policy">The policy value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="inputProvider">The input provider.</param>
+    /// <param name="repository">The repository.</param>
+    /// <param name="policy">The policy.</param>
     public PutMessageDataPropertyProvider(
         IPropertyProvider<TInput, MessageData<TValue>> inputProvider,
         IMessageDataRepository repository,
@@ -37,13 +33,11 @@ public class PutMessageDataPropertyProvider<TInput, TValue> :
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
     }
 
-    /// <summary>
-    /// Gets property.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Gets property.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<MessageData<TValue>?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {

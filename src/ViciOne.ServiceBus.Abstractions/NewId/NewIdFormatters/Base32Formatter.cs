@@ -6,9 +6,7 @@ using System.Runtime.Intrinsics.X86;
 
 namespace ViciOne.ServiceBus.NewIdFormatters;
 
-/// <summary>
-/// Provides a base32 formatter implementation.
-/// </summary>
+/// <summary>Formats base32 values.</summary>
 public class Base32Formatter :
     INewIdFormatter
 {
@@ -20,20 +18,16 @@ public class Base32Formatter :
     readonly bool _isCustom;
     readonly Vector256<byte> _lower;
     readonly Vector256<byte> _upper;
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="upperCase">The upper case value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="upperCase">The upper case.</param>
     public Base32Formatter(bool upperCase = false)
     {
         _chars = upperCase ? UpperCaseChars : LowerCaseChars;
         _isUpperCase = upperCase;
     }
 
-    /// <summary>
-    /// Creates a formatter with a custom 32-character alphabet.
-    /// </summary>
-    /// <param name="chars">The alphabet ordered by encoded value.</param>
+    /// <summary>Creates a formatter with a custom 32-character alphabet.</summary>
+    /// <param name="chars">The chars.</param>
     /// <exception cref="ArgumentNullException"><paramref name="chars" /> is null.</exception>
     /// <exception cref="ArgumentException"><paramref name="chars" /> does not contain exactly 32 characters.</exception>
     public Base32Formatter(string chars)
@@ -56,11 +50,9 @@ public class Base32Formatter :
         }
     }
 
-    /// <summary>
-    /// Formats a canonical identifier representation.
-    /// </summary>
-    /// <param name="bytes">The canonical 16-byte identifier representation.</param>
-    /// <returns>The Base32-encoded identifier.</returns>
+    /// <summary>Formats a canonical identifier representation.</summary>
+    /// <param name="bytes">The bytes.</param>
+    /// <returns>The formatted value.</returns>
     /// <exception cref="ArgumentException"><paramref name="bytes" /> does not contain exactly 16 bytes.</exception>
     public string Format(ReadOnlySpan<byte> bytes)
     {
@@ -102,7 +94,6 @@ public class Base32Formatter :
     {
         for (var i = count - 1; i >= 0; i--)
         {
-            //30, 26, 25, 7, 24, 31, 4, 10, 23, 1, 2, 9, 17, 11, 4, 23, 7, 9, 16, 16, 15, 8, 16, 19, 2, 4,
             var index = (int)(value % 32);
             buffer[offset + i] = chars[index];
             value /= 32;

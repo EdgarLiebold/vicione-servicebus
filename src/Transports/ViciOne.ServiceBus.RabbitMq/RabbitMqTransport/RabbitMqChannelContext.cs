@@ -12,9 +12,7 @@ using RabbitMqPublishException = RabbitMQ.Client.Exceptions.PublishException;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq channel context implementation.
-/// </summary>
+/// <summary>Owns one RabbitMQ channel and leases it to transport operations until disposal.</summary>
 public class RabbitMqChannelContext :
     ScopePipeContext,
     ChannelContext,
@@ -26,22 +24,19 @@ public class RabbitMqChannelContext :
     readonly object _faultStopLock = new object();
 
     /// <summary>
-    /// Owns the channel. Every operation below runs under a lease from it, so the channel is not
-    /// disposed while one is still unwinding — which is what used to replace the broker's answer
-    /// with an ObjectDisposedException.
+    /// Owns the channel. Every operation below runs under a lease so disposal cannot begin until
+    /// the last in-flight channel operation has finished unwinding.
     /// </summary>
     readonly TransportLifetime _lifetime;
 
     Task? _faultStopTask;
     CancellationTokenSource? _tokenSource;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionContext">The connection context value.</param>
-    /// <param name="channel">The channel value.</param>
-    /// <param name="agent">The agent value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a lifetime-managed channel context linked to connection and caller cancellation.</summary>
+    /// <param name="connectionContext">The owning RabbitMQ connection context.</param>
+    /// <param name="channel">The RabbitMQ client channel.</param>
+    /// <param name="agent">The transport agent stopped after an unrecoverable channel fault.</param>
+    /// <param name="cancellationToken">Cancellation linked to the channel context.</param>
     public RabbitMqChannelContext(ConnectionContext connectionContext, IChannel channel, IAgent agent, CancellationToken cancellationToken)
         : base(connectionContext)
     {
@@ -55,42 +50,34 @@ public class RabbitMqChannelContext :
         _tokenSource = CancellationTokenSource.CreateLinkedTokenSource(connectionContext.CancellationToken, cancellationToken);
     }
 
-    /// <summary>
-    /// Gets the cancellation token value.
-    /// </summary>
+    /// <summary>Gets the token that combines connection and channel-agent cancellation.</summary>
     public override CancellationToken CancellationToken => _tokenSource?.Token ?? _cancellationToken;
 
-    /// <summary>
-    /// Gets the channel value.
-    /// </summary>
+    /// <summary>Gets the owned RabbitMQ channel.</summary>
     public IChannel Channel => _channel;
 
     internal TransportLifetime Lifetime => _lifetime;
 
-    /// <summary>
-    /// Gets the connection context value.
-    /// </summary>
+    /// <summary>Gets the connection context that created the channel.</summary>
     public ConnectionContext ConnectionContext { get; }
 
-    /// <summary>
-    /// Performs the basic publish operation.
-    /// </summary>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="routingKey">The routing key value.</param>
-    /// <param name="mandatory">The mandatory value.</param>
-    /// <param name="basicProperties">The basic properties value.</param>
-    /// <param name="body">The body value.</param>
-    /// <param name="awaitAck">The await ack value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Publishes through the active RabbitMQ channel.</summary>
+    /// <param name="exchange">The destination exchange.</param>
+    /// <param name="routingKey">The publish routing key.</param>
+    /// <param name="mandatory">Whether RabbitMQ must return an unroutable message.</param>
+    /// <param name="basicProperties">The AMQP message properties.</param>
+    /// <param name="body">The serialized message body.</param>
+    /// <param name="awaitAck"><see langword="true" /> to await the RabbitMQ client publish task, including publisher confirmation when enabled; otherwise, to return after initiating the client publish.</param>
+    /// <param name="cancellationToken">Cancellation for the client publish.</param>
+    /// <returns>
+    /// A task that follows the RabbitMQ client publish operation when <paramref name="awaitAck" /> is <see langword="true" />;
+    /// otherwise, a completed task while the channel lease continues to observe the client publish internally.
+    /// </returns>
     public Task BasicPublishAsync(string exchange, string routingKey, bool mandatory, BasicProperties basicProperties, byte[] body, bool awaitAck,
         CancellationToken cancellationToken)
     {
-        // The lease is held until the client's own task finishes, not until this method returns.
-        // With publisher confirms off the caller does not wait for the broker, but the client still
-        // does — and releasing before that would let the channel be disposed underneath it, which is
-        // the very race this ownership exists to prevent. The task is observed on both paths, so a
-        // publish nobody waits for still cannot become an unobserved exception.
+        // The lease follows the client publish task even when the caller opts out of publisher-confirm waiting.
+        // Both paths observe completion so disposal cannot overtake the in-flight channel operation.
         var lease = Lease();
 
         Task publish;
@@ -136,15 +123,13 @@ public class RabbitMqChannelContext :
     }
 
 
-    /// <summary>
-    /// Performs the exchange bind operation.
-    /// </summary>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="source">The source value.</param>
-    /// <param name="routingKey">The routing key value.</param>
-    /// <param name="arguments">The arguments value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an exchange-to-exchange binding under a channel lease.</summary>
+    /// <param name="destination">The destination exchange.</param>
+    /// <param name="source">The source exchange.</param>
+    /// <param name="routingKey">The binding routing key.</param>
+    /// <param name="arguments">The RabbitMQ binding arguments.</param>
+    /// <param name="cancellationToken">Cancellation for the broker command.</param>
+    /// <returns>A task that completes when RabbitMQ accepts the binding.</returns>
     public async Task ExchangeBindAsync(string destination, string source, string routingKey, IDictionary<string, object?> arguments,
         CancellationToken cancellationToken)
     {
@@ -153,16 +138,14 @@ public class RabbitMqChannelContext :
         await _channel.ExchangeBindAsync(destination, source, routingKey, arguments, false, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the exchange declare operation.
-    /// </summary>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="type">The type value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="arguments">The arguments value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Declares an exchange under a channel lease.</summary>
+    /// <param name="exchange">The exchange name.</param>
+    /// <param name="type">The RabbitMQ exchange type.</param>
+    /// <param name="durable">Whether the exchange survives broker restarts.</param>
+    /// <param name="autoDelete">Whether RabbitMQ deletes the exchange when unused.</param>
+    /// <param name="arguments">The exchange declaration arguments.</param>
+    /// <param name="cancellationToken">Cancellation for the broker command.</param>
+    /// <returns>A task that completes when RabbitMQ accepts the declaration.</returns>
     public async Task ExchangeDeclareAsync(string exchange, string type, bool durable, bool autoDelete, IDictionary<string, object?> arguments,
         CancellationToken cancellationToken)
     {
@@ -171,12 +154,10 @@ public class RabbitMqChannelContext :
         await _channel.ExchangeDeclareAsync(exchange, type, durable, autoDelete, arguments, false, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the exchange declare passive operation.
-    /// </summary>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Passively verifies an exchange under a channel lease.</summary>
+    /// <param name="exchange">The exchange name.</param>
+    /// <param name="cancellationToken">Cancellation for the broker command.</param>
+    /// <returns>A task that completes when RabbitMQ confirms the exchange exists.</returns>
     public async Task ExchangeDeclarePassiveAsync(string exchange, CancellationToken cancellationToken)
     {
         using var lease = Lease();
@@ -184,15 +165,13 @@ public class RabbitMqChannelContext :
         await _channel.ExchangeDeclarePassiveAsync(exchange, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the queue bind operation.
-    /// </summary>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="routingKey">The routing key value.</param>
-    /// <param name="arguments">The arguments value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an exchange-to-queue binding under a channel lease.</summary>
+    /// <param name="queue">The destination queue.</param>
+    /// <param name="exchange">The source exchange.</param>
+    /// <param name="routingKey">The binding routing key.</param>
+    /// <param name="arguments">The RabbitMQ binding arguments.</param>
+    /// <param name="cancellationToken">Cancellation for the broker command.</param>
+    /// <returns>A task that completes when RabbitMQ accepts the binding.</returns>
     public async Task QueueBindAsync(string queue, string exchange, string routingKey, IDictionary<string, object?> arguments, CancellationToken cancellationToken)
     {
         using var lease = Lease();
@@ -200,16 +179,14 @@ public class RabbitMqChannelContext :
         await _channel.QueueBindAsync(queue, exchange, routingKey, arguments, false, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the queue declare operation.
-    /// </summary>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="exclusive">The exclusive value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="arguments">The arguments value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Declares a queue under a channel lease.</summary>
+    /// <param name="queue">The queue name, or an empty string for a broker-generated name.</param>
+    /// <param name="durable">Whether the queue survives broker restarts.</param>
+    /// <param name="exclusive">Whether the queue belongs exclusively to this connection.</param>
+    /// <param name="autoDelete">Whether RabbitMQ deletes the queue when unused.</param>
+    /// <param name="arguments">The queue declaration arguments.</param>
+    /// <param name="cancellationToken">Cancellation for the broker command.</param>
+    /// <returns>The broker's queue declaration result.</returns>
     public async Task<QueueDeclareOk> QueueDeclareAsync(string queue, bool durable, bool exclusive, bool autoDelete,
         IDictionary<string, object?> arguments, CancellationToken cancellationToken)
     {
@@ -218,12 +195,10 @@ public class RabbitMqChannelContext :
         return await _channel.QueueDeclareAsync(queue, durable, exclusive, autoDelete, arguments, false, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the queue declare passive operation.
-    /// </summary>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Passively verifies a queue under a channel lease.</summary>
+    /// <param name="queue">The queue name.</param>
+    /// <param name="cancellationToken">Cancellation for the broker command.</param>
+    /// <returns>The broker's passive queue declaration result.</returns>
     public async Task<QueueDeclareOk> QueueDeclarePassiveAsync(string queue, CancellationToken cancellationToken)
     {
         using var lease = Lease();
@@ -231,12 +206,10 @@ public class RabbitMqChannelContext :
         return await _channel.QueueDeclarePassiveAsync(queue, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the queue purge operation.
-    /// </summary>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Removes every pending message from the queue.</summary>
+    /// <param name="queue">The queue name.</param>
+    /// <param name="cancellationToken">Cancellation for the broker command.</param>
+    /// <returns>The number of messages removed.</returns>
     public async Task<uint> QueuePurgeAsync(string queue, CancellationToken cancellationToken)
     {
         using var lease = Lease();
@@ -244,14 +217,12 @@ public class RabbitMqChannelContext :
         return await _channel.QueuePurgeAsync(queue, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the basic qos operation.
-    /// </summary>
-    /// <param name="prefetchSize">The prefetch size value.</param>
-    /// <param name="prefetchCount">The prefetch count value.</param>
-    /// <param name="global">The global value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Applies the configured RabbitMQ quality-of-service limits.</summary>
+    /// <param name="prefetchSize">The AMQP prefetch-size limit.</param>
+    /// <param name="prefetchCount">The maximum number of unacknowledged deliveries.</param>
+    /// <param name="global">Whether the limit applies to every consumer on the channel.</param>
+    /// <param name="cancellationToken">Cancellation for the broker command.</param>
+    /// <returns>A task that completes when RabbitMQ applies the limit.</returns>
     public async Task BasicQosAsync(uint prefetchSize, ushort prefetchCount, bool global, CancellationToken cancellationToken)
     {
         using var lease = Lease();
@@ -259,35 +230,28 @@ public class RabbitMqChannelContext :
         await _channel.BasicQosAsync(prefetchSize, prefetchCount, global, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the basic ack operation.
-    /// </summary>
-    /// <param name="deliveryTag">The delivery tag value.</param>
-    /// <param name="multiple">The multiple value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Acknowledges the selected RabbitMQ delivery.</summary>
+    /// <param name="deliveryTag">The channel-scoped delivery tag.</param>
+    /// <param name="multiple">Whether to acknowledge this tag and every preceding unacknowledged delivery.</param>
+    /// <param name="cancellationToken">Cancellation for writing the acknowledgement.</param>
+    /// <returns>A task-like value that completes after the acknowledgement is written.</returns>
     public async ValueTask BasicAckAsync(ulong deliveryTag, bool multiple, CancellationToken cancellationToken)
     {
-        // Preserve the broker or transport exception so the caller receives the authoritative
-        // acknowledgement failure.
+        // The leased call propagates the authoritative broker or transport acknowledgement failure.
         using var lease = Lease();
 
         await _channel.BasicAckAsync(deliveryTag, multiple, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the basic nack operation.
-    /// </summary>
-    /// <param name="deliveryTag">The delivery tag value.</param>
-    /// <param name="multiple">The multiple value.</param>
-    /// <param name="requeue">The requeue value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Rejects the selected RabbitMQ delivery.</summary>
+    /// <param name="deliveryTag">The channel-scoped delivery tag.</param>
+    /// <param name="multiple">Whether to reject this tag and every preceding unacknowledged delivery.</param>
+    /// <param name="requeue">Whether RabbitMQ should place rejected deliveries back on their queues.</param>
+    /// <param name="cancellationToken">Cancellation for writing the rejection.</param>
+    /// <returns>A task that completes after the negative acknowledgement is written, or immediately if the channel is already closed.</returns>
     public async Task BasicNackAsync(ulong deliveryTag, bool multiple, bool requeue, CancellationToken cancellationToken)
     {
-        // A nack on a channel that is finished is not an error: shutting down, the broker requeues
-        // the prefetched messages anyway. So the refused lease is answered with silence here, unlike
-        // an acknowledgement, where the caller has to learn that it did not happen.
+        // Closing a channel requeues its outstanding unacknowledged deliveries, leaving nothing to nack.
         if (!_lifetime.TryLease(out var lease))
             return;
 
@@ -303,17 +267,15 @@ public class RabbitMqChannelContext :
         }
     }
 
-    /// <summary>
-    /// Performs the basic consume operation.
-    /// </summary>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="noAck">The no ack value.</param>
-    /// <param name="exclusive">The exclusive value.</param>
-    /// <param name="arguments">The arguments value.</param>
-    /// <param name="consumer">The consumer value.</param>
-    /// <param name="consumerTag">The consumer tag value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Starts the configured RabbitMQ consumer.</summary>
+    /// <param name="queue">The source queue name.</param>
+    /// <param name="noAck">Whether RabbitMQ should consider deliveries acknowledged immediately.</param>
+    /// <param name="exclusive">Whether the broker permits only this consumer on the queue.</param>
+    /// <param name="arguments">The consumer arguments.</param>
+    /// <param name="consumer">The callback receiver for deliveries and lifecycle events.</param>
+    /// <param name="consumerTag">The requested consumer tag, or an empty string for a generated tag.</param>
+    /// <param name="cancellationToken">Cancellation for starting the consumer.</param>
+    /// <returns>The consumer tag assigned by RabbitMQ.</returns>
     public async Task<string> BasicConsumeAsync(string queue, bool noAck, bool exclusive, IDictionary<string, object?> arguments,
         IAsyncBasicConsumer consumer, string consumerTag, CancellationToken cancellationToken)
     {
@@ -323,12 +285,10 @@ public class RabbitMqChannelContext :
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the basic cancel operation.
-    /// </summary>
-    /// <param name="consumerTag">The consumer tag value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Cancels the active RabbitMQ consumer.</summary>
+    /// <param name="consumerTag">The tag of the consumer to cancel.</param>
+    /// <param name="cancellationToken">Cancellation for the broker command.</param>
+    /// <returns>A task that completes when the cancel command has been sent.</returns>
     public async Task BasicCancelAsync(string consumerTag, CancellationToken cancellationToken)
     {
         using var lease = Lease();
@@ -336,11 +296,9 @@ public class RabbitMqChannelContext :
         await _channel.BasicCancelAsync(consumerTag, false, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the notify faulted operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="inputAddress">The input address value.</param>
+    /// <summary>Schedules transport-agent shutdown after an unrecoverable channel fault.</summary>
+    /// <param name="exception">The channel failure already reported by the caller.</param>
+    /// <param name="inputAddress">The receive endpoint address affected by the fault.</param>
     public void NotifyFaulted(Exception exception, Uri inputAddress)
     {
         lock (_faultStopLock)
@@ -365,13 +323,10 @@ public class RabbitMqChannelContext :
     }
 
     /// <summary>
-    /// Claims the channel for one operation, or says why it is gone.
-    /// <para>
-    /// The refusal carries the broker's own close reason when there is one. That is what keeping it
-    /// is for: a caller arriving after the channel closed learns what closed it, rather than an
-    /// invented answer or an ObjectDisposedException from a channel pulled out from under it.
-    /// </para>
+    /// Claims the channel for one operation. Refusal preserves the broker shutdown reason retained
+    /// by the transport lifetime.
     /// </summary>
+    /// <returns>A lease that prevents channel disposal until released.</returns>
     TransportLifetime.Lease Lease()
     {
         if (_lifetime.TryLease(out var lease))
@@ -380,14 +335,11 @@ public class RabbitMqChannelContext :
         throw _lifetime.NotAvailable();
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task-like value that completes after in-flight leases finish and the channel is cleaned up.</returns>
     public async ValueTask DisposeAsync()
     {
-        // Waits for the operations still running. Disposing while one of them is unwinding is the
-        // defect this ownership exists to prevent.
+        // Disposal waits for every leased channel operation to finish before releasing the channel.
         await _lifetime.DisposeAsync().ConfigureAwait(false);
 
         _tokenSource?.Dispose();

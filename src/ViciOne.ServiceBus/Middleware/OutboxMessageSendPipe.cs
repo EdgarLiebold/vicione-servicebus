@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides an outbox message send pipe implementation.
-/// </summary>
+/// <summary>Executes the pipeline for outbox message send.</summary>
 public class OutboxMessageSendPipe :
     IPipe<SendContext>
 {
@@ -19,22 +17,18 @@ public class OutboxMessageSendPipe :
 
     readonly OutboxMessageContext _message;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="destinationAddress">The destination address value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="destinationAddress">The destination address.</param>
     public OutboxMessageSendPipe(OutboxMessageContext message, Uri? destinationAddress)
     {
         _message = message;
         _destinationAddress = destinationAddress;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(SendContext context)
     {
         var contentType = new ContentType(_message.ContentType);
@@ -79,10 +73,8 @@ public class OutboxMessageSendPipe :
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
     }

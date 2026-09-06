@@ -7,18 +7,14 @@ using ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus host configurator implementation.
-/// </summary>
+/// <summary>Builds Azure Service Bus namespace connection and retry settings.</summary>
 public class ServiceBusHostConfigurator :
     IServiceBusHostConfigurator
 {
     readonly HostSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="serviceAddress">The service address value.</param>
+    /// <summary>Creates a host configuration for an Azure Service Bus namespace address.</summary>
+    /// <param name="serviceAddress">The namespace address, optionally followed by an entity-path scope.</param>
     public ServiceBusHostConfigurator(Uri serviceAddress)
     {
         var hostAddress = new ServiceBusHostAddress(serviceAddress);
@@ -26,12 +22,10 @@ public class ServiceBusHostConfigurator :
         _settings = new HostSettings { ServiceUri = hostAddress };
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="serviceAddress">The service address value.</param>
-    /// <param name="serviceBusClient">The service bus client value.</param>
-    /// <param name="serviceBusAdministrationClient">The service bus administration client value.</param>
+    /// <summary>Creates a host configuration backed by caller-owned Azure SDK clients.</summary>
+    /// <param name="serviceAddress">The namespace address, optionally followed by an entity-path scope.</param>
+    /// <param name="serviceBusClient">The client used for message operations.</param>
+    /// <param name="serviceBusAdministrationClient">The client used for namespace administration.</param>
     public ServiceBusHostConfigurator(Uri serviceAddress,
         ServiceBusClient serviceBusClient,
         ServiceBusAdministrationClient serviceBusAdministrationClient)
@@ -46,10 +40,8 @@ public class ServiceBusHostConfigurator :
         };
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionString">The connection string value.</param>
+    /// <summary>Creates a host configuration from an Azure Service Bus connection string.</summary>
+    /// <param name="connectionString">The connection string containing at least an endpoint.</param>
     public ServiceBusHostConfigurator(string connectionString)
     {
         var properties = ServiceBusConnectionStringProperties.Parse(connectionString);
@@ -64,14 +56,10 @@ public class ServiceBusHostConfigurator :
             _settings.ConnectionString = null;
     }
 
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the accumulated namespace settings.</summary>
     public ServiceBusHostSettings Settings => _settings;
 
-    /// <summary>
-    /// Gets or sets the connection string value.
-    /// </summary>
+    /// <summary>Sets the connection string, provided no other credential type is configured.</summary>
     public string ConnectionString
     {
         set
@@ -85,9 +73,7 @@ public class ServiceBusHostConfigurator :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the named key credential value.
-    /// </summary>
+    /// <summary>Sets the shared access key credential, provided no other authentication method is configured.</summary>
     public AzureNamedKeyCredential NamedKeyCredential
     {
         set
@@ -101,9 +87,7 @@ public class ServiceBusHostConfigurator :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the sas credential value.
-    /// </summary>
+    /// <summary>Sets a precomputed shared access signature, provided no other authentication method is configured.</summary>
     public AzureSasCredential SasCredential
     {
         set
@@ -117,9 +101,7 @@ public class ServiceBusHostConfigurator :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the token credential value.
-    /// </summary>
+    /// <summary>Sets the Azure token credential, provided no other authentication method is configured.</summary>
     public TokenCredential TokenCredential
     {
         set
@@ -133,33 +115,25 @@ public class ServiceBusHostConfigurator :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the transport type value.
-    /// </summary>
+    /// <summary>Sets whether the Azure SDK uses AMQP over TCP or WebSockets.</summary>
     public ServiceBusTransportType TransportType
     {
         set => _settings.TransportType = value;
     }
 
-    /// <summary>
-    /// Gets or sets the retry min backoff value.
-    /// </summary>
+    /// <summary>Sets the minimum delay used by the exponential retry policy.</summary>
     public TimeSpan RetryMinBackoff
     {
         set => _settings.RetryMinBackoff = value;
     }
 
-    /// <summary>
-    /// Gets or sets the retry max backoff value.
-    /// </summary>
+    /// <summary>Sets the maximum delay used by the exponential retry policy.</summary>
     public TimeSpan RetryMaxBackoff
     {
         set => _settings.RetryMaxBackoff = value;
     }
 
-    /// <summary>
-    /// Gets or sets the retry limit value.
-    /// </summary>
+    /// <summary>Sets the maximum number of retries for an Azure SDK operation.</summary>
     public int RetryLimit
     {
         set => _settings.RetryLimit = value;
@@ -171,11 +145,9 @@ public class ServiceBusHostConfigurator :
             && string.IsNullOrWhiteSpace(properties.SharedAccessSignature);
     }
 
-    /// <summary>
-    /// Performs the parse endpoint operation.
-    /// </summary>
-    /// <param name="connectionString">The connection string value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Extracts and normalizes the namespace endpoint from an Azure connection string.</summary>
+    /// <param name="connectionString">The Azure Service Bus connection string.</param>
+    /// <returns>The normalized <c>sb</c> endpoint, or <see langword="null"/> when no endpoint is present or its URI is invalid.</returns>
     public static Uri? ParseEndpoint(string connectionString)
     {
         var itemIndex = connectionString[0] == ';' ? 0 : 1;

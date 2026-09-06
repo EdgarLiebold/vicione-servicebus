@@ -4,20 +4,16 @@ using ViciOne.ServiceBus.AzureServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus subscription endpoint builder implementation.
-/// </summary>
+/// <summary>Builds an Azure Service Bus topic subscription endpoint and its runtime context.</summary>
 public class ServiceBusSubscriptionEndpointBuilder :
     ReceiveEndpointBuilder
 {
     readonly IServiceBusSubscriptionEndpointConfiguration _configuration;
     readonly IServiceBusHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="configuration">The configuration callback.</param>
+    /// <summary>Creates a builder for an Azure Service Bus subscription endpoint.</summary>
+    /// <param name="hostConfiguration">The namespace and connection configuration.</param>
+    /// <param name="configuration">The subscription endpoint configuration to build.</param>
     public ServiceBusSubscriptionEndpointBuilder(IServiceBusHostConfiguration hostConfiguration, IServiceBusSubscriptionEndpointConfiguration configuration)
         : base(configuration)
     {
@@ -25,10 +21,8 @@ public class ServiceBusSubscriptionEndpointBuilder :
         _configuration = configuration;
     }
 
-    /// <summary>
-    /// Creates receive endpoint context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds topic and subscription topology and creates the endpoint runtime context.</summary>
+    /// <returns>The initialized Azure Service Bus receive endpoint context.</returns>
     public ServiceBusReceiveEndpointContext CreateReceiveEndpointContext()
     {
         var topologyLayout = BuildTopology(_configuration.Settings);

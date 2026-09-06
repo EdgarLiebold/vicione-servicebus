@@ -3,22 +3,18 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.MessageData.Values;
 
-/// <summary>
-/// Provides an inline message data implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Carries inline message data.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class InlineMessageData<T> :
     MessageData<T>,
     IInlineMessageData
 {
     readonly IInlineMessageData _messageData;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <param name="value">The value.</param>
-    /// <param name="messageData">The message data value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="address">The address.</param>
+    /// <param name="value">The value to process.</param>
+    /// <param name="messageData">The message data.</param>
     public InlineMessageData(Uri? address, T value, IInlineMessageData messageData)
     {
         Value = Task.FromResult<T?>(value);
@@ -27,25 +23,17 @@ public class InlineMessageData<T> :
         _messageData = messageData;
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="reference">The reference value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <param name="reference">The reference.</param>
     public void Set(IMessageDataReference reference)
     {
         _messageData.Set(reference);
     }
 
-    /// <summary>
-    /// Gets the address value.
-    /// </summary>
+    /// <summary>Gets the address.</summary>
     public Uri? Address { get; }
-    /// <summary>
-    /// Gets the has value value.
-    /// </summary>
+    /// <summary>Gets whether this instance contains a value.</summary>
     public bool HasValue => true;
-    /// <summary>
-    /// Gets the underlying value.
-    /// </summary>
+    /// <summary>Gets the value.</summary>
     public Task<T?> Value { get; }
 }

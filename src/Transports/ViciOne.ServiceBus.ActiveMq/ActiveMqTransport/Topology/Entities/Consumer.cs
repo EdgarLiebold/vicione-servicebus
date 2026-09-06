@@ -1,35 +1,23 @@
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// The exchange to queue binding details to declare the binding to ActiveMQ
-/// </summary>
+/// <summary>Describes an ActiveMQ consumer subscription between a topic and queue.</summary>
 public interface Consumer
 {
-    /// <summary>
-    /// The virtual topic
-    /// </summary>
+    /// <summary>Gets the source topic.</summary>
     Topic Source { get; }
 
-    /// <summary>
-    /// The virtual topic consumer
-    /// </summary>
+    /// <summary>Gets the consumer queue, or <see langword="null" /> for a direct topic subscription.</summary>
     Queue? Destination { get; }
 
-    /// <summary>
-    /// A routing key for the exchange binding
-    /// </summary>
+    /// <summary>Gets the provider selector applied to the subscription.</summary>
     string? Selector { get; }
 
-    /// <summary>
-    /// The consumer name
-    /// </summary>
+    /// <summary>Gets the native subscription name, when configured.</summary>
     string? ConsumerName { get; }
 
-    /// <summary>
-    /// True if the consumer is shared.
-    /// </summary>
+    /// <summary>Gets whether multiple consumers share the named topic subscription.</summary>
     /// <remarks>
-    /// When you have multiple consumers on the same topic with same <see cref="ConsumerName"/>, you can use a shared consumer to load balance messages between the consumers.
+    /// A shared named subscription lets the broker distribute messages among multiple consumers of the same topic.
     /// </remarks>
     bool IsShared { get; }
 }

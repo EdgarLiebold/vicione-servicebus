@@ -4,23 +4,17 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>
-/// Provides a gauge implementation.
-/// </summary>
+/// <summary>Tracks the current value of a message-fabric measurement.</summary>
 public class Gauge :
     Metric
 {
     long _activeCount;
     long _concurrentActiveCount;
 
-    /// <summary>
-    /// Occurs when zero active.
-    /// </summary>
+    /// <summary>Occurs when zero active.</summary>
     public event ZeroActiveHandler? ZeroActive;
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
+    /// <summary>Adds the supplied value to the current collection.</summary>
     public void Add()
     {
         var currentActiveCount = Interlocked.Increment(ref _activeCount);
@@ -28,11 +22,9 @@ public class Gauge :
             Interlocked.CompareExchange(ref _concurrentActiveCount, currentActiveCount, _concurrentActiveCount);
     }
 
-    /// <summary>
-    /// Performs the remove operation.
-    /// </summary>
+    /// <summary>Removes the selected value.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task RemoveAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); var pendingCount = Interlocked.Decrement(ref _activeCount);

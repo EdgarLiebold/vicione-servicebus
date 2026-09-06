@@ -2,56 +2,42 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus bus factory configurator.
-/// </summary>
+/// <summary>Configures an Azure Service Bus bus, its namespace, endpoints, and message topology.</summary>
 public interface IServiceBusBusFactoryConfigurator :
     IBusFactoryConfigurator<IServiceBusReceiveEndpointConfigurator>,
     IServiceBusQueueEndpointConfigurator
 {
-    /// <summary>
-    /// Gets the send topology value.
-    /// </summary>
+    /// <summary>Gets the Azure Service Bus send topology.</summary>
     new IServiceBusSendTopologyConfigurator SendTopology { get; }
 
-    /// <summary>
-    /// Gets the publish topology value.
-    /// </summary>
+    /// <summary>Gets the Azure Service Bus publish topology.</summary>
     new IServiceBusPublishTopologyConfigurator PublishTopology { get; }
 
-    /// <summary>
-    /// Configure the send topology of the message type
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="configureTopology"></param>
+    /// <summary>Configures send topology for a message type.</summary>
+    /// <typeparam name="T">The message type to configure.</typeparam>
+    /// <param name="configureTopology">The callback that configures message-specific send conventions.</param>
     void Send<T>(Action<IServiceBusMessageSendTopologyConfigurator<T>> configureTopology)
         where T : class;
 
-    /// <summary>
-    /// Configure the send topology of the message type
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="configureTopology"></param>
+    /// <summary>Configures publish topology for a message type.</summary>
+    /// <typeparam name="T">The message type to configure.</typeparam>
+    /// <param name="configureTopology">An optional callback that configures its topic.</param>
     void Publish<T>(Action<IServiceBusMessagePublishTopologyConfigurator<T>>? configureTopology = null)
         where T : class;
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures publish topology for a runtime message type.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="configure">An optional callback that configures its topic.</param>
     void Publish(Type messageType, Action<IServiceBusMessagePublishTopologyConfigurator>? configure = null);
 
     /// <summary>
-    /// In most cases, this is not needed and should not be used. However, if for any reason the default bus
-    /// endpoint queue name needs to be changed, this will do it. Do NOT set it to the same name as a receive
-    /// endpoint or you will screw things up.
+    /// Overrides the generated bus endpoint queue name. The value must not match a receive endpoint queue,
+    /// because the competing consumers would make message ownership ambiguous.
     /// </summary>
+    /// <param name="value">The unique queue name to use for the bus endpoint.</param>
     void OverrideDefaultBusEndpointQueueName(string value);
 
-    /// <summary>
-    /// Sets the namespace separator to tilde instead of slash, which is compatible with managed identities and RBAC.
-    /// </summary>
+    /// <summary>Sets the namespace separator to tilde instead of slash, which is compatible with managed identities and RBAC.</summary>
     void SetNamespaceSeparatorToTilde();
 
     /// <summary>
@@ -60,32 +46,24 @@ public interface IServiceBusBusFactoryConfigurator :
     /// </summary>
     void SetNamespaceSeparatorToUnderscore();
 
-    /// <summary>
-    /// Sets the namespace separator to the specified string instead of slash.
-    /// </summary>
+    /// <summary>Sets the namespace separator to the specified string instead of slash.</summary>
+    /// <param name="separator">The separator inserted between namespace segments.</param>
     void SetNamespaceSeparatorTo(string separator);
 
-    /// <summary>
-    /// Configures a host
-    /// </summary>
-    /// <param name="settings"></param>
-    /// <returns></returns>
+    /// <summary>Applies fully resolved namespace settings.</summary>
+    /// <param name="settings">The namespace, authentication, retry, and transport settings.</param>
     void Host(ServiceBusHostSettings settings);
 
-    /// <summary>
-    /// Declare a subscription endpoint on the broker and configure the endpoint settings and message consumers
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="subscriptionName"></param>
-    /// <param name="configure"></param>
+    /// <summary>Declares a subscription endpoint for a message type's publish topic.</summary>
+    /// <typeparam name="T">The message type whose publish topology supplies the topic.</typeparam>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="configure">The callback that configures the subscription endpoint and its consumers.</param>
     void SubscriptionEndpoint<T>(string subscriptionName, Action<IServiceBusSubscriptionEndpointConfigurator> configure)
         where T : class;
 
-    /// <summary>
-    /// Declare a subscription endpoint on the broker and configure the endpoint settings and message consumers
-    /// </summary>
-    /// <param name="subscriptionName">The name of the subscription</param>
-    /// <param name="topicPath">The topic name to subscribe</param>
-    /// <param name="configure"></param>
+    /// <summary>Declares a subscription endpoint for an explicit topic path.</summary>
+    /// <param name="subscriptionName">The name of the subscription.</param>
+    /// <param name="topicPath">The topic name to subscribe.</param>
+    /// <param name="configure">The callback that configures the subscription endpoint and its consumers.</param>
     void SubscriptionEndpoint(string subscriptionName, string topicPath, Action<IServiceBusSubscriptionEndpointConfigurator> configure);
 }

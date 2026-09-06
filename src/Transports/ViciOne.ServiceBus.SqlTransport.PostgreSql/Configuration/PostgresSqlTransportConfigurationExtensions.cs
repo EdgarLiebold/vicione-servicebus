@@ -5,18 +5,14 @@ using ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
-/// <summary>
-/// Provides extension methods for postgres sql transport configuration.
-/// </summary>
+/// <summary>Provides PostgreSQL database migration registration extensions.</summary>
 public static class PostgresSqlTransportConfigurationExtensions
 {
-    /// <summary>
-    /// Adds postgres migration hosted service to the configuration.
-    /// </summary>
+    /// <summary>Registers the PostgreSQL migration hosted service with create and delete switches.</summary>
     /// <param name="services">The dependency-injection service collection.</param>
-    /// <param name="create">The create value.</param>
-    /// <param name="delete">The delete value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="create">Whether to create the database, schema, and transport infrastructure.</param>
+    /// <param name="delete">Whether to delete the transport database before creation.</param>
+    /// <returns>The same service collection.</returns>
     public static IServiceCollection AddPostgresMigrationHostedService(this IServiceCollection services, bool create = true, bool delete = false)
     {
         services.AddPostgresMigrationHostedService(options =>
@@ -30,12 +26,10 @@ public static class PostgresSqlTransportConfigurationExtensions
         return services;
     }
 
-    /// <summary>
-    /// Adds postgres migration hosted service to the configuration.
-    /// </summary>
+    /// <summary>Registers and configures the PostgreSQL migration hosted service.</summary>
     /// <param name="services">The dependency-injection service collection.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="configure">An optional callback that selects migration operations.</param>
+    /// <returns>The same service collection.</returns>
     public static IServiceCollection AddPostgresMigrationHostedService(this IServiceCollection services, Action<SqlTransportMigrationOptions>? configure)
     {
         services.AddTransient<ISqlTransportDatabaseMigrator, PostgresDatabaseMigrator>();

@@ -1,22 +1,14 @@
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// The queue details used to declare the queue to ActiveMQ
-/// </summary>
+/// <summary>Defines the name and lifecycle of an ActiveMQ queue.</summary>
 public interface Queue
 {
-    /// <summary>
-    /// The queue name
-    /// </summary>
+    /// <summary>Gets the queue name.</summary>
     string EntityName { get; }
 
-    /// <summary>
-    /// True if the queue should be deleted when the connection is closed
-    /// </summary>
+    /// <summary>Gets whether the broker removes the queue when its owning connection closes.</summary>
     bool AutoDelete { get; }
 
-    /// <summary>
-    /// True if queue is not persisted on disk
-    /// </summary>
+    /// <summary>Gets whether the queue persists across broker restarts.</summary>
     bool Durable { get; }
 }

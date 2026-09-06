@@ -3,28 +3,22 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus message name formatter implementation.
-/// </summary>
+/// <summary>Formats .NET message types as Azure Service Bus entity-name components.</summary>
 public class ServiceBusMessageNameFormatter :
     IMessageNameFormatter
 {
     readonly IMessageNameFormatter _formatter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="namespaceSeparator">The namespace separator value.</param>
+    /// <summary>Creates a formatter that includes namespaces.</summary>
+    /// <param name="namespaceSeparator">The optional separator used between namespace components.</param>
     public ServiceBusMessageNameFormatter(string? namespaceSeparator = null)
         : this(true, namespaceSeparator)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="includeNamespace">The include namespace value.</param>
-    /// <param name="namespaceSeparator">The namespace separator value.</param>
+    /// <summary>Creates a formatter with configurable namespace inclusion.</summary>
+    /// <param name="includeNamespace">Whether the formatted entity name includes the contract namespace.</param>
+    /// <param name="namespaceSeparator">The optional separator used between namespace components.</param>
     public ServiceBusMessageNameFormatter(bool includeNamespace, string? namespaceSeparator = null)
     {
         _formatter = string.IsNullOrWhiteSpace(namespaceSeparator)
@@ -32,11 +26,9 @@ public class ServiceBusMessageNameFormatter :
             : new DefaultMessageNameFormatter("---", "--", namespaceSeparator, "-", includeNamespace);
     }
 
-    /// <summary>
-    /// Gets message name.
-    /// </summary>
-    /// <param name="type">The type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats a message contract type and replaces array suffixes with Azure-safe characters.</summary>
+    /// <param name="type">The message contract type.</param>
+    /// <returns>The Azure-compatible entity-name component.</returns>
     public string GetMessageName(Type type)
     {
         return _formatter.GetMessageName(type).Replace("[]", "__");

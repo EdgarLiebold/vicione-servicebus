@@ -107,9 +107,7 @@ internal sealed class ViciOneServiceBusBus :
         {
             TaskBlocking.Wait(_receiveEndpoint.Started, timeout.Token);
         }
-        // Asked of the source rather than of the exception: a cancellation raised through a linked
-        // token carries neither, which is how a comparable check elsewhere in this transport went
-        // unreachable.
+        // The linked source distinguishes readiness timeout or terminal failure from unrelated cancellation.
         catch (OperationCanceledException) when (timeout.IsCancellationRequested || terminal?.Cause != null)
         {
             // The broker's own answer first; the safety limit only when there is none to give.
@@ -128,17 +126,11 @@ internal sealed class ViciOneServiceBusBus :
 
 
     /// <summary>
-    /// Remembers the failure of the bus endpoint that waiting cannot resolve, and ends the wait.
+    /// Preserves the terminal bus-endpoint failure and cancels every registered readiness waiter.
     /// <para>
-    /// It ends it by cancelling rather than by offering a second task to wait on: this wait is
-    /// entered by every ConnectConsumePipe and every ConnectRequestPipe, so a request client passes
-    /// through it on each request, and it keeps exactly the shape it had.
-    /// </para>
-    /// <para>
-    /// Terminality is supplied by the receive transport's retry owner. Observers therefore do not
-    /// infer lifecycle state from exception types or provider-specific transient flags: a recoverable
-    /// attempt fault leaves waiters attached, while retry exhaustion or another definitive startup
-    /// failure wakes them with the original cause.
+    /// Terminality is supplied by the receive transport's retry owner. Recoverable attempt faults leave
+    /// waiters attached; retry exhaustion or another definitive startup failure wakes them with the
+    /// original cause.
     /// </para>
     /// </summary>
     internal class TerminalFaultObserver :
@@ -150,13 +142,8 @@ internal sealed class ViciOneServiceBusBus :
         Exception? _cause;
 
         /// <summary>
-        /// The failure, published and read under the same lock.
-        /// <para>
-        /// An auto-property would have been written inside the lock and read outside it, which is
-        /// not a synchronisation edge at all — a waiter woken by the cancellation could see the
-        /// cancellation before the reason and report the safety limit instead of the broker's
-        /// answer. The lock is held on both sides so that ordering is a fact rather than a hope.
-        /// </para>
+        /// Gets the terminal failure under the same lock that publishes it before waiter cancellation,
+        /// ensuring a released waiter observes the original cause.
         /// </summary>
         public Exception? Cause
         {
@@ -168,6 +155,7 @@ internal sealed class ViciOneServiceBusBus :
         }
 
         /// <summary>Registers a waiter, and wakes it at once if the failure already happened.</summary>
+        /// <param name="waiter">The waiter.</param>
         public void Attach(CancellationTokenSource waiter)
         {
             lock (_lock)
@@ -265,14 +253,14 @@ internal sealed class ViciOneServiceBusBus :
 
 
     /// <summary>
-    /// Waits for the bus endpoint and hands the caller its handle, or gives the connection back.
+    /// Waits for the bus endpoint and returns the live connection handle.
     /// <para>
-    /// The pipe is connected before the wait. Bounding that wait turned a throw from something that
-    /// only happened when the endpoint faulted into the regular failure case, and on that path the
-    /// handle was lost: the caller could no longer disconnect, the pipe stayed registered for the
-    /// lifetime of the bus, and a request pipe kept its request id bound with it.
+    /// If readiness fails, disconnects the handle before propagating the failure so no pipe registration
+    /// or request identifier remains attached to the bus.
     /// </para>
     /// </summary>
+    /// <param name="handle">The handle.</param>
+    /// <returns>The connect handle produced by the operation.</returns>
     ConnectHandle WaitForBusEndpoint(ConnectHandle handle)
     {
         try
@@ -503,9 +491,7 @@ internal sealed class ViciOneServiceBusBus :
             return;
         }
 
-        // Released whatever the stop does. A stop that throws used to leave the observer connected
-        // and its terminal failure remembered, so the next successful start retained a refusal that
-        // belonged to the bus before it.
+        // Terminal-fault observation belongs to the current handle and must end even when stopping fails.
         try
         {
             await _busHandle.StopAsync(cancellationToken).ConfigureAwait(false);

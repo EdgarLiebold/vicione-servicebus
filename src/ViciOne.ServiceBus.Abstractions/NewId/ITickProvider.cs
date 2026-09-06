@@ -1,12 +1,8 @@
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Defines the contract for tick provider.
-/// </summary>
+/// <summary>Provides tick services.</summary>
 public interface ITickProvider
 {
-    /// <summary>
-    /// Gets the ticks value.
-    /// </summary>
+    /// <summary>Gets the ticks.</summary>
     long Ticks { get; }
 }

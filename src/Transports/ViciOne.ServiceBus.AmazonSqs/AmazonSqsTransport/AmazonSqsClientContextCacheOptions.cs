@@ -3,25 +3,19 @@ using System.Threading;
 using ViciOne.ServiceBus.Caching;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
-/// <summary>
-/// Immutable cache settings for queue and topic provider contexts owned by one Amazon SQS connection.
-/// </summary>
+/// <summary>Immutable cache settings for queue and topic provider contexts owned by one Amazon SQS connection.</summary>
 public sealed class AmazonSqsClientContextCacheOptions
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Creates cache settings with a capacity of 1,000 entries and sliding expiration of 427 days.</summary>
     public AmazonSqsClientContextCacheOptions()
         : this(1000, TimeSpan.FromDays(427), TimeProvider.System)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="capacity">The capacity value.</param>
-    /// <param name="maxAge">The max age value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Creates validated sliding-expiration settings for AWS entity caches.</summary>
+    /// <param name="capacity">The maximum number of cached entity contexts.</param>
+    /// <param name="maxAge">The sliding expiration interval.</param>
+    /// <param name="timeProvider">The clock used to evaluate expiration.</param>
     public AmazonSqsClientContextCacheOptions(int capacity, TimeSpan maxAge, TimeProvider timeProvider)
     {
         if (capacity < 1)
@@ -34,17 +28,11 @@ public sealed class AmazonSqsClientContextCacheOptions
         TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
-    /// <summary>
-    /// Gets the capacity value.
-    /// </summary>
+    /// <summary>Gets the maximum number of cached entity contexts.</summary>
     public int Capacity { get; }
-    /// <summary>
-    /// Gets the max age value.
-    /// </summary>
+    /// <summary>Gets the sliding expiration interval.</summary>
     public TimeSpan MaxAge { get; }
-    /// <summary>
-    /// Gets the time provider value.
-    /// </summary>
+    /// <summary>Gets the clock used to evaluate expiration.</summary>
     public TimeProvider TimeProvider { get; }
 
     internal ResourceCacheOptions CreateResourceCacheOptions(CancellationToken lifetimeCancellationToken)

@@ -4,10 +4,8 @@ using ViciOne.ServiceBus.SignalR.Utils;
 
 namespace ViciOne.ServiceBus.SignalR;
 
-/// <summary>
-/// Defines configuration options for hub lifetime manager.
-/// </summary>
-/// <typeparam name="THub">The t hub type.</typeparam>
+/// <summary>Defines configuration options for hub lifetime manager.</summary>
+/// <typeparam name="THub">The hub type.</typeparam>
 public sealed class HubLifetimeManagerOptions<THub> :
     IHubLifetimeManagerOptions<THub>
     where THub : Hub
@@ -21,9 +19,7 @@ public sealed class HubLifetimeManagerOptions<THub> :
         }
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public HubLifetimeManagerOptions()
     {
         ServerName = $"{Environment.MachineName}_{NewId.NextGuid():N}";
@@ -33,25 +29,15 @@ public sealed class HubLifetimeManagerOptions<THub> :
         UsersSubscriptionManager = new ViciOneServiceBusSubscriptionManager();
     }
 
-    /// <summary>
-    /// Gets the connection store value.
-    /// </summary>
+    /// <summary>Gets the connection store.</summary>
     public HubConnectionStore ConnectionStore { get; }
-    /// <summary>
-    /// Gets the groups subscription manager value.
-    /// </summary>
+    /// <summary>Gets the groups subscription manager.</summary>
     public ViciOneServiceBusSubscriptionManager GroupsSubscriptionManager { get; }
-    /// <summary>
-    /// Gets the users subscription manager value.
-    /// </summary>
+    /// <summary>Gets the users subscription manager.</summary>
     public ViciOneServiceBusSubscriptionManager UsersSubscriptionManager { get; }
 
-    /// <summary>
-    /// Gets or sets the server name value.
-    /// </summary>
+    /// <summary>Gets or sets the server name.</summary>
     public string ServerName { get; set; }
-    /// <summary>
-    /// Gets or sets the request timeout value.
-    /// </summary>
+    /// <summary>Gets or sets the request timeout.</summary>
     public RequestTimeout RequestTimeout { get; set; }
 }

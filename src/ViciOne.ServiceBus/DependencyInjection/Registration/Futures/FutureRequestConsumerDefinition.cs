@@ -2,11 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
-/// <summary>
-/// Provides a future request consumer definition implementation.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
-/// <typeparam name="TRequest">The t request type.</typeparam>
+/// <summary>Defines configuration for future request consumer.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+/// <typeparam name="TRequest">The request type.</typeparam>
 public class FutureRequestConsumerDefinition<TConsumer, TRequest> :
     ConsumerDefinition<TConsumer>,
     IFutureRequestDefinition<TRequest>
@@ -15,19 +13,15 @@ public class FutureRequestConsumerDefinition<TConsumer, TRequest> :
 {
     Lazy<Uri> _requestAddress = null!;
 
-    /// <summary>
-    /// Gets the request address value.
-    /// </summary>
+    /// <summary>Gets the request address.</summary>
     public Uri RequestAddress =>
         _requestAddress?.Value ??
         throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Future Request Consumer Definition", "unknown", $"The future consumer definition was not configured: {TypeCache<TConsumer>.ShortName}", "Correct the named configuration before starting the host"));
 
-    /// <summary>
-    /// Configures consumer.
-    /// </summary>
-    /// <param name="endpointConfigurator">The endpoint configurator value.</param>
-    /// <param name="consumerConfigurator">The consumer configurator value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Configures consumer.</summary>
+    /// <param name="endpointConfigurator">The endpoint configurator.</param>
+    /// <param name="consumerConfigurator">The consumer configurator.</param>
+    /// <param name="context">The context associated with the operation.</param>
     protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<TConsumer> consumerConfigurator,
         IRegistrationContext context)
     {

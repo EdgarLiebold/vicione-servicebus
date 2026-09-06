@@ -3,9 +3,7 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a queue binding entity implementation.
-/// </summary>
+/// <summary>Represents a de-duplicated exchange-to-queue binding in a broker topology.</summary>
 public class QueueBindingEntity :
     ExchangeToQueueBinding,
     QueueBindingHandle
@@ -13,14 +11,12 @@ public class QueueBindingEntity :
     readonly ExchangeEntity _exchange;
     readonly QueueEntity _queue;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="routingKey">The routing key value.</param>
-    /// <param name="arguments">The arguments value.</param>
+    /// <summary>Creates a queue-binding entity.</summary>
+    /// <param name="id">The topology-local entity identifier.</param>
+    /// <param name="exchange">The source exchange.</param>
+    /// <param name="queue">The destination queue.</param>
+    /// <param name="routingKey">The routing key used by the binding.</param>
+    /// <param name="arguments">The broker-specific binding arguments.</param>
     public QueueBindingEntity(long id, ExchangeEntity exchange, QueueEntity queue, string routingKey, IDictionary<string, object?> arguments)
     {
         Id = id;
@@ -30,41 +26,25 @@ public class QueueBindingEntity :
         _queue = queue;
     }
 
-    /// <summary>
-    /// Gets the entity comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that includes the exchange, queue, routing key, and all binding arguments.</summary>
     public static IEqualityComparer<QueueBindingEntity> EntityComparer { get; } = new QueueBindingEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the source value.
-    /// </summary>
+    /// <summary>Gets the source exchange.</summary>
     public Exchange Source => _exchange.Exchange;
-    /// <summary>
-    /// Gets the destination value.
-    /// </summary>
+    /// <summary>Gets the destination queue.</summary>
     public Queue Destination => _queue.Queue;
-    /// <summary>
-    /// Gets the routing key value.
-    /// </summary>
+    /// <summary>Gets the routing key used by the binding.</summary>
     public string RoutingKey { get; }
-    /// <summary>
-    /// Gets the arguments value.
-    /// </summary>
+    /// <summary>Gets the broker-specific binding arguments.</summary>
     public IDictionary<string, object?> Arguments { get; }
 
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the topology-local entity identifier.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the binding value.
-    /// </summary>
+    /// <summary>Gets this entity as an exchange-to-queue binding declaration.</summary>
     public ExchangeToQueueBinding Binding => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the exchange, queue, routing key, and binding arguments for diagnostics.</summary>
+    /// <returns>A diagnostic description of the binding.</returns>
     public override string ToString()
     {
         return string.Join(", ",

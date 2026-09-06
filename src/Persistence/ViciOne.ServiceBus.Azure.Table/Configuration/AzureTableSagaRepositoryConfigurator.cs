@@ -9,10 +9,8 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an azure table saga repository configurator implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Collects and validates the Azure Table client and key strategy for one saga repository.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class AzureTableSagaRepositoryConfigurator<TSaga> :
     IAzureTableSagaRepositoryConfigurator<TSaga>,
     ISpecification
@@ -23,50 +21,40 @@ public class AzureTableSagaRepositoryConfigurator<TSaga> :
     Func<IServiceProvider, ISagaKeyFormatter<TSaga>> _formatterFactory = provider =>
         new ConstPartitionSagaKeyFormatter<TSaga>(typeof(TSaga).Name);
 
-    /// <summary>
-    /// Supply a factory for retrieving the Azure Data Tables client.
-    /// </summary>
-    /// <param name="tableClientFactory">The table-client factory.</param>
+    /// <summary>Supply a factory for retrieving the Azure Data Tables client.</summary>
+    /// <param name="tableClientFactory">The factory invoked to obtain the Azure Table client.</param>
     public void TableClientFactory(Func<TableClient> tableClientFactory)
     {
         ArgumentNullException.ThrowIfNull(tableClientFactory);
         _tableClientFactory = provider => tableClientFactory();
     }
 
-    /// <summary>
-    /// Supply a service-provider-aware factory for retrieving the Azure Data Tables client.
-    /// </summary>
-    /// <param name="tableClientFactory">The table-client factory.</param>
+    /// <summary>Supply a service-provider-aware factory for retrieving the Azure Data Tables client.</summary>
+    /// <param name="tableClientFactory">The factory that resolves an Azure Table client from the registration service provider.</param>
     public void TableClientFactory(Func<IServiceProvider, TableClient> tableClientFactory)
     {
         ArgumentNullException.ThrowIfNull(tableClientFactory);
         _tableClientFactory = tableClientFactory;
     }
 
-    /// <summary>
-    /// Supply factory for retrieving the key formatter.
-    /// </summary>
-    /// <param name="formatterFactory"></param>
+    /// <summary>Supplies the factory that creates the saga key formatter.</summary>
+    /// <param name="formatterFactory">The factory invoked to create the key formatter.</param>
     public void KeyFormatter(Func<ISagaKeyFormatter<TSaga>> formatterFactory)
     {
         ArgumentNullException.ThrowIfNull(formatterFactory);
         _formatterFactory = provider => formatterFactory();
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_tableClientFactory == null)
             yield return this.Failure("TableClientFactory", "must be specified");
     }
 
-    /// <summary>
-    /// Performs the register operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Registers the validated Azure Table repository services for the saga type.</summary>
+    /// <param name="configurator">The saga repository registration to update.</param>
     public void Register(ISagaRepositoryRegistrationConfigurator<TSaga> configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);

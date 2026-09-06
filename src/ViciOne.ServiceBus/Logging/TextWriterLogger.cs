@@ -3,9 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ViciOne.ServiceBus.Logging;
 
-/// <summary>
-/// Provides a text writer logger implementation.
-/// </summary>
+/// <summary>Writes text writer log entries.</summary>
 public class TextWriterLogger :
     ILogger
 {
@@ -13,12 +11,10 @@ public class TextWriterLogger :
     readonly LogLevel _logLevel;
     readonly TimeProvider _timeProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="logLevel">The log level value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="logLevel">The log level.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public TextWriterLogger(TextWriterLoggerFactory factory, LogLevel logLevel, TimeProvider? timeProvider = null)
     {
         _factory = factory;
@@ -26,27 +22,23 @@ public class TextWriterLogger :
         _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    /// <summary>
-    /// Performs the begin scope operation.
-    /// </summary>
-    /// <typeparam name="TState">The t state type.</typeparam>
-    /// <param name="state">The state value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a scope for the current operation.</summary>
+    /// <typeparam name="TState">The state carried by the operation.</typeparam>
+    /// <param name="state">The state.</param>
+    /// <returns>The disposable produced by the operation.</returns>
     public IDisposable BeginScope<TState>(TState state)
         where TState : notnull
     {
         return TestDisposable.Instance;
     }
 
-    /// <summary>
-    /// Performs the log operation.
-    /// </summary>
-    /// <typeparam name="TState">The t state type.</typeparam>
-    /// <param name="logLevel">The log level value.</param>
-    /// <param name="eventId">The event id value.</param>
-    /// <param name="state">The state value.</param>
+    /// <summary>Writes the current diagnostic event.</summary>
+    /// <typeparam name="TState">The state carried by the operation.</typeparam>
+    /// <param name="logLevel">The log level.</param>
+    /// <param name="eventId">The event id.</param>
+    /// <param name="state">The state.</param>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="formatter">The formatter value.</param>
+    /// <param name="formatter">The formatter.</param>
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
         if (!IsEnabled(logLevel))
@@ -68,10 +60,8 @@ public class TextWriterLogger :
         _factory.Writer.WriteLine(message);
     }
 
-    /// <summary>
-    /// Determines whether enabled.
-    /// </summary>
-    /// <param name="logLevel">The log level value.</param>
+    /// <summary>Determines whether enabled.</summary>
+    /// <param name="logLevel">The log level.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsEnabled(LogLevel logLevel)
     {
@@ -85,7 +75,7 @@ public class TextWriterLogger :
 
         public void Dispose()
         {
-            // intentionally does nothing
+            // The shared sentinel owns no disposable resource.
         }
     }
 }

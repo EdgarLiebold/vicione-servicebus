@@ -3,10 +3,8 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
-/// <summary>
-/// Provides an endpoint registration implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Registers endpoint services.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class EndpointRegistration<T> :
     IEndpointRegistration
     where T : class
@@ -14,36 +12,28 @@ public class EndpointRegistration<T> :
     readonly IRegistration _registration;
     readonly IContainerSelector _selector;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="registration">The registration value.</param>
-    /// <param name="selector">The selector value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="registration">The registration.</param>
+    /// <param name="selector">The selector.</param>
     public EndpointRegistration(IRegistration registration, IContainerSelector selector)
     {
         _registration = registration;
         _selector = selector;
     }
 
-    /// <summary>
-    /// Gets the type value.
-    /// </summary>
+    /// <summary>Gets the type.</summary>
     public Type Type => typeof(T);
 
-    /// <summary>
-    /// Gets or sets the include in configure endpoints value.
-    /// </summary>
+    /// <summary>Gets or sets the include in configure endpoints.</summary>
     public bool IncludeInConfigureEndpoints
     {
         get => _registration.IncludeInConfigureEndpoints;
         set => _registration.IncludeInConfigureEndpoints = value;
     }
 
-    /// <summary>
-    /// Gets definition.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets definition.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <returns>The definition.</returns>
     public IEndpointDefinition GetDefinition(IServiceProvider provider)
     {
         return _selector.GetEndpointDefinition<T>(provider)

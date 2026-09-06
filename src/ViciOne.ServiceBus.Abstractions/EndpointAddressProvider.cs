@@ -2,9 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Resolves an endpoint address for a message type.
-/// </summary>
+/// <summary>Resolves an endpoint address for a message type.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 /// <param name="address">The resolved address when the provider returns <see langword="true" />.</param>
 /// <returns><see langword="true" /> when an address is available; otherwise <see langword="false" />.</returns>
 public delegate bool EndpointAddressProvider<in T>(out Uri address)

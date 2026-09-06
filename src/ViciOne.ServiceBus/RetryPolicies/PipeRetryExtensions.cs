@@ -6,59 +6,49 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>
-/// Provides extension methods for pipe retry.
-/// </summary>
+/// <summary>Provides extension methods for pipe retry.</summary>
 public static class PipeRetryExtensions
 {
-    /// <summary>
-    /// Performs the retry operation.
-    /// </summary>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="retryMethod">The retry method value.</param>
+    /// <summary>Retries the configured operation.</summary>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="retryMethod">The retry method.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task RetryAsync(this IRetryPolicy retryPolicy, Func<Task> retryMethod, CancellationToken cancellationToken = default)
     {
         return RetryAsync(retryPolicy, retryMethod, true, TimeProvider.System, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the retry operation.
-    /// </summary>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="retryMethod">The retry method value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Retries the configured operation.</summary>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="retryMethod">The retry method.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task RetryAsync(this IRetryPolicy retryPolicy, Func<Task> retryMethod, TimeProvider timeProvider,
         CancellationToken cancellationToken = default)
     {
         return RetryAsync(retryPolicy, retryMethod, true, timeProvider, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the retry operation.
-    /// </summary>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="retryMethod">The retry method value.</param>
-    /// <param name="log">The log value.</param>
+    /// <summary>Retries the configured operation.</summary>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="retryMethod">The retry method.</param>
+    /// <param name="log">The log.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static async Task RetryAsync(this IRetryPolicy retryPolicy, Func<Task> retryMethod, bool log, CancellationToken cancellationToken = default)
     {
         await RetryAsync(retryPolicy, retryMethod, log, TimeProvider.System, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the retry operation.
-    /// </summary>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="retryMethod">The retry method value.</param>
-    /// <param name="log">The log value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Retries the configured operation.</summary>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="retryMethod">The retry method.</param>
+    /// <param name="log">The log.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static async Task RetryAsync(this IRetryPolicy retryPolicy, Func<Task> retryMethod, bool log, TimeProvider timeProvider,
         CancellationToken cancellationToken = default)
     {
@@ -71,59 +61,51 @@ public static class PipeRetryExtensions
         }, log, timeProvider, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the retry operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="retryMethod">The retry method value.</param>
+    /// <summary>Retries the configured operation.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="retryMethod">The retry method.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the retry outcome.</returns>
     public static Task<T> RetryAsync<T>(this IRetryPolicy retryPolicy, Func<Task<T>> retryMethod, CancellationToken cancellationToken = default)
     {
         return RetryAsync(retryPolicy, retryMethod, true, TimeProvider.System, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the retry operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="retryMethod">The retry method value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Retries the configured operation.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="retryMethod">The retry method.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the retry outcome.</returns>
     public static Task<T> RetryAsync<T>(this IRetryPolicy retryPolicy, Func<Task<T>> retryMethod, TimeProvider timeProvider,
         CancellationToken cancellationToken = default)
     {
         return RetryAsync(retryPolicy, retryMethod, true, timeProvider, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the retry operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="retryMethod">The retry method value.</param>
-    /// <param name="log">The log value.</param>
+    /// <summary>Retries the configured operation.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="retryMethod">The retry method.</param>
+    /// <param name="log">The log.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the retry outcome.</returns>
     public static async Task<T> RetryAsync<T>(this IRetryPolicy retryPolicy, Func<Task<T>> retryMethod, bool log,
         CancellationToken cancellationToken = default)
     {
         return await RetryAsync(retryPolicy, retryMethod, log, TimeProvider.System, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the retry operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="retryMethod">The retry method value.</param>
-    /// <param name="log">The log value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Retries the configured operation.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="retryMethod">The retry method.</param>
+    /// <param name="log">The log.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the retry outcome.</returns>
     public static async Task<T> RetryAsync<T>(this IRetryPolicy retryPolicy, Func<Task<T>> retryMethod, bool log, TimeProvider timeProvider,
         CancellationToken cancellationToken = default)
     {

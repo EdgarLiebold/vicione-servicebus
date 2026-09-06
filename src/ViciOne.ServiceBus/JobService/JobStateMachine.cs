@@ -10,15 +10,11 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.JobService;
 
-/// <summary>
-/// Provides a job state machine implementation.
-/// </summary>
+/// <summary>Coordinates the state transitions for job.</summary>
 public sealed class JobStateMachine :
     ViciOneServiceBusStateMachine<JobSaga>
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public JobStateMachine()
     {
         Event(() => JobSubmitted, x => x.CorrelateById(m => m.Message.JobId));
@@ -297,7 +293,6 @@ public sealed class JobStateMachine :
                 })
         );
 
-        // Cancel Job
         During([WaitingForSlot, WaitingToRetry],
             When(CancelJob)
                 .Unschedule(JobSlotWaitElapsed)
@@ -330,7 +325,6 @@ public sealed class JobStateMachine :
                 .TransitionTo(Canceled)
         );
 
-        // Retry Job
         During([AllocatingJobSlot, StartingJobAttempt, Started, Completed, CancellationPending],
             Ignore(RetryJob));
 
@@ -352,7 +346,7 @@ public sealed class JobStateMachine :
                 .RequestRetryJobSlot(this));
 
 
-        // Run Job (only accepted while waiting for the scheduled job event)
+        // Explicit execution is valid only while the saga is waiting for its scheduled event.
         During([AllocatingJobSlot, StartingJobAttempt, Started, Completed, Canceled, Faulted, WaitingToRetry, CancellationPending],
             Ignore(RunJob));
 
@@ -362,7 +356,7 @@ public sealed class JobStateMachine :
                 .RequestJobSlot(this));
 
 
-        // Finalize Job (only accepted while waiting for the scheduled job event)
+        // Terminal sagas finalize only after the scheduled-event wait has been released.
         During([WaitingForSlot, AllocatingJobSlot, StartingJobAttempt, Started, Completed, WaitingToRetry],
             Ignore(FinalizeJob));
 
@@ -372,7 +366,7 @@ public sealed class JobStateMachine :
                 .Finalize());
 
 
-        // Update recurring jobs, otherwise ignore any duplicate job submissions with a warning
+        // A repeated submission updates a recurring schedule; other duplicates leave saga state unchanged.
         DuringAny(
             When(JobSubmitted)
                 .IfElse(context => context.IsScheduledJob(), x => x.UpdateRecurringJob(),
@@ -380,7 +374,7 @@ public sealed class JobStateMachine :
                         context.Message.JobId)))
         );
 
-        // if the job is in a state where it could be waiting or idle, update the next scheduled start date
+        // Waiting and terminal sagas accept the next occurrence of a recurring schedule.
         During([WaitingForSlot, Canceled, Completed, Faulted],
             When(JobSubmitted)
                 .If(context => context.IsScheduledJob() && context.CalculateNextStartDate(),
@@ -399,128 +393,67 @@ public sealed class JobStateMachine :
         SetCompletedWhenFinalized();
     }
 
-    //
-    /// <summary>
-    /// Gets the submitted value.
-    /// </summary>
+    /// <summary>Gets the submitted.</summary>
     public State Submitted { get; } = null!;
-    /// <summary>
-    /// Gets the waiting to start value.
-    /// </summary>
-    public State WaitingToStart { get; } = null!; // no longer used, but do not remove as it would change the CurrentState int values
-    /// <summary>
-    /// Gets the waiting to retry value.
-    /// </summary>
+    /// <summary>Gets the waiting to start.</summary>
+    public State WaitingToStart { get; } = null!; // This ordinal remains reserved in persisted saga state.
+    /// <summary>Gets the waiting to retry.</summary>
     public State WaitingToRetry { get; } = null!;
-    /// <summary>
-    /// Gets the waiting for slot value.
-    /// </summary>
+    /// <summary>Gets the waiting for slot.</summary>
     public State WaitingForSlot { get; } = null!;
-    /// <summary>
-    /// Gets the started value.
-    /// </summary>
+    /// <summary>Gets the started.</summary>
     public State Started { get; } = null!;
-    /// <summary>
-    /// Gets the completed value.
-    /// </summary>
+    /// <summary>Gets the completed.</summary>
     public State Completed { get; } = null!;
-    /// <summary>
-    /// Gets the canceled value.
-    /// </summary>
+    /// <summary>Gets the canceled.</summary>
     public State Canceled { get; } = null!;
-    /// <summary>
-    /// Gets the faulted value.
-    /// </summary>
+    /// <summary>Gets the faulted.</summary>
     public State Faulted { get; } = null!;
-    /// <summary>
-    /// Gets the allocating job slot value.
-    /// </summary>
+    /// <summary>Gets the allocating job slot.</summary>
     public State AllocatingJobSlot { get; } = null!;
-    /// <summary>
-    /// Gets the starting job attempt value.
-    /// </summary>
+    /// <summary>Gets the starting job attempt.</summary>
     public State StartingJobAttempt { get; } = null!;
-    /// <summary>
-    /// Gets the cancellation pending value.
-    /// </summary>
+    /// <summary>Gets the cancellation pending.</summary>
     public State CancellationPending { get; } = null!;
 
-    /// <summary>
-    /// Gets the job slot allocated value.
-    /// </summary>
+    /// <summary>Gets the job slot allocated.</summary>
     public Event<JobSlotAllocated> JobSlotAllocated { get; } = null!;
-    /// <summary>
-    /// Gets the job slot unavailable value.
-    /// </summary>
+    /// <summary>Gets the job slot unavailable.</summary>
     public Event<JobSlotUnavailable> JobSlotUnavailable { get; } = null!;
-    /// <summary>
-    /// Gets the allocate job slot faulted value.
-    /// </summary>
+    /// <summary>Gets the allocate job slot faulted.</summary>
     public Event<Fault<AllocateJobSlot>> AllocateJobSlotFaulted { get; } = null!;
-    /// <summary>
-    /// Gets the start job attempt faulted value.
-    /// </summary>
+    /// <summary>Gets the start job attempt faulted.</summary>
     public Event<Fault<StartJobAttempt>> StartJobAttemptFaulted { get; } = null!;
-    /// <summary>
-    /// Gets the job submitted value.
-    /// </summary>
+    /// <summary>Gets the job submitted.</summary>
     public Event<JobSubmitted> JobSubmitted { get; } = null!;
-    /// <summary>
-    /// Gets the attempt started value.
-    /// </summary>
+    /// <summary>Gets the attempt started.</summary>
     public Event<JobAttemptStarted> AttemptStarted { get; } = null!;
-    /// <summary>
-    /// Gets the attempt completed value.
-    /// </summary>
+    /// <summary>Gets the attempt completed.</summary>
     public Event<JobAttemptCompleted> AttemptCompleted { get; } = null!;
-    /// <summary>
-    /// Gets the attempt canceled value.
-    /// </summary>
+    /// <summary>Gets the attempt canceled.</summary>
     public Event<JobAttemptCanceled> AttemptCanceled { get; } = null!;
-    /// <summary>
-    /// Gets the attempt faulted value.
-    /// </summary>
+    /// <summary>Gets the attempt faulted.</summary>
     public Event<JobAttemptFaulted> AttemptFaulted { get; } = null!;
-    /// <summary>
-    /// Gets the job completed value.
-    /// </summary>
+    /// <summary>Gets the job completed.</summary>
     public Event<JobCompleted> JobCompleted { get; } = null!;
-    /// <summary>
-    /// Gets the cancel job value.
-    /// </summary>
+    /// <summary>Gets the cancel job.</summary>
     public Event<CancelJob> CancelJob { get; } = null!;
-    /// <summary>
-    /// Gets the retry job value.
-    /// </summary>
+    /// <summary>Gets the retry job.</summary>
     public Event<RetryJob> RetryJob { get; } = null!;
-    /// <summary>
-    /// Gets the run job value.
-    /// </summary>
+    /// <summary>Gets the run job.</summary>
     public Event<RunJob> RunJob { get; } = null!;
-    /// <summary>
-    /// Gets the finalize job value.
-    /// </summary>
+    /// <summary>Gets the finalize job.</summary>
     public Event<FinalizeJob> FinalizeJob { get; } = null!;
-    /// <summary>
-    /// Gets the set job progress value.
-    /// </summary>
+    /// <summary>Gets the set job progress.</summary>
     public Event<SetJobProgress> SetJobProgress { get; } = null!;
-    /// <summary>
-    /// Gets the save job state value.
-    /// </summary>
+    /// <summary>Gets the save job state.</summary>
     public Event<SaveJobState> SaveJobState { get; } = null!;
-    /// <summary>
-    /// Gets the get job state value.
-    /// </summary>
+    /// <summary>Gets the get job state.</summary>
     public Event<GetJobState> GetJobState { get; } = null!;
-    /// <summary>
-    /// Gets the job slot wait elapsed value.
-    /// </summary>
+    /// <summary>Gets the job slot wait elapsed.</summary>
     public Schedule<JobSaga, JobSlotWaitElapsed> JobSlotWaitElapsed { get; } = null!;
 
-    /// <summary>
-    /// Gets the job retry delay elapsed value.
-    /// </summary>
+    /// <summary>Gets the job retry delay elapsed.</summary>
     public Schedule<JobSaga, JobRetryDelayElapsed> JobRetryDelayElapsed { get; } = null!;
 }
 
@@ -571,7 +504,7 @@ static class JobStateMachineBehaviorExtensions
         {
             if (context.Saga.StartDate is not null)
             {
-                // if the start date hasn't changed, clear it and return false (no schedule change)
+                // Consuming an unchanged one-time start date does not create a new schedule.
                 if (context.Saga.StartDate == context.Saga.NextStartDate)
                 {
                     context.Saga.StartDate = null;
@@ -607,7 +540,7 @@ static class JobStateMachineBehaviorExtensions
                 nextStartDate = null;
         }
 
-        // the next start date didn't change, so don't bother with it
+        // An unchanged occurrence requires no persistence or scheduler update.
         if (nextStartDate == context.Saga.NextStartDate)
             return false;
 

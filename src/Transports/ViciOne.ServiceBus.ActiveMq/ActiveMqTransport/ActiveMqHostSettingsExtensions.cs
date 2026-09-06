@@ -2,16 +2,12 @@ using System.Text;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides extension methods for active mq host settings.
-/// </summary>
+/// <summary>Formats ActiveMQ host settings for diagnostics.</summary>
 public static class ActiveMqHostSettingsExtensions
 {
-    /// <summary>
-    /// Performs the to description operation.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a credential-safe broker description.</summary>
+    /// <param name="settings">The ActiveMQ host settings.</param>
+    /// <returns>The broker host and optional user name and port, without a password.</returns>
     public static string ToDescription(this ActiveMqHostSettings settings)
     {
         var sb = new StringBuilder();

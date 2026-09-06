@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a queue client context implementation.
-/// </summary>
+/// <summary>Owns the Azure Service Bus processor for a queue and coordinates it with its supervisor.</summary>
 public class QueueClientContext :
     BasePipeContext,
     ClientContext,
@@ -22,13 +20,11 @@ public class QueueClientContext :
     ServiceBusProcessor? _processor;
     ServiceBusSessionProcessor? _sessionProcessor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionContext">The connection context value.</param>
-    /// <param name="inputAddress">The input address value.</param>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="agent">The agent value.</param>
+    /// <summary>Initializes a queue client before its message or session processor is selected.</summary>
+    /// <param name="connectionContext">The namespace connection used to create the processor.</param>
+    /// <param name="inputAddress">The queue transport address.</param>
+    /// <param name="settings">The queue and processor settings.</param>
+    /// <param name="agent">The supervising agent stopped after an unrecoverable processor fault.</param>
     public QueueClientContext(ConnectionContext connectionContext, Uri inputAddress, ReceiveSettings settings, IAgent agent)
     {
         _settings = settings;
@@ -37,32 +33,22 @@ public class QueueClientContext :
         InputAddress = inputAddress;
     }
 
-    /// <summary>
-    /// Gets the connection context value.
-    /// </summary>
+    /// <summary>Gets the namespace connection that owns the processor.</summary>
     public ConnectionContext ConnectionContext { get; }
 
-    /// <summary>
-    /// Gets the entity path value.
-    /// </summary>
+    /// <summary>Gets the initialized processor's queue path.</summary>
     public string EntityPath => _processor?.EntityPath ?? _sessionProcessor?.EntityPath
         ?? throw new InvalidOperationException("The Azure Service Bus queue client has not been initialized.");
 
-    /// <summary>
-    /// Gets the is closed or closing value.
-    /// </summary>
+    /// <summary>Gets whether the initialized processor is closed.</summary>
     public bool IsClosedOrClosing => _processor?.IsClosed ?? _sessionProcessor?.IsClosed ?? false;
 
-    /// <summary>
-    /// Gets the input address value.
-    /// </summary>
+    /// <summary>Gets the queue transport address.</summary>
     public Uri InputAddress { get; }
 
-    /// <summary>
-    /// Performs the on message operation.
-    /// </summary>
-    /// <param name="callback">The callback value.</param>
-    /// <param name="exceptionHandler">The exception handler value.</param>
+    /// <summary>Creates a non-session queue processor and registers its asynchronous message and error callbacks.</summary>
+    /// <param name="callback">The callback that processes each received message.</param>
+    /// <param name="exceptionHandler">The callback that processes SDK processor errors.</param>
     public void OnMessageAsync(Func<ProcessMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
         Func<ProcessErrorEventArgs, Task> exceptionHandler)
     {
@@ -77,11 +63,9 @@ public class QueueClientContext :
         _processor.ProcessErrorAsync += exceptionHandler;
     }
 
-    /// <summary>
-    /// Performs the on session operation.
-    /// </summary>
-    /// <param name="callback">The callback value.</param>
-    /// <param name="exceptionHandler">The exception handler value.</param>
+    /// <summary>Creates a session-aware queue processor and registers its asynchronous message and error callbacks.</summary>
+    /// <param name="callback">The callback that processes each received session message.</param>
+    /// <param name="exceptionHandler">The callback that processes SDK processor errors.</param>
     public void OnSessionAsync(Func<ProcessSessionMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
         Func<ProcessErrorEventArgs, Task> exceptionHandler)
     {
@@ -96,11 +80,9 @@ public class QueueClientContext :
         _sessionProcessor.ProcessErrorAsync += exceptionHandler;
     }
 
-    /// <summary>
-    /// Starts the configured component.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Starts the configured queue processor.</summary>
+    /// <param name="cancellationToken">The token that cancels processor startup.</param>
+    /// <returns>A task that completes when the processor has started.</returns>
     public async Task StartAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -111,11 +93,9 @@ public class QueueClientContext :
             await _sessionProcessor.StartProcessingAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the shutdown operation.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Stops message processing and logs, rather than propagates, stop failures.</summary>
+    /// <param name="cancellationToken">The token that cancels the stop request.</param>
+    /// <returns>A task that completes after the stop attempt.</returns>
     public async Task ShutdownAsync(CancellationToken cancellationToken = default)
     {
         try
@@ -132,11 +112,9 @@ public class QueueClientContext :
         }
     }
 
-    /// <summary>
-    /// Performs the close operation.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Closes the processor and logs, rather than propagates, close failures.</summary>
+    /// <param name="cancellationToken">The token that cancels processor closure.</param>
+    /// <returns>A task that completes after the close attempt.</returns>
     public async Task CloseAsync(CancellationToken cancellationToken = default)
     {
         try
@@ -153,17 +131,18 @@ public class QueueClientContext :
         }
     }
 
-    /// <summary>
-    /// Performs the notify faulted operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="entityPath">The entity path value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Schedules supervised shutdown after a non-transient processor fault without closing the processor inside its callback.</summary>
+    /// <param name="exception">The processor exception reported by the callback.</param>
+    /// <param name="entityPath">The path included in the supervisor stop reason.</param>
+    /// <param name="cancellationToken">The token checked before scheduling shutdown.</param>
+    /// <returns>A completed task once shutdown has been scheduled, or a canceled task when cancellation was already requested.</returns>
     public Task NotifyFaultedAsync(Exception exception, string entityPath, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken);        // Azure invokes this from the processor callback. Defer closing the same processor, but
-        // retain the task and consume every stop outcome in this context owner.
+        if (cancellationToken.IsCancellationRequested)
+            return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken);
+
+        // Closing an Azure processor from its own callback can deadlock. Defer supervisor shutdown,
+        // retain the task, and observe the stop outcome in this context owner.
         lock (_faultStopLock)
         {
             if (_faultStopTask == null || _faultStopTask.IsCompleted)
@@ -187,10 +166,8 @@ public class QueueClientContext :
         }
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Closes the queue processor.</summary>
+    /// <returns>A task that completes after the close attempt.</returns>
     public async ValueTask DisposeAsync()
     {
         await CloseAsync().ConfigureAwait(false);

@@ -2,17 +2,13 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Provides a session id send topology convention implementation.
-/// </summary>
+/// <summary>Caches per-message conventions that assign Azure Service Bus session identifiers.</summary>
 public class SessionIdSendTopologyConvention :
     ISessionIdSendTopologyConvention
 {
     readonly ITopologyConventionCache<IMessageSendTopologyConvention> _cache;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes the convention cache with an empty default formatter.</summary>
     public SessionIdSendTopologyConvention()
     {
         DefaultFormatter = new EmptySessionIdFormatter();
@@ -25,9 +21,7 @@ public class SessionIdSendTopologyConvention :
         return _cache.GetOrAdd<T, IMessageSendTopologyConvention<T>>().TryGetMessageSendTopologyConvention(out convention);
     }
 
-    /// <summary>
-    /// Gets or sets the default formatter value.
-    /// </summary>
+    /// <summary>Gets or sets the formatter inherited by newly configured message conventions.</summary>
     public ISessionIdFormatter DefaultFormatter { get; set; }
 
 

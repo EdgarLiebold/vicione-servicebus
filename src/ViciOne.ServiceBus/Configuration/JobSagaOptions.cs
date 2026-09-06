@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines configuration options for job saga.
-/// </summary>
+/// <summary>Defines configuration options for job saga.</summary>
 public sealed class JobSagaOptions :
     JobSagaSettingsConfigurator,
     ISpecification
@@ -15,9 +13,7 @@ public sealed class JobSagaOptions :
     Uri _jobSagaEndpointAddress = null!;
     Uri _jobTypeSagaEndpointAddress = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public JobSagaOptions()
     {
         StatusCheckInterval = TimeSpan.FromMinutes(1);
@@ -29,9 +25,7 @@ public sealed class JobSagaOptions :
         FinalizeCompleted = true;
     }
 
-    /// <summary>
-    /// The number of concurrent messages
-    /// </summary>
+    /// <summary>The number of concurrent messages.</summary>
     public int? ConcurrentMessageLimit { get; set; }
 
     IEnumerable<ValidationResult> ISpecification.Validate()
@@ -61,34 +55,22 @@ public sealed class JobSagaOptions :
     Uri JobSagaSettings.JobTypeSagaEndpointAddress => _jobTypeSagaEndpointAddress;
     Uri JobSagaSettings.JobSagaEndpointAddress => _jobSagaEndpointAddress;
 
-    /// <summary>
-    /// The time to wait for a job slot when one is unavailable
-    /// </summary>
+    /// <summary>The time to wait for a job slot when one is unavailable.</summary>
     public TimeSpan SlotWaitTime { get; set; }
 
-    /// <summary>
-    /// The time after which the status of a job should be checked
-    /// </summary>
+    /// <summary>The time after which the status of a job should be checked.</summary>
     public TimeSpan StatusCheckInterval { get; set; }
 
-    /// <summary>
-    /// The time after which an instance will automatically be purged from the instance list
-    /// </summary>
+    /// <summary>The time after which an instance will automatically be purged from the instance list.</summary>
     public TimeSpan HeartbeatTimeout { get; set; }
 
-    /// <summary>
-    /// The number of times to retry a suspect job before it is faulted. Defaults to zero.
-    /// </summary>
+    /// <summary>The number of times to retry a suspect job before it is faulted. Defaults to zero.</summary>
     public int SuspectJobRetryCount { get; set; }
 
-    /// <summary>
-    /// The delay before retrying a suspect job
-    /// </summary>
+    /// <summary>The delay before retrying a suspect job.</summary>
     public TimeSpan? SuspectJobRetryDelay { get; set; }
 
-    /// <summary>
-    /// If true, completed jobs will be finalized, removing the saga from the repository
-    /// </summary>
+    /// <summary>If true, completed jobs will be finalized, removing the saga from the repository.</summary>
     public bool FinalizeCompleted { get; set; }
 
     /// <summary>

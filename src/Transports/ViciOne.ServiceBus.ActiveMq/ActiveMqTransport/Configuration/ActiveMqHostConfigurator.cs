@@ -3,18 +3,14 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.ActiveMq.Configuration;
 
-/// <summary>
-/// Provides an active mq host configurator implementation.
-/// </summary>
+/// <summary>Configures credentials and provider options for an ActiveMQ broker.</summary>
 public class ActiveMqHostConfigurator :
     IActiveMqHostConfigurator
 {
     readonly ConfigurationHostSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Creates provider-specific settings for an ActiveMQ or AMQP broker address.</summary>
+    /// <param name="address">The validated broker address.</param>
     public ActiveMqHostConfigurator(Uri address)
     {
         switch (address.Scheme.ToLowerInvariant())
@@ -28,52 +24,40 @@ public class ActiveMqHostConfigurator :
         }
     }
 
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the mutable provider-specific host settings.</summary>
     public ActiveMqHostSettings Settings => _settings;
 
-    /// <summary>
-    /// Configures rname for the current pipeline.
-    /// </summary>
-    /// <param name="username">The username value.</param>
+    /// <summary>Sets the broker user name.</summary>
+    /// <param name="username">The user name used to authenticate.</param>
     public void Username(string username)
     {
         _settings.Username = username;
     }
 
-    /// <summary>
-    /// Performs the password operation.
-    /// </summary>
-    /// <param name="password">The password value.</param>
+    /// <summary>Sets the broker password.</summary>
+    /// <param name="password">The password used to authenticate.</param>
     public void Password(string password)
     {
         _settings.Password = password;
     }
 
-    /// <summary>
-    /// Configures ssl for the current pipeline.
-    /// </summary>
-    /// <param name="enabled">The enabled value.</param>
+    /// <summary>Enables or disables TLS for the broker connection.</summary>
+    /// <param name="enabled">Whether TLS is enabled.</param>
     public void UseSsl(bool enabled = true)
     {
         _settings.UseSsl = enabled;
     }
 
-    /// <summary>
-    /// Performs the failover hosts operation.
-    /// </summary>
-    /// <param name="hosts">The hosts value.</param>
+    /// <summary>Sets a snapshot of alternate broker addresses for provider failover.</summary>
+    /// <param name="hosts">The failover broker addresses.</param>
     public void FailoverHosts(params Uri[] hosts)
     {
         ArgumentNullException.ThrowIfNull(hosts);
         _settings.FailoverHosts = Array.AsReadOnly((Uri[])hosts.Clone());
     }
 
-    /// <summary>
-    /// Performs the transport options operation.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Adds native Apache NMS connection URI options.</summary>
+    /// <param name="options">The option name/value pairs; duplicate names are rejected.</param>
     public void TransportOptions(IEnumerable<KeyValuePair<string, string>> options)
     {
         ArgumentNullException.ThrowIfNull(options);
@@ -89,35 +73,27 @@ public class ActiveMqHostConfigurator :
         }
     }
 
-    /// <summary>
-    /// Performs the enable async send operation.
-    /// </summary>
+    /// <summary>Enables the Apache NMS asynchronous-send connection option.</summary>
     public void EnableAsyncSend()
     {
         _settings.TransportOptions["nms.AsyncSend"] = "true";
     }
 
-    /// <summary>
-    /// Performs the enable optimize acknowledge operation.
-    /// </summary>
+    /// <summary>Enables the Apache NMS optimized-acknowledgement connection option.</summary>
     public void EnableOptimizeAcknowledge()
     {
         _settings.TransportOptions["jms.optimizeAcknowledge"] = "true";
     }
 
-    /// <summary>
-    /// Sets prefetch policy.
-    /// </summary>
-    /// <param name="limit">The limit value.</param>
+    /// <summary>Sets the native prefetch limit for all destination types.</summary>
+    /// <param name="limit">The provider prefetch limit.</param>
     public void SetPrefetchPolicy(int limit)
     {
         _settings.TransportOptions["jms.prefetchPolicy.all"] = limit.ToString();
     }
 
-    /// <summary>
-    /// Sets queue prefetch policy.
-    /// </summary>
-    /// <param name="limit">The limit value.</param>
+    /// <summary>Sets the native prefetch limit for queues.</summary>
+    /// <param name="limit">The queue prefetch limit.</param>
     public void SetQueuePrefetchPolicy(int limit)
     {
         _settings.TransportOptions["jms.prefetchPolicy.queuePrefetch"] = limit.ToString();

@@ -2,40 +2,28 @@ using System;
 
 namespace ViciOne.ServiceBus.Events;
 
-/// <summary>
-/// Provides a receive endpoint faulted event implementation.
-/// </summary>
+/// <summary>Carries the receive endpoint faulted event data.</summary>
 public class ReceiveEndpointFaultedEvent :
     ReceiveEndpointFaulted
 {
     readonly ReceiveTransportFaulted _faulted;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="faulted">The faulted value.</param>
-    /// <param name="receiveEndpoint">The receive endpoint value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="faulted">The faulted.</param>
+    /// <param name="receiveEndpoint">The receive endpoint.</param>
     public ReceiveEndpointFaultedEvent(ReceiveTransportFaulted faulted, IReceiveEndpoint receiveEndpoint)
     {
         _faulted = faulted;
         ReceiveEndpoint = receiveEndpoint;
     }
 
-    /// <summary>
-    /// Gets the input address value.
-    /// </summary>
+    /// <summary>Gets the input address.</summary>
     public Uri InputAddress => _faulted.InputAddress;
-    /// <summary>
-    /// Gets the exception value.
-    /// </summary>
+    /// <summary>Gets the exception.</summary>
     public Exception Exception => _faulted.Exception;
-    /// <summary>
-    /// Gets the is terminal value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether terminal.</summary>
     public bool IsTerminal => _faulted.IsTerminal;
 
-    /// <summary>
-    /// Gets the receive endpoint value.
-    /// </summary>
+    /// <summary>Gets the receive endpoint.</summary>
     public IReceiveEndpoint ReceiveEndpoint { get; }
 }

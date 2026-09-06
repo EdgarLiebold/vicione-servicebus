@@ -3,35 +3,29 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 
-/// <summary>
-/// Provides an in memory outbox context factory implementation.
-/// </summary>
+/// <summary>Creates in memory outbox context instances.</summary>
 public class InMemoryOutboxContextFactory :
     IOutboxContextFactory<InMemoryOutboxMessageRepository>
 {
     readonly InMemoryOutboxMessageRepository _messageRepository;
     readonly IServiceProvider _provider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageRepository">The message repository value.</param>
-    /// <param name="provider">The service provider.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="messageRepository">The message repository.</param>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
     public InMemoryOutboxContextFactory(InMemoryOutboxMessageRepository messageRepository, IServiceProvider provider)
     {
         _messageRepository = messageRepository;
         _provider = provider;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="next">The next value.</param>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync<T>(ConsumeContext<T> context, OutboxConsumeOptions options, IPipe<OutboxConsumeContext<T>> next, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -97,10 +91,8 @@ public class InMemoryOutboxContextFactory :
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateFilterScope("inMemoryOutboxContextFactory");

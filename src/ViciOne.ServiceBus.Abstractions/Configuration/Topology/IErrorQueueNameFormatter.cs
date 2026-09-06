@@ -1,14 +1,10 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for error queue name formatter.
-/// </summary>
+/// <summary>Formats error queue name values.</summary>
 public interface IErrorQueueNameFormatter
 {
-    /// <summary>
-    /// Performs the format error queue name operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats error queue name.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <returns>The formatted error queue name.</returns>
     string FormatErrorQueueName(string queueName);
 }

@@ -7,28 +7,24 @@ namespace ViciOne.ServiceBus.Middleware;
 /// A content filter applies a delegate to the message context, and uses the result to either accept the message
 /// or discard it.
 /// </summary>
-/// <typeparam name="TContext"></typeparam>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class ContextFilter<TContext> :
     IFilter<TContext>
     where TContext : class, PipeContext
 {
     readonly Func<TContext, Task<bool>> _filter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public ContextFilter(Func<TContext, Task<bool>> filter)
     {
         _filter = filter ?? throw new ArgumentNullException(nameof(filter));
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(TContext context, IPipe<TContext> next)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -49,10 +45,8 @@ public class ContextFilter<TContext> :
         return SendAsync();
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

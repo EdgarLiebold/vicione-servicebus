@@ -1,10 +1,7 @@
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Represents the method that handles amazon sqs configure endpoints callback.
-/// </summary>
-/// <param name="context">The operation context.</param>
-/// <param name="queueName">The queue name value.</param>
-/// <param name="configurator">The configurator value.</param>
-/// <returns>The result of the operation.</returns>
+/// <summary>Configures an Amazon SQS receive endpoint discovered during endpoint registration.</summary>
+/// <param name="context">The service registration context.</param>
+/// <param name="queueName">The resolved queue name, or <see langword="null"/> when it is not yet available.</param>
+/// <param name="configurator">The Amazon SQS receive-endpoint configurator.</param>
 public delegate void AmazonSqsConfigureEndpointsCallback(IRegistrationContext context, string? queueName, IAmazonSqsReceiveEndpointConfigurator configurator);

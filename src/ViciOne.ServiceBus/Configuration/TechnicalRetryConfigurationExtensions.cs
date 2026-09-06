@@ -6,6 +6,8 @@ namespace ViciOne.ServiceBus.Configuration;
 public static class TechnicalRetryConfigurationExtensions
 {
     /// <summary>Adds the canonical short in-process technical retry policy.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="classifier">The classifier.</param>
     public static void UseTechnicalMessageRetry(this IConsumePipeConfigurator configurator,
         ITechnicalFailureClassifier? classifier = null)
     {
@@ -14,6 +16,8 @@ public static class TechnicalRetryConfigurationExtensions
     }
 
     /// <summary>Adds the canonical delayed technical redelivery policy.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="classifier">The classifier.</param>
     public static void UseTechnicalDelayedRedelivery(this IConsumePipeConfigurator configurator,
         ITechnicalFailureClassifier? classifier = null)
     {

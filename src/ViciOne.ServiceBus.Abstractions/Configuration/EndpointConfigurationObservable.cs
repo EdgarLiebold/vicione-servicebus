@@ -2,18 +2,14 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an endpoint configuration observable implementation.
-/// </summary>
+/// <summary>Publishes observations for endpoint configuration.</summary>
 public class EndpointConfigurationObservable :
     Connectable<IEndpointConfigurationObserver>,
     IEndpointConfigurationObserver
 {
-    /// <summary>
-    /// Performs the endpoint configured operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that endpoint has been configured.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void EndpointConfigured<T>(T configurator)
         where T : IReceiveEndpointConfigurator
     {

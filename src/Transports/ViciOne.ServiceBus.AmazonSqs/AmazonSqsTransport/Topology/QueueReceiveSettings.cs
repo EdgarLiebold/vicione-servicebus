@@ -3,22 +3,18 @@ using ViciOne.ServiceBus.AmazonSqs.Configuration;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides a queue receive settings implementation.
-/// </summary>
+/// <summary>Stores Amazon SQS queue, polling, concurrency, ordering, and visibility settings for a receive endpoint.</summary>
 public class QueueReceiveSettings :
     AmazonSqsQueueSubscriptionConfigurator,
     ReceiveSettings
 {
     readonly IAmazonSqsEndpointConfiguration _configuration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configuration">The configuration callback.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
+    /// <summary>Initializes receive settings with Amazon SQS polling and visibility defaults.</summary>
+    /// <param name="configuration">The endpoint configuration that supplies transport concurrency settings.</param>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="durable">Whether the queue is retained when the endpoint stops.</param>
+    /// <param name="autoDelete">Whether the queue is deleted when the endpoint stops.</param>
     public QueueReceiveSettings(IAmazonSqsEndpointConfiguration configuration, string queueName, bool durable, bool autoDelete)
         : base(queueName, durable, autoDelete)
     {
@@ -36,65 +32,39 @@ public class QueueReceiveSettings :
             IsOrdered = true;
     }
 
-    /// <summary>
-    /// Gets the prefetch count value.
-    /// </summary>
+    /// <inheritdoc />
     public int PrefetchCount => _configuration.Transport.PrefetchCount;
-    /// <summary>
-    /// Gets the concurrent message limit value.
-    /// </summary>
+    /// <inheritdoc />
     public int ConcurrentMessageLimit => _configuration.Transport.GetConcurrentMessageLimit();
 
-    /// <summary>
-    /// Gets or sets the concurrent delivery limit value.
-    /// </summary>
+    /// <inheritdoc />
     public int ConcurrentDeliveryLimit { get; set; }
 
-    /// <summary>
-    /// Gets or sets the wait time seconds value.
-    /// </summary>
+    /// <inheritdoc />
     public int WaitTimeSeconds { get; set; }
 
-    /// <summary>
-    /// Gets or sets the purge on startup value.
-    /// </summary>
+    /// <inheritdoc />
     public bool PurgeOnStartup { get; set; }
 
-    /// <summary>
-    /// Gets or sets the is ordered value.
-    /// </summary>
+    /// <inheritdoc />
     public bool IsOrdered { get; set; }
 
-    /// <summary>
-    /// Gets or sets the visibility timeout value.
-    /// </summary>
+    /// <inheritdoc />
     public int VisibilityTimeout { get; set; }
 
-    /// <summary>
-    /// Gets or sets the redeliver visibility timeout value.
-    /// </summary>
+    /// <inheritdoc />
     public int RedeliverVisibilityTimeout { get; set; }
 
-    /// <summary>
-    /// Gets or sets the max visibility timeout value.
-    /// </summary>
+    /// <inheritdoc />
     public TimeSpan MaxVisibilityTimeout { get; set; }
 
-    /// <summary>
-    /// Gets or sets the max visibility timeout renewal value.
-    /// </summary>
+    /// <inheritdoc />
     public int MaxVisibilityTimeoutRenewal { get; set; }
 
-    /// <summary>
-    /// Gets or sets the queue url value.
-    /// </summary>
+    /// <inheritdoc />
     public string? QueueUrl { get; set; }
 
-    /// <summary>
-    /// Gets input address.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <inheritdoc />
     public Uri GetInputAddress(Uri hostAddress)
     {
         return GetEndpointAddress(hostAddress);

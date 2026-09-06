@@ -9,9 +9,9 @@ namespace ViciOne.ServiceBus.Configuration;
 /// </summary>
 public interface IRegistrationConfiguratorServices
 {
-    /// <summary>Gets the dependency-injection collection owned by this configurator.</summary>
+    /// <summary>Gets the services.</summary>
     IServiceCollection Services { get; }
 
-    /// <summary>Gets the bus contract owned by this registration configurator.</summary>
+    /// <summary>Gets the bus type.</summary>
     Type BusType { get; }
 }

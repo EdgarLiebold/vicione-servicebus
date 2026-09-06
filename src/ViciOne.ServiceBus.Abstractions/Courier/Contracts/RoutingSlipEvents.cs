@@ -2,65 +2,41 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Specifies the available routing slip events values.
-/// </summary>
+/// <summary>Specifies the available routing slip events values.</summary>
 [Flags]
 public enum RoutingSlipEvents
 {
-    /// <summary>
-    /// By default, all routing slip events are included for a subscription
-    /// </summary>
+    /// <summary>By default, all routing slip events are included for a subscription.</summary>
     All = 0,
 
-    /// <summary>
-    /// Send the RoutingSlipCompleted event
-    /// </summary>
+    /// <summary>Send the RoutingSlipCompleted event.</summary>
     Completed = 0x0001,
 
-    /// <summary>
-    /// Send the RoutingSlipFaulted event
-    /// </summary>
+    /// <summary>Send the RoutingSlipFaulted event.</summary>
     Faulted = 0x0002,
 
-    /// <summary>
-    /// Send the RoutingSlipCompensationFaulted event
-    /// </summary>
+    /// <summary>Send the RoutingSlipCompensationFaulted event.</summary>
     CompensationFailed = 0x0004,
 
-    /// <summary>
-    /// Send the routing slip terminated event
-    /// </summary>
+    /// <summary>Send the routing slip terminated event.</summary>
     Terminated = 0x0008,
 
-    /// <summary>
-    /// Send the routing slip revised event
-    /// </summary>
+    /// <summary>Send the routing slip revised event.</summary>
     Revised = 0x0010,
 
-    /// <summary>
-    /// Send the RoutingSlipActivityCompleted event
-    /// </summary>
+    /// <summary>Send the RoutingSlipActivityCompleted event.</summary>
     ActivityCompleted = 0x0100,
 
-    /// <summary>
-    /// Send the RoutingSlipActivityFaulted event
-    /// </summary>
+    /// <summary>Send the RoutingSlipActivityFaulted event.</summary>
     ActivityFaulted = 0x0200,
 
-    /// <summary>
-    /// Send the RoutingSlipActivityCompensated event
-    /// </summary>
+    /// <summary>Send the RoutingSlipActivityCompensated event.</summary>
     ActivityCompensated = 0x0400,
 
-    /// <summary>
-    /// Send the RoutingSlipCompensationFailed event
-    /// </summary>
+    /// <summary>Send the RoutingSlipCompensationFailed event.</summary>
     ActivityCompensationFailed = 0x0800,
 
-    /// <summary>
-    /// Used to mask the events so that upper-level flags don't conflict
-    /// </summary>
+    /// <summary>Used to mask the events so that upper-level flags don't conflict.</summary>
     EventMask = 0xFFFF,
 
     /// <summary>

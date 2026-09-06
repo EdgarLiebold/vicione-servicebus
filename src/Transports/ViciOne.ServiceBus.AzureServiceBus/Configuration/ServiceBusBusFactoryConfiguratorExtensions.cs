@@ -6,20 +6,13 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides extension methods for service bus bus factory configurator.
-/// </summary>
+/// <summary>Configures Azure Service Bus hosts and receive endpoints on a bus factory.</summary>
 public static class ServiceBusBusFactoryConfiguratorExtensions
 {
-    /// <summary>
-    /// Adds a service bus host using the ViciOne.ServiceBus style URI host name
-    /// </summary>
-    /// <param name="configurator">The bus factory configurator</param>
-    /// <param name="hostAddress">
-    /// The host address, in ViciOne.ServiceBus format (sb://namespace.servicebus.windows.net/scope)
-    /// </param>
-    /// <param name="configure">A callback to further configure the service bus</param>
-    /// <returns>The service bus host</returns>
+    /// <summary>Configures a namespace from an absolute Azure Service Bus host address.</summary>
+    /// <param name="configurator">The bus factory to configure.</param>
+    /// <param name="hostAddress">The namespace address, optionally followed by an entity-path scope.</param>
+    /// <param name="configure">Optionally configures credentials, transport, and retry settings.</param>
     public static void Host(this IServiceBusBusFactoryConfigurator configurator, Uri hostAddress,
         Action<IServiceBusHostConfigurator>? configure = null)
     {
@@ -30,15 +23,11 @@ public static class ServiceBusBusFactoryConfiguratorExtensions
         configurator.Host(hostConfigurator.Settings);
     }
 
-    /// <summary>
-    /// Adds a service bus host using the ViciOne.ServiceBus style URI host name with the pre-configured clients.
-    /// </summary>
-    /// <param name="configurator">The bus factory configurator</param>
-    /// <param name="hostAddress">
-    /// The host address, in ViciOne.ServiceBus format (sb://namespace.servicebus.windows.net/scope)
-    /// </param>
-    /// <param name="serviceBusClient">A pre-configured client used to perform message operations on the Service Bus</param>
-    /// <param name="serviceBusAdministrationClient">A pre-configured client to perform namespace operations on the Service Bus</param>
+    /// <summary>Configures a namespace backed by caller-owned Azure SDK clients.</summary>
+    /// <param name="configurator">The bus factory to configure.</param>
+    /// <param name="hostAddress">The namespace address, optionally followed by an entity-path scope.</param>
+    /// <param name="serviceBusClient">The client used for message operations.</param>
+    /// <param name="serviceBusAdministrationClient">The client used for namespace administration.</param>
     public static void Host(this IServiceBusBusFactoryConfigurator configurator, Uri hostAddress,
         ServiceBusClient serviceBusClient, ServiceBusAdministrationClient serviceBusAdministrationClient)
     {
@@ -47,17 +36,14 @@ public static class ServiceBusBusFactoryConfiguratorExtensions
         configurator.Host(hostConfigurator.Settings);
     }
 
-    /// <summary>
-    /// Adds a Service Bus host using a connection string (Endpoint=...., etc.).
-    /// </summary>
-    /// <param name="configurator">The bus factory configurator</param>
-    /// <param name="connectionString">The connection string in the proper format</param>
-    /// <param name="configure">A callback to further configure the service bus</param>
-    /// <returns>The service bus host</returns>
+    /// <summary>Configures a namespace from an Azure connection string or absolute endpoint address.</summary>
+    /// <param name="configurator">The bus factory to configure.</param>
+    /// <param name="connectionString">An Azure Service Bus connection string or absolute namespace address.</param>
+    /// <param name="configure">Optionally configures credentials, transport, and retry settings.</param>
     public static void Host(this IServiceBusBusFactoryConfigurator configurator, string connectionString,
         Action<IServiceBusHostConfigurator>? configure = null)
     {
-        // in case they pass a URI by mistake (it happens)
+        // Accept both Azure connection strings and absolute endpoint addresses.
         if (Uri.IsWellFormedUriString(connectionString, UriKind.Absolute))
         {
             var hostAddress = new Uri(connectionString);
@@ -74,11 +60,9 @@ public static class ServiceBusBusFactoryConfiguratorExtensions
         }
     }
 
-    /// <summary>
-    /// Performs the shared access signature operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures authentication with a precomputed shared access signature.</summary>
+    /// <param name="configurator">The host configuration to update.</param>
+    /// <param name="configure">Supplies the signature and its validity interval.</param>
     public static void SharedAccessSignature(this IServiceBusHostConfigurator configurator,
         Action<ISharedAccessSignatureTokenProviderConfigurator> configure)
     {
@@ -89,11 +73,9 @@ public static class ServiceBusBusFactoryConfiguratorExtensions
         configurator.SasCredential = tokenProviderConfigurator.SasCredential;
     }
 
-    /// <summary>
-    /// Performs the named key operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures authentication with an Azure shared access key name and value.</summary>
+    /// <param name="configurator">The host configuration to update.</param>
+    /// <param name="configure">Supplies the shared access key credentials.</param>
     public static void NamedKey(this IServiceBusHostConfigurator configurator,
         Action<IServiceBusNamedKeyTokenProviderConfigurator> configure)
     {
@@ -105,23 +87,20 @@ public static class ServiceBusBusFactoryConfiguratorExtensions
     }
 
     /// <summary>
-    /// Declare a ReceiveEndpoint using a unique generated queue name. This queue defaults to auto-delete
-    /// and non-durable. By default all services bus instances include a default receiveEndpoint that is
-    /// of this type (created automatically upon the first receiver binding).
+    /// Registers a temporary receive endpoint with a generated queue name.
+    /// The queue is non-durable and automatically deleted after its configured idle interval.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
+    /// <param name="configurator">The bus factory to configure.</param>
+    /// <param name="configure">Optionally configures the temporary endpoint.</param>
     public static void ReceiveEndpoint(this IServiceBusBusFactoryConfigurator configurator, Action<IServiceBusReceiveEndpointConfigurator>? configure = null)
     {
         configurator.ReceiveEndpoint(new TemporaryEndpointDefinition(), DefaultEndpointNameFormatter.Instance, configure);
     }
 
-    /// <summary>
-    /// Declare a receive endpoint using the endpoint <paramref name="definition"/>.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="definition"></param>
-    /// <param name="configure"></param>
+    /// <summary>Registers a receive endpoint from an endpoint definition.</summary>
+    /// <param name="configurator">The bus factory to configure.</param>
+    /// <param name="definition">The definition that supplies the endpoint name and common settings.</param>
+    /// <param name="configure">Optionally configures Azure Service Bus-specific endpoint settings.</param>
     public static void ReceiveEndpoint(this IServiceBusBusFactoryConfigurator configurator, IEndpointDefinition definition,
         Action<IServiceBusReceiveEndpointConfigurator>? configure = null)
     {

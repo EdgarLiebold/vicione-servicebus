@@ -2,28 +2,18 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// The exchange to exchange binding details to declare the binding to RabbitMQ
-/// </summary>
+/// <summary>Describes an exchange-to-exchange binding declaration in a RabbitMQ broker topology.</summary>
 public interface ExchangeToExchangeBinding
 {
-    /// <summary>
-    /// The source exchange
-    /// </summary>
+    /// <summary>Gets the source exchange.</summary>
     Exchange Source { get; }
 
-    /// <summary>
-    /// The destination exchange
-    /// </summary>
+    /// <summary>Gets the destination exchange.</summary>
     Exchange Destination { get; }
 
-    /// <summary>
-    /// A routing key for the exchange binding
-    /// </summary>
+    /// <summary>Gets the routing key used by the binding.</summary>
     string RoutingKey { get; }
 
-    /// <summary>
-    /// The arguments for the binding
-    /// </summary>
+    /// <summary>Gets the broker-specific binding arguments.</summary>
     IDictionary<string, object?> Arguments { get; }
 }

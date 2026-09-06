@@ -2,11 +2,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a compensate activity factory filter implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TLog">The t log type.</typeparam>
+/// <summary>Processes compensate activity factory pipeline stages.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TLog">The log type.</typeparam>
 public class CompensateActivityFactoryFilter<TActivity, TLog> :
     IFilter<CompensateContext<TLog>>
     where TActivity : class, ICompensateActivity<TLog>
@@ -15,23 +13,19 @@ public class CompensateActivityFactoryFilter<TActivity, TLog> :
     readonly ICompensateActivityFactory<TActivity, TLog> _factory;
     readonly IPipe<CompensateActivityContext<TActivity, TLog>> _pipe;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     public CompensateActivityFactoryFilter(ICompensateActivityFactory<TActivity, TLog> factory, IPipe<CompensateActivityContext<TActivity, TLog>> pipe)
     {
         _factory = factory;
         _pipe = pipe;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(CompensateContext<TLog> context, IPipe<CompensateContext<TLog>> next)
     {
         await _factory.CompensateAsync(context, _pipe).ConfigureAwait(false);
@@ -39,10 +33,8 @@ public class CompensateActivityFactoryFilter<TActivity, TLog> :
         await next.SendAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         _factory.Probe(context);

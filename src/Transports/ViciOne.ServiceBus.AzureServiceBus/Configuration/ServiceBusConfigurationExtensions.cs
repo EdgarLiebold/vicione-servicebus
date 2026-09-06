@@ -7,27 +7,21 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for service bus configuration.
-/// </summary>
+/// <summary>Registers and creates buses that use the Azure Service Bus transport.</summary>
 public static class ServiceBusConfigurationExtensions
 {
-    /// <summary>
-    /// Configure and create a bus for Azure Service Bus
-    /// </summary>
-    /// <param name="selector">Hang off the selector interface for visibility</param>
-    /// <param name="configure">The configuration callback to configure the bus</param>
-    /// <returns></returns>
+    /// <summary>Creates a standalone bus control that uses Azure Service Bus.</summary>
+    /// <param name="selector">The transport selector used to expose this factory method.</param>
+    /// <param name="configure">Configures the Azure Service Bus bus.</param>
+    /// <returns>The configured bus control.</returns>
     public static IBusControl CreateUsingAzureServiceBus(this IBusFactorySelector selector, Action<IServiceBusBusFactoryConfigurator> configure)
     {
         return AzureBusFactory.CreateUsingServiceBus(configure);
     }
 
-    /// <summary>
-    /// Configure ViciOne.ServiceBus to use Azure Service Bus for the transport.
-    /// </summary>
-    /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus)</param>
-    /// <param name="configure">The configuration callback for the bus factory</param>
+    /// <summary>Registers Azure Service Bus as the transport for the default bus.</summary>
+    /// <param name="configurator">The default bus registration.</param>
+    /// <param name="configure">Optionally configures the bus factory when the bus is created.</param>
     public static void UsingAzureServiceBus(this IBusRegistrationConfigurator configurator,
         Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator>? configure = null)
     {
@@ -43,11 +37,10 @@ public static class ServiceBusConfigurationExtensions
         });
     }
 
-    /// <summary>
-    /// Configure ViciOne.ServiceBus to use Azure Service Bus for the transport.
-    /// </summary>
-    /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus)</param>
-    /// <param name="configure">The configuration callback for the bus factory</param>
+    /// <summary>Registers Azure Service Bus as the transport for a named bus.</summary>
+    /// <typeparam name="TBus">The named bus contract.</typeparam>
+    /// <param name="configurator">The named bus registration.</param>
+    /// <param name="configure">Optionally configures the bus factory when the bus is created.</param>
     public static void UsingAzureServiceBus<TBus>(this IBusRegistrationConfigurator<TBus> configurator,
         Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator>? configure = null)
         where TBus : class, IBus

@@ -2,14 +2,12 @@ using ViciOne.ServiceBus.Initializers.Variables;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Variables, which can be used for message initialization
-/// </summary>
+/// <summary>Variables, which can be used for message initialization.</summary>
 public static class InVar
 {
     /// <summary>
     /// Generates the current timestamp, in UTC, which can be used to initialize properties
-    /// in the message with a consistent value
+    /// in the message with a consistent value.
     /// </summary>
     public static TimestampVariable Timestamp => new TimestampVariable();
 

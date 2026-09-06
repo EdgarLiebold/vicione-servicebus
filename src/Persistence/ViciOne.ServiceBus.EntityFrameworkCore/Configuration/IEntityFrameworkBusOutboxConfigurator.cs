@@ -2,31 +2,19 @@ using System;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Defines the contract for entity framework bus outbox configurator.
-/// </summary>
+/// <summary>Configures delivery of messages persisted by an Entity Framework Core transactional outbox.</summary>
 public interface IEntityFrameworkBusOutboxConfigurator :
     IBusOutboxConfigurator
 {
-    /// <summary>
-    /// Gets or sets the message delivery limit value.
-    /// </summary>
+    /// <summary>Sets the maximum number of persisted messages sent from one outbox row per delivery pass.</summary>
     int MessageDeliveryLimit { set; }
-    /// <summary>
-    /// Gets or sets the message delivery timeout value.
-    /// </summary>
+    /// <summary>Gets or sets the timeout applied to each individual transport send.</summary>
     TimeSpan MessageDeliveryTimeout { get; set; }
-    /// <summary>
-    /// Gets or sets the maximum delivery attempts value.
-    /// </summary>
+    /// <summary>Gets or sets the number of failed attempts after which an outbox row is quarantined.</summary>
     int MaximumDeliveryAttempts { get; set; }
-    /// <summary>
-    /// Gets or sets the initial delivery retry delay value.
-    /// </summary>
+    /// <summary>Gets or sets the delay before the first retry of a failed transport send.</summary>
     TimeSpan InitialDeliveryRetryDelay { get; set; }
-    /// <summary>
-    /// Gets or sets the maximum delivery retry delay value.
-    /// </summary>
+    /// <summary>Gets or sets the upper bound for exponentially increasing delivery retry delays.</summary>
     TimeSpan MaximumDeliveryRetryDelay { get; set; }
 
     /// <summary>

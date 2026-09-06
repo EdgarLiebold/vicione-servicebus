@@ -4,11 +4,9 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Merges the out-of-band consumer back into the pipe
-/// </summary>
-/// <typeparam name="TConsumer"></typeparam>
-/// <typeparam name="TMessage"></typeparam>
+/// <summary>Merges the out-of-band consumer back into the pipe.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class ConsumerMergePipe<TConsumer, TMessage> :
     IPipe<ConsumerConsumeContext<TConsumer>>
     where TMessage : class
@@ -16,10 +14,8 @@ public class ConsumerMergePipe<TConsumer, TMessage> :
 {
     readonly IPipe<ConsumerConsumeContext<TConsumer, TMessage>> _output;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="output">The output value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="output">The output.</param>
     public ConsumerMergePipe(IPipe<ConsumerConsumeContext<TConsumer, TMessage>> output)
     {
         _output = output;
@@ -37,11 +33,9 @@ public class ConsumerMergePipe<TConsumer, TMessage> :
         _output.Probe(scope);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(ConsumerConsumeContext<TConsumer> context)
     {
         if (context is ConsumerConsumeContext<TConsumer, TMessage> consumerContext)
@@ -50,6 +44,6 @@ public class ConsumerMergePipe<TConsumer, TMessage> :
         if (context.TryGetMessage(out ConsumeContext<TMessage>? messageContext))
             return _output.SendAsync(new ConsumerConsumeContextScope<TConsumer, TMessage>(messageContext, context.Consumer));
 
-        throw new ArgumentException($"THe message could not be retrieved: {TypeCache<TMessage>.ShortName}", nameof(context));
+        throw new ArgumentException($"The message could not be retrieved: {TypeCache<TMessage>.ShortName}", nameof(context));
     }
 }

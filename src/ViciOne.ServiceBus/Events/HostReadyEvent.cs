@@ -2,18 +2,14 @@ using System;
 
 namespace ViciOne.ServiceBus.Events;
 
-/// <summary>
-/// Provides a host ready event implementation.
-/// </summary>
+/// <summary>Carries the host ready event data.</summary>
 public class HostReadyEvent :
     HostReady
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <param name="receiveEndpoints">The receive endpoints value.</param>
-    /// <param name="riders">The riders value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostAddress">The host address.</param>
+    /// <param name="receiveEndpoints">The receive endpoints.</param>
+    /// <param name="riders">The riders.</param>
     public HostReadyEvent(Uri hostAddress, ReceiveEndpointReady[] receiveEndpoints, RiderReady[] riders)
     {
         HostAddress = hostAddress;
@@ -21,18 +17,12 @@ public class HostReadyEvent :
         Riders = riders;
     }
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the host address.</summary>
     public Uri HostAddress { get; }
 
-    /// <summary>
-    /// Gets the receive endpoints value.
-    /// </summary>
+    /// <summary>Gets the receive endpoints.</summary>
     public ReceiveEndpointReady[] ReceiveEndpoints { get; }
 
-    /// <summary>
-    /// Gets the riders value.
-    /// </summary>
+    /// <summary>Gets the riders.</summary>
     public RiderReady[] Riders { get; }
 }

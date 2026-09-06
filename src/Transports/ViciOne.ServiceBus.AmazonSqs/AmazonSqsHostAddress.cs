@@ -4,34 +4,22 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Represents an amazon sqs host address value.
-/// </summary>
+/// <summary>Represents a validated Amazon SQS region and logical entity scope.</summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct AmazonSqsHostAddress
 {
-    /// <summary>
-    /// Defines the amazon sqs scheme value.
-    /// </summary>
+    /// <summary>The URI scheme for the Amazon SQS transport.</summary>
     public const string AmazonSqsScheme = "amazonsqs";
 
-    /// <summary>
-    /// Defines the scheme value.
-    /// </summary>
+    /// <summary>The transport URI scheme.</summary>
     public readonly string Scheme;
-    /// <summary>
-    /// Defines the host value.
-    /// </summary>
+    /// <summary>The AWS region host name.</summary>
     public readonly string Host;
-    /// <summary>
-    /// Defines the scope value.
-    /// </summary>
+    /// <summary>The logical entity-name scope.</summary>
     public readonly string Scope;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Parses and validates an absolute Amazon SQS host address.</summary>
+    /// <param name="address">The absolute transport host URI.</param>
     public AmazonSqsHostAddress(Uri address)
     {
         ArgumentNullException.ThrowIfNull(address);
@@ -62,11 +50,9 @@ public readonly struct AmazonSqsHostAddress
         }
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="host">The host value.</param>
-    /// <param name="scope">The scope value.</param>
+    /// <summary>Creates an Amazon SQS host address from a region host name and optional scope.</summary>
+    /// <param name="host">The AWS region host name.</param>
+    /// <param name="scope">The logical entity-name scope, or <see langword="null" /> for the root scope.</param>
     public AmazonSqsHostAddress(string host, string? scope)
     {
         if (string.IsNullOrWhiteSpace(host))
@@ -85,11 +71,9 @@ public readonly struct AmazonSqsHostAddress
         scope = address.ParseHostPath();
     }
 
-    /// <summary>
-    /// Converts a value to <see cref="Uri" />.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts the host address to its canonical absolute transport URI.</summary>
+    /// <param name="address">The Amazon SQS host address.</param>
+    /// <returns>An absolute URI containing the region host and logical scope.</returns>
     public static implicit operator Uri(in AmazonSqsHostAddress address)
     {
         var builder = new UriBuilder

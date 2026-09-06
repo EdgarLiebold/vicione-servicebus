@@ -3,39 +3,31 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// The last pipe in a pipeline is always an end pipe that does nothing and returns synchronously
-/// </summary>
-/// <typeparam name="TContext"></typeparam>
+/// <summary>The last pipe in a pipeline is always an end pipe that does nothing and returns synchronously.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class LastPipe<TContext> :
     IPipe<TContext>
     where TContext : class, PipeContext
 {
     readonly IFilter<TContext> _filter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public LastPipe(IFilter<TContext> filter)
     {
         _filter = filter;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         _filter.Probe(context);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [DebuggerStepThrough]
     public Task SendAsync(TContext context)
     {

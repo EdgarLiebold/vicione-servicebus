@@ -8,16 +8,12 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Provides extension methods for sql schedule message.
-/// </summary>
+/// <summary>Provides extension methods for sql schedule message.</summary>
 public static class SqlScheduleMessageExtensions
 {
 
-    /// <summary>
-    /// Uses the SQL transport's built-in message scheduler
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Uses the SQL transport's built-in message scheduler.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public static void ConfigureSqlMessageScheduler(this IBusFactoryConfigurator configurator)
     {
         if (configurator == null)
@@ -28,10 +24,8 @@ public static class SqlScheduleMessageExtensions
         configurator.AddPrePipeSpecification(pipeBuilderConfigurator);
     }
 
-    /// <summary>
-    /// Add a <see cref="IMessageScheduler" /> to the container that uses the SQL Transport message enqueue time to schedule messages.
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Add a <see cref="IMessageScheduler" /> to the container that uses the SQL Transport message enqueue time to schedule messages.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public static void AddSqlMessageScheduler(this IBusRegistrationConfigurator configurator)
     {
         configurator.Services.TryAddScoped<IMessageScheduler>(provider =>
@@ -47,10 +41,9 @@ public static class SqlScheduleMessageExtensions
         });
     }
 
-    /// <summary>
-    /// Add a <see cref="IMessageScheduler" /> to the container that uses the SQL Transport message enqueue time to schedule messages.
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Add a <see cref="IMessageScheduler" /> to the container that uses the SQL Transport message enqueue time to schedule messages.</summary>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public static void AddSqlMessageScheduler<TBus>(this IBusRegistrationConfigurator<TBus> configurator)
         where TBus : class, IBus
     {

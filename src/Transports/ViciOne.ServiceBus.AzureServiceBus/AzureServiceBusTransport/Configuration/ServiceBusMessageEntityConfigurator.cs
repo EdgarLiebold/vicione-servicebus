@@ -2,19 +2,15 @@ using System;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus message entity configurator implementation.
-/// </summary>
+/// <summary>Captures the common creation properties of Azure Service Bus queues and topics.</summary>
 public abstract class ServiceBusMessageEntityConfigurator :
     ServiceBusEntityConfigurator,
     IServiceBusMessageEntityConfigurator
 {
     string? _basePath;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="path">The path value.</param>
+    /// <summary>Initializes an entity with the transport's durable entity defaults.</summary>
+    /// <param name="path">The entity path relative to the configured base path.</param>
     protected ServiceBusMessageEntityConfigurator(string path)
     {
         Path = path;
@@ -24,54 +20,36 @@ public abstract class ServiceBusMessageEntityConfigurator :
         EnableBatchedOperations = true;
     }
 
-    /// <summary>
-    /// Gets or sets the path value.
-    /// </summary>
+    /// <summary>Gets or sets the entity path relative to <see cref="BasePath"/>.</summary>
     public string Path { get; set; }
 
-    /// <summary>
-    /// Gets or sets the base path value.
-    /// </summary>
+    /// <summary>Gets or sets the optional namespace-relative prefix applied to the entity path.</summary>
     public string? BasePath
     {
         get => _basePath;
         set => _basePath = value?.Trim('/');
     }
 
-    /// <summary>
-    /// Gets the full path value.
-    /// </summary>
+    /// <summary>Gets the entity path including its optional base-path prefix.</summary>
     public string FullPath => string.IsNullOrEmpty(BasePath) ? Path : $"{BasePath}/{Path.Trim('/')}";
 
-    /// <summary>
-    /// Gets or sets the duplicate detection history time window value.
-    /// </summary>
+    /// <summary>Gets or sets how long Azure Service Bus retains message identifiers for duplicate detection.</summary>
     public TimeSpan? DuplicateDetectionHistoryTimeWindow { get; set; }
 
-    /// <summary>
-    /// Gets or sets the enable partitioning value.
-    /// </summary>
+    /// <summary>Gets or sets whether the entity is partitioned.</summary>
     public bool? EnablePartitioning { get; set; }
 
-    /// <summary>
-    /// Gets or sets the max size in megabytes value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum entity size in megabytes.</summary>
     public long? MaxSizeInMegabytes { get; set; }
 
-    /// <summary>
-    /// Gets or sets the max message size in kilobytes value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum individual message size in kilobytes.</summary>
     public long? MaxMessageSizeInKilobytes { get; set; }
 
-    /// <summary>
-    /// Gets or sets the requires duplicate detection value.
-    /// </summary>
+    /// <summary>Gets or sets whether Azure Service Bus rejects duplicate message identifiers.</summary>
     public bool? RequiresDuplicateDetection { get; set; }
 
-    /// <summary>
-    /// Performs the enable duplicate detection operation.
-    /// </summary>
-    /// <param name="historyTimeWindow">The history time window value.</param>
+    /// <summary>Enables duplicate detection and sets its identifier-retention window.</summary>
+    /// <param name="historyTimeWindow">How long message identifiers remain available for duplicate detection.</param>
     public void EnableDuplicateDetection(TimeSpan historyTimeWindow)
     {
         RequiresDuplicateDetection = true;

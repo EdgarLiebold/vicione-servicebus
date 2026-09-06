@@ -4,22 +4,18 @@ using ViciOne.ServiceBus.ActiveMq.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq.Configuration;
 
-/// <summary>
-/// Used to by a Consumer virtual destination to the receive endpoint, via an additional message consumer
-/// </summary>
+/// <summary>Connects an ActiveMQ virtual topic to a receive endpoint through a consumer queue or named subscription.</summary>
 public class ConsumerConsumeTopologySpecification :
     ActiveMqTopicBindingConfigurator,
     IActiveMqConsumeTopologySpecification
 {
     readonly IActiveMqConsumerEndpointQueueNameFormatter? _consumerEndpointQueueNameFormatter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="consumerEndpointQueueNameFormatter">The consumer endpoint queue name formatter value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
+    /// <summary>Creates a virtual-topic consume specification from explicit topic settings.</summary>
+    /// <param name="topicName">The topic name.</param>
+    /// <param name="consumerEndpointQueueNameFormatter">An optional formatter for the consumer queue or subscription name.</param>
+    /// <param name="durable">Whether the topic and consumer queue persist across broker restarts.</param>
+    /// <param name="autoDelete">Whether the broker removes the topic when it is no longer used.</param>
     public ConsumerConsumeTopologySpecification(string topicName, IActiveMqConsumerEndpointQueueNameFormatter? consumerEndpointQueueNameFormatter,
         bool durable = true, bool autoDelete = false)
         : base(topicName, durable, autoDelete)
@@ -27,30 +23,24 @@ public class ConsumerConsumeTopologySpecification :
         _consumerEndpointQueueNameFormatter = consumerEndpointQueueNameFormatter;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="consumerEndpointQueueNameFormatter">The consumer endpoint queue name formatter value.</param>
+    /// <summary>Creates a virtual-topic consume specification from existing topic settings.</summary>
+    /// <param name="topic">The topic settings to copy.</param>
+    /// <param name="consumerEndpointQueueNameFormatter">An optional formatter for the consumer queue or subscription name.</param>
     public ConsumerConsumeTopologySpecification(Topic topic, IActiveMqConsumerEndpointQueueNameFormatter? consumerEndpointQueueNameFormatter)
         : base(topic)
     {
         _consumerEndpointQueueNameFormatter = consumerEndpointQueueNameFormatter;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return Enumerable.Empty<ValidationResult>();
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Adds the virtual topic and its consumer queue or named Artemis subscription to a receive topology.</summary>
+    /// <param name="builder">The receive-topology builder.</param>
     public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
     {
         var destinationQueue = builder.Queue.Queue;

@@ -1,23 +1,17 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for message connector factory.
-/// </summary>
+/// <summary>Creates message connector instances.</summary>
 public interface IMessageConnectorFactory
 {
-    /// <summary>
-    /// Creates consumer connector.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates consumer connector.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The created consumer connector.</returns>
     IConsumerMessageConnector<T> CreateConsumerConnector<T>()
         where T : class;
 
-    /// <summary>
-    /// Creates instance connector.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates instance connector.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The created instance connector.</returns>
     IInstanceMessageConnector<T> CreateInstanceConnector<T>()
         where T : class;
 }

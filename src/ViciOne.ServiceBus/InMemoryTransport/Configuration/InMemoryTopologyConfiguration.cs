@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>
-/// Provides an in memory topology configuration implementation.
-/// </summary>
+/// <summary>Stores and validates in memory topology configuration.</summary>
 public class InMemoryTopologyConfiguration :
     IInMemoryTopologyConfiguration
 {
@@ -16,10 +14,8 @@ public class InMemoryTopologyConfiguration :
     readonly IInMemoryPublishTopologyConfigurator _publishTopology;
     readonly ISendTopologyConfigurator _sendTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="messageTopology">The message topology.</param>
     public InMemoryTopologyConfiguration(IMessageTopologyConfigurator messageTopology)
     {
         _messageTopology = messageTopology;
@@ -37,10 +33,8 @@ public class InMemoryTopologyConfiguration :
         _consumeTopology = new InMemoryConsumeTopology(messageTopology, _publishTopology);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="topologyConfiguration">The topology configuration.</param>
     public InMemoryTopologyConfiguration(IInMemoryTopologyConfiguration topologyConfiguration)
     {
         _messageTopology = topologyConfiguration.Message;
@@ -58,10 +52,8 @@ public class InMemoryTopologyConfiguration :
     IInMemoryPublishTopologyConfigurator IInMemoryTopologyConfiguration.Publish => _publishTopology;
     IInMemoryConsumeTopologyConfigurator IInMemoryTopologyConfiguration.Consume => _consumeTopology;
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return _sendTopology.Validate()

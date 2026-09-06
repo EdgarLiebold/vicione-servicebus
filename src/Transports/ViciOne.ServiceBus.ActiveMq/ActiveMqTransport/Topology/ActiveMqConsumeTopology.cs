@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.ActiveMq.Configuration;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides an active mq consume topology implementation.
-/// </summary>
+/// <summary>Collects ActiveMQ receive bindings and per-message consume topology.</summary>
 public class ActiveMqConsumeTopology :
     ConsumeTopology,
     IActiveMqConsumeTopologyConfigurator
@@ -15,11 +13,9 @@ public class ActiveMqConsumeTopology :
     readonly IActiveMqPublishTopology _publishTopology;
     readonly IList<IActiveMqConsumeTopologySpecification> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="publishTopology">The publish topology value.</param>
-    /// <param name="consumeTopology">The consume topology value.</param>
+    /// <summary>Creates consume topology linked to a publish topology and optional parent settings.</summary>
+    /// <param name="publishTopology">The publish topology that resolves message topics.</param>
+    /// <param name="consumeTopology">An optional parent whose naming formatters are copied.</param>
     public ActiveMqConsumeTopology(IActiveMqPublishTopology publishTopology, IActiveMqConsumeTopology? consumeTopology = default)
     {
         _publishTopology = publishTopology;
@@ -33,13 +29,9 @@ public class ActiveMqConsumeTopology :
         _specifications = new List<IActiveMqConsumeTopologySpecification>();
     }
 
-    /// <summary>
-    /// Gets or sets the consumer endpoint queue name formatter value.
-    /// </summary>
+    /// <summary>Gets or sets the formatter for virtual-topic consumer queues or subscriptions.</summary>
     public IActiveMqConsumerEndpointQueueNameFormatter? ConsumerEndpointQueueNameFormatter { get; set; }
-    /// <summary>
-    /// Gets or sets the temporary queue name formatter value.
-    /// </summary>
+    /// <summary>Gets or sets the formatter applied to generated temporary queue names.</summary>
     public IActiveMqTemporaryQueueNameFormatter? TemporaryQueueNameFormatter { get; set; }
 
     IActiveMqMessageConsumeTopology<T> IActiveMqConsumeTopology.GetMessageTopology<T>()
@@ -47,10 +39,8 @@ public class ActiveMqConsumeTopology :
         return (IActiveMqMessageConsumeTopologyConfigurator<T>)base.GetMessageTopology<T>();
     }
 
-    /// <summary>
-    /// Adds specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds a consume-topology specification.</summary>
+    /// <param name="specification">The specification to add.</param>
     public void AddSpecification(IActiveMqConsumeTopologySpecification specification)
     {
         if (specification == null)
@@ -64,10 +54,8 @@ public class ActiveMqConsumeTopology :
         return (IActiveMqMessageConsumeTopologyConfigurator<T>)base.GetMessageTopology<T>();
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies explicit and per-message consume specifications to a receive topology.</summary>
+    /// <param name="builder">The receive-topology builder.</param>
     public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
     {
         foreach (var specification in _specifications)
@@ -76,11 +64,9 @@ public class ActiveMqConsumeTopology :
         ForEach<IActiveMqMessageConsumeTopologyConfigurator>(x => x.Apply(builder));
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Binds a topic through virtual-topic or direct-topic consumer semantics.</summary>
+    /// <param name="topicName">The topic name.</param>
+    /// <param name="configure">An optional callback that configures the topic binding.</param>
     public void Bind(string topicName, Action<IActiveMqTopicBindingConfigurator>? configure = null)
     {
         IActiveMqTopicBindingConfigurator specification =
@@ -93,11 +79,9 @@ public class ActiveMqConsumeTopology :
         _specifications.Add((IActiveMqConsumeTopologySpecification)specification);
     }
 
-    /// <summary>
-    /// Creates temporary queue name.
-    /// </summary>
-    /// <param name="tag">The tag value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an ActiveMQ-compatible temporary queue name without periods.</summary>
+    /// <param name="tag">The descriptive name tag.</param>
+    /// <returns>The optionally custom-formatted temporary queue name.</returns>
     public override string CreateTemporaryQueueName(string tag)
     {
         var queueName = new string(base.CreateTemporaryQueueName(tag).Where(c => c != '.').ToArray());
@@ -108,20 +92,16 @@ public class ActiveMqConsumeTopology :
         return queueName;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates consume topology for a message type.</summary>
+    /// <typeparam name="T">The consumed message type.</typeparam>
+    /// <returns>The new ActiveMQ message consume topology.</returns>
     protected override IMessageConsumeTopologyConfigurator CreateMessageTopology<T>()
     {
         var messageTopology = new ActiveMqMessageConsumeTopology<T>(_publishTopology.GetMessageTopology<T>(), ConsumerEndpointQueueNameFormatter);

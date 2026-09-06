@@ -2,15 +2,11 @@ using ViciOne.ServiceBus.ActiveMq.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Defines the contract for error settings.
-/// </summary>
+/// <summary>Defines the ActiveMQ destination and topology used for faulted messages.</summary>
 public interface ErrorSettings :
     EntitySettings
 {
-    /// <summary>
-    /// Return the BrokerTopology to apply at startup (to create exchange and queue if binding is specified)
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Creates the topic and queue topology required by this error destination.</summary>
+    /// <returns>The broker topology.</returns>
     BrokerTopology GetBrokerTopology();
 }

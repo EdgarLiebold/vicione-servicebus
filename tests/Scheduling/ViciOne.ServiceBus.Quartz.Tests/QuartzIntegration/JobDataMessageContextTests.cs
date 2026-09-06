@@ -90,6 +90,40 @@ public sealed class JobDataMessageContextTests
         Assert.Equal(firstSentTime, context.SentTime);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-QUARTZ-JOB-DATA", "missing-header-defaults")]
+    public void MissingHeader_ReturnsSuppliedReferenceAndValueFallbacks()
+    {
+        JobExecutionContextImpl execution = CreateExecutionContext("single", new JobDataMap());
+        var context = new JobDataMessageContext(execution, ServiceBusMetadataJson.ObjectDeserializer);
+
+        string? referenceValue = context.Get("missing-reference", "reference-fallback");
+        int? valueTypeValue = context.Get<int>("missing-value", 47);
+
+        Assert.Equal("reference-fallback", referenceValue);
+        Assert.Equal(47, valueTypeValue);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-QUARTZ-JOB-DATA", "present-header-overrides-defaults")]
+    public void PresentHeader_OverridesSuppliedReferenceAndValueFallbacks()
+    {
+        JobExecutionContextImpl execution = CreateExecutionContext(
+            "single",
+            new JobDataMap
+            {
+                ["reference"] = "persisted",
+                ["value"] = 23,
+            });
+        var context = new JobDataMessageContext(execution, ServiceBusMetadataJson.ObjectDeserializer);
+
+        string? referenceValue = context.Get("reference", "reference-fallback");
+        int? valueTypeValue = context.Get<int>("value", 47);
+
+        Assert.Equal("persisted", referenceValue);
+        Assert.Equal(23, valueTypeValue);
+    }
+
     private static JobExecutionContextImpl CreateExecutionContext(string triggerName, JobDataMap data)
     {
         IJobDetail job = JobBuilder.Create<NoOpJob>()

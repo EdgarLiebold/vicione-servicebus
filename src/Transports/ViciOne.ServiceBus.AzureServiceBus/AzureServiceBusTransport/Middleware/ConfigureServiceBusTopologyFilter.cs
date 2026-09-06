@@ -7,10 +7,8 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Middleware;
 
-/// <summary>
-/// Provides a configure service bus topology filter implementation.
-/// </summary>
-/// <typeparam name="TSettings">The t settings type.</typeparam>
+/// <summary>Deploys Azure Service Bus broker topology once per client context before the pipeline continues.</summary>
+/// <typeparam name="TSettings">The entity settings attached to the one-time configuration context.</typeparam>
 public class ConfigureServiceBusTopologyFilter<TSettings> :
     IFilter<ClientContext>
     where TSettings : class
@@ -20,13 +18,11 @@ public class ConfigureServiceBusTopologyFilter<TSettings> :
     readonly bool _removeSubscriptions;
     readonly TSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="brokerTopology">The broker topology value.</param>
-    /// <param name="removeSubscriptions">The remove subscriptions value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes topology deployment and optional subscription cleanup.</summary>
+    /// <param name="settings">The entity settings exposed during deployment.</param>
+    /// <param name="brokerTopology">The broker entities to create or reconcile.</param>
+    /// <param name="removeSubscriptions">Whether queue-forwarding subscriptions are removed when the endpoint stops.</param>
+    /// <param name="context">The receive endpoint that owns the cleanup agent, when applicable.</param>
     public ConfigureServiceBusTopologyFilter(TSettings settings, BrokerTopology brokerTopology, bool removeSubscriptions = false,
         ServiceBusReceiveEndpointContext? context = null)
     {
@@ -36,10 +32,8 @@ public class ConfigureServiceBusTopologyFilter<TSettings> :
         _context = context;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The probe section to populate.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("configureTopology");
@@ -47,12 +41,10 @@ public class ConfigureServiceBusTopologyFilter<TSettings> :
         _brokerTopology.Probe(scope);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Ensures topology is configured, then executes the remaining client-context pipeline.</summary>
+    /// <param name="context">The client context whose namespace receives the topology.</param>
+    /// <param name="next">The remaining pipeline.</param>
+    /// <returns>The continuation task returned by <paramref name="next"/> after all configured entities exist.</returns>
     public async Task SendAsync(ClientContext context, IPipe<ClientContext> next)
     {
         OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await ConfigureAsync(context, context.CancellationToken).ConfigureAwait(false);
@@ -69,12 +61,10 @@ public class ConfigureServiceBusTopologyFilter<TSettings> :
         }
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs entity deployment once for the namespace context and returns its eviction handle.</summary>
+    /// <param name="context">The namespace context used for administration operations.</param>
+    /// <param name="cancellationToken">The token that cancels topology deployment.</param>
+    /// <returns>A task that produces the one-time setup context.</returns>
     public async Task<OneTimeContext<ConfigureTopologyContext<TSettings>>> ConfigureAsync(NamespaceContext context, CancellationToken cancellationToken)
     {
         OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await context.OneTimeSetupAsync<ConfigureTopologyContext<TSettings>>(() =>

@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.AzureServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Used to bind an exchange to the consuming queue's exchange
-/// </summary>
+/// <summary>Configures a topic subscription that forwards messages to the consuming queue.</summary>
 public class SubscriptionConsumeTopologySpecification :
     IServiceBusConsumeTopologySpecification
 {
@@ -15,13 +13,11 @@ public class SubscriptionConsumeTopologySpecification :
     readonly RuleFilter? _filter;
     readonly CreateRuleOptions? _rule;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="createTopicOptions">The create topic options value.</param>
-    /// <param name="createSubscriptionOptions">The create subscription options value.</param>
-    /// <param name="rule">The rule value.</param>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Initializes a topic-subscription forwarding operation.</summary>
+    /// <param name="createTopicOptions">The source-topic creation options.</param>
+    /// <param name="createSubscriptionOptions">The subscription options updated with the target queue during application.</param>
+    /// <param name="rule">An optional complete subscription rule.</param>
+    /// <param name="filter">An optional filter for the default subscription rule.</param>
     public SubscriptionConsumeTopologySpecification(CreateTopicOptions createTopicOptions, CreateSubscriptionOptions createSubscriptionOptions,
         CreateRuleOptions? rule, RuleFilter? filter)
     {
@@ -31,19 +27,15 @@ public class SubscriptionConsumeTopologySpecification :
         _filter = filter;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns no additional validation because the entity configurators validate these options.</summary>
+    /// <returns>An empty sequence.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Creates the source topic and a subscription that forwards deliveries to the endpoint queue.</summary>
+    /// <param name="builder">The receive-endpoint topology builder that supplies the target queue.</param>
     public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
     {
         var topic = builder.CreateTopic(_createTopicOptions);

@@ -3,11 +3,9 @@ using System.Linq.Expressions;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>
-/// Creates a saga query using the specified filter expression
-/// </summary>
-/// <typeparam name="TSaga">The saga type</typeparam>
-/// <typeparam name="TMessage">The message type</typeparam>
+/// <summary>Creates a saga query using the specified filter expression.</summary>
+/// <typeparam name="TSaga">The saga type.</typeparam>
+/// <typeparam name="TMessage">The message type.</typeparam>
 public class ExpressionSagaQueryFactory<TSaga, TMessage> :
     ISagaQueryFactory<TSaga, TMessage>
     where TSaga : class, ISaga
@@ -15,10 +13,8 @@ public class ExpressionSagaQueryFactory<TSaga, TMessage> :
 {
     readonly Expression<Func<TSaga, TMessage, bool>> _filterExpression;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="filterExpression">The filter expression value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="filterExpression">The filter expression.</param>
     public ExpressionSagaQueryFactory(Expression<Func<TSaga, TMessage, bool>> filterExpression)
     {
         _filterExpression = filterExpression;

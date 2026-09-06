@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Defines the contract for active mq message publish topology configurator.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures the ActiveMQ publish topic for one message type.</summary>
+/// <typeparam name="TMessage">The published message type.</typeparam>
 public interface IActiveMqMessagePublishTopologyConfigurator<TMessage> :
     IMessagePublishTopologyConfigurator<TMessage>,
     IActiveMqMessagePublishTopology<TMessage>,
@@ -13,9 +11,7 @@ public interface IActiveMqMessagePublishTopologyConfigurator<TMessage> :
 }
 
 
-/// <summary>
-/// Defines the contract for active mq message publish topology configurator.
-/// </summary>
+/// <summary>Configures an untyped ActiveMQ message publish topic.</summary>
 public interface IActiveMqMessagePublishTopologyConfigurator :
     IMessagePublishTopologyConfigurator,
     IActiveMqMessagePublishTopology,

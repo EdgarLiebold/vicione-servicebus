@@ -5,16 +5,12 @@ using System.Reflection;
 
 namespace ViciOne.ServiceBus.AzureTable.Saga;
 
-/// <summary>
-/// Provides an entity converter factory implementation.
-/// </summary>
+/// <summary>Builds Azure Table converters for the readable and writable properties of a reference type.</summary>
 public static class EntityConverterFactory
 {
-    /// <summary>
-    /// Creates converter.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a converter using native Azure property conversion where possible and serialized fallback conversion otherwise.</summary>
+    /// <typeparam name="T">The reference type to convert.</typeparam>
+    /// <returns>A converter for all public readable and writable properties of <typeparamref name="T"/>.</returns>
     public static IEntityConverter<T> CreateConverter<T>()
         where T : class
     {

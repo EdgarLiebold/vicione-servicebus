@@ -5,16 +5,14 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for bus control.
-/// </summary>
+/// <summary>Provides extension methods for bus control.</summary>
 public static class BusControlExtensions
 {
     /// <summary>
     /// Stop a bus, throwing an exception if the bus does not stop.
-    /// It is a wrapper of the async method `StopAsync`
+    /// It is a wrapper of the async method `StopAsync`.
     /// </summary>
-    /// <param name="busControl">The bus handle</param>
+    /// <param name="busControl">The bus handle.</param>
     public static void Stop(this IBusControl busControl)
     {
         Stop(busControl, TimeSpan.FromSeconds(60));
@@ -22,19 +20,17 @@ public static class BusControlExtensions
 
     /// <summary>
     /// Starts a bus, throwing an exception if the bus does not start
-    /// It is a wrapper of the async method `StartAsync`
+    /// It is a wrapper of the async method `StartAsync`.
     /// </summary>
-    /// <param name="busControl">The bus handle</param>
+    /// <param name="busControl">The bus handle.</param>
     public static void Start(this IBusControl busControl)
     {
         Start(busControl, TimeSpan.FromSeconds(60));
     }
 
-    /// <summary>
-    /// Stop a bus, throwing an exception if the bus does not stop in the specified timeout
-    /// </summary>
-    /// <param name="bus">The bus handle</param>
-    /// <param name="stopTimeout">The wait time before throwing an exception</param>
+    /// <summary>Stop a bus, throwing an exception if the bus does not stop in the specified timeout.</summary>
+    /// <param name="bus">The bus handle.</param>
+    /// <param name="stopTimeout">The wait time before throwing an exception.</param>
     public static void Stop(this IBusControl bus, TimeSpan stopTimeout)
     {
         using var cancellationTokenSource = new CancellationTokenSource(stopTimeout);
@@ -44,11 +40,9 @@ public static class BusControlExtensions
         TaskBlocking.Wait(() => bus.StopAsync(cancellationToken), cancellationToken);
     }
 
-    /// <summary>
-    /// Start a bus, throwing an exception if the bus does not start in the specified timeout
-    /// </summary>
-    /// <param name="bus">The bus handle</param>
-    /// <param name="startTimeout">The wait time before throwing an exception</param>
+    /// <summary>Start a bus, throwing an exception if the bus does not start in the specified timeout.</summary>
+    /// <param name="bus">The bus handle.</param>
+    /// <param name="startTimeout">The wait time before throwing an exception.</param>
     public static void Start(this IBusControl bus, TimeSpan startTimeout)
     {
         using var cancellationTokenSource = new CancellationTokenSource(startTimeout);
@@ -56,12 +50,11 @@ public static class BusControlExtensions
         TaskBlocking.Wait(() => bus.StartAsync(cancellationTokenSource.Token), cancellationTokenSource.Token);
     }
 
-    /// <summary>
-    /// Start a bus, throwing an exception if the bus does not start in the specified timeout
-    /// </summary>
-    /// <param name="bus">The bus handle</param>
-    /// <param name="startTimeout">The wait time before throwing an exception</param>
+    /// <summary>Start a bus, throwing an exception if the bus does not start in the specified timeout.</summary>
+    /// <param name="bus">The bus handle.</param>
+    /// <param name="startTimeout">The wait time before throwing an exception.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static async Task StartAsync(this IBusControl bus, TimeSpan startTimeout, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -73,12 +66,11 @@ public static class BusControlExtensions
         await bus.StartAsync(linkedTokenSource?.Token ?? timeoutTokenSource.Token).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Stop a bus, throwing an exception if the bus does not stop in the specified timeout
-    /// </summary>
-    /// <param name="bus">The bus handle</param>
-    /// <param name="stopTimeout">The wait time before throwing an exception</param>
+    /// <summary>Stop a bus, throwing an exception if the bus does not stop in the specified timeout.</summary>
+    /// <param name="bus">The bus handle.</param>
+    /// <param name="stopTimeout">The wait time before throwing an exception.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static async Task StopAsync(this IBusControl bus, TimeSpan stopTimeout, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -90,13 +82,11 @@ public static class BusControlExtensions
         await bus.StopAsync(linkedTokenSource?.Token ?? timeoutTokenSource.Token).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// This can be used to start and stop the bus when configured in a deploy topology only scenario. No messages should be consumed by it.
-    /// </summary>
-    /// <param name="bus"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <summary>This can be used to start and stop the bus when configured in a deploy topology only scenario. No messages should be consumed by it.</summary>
+    /// <param name="bus">The bus.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when a required argument is <see langword="null" />.</exception>
     public static async Task DeployAsync(this IBusControl bus, CancellationToken cancellationToken = default)
     {
         if (bus == null)

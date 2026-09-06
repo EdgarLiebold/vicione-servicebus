@@ -3,20 +3,16 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides a queue entity implementation.
-/// </summary>
+/// <summary>Represents a de-duplicated ActiveMQ queue declaration.</summary>
 public class QueueEntity :
     Queue,
     QueueHandle
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
+    /// <summary>Creates a queue declaration.</summary>
+    /// <param name="id">The builder-local entity identifier.</param>
+    /// <param name="name">The queue name.</param>
+    /// <param name="durable">Whether the queue persists across broker restarts.</param>
+    /// <param name="autoDelete">Whether the broker removes the queue when it is no longer used.</param>
     public QueueEntity(long id, string name, bool durable, bool autoDelete)
     {
         Id = id;
@@ -25,41 +21,25 @@ public class QueueEntity :
         Durable = durable;
     }
 
-    /// <summary>
-    /// Gets the name comparer value.
-    /// </summary>
+    /// <summary>Gets the comparer that uses the queue name only.</summary>
     public static IEqualityComparer<QueueEntity> NameComparer { get; } = new NameEqualityComparer();
 
-    /// <summary>
-    /// Gets the queue comparer value.
-    /// </summary>
+    /// <summary>Gets the comparer that includes name and lifecycle settings.</summary>
     public static IEqualityComparer<QueueEntity> QueueComparer { get; } = new QueueEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the entity name value.
-    /// </summary>
+    /// <summary>Gets the queue name.</summary>
     public string EntityName { get; }
-    /// <summary>
-    /// Gets the auto delete value.
-    /// </summary>
+    /// <summary>Gets whether the broker removes the queue when it is no longer used.</summary>
     public bool AutoDelete { get; }
-    /// <summary>
-    /// Gets the durable value.
-    /// </summary>
+    /// <summary>Gets whether the queue persists across broker restarts.</summary>
     public bool Durable { get; }
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the builder-local entity identifier.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the queue value.
-    /// </summary>
+    /// <summary>Gets this declaration as its queue contract.</summary>
     public Queue Queue => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the queue name and enabled auto-delete flag.</summary>
+    /// <returns>A comma-separated diagnostic representation.</returns>
     public override string ToString()
     {
         return string.Join(", ",

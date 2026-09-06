@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Schedules redelivery for a transport-independent activity pipeline.
-/// </summary>
-/// <typeparam name="TContext">The activity context type.</typeparam>
+/// <summary>Schedules redelivery for a transport-independent activity pipeline.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public sealed class ActivityRedeliveryRetryFilter<TContext> :
     IFilter<TContext>
     where TContext : class, Advanced.ActivityContext
@@ -16,9 +14,9 @@ public sealed class ActivityRedeliveryRetryFilter<TContext> :
     readonly RetryObservable _observers;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>
-    /// Initializes the redelivery filter.
-    /// </summary>
+    /// <summary>Initializes the redelivery filter.</summary>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="observers">The observers.</param>
     public ActivityRedeliveryRetryFilter(IRetryPolicy retryPolicy, RetryObservable observers)
     {
         _retryPolicy = retryPolicy;

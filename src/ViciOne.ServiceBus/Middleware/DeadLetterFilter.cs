@@ -13,10 +13,8 @@ public class DeadLetterFilter :
 {
     readonly IPipe<ReceiveContext> _deadLetterPipe;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="deadLetterPipe">The dead letter pipe value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="deadLetterPipe">The dead letter pipe.</param>
     public DeadLetterFilter(IPipe<ReceiveContext> deadLetterPipe)
     {
         _deadLetterPipe = deadLetterPipe;

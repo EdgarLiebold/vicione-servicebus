@@ -1,14 +1,10 @@
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a send endpoint broker topology builder implementation.
-/// </summary>
+/// <summary>Builds topology for an Azure Service Bus queue send endpoint.</summary>
 public class SendEndpointBrokerTopologyBuilder :
     BrokerTopologyBuilder,
     ISendEndpointBrokerTopologyBuilder
 {
-    /// <summary>
-    /// Gets or sets the queue value.
-    /// </summary>
+    /// <summary>Gets or sets the destination queue handle.</summary>
     public QueueHandle Queue { get; set; } = null!;
 }

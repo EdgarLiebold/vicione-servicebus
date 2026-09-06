@@ -5,20 +5,16 @@ using ViciOne.ServiceBus.DependencyInjection;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides dependency-injection receive-endpoint extensions for Courier activities.
-/// </summary>
+/// <summary>Provides dependency-injection receive-endpoint extensions for Courier activities.</summary>
 public static class DependencyInjectionCourierReceiveEndpointExtensions
 {
-    /// <summary>
-    /// Performs the execute activity host operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="compensateAddress">The compensate address value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Executes activity host.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="compensateAddress">The compensate address.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator, Uri compensateAddress,
         IRegistrationContext context, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
@@ -32,14 +28,12 @@ public static class DependencyInjectionCourierReceiveEndpointExtensions
     }
 
 
-    /// <summary>
-    /// Performs the execute activity host operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Executes activity host.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
         Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
@@ -53,14 +47,12 @@ public static class DependencyInjectionCourierReceiveEndpointExtensions
     }
 
 
-    /// <summary>
-    /// Performs the compensate activity host operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Compensates activity host.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void CompensateActivityHost<TActivity, TLog>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
         Action<ICompensateActivityConfigurator<TActivity, TLog>>? configure = null)
         where TActivity : class, ICompensateActivity<TLog>

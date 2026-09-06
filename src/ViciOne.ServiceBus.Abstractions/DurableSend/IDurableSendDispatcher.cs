@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Providers.Persistence;
 
 /// <summary>Transport adapter used by the generic durable sender to dispatch an already serialized retained message.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 public interface IDurableSendDispatcher<TBus>
     where TBus : class, IBus
 {
@@ -14,8 +15,9 @@ public interface IDurableSendDispatcher<TBus>
     /// <see cref="DurableSendDispatchContext.ConsumerCompletion"/> as process-local pipeline context and return
     /// <see cref="DurableSendCompletionMode.ConsumerCompletion"/>. The completion capability MUST NOT be serialized.
     /// </summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="context">The context for the operation.</param>
+    /// <returns>A task that produces the dispatch outcome.</returns>
     Task<DurableSendDispatchResult> DispatchAsync(
         DurableSendDispatchContext context,
         CancellationToken cancellationToken = default);

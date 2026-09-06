@@ -4,20 +4,16 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides extension methods for rabbit mq defer message.
-/// </summary>
+/// <summary>Schedules RabbitMQ redelivery through the delayed-message exchange plug-in.</summary>
 public static class RabbitMqDeferMessageExtensions
 {
-    /// <summary>
-    /// Defers the message for redelivery using a delayed exchange (an experimental RabbitMQ plug-in).
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="context"></param>
-    /// <param name="delay"></param>
-    /// <param name="callback"></param>
-    /// <returns></returns>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Defers the current message through a delayed exchange declared by the RabbitMQ plug-in.</summary>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="context">The consumed message context.</param>
+    /// <param name="delay">The delay before redelivery.</param>
+    /// <param name="callback">An optional callback that customizes the redelivery send context.</param>
+    /// <param name="cancellationToken">Cancellation for scheduling the redelivery.</param>
+    /// <returns>A task that completes when the delayed redelivery has been scheduled.</returns>
     public static Task DeferAsync<T>(this ConsumeContext<T> context, TimeSpan delay, Action<ConsumeContext, SendContext>? callback = null, CancellationToken cancellationToken = default)
         where T : class
     {

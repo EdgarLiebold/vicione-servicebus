@@ -3,11 +3,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Dispatches the ConsumeContext to the consumer method for the specified message type
-/// </summary>
-/// <typeparam name="TConsumer">The consumer type</typeparam>
-/// <typeparam name="TMessage">The message type</typeparam>
+/// <summary>Dispatches the ConsumeContext to the consumer method for the specified message type.</summary>
+/// <typeparam name="TConsumer">The consumer type.</typeparam>
+/// <typeparam name="TMessage">The message type.</typeparam>
 public class MethodConsumerMessageFilter<TConsumer, TMessage> :
     IConsumerMessageFilter<TConsumer, TMessage>
     where TConsumer : class, IConsumer<TMessage>

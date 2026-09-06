@@ -9,9 +9,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// </summary>
 public interface ISpecification
 {
-    /// <summary>
-    /// Validate the specification, ensuring that a successful build will occur.
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Validate the specification, ensuring that a successful build will occur.</summary>
+    /// <returns>The validation failures.</returns>
     IEnumerable<ValidationResult> Validate();
 }

@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides an event hub receive endpoint context implementation.
-/// </summary>
+/// <summary>Owns receive-pipeline state, processor supervision, and bus endpoint providers for an Event Hubs endpoint.</summary>
 public class EventHubReceiveEndpointContext :
     BaseReceiveEndpointContext,
     IEventHubReceiveEndpointContext
@@ -19,15 +17,13 @@ public class EventHubReceiveEndpointContext :
     readonly IBusInstance _busInstance;
     readonly Recycle<IProcessorContextSupervisor> _contextSupervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="busInstance">The bus instance value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
-    /// <param name="clientFactory">The client factory value.</param>
-    /// <param name="partitionClosingHandler">The partition closing handler value.</param>
-    /// <param name="partitionInitializingHandler">The partition initializing handler value.</param>
+    /// <summary>Creates a receive context with a recyclable processor supervisor.</summary>
+    /// <param name="hostConfiguration">The Event Hubs rider host configuration.</param>
+    /// <param name="busInstance">The bus instance that owns the endpoint.</param>
+    /// <param name="endpointConfiguration">The endpoint's receive-pipeline configuration.</param>
+    /// <param name="clientFactory">Creates the Azure SDK event processor client.</param>
+    /// <param name="partitionClosingHandler">The optional application partition-closing handler.</param>
+    /// <param name="partitionInitializingHandler">The optional application partition-initializing handler.</param>
     public EventHubReceiveEndpointContext(IEventHubHostConfiguration hostConfiguration, IBusInstance busInstance,
         IReceiveEndpointConfiguration endpointConfiguration,
         Func<EventProcessorClient> clientFactory,
@@ -41,91 +37,71 @@ public class EventHubReceiveEndpointContext :
                 partitionClosingHandler, partitionInitializingHandler));
     }
 
-    /// <summary>
-    /// Adds send agent to the configuration.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
+    /// <summary>Adds a send agent to the processor supervisor's lifetime.</summary>
+    /// <param name="agent">The send agent to supervise.</param>
     public override void AddSendAgent(IAgent agent)
     {
         _contextSupervisor.Supervisor.AddSendAgent(agent);
     }
 
-    /// <summary>
-    /// Adds consume agent to the configuration.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
+    /// <summary>Adds a consume agent to the processor supervisor's lifetime.</summary>
+    /// <param name="agent">The consume agent to supervise.</param>
     public override void AddConsumeAgent(IAgent agent)
     {
         _contextSupervisor.Supervisor.AddConsumeAgent(agent);
     }
 
-    /// <summary>
-    /// Performs the convert exception operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Wraps a transport failure as an Event Hubs connection exception.</summary>
+    /// <param name="exception">The underlying transport failure.</param>
+    /// <param name="message">The contextual error message.</param>
+    /// <returns>The Event Hubs connection exception.</returns>
     public override Exception ConvertException(Exception exception, string message)
     {
         return new EventHubConnectionException(message, exception);
     }
 
-    /// <summary>
-    /// Gets the context supervisor value.
-    /// </summary>
+    /// <summary>Gets the recyclable supervisor that owns the processor context.</summary>
     public IProcessorContextSupervisor ContextSupervisor => _contextSupervisor.Supervisor;
 
-    /// <summary>
-    /// Creates send transport provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Rejects receive-endpoint-local send transport creation, which Event Hubs does not support.</summary>
+    /// <returns>This method does not return.</returns>
     protected override ISendTransportProvider CreateSendTransportProvider()
     {
         throw new NotSupportedException();
     }
 
-    /// <summary>
-    /// Creates publish transport provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Rejects receive-endpoint-local publish transport creation, which Event Hubs does not support.</summary>
+    /// <returns>This method does not return.</returns>
     protected override IPublishTransportProvider CreatePublishTransportProvider()
     {
         throw new NotSupportedException();
     }
 
-    /// <summary>
-    /// Creates publish endpoint provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Uses the owning bus as the publish endpoint provider.</summary>
+    /// <returns>The bus instance.</returns>
     protected override IPublishEndpointProvider CreatePublishEndpointProvider()
     {
         return _busInstance.Bus;
     }
 
-    /// <summary>
-    /// Creates send endpoint provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Uses the owning bus as the send endpoint provider.</summary>
+    /// <returns>The bus instance.</returns>
     protected override ISendEndpointProvider CreateSendEndpointProvider()
     {
         return _busInstance.Bus;
     }
 
-    /// <summary>
-    /// Performs the release send endpoint provider operation.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes immediately because this context does not own the bus send endpoint provider.</summary>
+    /// <param name="provider">The bus-owned provider returned by <see cref="CreateSendEndpointProvider" />.</param>
+    /// <returns>A completed value task.</returns>
     protected override ValueTask ReleaseSendEndpointProviderAsync(ISendEndpointProvider provider)
     {
         return default;
     }
 
-    /// <summary>
-    /// Performs the release publish endpoint provider operation.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes immediately because this context does not own the bus publish endpoint provider.</summary>
+    /// <param name="provider">The bus-owned provider returned by <see cref="CreatePublishEndpointProvider" />.</param>
+    /// <returns>A completed value task.</returns>
     protected override ValueTask ReleasePublishEndpointProviderAsync(IPublishEndpointProvider provider)
     {
         return default;

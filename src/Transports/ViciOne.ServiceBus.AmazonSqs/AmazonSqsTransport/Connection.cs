@@ -7,19 +7,15 @@ using Amazon.SQS;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides a connection implementation.
-/// </summary>
+/// <summary>Owns the Amazon SQS and Amazon SNS clients used by one transport connection.</summary>
 public class Connection :
     IConnection
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="credentials">The credentials value.</param>
-    /// <param name="regionEndpoint">The region endpoint value.</param>
-    /// <param name="amazonSqsConfig">The amazon sqs config value.</param>
-    /// <param name="amazonSnsConfig">The amazon sns config value.</param>
+    /// <summary>Creates Amazon SQS and Amazon SNS clients for a region.</summary>
+    /// <param name="credentials">Explicit AWS credentials, or <see langword="null"/> to use the SDK credential chain.</param>
+    /// <param name="regionEndpoint">The AWS region, or <see langword="null"/> to use US East (N. Virginia) when no client configuration is supplied.</param>
+    /// <param name="amazonSqsConfig">An optional Amazon SQS client configuration.</param>
+    /// <param name="amazonSnsConfig">An optional Amazon SNS client configuration.</param>
     public Connection(AWSCredentials? credentials, RegionEndpoint? regionEndpoint = null, AmazonSQSConfig? amazonSqsConfig = null,
         AmazonSimpleNotificationServiceConfig? amazonSnsConfig = null)
         : this(
@@ -85,18 +81,12 @@ public class Connection :
             : new AmazonSimpleNotificationServiceClient(credentials, config);
     }
 
-    /// <summary>
-    /// Gets the sqs client value.
-    /// </summary>
+    /// <summary>Gets the Amazon SQS client.</summary>
     public IAmazonSQS SqsClient { get; }
-    /// <summary>
-    /// Gets the sns client value.
-    /// </summary>
+    /// <summary>Gets the Amazon SNS client.</summary>
     public IAmazonSimpleNotificationService SnsClient { get; }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Disposes both Amazon clients and preserves any failures from either disposal.</summary>
     public void Dispose()
     {
         Exception? snsException = null;

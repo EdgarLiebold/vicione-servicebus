@@ -2,9 +2,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for rabbit mq host.
-/// </summary>
+/// <summary>Hosts RabbitMQ receive endpoints.</summary>
 public interface IRabbitMqHost :
     IHost<IRabbitMqReceiveEndpointConfigurator>
 {

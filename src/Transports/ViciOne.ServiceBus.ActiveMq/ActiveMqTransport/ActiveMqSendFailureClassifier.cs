@@ -2,9 +2,7 @@ using System;
 using Apache.NMS;
 
 namespace ViciOne.ServiceBus.ActiveMq;
-/// <summary>
-/// Classifies ActiveMQ send failures from typed NMS and transport data without inspecting exception text.
-/// </summary>
+/// <summary>Classifies ActiveMQ send failures from typed NMS and transport data without inspecting exception text.</summary>
 public sealed class ActiveMqSendFailureClassifier : ITransportSendFailureClassifier
 {
     /// <inheritdoc />

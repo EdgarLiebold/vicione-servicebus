@@ -7,9 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
-/// <summary>
-/// Provides a sql server database migrator implementation.
-/// </summary>
+/// <summary>Creates, removes, and provisions the SQL Server database infrastructure required by the SQL transport.</summary>
 public class SqlServerDatabaseMigrator :
     ISqlTransportDatabaseMigrator
 {
@@ -1887,32 +1885,26 @@ END
 
     readonly ILogger<SqlServerDatabaseMigrator> _logger;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="logger">The logger value.</param>
+    /// <summary>Initializes the SQL Server database migrator.</summary>
+    /// <param name="logger">The logger used to report migration failures.</param>
     public SqlServerDatabaseMigrator(ILogger<SqlServerDatabaseMigrator> logger)
     {
         _logger = logger;
     }
 
-    /// <summary>
-    /// Creates database.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Creates the configured SQL Server database when it does not exist.</summary>
+    /// <param name="options">The database name, connection settings, and migration credentials.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CreateDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await CreateDatabaseIfNotExistAsync(options, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the delete database operation.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Drops the configured SQL Server database when it exists.</summary>
+    /// <param name="options">The database name, connection settings, and migration credentials.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task DeleteDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = SqlServerSqlTransportConnection.GetSystemDatabaseConnection(options);
@@ -1927,12 +1919,10 @@ END
         }
     }
 
-    /// <summary>
-    /// Creates infrastructure.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Creates the SQL Server transport tables, procedures, functions, indexes, and grants in the configured schema.</summary>
+    /// <param name="options">The target schema, transport role, and database connection settings.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CreateInfrastructureAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = SqlServerSqlTransportConnection.GetDatabaseConnection(options);
@@ -2009,12 +1999,10 @@ END
         }
     }
 
-    /// <summary>
-    /// Creates schema if not exist.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Creates the configured SQL Server schema when necessary and grants it to the transport role.</summary>
+    /// <param name="options">The target database, schema, transport role, and connection settings.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CreateSchemaIfNotExistAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = SqlServerSqlTransportConnection.GetDatabaseAdminConnection(options);

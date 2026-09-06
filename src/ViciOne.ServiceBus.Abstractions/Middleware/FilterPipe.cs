@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a filter pipe implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Executes the pipeline for filter.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class FilterPipe<TContext> :
     IPipe<TContext>
     where TContext : class, PipeContext
@@ -14,32 +12,26 @@ public class FilterPipe<TContext> :
     readonly IFilter<TContext> _filter;
     readonly IPipe<TContext> _next;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
-    /// <param name="next">The next value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
     public FilterPipe(IFilter<TContext> filter, IPipe<TContext> next)
     {
         _filter = filter;
         _next = next;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         _filter.Probe(context);
         _next.Probe(context);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [DebuggerStepThrough]
     public Task SendAsync(TContext context)
     {

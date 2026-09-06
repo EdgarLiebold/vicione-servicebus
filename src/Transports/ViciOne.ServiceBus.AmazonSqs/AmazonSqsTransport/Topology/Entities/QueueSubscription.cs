@@ -1,17 +1,11 @@
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// The topic to queue binding details to declare the binding to AmazonSQS
-/// </summary>
+/// <summary>Describes an Amazon SNS topic subscription targeting an Amazon SQS queue.</summary>
 public interface QueueSubscription
 {
-    /// <summary>
-    /// The topic
-    /// </summary>
+    /// <summary>Gets the source Amazon SNS topic.</summary>
     Topic Source { get; }
 
-    /// <summary>
-    /// The queue
-    /// </summary>
+    /// <summary>Gets the destination Amazon SQS queue.</summary>
     Queue Destination { get; }
 }

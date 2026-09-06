@@ -1,25 +1,13 @@
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Defines the contract for broker topology.
-/// </summary>
+/// <summary>Represents Amazon SNS topics, Amazon SQS queues, their subscriptions, and probe diagnostics.</summary>
 public interface BrokerTopology :
     IProbeSite
 {
-    /// <summary>
-    /// Gets the topics value.
-    /// </summary>
+    /// <summary>Gets the Amazon SNS topics.</summary>
     Topic[] Topics { get; }
-    /// <summary>
-    /// Gets the queues value.
-    /// </summary>
+    /// <summary>Gets the Amazon SQS queues.</summary>
     Queue[] Queues { get; }
-    /// <summary>
-    /// Gets the queue subscriptions value.
-    /// </summary>
+    /// <summary>Gets the topic-to-queue subscriptions.</summary>
     QueueSubscription[] QueueSubscriptions { get; }
-    /// <summary>
-    /// Gets the topic subscriptions value.
-    /// </summary>
-    TopicSubscription[] TopicSubscriptions { get; }
 }

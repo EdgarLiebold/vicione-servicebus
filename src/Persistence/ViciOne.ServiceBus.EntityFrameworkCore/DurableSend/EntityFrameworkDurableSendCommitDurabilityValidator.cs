@@ -13,6 +13,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// Strict built-in commit-durability preflight. It intentionally rejects ambiguous or unknown provider modes rather
 /// than allowing the provider-level durable admission boundary to overstate restart safety.
 /// </summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 internal sealed class EntityFrameworkDurableSendCommitDurabilityValidator<TBus>
     : IEntityFrameworkDurableSendCommitDurabilityValidator<TBus>
     where TBus : class, IBus

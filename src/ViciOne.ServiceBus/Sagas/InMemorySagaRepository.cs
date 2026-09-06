@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Provides an in memory saga repository implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Stores and retrieves in memory saga data.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class InMemorySagaRepository<TSaga> :
     ISagaRepository<TSaga>,
     IQuerySagaRepository<TSaga>,
@@ -18,9 +16,7 @@ public class InMemorySagaRepository<TSaga> :
     readonly SagaRepository<TSaga> _repository;
     readonly IndexedSagaDictionary<TSaga> _sagas;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public InMemorySagaRepository()
     {
         _sagas = new IndexedSagaDictionary<TSaga>();
@@ -32,34 +28,26 @@ public class InMemorySagaRepository<TSaga> :
         _repository = new SagaRepository<TSaga>(repositoryContextFactory, repositoryContextFactory, repositoryContextFactory);
     }
 
-    /// <summary>
-    /// Gets or sets the value at the specified index.
-    /// </summary>
-    /// <param name="id">The id value.</param>
+    /// <summary>Gets or sets the value at the specified index.</summary>
+    /// <param name="id">The id.</param>
     public SagaInstance<TSaga>? this[Guid id] => _sagas[id];
 
-    /// <summary>
-    /// Gets the count value.
-    /// </summary>
+    /// <summary>Gets the count.</summary>
     public int Count => _sagas.Count;
 
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
-    /// <param name="correlationId">The correlation id value.</param>
+    /// <summary>Loads the requested state.</summary>
+    /// <param name="correlationId">The correlation id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the load outcome.</returns>
     public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         return _repository.LoadAsync(correlationId, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the find operation.
-    /// </summary>
-    /// <param name="query">The query value.</param>
+    /// <summary>Finds the matching value.</summary>
+    /// <param name="query">The query.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the matching value.</returns>
     public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
     {
         return _repository.FindAsync(query, cancellationToken: cancellationToken);

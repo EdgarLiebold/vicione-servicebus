@@ -3,18 +3,14 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a dynamo db saga repository registration provider implementation.
-/// </summary>
+/// <summary>Applies one Amazon DynamoDB repository configuration to compatible versioned saga types.</summary>
 public class DynamoDbSagaRepositoryRegistrationProvider :
     ISagaRepositoryRegistrationProvider
 {
     readonly Action<IDynamoDbSagaRepositoryConfigurator> _configure;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Creates a provider from the configuration callback applied to each compatible saga type.</summary>
+    /// <param name="configure">The Amazon DynamoDB repository configuration callback.</param>
     public DynamoDbSagaRepositoryRegistrationProvider(Action<IDynamoDbSagaRepositoryConfigurator> configure)
     {
         _configure = configure ?? throw new ArgumentNullException(nameof(configure));
@@ -32,11 +28,9 @@ public class DynamoDbSagaRepositoryRegistrationProvider :
         }
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Registers an Amazon DynamoDB repository for the specified versioned saga type.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The saga registration to update.</param>
     protected virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
         where TSaga : class, ISagaVersion
     {

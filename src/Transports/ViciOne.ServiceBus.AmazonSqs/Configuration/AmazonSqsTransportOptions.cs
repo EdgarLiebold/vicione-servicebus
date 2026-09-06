@@ -1,16 +1,10 @@
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Defines configuration options for amazon sqs transport.
-/// </summary>
+/// <summary>Defines named AWS region and entity-scope options for the Amazon SQS transport.</summary>
 public sealed class AmazonSqsTransportOptions
 {
-    /// <summary>
-    /// Gets or sets the region value.
-    /// </summary>
+    /// <summary>Gets or sets the AWS region system name.</summary>
     public string? Region { get; set; }
-    /// <summary>
-    /// Gets or sets the scope value.
-    /// </summary>
+    /// <summary>Gets or sets the entity-name prefix applied within the host.</summary>
     public string? Scope { get; set; }
 }

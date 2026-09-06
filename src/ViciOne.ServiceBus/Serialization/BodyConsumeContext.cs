@@ -5,86 +5,52 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a body consume context implementation.
-/// </summary>
+/// <summary>Carries state for body consume operations.</summary>
 public class BodyConsumeContext :
     DeserializerConsumeContext
 {
     readonly IDictionary<Type, ConsumeContext?> _messageTypes;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="receiveContext">The receive context value.</param>
-    /// <param name="serializerContext">The serializer context value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="receiveContext">The receive context.</param>
+    /// <param name="serializerContext">The serializer context.</param>
     public BodyConsumeContext(ReceiveContext receiveContext, SerializerContext serializerContext)
         : base(receiveContext, serializerContext)
     {
         _messageTypes = new Dictionary<Type, ConsumeContext?>(1);
     }
 
-    /// <summary>
-    /// Gets the message id value.
-    /// </summary>
+    /// <summary>Gets the message id.</summary>
     public override Guid? MessageId => SerializerContext.MessageId;
-    /// <summary>
-    /// Gets the request id value.
-    /// </summary>
+    /// <summary>Gets the request id.</summary>
     public override Guid? RequestId => SerializerContext.RequestId;
-    /// <summary>
-    /// Gets the correlation id value.
-    /// </summary>
+    /// <summary>Gets the correlation id.</summary>
     public override Guid? CorrelationId => SerializerContext.CorrelationId;
-    /// <summary>
-    /// Gets the conversation id value.
-    /// </summary>
+    /// <summary>Gets the conversation id.</summary>
     public override Guid? ConversationId => SerializerContext.ConversationId;
-    /// <summary>
-    /// Gets the initiator id value.
-    /// </summary>
+    /// <summary>Gets the initiator id.</summary>
     public override Guid? InitiatorId => SerializerContext.InitiatorId;
-    /// <summary>
-    /// Gets the expiration time value.
-    /// </summary>
+    /// <summary>Gets the expiration time.</summary>
     public override DateTimeOffset? ExpirationTime => SerializerContext.ExpirationTime;
-    /// <summary>
-    /// Gets the source address value.
-    /// </summary>
+    /// <summary>Gets the source address.</summary>
     public override Uri SourceAddress => SerializerContext.SourceAddress!;
-    /// <summary>
-    /// Gets the destination address value.
-    /// </summary>
+    /// <summary>Gets the destination address.</summary>
     public override Uri DestinationAddress => SerializerContext.DestinationAddress!;
-    /// <summary>
-    /// Gets the response address value.
-    /// </summary>
+    /// <summary>Gets the response address.</summary>
     public override Uri ResponseAddress => SerializerContext.ResponseAddress!;
-    /// <summary>
-    /// Gets the fault address value.
-    /// </summary>
+    /// <summary>Gets the fault address.</summary>
     public override Uri FaultAddress => SerializerContext.FaultAddress!;
-    /// <summary>
-    /// Gets the sent time value.
-    /// </summary>
+    /// <summary>Gets the sent time.</summary>
     public override DateTimeOffset? SentTime => SerializerContext.SentTime;
-    /// <summary>
-    /// Gets the headers value.
-    /// </summary>
+    /// <summary>Gets the headers.</summary>
     public override Headers Headers => SerializerContext.Headers;
-    /// <summary>
-    /// Gets the host value.
-    /// </summary>
+    /// <summary>Gets the host.</summary>
     public override HostInfo Host => SerializerContext.Host;
-    /// <summary>
-    /// Gets the supported message types value.
-    /// </summary>
+    /// <summary>Gets the supported message types.</summary>
     public override IEnumerable<string> SupportedMessageTypes => SerializerContext.SupportedMessageTypes;
 
-    /// <summary>
-    /// Determines whether the current value has message type.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
+    /// <summary>Determines whether the current value has message type.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool HasMessageType(Type messageType)
     {
@@ -97,11 +63,9 @@ public class BodyConsumeContext :
         return SerializerContext.IsSupportedMessageType(messageType);
     }
 
-    /// <summary>
-    /// Attempts to get message.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
+    /// <summary>Attempts to get message.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">Receives the message produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool TryGetMessage<T>([NotNullWhen(true)] out ConsumeContext<T>? message)
     {

@@ -1,22 +1,14 @@
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// A subscription that forwards to another topic
-/// </summary>
+/// <summary>Describes an Azure Service Bus subscription that forwards from one topic to another.</summary>
 public interface TopicSubscription
 {
-    /// <summary>
-    /// The source topic
-    /// </summary>
+    /// <summary>Gets the source topic.</summary>
     Topic Source { get; }
 
-    /// <summary>
-    /// The destination topic
-    /// </summary>
+    /// <summary>Gets the forwarding destination topic.</summary>
     Topic Destination { get; }
 
-    /// <summary>
-    /// The subscription that binds them together
-    /// </summary>
+    /// <summary>Gets the subscription that performs the forwarding.</summary>
     Subscription Subscription { get; }
 }

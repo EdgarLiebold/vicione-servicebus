@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.AmazonSqs.Configuration;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides an amazon sqs consume topology implementation.
-/// </summary>
+/// <summary>Builds Amazon SNS topic subscriptions for an Amazon SQS receive queue.</summary>
 public class AmazonSqsConsumeTopology :
     ConsumeTopology,
     IAmazonSqsConsumeTopologyConfigurator
@@ -16,11 +14,9 @@ public class AmazonSqsConsumeTopology :
     readonly IAmazonSqsPublishTopology _publishTopology;
     readonly IList<IAmazonSqsConsumeTopologySpecification> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
-    /// <param name="publishTopology">The publish topology value.</param>
+    /// <summary>Initializes Amazon SQS consume topology.</summary>
+    /// <param name="messageTopology">The message-topology convention source.</param>
+    /// <param name="publishTopology">The Amazon SNS publish topology used to resolve topics.</param>
     public AmazonSqsConsumeTopology(IMessageTopology messageTopology, IAmazonSqsPublishTopology publishTopology)
         : base(72)
     {
@@ -35,10 +31,8 @@ public class AmazonSqsConsumeTopology :
         return (IAmazonSqsMessageConsumeTopologyConfigurator<T>)base.GetMessageTopology<T>();
     }
 
-    /// <summary>
-    /// Adds specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds a queue-subscription specification.</summary>
+    /// <param name="specification">The specification to apply and validate.</param>
     public void AddSpecification(IAmazonSqsConsumeTopologySpecification specification)
     {
         if (specification == null)
@@ -52,10 +46,8 @@ public class AmazonSqsConsumeTopology :
         return (IAmazonSqsMessageConsumeTopologyConfigurator<T>)base.GetMessageTopology<T>();
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies explicit and message-specific subscriptions to a receive-endpoint builder.</summary>
+    /// <param name="builder">The receive-endpoint broker-topology builder.</param>
     public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
     {
         foreach (var specification in _specifications)
@@ -64,11 +56,9 @@ public class AmazonSqsConsumeTopology :
         ForEach<IAmazonSqsMessageConsumeTopologyConfigurator>(x => x.Apply(builder));
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Subscribes the receive queue to a named Amazon SNS topic.</summary>
+    /// <param name="topicName">The source topic name.</param>
+    /// <param name="configure">An optional callback that configures the subscription.</param>
     public void Bind(string topicName, Action<IAmazonSqsTopicSubscriptionConfigurator>? configure = null)
     {
         var specification = new ConsumerConsumeTopologySpecification(_publishTopology, topicName);
@@ -78,20 +68,16 @@ public class AmazonSqsConsumeTopology :
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates base consume topology and all explicit subscription specifications.</summary>
+    /// <returns>All detected validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates Amazon SQS consume topology for a message type and notifies topology observers.</summary>
+    /// <typeparam name="T">The consumed message type.</typeparam>
+    /// <returns>The message consume-topology configurator.</returns>
     protected override IMessageConsumeTopologyConfigurator CreateMessageTopology<T>()
     {
         var messageTopology = new AmazonSqsMessageConsumeTopology<T>(_messageTopology.GetMessageTopology<T>(), _publishTopology);

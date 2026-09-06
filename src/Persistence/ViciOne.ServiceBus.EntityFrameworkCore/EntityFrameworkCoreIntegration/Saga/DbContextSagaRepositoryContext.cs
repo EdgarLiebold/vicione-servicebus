@@ -13,11 +13,9 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
-/// <summary>
-/// Provides a db context saga repository context implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Executes saga persistence for one consumed message through a shared EF Core DbContext.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The consumed message contract.</typeparam>
 public class DbContextSagaRepositoryContext<TSaga, TMessage> :
     ConsumeContextScope<TMessage>,
     SagaRepositoryContext<TSaga, TMessage>,
@@ -31,13 +29,11 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
     readonly SemaphoreSlim _inUse = new SemaphoreSlim(1);
     readonly ISagaRepositoryLockStrategy<TSaga> _lockStrategy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="dbContext">The db context value.</param>
-    /// <param name="consumeContext">The consume context value.</param>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="lockStrategy">The lock strategy value.</param>
+    /// <summary>Initializes a message-scoped saga repository context over a tracked DbContext.</summary>
+    /// <param name="dbContext">The DbContext that tracks saga state.</param>
+    /// <param name="consumeContext">The active message-consumption context.</param>
+    /// <param name="factory">The factory that wraps saga instances for consumption.</param>
+    /// <param name="lockStrategy">The configured query and concurrency strategy.</param>
     public DbContextSagaRepositoryContext(DbContext dbContext, ConsumeContext<TMessage> consumeContext,
         ISagaConsumeContextFactory<DbContext, TSaga> factory, ISagaRepositoryLockStrategy<TSaga> lockStrategy)
         : base(consumeContext, dbContext)
@@ -48,31 +44,25 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
         _lockStrategy = lockStrategy;
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         _inUse.Dispose();
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Creates an add-mode consume context for a new saga instance without persisting it yet.</summary>
+    /// <param name="instance">The new saga instance.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A consume context that will add the saga when the pipeline saves it.</returns>
     public Task<SagaConsumeContext<TSaga, TMessage>> AddAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga, TMessage>>(cancellationToken); return _factory.CreateSagaConsumeContextAsync(_dbContext, _consumeContext, instance, SagaConsumeContextMode.Add);
     }
 
-    /// <summary>
-    /// Performs the insert operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Inserts a saga immediately, returning <see langword="null"/> when a concurrent insert won the same identity.</summary>
+    /// <param name="instance">The saga instance to insert.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>An insert-mode consume context, or <see langword="null"/> after a verified identity race.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>?> InsertAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); EntityEntry<TSaga> entry = await _dbContext.Set<TSaga>().AddAsync(instance, CancellationToken).ConfigureAwait(false);
@@ -116,12 +106,10 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
-    /// <param name="correlationId">The correlation id value.</param>
+    /// <summary>Loads the requested state.</summary>
+    /// <param name="correlationId">The saga correlation identifier.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A load-mode consume context, or <see langword="null"/> when the saga does not exist.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var instance = await _lockStrategy.LoadAsync(_dbContext, correlationId, CancellationToken).ConfigureAwait(false);
@@ -131,12 +119,10 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
         return await _factory.CreateSagaConsumeContextAsync(_dbContext, _consumeContext, instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the save operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds a newly created saga to the DbContext and saves changes.</summary>
+    /// <param name="context">The saga consume context containing the new instance.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         await _inUse.WaitAsync(context.CancellationToken).ConfigureAwait(false);
@@ -156,12 +142,10 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>
-    /// Performs the update operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Saves tracked changes for an existing saga.</summary>
+    /// <param name="context">The saga consume context containing the tracked instance.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); await _inUse.WaitAsync(context.CancellationToken).ConfigureAwait(false);
@@ -179,12 +163,10 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>
-    /// Performs the delete operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Deletes the saga instance and saves changes.</summary>
+    /// <param name="context">The saga consume context containing the instance to delete.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); await _inUse.WaitAsync(context.CancellationToken).ConfigureAwait(false);
@@ -204,23 +186,19 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>
-    /// Performs the discard operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Completes without changing tracked state.</summary>
+    /// <param name="context">The saga consume context whose tracked changes are left untouched.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the undo operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Marks the tracked saga entity unchanged so its pending modifications are not saved.</summary>
+    /// <param name="context">The saga consume context whose tracked entity is reverted.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); await _inUse.WaitAsync(context.CancellationToken).ConfigureAwait(false);
@@ -236,14 +214,12 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>
-    /// Creates saga consume context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="consumeContext">The consume context value.</param>
-    /// <param name="instance">The instance value.</param>
-    /// <param name="mode">The mode value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Wraps a saga instance for another message contract using the same DbContext.</summary>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="consumeContext">The active consumption context.</param>
+    /// <param name="instance">The saga instance to wrap.</param>
+    /// <param name="mode">The repository operation represented by the context.</param>
+    /// <returns>The created saga consume context.</returns>
     public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
         where T : class
     {
@@ -252,10 +228,8 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
 }
 
 
-/// <summary>
-/// Provides a db context saga repository context implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Executes direct saga loads and queries through one EF Core DbContext.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class DbContextSagaRepositoryContext<TSaga> :
     BasePipeContext,
     QuerySagaRepositoryContext<TSaga>,
@@ -265,11 +239,9 @@ public class DbContextSagaRepositoryContext<TSaga> :
     readonly DbContext _dbContext;
     readonly ISagaRepositoryLockStrategy<TSaga> _lockStrategy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="dbContext">The db context value.</param>
-    /// <param name="lockStrategy">The lock strategy value.</param>
+    /// <summary>Initializes a query-scoped saga repository context over a tracked DbContext.</summary>
+    /// <param name="dbContext">The DbContext that contains the saga set.</param>
+    /// <param name="lockStrategy">The configured query and concurrency strategy.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public DbContextSagaRepositoryContext(DbContext dbContext, ISagaRepositoryLockStrategy<TSaga> lockStrategy,
         CancellationToken cancellationToken)
@@ -279,23 +251,19 @@ public class DbContextSagaRepositoryContext<TSaga> :
         _lockStrategy = lockStrategy ?? throw new ArgumentNullException(nameof(lockStrategy));
     }
 
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
-    /// <param name="correlationId">The correlation id value.</param>
+    /// <summary>Loads the requested state.</summary>
+    /// <param name="correlationId">The saga correlation identifier.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The tracked saga entity, or <see langword="null"/> when no row matches.</returns>
     public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<TSaga?>(cancellationToken); return _lockStrategy.LoadAsync(_dbContext, correlationId, CancellationToken);
     }
 
-    /// <summary>
-    /// Performs the query operation.
-    /// </summary>
-    /// <param name="query">The query value.</param>
+    /// <summary>Loads the correlation identifiers selected by a saga query.</summary>
+    /// <param name="query">The saga filter to execute.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A query context containing the matching correlation identifiers.</returns>
     public async Task<SagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(query);

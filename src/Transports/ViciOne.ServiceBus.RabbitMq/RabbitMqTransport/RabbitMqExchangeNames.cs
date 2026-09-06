@@ -1,12 +1,8 @@
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq exchange names implementation.
-/// </summary>
+/// <summary>Defines RabbitMQ-reserved entity names used by the transport.</summary>
 public static class RabbitMqExchangeNames
 {
-    /// <summary>
-    /// Defines the reply to value.
-    /// </summary>
+    /// <summary>The RabbitMQ direct-reply-to pseudo-queue name.</summary>
     public const string ReplyTo = "amq.rabbitmq.reply-to";
 }

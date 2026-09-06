@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for transactional outbox configurator.
-/// </summary>
+/// <summary>Configures transactional outbox.</summary>
 public interface ITransactionalOutboxConfigurator
 {
 }

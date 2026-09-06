@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides an active mq message publish topology implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Defines the ActiveMQ publish topic for one message type.</summary>
+/// <typeparam name="TMessage">The published message type.</typeparam>
 public class ActiveMqMessagePublishTopology<TMessage> :
     MessagePublishTopology<TMessage>,
     IActiveMqMessagePublishTopologyConfigurator<TMessage>
@@ -16,11 +14,9 @@ public class ActiveMqMessagePublishTopology<TMessage> :
 {
     readonly ActiveMqTopicConfigurator _topic;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="publishTopology">The publish topology value.</param>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Creates message publish topology using the configured virtual-topic prefix.</summary>
+    /// <param name="publishTopology">The owning ActiveMQ publish topology.</param>
+    /// <param name="messageTopology">The message topology supplying the entity name.</param>
     public ActiveMqMessagePublishTopology(IActiveMqPublishTopology publishTopology, IMessageTopology<TMessage> messageTopology)
         : base(publishTopology)
     {
@@ -34,9 +30,7 @@ public class ActiveMqMessagePublishTopology<TMessage> :
         _topic = new ActiveMqTopicConfigurator(topicName, durable, autoDelete);
     }
 
-    /// <summary>
-    /// Gets the topic value.
-    /// </summary>
+    /// <summary>Gets the configured publish topic.</summary>
     public Topic Topic => _topic;
 
     bool IActiveMqTopicConfigurator.Durable
@@ -49,22 +43,18 @@ public class ActiveMqMessagePublishTopology<TMessage> :
         set => _topic.AutoDelete = value;
     }
 
-    /// <summary>
-    /// Attempts to get publish address.
-    /// </summary>
-    /// <param name="baseAddress">The base address value.</param>
-    /// <param name="publishAddress">The publish address value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Builds the message's publish-topic address.</summary>
+    /// <param name="baseAddress">The configured broker address.</param>
+    /// <param name="publishAddress">The resulting absolute topic address.</param>
+    /// <returns>Always <see langword="true" />.</returns>
     public override bool TryGetPublishAddress(Uri baseAddress, [NotNullWhen(true)] out Uri? publishAddress)
     {
         publishAddress = _topic.GetEndpointAddress(baseAddress);
         return true;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Adds the publish topic to a broker topology unless publishing is excluded.</summary>
+    /// <param name="builder">The publish-topology builder.</param>
     public void Apply(IPublishEndpointBrokerTopologyBuilder builder)
     {
         if (Exclude)
@@ -74,21 +64,17 @@ public class ActiveMqMessagePublishTopology<TMessage> :
 
     }
 
-    /// <summary>
-    /// Gets send settings.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates send settings for the message's publish topic.</summary>
+    /// <param name="hostAddress">The configured broker address.</param>
+    /// <returns>The topic send settings.</returns>
     public SendSettings GetSendSettings(Uri hostAddress)
     {
         return new ActiveMqTopicSendSettings(_topic.GetEndpointAddress(hostAddress));
     }
 
-    /// <summary>
-    /// Gets broker topology.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the broker topology required to publish this message type.</summary>
+    /// <param name="options">Options controlling the publish-topology layout.</param>
+    /// <returns>The message's publish broker topology.</returns>
     public BrokerTopology GetBrokerTopology(PublishBrokerTopologyOptions options)
     {
         var builder = new PublishEndpointBrokerTopologyBuilder(options);

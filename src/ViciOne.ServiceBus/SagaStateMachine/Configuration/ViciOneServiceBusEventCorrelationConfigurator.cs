@@ -6,14 +6,9 @@ using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a state machine interface type implementation.
-/// </summary>
 public partial class StateMachineInterfaceType<TInstance, TData>
 {
-    /// <summary>
-    /// Provides a vici one service bus event correlation configurator implementation.
-    /// </summary>
+    /// <summary>Configures vici one service bus event correlation.</summary>
     public class ViciOneServiceBusEventCorrelationConfigurator :
         IEventCorrelationConfigurator<TInstance, TData>,
         IEventCorrelationBuilder
@@ -25,12 +20,10 @@ public partial class StateMachineInterfaceType<TInstance, TData>
         ISagaFactory<TInstance, TData> _sagaFactory;
         SagaFilterFactory<TInstance, TData>? _sagaFilterFactory = null!;
 
-        /// <summary>
-        /// Initializes a new instance of the containing type.
-        /// </summary>
-        /// <param name="machine">The machine value.</param>
-        /// <param name="event">The event value.</param>
-        /// <param name="existingCorrelation">The existing correlation value.</param>
+        /// <summary>Initializes a new instance.</summary>
+        /// <param name="machine">The machine.</param>
+        /// <param name="event">The event.</param>
+        /// <param name="existingCorrelation">The existing correlation.</param>
         public ViciOneServiceBusEventCorrelationConfigurator(SagaStateMachine<TInstance> machine, Event<TData> @event, EventCorrelation? existingCorrelation)
         {
             _event = @event;
@@ -50,36 +43,26 @@ public partial class StateMachineInterfaceType<TInstance, TData>
             }
         }
 
-        /// <summary>
-        /// Performs the build operation.
-        /// </summary>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Builds the configured component.</summary>
+        /// <returns>The configured component.</returns>
         public EventCorrelation Build()
         {
             return new MessageEventCorrelation<TInstance, TData>(_machine, _event, _sagaFilterFactory, _messageFilter, _missingPipe, _sagaFactory,
                 InsertOnInitial, ReadOnly, ConfigureConsumeTopology);
         }
 
-        /// <summary>
-        /// Gets or sets the insert on initial value.
-        /// </summary>
+        /// <summary>Gets or sets the insert on initial.</summary>
         public bool InsertOnInitial { get; set; }
 
-        /// <summary>
-        /// Gets or sets the read only value.
-        /// </summary>
+        /// <summary>Gets or sets the read only.</summary>
         public bool ReadOnly { get; set; }
 
-        /// <summary>
-        /// Gets or sets the configure consume topology value.
-        /// </summary>
+        /// <summary>Gets or sets the configure consume topology.</summary>
         public bool ConfigureConsumeTopology { get; set; }
 
-        /// <summary>
-        /// Performs the correlate by id operation.
-        /// </summary>
-        /// <param name="selector">The selector value.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Configures correlation using the identifier selector.</summary>
+        /// <param name="selector">The selector.</param>
+        /// <returns>The event correlation configurator produced by the operation.</returns>
         public IEventCorrelationConfigurator<TInstance, TData> CorrelateById(Func<ConsumeContext<TData>, Guid> selector)
         {
             _messageFilter = new CorrelationIdMessageFilter<TData>(selector);
@@ -89,13 +72,11 @@ public partial class StateMachineInterfaceType<TInstance, TData>
             return this;
         }
 
-        /// <summary>
-        /// Performs the correlate by id operation.
-        /// </summary>
-        /// <typeparam name="T">The t type.</typeparam>
-        /// <param name="propertyExpression">The property expression value.</param>
-        /// <param name="selector">The selector value.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Configures correlation using the identifier selector.</summary>
+        /// <typeparam name="T">The value type.</typeparam>
+        /// <param name="propertyExpression">The property expression.</param>
+        /// <param name="selector">The selector.</param>
+        /// <returns>The event correlation configurator produced by the operation.</returns>
         public IEventCorrelationConfigurator<TInstance, TData> CorrelateById<T>(Expression<Func<TInstance, T>> propertyExpression,
             Func<ConsumeContext<TData>, T> selector)
             where T : struct
@@ -117,13 +98,11 @@ public partial class StateMachineInterfaceType<TInstance, TData>
             return this;
         }
 
-        /// <summary>
-        /// Performs the correlate by operation.
-        /// </summary>
-        /// <typeparam name="T">The t type.</typeparam>
-        /// <param name="propertyExpression">The property expression value.</param>
-        /// <param name="selector">The selector value.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Configures message correlation using the supplied expression.</summary>
+        /// <typeparam name="T">The value type.</typeparam>
+        /// <param name="propertyExpression">The property expression.</param>
+        /// <param name="selector">The selector.</param>
+        /// <returns>The event correlation configurator produced by the operation.</returns>
         public IEventCorrelationConfigurator<TInstance, TData> CorrelateBy<T>(Expression<Func<TInstance, T?>> propertyExpression,
             Func<ConsumeContext<TData>, T?> selector)
             where T : struct
@@ -145,13 +124,11 @@ public partial class StateMachineInterfaceType<TInstance, TData>
             return this;
         }
 
-        /// <summary>
-        /// Performs the correlate by operation.
-        /// </summary>
-        /// <typeparam name="T">The t type.</typeparam>
-        /// <param name="propertyExpression">The property expression value.</param>
-        /// <param name="selector">The selector value.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Configures message correlation using the supplied expression.</summary>
+        /// <typeparam name="T">The value type.</typeparam>
+        /// <param name="propertyExpression">The property expression.</param>
+        /// <param name="selector">The selector.</param>
+        /// <returns>The event correlation configurator produced by the operation.</returns>
         public IEventCorrelationConfigurator<TInstance, TData> CorrelateBy<T>(Expression<Func<TInstance, T>> propertyExpression,
             Func<ConsumeContext<TData>, T> selector)
             where T : class
@@ -173,11 +150,9 @@ public partial class StateMachineInterfaceType<TInstance, TData>
             return this;
         }
 
-        /// <summary>
-        /// Performs the select id operation.
-        /// </summary>
-        /// <param name="selector">The selector value.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Selects id.</summary>
+        /// <param name="selector">The selector.</param>
+        /// <returns>The selected id.</returns>
         public IEventCorrelationConfigurator<TInstance, TData> SelectId(Func<ConsumeContext<TData>, Guid> selector)
         {
             if (selector == null)
@@ -188,11 +163,9 @@ public partial class StateMachineInterfaceType<TInstance, TData>
             return this;
         }
 
-        /// <summary>
-        /// Performs the correlate by operation.
-        /// </summary>
-        /// <param name="correlationExpression">The correlation expression value.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Configures message correlation using the supplied expression.</summary>
+        /// <param name="correlationExpression">The correlation expression.</param>
+        /// <returns>The event correlation configurator produced by the operation.</returns>
         public IEventCorrelationConfigurator<TInstance, TData> CorrelateBy(Expression<Func<TInstance, ConsumeContext<TData>, bool>> correlationExpression)
         {
             if (correlationExpression == null)
@@ -208,11 +181,9 @@ public partial class StateMachineInterfaceType<TInstance, TData>
             return this;
         }
 
-        /// <summary>
-        /// Sets saga factory.
-        /// </summary>
-        /// <param name="factoryMethod">The factory method value.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Sets saga factory.</summary>
+        /// <param name="factoryMethod">The factory method.</param>
+        /// <returns>The event correlation configurator produced by the operation.</returns>
         public IEventCorrelationConfigurator<TInstance, TData> SetSagaFactory(SagaFactoryMethod<TInstance, TData> factoryMethod)
         {
             _sagaFactory = new FactoryMethodSagaFactory<TInstance, TData>(factoryMethod);
@@ -220,11 +191,9 @@ public partial class StateMachineInterfaceType<TInstance, TData>
             return this;
         }
 
-        /// <summary>
-        /// Performs the on missing instance operation.
-        /// </summary>
-        /// <param name="getMissingPipe">The get missing pipe value.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Handles the notification for missing instance.</summary>
+        /// <param name="getMissingPipe">The get missing pipe.</param>
+        /// <returns>The event correlation configurator produced by the operation.</returns>
         public IEventCorrelationConfigurator<TInstance, TData> OnMissingInstance(
             Func<IMissingInstanceConfigurator<TInstance, TData>, IPipe<ConsumeContext<TData>>> getMissingPipe)
         {

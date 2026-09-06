@@ -5,19 +5,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides an event hub producer cache implementation.
-/// </summary>
-/// <typeparam name="TKey">The t key type.</typeparam>
+/// <summary>Caches Event Hubs producers and disposes entries after resource-cache eviction or shutdown.</summary>
+/// <typeparam name="TKey">The producer cache-key type.</typeparam>
 public class EventHubProducerCache<TKey> :
     IEventHubProducerCache<TKey>
     where TKey : notnull
 {
     readonly KeyedResourceCache<TKey, CachedEventHubProducer<TKey>> _cache;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Creates a producer cache with a ten-second minimum resource age.</summary>
     public EventHubProducerCache()
     {
         var options = new ResourceCacheOptions(minAge: TimeSpan.FromSeconds(10));
@@ -25,22 +21,18 @@ public class EventHubProducerCache<TKey> :
         _cache = new KeyedResourceCache<TKey, CachedEventHubProducer<TKey>>(x => x.Key, options);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Disposes the resource cache and all producers it owns.</summary>
+    /// <returns>A task that completes after cached producers have been disposed.</returns>
     public ValueTask DisposeAsync()
     {
         return _cache.DisposeAsync();
     }
 
-    /// <summary>
-    /// Gets producer.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets a cached producer or creates a cache-owned producer for the key.</summary>
+    /// <param name="key">The key that identifies the producer.</param>
+    /// <param name="factory">Creates the producer when the key is absent.</param>
+    /// <param name="cancellationToken">Cancels cache lookup or producer creation.</param>
+    /// <returns>A task whose result is the cached or newly created producer.</returns>
     public async Task<IEventHubProducer> GetProducerAsync(TKey key, Func<TKey, Task<IEventHubProducer>> factory, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(factory);

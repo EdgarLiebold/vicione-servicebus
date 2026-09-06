@@ -6,18 +6,14 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Introspection;
 
-/// <summary>
-/// Provides a scope probe context implementation.
-/// </summary>
+/// <summary>Carries state for scope probe operations.</summary>
 public class ScopeProbeContext :
     ProbeContext
 {
     readonly CancellationToken _cancellationToken;
     readonly IDictionary<string, object> _variables;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     protected ScopeProbeContext(CancellationToken cancellationToken)
     {
@@ -27,11 +23,9 @@ public class ScopeProbeContext :
 
     CancellationToken ProbeContext.CancellationToken => _cancellationToken;
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">The value to process.</param>
     public void Add(string key, string value)
     {
         if (key == null)
@@ -43,11 +37,9 @@ public class ScopeProbeContext :
             _variables[key] = value;
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="value">The value to process.</param>
     public void Add(string key, object value)
     {
         if (key == null)
@@ -59,30 +51,24 @@ public class ScopeProbeContext :
             _variables[key] = value;
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="values">The values value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <param name="values">The values.</param>
     public void Set(object values)
     {
         if (values != null)
             SetVariablesFromDictionary(ConvertObject.ToDictionary(values));
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="values">The values value.</param>
+    /// <summary>Updates the target with the supplied value.</summary>
+    /// <param name="values">The values.</param>
     public void Set(IEnumerable<KeyValuePair<string, object>> values)
     {
         SetVariablesFromDictionary(values);
     }
 
-    /// <summary>
-    /// Creates scope.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates scope.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <returns>The created scope.</returns>
     public ProbeContext CreateScope(string key)
     {
         var scope = new ScopeProbeContext(_cancellationToken);
@@ -106,10 +92,8 @@ public class ScopeProbeContext :
         return scope;
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the configured component.</summary>
+    /// <returns>The configured component.</returns>
     protected IDictionary<string, object> Build()
     {
         return _variables.ToDictionary(x => x.Key, item =>

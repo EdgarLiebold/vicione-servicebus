@@ -4,50 +4,34 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a queue entity implementation.
-/// </summary>
+/// <summary>Represents an Azure Service Bus queue declaration in broker topology.</summary>
 public class QueueEntity :
     Queue,
     QueueHandle
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="createQueueOptions">The create queue options value.</param>
+    /// <summary>Creates a topology queue from Azure declaration options.</summary>
+    /// <param name="id">The topology-local identifier.</param>
+    /// <param name="createQueueOptions">The Azure queue declaration options.</param>
     public QueueEntity(long id, CreateQueueOptions createQueueOptions)
     {
         Id = id;
         CreateQueueOptions = createQueueOptions;
     }
 
-    /// <summary>
-    /// Gets the name comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that considers only the Azure queue name.</summary>
     public static IEqualityComparer<QueueEntity> NameComparer { get; } = new NameEqualityComparer();
-    /// <summary>
-    /// Gets the entity comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that considers the queue name and declaration properties.</summary>
     public static IEqualityComparer<QueueEntity> EntityComparer { get; } = new QueueEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the create queue options value.
-    /// </summary>
+    /// <summary>Gets the Azure queue declaration options.</summary>
     public CreateQueueOptions CreateQueueOptions { get; }
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the topology-local identifier.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the queue value.
-    /// </summary>
+    /// <summary>Gets this entity through the read-only queue contract.</summary>
     public Queue Queue => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the queue path for diagnostics.</summary>
+    /// <returns>A diagnostic string containing the queue path.</returns>
     public override string ToString()
     {
         return string.Join(", ", new[] { $"path: {CreateQueueOptions.Name}" }.Where(x => !string.IsNullOrWhiteSpace(x)));

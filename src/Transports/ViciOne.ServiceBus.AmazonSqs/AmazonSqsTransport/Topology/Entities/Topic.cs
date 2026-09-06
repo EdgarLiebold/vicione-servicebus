@@ -1,38 +1,24 @@
 using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
-/// <summary>
-/// The exchange details used to declare the exchange to AmazonSQS
-/// </summary>
+/// <summary>Describes an Amazon SNS topic declaration.</summary>
 public interface Topic
 {
-    /// <summary>
-    /// The exchange name
-    /// </summary>
+    /// <summary>Gets the topic name.</summary>
     string EntityName { get; }
 
-    /// <summary>
-    /// True if the exchange should be durable, and survive a broker restart
-    /// </summary>
+    /// <summary>Gets whether the topic is retained beyond the bus lifetime.</summary>
     bool Durable { get; }
 
-    /// <summary>
-    /// True if the exchange should be deleted when the connection is closed
-    /// </summary>
+    /// <summary>Gets whether the transport deletes the topic when the bus stops.</summary>
     bool AutoDelete { get; }
 
-    /// <summary>
-    /// Additional <see href="https://docs.aws.amazon.com/sns/latest/api/API_SetTopicAttributes.html">attributes</see> for the topic.
-    /// </summary>
+    /// <summary>Gets additional <see href="https://docs.aws.amazon.com/sns/latest/api/API_SetTopicAttributes.html">Amazon SNS topic attributes</see>.</summary>
     IDictionary<string, object> TopicAttributes { get; }
 
-    /// <summary>
-    /// Additional <see href="https://docs.aws.amazon.com/sns/latest/api/API_SetSubscriptionAttributes.html">attributes</see> for the topic's subscription.
-    /// </summary>
+    /// <summary>Gets additional default <see href="https://docs.aws.amazon.com/sns/latest/api/API_SetSubscriptionAttributes.html">Amazon SNS subscription attributes</see>.</summary>
     IDictionary<string, object> TopicSubscriptionAttributes { get; }
 
-    /// <summary>
-    /// Collection of tags to assign to topic when created.
-    /// </summary>
+    /// <summary>Gets the tags assigned when the topic is created.</summary>
     IDictionary<string, string> TopicTags { get; }
 }

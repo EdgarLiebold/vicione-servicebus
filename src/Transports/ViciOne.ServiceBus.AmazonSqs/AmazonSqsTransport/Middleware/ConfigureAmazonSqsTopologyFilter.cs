@@ -7,9 +7,9 @@ using ViciOne.ServiceBus.AmazonSqs.Topology;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Middleware;
 /// <summary>
-/// Configures the broker with the supplied topology once the model is created, to ensure
-/// that the exchanges, queues, and bindings for the model are properly configured in AmazonSQS.
+/// Configures Amazon SNS topics, Amazon SQS queues, and their subscriptions once per client context.
 /// </summary>
+/// <typeparam name="TSettings">The entity settings exposed to subsequent pipeline stages.</typeparam>
 public class ConfigureAmazonSqsTopologyFilter<TSettings> :
     IFilter<ClientContext>
     where TSettings : class
@@ -18,12 +18,10 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
     readonly SqsReceiveEndpointContext? _context;
     readonly TSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="brokerTopology">The broker topology value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a topology-configuration filter.</summary>
+    /// <param name="settings">The entity settings added to the client context.</param>
+    /// <param name="brokerTopology">The topics, queues, and subscriptions to declare.</param>
+    /// <param name="context">The optional receive endpoint that owns automatic topology removal.</param>
     public ConfigureAmazonSqsTopologyFilter(TSettings settings, BrokerTopology brokerTopology, SqsReceiveEndpointContext? context = null)
     {
         _settings = settings;
@@ -31,12 +29,10 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
         _context = context;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Declares topology once, invokes the next client-context stage, and evicts failed setup state for retry.</summary>
+    /// <param name="context">The Amazon client context.</param>
+    /// <param name="next">The next pipeline stage.</param>
+    /// <returns>The continuation task returned by <paramref name="next"/> after topology is ready.</returns>
     public async Task SendAsync(ClientContext context, IPipe<ClientContext> next)
     {
         OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await ConfigureAsync(context, context.CancellationToken);
@@ -53,10 +49,8 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds the configured broker topology to a diagnostic probe.</summary>
+    /// <param name="context">The probe context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("configureTopology");
@@ -64,12 +58,10 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
         _brokerTopology.Probe(scope);
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Declares topology once for a client context and registers automatic cleanup when required.</summary>
+    /// <param name="context">The Amazon client context.</param>
+    /// <param name="cancellationToken">The token used to cancel entity declaration.</param>
+    /// <returns>The one-time setup handle, which can be evicted after a downstream failure.</returns>
     public async Task<OneTimeContext<ConfigureTopologyContext<TSettings>>> ConfigureAsync(ClientContext context, CancellationToken cancellationToken)
     {
         return await context.OneTimeSetupAsync<ConfigureTopologyContext<TSettings>>(() =>

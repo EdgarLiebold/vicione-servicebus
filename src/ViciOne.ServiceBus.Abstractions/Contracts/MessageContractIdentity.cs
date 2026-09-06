@@ -3,9 +3,7 @@ using System.Globalization;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>
-/// Stable identity of a message contract at a persistence or wire boundary.
-/// </summary>
+/// <summary>Stable identity of a message contract at a persistence or wire boundary.</summary>
 /// <remarks>
 /// The identity deliberately excludes CLR assembly identity. Assembly name, assembly version, public-key token, and
 /// file location are deployment details and must never be required to deserialize durable ServiceBus infrastructure
@@ -15,39 +13,29 @@ public readonly record struct MessageContractIdentity
 {
     private const string VersionSeparator = ";v=";
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="majorVersion">The major version value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="majorVersion">The major version.</param>
     public MessageContractIdentity(string name, int majorVersion)
     {
         Name = ValidateName(name);
         MajorVersion = ValidateMajorVersion(majorVersion);
     }
 
-    /// <summary>
-    /// Gets the application-owned stable contract name.
-    /// </summary>
+    /// <summary>Gets the name.</summary>
     public string Name { get; }
 
-    /// <summary>
-    /// Gets the incompatible contract generation. Version zero is never valid.
-    /// </summary>
+    /// <summary>Gets the major version.</summary>
     public int MajorVersion { get; }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the string representation of this instance.</summary>
+    /// <returns>The converted string.</returns>
     public override string ToString()
         => string.Concat(Name, VersionSeparator, MajorVersion.ToString(CultureInfo.InvariantCulture));
 
-    /// <summary>
-    /// Parses the supplied representation.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Parses the supplied representation.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <returns>The parsed value.</returns>
     public static MessageContractIdentity Parse(string value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(value);
@@ -66,11 +54,9 @@ public readonly record struct MessageContractIdentity
         return new MessageContractIdentity(value[..separator], majorVersion);
     }
 
-    /// <summary>
-    /// Attempts to parse the supplied representation.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="identity">The identity value.</param>
+    /// <summary>Attempts to parse the supplied representation.</summary>
+    /// <param name="value">The value to process.</param>
+    /// <param name="identity">Receives the identity produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool TryParse(string? value, out MessageContractIdentity identity)
     {

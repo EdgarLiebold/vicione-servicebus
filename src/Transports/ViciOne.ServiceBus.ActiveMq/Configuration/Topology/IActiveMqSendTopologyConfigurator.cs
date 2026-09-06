@@ -2,20 +2,14 @@ using System;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Defines the contract for active mq send topology configurator.
-/// </summary>
+/// <summary>Configures ActiveMQ send, error, and dead-letter destination topology.</summary>
 public interface IActiveMqSendTopologyConfigurator :
     ISendTopologyConfigurator,
     IActiveMqSendTopology
 {
-    /// <summary>
-    /// Gets or sets the configure error settings value.
-    /// </summary>
+    /// <summary>Sets the callback applied to generated error-queue settings.</summary>
     Action<IActiveMqQueueConfigurator> ConfigureErrorSettings { set; }
 
-    /// <summary>
-    /// Gets or sets the configure dead letter settings value.
-    /// </summary>
+    /// <summary>Sets the callback applied to generated dead-letter queue settings.</summary>
     Action<IActiveMqQueueConfigurator> ConfigureDeadLetterSettings { set; }
 }

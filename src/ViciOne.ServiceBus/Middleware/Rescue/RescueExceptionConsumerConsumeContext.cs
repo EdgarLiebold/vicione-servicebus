@@ -4,10 +4,8 @@ using ViciOne.ServiceBus.Events;
 
 namespace ViciOne.ServiceBus.Middleware.Rescue;
 
-/// <summary>
-/// Provides a rescue exception consumer consume context implementation.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
+/// <summary>Carries state for rescue exception consumer consume operations.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
 public class RescueExceptionConsumerConsumeContext<TConsumer> :
     ConsumeContextProxy,
     ExceptionConsumerConsumeContext<TConsumer>
@@ -16,10 +14,8 @@ public class RescueExceptionConsumerConsumeContext<TConsumer> :
     readonly ConsumerConsumeContext<TConsumer> _context;
     ExceptionInfo _exceptionInfo = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     public RescueExceptionConsumerConsumeContext(ConsumerConsumeContext<TConsumer> context, Exception exception)
         : base(context)
@@ -28,19 +24,13 @@ public class RescueExceptionConsumerConsumeContext<TConsumer> :
         Exception = exception;
     }
 
-    /// <summary>
-    /// Gets the consumer value.
-    /// </summary>
+    /// <summary>Gets the consumer.</summary>
     public TConsumer Consumer => _context.Consumer;
 
-    /// <summary>
-    /// Gets the exception value.
-    /// </summary>
+    /// <summary>Gets the exception.</summary>
     public Exception Exception { get; }
 
-    /// <summary>
-    /// Gets the exception info value.
-    /// </summary>
+    /// <summary>Gets the exception info.</summary>
     public ExceptionInfo ExceptionInfo
     {
         get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }

@@ -2,14 +2,10 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Defines the contract for exchange binding handle.
-/// </summary>
+/// <summary>Identifies an exchange-to-exchange binding stored in a topology builder.</summary>
 public interface ExchangeBindingHandle :
     EntityHandle
 {
-    /// <summary>
-    /// Gets the binding value.
-    /// </summary>
+    /// <summary>Gets the binding declaration represented by the handle.</summary>
     ExchangeToExchangeBinding Binding { get; }
 }

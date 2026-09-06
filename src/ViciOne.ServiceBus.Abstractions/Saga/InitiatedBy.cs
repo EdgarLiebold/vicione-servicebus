@@ -2,10 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Specifies that the message type TMessage starts a new saga.
-/// </summary>
-/// <typeparam name="TMessage"></typeparam>
+/// <summary>Specifies that the message type TMessage starts a new saga.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 [MessageContractExclusion]
 [ConsumerRegistrationExclusion]
 public interface InitiatedBy<in TMessage> :

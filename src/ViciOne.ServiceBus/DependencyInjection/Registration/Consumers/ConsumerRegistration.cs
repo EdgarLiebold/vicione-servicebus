@@ -12,7 +12,7 @@ namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 /// provider. The consumer definition, if present, is loaded from the container and used to configure the consumer
 /// within the receive endpoint.
 /// </summary>
-/// <typeparam name="TConsumer">The consumer type</typeparam>
+/// <typeparam name="TConsumer">The consumer type.</typeparam>
 public class ConsumerRegistration<TConsumer> :
     IConsumerRegistration
     where TConsumer : class, IConsumer
@@ -21,10 +21,8 @@ public class ConsumerRegistration<TConsumer> :
     readonly IContainerSelector _selector;
     IConsumerDefinition<TConsumer> _definition = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="selector">The selector value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="selector">The selector.</param>
     public ConsumerRegistration(IContainerSelector selector)
     {
         _selector = selector;
@@ -32,19 +30,13 @@ public class ConsumerRegistration<TConsumer> :
         IncludeInConfigureEndpoints = !Type.HasAttribute<ExcludeFromConfigureEndpointsAttribute>();
     }
 
-    /// <summary>
-    /// Gets the type value.
-    /// </summary>
+    /// <summary>Gets the type.</summary>
     public Type Type => typeof(TConsumer);
 
-    /// <summary>
-    /// Gets or sets the include in configure endpoints value.
-    /// </summary>
+    /// <summary>Gets or sets the include in configure endpoints.</summary>
     public bool IncludeInConfigureEndpoints { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the consumer endpoint must be hosted by a service instance.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the consumer endpoint must be hosted by a service instance.</summary>
     public bool RequiresServiceInstance { get; set; }
 
     void IConsumerRegistration.AddConfigureAction<T>(Action<IRegistrationContext, IConsumerConfigurator<T>>? configure)
@@ -85,11 +77,9 @@ public class ConsumerRegistration<TConsumer> :
         return GetConsumerDefinition(context);
     }
 
-    /// <summary>
-    /// Gets consumer registration configurator.
-    /// </summary>
-    /// <param name="registrationConfigurator">The registration configurator value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets consumer registration configurator.</summary>
+    /// <param name="registrationConfigurator">The registration configurator.</param>
+    /// <returns>The consumer registration configurator.</returns>
     public IConsumerRegistrationConfigurator GetConsumerRegistrationConfigurator(IRegistrationConfigurator registrationConfigurator)
     {
         return new ConsumerRegistrationConfigurator<TConsumer>(registrationConfigurator, this);

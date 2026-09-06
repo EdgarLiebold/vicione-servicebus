@@ -3,19 +3,13 @@ using ViciOne.ServiceBus.Contracts;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Defines the contract for request configurator.
-/// </summary>
+/// <summary>Configures request.</summary>
 public interface IRequestConfigurator
 {
-    /// <summary>
-    /// Sets the service address of the request handler
-    /// </summary>
+    /// <summary>Sets the service address of the request handler.</summary>
     Uri ServiceAddress { set; }
 
-    /// <summary>
-    /// Sets the request timeout
-    /// </summary>
+    /// <summary>Sets the request timeout.</summary>
     TimeSpan Timeout { set; }
 
     /// <summary>
@@ -24,52 +18,37 @@ public interface IRequestConfigurator
     /// </summary>
     TimeSpan? TimeToLive { set; }
 
-    /// <summary>
-    /// By default, the RequestId is not cleared when the request is Faulted. Set to true to clear the requestId
-    /// </summary>
+    /// <summary>By default, the RequestId is not cleared when the request is Faulted. Set to true to clear the requestId.</summary>
     bool ClearRequestIdOnFaulted { set; }
 }
 
 
-/// <summary>
-/// Defines the contract for request configurator.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TRequest">The t request type.</typeparam>
-/// <typeparam name="TResponse">The t response type.</typeparam>
+/// <summary>Configures request.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TRequest">The request type.</typeparam>
+/// <typeparam name="TResponse">The response type.</typeparam>
 public interface IRequestConfigurator<TInstance, TRequest, TResponse> :
     IRequestConfigurator
     where TInstance : class, SagaStateMachineInstance
     where TRequest : class
     where TResponse : class
 {
-    /// <summary>
-    /// Configure the behavior of the Completed event, the same was Events are configured on
-    /// the state machine.
-    /// </summary>
+    /// <summary>Sets the correlation configuration applied to the completed response event.</summary>
     Action<IEventCorrelationConfigurator<TInstance, TResponse>> Completed { set; }
 
-    /// <summary>
-    /// Configure the behavior of the Faulted event, the same was Events are configured on
-    /// the state machine.
-    /// </summary>
+    /// <summary>Sets the correlation configuration applied to the request fault event.</summary>
     Action<IEventCorrelationConfigurator<TInstance, Fault<TRequest>>> Faulted { set; }
 
-    /// <summary>
-    /// Configure the behavior of the Faulted event, the same was Events are configured on
-    /// the state machine.
-    /// </summary>
+    /// <summary>Sets the correlation configuration applied to the request-timeout event.</summary>
     Action<IEventCorrelationConfigurator<TInstance, RequestTimeoutExpired<TRequest>>> TimeoutExpired { set; }
 }
 
 
-/// <summary>
-/// Defines the contract for request configurator.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TRequest">The t request type.</typeparam>
-/// <typeparam name="TResponse">The t response type.</typeparam>
-/// <typeparam name="TResponse2">The t response2 type.</typeparam>
+/// <summary>Configures request.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TRequest">The request type.</typeparam>
+/// <typeparam name="TResponse">The response type.</typeparam>
+/// <typeparam name="TResponse2">The response2 type.</typeparam>
 public interface IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2> :
     IRequestConfigurator<TInstance, TRequest, TResponse>
     where TInstance : class, SagaStateMachineInstance
@@ -77,22 +56,17 @@ public interface IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2
     where TResponse2 : class
     where TRequest : class
 {
-    /// <summary>
-    /// Configure the behavior of the Completed event, the same was Events are configured on
-    /// the state machine.
-    /// </summary>
+    /// <summary>Sets the correlation configuration applied to the second completed response event.</summary>
     Action<IEventCorrelationConfigurator<TInstance, TResponse2>> Completed2 { set; }
 }
 
 
-/// <summary>
-/// Defines the contract for request configurator.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TRequest">The t request type.</typeparam>
-/// <typeparam name="TResponse">The t response type.</typeparam>
-/// <typeparam name="TResponse2">The t response2 type.</typeparam>
-/// <typeparam name="TResponse3">The t response3 type.</typeparam>
+/// <summary>Configures request.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TRequest">The request type.</typeparam>
+/// <typeparam name="TResponse">The response type.</typeparam>
+/// <typeparam name="TResponse2">The response2 type.</typeparam>
+/// <typeparam name="TResponse3">The response3 type.</typeparam>
 public interface IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2, TResponse3> :
     IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2>
     where TInstance : class, SagaStateMachineInstance
@@ -101,9 +75,6 @@ public interface IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2
     where TResponse3 : class
     where TRequest : class
 {
-    /// <summary>
-    /// Configure the behavior of the Completed event, the same was Events are configured on
-    /// the state machine.
-    /// </summary>
+    /// <summary>Sets the correlation configuration applied to the third completed response event.</summary>
     Action<IEventCorrelationConfigurator<TInstance, TResponse3>> Completed3 { set; }
 }

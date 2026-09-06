@@ -20,20 +20,16 @@ public class ConditionExpression :
     readonly ISignalResource _resource;
     bool _disposed;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="resource">The resource value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="resource">The resource.</param>
     public ConditionExpression(ISignalResource resource)
     {
         _resource = resource ?? throw new ArgumentNullException(nameof(resource));
     }
 
-    /// <summary>
-    /// Performs the condition updated operation.
-    /// </summary>
+    /// <summary>Reevaluates state after a condition changes.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ConditionUpdatedAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (TryCheckCondition(out var isMet) && isMet)
@@ -41,9 +37,8 @@ public class ConditionExpression :
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Adds a condition block where all conditions in the array must be logically ANDed together to succeed.
-    /// </summary>
+    /// <summary>Adds a condition block where all conditions in the array must be logically ANDed together to succeed.</summary>
+    /// <param name="conditions">The conditions.</param>
     public void AddConditionBlock(params IObservableCondition[] conditions)
     {
         ArgumentNullException.ThrowIfNull(conditions);
@@ -72,9 +67,7 @@ public class ConditionExpression :
         }
     }
 
-    /// <summary>
-    /// Performs the clear all conditions operation.
-    /// </summary>
+    /// <summary>Clears all conditions.</summary>
     public void ClearAllConditions()
     {
         ConnectHandle[] connections;
@@ -89,9 +82,7 @@ public class ConditionExpression :
             connection.Disconnect();
     }
 
-    /// <summary>
-    /// Performs the check condition operation.
-    /// </summary>
+    /// <summary>Checks condition.</summary>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool CheckCondition()
     {
@@ -101,9 +92,7 @@ public class ConditionExpression :
         return isMet;
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         ConnectHandle[] connections;

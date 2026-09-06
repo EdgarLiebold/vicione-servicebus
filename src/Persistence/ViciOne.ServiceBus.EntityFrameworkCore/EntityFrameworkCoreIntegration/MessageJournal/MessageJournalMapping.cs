@@ -3,19 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.MessageJournal;
-/// <summary>
-/// Maps the provider-neutral message-journal record to its explicitly selected table.
-/// </summary>
+/// <summary>Maps the provider-neutral message-journal record to its explicitly selected table.</summary>
 public sealed class MessageJournalMapping : IEntityTypeConfiguration<MessageJournalRecord>
 {
     private readonly string? _schemaName;
     private readonly string _tableName;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="tableName">The table name value.</param>
-    /// <param name="schemaName">The schema name value.</param>
+    /// <summary>Initializes a mapping for an explicitly selected journal table.</summary>
+    /// <param name="tableName">The table that stores journal entries.</param>
+    /// <param name="schemaName">The schema, or <see langword="null"/> to use the provider default.</param>
     public MessageJournalMapping(string tableName, string? schemaName = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tableName);
@@ -26,10 +22,8 @@ public sealed class MessageJournalMapping : IEntityTypeConfiguration<MessageJour
         _schemaName = schemaName;
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Configures keys, indexes, required fields, and the target table.</summary>
+    /// <param name="builder">The journal-record entity builder.</param>
     public void Configure(EntityTypeBuilder<MessageJournalRecord> builder)
     {
         if (_schemaName is null)

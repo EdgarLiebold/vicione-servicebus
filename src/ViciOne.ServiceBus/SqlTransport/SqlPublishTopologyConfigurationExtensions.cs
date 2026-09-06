@@ -4,30 +4,25 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Provides extension methods for sql publish topology configuration.
-/// </summary>
+/// <summary>Provides extension methods for sql publish topology configuration.</summary>
 public static class SqlPublishTopologyConfigurationExtensions
 {
-    /// <summary>
-    /// Adds any valid message types found in the specified namespace to the publish topology
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <param name="filter"></param>
+    /// <summary>Adds any valid message types found in the specified namespace to the publish topology.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public static void AddPublishMessageTypesFromNamespaceContaining<T>(this ISqlBusFactoryConfigurator configurator,
         Action<ISqlMessagePublishTopologyConfigurator, Type>? configure = null, Func<Type, bool>? filter = null)
     {
         AddPublishMessageTypesFromNamespaceContaining(configurator, typeof(T), configure, filter);
     }
 
-    /// <summary>
-    /// Adds any valid message types found in the specified namespace to the publish topology
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="type">The type to use to identify the assembly and namespace to scan</param>
-    /// <param name="configure"></param>
-    /// <param name="filter"></param>
+    /// <summary>Adds any valid message types found in the specified namespace to the publish topology.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="type">The type to use to identify the assembly and namespace to scan.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public static void AddPublishMessageTypesFromNamespaceContaining(this ISqlBusFactoryConfigurator configurator, Type type,
         Action<ISqlMessagePublishTopologyConfigurator, Type>? configure = null, Func<Type, bool>? filter = null)
     {
@@ -58,12 +53,10 @@ public static class SqlPublishTopologyConfigurationExtensions
             configurator.Publish(messageType, x => configure?.Invoke(x, messageType));
     }
 
-    /// <summary>
-    /// Adds the specified message types to the publish topology
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="messageTypes"></param>
-    /// <param name="configure"></param>
+    /// <summary>Adds the specified message types to the publish topology.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="messageTypes">The message types.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void AddPublishMessageTypes(this ISqlBusFactoryConfigurator configurator, IEnumerable<Type> messageTypes,
         Action<ISqlMessagePublishTopologyConfigurator, Type>? configure = null)
     {

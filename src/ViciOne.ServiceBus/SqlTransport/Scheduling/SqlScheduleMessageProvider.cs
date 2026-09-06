@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>
-/// Provides a sql schedule message provider implementation.
-/// </summary>
+/// <summary>Provides sql schedule message services.</summary>
 public class SqlScheduleMessageProvider :
     IScheduleMessageProvider
 {
@@ -18,10 +16,8 @@ public class SqlScheduleMessageProvider :
     readonly ISqlHostConfiguration? _hostConfiguration;
     readonly ISendEndpointProvider _sendEndpointProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public SqlScheduleMessageProvider(ConsumeContext context)
     {
         _context = context;
@@ -30,11 +26,9 @@ public class SqlScheduleMessageProvider :
         _cancel = RetryUsingContextAsync;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="sendEndpointProvider">The send endpoint provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="sendEndpointProvider">The send endpoint provider.</param>
     public SqlScheduleMessageProvider(ISqlHostConfiguration hostConfiguration, ISendEndpointProvider sendEndpointProvider)
     {
         _hostConfiguration = hostConfiguration;
@@ -43,16 +37,14 @@ public class SqlScheduleMessageProvider :
         _cancel = RetryUsingHostConfigurationAsync;
     }
 
-    /// <summary>
-    /// Schedules send.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="destinationAddress">The destination address value.</param>
-    /// <param name="dueAt">The due at value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Schedules send.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="destinationAddress">The destination address.</param>
+    /// <param name="dueAt">The due at.</param>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the schedule send outcome.</returns>
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
@@ -76,12 +68,10 @@ public class SqlScheduleMessageProvider :
         return new ScheduledMessageHandle<T>(schedulePipe.ScheduledMessageId ?? NewId.NextGuid(), dueAt, destinationAddress, message);
     }
 
-    /// <summary>
-    /// Determines whether the current value can cel scheduled send.
-    /// </summary>
-    /// <param name="tokenId">The token id value.</param>
+    /// <summary>Determines whether the current value can cel scheduled send.</summary>
+    /// <param name="tokenId">The token id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CancelScheduledSendAsync(Guid tokenId, CancellationToken cancellationToken)
     {
         return _cancel(async clientContext =>
@@ -92,13 +82,11 @@ public class SqlScheduleMessageProvider :
         }, cancellationToken);
     }
 
-    /// <summary>
-    /// Determines whether the current value can cel scheduled send.
-    /// </summary>
-    /// <param name="destinationAddress">The destination address value.</param>
-    /// <param name="tokenId">The token id value.</param>
+    /// <summary>Determines whether the current value can cel scheduled send.</summary>
+    /// <param name="destinationAddress">The destination address.</param>
+    /// <param name="tokenId">The token id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
     {
         return _cancel(async clientContext =>

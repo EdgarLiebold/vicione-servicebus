@@ -3,11 +3,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Courier;
 
-/// <summary>
-/// Provides a factory method compensate activity factory implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TLog">The t log type.</typeparam>
+/// <summary>Creates factory method compensate activity instances.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TLog">The log type.</typeparam>
 public class FactoryMethodCompensateActivityFactory<TActivity, TLog> :
     ICompensateActivityFactory<TActivity, TLog>
     where TActivity : class, ICompensateActivity<TLog>
@@ -15,22 +13,18 @@ public class FactoryMethodCompensateActivityFactory<TActivity, TLog> :
 {
     readonly Func<TLog, TActivity> _compensateFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="compensateFactory">The compensate factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="compensateFactory">The compensate factory.</param>
     public FactoryMethodCompensateActivityFactory(Func<TLog, TActivity> compensateFactory)
     {
         _compensateFactory = compensateFactory;
     }
 
-    /// <summary>
-    /// Performs the compensate operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
+    /// <summary>Compensates the completed activity.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CompensateAsync(CompensateContext<TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); TActivity? activity = null;
@@ -56,10 +50,8 @@ public class FactoryMethodCompensateActivityFactory<TActivity, TLog> :
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateScope("factoryMethod");

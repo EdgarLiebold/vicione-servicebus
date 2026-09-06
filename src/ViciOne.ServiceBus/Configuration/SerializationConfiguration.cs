@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a serialization configuration implementation.
-/// </summary>
+/// <summary>Stores and validates serialization configuration.</summary>
 public class SerializationConfiguration :
     ISerializationConfiguration
 {
@@ -22,9 +20,7 @@ public class SerializationConfiguration :
     ContentType? _serializerContentType;
     SerializationConfiguration? _source;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public SerializationConfiguration()
     {
         _serializers = new Dictionary<string, ISerializerFactory>(StringComparer.OrdinalIgnoreCase);
@@ -45,9 +41,7 @@ public class SerializationConfiguration :
         _source = source;
     }
 
-    /// <summary>
-    /// Gets or sets the default content type value.
-    /// </summary>
+    /// <summary>Gets or sets the default content type.</summary>
     public ContentType DefaultContentType
     {
         set
@@ -57,9 +51,7 @@ public class SerializationConfiguration :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the serializer content type value.
-    /// </summary>
+    /// <summary>Gets or sets the serializer content type.</summary>
     public ContentType SerializerContentType
     {
         set
@@ -69,9 +61,7 @@ public class SerializationConfiguration :
         }
     }
 
-    /// <summary>
-    /// Performs the clear operation.
-    /// </summary>
+    /// <summary>Removes every item from the current collection.</summary>
     public void Clear()
     {
         EnsureMutable();
@@ -86,11 +76,9 @@ public class SerializationConfiguration :
         _source = null;
     }
 
-    /// <summary>
-    /// Adds serializer to the configuration.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="isSerializer">The is serializer value.</param>
+    /// <summary>Adds serializer to the configuration.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="isSerializer">The is serializer.</param>
     public void AddSerializer(ISerializerFactory factory, bool isSerializer = true)
     {
         ArgumentNullException.ThrowIfNull(factory);
@@ -102,11 +90,9 @@ public class SerializationConfiguration :
             _serializerContentType = factory.ContentType;
     }
 
-    /// <summary>
-    /// Adds deserializer to the configuration.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="isDefault">The is default value.</param>
+    /// <summary>Adds deserializer to the configuration.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="isDefault">The is default.</param>
     public void AddDeserializer(ISerializerFactory factory, bool isDefault = false)
     {
         ArgumentNullException.ThrowIfNull(factory);
@@ -118,10 +104,8 @@ public class SerializationConfiguration :
             _defaultContentType = factory.ContentType;
     }
 
-    /// <summary>
-    /// Configures system text json serializer options.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures system text json serializer options.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void ConfigureSystemTextJsonSerializerOptions(Func<JsonSerializerOptions, JsonSerializerOptions> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
@@ -129,28 +113,22 @@ public class SerializationConfiguration :
         _jsonOptionsConfigurators.Add(configure);
     }
 
-    /// <summary>
-    /// Creates serialization configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates serialization configuration.</summary>
+    /// <returns>The created serialization configuration.</returns>
     public ISerializationConfiguration CreateSerializationConfiguration()
     {
         return new SerializationConfiguration(this);
     }
 
-    /// <summary>
-    /// Creates serializer collection.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates serializer collection.</summary>
+    /// <returns>The created serializer collection.</returns>
     public ISerialization CreateSerializerCollection()
     {
         return _collection.Value;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         var serializers = ResolveFactories(static x => x._serializers);

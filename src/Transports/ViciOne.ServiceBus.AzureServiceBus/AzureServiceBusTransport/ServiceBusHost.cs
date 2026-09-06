@@ -4,20 +4,16 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus host implementation.
-/// </summary>
+/// <summary>Owns Azure Service Bus receive endpoints for a configured namespace.</summary>
 public class ServiceBusHost :
     BaseHost,
     IServiceBusHost
 {
     readonly IServiceBusHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="busTopology">The bus topology value.</param>
+    /// <summary>Creates a host from namespace configuration and bus topology.</summary>
+    /// <param name="hostConfiguration">The namespace connection and endpoint configuration.</param>
+    /// <param name="busTopology">The Azure Service Bus send and publish topology.</param>
     public ServiceBusHost(IServiceBusHostConfiguration hostConfiguration, IServiceBusBusTopology busTopology)
         : base(hostConfiguration, busTopology)
     {
@@ -25,18 +21,14 @@ public class ServiceBusHost :
         Topology = busTopology;
     }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the Azure Service Bus topology exposed by the host.</summary>
     public new IServiceBusBusTopology Topology { get; }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a receive endpoint using provider-neutral endpoint configuration.</summary>
+    /// <param name="definition">The endpoint definition supplying name and common settings.</param>
+    /// <param name="endpointNameFormatter">The optional formatter used to derive the queue name.</param>
+    /// <param name="configureEndpoint">Optionally configures provider-neutral endpoint settings.</param>
+    /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
@@ -44,25 +36,21 @@ public class ServiceBusHost :
             configureEndpoint == null ? null : endpoint => configureEndpoint(endpoint));
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a named queue using provider-neutral endpoint configuration.</summary>
+    /// <param name="queueName">The namespace-relative queue name.</param>
+    /// <param name="configureEndpoint">Optionally configures provider-neutral endpoint settings.</param>
+    /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return ConnectReceiveEndpoint(queueName,
             configureEndpoint == null ? null : endpoint => configureEndpoint(endpoint));
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a receive endpoint from a definition using Azure Service Bus-specific configuration.</summary>
+    /// <param name="definition">The endpoint definition supplying name and common settings.</param>
+    /// <param name="endpointNameFormatter">The optional formatter used to derive the queue name.</param>
+    /// <param name="configureEndpoint">Optionally configures Azure Service Bus-specific settings.</param>
+    /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
         Action<IServiceBusReceiveEndpointConfigurator>? configureEndpoint = null)
     {
@@ -75,12 +63,10 @@ public class ServiceBusHost :
         });
     }
 
-    /// <summary>
-    /// Connects receive endpoint.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds and starts a receive endpoint for a named queue.</summary>
+    /// <param name="queueName">The namespace-relative queue name.</param>
+    /// <param name="configure">Optionally configures Azure Service Bus-specific settings.</param>
+    /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IServiceBusReceiveEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
@@ -96,13 +82,11 @@ public class ServiceBusHost :
         return ReceiveEndpoints.Start(configuration.Settings.Path);
     }
 
-    /// <summary>
-    /// Connects subscription endpoint.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a subscription to the publish topic for a message contract.</summary>
+    /// <typeparam name="T">The subscribed message contract.</typeparam>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="configure">Optionally configures Azure Service Bus-specific settings.</param>
+    /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
     public HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
         Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
         where T : class
@@ -114,13 +98,11 @@ public class ServiceBusHost :
         return ConnectSubscriptionEndpoint(endpointConfiguration);
     }
 
-    /// <summary>
-    /// Connects subscription endpoint.
-    /// </summary>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a subscription to a named topic.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="topicName">The namespace-relative topic name.</param>
+    /// <param name="configure">Optionally configures Azure Service Bus-specific settings.</param>
+    /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
     public HostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
         Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
     {
@@ -131,10 +113,8 @@ public class ServiceBusHost :
         return ConnectSubscriptionEndpoint(endpointConfiguration);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds namespace and connection-supervisor diagnostics to a probe.</summary>
+    /// <param name="context">The probe receiving diagnostic values.</param>
     protected override void Probe(ProbeContext context)
     {
         context.Set(new
@@ -157,10 +137,8 @@ public class ServiceBusHost :
         return ReceiveEndpoints.Start(configuration.Settings.Path);
     }
 
-    /// <summary>
-    /// Gets agent handles.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the namespace connection supervisor owned by this host.</summary>
+    /// <returns>The host agent handles.</returns>
     protected override IAgent[] GetAgentHandles()
     {
         return new IAgent[] { _hostConfiguration.ConnectionContextSupervisor };

@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a rider collection implementation.
-/// </summary>
+/// <summary>Stores a collection of rider values.</summary>
 public class RiderCollection :
     Agent,
     IRiderCollection
@@ -18,20 +16,16 @@ public class RiderCollection :
     readonly object _mutateLock = new object();
     readonly Dictionary<string, IRiderControl> _riders;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public RiderCollection()
     {
         _riders = new Dictionary<string, IRiderControl>(StringComparer.OrdinalIgnoreCase);
         _handles = new Dictionary<string, Handle>(StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Retrieves the requested value.</summary>
+    /// <param name="name">The name.</param>
+    /// <returns>The requested value.</returns>
     public IRider Get(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -49,11 +43,9 @@ public class RiderCollection :
         }
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="rider">The rider value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="rider">The rider.</param>
     public void Add(string name, IRiderControl rider)
     {
         if (rider == null)
@@ -71,11 +63,9 @@ public class RiderCollection :
         }
     }
 
-    /// <summary>
-    /// Starts riders.
-    /// </summary>
+    /// <summary>Starts riders.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The host rider handle array produced by the operation.</returns>
     public HostRiderHandle[] StartRiders(CancellationToken cancellationToken = default)
     {
         KeyValuePair<string, IRiderControl>[] ridersToStart;
@@ -85,12 +75,10 @@ public class RiderCollection :
         return ridersToStart.Select(x => StartRider(x.Key, x.Value, cancellationToken)).ToArray();
     }
 
-    /// <summary>
-    /// Starts rider.
-    /// </summary>
-    /// <param name="name">The name value.</param>
+    /// <summary>Starts rider.</summary>
+    /// <param name="name">The name.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The host rider handle produced by the operation.</returns>
     public HostRiderHandle StartRider(string name, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -109,10 +97,8 @@ public class RiderCollection :
         return StartRider(name, rider, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the check endpoint health operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Checks endpoint health.</summary>
+    /// <returns>The enumerable produced by the operation.</returns>
     public IEnumerable<EndpointHealthResult> CheckEndpointHealth()
     {
         return _riders.Values.SelectMany(x => x.CheckEndpointHealth()).ToList();
@@ -159,11 +145,9 @@ public class RiderCollection :
         }
     }
 
-    /// <summary>
-    /// Stops agent.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Stops agent.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected override async Task StopAgentAsync(StopContext context)
     {
         await StopRidersAsync(context.CancellationToken).ConfigureAwait(false);

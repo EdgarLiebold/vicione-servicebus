@@ -1,30 +1,20 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// The configuration of a bus
-/// </summary>
+/// <summary>The configuration of a bus.</summary>
 public interface IBusConfiguration :
     IEndpointConfiguration,
     IBusObserverConnector,
     IEndpointConfigurationObserverConnector
 {
-    /// <summary>
-    /// Gets the host configuration value.
-    /// </summary>
+    /// <summary>Gets the host configuration.</summary>
     IHostConfiguration HostConfiguration { get; }
 
-    /// <summary>
-    /// Gets the message routes value.
-    /// </summary>
+    /// <summary>Gets the message routes.</summary>
     IMessageRouteTable MessageRoutes { get; }
 
-    /// <summary>
-    /// Gets the bus endpoint configuration value.
-    /// </summary>
+    /// <summary>Gets the bus endpoint configuration.</summary>
     IEndpointConfiguration BusEndpointConfiguration { get; }
 
-    /// <summary>
-    /// Gets the bus observers value.
-    /// </summary>
+    /// <summary>Gets the bus observers.</summary>
     IBusObserver BusObservers { get; }
 }

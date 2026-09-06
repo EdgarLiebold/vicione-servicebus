@@ -2,39 +2,31 @@ using RabbitMQ.Client;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for rabbit mq send context.
-/// </summary>
+/// <summary>Exposes RabbitMQ routing, delivery, and publisher-confirm settings for a send.</summary>
 public interface RabbitMqSendContext :
     SendContext,
     RoutingKeySendContext
 {
-    /// <summary>
-    /// Specify that the published message must be delivered to a queue or it will be returned
-    /// </summary>
+    /// <summary>Gets or sets whether RabbitMQ must return the message when no queue is bound for its routing key.</summary>
     bool Mandatory { get; set; }
 
-    /// <summary>
-    /// The destination exchange for the message
-    /// </summary>
+    /// <summary>Gets the destination exchange.</summary>
     string Exchange { get; }
 
     /// <summary>
-    /// True if the ack from the broker should be awaited, otherwise only the BasicPublish call is awaited
+    /// Gets or sets whether the caller waits for the RabbitMQ client publish task, including publisher confirmation when enabled.
+    /// When <see langword="false"/>, the caller returns after the client publish has been initiated; the transport continues to
+    /// observe the publish task and retain the channel lease internally.
     /// </summary>
     bool AwaitAck { get; set; }
 
-    /// <summary>
-    /// The basic properties for the RabbitMQ message
-    /// </summary>
+    /// <summary>Gets the AMQP basic properties written with the message.</summary>
     BasicProperties BasicProperties { get; }
 }
 
 
-/// <summary>
-/// Defines the contract for rabbit mq send context.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Exposes RabbitMQ-specific state for a typed send context.</summary>
+/// <typeparam name="T">The message type being sent.</typeparam>
 public interface RabbitMqSendContext<out T> :
     SendContext<T>,
     RabbitMqSendContext

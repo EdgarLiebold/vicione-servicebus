@@ -1,10 +1,8 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a compensate activity log configurator implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TLog">The t log type.</typeparam>
+/// <summary>Configures compensate activity log.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TLog">The log type.</typeparam>
 public class CompensateActivityLogConfigurator<TActivity, TLog> :
     ICompensateActivityLogConfigurator<TLog>
     where TActivity : class, ICompensateActivity<TLog>
@@ -12,19 +10,15 @@ public class CompensateActivityLogConfigurator<TActivity, TLog> :
 {
     readonly IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> _configurator;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public CompensateActivityLogConfigurator(IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> configurator)
     {
         _configurator = configurator;
     }
 
-    /// <summary>
-    /// Adds pipe specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
     public void AddPipeSpecification(IPipeSpecification<CompensateActivityContext<TLog>> specification)
     {
         _configurator.AddPipeSpecification(specification);

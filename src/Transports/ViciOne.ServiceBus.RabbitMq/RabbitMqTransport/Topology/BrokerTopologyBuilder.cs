@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a broker topology builder implementation.
-/// </summary>
+/// <summary>Collects and de-duplicates RabbitMQ exchange, queue, and binding declarations.</summary>
 public abstract class BrokerTopologyBuilder
 {
     readonly EntityCollection<ExchangeBindingEntity, ExchangeBindingHandle> _exchangeBindings;
@@ -15,9 +13,7 @@ public abstract class BrokerTopologyBuilder
     readonly NamedEntityCollection<QueueEntity, QueueHandle> _queues;
     long _nextId;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Creates an empty topology builder.</summary>
     protected BrokerTopologyBuilder()
     {
         _exchanges = new NamedEntityCollection<ExchangeEntity, ExchangeHandle>(ExchangeEntity.EntityComparer, ExchangeEntity.NameComparer);
@@ -32,15 +28,13 @@ public abstract class BrokerTopologyBuilder
         return Interlocked.Increment(ref _nextId);
     }
 
-    /// <summary>
-    /// Performs the exchange declare operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="type">The type value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="arguments">The arguments value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds or reuses an exchange declaration.</summary>
+    /// <param name="name">The exchange name.</param>
+    /// <param name="type">The RabbitMQ exchange type.</param>
+    /// <param name="durable">Whether the exchange survives broker restarts.</param>
+    /// <param name="autoDelete">Whether RabbitMQ deletes the exchange when it is no longer used.</param>
+    /// <param name="arguments">The broker-specific declaration arguments.</param>
+    /// <returns>A handle that identifies the de-duplicated exchange.</returns>
     public ExchangeHandle ExchangeDeclare(string name, string type, bool durable, bool autoDelete, IDictionary<string, object?> arguments)
     {
         var id = GetNextId();
@@ -50,14 +44,12 @@ public abstract class BrokerTopologyBuilder
         return _exchanges.GetOrAdd(exchange);
     }
 
-    /// <summary>
-    /// Performs the exchange bind operation.
-    /// </summary>
-    /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="routingKey">The routing key value.</param>
-    /// <param name="arguments">The arguments value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds or reuses a binding between two declared exchanges.</summary>
+    /// <param name="source">The source exchange handle.</param>
+    /// <param name="destination">The destination exchange handle.</param>
+    /// <param name="routingKey">The routing key used by the binding.</param>
+    /// <param name="arguments">The broker-specific binding arguments.</param>
+    /// <returns>A handle that identifies the de-duplicated binding.</returns>
     public ExchangeBindingHandle ExchangeBind(ExchangeHandle source, ExchangeHandle destination, string routingKey, IDictionary<string, object?> arguments)
     {
         var id = GetNextId();
@@ -71,15 +63,13 @@ public abstract class BrokerTopologyBuilder
         return _exchangeBindings.GetOrAdd(binding);
     }
 
-    /// <summary>
-    /// Performs the queue declare operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="exclusive">The exclusive value.</param>
-    /// <param name="arguments">The arguments value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds or reuses a queue declaration, normalizing quorum and expiring-queue constraints.</summary>
+    /// <param name="name">The queue name.</param>
+    /// <param name="durable">Whether the queue survives broker restarts.</param>
+    /// <param name="autoDelete">Whether RabbitMQ deletes the queue when its last consumer is gone.</param>
+    /// <param name="exclusive">Whether the queue belongs exclusively to its declaring connection.</param>
+    /// <param name="arguments">The broker-specific declaration arguments.</param>
+    /// <returns>A handle that identifies the de-duplicated queue.</returns>
     public QueueHandle QueueDeclare(string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object?> arguments)
     {
         var id = GetNextId();
@@ -104,14 +94,12 @@ public abstract class BrokerTopologyBuilder
         return _queues.GetOrAdd(queue);
     }
 
-    /// <summary>
-    /// Performs the queue bind operation.
-    /// </summary>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="routingKey">The routing key value.</param>
-    /// <param name="arguments">The arguments value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds or reuses a binding from a declared exchange to a declared queue.</summary>
+    /// <param name="exchange">The source exchange handle.</param>
+    /// <param name="queue">The destination queue handle.</param>
+    /// <param name="routingKey">The routing key used by the binding.</param>
+    /// <param name="arguments">The broker-specific binding arguments.</param>
+    /// <returns>A handle that identifies the de-duplicated binding.</returns>
     public QueueBindingHandle QueueBind(ExchangeHandle exchange, QueueHandle queue, string routingKey, IDictionary<string, object?> arguments)
     {
         var id = GetNextId();
@@ -125,10 +113,8 @@ public abstract class BrokerTopologyBuilder
         return _queueBindings.GetOrAdd(binding);
     }
 
-    /// <summary>
-    /// Performs the build broker topology operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an immutable broker-topology snapshot from the collected declarations.</summary>
+    /// <returns>The ordered, de-duplicated RabbitMQ topology.</returns>
     public BrokerTopology BuildBrokerTopology()
     {
         return new RabbitMqBrokerTopology(_exchanges, _exchangeBindings, _queues, _queueBindings);

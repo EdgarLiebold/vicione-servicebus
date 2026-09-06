@@ -1,15 +1,11 @@
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>
-/// Defines the contract for implemented message type.
-/// </summary>
+/// <summary>Defines the operations required by implemented message type.</summary>
 public interface IImplementedMessageType
 {
-    /// <summary>
-    /// Performs the implements message type operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="direct">The direct value.</param>
+    /// <summary>Determines whether the type implements the message contract.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="direct">The direct.</param>
     void ImplementsMessageType<T>(bool direct)
         where T : class;
 }

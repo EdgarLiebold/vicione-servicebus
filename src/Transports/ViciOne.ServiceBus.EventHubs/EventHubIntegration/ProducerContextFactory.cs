@@ -5,44 +5,36 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides a producer context factory implementation.
-/// </summary>
+/// <summary>Creates and shares supervised producer contexts for one Event Hub.</summary>
 public class ProducerContextFactory :
     IPipeContextFactory<ProducerContext>
 {
     readonly IConnectionContextSupervisor _contextSupervisor;
     readonly string _eventHubName;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="contextSupervisor">The context supervisor value.</param>
-    /// <param name="eventHubName">The event hub name value.</param>
+    /// <summary>Creates a producer-context factory for a named Event Hub.</summary>
+    /// <param name="contextSupervisor">The shared Event Hubs connection supervisor.</param>
+    /// <param name="eventHubName">The Event Hub entity name.</param>
     public ProducerContextFactory(IConnectionContextSupervisor contextSupervisor, string eventHubName)
     {
         _contextSupervisor = contextSupervisor;
         _eventHubName = eventHubName;
     }
 
-    /// <summary>
-    /// Creates active context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a caller-scoped active agent over an existing producer context.</summary>
+    /// <param name="supervisor">The supervisor that will own the active agent.</param>
+    /// <param name="context">The handle for the shared producer context.</param>
+    /// <param name="cancellationToken">The cancellation token exposed by the scoped context.</param>
+    /// <returns>The active producer-context agent.</returns>
     public IActivePipeContextAgent<ProducerContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ProducerContext> context,
         CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedConnectionAsync(context.Context, cancellationToken));
     }
 
-    /// <summary>
-    /// Creates context.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an asynchronous agent that acquires a producer client through the connection supervisor.</summary>
+    /// <param name="supervisor">The supervisor that will own the context agent.</param>
+    /// <returns>The asynchronous producer-context agent.</returns>
     public IPipeContextAgent<ProducerContext> CreateContext(ISupervisor supervisor)
     {
         IAsyncPipeContextAgent<ProducerContext> asyncContext = supervisor.AddAsyncContext<ProducerContext>();

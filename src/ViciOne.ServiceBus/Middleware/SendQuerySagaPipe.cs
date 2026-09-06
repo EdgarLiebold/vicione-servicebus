@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a send query saga pipe implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Executes the pipeline for send query saga.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="T">The value type.</typeparam>
 public class SendQuerySagaPipe<TSaga, T> :
     IPipe<SagaRepositoryQueryContext<TSaga, T>>
     where TSaga : class, ISaga
@@ -18,30 +16,24 @@ public class SendQuerySagaPipe<TSaga, T> :
     readonly IPipe<SagaConsumeContext<TSaga, T>> _next;
     readonly ISagaPolicy<TSaga, T> _policy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="policy">The policy value.</param>
-    /// <param name="next">The next value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="policy">The policy.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
     public SendQuerySagaPipe(ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
     {
         _policy = policy;
         _next = next;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(SagaRepositoryQueryContext<TSaga, T> context)
     {
         if (context.Count > 0)

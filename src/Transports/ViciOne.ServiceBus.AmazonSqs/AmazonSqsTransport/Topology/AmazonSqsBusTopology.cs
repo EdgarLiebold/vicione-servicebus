@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides an amazon sqs bus topology implementation.
-/// </summary>
+/// <summary>Resolves Amazon SQS send and Amazon SNS publish topology and destination addresses for a bus.</summary>
 public class AmazonSqsBusTopology :
     BusTopology,
     IAmazonSqsBusTopology
@@ -15,12 +13,10 @@ public class AmazonSqsBusTopology :
     readonly IAmazonSqsHostConfiguration _hostConfiguration;
     readonly IMessageNameFormatter _messageNameFormatter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="messageNameFormatter">The message name formatter value.</param>
-    /// <param name="configuration">The configuration callback.</param>
+    /// <summary>Initializes Amazon SQS bus topology.</summary>
+    /// <param name="hostConfiguration">The host used to resolve relative entity addresses.</param>
+    /// <param name="messageNameFormatter">The formatter used to derive topic names from message types.</param>
+    /// <param name="configuration">The send and publish topology configuration.</param>
     public AmazonSqsBusTopology(IAmazonSqsHostConfiguration hostConfiguration, IMessageNameFormatter messageNameFormatter,
         IAmazonSqsTopologyConfiguration configuration)
         : base(hostConfiguration, configuration)
@@ -43,11 +39,9 @@ public class AmazonSqsBusTopology :
         return _configuration.Send.GetMessageTopology<T>();
     }
 
-    /// <summary>
-    /// Gets send settings.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Resolves queue or topic send settings for an endpoint address.</summary>
+    /// <param name="address">The absolute or host-relative destination address.</param>
+    /// <returns>The resolved entity send settings.</returns>
     public SendSettings GetSendSettings(Uri address)
     {
         var endpointAddress = new AmazonSqsEndpointAddress(_hostConfiguration.HostAddress, address);
@@ -55,12 +49,10 @@ public class AmazonSqsBusTopology :
         return _configuration.Send.GetSendSettings(endpointAddress);
     }
 
-    /// <summary>
-    /// Gets destination address.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an Amazon SNS destination address for a named topic.</summary>
+    /// <param name="topicName">The topic name.</param>
+    /// <param name="configure">An optional callback that changes topic attributes, tags, or lifetime.</param>
+    /// <returns>The configured topic address.</returns>
     public Uri GetDestinationAddress(string topicName, Action<IAmazonSqsTopicConfigurator>? configure = null)
     {
         var address = new AmazonSqsEndpointAddress(
@@ -75,12 +67,10 @@ public class AmazonSqsBusTopology :
         return publishSettings.GetSendAddress(_hostConfiguration.HostAddress);
     }
 
-    /// <summary>
-    /// Gets destination address.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an Amazon SNS destination address for a message type.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="configure">An optional callback that changes topic attributes, tags, or lifetime.</param>
+    /// <returns>The configured topic address.</returns>
     public Uri GetDestinationAddress(Type messageType, Action<IAmazonSqsTopicConfigurator>? configure = null)
     {
         var topicName = _messageNameFormatter.GetMessageName(messageType);

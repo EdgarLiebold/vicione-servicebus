@@ -3,43 +3,27 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Courier;
 
-/// <summary>
-/// Represents a routing slip request info value.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Represents a routing slip request info.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public readonly struct RoutingSlipRequestInfo<T>
     where T : class
 {
-    /// <summary>
-    /// Defines the request id value.
-    /// </summary>
+    /// <summary>Exposes the request id used by the containing type.</summary>
     public readonly Guid RequestId;
-    /// <summary>
-    /// Defines the response address value.
-    /// </summary>
+    /// <summary>Exposes the response address used by the containing type.</summary>
     public readonly Uri ResponseAddress;
-    /// <summary>
-    /// Defines the fault address value.
-    /// </summary>
+    /// <summary>Exposes the fault address used by the containing type.</summary>
     public readonly Uri? FaultAddress;
-    /// <summary>
-    /// Defines the request address value.
-    /// </summary>
+    /// <summary>Exposes the request address used by the containing type.</summary>
     public readonly Uri? RequestAddress;
-    /// <summary>
-    /// Defines the retry attempt value.
-    /// </summary>
+    /// <summary>Exposes the retry attempt used by the containing type.</summary>
     public readonly int? RetryAttempt;
-    /// <summary>
-    /// Defines the request value.
-    /// </summary>
+    /// <summary>Exposes the request used by the containing type.</summary>
     public readonly T Request;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="variables">The variables value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="variables">The variables.</param>
     public RoutingSlipRequestInfo(IObjectDeserializer context, IDictionary<string, object> variables)
     {
         Request = context.GetValue<T>(variables, RoutingSlipRequestVariableNames.Request)

@@ -10,9 +10,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides an event hub producer implementation.
-/// </summary>
+/// <summary>Owns a supervised Event Hubs send transport and applies initialization, admission, observers, and diagnostics around production.</summary>
 public class EventHubProducer :
     Supervisor,
     IAsyncDisposable,
@@ -21,11 +19,9 @@ public class EventHubProducer :
     readonly ConnectHandle? _connectHandle;
     readonly EventHubSendTransportContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="connectHandle">The connect handle value.</param>
+    /// <summary>Creates a producer and adopts the transport's agent lifetimes.</summary>
+    /// <param name="context">The Event Hubs send transport context.</param>
+    /// <param name="connectHandle">The optional observer connection owned by this producer.</param>
     public EventHubProducer(EventHubSendTransportContext context, ConnectHandle? connectHandle = null)
     {
         _context = context;
@@ -35,104 +31,88 @@ public class EventHubProducer :
             Add(handle);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Disconnects the owned observer registration and stops supervised producer agents.</summary>
+    /// <returns>A task that completes after producer shutdown.</returns>
     public async ValueTask DisposeAsync()
     {
         _connectHandle?.Disconnect();
         await this.StopAsync("Disposing Agent").ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
+    /// <summary>Produces one message using the default Event Hubs send-context pipe.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="message">The message to produce.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The supervised transport task for the serialized message.</returns>
     public Task ProduceAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class
     {
         return ProduceAsync(message, Pipe.Empty<EventHubSendContext<T>>(), cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="messages">The messages value.</param>
+    /// <summary>Produces a batch of messages using the default Event Hubs send-context pipe.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="messages">The messages to produce.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that completes when all provider batches have been sent.</returns>
     public Task ProduceAsync<T>(IEnumerable<T> messages, CancellationToken cancellationToken = default)
         where T : class
     {
         return ProduceAsync(messages, Pipe.Empty<EventHubSendContext<T>>(), cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Configures, observes, and produces one message through the supervised transport.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="message">The message to produce.</param>
+    /// <param name="pipe">The pipe that configures the Event Hubs send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that completes after send observers and provider submission finish.</returns>
     public Task ProduceAsync<T>(T message, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
         return _context.SendAsync(new SendPipe<T>(message, _context, pipe, cancellationToken), cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="messages">The messages value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Configures, observes, and produces messages in provider-sized batches.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="messages">The messages to produce.</param>
+    /// <param name="pipe">The pipe applied to each Event Hubs send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that completes after observers and all provider batches finish.</returns>
     public Task ProduceAsync<T>(IEnumerable<T> messages, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
         return _context.SendAsync(new BatchSendPipe<T>(messages, _context, pipe, cancellationToken), cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
+    /// <summary>Initializes and produces one message using the default Event Hubs send-context pipe.</summary>
+    /// <typeparam name="T">The message type to initialize.</typeparam>
+    /// <param name="values">The values used to initialize the message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that completes after initialization and provider submission.</returns>
     public Task ProduceAsync<T>(object values, CancellationToken cancellationToken = default)
         where T : class
     {
         return ProduceAsync(values, Pipe.Empty<EventHubSendContext<T>>(), cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
+    /// <summary>Initializes and produces a batch of messages using the default Event Hubs send-context pipe.</summary>
+    /// <typeparam name="T">The message type to initialize.</typeparam>
+    /// <param name="values">The values used to initialize the messages.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that completes after initialization and all provider batches finish.</returns>
     public Task ProduceAsync<T>(IEnumerable<object> values, CancellationToken cancellationToken = default)
         where T : class
     {
         return ProduceAsync(values, Pipe.Empty<EventHubSendContext<T>>(), cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Initializes, configures, observes, and produces one message.</summary>
+    /// <typeparam name="T">The message type to initialize.</typeparam>
+    /// <param name="values">The values used to initialize the message.</param>
+    /// <param name="pipe">The pipe that configures the Event Hubs send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that completes after initialization, observers, and provider submission.</returns>
     public async Task ProduceAsync<T>(object values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -141,14 +121,12 @@ public class EventHubProducer :
         await _context.SendAsync(new SendPipe<T>(message, _context, pipe, cancellationToken, sendPipe), cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the produce operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Initializes, configures, observes, and produces messages in provider-sized batches.</summary>
+    /// <typeparam name="T">The message type to initialize.</typeparam>
+    /// <param name="values">The values used to initialize the messages.</param>
+    /// <param name="pipe">The pipe applied to each Event Hubs send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that completes after initialization, observers, and all provider batches finish.</returns>
     public async Task ProduceAsync<T>(IEnumerable<object> values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -159,11 +137,9 @@ public class EventHubProducer :
             cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a send observer to the underlying transport context.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _context.ConnectSendObserver(observer);

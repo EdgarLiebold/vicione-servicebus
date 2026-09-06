@@ -1,13 +1,9 @@
 namespace ViciOne.ServiceBus.AzureStorage.MessageData;
 
-/// <summary>
-/// Defines the contract for blob name generator.
-/// </summary>
+/// <summary>Generates unique blob names for Azure-backed message payloads.</summary>
 public interface IBlobNameGenerator
 {
-    /// <summary>
-    /// Performs the generate blob name operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Generates the name for the next message-data blob.</summary>
+    /// <returns>A blob name that is unique within the repository container.</returns>
     string GenerateBlobName();
 }

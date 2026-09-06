@@ -7,31 +7,25 @@ using Microsoft.Extensions.Logging;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a bus depot implementation.
-/// </summary>
+/// <summary>Owns registered bus instances.</summary>
 public class BusDepot :
     IBusDepot
 {
     readonly IDictionary<Type, IBusInstance> _instances;
     readonly ILogger<BusDepot> _logger;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="instances">The instances value.</param>
-    /// <param name="logger">The logger value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="instances">The instances.</param>
+    /// <param name="logger">The logger.</param>
     public BusDepot(IEnumerable<IBusInstance> instances, ILogger<BusDepot> logger)
     {
         _logger = logger;
         _instances = instances.ToDictionary(x => x.InstanceType);
     }
 
-    /// <summary>
-    /// Starts the configured component.
-    /// </summary>
+    /// <summary>Starts the configured component.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task StartAsync(CancellationToken cancellationToken)
     {
         if (_instances.Count == 0)
@@ -42,11 +36,9 @@ public class BusDepot :
         return Task.WhenAll(_instances.Values.Select(x => x.BusControl.StartAsync(cancellationToken)));
     }
 
-    /// <summary>
-    /// Stops the configured component.
-    /// </summary>
+    /// <summary>Stops the configured component.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task StopAsync(CancellationToken cancellationToken)
     {
         if (_instances.Count == 0)

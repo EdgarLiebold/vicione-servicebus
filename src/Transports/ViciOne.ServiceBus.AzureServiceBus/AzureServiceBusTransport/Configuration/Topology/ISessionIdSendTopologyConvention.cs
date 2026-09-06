@@ -2,15 +2,12 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for session id send topology convention.
-/// </summary>
+/// <summary>Provides the default session-id formatter used to create per-message send conventions.</summary>
 public interface ISessionIdSendTopologyConvention :
     ISendTopologyConvention
 {
     /// <summary>
-    /// The default, non-message specific routing key formatter used by messages
-    /// when no specific convention has been specified.
+    /// Gets or sets the default session-id formatter used when no message-specific formatter has been specified.
     /// </summary>
     ISessionIdFormatter DefaultFormatter { get; set; }
 }

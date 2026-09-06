@@ -16,24 +16,16 @@ public sealed class DurableSendQuarantinePage
         ContinuationToken = continuationToken;
     }
 
-    /// <summary>
-    /// Gets the entries value.
-    /// </summary>
+    /// <summary>Gets the entries.</summary>
     public IReadOnlyList<DurableSendQuarantineEntry> Entries { get; }
 
-    /// <summary>
-    /// Gets the continuation token value.
-    /// </summary>
+    /// <summary>Gets the continuation token.</summary>
     public string? ContinuationToken { get; }
 
-    /// <summary>
-    /// Gets the has more value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether this instance has more.</summary>
     public bool HasMore => ContinuationToken is not null;
 
-    /// <summary>
-    /// Gets the next query value.
-    /// </summary>
+    /// <summary>Gets the next query.</summary>
     public DurableSendQuarantineQuery? NextQuery => ContinuationToken is null
         ? null
         : new DurableSendQuarantineQuery

@@ -1,16 +1,12 @@
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a rabbit mq delay settings implementation.
-/// </summary>
+/// <summary>Provides send settings for the RabbitMQ exchange used to delay a message.</summary>
 public class RabbitMqDelaySettings :
     RabbitMqSendSettings,
     DelaySettings
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Creates delay-exchange settings from a RabbitMQ endpoint address.</summary>
+    /// <param name="address">The delayed-message exchange address.</param>
     public RabbitMqDelaySettings(RabbitMqEndpointAddress address)
         : base(address)
     {

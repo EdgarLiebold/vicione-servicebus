@@ -1,17 +1,11 @@
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>
-/// Defines the contract for topology handle.
-/// </summary>
+/// <summary>Controls the lifetime of topology.</summary>
 public interface TopologyHandle
 {
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the id.</summary>
     long Id { get; }
 
-    /// <summary>
-    /// Performs the disconnect operation.
-    /// </summary>
+    /// <summary>Disconnects the current observer or endpoint.</summary>
     void Disconnect();
 }

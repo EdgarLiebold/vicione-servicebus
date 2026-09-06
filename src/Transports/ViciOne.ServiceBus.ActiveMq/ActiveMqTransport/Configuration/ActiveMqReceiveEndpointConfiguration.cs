@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.ActiveMq.Configuration;
 
-/// <summary>
-/// Provides an active mq receive endpoint configuration implementation.
-/// </summary>
+/// <summary>Configures and builds one ActiveMQ queue receive endpoint.</summary>
 public class ActiveMqReceiveEndpointConfiguration :
     ReceiveEndpointConfiguration,
     IActiveMqReceiveEndpointConfiguration,
@@ -23,12 +21,10 @@ public class ActiveMqReceiveEndpointConfiguration :
     readonly IBuildPipeConfigurator<SessionContext> _sessionConfigurator;
     readonly ActiveMqQueueReceiveSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
+    /// <summary>Creates a receive-endpoint configuration for an ActiveMQ queue.</summary>
+    /// <param name="hostConfiguration">The ActiveMQ host configuration.</param>
+    /// <param name="settings">The queue receive settings.</param>
+    /// <param name="endpointConfiguration">The endpoint's shared configuration.</param>
     public ActiveMqReceiveEndpointConfiguration(IActiveMqHostConfiguration hostConfiguration, ActiveMqQueueReceiveSettings settings,
         IActiveMqEndpointConfiguration endpointConfiguration)
         : base(hostConfiguration, endpointConfiguration)
@@ -43,33 +39,23 @@ public class ActiveMqReceiveEndpointConfiguration :
         _inputAddress = new Lazy<Uri>(FormatInputAddress);
     }
 
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the queue receive settings.</summary>
     public ReceiveSettings Settings => _settings;
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the configured broker address.</summary>
     public override Uri HostAddress => _hostConfiguration.HostAddress;
-    /// <summary>
-    /// Gets the input address value.
-    /// </summary>
+    /// <summary>Gets the lazily formatted queue input address.</summary>
     public override Uri InputAddress => _inputAddress.Value;
     IActiveMqTopologyConfiguration IActiveMqEndpointConfiguration.Topology => _endpointConfiguration.Topology;
 
-    /// <summary>
-    /// Creates receive endpoint context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the runtime ActiveMQ receive-endpoint context.</summary>
+    /// <returns>The configured receive-endpoint context.</returns>
     public override ReceiveEndpointContext CreateReceiveEndpointContext()
     {
         return CreateActiveMqReceiveEndpointContext();
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <param name="host">The host value.</param>
+    /// <summary>Builds and registers the receive transport and endpoint with a host.</summary>
+    /// <param name="host">The host that owns the endpoint.</param>
     public void Build(IHost host)
     {
         var context = CreateActiveMqReceiveEndpointContext();
@@ -107,10 +93,8 @@ public class ActiveMqReceiveEndpointConfiguration :
         ReceiveEndpoint = receiveEndpoint;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         var queueName = $"{_settings.EntityName}";
@@ -122,9 +106,7 @@ public class ActiveMqReceiveEndpointConfiguration :
             yield return result.WithParentKey(queueName);
     }
 
-    /// <summary>
-    /// Gets or sets the durable value.
-    /// </summary>
+    /// <summary>Sets whether the queue persists across broker restarts.</summary>
     public bool Durable
     {
         set
@@ -135,9 +117,7 @@ public class ActiveMqReceiveEndpointConfiguration :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the auto delete value.
-    /// </summary>
+    /// <summary>Sets whether the broker removes the queue when it is no longer used.</summary>
     public bool AutoDelete
     {
         set
@@ -148,11 +128,9 @@ public class ActiveMqReceiveEndpointConfiguration :
         }
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Binds a named topic to the receive queue.</summary>
+    /// <param name="topicName">The topic name.</param>
+    /// <param name="configure">An optional callback that configures the topic binding.</param>
     public void Bind(string topicName, Action<IActiveMqTopicBindingConfigurator>? configure = null)
     {
         if (topicName == null)
@@ -161,21 +139,17 @@ public class ActiveMqReceiveEndpointConfiguration :
         _endpointConfiguration.Topology.Consume.Bind(topicName, configure);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Binds the publish topic for a message type to the receive queue.</summary>
+    /// <typeparam name="T">The message type whose topic is bound.</typeparam>
+    /// <param name="configure">An optional callback that configures the topic binding.</param>
     public void Bind<T>(Action<IActiveMqTopicBindingConfigurator>? configure = null)
         where T : class
     {
         _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Bind(configure);
     }
 
-    /// <summary>
-    /// Configures session.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures the Apache NMS session pipeline used by the endpoint.</summary>
+    /// <param name="configure">The callback that configures the session pipeline.</param>
     public void ConfigureSession(Action<IPipeConfigurator<SessionContext>> configure)
     {
         configure?.Invoke(_sessionConfigurator);
@@ -195,10 +169,8 @@ public class ActiveMqReceiveEndpointConfiguration :
         return _settings.GetInputAddress(_hostConfiguration.HostAddress);
     }
 
-    /// <summary>
-    /// Determines whether already configured.
-    /// </summary>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether the endpoint input address or base configuration has already been materialized.</summary>
+    /// <returns><see langword="true" /> when configuration can no longer be changed safely; otherwise, <see langword="false" />.</returns>
     protected override bool IsAlreadyConfigured()
     {
         return _inputAddress.IsValueCreated || base.IsAlreadyConfigured();

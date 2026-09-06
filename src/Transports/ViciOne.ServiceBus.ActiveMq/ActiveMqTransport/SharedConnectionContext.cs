@@ -6,20 +6,16 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides a shared connection context implementation.
-/// </summary>
+/// <summary>Applies an operation-specific cancellation scope to a shared ActiveMQ connection context.</summary>
 public class SharedConnectionContext :
     ProxyPipeContext,
     ConnectionContext
 {
     readonly ConnectionContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a scoped proxy over an established connection context.</summary>
+    /// <param name="context">The underlying connection context.</param>
+    /// <param name="cancellationToken">The token associated with this operation scope.</param>
     public SharedConnectionContext(ConnectionContext context, CancellationToken cancellationToken)
         : base(context)
     {
@@ -27,23 +23,15 @@ public class SharedConnectionContext :
         CancellationToken = cancellationToken;
     }
 
-    /// <summary>
-    /// Gets the cancellation token value.
-    /// </summary>
+    /// <summary>Gets the token associated with this operation scope.</summary>
     public override CancellationToken CancellationToken { get; }
 
     IConnection ConnectionContext.Connection => _context.Connection;
-    /// <summary>
-    /// Gets the description value.
-    /// </summary>
+    /// <inheritdoc />
     public string Description => _context.Description;
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <inheritdoc />
     public Uri HostAddress => _context.HostAddress;
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <inheritdoc />
     public IActiveMqBusTopology Topology => _context.Topology;
 
     Task<ISession> ConnectionContext.CreateSessionAsync(CancellationToken cancellationToken)
@@ -51,55 +39,31 @@ public class SharedConnectionContext :
         return _context.CreateSessionAsync(cancellationToken);
     }
 
-    /// <summary>
-    /// Determines whether virtual topic consumer.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool IsVirtualTopicConsumer(string name)
     {
         return _context.IsVirtualTopicConsumer(name);
     }
 
-    /// <summary>
-    /// Gets temporary queue.
-    /// </summary>
-    /// <param name="session">The session value.</param>
-    /// <param name="topicName">The topic name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <inheritdoc />
     public IQueue GetTemporaryQueue(ISession session, string topicName)
     {
         return _context.GetTemporaryQueue(session, topicName);
     }
 
-    /// <summary>
-    /// Gets temporary topic.
-    /// </summary>
-    /// <param name="session">The session value.</param>
-    /// <param name="topicName">The topic name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <inheritdoc />
     public ITopic GetTemporaryTopic(ISession session, string topicName)
     {
         return _context.GetTemporaryTopic(session, topicName);
     }
 
-    /// <summary>
-    /// Attempts to get temporary entity.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="destination">The destination value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryGetTemporaryEntity(string name, out IDestination? destination)
     {
         return _context.TryGetTemporaryEntity(name, out destination);
     }
 
-    /// <summary>
-    /// Performs the try remove temporary entity operation.
-    /// </summary>
-    /// <param name="session">The session value.</param>
-    /// <param name="name">The name value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryRemoveTemporaryEntity(ISession session, string name)
     {
         return _context.TryRemoveTemporaryEntity(session, name);

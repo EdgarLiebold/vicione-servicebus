@@ -3,17 +3,13 @@ using ViciOne.ServiceBus.AmazonSqs.Configuration;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides extension methods for amazon sqs host configuration.
-/// </summary>
+/// <summary>Provides Amazon SQS host and receive-endpoint configuration extensions.</summary>
 public static class AmazonSqsHostConfigurationExtensions
 {
-    /// <summary>
-    /// Configure a AmazonSQS host using the configuration API
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="hostAddress">The URI host address of the AmazonSQS host (amazonsqs://region)</param>
-    /// <param name="configure"></param>
+    /// <summary>Configures an Amazon SQS host from an <c>amazonsqs://</c> address.</summary>
+    /// <param name="configurator">The Amazon SQS bus configurator.</param>
+    /// <param name="hostAddress">The host address containing the AWS region and optional scope.</param>
+    /// <param name="configure">The callback that configures the host.</param>
     public static void Host(this IAmazonSqsBusFactoryConfigurator configurator, Uri hostAddress, Action<IAmazonSqsHostConfigurator> configure)
     {
         if (hostAddress == null)
@@ -26,35 +22,29 @@ public static class AmazonSqsHostConfigurationExtensions
         configurator.Host(hostConfigurator.Settings);
     }
 
-    /// <summary>
-    /// Configure a AmazonSQS host with a host name and virtual host
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="hostName">The host name of the broker</param>
-    /// <param name="configure">The configuration callback</param>
+    /// <summary>Configures an Amazon SQS host by AWS region system name.</summary>
+    /// <param name="configurator">The Amazon SQS bus configurator.</param>
+    /// <param name="hostName">The AWS region system name.</param>
+    /// <param name="configure">The callback that configures the host.</param>
     public static void Host(this IAmazonSqsBusFactoryConfigurator configurator, string hostName, Action<IAmazonSqsHostConfigurator> configure)
     {
         configurator.Host(new UriBuilder("amazonsqs", hostName).Uri, configure);
     }
 
     /// <summary>
-    /// Declare a ReceiveEndpoint using a unique generated queue name. This queue defaults to auto-delete
-    /// and non-durable. By default all services bus instances include a default receiveEndpoint that is
-    /// of this type (created automatically upon the first receiver binding).
+    /// Configures a temporary receive endpoint with a generated, non-durable, auto-delete Amazon SQS queue.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
+    /// <param name="configurator">The Amazon SQS bus configurator.</param>
+    /// <param name="configure">An optional callback that configures the receive endpoint.</param>
     public static void ReceiveEndpoint(this IAmazonSqsBusFactoryConfigurator configurator, Action<IAmazonSqsReceiveEndpointConfigurator>? configure = null)
     {
         configurator.ReceiveEndpoint(new TemporaryEndpointDefinition(), DefaultEndpointNameFormatter.Instance, configure);
     }
 
-    /// <summary>
-    /// Declare a receive endpoint using the endpoint <paramref name="definition"/>.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="definition"></param>
-    /// <param name="configure"></param>
+    /// <summary>Configures an Amazon SQS receive endpoint from an endpoint definition.</summary>
+    /// <param name="configurator">The Amazon SQS bus configurator.</param>
+    /// <param name="definition">The endpoint definition.</param>
+    /// <param name="configure">An optional callback that configures the receive endpoint.</param>
     public static void ReceiveEndpoint(this IAmazonSqsBusFactoryConfigurator configurator, IEndpointDefinition definition,
         Action<IAmazonSqsReceiveEndpointConfigurator>? configure = null)
     {

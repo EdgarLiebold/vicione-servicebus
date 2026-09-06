@@ -7,10 +7,8 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>
-/// Provides a topic node implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Represents the topic graph node.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class TopicNode<T> :
     IProbeSite
     where T : class
@@ -19,10 +17,8 @@ public class TopicNode<T> :
     readonly StringComparer _comparer;
     readonly Connectable<IMessageSink<T>> _sinks;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="comparer">The comparer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="comparer">The comparer.</param>
     public TopicNode(StringComparer comparer)
     {
         _comparer = comparer;
@@ -31,9 +27,7 @@ public class TopicNode<T> :
         _children = new ConcurrentDictionary<string, TopicNode<T>>(comparer);
     }
 
-    /// <summary>
-    /// Gets the sinks value.
-    /// </summary>
+    /// <summary>Gets the sinks.</summary>
     public IEnumerable<IMessageSink<T>> Sinks
     {
         get
@@ -49,10 +43,8 @@ public class TopicNode<T> :
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         _sinks.ForEach(s => s.Probe(context));
@@ -65,12 +57,10 @@ public class TopicNode<T> :
         }
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="sink">The sink value.</param>
-    /// <param name="pattern">The pattern value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="sink">The sink.</param>
+    /// <param name="pattern">The pattern.</param>
+    /// <returns>The connect handle produced by the operation.</returns>
     public ConnectHandle Add(IMessageSink<T> sink, string? pattern)
     {
         if (string.IsNullOrWhiteSpace(pattern))
@@ -85,13 +75,11 @@ public class TopicNode<T> :
         return GetChild(word).Add(sink, pattern, separator + 1);
     }
 
-    /// <summary>
-    /// Performs the deliver operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="routingKey">The routing key value.</param>
+    /// <summary>Delivers the current message.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="routingKey">The routing key.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task DeliverAsync(DeliveryContext<T> context, string? routingKey, CancellationToken cancellationToken = default)
     {
         if (_children.TryGetValue("#", out TopicNode<T>? hashNode))

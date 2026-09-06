@@ -8,27 +8,21 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides extension methods for testing service provider.
-/// </summary>
+/// <summary>Provides extension methods for testing service provider.</summary>
 public static class TestingServiceProviderExtensions
 {
-    /// <summary>
-    /// Gets test harness.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets test harness.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <returns>The test harness.</returns>
     public static ITestHarness GetTestHarness(this IServiceProvider provider)
     {
         return provider.GetRequiredService<ITestHarness>();
     }
 
-    /// <summary>
-    /// Starts test harness.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
+    /// <summary>Starts test harness.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the start test harness outcome.</returns>
     public static async Task<ITestHarness> StartTestHarnessAsync(this IServiceProvider provider, CancellationToken cancellationToken = default)
     {
         var testHarness = provider.GetRequiredService<ITestHarness>();
@@ -38,14 +32,12 @@ public static class TestingServiceProviderExtensions
         return testHarness;
     }
 
-    /// <summary>
-    /// Connects publish handler.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="harness">The harness value.</param>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Connects publish handler.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="harness">The harness.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces a handle that disconnects the registration.</returns>
     public static async Task<Task<ConsumeContext<T>>> ConnectPublishHandlerAsync<T>(this ITestHarness harness, Func<ConsumeContext<T>, bool> filter, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -70,21 +62,18 @@ public static class TestingServiceProviderExtensions
         return source.Task;
     }
 
-    /// <summary>
-    /// Adds task completion source to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Adds task completion source to the configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public static void AddTaskCompletionSource<T>(this IBusRegistrationConfigurator configurator)
     {
         configurator.Services.AddSingleton(provider => provider.GetRequiredService<ITestHarness>().GetTask<T>());
     }
 
-    /// <summary>
-    /// Stop the test harness, which stops the bus and all hosted services that were started.
-    /// </summary>
-    /// <param name="harness"></param>
-    /// <param name="cancellationToken"></param>
+    /// <summary>Stop the test harness, which stops the bus and all hosted services that were started.</summary>
+    /// <param name="harness">The harness.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static async Task StopAsync(this ITestHarness harness, CancellationToken cancellationToken = default)
     {
         IHostedService[] services = harness.Provider.GetServices<IHostedService>().ToArray();
@@ -93,12 +82,10 @@ public static class TestingServiceProviderExtensions
             await service.StopAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the restart hosted services operation.
-    /// </summary>
-    /// <param name="harness">The harness value.</param>
+    /// <summary>Restarts hosted services.</summary>
+    /// <param name="harness">The harness.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static async Task RestartHostedServicesAsync(this ITestHarness harness, CancellationToken cancellationToken = default)
     {
         IHostedService[] services = harness.Provider.GetServices<IHostedService>().ToArray();
@@ -110,13 +97,11 @@ public static class TestingServiceProviderExtensions
             await service.StartAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Adds a saga instance to the in-memory saga repository.
-    /// </summary>
-    /// <param name="harness">The test harness</param>
-    /// <param name="correlationId">The correlationId for the newly created saga instance</param>
-    /// <param name="callback">Callback to set any additional properties on the saga instance</param>
-    /// <typeparam name="T">The saga type</typeparam>
+    /// <summary>Adds a saga instance to the in-memory saga repository.</summary>
+    /// <typeparam name="T">The saga type.</typeparam>
+    /// <param name="harness">The test harness.</param>
+    /// <param name="correlationId">The correlationId for the newly created saga instance.</param>
+    /// <param name="callback">Callback to set any additional properties on the saga instance.</param>
     public static void AddSagaInstance<T>(this ITestHarness harness, Guid? correlationId = default, Action<T>? callback = null)
         where T : class, ISaga, new()
     {
@@ -133,14 +118,13 @@ public static class TestingServiceProviderExtensions
         dictionary.Add(new SagaInstance<T>(instance));
     }
 
-    /// <summary>
-    /// Adds or updates an existing saga instance using the in-memory saga repository.
-    /// </summary>
-    /// <param name="harness"></param>
-    /// <param name="correlationId"></param>
-    /// <param name="callback"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
+    /// <summary>Adds or updates an existing saga instance using the in-memory saga repository.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="harness">The harness.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static async Task AddOrUpdateSagaInstanceAsync<T>(this ITestHarness harness, Guid? correlationId = default, Action<T>? callback = null,
         CancellationToken cancellationToken = default)
         where T : class, ISaga, new()
@@ -174,15 +158,13 @@ public static class TestingServiceProviderExtensions
         }
     }
 
-    /// <summary>
-    /// Removes a saga instance from the in-memory saga repository (if it exists).
-    /// </summary>
-    /// <param name="harness"></param>
-    /// <param name="correlationId"></param>
-    /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
+    /// <summary>Removes a saga instance from the in-memory saga repository (if it exists).</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="harness">The harness.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>A task that produces the try remove saga instance outcome.</returns>
+    /// <exception cref="ArgumentException">Thrown when an argument does not satisfy the operation contract.</exception>
     public static async Task<bool> TryRemoveSagaInstanceAsync<T>(this ITestHarness harness, Guid correlationId, CancellationToken cancellationToken = default)
         where T : class, ISaga
     {

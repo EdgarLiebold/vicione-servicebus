@@ -9,6 +9,8 @@ namespace ViciOne.ServiceBus.Caching;
 /// Convenience facade over the single resource-cache engine for the common one-key transport cache case.
 /// It does not own a second cache implementation.
 /// </summary>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
+/// <typeparam name="TValue">The value stored by the member.</typeparam>
 public sealed class KeyedResourceCache<TKey, TValue> :
     IAsyncDisposable
     where TKey : notnull
@@ -17,12 +19,10 @@ public sealed class KeyedResourceCache<TKey, TValue> :
     readonly ResourceCache<TValue> _cache;
     readonly IResourceCacheIndex<TKey, TValue> _index;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="keySelector">The key selector value.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="comparer">The comparer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="keySelector">The key selector.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="comparer">The comparer.</param>
     public KeyedResourceCache(Func<TValue, TKey> keySelector, ResourceCacheOptions options,
         IEqualityComparer<TKey>? comparer = null)
     {
@@ -33,59 +33,47 @@ public sealed class KeyedResourceCache<TKey, TValue> :
         _index = _cache.AddIndex("primary", keySelector, comparer: comparer);
     }
 
-    /// <summary>
-    /// Gets the statistics value.
-    /// </summary>
+    /// <summary>Gets the statistics.</summary>
     public ResourceCacheStatistics Statistics => _cache.Statistics;
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <param name="key">The key value.</param>
+    /// <summary>Retrieves the requested value.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public ValueTask<TValue> GetAsync(TKey key, CancellationToken cancellationToken = default)
     {
         return _index.GetAsync(key, cancellationToken);
     }
 
-    /// <summary>
-    /// Gets or add.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="factory">The factory value.</param>
+    /// <summary>Gets or add.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public ValueTask<TValue> GetOrAddAsync(TKey key, ResourceFactory<TKey, TValue> factory, CancellationToken cancellationToken = default)
     {
         return _index.GetOrAddAsync(key, factory, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the remove operation.
-    /// </summary>
-    /// <param name="key">The key value.</param>
+    /// <summary>Removes the selected value.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the remove outcome.</returns>
     public ValueTask<bool> RemoveAsync(TKey key, CancellationToken cancellationToken = default)
     {
         return _index.RemoveAsync(key, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the clear operation.
-    /// </summary>
+    /// <summary>Removes every item from the current collection.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask ClearAsync(CancellationToken cancellationToken = default)
     {
         return _cache.ClearAsync(cancellationToken);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         return _cache.DisposeAsync();

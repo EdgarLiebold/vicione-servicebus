@@ -6,16 +6,12 @@ using ViciOne.ServiceBus.MessageData.Conventions;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for message data configurator.
-/// </summary>
+/// <summary>Provides extension methods for message data configurator.</summary>
 public static class MessageDataConfiguratorExtensions
 {
-    /// <summary>
-    /// Enable the loading of message data for the any message type that includes a MessageData property.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="repository"></param>
+    /// <summary>Enable the loading of message data for the any message type that includes a MessageData property.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="repository">The repository.</param>
     /// <param name="policy">The immutable policy owned by this bus, or the default policy when omitted.</param>
     public static void UseMessageData(this IBusFactoryConfigurator configurator, IMessageDataRepository repository, MessageDataPolicy? policy = null)
     {
@@ -34,15 +30,14 @@ public static class MessageDataConfiguratorExtensions
         _ = new ActivityMessageDataConfigurationObserver(configurator, repository, false);
     }
 
-    /// <summary>
-    /// Enable the loading of message data for the any message type that includes a MessageData property.
-    /// </summary>
-    /// <param name="configurator">The bus factory configurator.</param>
+    /// <summary>Enable the loading of message data for the any message type that includes a MessageData property.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     /// <param name="selector">
     /// The repository selector.
     /// See extension methods, e.g. <see cref="MessageDataRepositorySelectorExtensions.FileSystem" />.
     /// </param>
     /// <param name="policy">The immutable policy owned by this bus, or the default policy when omitted.</param>
+    /// <returns>The configured message data.</returns>
     public static IMessageDataRepository UseMessageData(this IBusFactoryConfigurator configurator,
         Func<IMessageDataRepositorySelector, IMessageDataRepository> selector, MessageDataPolicy? policy = null)
     {

@@ -9,9 +9,9 @@ using ViciOne.ServiceBus.Providers.Persistence;
 
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
-/// <summary>
-/// EF Core persistent durable-send store with atomic retained-storage admission and fenced delivery ownership.
-/// </summary>
+/// <summary>EF Core persistent durable-send store with atomic retained-storage admission and fenced delivery ownership.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
+/// <typeparam name="TDbContext">The db context type.</typeparam>
 /// <remarks>
 /// Quarantined records remain capacity-owned until an operator explicitly requeues or discards them. Successful delivery
 /// removes the record in the same transaction that releases capacity. Claims use compare-and-set updates, so competing

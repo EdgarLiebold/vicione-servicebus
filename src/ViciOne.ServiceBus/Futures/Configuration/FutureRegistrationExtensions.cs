@@ -9,17 +9,14 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for future registration.
-/// </summary>
+/// <summary>Provides extension methods for future registration.</summary>
 public static class FutureRegistrationExtensions
 {
-    /// <summary>
-    /// Adds the consumer, allowing configuration when it is configured on an endpoint
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <typeparam name="T">The consumer type</typeparam>
-    /// <typeparam name="TDefinition">The consumer definition type</typeparam>
+    /// <summary>Adds the consumer, allowing configuration when it is configured on an endpoint.</summary>
+    /// <typeparam name="T">The consumer type.</typeparam>
+    /// <typeparam name="TDefinition">The consumer definition type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <returns>The future registration configurator produced by the operation.</returns>
     public static IFutureRegistrationConfigurator<T> AddFuture<T, TDefinition>(this IRegistrationConfigurator configurator)
         where T : ViciOneServiceBusStateMachine<FutureState>
         where TDefinition : class, IFutureDefinition<T>
@@ -29,14 +26,15 @@ public static class FutureRegistrationExtensions
 
     /// <summary>
     /// Adds a combined consumer/future, where the future handles the requests and the consumer is only known to the future.
-    /// This is a shortcut method,
+    /// This is a shortcut method,.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <typeparam name="TFuture">The consumer type</typeparam>
-    /// <typeparam name="TConsumer"></typeparam>
-    /// <typeparam name="TRequest"></typeparam>
-    /// <typeparam name="TResponse"></typeparam>
+    /// <typeparam name="TFuture">The consumer type.</typeparam>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <typeparam name="TRequest">The request type.</typeparam>
+    /// <typeparam name="TResponse">The response type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The future registration configurator produced by the operation.</returns>
     public static IFutureRegistrationConfigurator<TFuture> AddFutureRequestConsumer<TFuture, TConsumer, TRequest, TResponse>(
         this IRegistrationConfigurator configurator, Action<IConsumerConfigurator<TConsumer>>? configure = null)
         where TFuture : Future<TRequest, TResponse>
@@ -49,22 +47,18 @@ public static class FutureRegistrationExtensions
         return configurator.AddFuture<TFuture, RequestConsumerFutureDefinition<TFuture, TConsumer, TRequest, TResponse>>();
     }
 
-    /// <summary>
-    /// Adds all futures in the specified assemblies
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="assemblies">The assemblies to scan for futures</param>
+    /// <summary>Adds all futures in the specified assemblies.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="assemblies">The assemblies to scan for futures.</param>
     public static void AddFutures(this IRegistrationConfigurator configurator, params Assembly[] assemblies)
     {
         AddFutures(configurator, null, assemblies);
     }
 
-    /// <summary>
-    /// Adds all futures that match the given filter in the specified assemblies
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="filter"></param>
-    /// <param name="assemblies">The assemblies to scan for futures</param>
+    /// <summary>Adds all futures that match the given filter in the specified assemblies.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="assemblies">The assemblies to scan for futures.</param>
     public static void AddFutures(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Assembly[] assemblies)
     {
         if (assemblies.Length == 0)
@@ -75,23 +69,19 @@ public static class FutureRegistrationExtensions
         AddFutures(configurator, filter, types.FindTypes(TypeClassification.Concrete | TypeClassification.Closed).ToArray());
     }
 
-    /// <summary>
-    /// Adds all futures from the assembly containing the specified type that are in the same (or deeper) namespace.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="filter"></param>
-    /// <typeparam name="T">The anchor type</typeparam>
+    /// <summary>Adds all futures from the assembly containing the specified type that are in the same (or deeper) namespace.</summary>
+    /// <typeparam name="T">The anchor type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public static void AddFuturesFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool>? filter = null)
     {
         AddFuturesFromNamespaceContaining(configurator, typeof(T), filter);
     }
 
-    /// <summary>
-    /// Adds all futures in the specified assemblies matching the namespace
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="type">The type to use to identify the assembly and namespace to scan</param>
-    /// <param name="filter"></param>
+    /// <summary>Adds all futures in the specified assemblies matching the namespace.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="type">The type to use to identify the assembly and namespace to scan.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public static void AddFuturesFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool>? filter = null)
     {
         if (type == null)
@@ -103,23 +93,19 @@ public static class FutureRegistrationExtensions
         AddFutures(configurator, filter, FindTypesInNamespace(type, FutureRegistrationMetadata.IsFutureOrDefinition));
     }
 
-    /// <summary>
-    /// Adds the specified consumer types
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Adds the specified consumer types.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="types">The state machine types to add.</param>
     /// ˆ
-    /// <param name="types">The state machine types to add</param>
     public static void AddFutures(this IRegistrationConfigurator configurator, params Type[] types)
     {
         AddFutures(configurator, null, types);
     }
 
-    /// <summary>
-    /// Adds the specified consumer types which match the given filter
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="filter"></param>
-    /// <param name="types">The consumer types to add</param>
+    /// <summary>Adds the specified consumer types which match the given filter.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="types">The consumer types to add.</param>
     public static void AddFutures(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Type[] types)
     {
         filter ??= t => true;

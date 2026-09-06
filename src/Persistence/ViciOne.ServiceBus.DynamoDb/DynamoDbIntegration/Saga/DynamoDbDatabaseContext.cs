@@ -12,10 +12,8 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.DynamoDb.Saga;
 
-/// <summary>
-/// Provides a dynamo db database context implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Serializes versioned sagas and executes conditional Amazon DynamoDB persistence operations.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class DynamoDbDatabaseContext<TSaga> :
     DatabaseContext<TSaga>
     where TSaga : class, ISagaVersion
@@ -23,45 +21,37 @@ public class DynamoDbDatabaseContext<TSaga> :
     readonly IDynamoDBContext _database;
     readonly DynamoDbSagaRepositoryOptions<TSaga> _options;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="database">The database value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Creates a database context with caller-owned AWS persistence context lifetime.</summary>
+    /// <param name="database">The AWS object-persistence context used for saga operations.</param>
+    /// <param name="options">The table, conversion, read, time, and expiration settings.</param>
     public DynamoDbDatabaseContext(IDynamoDBContext database, DynamoDbSagaRepositoryOptions<TSaga> options)
     {
         _database = database ?? throw new ArgumentNullException(nameof(database));
         _options = options ?? throw new ArgumentNullException(nameof(options));
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Creates a saga document only when its composite key does not already exist.</summary>
+    /// <param name="instance">The saga state to persist.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that completes when Amazon DynamoDB accepts the conditional put.</returns>
     public Task AddAsync(TSaga instance, CancellationToken cancellationToken)
     {
         return SaveAsync(instance, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the insert operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Inserts a saga document only when its composite key does not already exist.</summary>
+    /// <param name="instance">The saga state to persist.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that completes when Amazon DynamoDB accepts the conditional put.</returns>
     public Task InsertAsync(TSaga instance, CancellationToken cancellationToken)
     {
         return SaveAsync(instance, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
-    /// <param name="correlationId">The correlation id value.</param>
+    /// <summary>Loads, deserializes, and validates a saga document by correlation identifier.</summary>
+    /// <param name="correlationId">The saga correlation identifier.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task whose result is the validated saga state, or <see langword="null"/> when no document exists.</returns>
     public async Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken)
     {
         var value = await _database.LoadAsync<DynamoDbSaga>(_options.FormatSagaKey(correlationId), DynamoDbSaga.DefaultEntityType,
@@ -86,12 +76,10 @@ public class DynamoDbDatabaseContext<TSaga> :
         return instance;
     }
 
-    /// <summary>
-    /// Performs the update operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Increments the saga version and updates the document only when the persisted version still matches.</summary>
+    /// <param name="instance">The saga state to serialize and update.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that completes when Amazon DynamoDB accepts the conditional update.</returns>
     public async Task UpdateAsync(TSaga instance, CancellationToken cancellationToken)
     {
         var expectedVersion = instance.Version;
@@ -121,12 +109,10 @@ public class DynamoDbDatabaseContext<TSaga> :
         }
     }
 
-    /// <summary>
-    /// Performs the delete operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Deletes the saga document only when the persisted version still matches.</summary>
+    /// <param name="instance">The saga state whose document is deleted.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that completes when Amazon DynamoDB accepts the conditional delete.</returns>
     public async Task DeleteAsync(TSaga instance, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(instance);
@@ -152,9 +138,7 @@ public class DynamoDbDatabaseContext<TSaga> :
         }
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         _database?.Dispose();

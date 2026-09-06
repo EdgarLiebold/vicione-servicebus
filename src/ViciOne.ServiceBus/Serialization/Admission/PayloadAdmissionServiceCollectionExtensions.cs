@@ -15,6 +15,10 @@ public static class PayloadAdmissionServiceCollectionExtensions
     /// Adds bounded application-body and final-envelope admission to <typeparamref name="TBus"/>.
     /// Both hard limits are required and validated during host startup.
     /// </summary>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddViciOnePayloadAdmission<TBus>(
         this IServiceCollection services,
         Action<PayloadAdmissionOptions<TBus>>? configure = null)

@@ -2,16 +2,12 @@ using System;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
 
-/// <summary>
-/// Fenced ownership lease for one persisted durable-send delivery attempt.
-/// </summary>
+/// <summary>Fenced ownership lease for one persisted durable-send delivery attempt.</summary>
 public readonly record struct DurableSendLease
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="token">The token value.</param>
-    /// <param name="expiresAt">The expires at value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="token">The token.</param>
+    /// <param name="expiresAt">The expires at.</param>
     public DurableSendLease(Guid token, DateTimeOffset expiresAt)
     {
         if (token == Guid.Empty)
@@ -21,13 +17,9 @@ public readonly record struct DurableSendLease
         ExpiresAt = expiresAt;
     }
 
-    /// <summary>
-    /// Gets the token value.
-    /// </summary>
+    /// <summary>Gets the token.</summary>
     public Guid Token { get; }
 
-    /// <summary>
-    /// Gets the expires at value.
-    /// </summary>
+    /// <summary>Gets the expires at.</summary>
     public DateTimeOffset ExpiresAt { get; }
 }

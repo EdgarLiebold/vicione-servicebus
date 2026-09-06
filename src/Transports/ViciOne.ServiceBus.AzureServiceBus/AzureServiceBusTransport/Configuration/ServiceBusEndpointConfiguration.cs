@@ -2,17 +2,13 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus endpoint configuration implementation.
-/// </summary>
+/// <summary>Adds an isolated Azure Service Bus topology configuration to endpoint configuration.</summary>
 public class ServiceBusEndpointConfiguration :
     EndpointConfiguration,
     IServiceBusEndpointConfiguration
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Initializes the root endpoint configuration.</summary>
+    /// <param name="topologyConfiguration">The transport topology configuration owned by the endpoint.</param>
     protected ServiceBusEndpointConfiguration(IServiceBusTopologyConfiguration topologyConfiguration)
         : base(topologyConfiguration)
     {
@@ -26,16 +22,12 @@ public class ServiceBusEndpointConfiguration :
         Topology = topologyConfiguration;
     }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the endpoint's Azure Service Bus topology configuration.</summary>
     public new IServiceBusTopologyConfiguration Topology { get; }
 
-    /// <summary>
-    /// Creates endpoint configuration.
-    /// </summary>
-    /// <param name="isBusEndpoint">The is bus endpoint value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a child endpoint configuration and copies the current topology conventions into it.</summary>
+    /// <param name="isBusEndpoint">Whether the child configures the bus endpoint.</param>
+    /// <returns>The child endpoint configuration.</returns>
     public IServiceBusEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
     {
         var topologyConfiguration = new ServiceBusTopologyConfiguration(Topology);

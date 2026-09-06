@@ -5,113 +5,87 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Defines the contract for received message list.
-/// </summary>
+/// <summary>Defines the operations required by received message list.</summary>
 public interface IReceivedMessageList :
     IAsyncElementList<IReceivedMessage>
 {
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Selects the matching value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The selected value.</returns>
     IEnumerable<IReceivedMessage<T>> Select<T>(CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects the matching value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The selected value.</returns>
     IEnumerable<IReceivedMessage<T>> Select<T>(FilterDelegate<IReceivedMessage<T>> filter, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <param name="apply">The apply value.</param>
+    /// <summary>Selects the matching value.</summary>
+    /// <param name="apply">The apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>An asynchronous sequence containing the selected value.</returns>
     IAsyncEnumerable<IReceivedMessage> SelectAsync(Action<ReceivedMessageFilter> apply, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Selects the matching value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>An asynchronous sequence containing the selected value.</returns>
     IAsyncEnumerable<IReceivedMessage<T>> SelectAsync<T>(CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects the matching value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>An asynchronous sequence containing the selected value.</returns>
     IAsyncEnumerable<IReceivedMessage<T>> SelectAsync<T>(FilterDelegate<IReceivedMessage<T>> filter, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>
-    /// Performs the any operation.
-    /// </summary>
-    /// <param name="apply">The apply value.</param>
+    /// <summary>Selects any matching value.</summary>
+    /// <param name="apply">The apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the any outcome.</returns>
     Task<bool> AnyAsync(Action<ReceivedMessageFilter>? apply = default, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the any operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Selects any matching value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the any outcome.</returns>
     Task<bool> AnyAsync<T>(CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>
-    /// Performs the any operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Selects any matching value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the any outcome.</returns>
     Task<bool> AnyAsync<T>(FilterDelegate<IReceivedMessage<T>> filter, CancellationToken cancellationToken = default)
         where T : class;
 }
 
 
-/// <summary>
-/// Defines the contract for received message list.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Defines the operations required by received message list.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface IReceivedMessageList<out T> :
     IAsyncElementList<IReceivedMessage<T>>
     where T : class
 {
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
+    /// <summary>Selects the matching value.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The selected value.</returns>
     IEnumerable<IReceivedMessage<T>> Select(CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the select operation.
-    /// </summary>
+    /// <summary>Selects the matching value.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>An asynchronous sequence containing the selected value.</returns>
     IAsyncEnumerable<IReceivedMessage<T>> SelectAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the any operation.
-    /// </summary>
+    /// <summary>Selects any matching value.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the any outcome.</returns>
     Task<bool> AnyAsync(CancellationToken cancellationToken = default);
 }

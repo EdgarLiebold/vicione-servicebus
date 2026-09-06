@@ -9,31 +9,25 @@ namespace ViciOne.ServiceBus.Advanced.Observers;
 /// </summary>
 public interface ISendObserver
 {
-    /// <summary>
-    /// Called before the message is sent to the transport
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="context">The message send context</param>
-    /// <returns></returns>
+    /// <summary>Called before the message is sent to the transport.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="context">The message send context.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task PreSendAsync<T>(SendContext<T> context)
         where T : class;
 
-    /// <summary>
-    /// Called after the message is sent to the transport (and confirmed by the transport if supported)
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="context">The message send context</param>
-    /// <returns></returns>
+    /// <summary>Called after the message is sent to the transport (and confirmed by the transport if supported).</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="context">The message send context.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task PostSendAsync<T>(SendContext<T> context)
         where T : class;
 
-    /// <summary>
-    /// Called when the message fails to send to the transport, including the exception that was thrown
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="context">The message send context</param>
-    /// <param name="exception">The exception from the transport</param>
-    /// <returns></returns>
+    /// <summary>Called when the message fails to send to the transport, including the exception that was thrown.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="context">The message send context.</param>
+    /// <param name="exception">The exception from the transport.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
         where T : class;
 }

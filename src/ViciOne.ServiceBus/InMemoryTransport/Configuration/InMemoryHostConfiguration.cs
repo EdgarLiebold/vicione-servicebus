@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>
-/// Provides an in memory host configuration implementation.
-/// </summary>
+/// <summary>Owns in-memory host settings, topology, endpoint registrations, and the shared message fabric.</summary>
 public class InMemoryHostConfiguration :
     BaseHostConfiguration<IInMemoryReceiveEndpointConfiguration, IInMemoryReceiveEndpointConfigurator>,
     IInMemoryHostConfiguration,
@@ -19,12 +17,10 @@ public class InMemoryHostConfiguration :
     Uri _hostAddress;
     int _queueCapacity = 1024;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="busConfiguration">The bus configuration value.</param>
-    /// <param name="baseAddress">The base address value.</param>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Creates an in-memory host configuration and its recyclable transport provider.</summary>
+    /// <param name="busConfiguration">The bus configuration that creates endpoint-level configuration.</param>
+    /// <param name="baseAddress">The base address for in-memory endpoints, or <see langword="null"/> for <c>loopback://localhost/</c>.</param>
+    /// <param name="topologyConfiguration">The topology configuration shared by endpoints and the message fabric.</param>
     public InMemoryHostConfiguration(IInMemoryBusConfiguration busConfiguration, Uri? baseAddress, IInMemoryTopologyConfiguration topologyConfiguration)
         : base(busConfiguration)
     {
@@ -43,31 +39,21 @@ public class InMemoryHostConfiguration :
         _transportProvider = new Recycle<IInMemoryTransportProvider>(() => new InMemoryTransportProvider(this, topologyConfiguration));
     }
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the base address used to resolve in-memory endpoints.</summary>
     public override Uri HostAddress => _hostAddress;
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the in-memory bus topology.</summary>
     public override IBusTopology Topology => _topology;
 
-    /// <summary>
-    /// Gets the receive transport retry policy value.
-    /// </summary>
+    /// <summary>Gets the policy used to retry transient receive-transport connection failures.</summary>
     public override IRetryPolicy ReceiveTransportRetryPolicy { get; }
 
-    /// <summary>
-    /// Gets or sets the base address value.
-    /// </summary>
+    /// <summary>Sets the base address used to resolve in-memory endpoints, defaulting a null value to <c>loopback://localhost/</c>.</summary>
     public Uri BaseAddress
     {
         set => _hostAddress = value ?? new Uri("loopback://localhost/");
     }
 
-    /// <summary>
-    /// Gets or sets the queue capacity value.
-    /// </summary>
+    /// <summary>Sets the positive maximum number of messages buffered by each in-memory queue.</summary>
     public int QueueCapacity
     {
         set => _queueCapacity = value > 0
@@ -80,22 +66,18 @@ public class InMemoryHostConfiguration :
     int IInMemoryHostConfiguration.QueueCapacity => _queueCapacity;
     IInMemoryBusTopology IInMemoryHostConfiguration.Topology => _topology;
 
-    /// <summary>
-    /// Performs the apply endpoint definition operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="definition">The definition value.</param>
+    /// <summary>Applies the common endpoint-definition settings to an in-memory endpoint.</summary>
+    /// <param name="configurator">The in-memory receive endpoint configurator to update.</param>
+    /// <param name="definition">The endpoint definition whose settings are applied.</param>
     public void ApplyEndpointDefinition(IInMemoryReceiveEndpointConfigurator configurator, IEndpointDefinition definition)
     {
         base.ApplyEndpointDefinition(configurator, definition);
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and registers an in-memory receive endpoint with a new endpoint configuration.</summary>
+    /// <param name="queueName">The in-memory queue name.</param>
+    /// <param name="configure">An optional callback applied before observers are notified and the endpoint is registered.</param>
+    /// <returns>The registered in-memory receive endpoint configuration.</returns>
     public IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
         Action<IInMemoryReceiveEndpointConfigurator>? configure)
     {
@@ -104,13 +86,11 @@ public class InMemoryHostConfiguration :
         return CreateReceiveEndpointConfiguration(queueName, endpointConfiguration, configure);
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and registers an in-memory receive endpoint from an existing endpoint configuration.</summary>
+    /// <param name="queueName">The non-empty in-memory queue name.</param>
+    /// <param name="endpointConfiguration">The shared endpoint pipeline and serialization configuration.</param>
+    /// <param name="configure">An optional callback applied before observers are notified and the endpoint is registered.</param>
+    /// <returns>The registered in-memory receive endpoint configuration.</returns>
     public IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
         IInMemoryEndpointConfiguration endpointConfiguration, Action<IInMemoryReceiveEndpointConfigurator>? configure)
     {
@@ -129,12 +109,10 @@ public class InMemoryHostConfiguration :
         return configuration;
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Registers an in-memory receive endpoint described by an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition that supplies the name and common settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null"/> to use the default formatter.</param>
+    /// <param name="configureEndpoint">An optional callback that applies in-memory-specific settings after the definition.</param>
     public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IInMemoryReceiveEndpointConfigurator>? configureEndpoint = null)
     {
@@ -147,31 +125,29 @@ public class InMemoryHostConfiguration :
         });
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Creates and registers an in-memory receive endpoint for a named queue.</summary>
+    /// <param name="queueName">The in-memory queue name.</param>
+    /// <param name="configureEndpoint">The callback applied before the endpoint is registered.</param>
     public override void ReceiveEndpoint(string queueName, Action<IInMemoryReceiveEndpointConfigurator> configureEndpoint)
     {
         CreateReceiveEndpointConfiguration(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an in-memory endpoint while exposing it through the provider-neutral host contract.</summary>
+    /// <param name="queueName">The in-memory queue name.</param>
+    /// <param name="configure">An optional provider-neutral callback adapted to the in-memory configurator.</param>
+    /// <returns>The registered in-memory receive endpoint configuration.</returns>
     public override IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName, Action<IReceiveEndpointConfigurator>? configure)
     {
-        return CreateReceiveEndpointConfiguration(queueName, configure);
+        Action<IInMemoryReceiveEndpointConfigurator>? configureEndpoint = configure == null
+            ? null
+            : endpoint => configure(endpoint);
+
+        return CreateReceiveEndpointConfiguration(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the in-memory host and attaches every registered receive endpoint.</summary>
+    /// <returns>The configured in-memory host.</returns>
     public override IHost Build()
     {
         var host = new InMemoryHost(this, _topology);

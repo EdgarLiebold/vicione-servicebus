@@ -5,36 +5,27 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.SignalR.Utils;
 
-// From here: https://stackoverflow.com/a/11034999/6558597
-/// <summary>
-/// Provides a concurrent hash set implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Stores a unique set of concurrent hash values.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class ConcurrentHashSet<T> : IDisposable
 {
     readonly HashSet<T> _hashSet;
     readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public ConcurrentHashSet()
     {
         _hashSet = new HashSet<T>();
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="equalityComparer">The equality comparer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="equalityComparer">The equality comparer.</param>
     public ConcurrentHashSet(IEqualityComparer<T> equalityComparer)
     {
         _hashSet = new HashSet<T>(equalityComparer);
     }
 
-    /// <summary>
-    /// Gets the count value.
-    /// </summary>
+    /// <summary>Gets the count.</summary>
     public int Count
     {
         get
@@ -52,19 +43,15 @@ public class ConcurrentHashSet<T> : IDisposable
         }
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         if (_lock != null)
             _lock.Dispose();
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="item">The item value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="item">The item.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Add(T item)
     {
@@ -80,9 +67,7 @@ public class ConcurrentHashSet<T> : IDisposable
         }
     }
 
-    /// <summary>
-    /// Performs the clear operation.
-    /// </summary>
+    /// <summary>Removes every item from the current collection.</summary>
     public void Clear()
     {
         try
@@ -97,10 +82,8 @@ public class ConcurrentHashSet<T> : IDisposable
         }
     }
 
-    /// <summary>
-    /// Performs the contains operation.
-    /// </summary>
-    /// <param name="item">The item value.</param>
+    /// <summary>Determines whether the current collection contains the supplied value.</summary>
+    /// <param name="item">The item.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Contains(T item)
     {
@@ -116,10 +99,8 @@ public class ConcurrentHashSet<T> : IDisposable
         }
     }
 
-    /// <summary>
-    /// Performs the remove operation.
-    /// </summary>
-    /// <param name="item">The item value.</param>
+    /// <summary>Removes the selected value.</summary>
+    /// <param name="item">The item.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Remove(T item)
     {
@@ -135,16 +116,14 @@ public class ConcurrentHashSet<T> : IDisposable
         }
     }
 
-    /// <summary>
-    /// Performs the to array operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts this value to array.</summary>
+    /// <returns>The converted array.</returns>
     public T[] ToArray()
     {
         try
         {
             _lock.EnterReadLock();
-            return _hashSet.ToArray(); // Internally Linq .ToArray uses CopyTo
+            return _hashSet.ToArray();
         }
         finally
         {

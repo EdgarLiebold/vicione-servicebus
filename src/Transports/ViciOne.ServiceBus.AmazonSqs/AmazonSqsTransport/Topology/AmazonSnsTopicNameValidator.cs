@@ -3,24 +3,19 @@ using System.Text.RegularExpressions;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// Provides an amazon sns topic name validator implementation.
-/// </summary>
+/// <summary>Validates standard and FIFO Amazon SNS topic names.</summary>
 public class AmazonSnsTopicNameValidator :
     IEntityNameValidator
 {
     const string FifoSuffix = ".fifo";
     static readonly Regex _baseNameRegex = new(@"^[A-Za-z0-9\-_]+$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-    /// <summary>
-    /// Gets the validator value.
-    /// </summary>
+    /// <summary>Gets the shared Amazon SNS topic-name validator.</summary>
     public static IEntityNameValidator Validator => Cached.EntityNameValidator;
 
-    /// <summary>
-    /// Performs the throw if invalid entity name operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
+    /// <summary>Throws when a value is not a valid Amazon SNS topic name.</summary>
+    /// <param name="name">The topic name to validate.</param>
+    /// <exception cref="AmazonSqsTransportConfigurationException">The name is empty, too long, or contains unsupported characters.</exception>
     public void ThrowIfInvalidEntityName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -34,11 +29,9 @@ public class AmazonSnsTopicNameValidator :
         }
     }
 
-    /// <summary>
-    /// Determines whether valid entity name.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether a value is a valid standard or FIFO Amazon SNS topic name.</summary>
+    /// <param name="name">The topic name to validate.</param>
+    /// <returns><see langword="true"/> when the name meets Amazon SNS length, character, and suffix rules; otherwise, <see langword="false"/>.</returns>
     public bool IsValidEntityName(string name)
     {
         if (string.IsNullOrWhiteSpace(name) || name.Length > 256)

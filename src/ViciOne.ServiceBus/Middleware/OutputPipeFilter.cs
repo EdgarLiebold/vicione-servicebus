@@ -4,11 +4,9 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Converts an inbound context type to a pipe context type post-dispatch
-/// </summary>
-/// <typeparam name="TInput">The pipe context type</typeparam>
-/// <typeparam name="TOutput">The subsequent pipe context type</typeparam>
+/// <summary>Converts an inbound context type to a pipe context type post-dispatch.</summary>
+/// <typeparam name="TInput">The pipe context type.</typeparam>
+/// <typeparam name="TOutput">The subsequent pipe context type.</typeparam>
 public class OutputPipeFilter<TInput, TOutput> :
     IOutputPipeFilter<TInput, TOutput>
     where TInput : class, PipeContext
@@ -19,12 +17,10 @@ public class OutputPipeFilter<TInput, TOutput> :
     readonly FilterObservable _outerObservers;
     readonly ITeeFilter<TOutput> _output;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="contextConverter">The context converter value.</param>
-    /// <param name="observers">The observers value.</param>
-    /// <param name="outputFilter">The output filter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="contextConverter">The context converter.</param>
+    /// <param name="observers">The observers.</param>
+    /// <param name="outputFilter">The output filter.</param>
     public OutputPipeFilter(IPipeContextConverter<TInput, TOutput> contextConverter, FilterObservable observers, ITeeFilter<TOutput> outputFilter)
     {
         _outerObservers = observers ?? throw new ArgumentNullException(nameof(observers));
@@ -120,12 +116,10 @@ public class OutputPipeFilter<TInput, TOutput> :
 }
 
 
-/// <summary>
-/// Provides an output pipe filter implementation.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
-/// <typeparam name="TOutput">The t output type.</typeparam>
-/// <typeparam name="TKey">The t key type.</typeparam>
+/// <summary>Processes output pipe pipeline stages.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TOutput">The output type.</typeparam>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
 public class OutputPipeFilter<TInput, TOutput, TKey> :
     OutputPipeFilter<TInput, TOutput>,
     IOutputPipeFilter<TInput, TOutput, TKey>
@@ -135,36 +129,30 @@ public class OutputPipeFilter<TInput, TOutput, TKey> :
 {
     readonly ITeeFilter<TOutput, TKey> _outputFilter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="contextConverter">The context converter value.</param>
-    /// <param name="observers">The observers value.</param>
-    /// <param name="keyAccessor">The key accessor value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="contextConverter">The context converter.</param>
+    /// <param name="observers">The observers.</param>
+    /// <param name="keyAccessor">The key accessor.</param>
     public OutputPipeFilter(IPipeContextConverter<TInput, TOutput> contextConverter, FilterObservable observers, KeyAccessor<TInput, TKey> keyAccessor)
         : this(contextConverter, observers, new TeeFilter<TOutput, TKey>(keyAccessor))
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="contextConverter">The context converter value.</param>
-    /// <param name="observers">The observers value.</param>
-    /// <param name="outputFilter">The output filter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="contextConverter">The context converter.</param>
+    /// <param name="observers">The observers.</param>
+    /// <param name="outputFilter">The output filter.</param>
     protected OutputPipeFilter(IPipeContextConverter<TInput, TOutput> contextConverter, FilterObservable observers, ITeeFilter<TOutput, TKey> outputFilter)
         : base(contextConverter, observers, outputFilter)
     {
         _outputFilter = outputFilter;
     }
 
-    /// <summary>
-    /// Connects pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="key">The key value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
         where T : class, PipeContext
     {

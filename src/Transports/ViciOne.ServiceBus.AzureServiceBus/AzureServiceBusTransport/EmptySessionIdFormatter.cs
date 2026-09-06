@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides an empty session id formatter implementation.
-/// </summary>
+/// <summary>Formats empty session id values.</summary>
 public class EmptySessionIdFormatter :
     ISessionIdFormatter
 {

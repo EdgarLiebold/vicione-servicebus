@@ -5,6 +5,10 @@ namespace ViciOne.ServiceBus;
 public sealed class PayloadAdmissionException : Exception
 {
     /// <summary>Creates one payload-admission failure.</summary>
+    /// <param name="stage">The stage.</param>
+    /// <param name="actualBytes">The actual bytes.</param>
+    /// <param name="configuredLimitBytes">The configured limit bytes.</param>
+    /// <param name="message">The message to process.</param>
     public PayloadAdmissionException(
         PayloadAdmissionStage stage,
         long actualBytes,
@@ -25,15 +29,12 @@ public sealed class PayloadAdmissionException : Exception
         ConfiguredLimitBytes = configuredLimitBytes;
     }
 
-    /// <summary>Gets the boundary that rejected the payload.</summary>
+    /// <summary>Gets the stage.</summary>
     public PayloadAdmissionStage Stage { get; }
 
-    /// <summary>
-    /// Gets the exact encoded length for materialized bytes, or the minimum requested/required capacity
-    /// at a bounded-writer rejection.
-    /// </summary>
+    /// <summary>Gets the actual bytes.</summary>
     public long ActualBytes { get; }
 
-    /// <summary>Gets the configured boundary that was crossed, when one exists.</summary>
+    /// <summary>Gets the configured limit bytes.</summary>
     public long? ConfiguredLimitBytes { get; }
 }

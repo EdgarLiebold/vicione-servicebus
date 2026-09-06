@@ -3,10 +3,8 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>
-/// Provides an exponential retry context implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Carries state for exponential retry operations.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class ExponentialRetryContext<TContext> :
     BaseRetryContext<TContext>,
     RetryContext<TContext>
@@ -15,13 +13,11 @@ public class ExponentialRetryContext<TContext> :
     readonly TimeSpan _delay;
     readonly ExponentialRetryPolicy _policy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="policy">The policy value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="policy">The policy.</param>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="retryCount">The retry count value.</param>
+    /// <param name="retryCount">The retry count.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public ExponentialRetryContext(ExponentialRetryPolicy policy, TContext context, Exception exception, int retryCount,
         CancellationToken cancellationToken)
@@ -31,9 +27,7 @@ public class ExponentialRetryContext<TContext> :
         _delay = policy.GetRetryInterval(retryCount);
     }
 
-    /// <summary>
-    /// Gets the delay value.
-    /// </summary>
+    /// <summary>Gets the delay.</summary>
     public override TimeSpan? Delay => _delay;
 
     bool RetryContext<TContext>.CanRetry(Exception exception, out RetryContext<TContext> retryContext)

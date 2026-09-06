@@ -3,9 +3,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Moves a message received to a transport without any deserialization
-/// </summary>
+/// <summary>Moves a message received to a transport without any deserialization.</summary>
 public class DeadLetterTransportFilter :
     IFilter<ReceiveContext>
 {

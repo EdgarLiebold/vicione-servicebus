@@ -4,16 +4,12 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Initializers;
 
-/// <summary>
-/// Provides a message factory cache implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Caches message factory data.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public static class MessageFactoryCache<TMessage>
     where TMessage : class
 {
-    /// <summary>
-    /// Gets the factory value.
-    /// </summary>
+    /// <summary>Gets the factory.</summary>
     public static IMessageFactory<TMessage> Factory => Cached.MessageFactory.Value;
 
 

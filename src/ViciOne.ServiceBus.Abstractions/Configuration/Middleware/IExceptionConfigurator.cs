@@ -2,50 +2,36 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for exception configurator.
-/// </summary>
+/// <summary>Configures exception.</summary>
 public interface IExceptionConfigurator
 {
-    /// <summary>
-    /// Performs the handle operation.
-    /// </summary>
-    /// <param name="exceptionTypes">The exception types value.</param>
+    /// <summary>Handles the supplied message or context.</summary>
+    /// <param name="exceptionTypes">The exception types.</param>
     void Handle(params Type[] exceptionTypes);
 
-    /// <summary>
-    /// Performs the handle operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Handles the supplied message or context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     void Handle<T>()
         where T : Exception;
 
-    /// <summary>
-    /// Performs the handle operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Handles the supplied message or context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     void Handle<T>(Func<T, bool> filter)
         where T : Exception;
 
-    /// <summary>
-    /// Performs the ignore operation.
-    /// </summary>
-    /// <param name="exceptionTypes">The exception types value.</param>
+    /// <summary>Ignores the selected event or message.</summary>
+    /// <param name="exceptionTypes">The exception types.</param>
     void Ignore(params Type[] exceptionTypes);
 
-    /// <summary>
-    /// Performs the ignore operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Ignores the selected event or message.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     void Ignore<T>()
         where T : Exception;
 
-    /// <summary>
-    /// Performs the ignore operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Ignores the selected event or message.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     void Ignore<T>(Func<T, bool> filter)
         where T : Exception;
 }

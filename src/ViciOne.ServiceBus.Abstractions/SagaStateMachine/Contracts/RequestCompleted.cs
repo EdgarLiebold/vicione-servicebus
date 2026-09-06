@@ -8,23 +8,15 @@ namespace ViciOne.ServiceBus.Contracts;
 /// </summary>
 public interface RequestCompleted
 {
-    /// <summary>
-    /// The saga correlationId
-    /// </summary>
+    /// <summary>The saga correlationId.</summary>
     Guid CorrelationId { get; }
 
-    /// <summary>
-    /// The timestamp when the request was completed
-    /// </summary>
+    /// <summary>The timestamp when the request was completed.</summary>
     DateTimeOffset Timestamp { get; }
 
-    /// <summary>
-    /// The payload types supported by the payload
-    /// </summary>
+    /// <summary>The payload types supported by the payload.</summary>
     string[] PayloadType { get; }
 
-    /// <summary>
-    /// The actual message payload
-    /// </summary>
+    /// <summary>The actual message payload.</summary>
     object Payload { get; }
 }

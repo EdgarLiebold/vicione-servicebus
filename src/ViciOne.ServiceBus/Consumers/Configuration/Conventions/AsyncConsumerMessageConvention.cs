@@ -3,18 +3,14 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// A default convention that looks for IConsumerOfT message types
-/// </summary>
-/// <typeparam name="T"></typeparam>
+/// <summary>A default convention that looks for IConsumerOfT message types.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class AsyncConsumerMessageConvention<T> :
     IConsumerMessageConvention
     where T : class
 {
-    /// <summary>
-    /// Gets message types.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message types.</summary>
+    /// <returns>The message types.</returns>
     public IEnumerable<IMessageInterfaceType> GetMessageTypes()
     {
         var consumerType = typeof(T);

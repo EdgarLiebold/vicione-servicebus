@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a subscription endpoint settings implementation.
-/// </summary>
+/// <summary>Provides topic, subscription, and processor settings for an Azure Service Bus endpoint.</summary>
 public class SubscriptionEndpointSettings :
     BaseClientSettings,
     SubscriptionSettings
@@ -15,23 +13,19 @@ public class SubscriptionEndpointSettings :
     readonly CreateTopicOptions _createTopicOptions;
     readonly ServiceBusSubscriptionConfigurator _subscriptionConfigurator;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configuration">The configuration callback.</param>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="topicName">The topic name value.</param>
+    /// <summary>Creates endpoint settings for a named topic and subscription.</summary>
+    /// <param name="configuration">The endpoint configuration supplying transport settings.</param>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="topicName">The namespace-relative topic name.</param>
     public SubscriptionEndpointSettings(IServiceBusEndpointConfiguration configuration, string subscriptionName, string topicName)
         : this(configuration, subscriptionName, Defaults.GetCreateTopicOptions(topicName))
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configuration">The configuration callback.</param>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <param name="createTopicOptions">The create topic options value.</param>
+    /// <summary>Creates endpoint settings from topic declaration options.</summary>
+    /// <param name="configuration">The endpoint configuration supplying transport settings.</param>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="createTopicOptions">The Azure topic declaration options.</param>
     public SubscriptionEndpointSettings(IServiceBusEndpointConfiguration configuration, string subscriptionName, CreateTopicOptions createTopicOptions)
         : this(configuration, createTopicOptions, new ServiceBusSubscriptionConfigurator(subscriptionName, createTopicOptions.Name))
     {
@@ -47,50 +41,32 @@ public class SubscriptionEndpointSettings :
         Name = Path = EntityNameFormatter.FormatSubscriptionPath(_subscriptionConfigurator.TopicPath, _subscriptionConfigurator.SubscriptionName);
     }
 
-    /// <summary>
-    /// Gets the subscription configurator value.
-    /// </summary>
+    /// <summary>Gets the Azure subscription configuration.</summary>
     public IServiceBusSubscriptionConfigurator SubscriptionConfigurator => _subscriptionConfigurator;
 
-    /// <summary>
-    /// Gets the requires session value.
-    /// </summary>
+    /// <summary>Gets whether the subscription requires sessions.</summary>
     public override bool RequiresSession => _subscriptionConfigurator.RequiresSession ?? false;
 
-    /// <summary>
-    /// Gets or sets the remove subscriptions value.
-    /// </summary>
+    /// <summary>Gets or sets whether the subscription is deleted during endpoint shutdown.</summary>
     public bool RemoveSubscriptions { get; set; }
-    /// <summary>
-    /// Gets the max concurrent sessions value.
-    /// </summary>
+    /// <summary>Gets the maximum number of sessions processed concurrently.</summary>
     public override int MaxConcurrentSessions => _subscriptionConfigurator.MaxConcurrentSessions ?? MaxConcurrentCalls;
-    /// <summary>
-    /// Gets the max concurrent calls per session value.
-    /// </summary>
+    /// <summary>Gets the maximum number of concurrent message callbacks per session.</summary>
     public override int MaxConcurrentCallsPerSession => _subscriptionConfigurator.MaxConcurrentCallsPerSession ?? Defaults.MaxConcurrentCallsPerSessions;
 
     CreateTopicOptions SubscriptionSettings.CreateTopicOptions => _createTopicOptions;
     CreateSubscriptionOptions SubscriptionSettings.CreateSubscriptionOptions => _subscriptionConfigurator.GetCreateSubscriptionOptions();
 
-    /// <summary>
-    /// Gets or sets the rule value.
-    /// </summary>
+    /// <summary>Gets or sets the initial Azure subscription rule.</summary>
     public CreateRuleOptions? Rule { get; set; }
-    /// <summary>
-    /// Gets or sets the filter value.
-    /// </summary>
+    /// <summary>Gets or sets the filter associated with the initial subscription rule.</summary>
     public RuleFilter? Filter { get; set; }
 
-    /// <summary>
-    /// Gets the path value.
-    /// </summary>
+    /// <summary>Gets the combined topic and subscription path.</summary>
     public override string Path { get; }
 
-    /// <summary>
-    /// Gets query string options.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats non-default subscription options for the endpoint input address.</summary>
+    /// <returns>The encoded option fragments.</returns>
     protected override IEnumerable<string> GetQueryStringOptions()
     {
         if (_subscriptionConfigurator.AutoDeleteOnIdle.HasValue && _subscriptionConfigurator.AutoDeleteOnIdle.Value > TimeSpan.Zero

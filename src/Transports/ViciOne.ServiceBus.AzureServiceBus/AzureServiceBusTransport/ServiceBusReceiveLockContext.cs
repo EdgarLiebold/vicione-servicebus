@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus receive lock context implementation.
-/// </summary>
+/// <summary>Validates and settles an Azure Service Bus delivery lock for receive-pipeline dispatch.</summary>
 public class ServiceBusReceiveLockContext :
     ReceiveLockContext
 {
@@ -16,13 +14,11 @@ public class ServiceBusReceiveLockContext :
     readonly ServiceBusReceivedMessage _message;
     readonly TimeProvider _timeProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="inputAddress">The input address value.</param>
-    /// <param name="lockContext">The lock context value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Creates lock handling for a received message.</summary>
+    /// <param name="inputAddress">The receive endpoint address used in expiration errors.</param>
+    /// <param name="lockContext">The provider settlement context.</param>
+    /// <param name="message">The received Azure Service Bus message.</param>
+    /// <param name="timeProvider">The time source used for expiry checks.</param>
     public ServiceBusReceiveLockContext(Uri inputAddress, MessageLockContext lockContext, ServiceBusReceivedMessage message, TimeProvider timeProvider)
     {
         ArgumentNullException.ThrowIfNull(timeProvider);
@@ -33,22 +29,18 @@ public class ServiceBusReceiveLockContext :
         _timeProvider = timeProvider;
     }
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes the message through the provider settlement context.</summary>
+    /// <param name="cancellationToken">Cancels broker settlement.</param>
+    /// <returns>A task that completes when the broker accepts settlement.</returns>
     public Task CompleteAsync(CancellationToken cancellationToken = default)
     {
         return _lockContext.CompleteAsync(cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Abandons the message after a processing failure unless the lock or connection is already unusable.</summary>
+    /// <param name="exception">The processing or provider failure.</param>
+    /// <param name="cancellationToken">Cancels broker settlement.</param>
+    /// <returns>A task that completes after abandonment or after an ignored terminal lock failure.</returns>
     public async Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         switch (exception)
@@ -74,11 +66,9 @@ public class ServiceBusReceiveLockContext :
         }
     }
 
-    /// <summary>
-    /// Validates lock status.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Rejects a delivery whose lock or message time to live has expired.</summary>
+    /// <param name="cancellationToken">Returns a canceled task when cancellation is already requested.</param>
+    /// <returns>A completed task while the lock and message remain valid.</returns>
     public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); var utcNow = _timeProvider.GetUtcNow().UtcDateTime;

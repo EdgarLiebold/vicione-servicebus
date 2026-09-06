@@ -5,9 +5,7 @@ using Azure.Messaging.EventHubs.Processor;
 
 namespace ViciOne.ServiceBus.EventHubs.Checkpoints;
 
-/// <summary>
-/// Provides a pending confirmation collection implementation.
-/// </summary>
+/// <summary>Tracks unconfirmed Event Hubs events by partition and offset.</summary>
 public class PendingConfirmationCollection :
     IDisposable
 {
@@ -15,10 +13,8 @@ public class PendingConfirmationCollection :
     readonly ConcurrentDictionary<PartitionOffset, IPendingConfirmation> _confirmations;
     readonly CancellationTokenRegistration? _registration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a collection that cancels all pending confirmations when the supplied token is canceled.</summary>
+    /// <param name="cancellationToken">The token governing pending confirmation lifetime.</param>
     public PendingConfirmationCollection(CancellationToken cancellationToken)
     {
         _cancellationToken = cancellationToken;
@@ -28,19 +24,15 @@ public class PendingConfirmationCollection :
             _registration = cancellationToken.Register(Cancel);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Removes the cancellation registration owned by the collection.</summary>
     public void Dispose()
     {
         _registration?.Dispose();
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="eventArgs">The event args value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds a pending confirmation for an event, faulting any duplicate entry it replaces.</summary>
+    /// <param name="eventArgs">The Azure SDK event-processing arguments.</param>
+    /// <returns>The newly registered pending confirmation.</returns>
     public IPendingConfirmation Add(ProcessEventArgs eventArgs)
     {
         _cancellationToken.ThrowIfCancellationRequested();
@@ -54,31 +46,25 @@ public class PendingConfirmationCollection :
         });
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <param name="partitionOffset">The partition offset value.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Removes and faults the matching pending confirmation.</summary>
+    /// <param name="partitionOffset">The partition offset.</param>
+    /// <param name="exception">The receive-pipeline failure.</param>
     public void Faulted(PartitionOffset partitionOffset, Exception exception)
     {
         if (_confirmations.TryRemove(partitionOffset, out var confirmation))
             confirmation.Faulted(exception);
     }
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
-    /// <param name="partitionOffset">The partition offset value.</param>
+    /// <summary>Removes and completes the matching pending confirmation.</summary>
+    /// <param name="partitionOffset">The partition offset.</param>
     public void Complete(PartitionOffset partitionOffset)
     {
         if (_confirmations.TryRemove(partitionOffset, out var confirmation))
             confirmation.Complete();
     }
 
-    /// <summary>
-    /// Determines whether the current value can celed.
-    /// </summary>
-    /// <param name="partitionOffset">The partition offset value.</param>
+    /// <summary>Removes and cancels the matching pending confirmation.</summary>
+    /// <param name="partitionOffset">The partition offset.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public void Canceled(PartitionOffset partitionOffset, CancellationToken cancellationToken)
     {

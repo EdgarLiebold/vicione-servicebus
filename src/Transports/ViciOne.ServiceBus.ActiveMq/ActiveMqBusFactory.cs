@@ -6,16 +6,12 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides an active mq bus factory implementation.
-/// </summary>
+/// <summary>Creates ActiveMQ bus controls and their default message topology.</summary>
 public static class ActiveMqBusFactory
 {
-    /// <summary>
-    /// Configure and create a bus for ActiveMQ
-    /// </summary>
-    /// <param name="configure">The configuration callback to configure the bus</param>
-    /// <returns></returns>
+    /// <summary>Creates an ActiveMQ bus control using the supplied transport configuration.</summary>
+    /// <param name="configure">The callback that configures the ActiveMQ bus.</param>
+    /// <returns>The configured bus control.</returns>
     public static IBusControl Create(Action<IActiveMqBusFactoryConfigurator> configure)
     {
         var topologyConfiguration = new ActiveMqTopologyConfiguration(CreateMessageTopology());
@@ -28,10 +24,8 @@ public static class ActiveMqBusFactory
         return configurator.Build(busConfiguration);
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates message topology that uses the ActiveMQ entity-name formatter.</summary>
+    /// <returns>A new message-topology configurator.</returns>
     public static IMessageTopologyConfigurator CreateMessageTopology()
     {
         return new MessageTopology(Cached.EntityNameFormatter);

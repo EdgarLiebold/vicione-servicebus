@@ -5,17 +5,13 @@ using ViciOne.ServiceBus.AzureServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus queue configurator implementation.
-/// </summary>
+/// <summary>Builds and validates the Azure Service Bus creation options for a queue.</summary>
 public class ServiceBusQueueConfigurator :
     ServiceBusMessageEntityConfigurator,
     IServiceBusQueueConfigurator
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="path">The path value.</param>
+    /// <summary>Initializes a queue with the transport's dead-lettering, lock, and delivery-count defaults.</summary>
+    /// <param name="path">The queue path relative to the configured base path.</param>
     public ServiceBusQueueConfigurator(string path)
         : base(path)
     {
@@ -24,54 +20,34 @@ public class ServiceBusQueueConfigurator :
         MaxDeliveryCount = 5;
     }
 
-    /// <summary>
-    /// Gets or sets the enable dead lettering on message expiration value.
-    /// </summary>
+    /// <summary>Gets or sets whether expired messages are moved to the queue's dead-letter subqueue.</summary>
     public bool? EnableDeadLetteringOnMessageExpiration { get; set; }
 
-    /// <summary>
-    /// Gets or sets the enable dead lettering on filter evaluation exceptions value.
-    /// </summary>
+    /// <summary>Gets or sets whether subscription filter evaluation failures are dead-lettered.</summary>
     public bool? EnableDeadLetteringOnFilterEvaluationExceptions { get; set; }
 
-    /// <summary>
-    /// Gets or sets the forward dead lettered messages to value.
-    /// </summary>
+    /// <summary>Gets or sets the entity path to which dead-lettered messages are forwarded.</summary>
     public string? ForwardDeadLetteredMessagesTo { get; set; }
 
-    /// <summary>
-    /// Gets or sets the forward to value.
-    /// </summary>
+    /// <summary>Gets or sets the entity path to which active messages are forwarded.</summary>
     public string? ForwardTo { get; set; }
 
-    /// <summary>
-    /// Gets or sets the lock duration value.
-    /// </summary>
+    /// <summary>Gets or sets the initial lock duration for received messages.</summary>
     public TimeSpan? LockDuration { get; set; }
 
-    /// <summary>
-    /// Gets or sets the max delivery count value.
-    /// </summary>
+    /// <summary>Gets or sets the delivery-attempt limit before a message is dead-lettered.</summary>
     public int? MaxDeliveryCount { get; set; }
 
-    /// <summary>
-    /// Gets or sets the requires session value.
-    /// </summary>
+    /// <summary>Gets or sets whether the queue requires sessions.</summary>
     public bool? RequiresSession { get; set; }
 
-    /// <summary>
-    /// Gets or sets the max concurrent sessions value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum number of sessions processed concurrently by the endpoint.</summary>
     public int? MaxConcurrentSessions { get; set; }
-    /// <summary>
-    /// Gets or sets the max concurrent calls per session value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum number of concurrent message callbacks for each session.</summary>
     public int? MaxConcurrentCallsPerSession { get; set; }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the queue path and Azure Service Bus idle-deletion constraint.</summary>
+    /// <returns>The queue configuration failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (!ServiceBusEntityNameValidator.Validator.IsValidEntityName(Path))
@@ -81,10 +57,8 @@ public class ServiceBusQueueConfigurator :
             yield return this.Failure("AutoDeleteOnIdle", "must be zero, or >= 5:00");
     }
 
-    /// <summary>
-    /// Gets create queue options.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Projects the configured values into Azure SDK queue-creation options.</summary>
+    /// <returns>The SDK options for creating or comparing the queue.</returns>
     public CreateQueueOptions GetCreateQueueOptions()
     {
         var options = new CreateQueueOptions(FullPath);
@@ -137,11 +111,9 @@ public class ServiceBusQueueConfigurator :
         return options;
     }
 
-    /// <summary>
-    /// Gets queue address.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the transport address for this queue in a namespace.</summary>
+    /// <param name="hostAddress">The namespace address.</param>
+    /// <returns>The queue address including temporary-entity metadata when configured.</returns>
     public Uri GetQueueAddress(Uri hostAddress)
     {
         return new ServiceBusEndpointAddress(hostAddress, Path, AutoDeleteOnIdle);

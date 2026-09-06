@@ -1,25 +1,15 @@
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>
-/// Defines the contract for broker topology.
-/// </summary>
+/// <summary>Defines the operations required by broker topology.</summary>
 public interface BrokerTopology :
     IProbeSite
 {
-    /// <summary>
-    /// Gets the topics value.
-    /// </summary>
+    /// <summary>Gets the topics.</summary>
     Topic[] Topics { get; }
-    /// <summary>
-    /// Gets the queues value.
-    /// </summary>
+    /// <summary>Gets the queues.</summary>
     Queue[] Queues { get; }
-    /// <summary>
-    /// Gets the topic subscriptions value.
-    /// </summary>
+    /// <summary>Gets the topic subscriptions.</summary>
     TopicToTopicSubscription[] TopicSubscriptions { get; }
-    /// <summary>
-    /// Gets the queue subscriptions value.
-    /// </summary>
+    /// <summary>Gets the queue subscriptions.</summary>
     TopicToQueueSubscription[] QueueSubscriptions { get; }
 }

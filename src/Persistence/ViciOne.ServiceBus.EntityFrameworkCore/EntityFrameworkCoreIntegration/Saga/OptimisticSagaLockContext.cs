@@ -7,10 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
-/// <summary>
-/// Defers loading the sagas until the transaction is started
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
+/// <summary>Defers loading the sagas until the transaction is started.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class OptimisticSagaLockContext<TSaga> :
     SagaLockContext<TSaga>
     where TSaga : class, ISaga
@@ -20,13 +18,11 @@ public class OptimisticSagaLockContext<TSaga> :
     readonly ISagaQuery<TSaga> _query;
     readonly Func<IQueryable<TSaga>, IQueryable<TSaga>>? _queryCustomization;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="query">The query value.</param>
+    /// <summary>Initializes an optimistic saga lock context for a deferred saga query.</summary>
+    /// <param name="context">The DbContext that contains the saga set.</param>
+    /// <param name="query">The saga filter to execute after the transaction begins.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="queryCustomization">The query customization value.</param>
+    /// <param name="queryCustomization">An optional transformation applied to the saga query.</param>
     public OptimisticSagaLockContext(DbContext context, ISagaQuery<TSaga> query, CancellationToken cancellationToken,
         Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization)
     {
@@ -36,11 +32,9 @@ public class OptimisticSagaLockContext<TSaga> :
         _queryCustomization = queryCustomization;
     }
 
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
+    /// <summary>Loads the requested state.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The tracked saga entities selected by the query.</returns>
     public async Task<IList<TSaga>> LoadAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); IQueryable<TSaga> queryable = SagaQueryCustomization.Apply(_context.Set<TSaga>(), _queryCustomization);

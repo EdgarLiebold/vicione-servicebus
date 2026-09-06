@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 
-/// <summary>
-/// Provides a dictionary property converter implementation.
-/// </summary>
-/// <typeparam name="TKey">The t key type.</typeparam>
-/// <typeparam name="TElement">The t element type.</typeparam>
+/// <summary>Converts dictionary property values.</summary>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
+/// <typeparam name="TElement">The element type.</typeparam>
 public class DictionaryPropertyConverter<TKey, TElement> :
     IPropertyConverter<Dictionary<TKey, TElement>, IEnumerable<KeyValuePair<TKey, TElement>>>,
     IPropertyConverter<IDictionary<TKey, TElement>, IEnumerable<KeyValuePair<TKey, TElement>>>,
@@ -17,14 +15,12 @@ public class DictionaryPropertyConverter<TKey, TElement> :
     IPropertyConverter<IEnumerable<KeyValuePair<TKey, TElement>>, IEnumerable<KeyValuePair<TKey, TElement>>>
     where TKey : notnull
 {
-    /// <summary>
-    /// Performs the convert operation.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="input">The input value.</param>
+    /// <summary>Converts the supplied value.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="input">The input.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the converted value.</returns>
     public Task<Dictionary<TKey, TElement>?> ConvertAsync<TMessage>(InitializeContext<TMessage> context,
         IEnumerable<KeyValuePair<TKey, TElement>>? input, CancellationToken cancellationToken = default)
         where TMessage : class
@@ -83,12 +79,10 @@ public class DictionaryPropertyConverter<TKey, TElement> :
 }
 
 
-/// <summary>
-/// Provides a dictionary property converter implementation.
-/// </summary>
-/// <typeparam name="TKey">The t key type.</typeparam>
-/// <typeparam name="TElement">The t element type.</typeparam>
-/// <typeparam name="TInputElement">The t input element type.</typeparam>
+/// <summary>Converts dictionary property values.</summary>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
+/// <typeparam name="TElement">The element type.</typeparam>
+/// <typeparam name="TInputElement">The input element type.</typeparam>
 public class DictionaryPropertyConverter<TKey, TElement, TInputElement> :
     IPropertyConverter<Dictionary<TKey, TElement>, IEnumerable<KeyValuePair<TKey, TInputElement>>>,
     IPropertyConverter<IDictionary<TKey, TElement>, IEnumerable<KeyValuePair<TKey, TInputElement>>>,
@@ -98,23 +92,19 @@ public class DictionaryPropertyConverter<TKey, TElement, TInputElement> :
 {
     readonly IPropertyConverter<TElement, TInputElement> _converter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="converter">The converter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="converter">The converter.</param>
     public DictionaryPropertyConverter(IPropertyConverter<TElement, TInputElement> converter)
     {
         _converter = converter;
     }
 
-    /// <summary>
-    /// Performs the convert operation.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="input">The input value.</param>
+    /// <summary>Converts the supplied value.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="input">The input.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the converted value.</returns>
     public Task<Dictionary<TKey, TElement>?> ConvertAsync<TMessage>(InitializeContext<TMessage> context,
         IEnumerable<KeyValuePair<TKey, TInputElement>>? input, CancellationToken cancellationToken = default)
         where TMessage : class
@@ -245,13 +235,11 @@ public class DictionaryPropertyConverter<TKey, TElement, TInputElement> :
 }
 
 
-/// <summary>
-/// Provides a dictionary property converter implementation.
-/// </summary>
-/// <typeparam name="TKey">The t key type.</typeparam>
-/// <typeparam name="TElement">The t element type.</typeparam>
-/// <typeparam name="TInputKey">The t input key type.</typeparam>
-/// <typeparam name="TInputElement">The t input element type.</typeparam>
+/// <summary>Converts dictionary property values.</summary>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
+/// <typeparam name="TElement">The element type.</typeparam>
+/// <typeparam name="TInputKey">The input key type.</typeparam>
+/// <typeparam name="TInputElement">The input element type.</typeparam>
 public class DictionaryPropertyConverter<TKey, TElement, TInputKey, TInputElement> :
     IPropertyConverter<Dictionary<TKey, TElement>, IEnumerable<KeyValuePair<TInputKey, TInputElement>>>,
     IPropertyConverter<IDictionary<TKey, TElement>, IEnumerable<KeyValuePair<TInputKey, TInputElement>>>,
@@ -262,11 +250,9 @@ public class DictionaryPropertyConverter<TKey, TElement, TInputKey, TInputElemen
     readonly IPropertyConverter<TElement, TInputElement> _elementConverter;
     readonly IPropertyConverter<TKey, TInputKey> _keyConverter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="keyConverter">The key converter value.</param>
-    /// <param name="elementConverter">The element converter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="keyConverter">The key converter.</param>
+    /// <param name="elementConverter">The element converter.</param>
     public DictionaryPropertyConverter(IPropertyConverter<TKey, TInputKey> keyConverter,
         IPropertyConverter<TElement, TInputElement> elementConverter)
     {
@@ -274,14 +260,12 @@ public class DictionaryPropertyConverter<TKey, TElement, TInputKey, TInputElemen
         _keyConverter = keyConverter;
     }
 
-    /// <summary>
-    /// Performs the convert operation.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="input">The input value.</param>
+    /// <summary>Converts the supplied value.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="input">The input.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the converted value.</returns>
     public Task<Dictionary<TKey, TElement>?> ConvertAsync<TMessage>(InitializeContext<TMessage> context,
         IEnumerable<KeyValuePair<TInputKey, TInputElement>>? input, CancellationToken cancellationToken = default)
         where TMessage : class

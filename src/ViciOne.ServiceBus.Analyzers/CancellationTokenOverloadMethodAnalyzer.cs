@@ -13,31 +13,21 @@ using ViciOne.ServiceBus.Analyzers.Helpers;
 
 namespace ViciOne.ServiceBus.Analyzers;
 
-/// <summary>
-/// Provides a cancellation token overload method analyzer implementation.
-/// </summary>
+/// <summary>Analyzes source code for cancellation token overload method.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class CancellationTokenOverloadMethodAnalyzer :
     DiagnosticAnalyzer
 {
-    /// <summary>
-    /// Defines the cancellation token overload method rule id value.
-    /// </summary>
+    /// <summary>Exposes the cancellation token overload method rule id used by the containing type.</summary>
     public const string CancellationTokenOverloadMethodRuleId = "VOSB2001";
 
     // Diagnostic property keys. The code fix reads them from its own assembly, so they are part of
     // the contract between the two.
-    /// <summary>
-    /// Defines the parameter index value.
-    /// </summary>
+    /// <summary>Exposes the parameter index used by the containing type.</summary>
     public const string ParameterIndex = "ParameterIndex";
-    /// <summary>
-    /// Defines the parameter name value.
-    /// </summary>
+    /// <summary>Exposes the parameter name used by the containing type.</summary>
     public const string ParameterName = "ParameterName";
-    /// <summary>
-    /// Defines the cancellation tokens value.
-    /// </summary>
+    /// <summary>Exposes the cancellation tokens used by the containing type.</summary>
     public const string CancellationTokens = "CancellationTokens";
 
     const string Category = "Reliability";
@@ -48,15 +38,11 @@ public class CancellationTokenOverloadMethodAnalyzer :
         Category, DiagnosticSeverity.Info, true,
         "Context.CancellationToken can be passed in method with overload.");
 
-    /// <summary>
-    /// Gets the supported diagnostics value.
-    /// </summary>
+    /// <summary>Gets the supported diagnostics.</summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(CancellationTokenOverloadMethodRule);
 
-    /// <summary>
-    /// Performs the initialize operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes the target component.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context == null)
@@ -78,10 +64,7 @@ public class CancellationTokenOverloadMethodAnalyzer :
         var consumeContextTypeSymbol = GetBestTypeByMetadataName(context.Compilation, "ViciOne.ServiceBus.ConsumeContext");
         var outgoingMessagesTypeSymbol = GetBestTypeByMetadataName(context.Compilation, "ViciOne.ServiceBus.IOutgoingMessages");
 
-        // The member cache holds ISymbol instances, which belong to one compilation. It used to
-        // be a field of the analyzer, and an analyzer instance is reused across compilations, so
-        // it both kept every symbol of every compilation alive and could answer a later
-        // compilation with symbols of an earlier one. It lives inside the compilation now.
+        // ISymbol instances belong to one compilation, so the member cache shares that exact lifetime.
         var membersByType = new ConcurrentDictionary<ISymbol, IEnumerable<ISymbol>>(SymbolEqualityComparer.Default);
 
         context.RegisterOperationAction(analysisContext =>
@@ -238,8 +221,6 @@ public class CancellationTokenOverloadMethodAnalyzer :
         return !otherMethodParameters.Any();
     }
 
-    // Check if there's a method overload with the same parameters as this one, in the same order, plus a ct at the end.
-
     static SyntaxNode? GetInvocationMethodNameNode(SyntaxNode invocationNode)
     {
         if (!(invocationNode is InvocationExpressionSyntax invocationExpression))
@@ -247,9 +228,7 @@ public class CancellationTokenOverloadMethodAnalyzer :
 
         if (invocationExpression.Expression is MemberBindingExpressionSyntax memberBindingExpression)
         {
-            // When using nullability features, specifically attempting to dereference possible null references,
-            // the dot becomes part of the member invocation expression, so we need to return just the name,
-            // so that the diagnostic gets properly returned in the method name only.
+            // A conditional-access dot belongs to the invocation expression; the diagnostic spans only the member name.
             return memberBindingExpression.Name;
         }
 
@@ -297,7 +276,7 @@ public class CancellationTokenOverloadMethodAnalyzer :
 
             if (type is not null)
             {
-                // Multiple visible types with the same metadata name are present
+                // An ambiguous metadata name cannot identify a safe analyzer target.
                 return null;
             }
 
@@ -307,22 +286,19 @@ public class CancellationTokenOverloadMethodAnalyzer :
         return type;
     }
 
-    // https://github.com/dotnet/roslyn/blob/d2ff1d83e8fde6165531ad83f0e5b1ae95908289/src/Workspaces/SharedUtilitiesAndExtensions/Compiler/Core/Extensions/ISymbolExtensions.cs#L28-L73
     static SymbolVisibility GetResultantVisibility(ISymbol symbol)
     {
-        // Start by assuming it's visible.
         var visibility = SymbolVisibility.Public;
         switch (symbol.Kind)
         {
             case SymbolKind.Alias:
-                // Aliases are uber private.  They're only visible in the same file that they
-                // were declared in.
+                // Aliases are visible only in their declaring source file.
                 return SymbolVisibility.Private;
             case SymbolKind.Parameter:
-                // Parameters are only as visible as their containing symbol
+                // Parameters inherit the visibility of their containing symbol.
                 return GetResultantVisibility(symbol.ContainingSymbol);
             case SymbolKind.TypeParameter:
-                // Type Parameters are private.
+                // Type parameters are not independently addressable outside their declaration.
                 return SymbolVisibility.Private;
         }
 
@@ -330,18 +306,13 @@ public class CancellationTokenOverloadMethodAnalyzer :
         {
             switch (symbol.DeclaredAccessibility)
             {
-                // If we see anything private, then the symbol is private.
                 case Accessibility.NotApplicable:
                 case Accessibility.Private:
                     return SymbolVisibility.Private;
-                // If we see anything internal, then knock it down from public to
-                // internal.
                 case Accessibility.Internal:
                 case Accessibility.ProtectedAndInternal:
                     visibility = SymbolVisibility.Internal;
                     break;
-                    // For anything else (Public, Protected, ProtectedOrInternal), the
-                    // symbol stays at the level we've gotten so far.
             }
 
             symbol = symbol.ContainingSymbol;
@@ -397,7 +368,7 @@ public class CancellationTokenOverloadMethodAnalyzer :
     {
         return membersByType.GetOrAdd(symbol, _ =>
         {
-            // quickly skips some basic types that are known to not contain CancellationToken
+            // Special framework types cannot expose a nested service-bus cancellation token path.
             if ((int)symbol.SpecialType >= 1 && (int)symbol.SpecialType <= 45)
                 return [];
 
@@ -439,17 +410,11 @@ public class CancellationTokenOverloadMethodAnalyzer :
 
     enum SymbolVisibility
     {
-        /// <summary>
-        /// Indicates public.
-        /// </summary>
+        /// <summary>Indicates public.</summary>
         Public,
-        /// <summary>
-        /// Indicates internal.
-        /// </summary>
+        /// <summary>Indicates internal.</summary>
         Internal,
-        /// <summary>
-        /// Indicates private.
-        /// </summary>
+        /// <summary>Indicates private.</summary>
         Private,
     }
 }

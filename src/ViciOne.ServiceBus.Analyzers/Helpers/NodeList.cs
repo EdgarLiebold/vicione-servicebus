@@ -25,11 +25,9 @@ class NodeList<T>
         return _nodes[Index(key) - 1].Contains(Index(value));
     }
 
-    /// <summary>
-    /// Retrieve the index for a given key
-    /// </summary>
-    /// <param name="key">The key</param>
-    /// <returns>The index</returns>
+    /// <summary>Retrieve the index for a given key.</summary>
+    /// <param name="key">The key.</param>
+    /// <returns>The index.</returns>
     int Index(T key)
     {
         var index = _nodeTable[key];

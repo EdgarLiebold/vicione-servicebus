@@ -10,9 +10,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Configuration;
 
-/// <summary>
-/// Provides an amazon sqs receive endpoint configuration implementation.
-/// </summary>
+/// <summary>Configures, validates, and builds an Amazon SQS receive endpoint.</summary>
 public class AmazonSqsReceiveEndpointConfiguration :
     ReceiveEndpointConfiguration,
     IAmazonSqsReceiveEndpointConfiguration,
@@ -25,12 +23,10 @@ public class AmazonSqsReceiveEndpointConfiguration :
     readonly Lazy<Uri> _inputAddress;
     readonly QueueReceiveSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
+    /// <summary>Initializes an Amazon SQS receive-endpoint configuration.</summary>
+    /// <param name="hostConfiguration">The owning host configuration.</param>
+    /// <param name="settings">The queue and receive settings.</param>
+    /// <param name="endpointConfiguration">The endpoint-level pipeline and topology configuration.</param>
     public AmazonSqsReceiveEndpointConfiguration(IAmazonSqsHostConfiguration hostConfiguration, QueueReceiveSettings settings,
         IAmazonSqsEndpointConfiguration endpointConfiguration)
         : base(hostConfiguration, endpointConfiguration)
@@ -46,23 +42,15 @@ public class AmazonSqsReceiveEndpointConfiguration :
         _inputAddress = new Lazy<Uri>(FormatInputAddress);
     }
 
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the queue and receive settings.</summary>
     public ReceiveSettings Settings => _settings;
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the configured Amazon SQS host address.</summary>
     public override Uri HostAddress => _hostConfiguration.HostAddress;
-    /// <summary>
-    /// Gets the input address value.
-    /// </summary>
+    /// <summary>Gets the formatted queue input address.</summary>
     public override Uri InputAddress => _inputAddress.Value;
 
-    /// <summary>
-    /// Creates receive endpoint context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds and returns the Amazon SQS receive-endpoint context.</summary>
+    /// <returns>The configured receive-endpoint context.</returns>
     public override ReceiveEndpointContext CreateReceiveEndpointContext()
     {
         return CreateSqsReceiveEndpointContext();
@@ -70,10 +58,8 @@ public class AmazonSqsReceiveEndpointConfiguration :
 
     IAmazonSqsTopologyConfiguration IAmazonSqsEndpointConfiguration.Topology => _endpointConfiguration.Topology;
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <param name="host">The host value.</param>
+    /// <summary>Builds the client pipeline and registers the receive endpoint with its host.</summary>
+    /// <param name="host">The host that owns the receive endpoint.</param>
     public void Build(IHost host)
     {
         var context = CreateSqsReceiveEndpointContext();
@@ -114,10 +100,8 @@ public class AmazonSqsReceiveEndpointConfiguration :
         ReceiveEndpoint = receiveEndpoint;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates queue names, concurrency, polling, visibility, purge, and topology settings.</summary>
+    /// <returns>All detected validation failures and warnings.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         if (_settings.PrefetchCount <= 0)
@@ -160,9 +144,7 @@ public class AmazonSqsReceiveEndpointConfiguration :
             yield return result.WithParentKey(queueName);
     }
 
-    /// <summary>
-    /// Gets or sets the durable value.
-    /// </summary>
+    /// <summary>Sets whether the queue is retained when the endpoint stops.</summary>
     public bool Durable
     {
         set
@@ -173,9 +155,7 @@ public class AmazonSqsReceiveEndpointConfiguration :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the auto delete value.
-    /// </summary>
+    /// <summary>Sets whether the queue is deleted when the endpoint stops.</summary>
     public bool AutoDelete
     {
         set
@@ -186,48 +166,34 @@ public class AmazonSqsReceiveEndpointConfiguration :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the concurrent delivery limit value.
-    /// </summary>
+    /// <summary>Sets the maximum number of messages delivered concurrently by the endpoint.</summary>
     public int ConcurrentDeliveryLimit
     {
         set => _settings.ConcurrentDeliveryLimit = AmazonSqsReceiveSettingsLimits.PositiveConcurrency(value, nameof(ConcurrentDeliveryLimit));
     }
 
-    /// <summary>
-    /// Gets or sets the wait time seconds value.
-    /// </summary>
+    /// <summary>Sets the Amazon SQS long-poll wait time, in seconds.</summary>
     public ushort WaitTimeSeconds
     {
         set => _settings.WaitTimeSeconds = AmazonSqsReceiveSettingsLimits.WaitTimeSeconds(value);
     }
 
-    /// <summary>
-    /// Gets or sets the purge on startup value.
-    /// </summary>
+    /// <summary>Sets whether available messages are purged when the endpoint starts.</summary>
     public bool PurgeOnStartup
     {
         set => _settings.PurgeOnStartup = value;
     }
 
-    /// <summary>
-    /// Gets the queue attributes value.
-    /// </summary>
+    /// <summary>Gets the Amazon SQS queue attributes.</summary>
     public IDictionary<string, object> QueueAttributes => _settings.QueueAttributes;
-    /// <summary>
-    /// Gets the queue subscription attributes value.
-    /// </summary>
+    /// <summary>Gets the Amazon SNS attributes applied to subscriptions targeting the queue.</summary>
     public IDictionary<string, object> QueueSubscriptionAttributes => _settings.QueueSubscriptionAttributes;
-    /// <summary>
-    /// Gets the queue tags value.
-    /// </summary>
+    /// <summary>Gets the tags applied to the queue.</summary>
     public IDictionary<string, string> QueueTags => _settings.QueueTags;
 
-    /// <summary>
-    /// Performs the subscribe operation.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Subscribes the receive queue to a named Amazon SNS topic.</summary>
+    /// <param name="topicName">The source topic name.</param>
+    /// <param name="configure">An optional callback that configures the subscription.</param>
     public void Subscribe(string topicName, Action<IAmazonSqsTopicSubscriptionConfigurator>? configure = null)
     {
         if (topicName == null)
@@ -236,62 +202,48 @@ public class AmazonSqsReceiveEndpointConfiguration :
         _endpointConfiguration.Topology.Consume.Bind(topicName, configure);
     }
 
-    /// <summary>
-    /// Gets or sets the redeliver visibility timeout value.
-    /// </summary>
+    /// <summary>Sets the visibility delay applied after message processing faults.</summary>
     public int RedeliverVisibilityTimeout
     {
         set => _settings.RedeliverVisibilityTimeout = AmazonSqsReceiveSettingsLimits.VisibilityTimeoutSeconds(value, nameof(RedeliverVisibilityTimeout));
     }
 
-    /// <summary>
-    /// Gets or sets the max visibility timeout value.
-    /// </summary>
+    /// <summary>Sets the maximum total duration for automatic message-visibility renewal.</summary>
     public TimeSpan MaxVisibilityTimeout
     {
         set => _settings.MaxVisibilityTimeout = AmazonSqsReceiveSettingsLimits.MaximumVisibilityTimeout(value);
     }
 
-    /// <summary>
-    /// Gets or sets the max visibility timeout renewal value.
-    /// </summary>
+    /// <summary>Sets the maximum number of seconds requested by an individual visibility renewal.</summary>
     public int MaxVisibilityTimeoutRenewal
     {
         set => _settings.MaxVisibilityTimeoutRenewal = AmazonSqsReceiveSettingsLimits.VisibilityRenewalSeconds(value);
     }
 
-    /// <summary>
-    /// Performs the subscribe operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Subscribes the receive queue to the Amazon SNS topic for a message type.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="configure">An optional callback that configures the subscription.</param>
     public void Subscribe<T>(Action<IAmazonSqsTopicSubscriptionConfigurator>? configure = null)
         where T : class
     {
         _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Subscribe(configure);
     }
 
-    /// <summary>
-    /// Configures client.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures filters in the Amazon client-context pipeline.</summary>
+    /// <param name="configure">The callback that updates the client-context pipe.</param>
     public void ConfigureClient(Action<IPipeConfigurator<ClientContext>>? configure)
     {
         configure?.Invoke(_clientConfigurator);
     }
 
-    /// <summary>
-    /// Configures connection.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures filters in the Amazon connection-context pipeline.</summary>
+    /// <param name="configure">The callback that updates the connection-context pipe.</param>
     public void ConfigureConnection(Action<IPipeConfigurator<ConnectionContext>>? configure)
     {
         configure?.Invoke(_connectionConfigurator);
     }
 
-    /// <summary>
-    /// Performs the disable message ordering operation.
-    /// </summary>
+    /// <summary>Disables the endpoint's ordered-delivery constraint.</summary>
     public void DisableMessageOrdering()
     {
         _settings.IsOrdered = false;
@@ -311,10 +263,8 @@ public class AmazonSqsReceiveEndpointConfiguration :
         return _settings.GetInputAddress(_hostConfiguration.HostAddress);
     }
 
-    /// <summary>
-    /// Determines whether already configured.
-    /// </summary>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether the input address has been observed or the base configuration is already frozen.</summary>
+    /// <returns><see langword="true"/> when the configuration can no longer be changed; otherwise, <see langword="false"/>.</returns>
     protected override bool IsAlreadyConfigured()
     {
         return _inputAddress.IsValueCreated || base.IsAlreadyConfigured();

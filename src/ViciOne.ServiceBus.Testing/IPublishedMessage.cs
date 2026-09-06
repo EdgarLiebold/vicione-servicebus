@@ -2,55 +2,35 @@ using System;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Defines the contract for published message.
-/// </summary>
+/// <summary>Defines the operations required by published message.</summary>
 public interface IPublishedMessage :
     IAsyncListElement
 {
-    /// <summary>
-    /// Gets the context value.
-    /// </summary>
+    /// <summary>Gets the context.</summary>
     SendContext Context { get; }
 
-    /// <summary>
-    /// Gets the start time value.
-    /// </summary>
+    /// <summary>Gets the start time.</summary>
     DateTimeOffset StartTime { get; }
-    /// <summary>
-    /// Gets the elapsed time value.
-    /// </summary>
+    /// <summary>Gets the elapsed time.</summary>
     TimeSpan ElapsedTime { get; }
 
-    /// <summary>
-    /// Gets the exception value.
-    /// </summary>
+    /// <summary>Gets the exception.</summary>
     Exception? Exception { get; }
-    /// <summary>
-    /// Gets the message type value.
-    /// </summary>
+    /// <summary>Gets the message type.</summary>
     Type MessageType { get; }
-    /// <summary>
-    /// Gets the short type name value.
-    /// </summary>
+    /// <summary>Gets the short type name.</summary>
     string ShortTypeName { get; }
-    /// <summary>
-    /// Gets the message object value.
-    /// </summary>
+    /// <summary>Gets the message object.</summary>
     object MessageObject { get; }
 }
 
 
-/// <summary>
-/// Defines the contract for published message.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Defines the operations required by published message.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface IPublishedMessage<out T> :
     IPublishedMessage
     where T : class
 {
-    /// <summary>
-    /// Gets the context value.
-    /// </summary>
+    /// <summary>Gets the context.</summary>
     new PublishContext<T> Context { get; }
 }

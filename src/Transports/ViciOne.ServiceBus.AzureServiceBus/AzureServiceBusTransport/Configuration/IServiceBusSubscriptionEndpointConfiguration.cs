@@ -1,13 +1,9 @@
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for service bus subscription endpoint configuration.
-/// </summary>
+/// <summary>Exposes the settings for an Azure Service Bus subscription receive endpoint.</summary>
 public interface IServiceBusSubscriptionEndpointConfiguration :
     IServiceBusEntityEndpointConfiguration
 {
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the topic, subscription, and processor settings.</summary>
     SubscriptionSettings Settings { get; }
 }

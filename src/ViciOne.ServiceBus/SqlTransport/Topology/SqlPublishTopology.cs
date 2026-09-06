@@ -4,19 +4,15 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>
-/// Provides a sql publish topology implementation.
-/// </summary>
+/// <summary>Defines the topology for sql publish.</summary>
 public class SqlPublishTopology :
     PublishTopology,
     ISqlPublishTopologyConfigurator
 {
     readonly IMessageTopology _messageTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="messageTopology">The message topology.</param>
     public SqlPublishTopology(IMessageTopology messageTopology)
     {
         _messageTopology = messageTopology;
@@ -32,10 +28,8 @@ public class SqlPublishTopology :
         return (ISqlMessagePublishTopologyConfigurator)GetMessageTopology(messageType);
     }
 
-    /// <summary>
-    /// Gets publish broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets publish broker topology.</summary>
+    /// <returns>The publish broker topology.</returns>
     public BrokerTopology GetPublishBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder();
@@ -55,11 +49,9 @@ public class SqlPublishTopology :
         return (ISqlMessagePublishTopologyConfigurator<T>)GetMessageTopology<T>();
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates message topology.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The created message topology.</returns>
     protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()
     {
         var messageTopology = new SqlMessagePublishTopology<T>(this, _messageTopology.GetMessageTopology<T>());

@@ -2,36 +2,24 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>
-/// Defines the contract for scheduled message.
-/// </summary>
+/// <summary>Defines the operations required by scheduled message.</summary>
 public interface ScheduledMessage
 {
-    /// <summary>
-    /// Gets the token id value.
-    /// </summary>
+    /// <summary>Gets the token id.</summary>
     Guid TokenId { get; }
-    /// <summary>
-    /// Gets the due at value.
-    /// </summary>
+    /// <summary>Gets the due at.</summary>
     DateTimeOffset DueAt { get; }
-    /// <summary>
-    /// Gets the destination value.
-    /// </summary>
+    /// <summary>Gets the destination.</summary>
     Uri Destination { get; }
 }
 
 
-/// <summary>
-/// Defines the contract for scheduled message.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Defines the operations required by scheduled message.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface ScheduledMessage<out T> :
     ScheduledMessage
     where T : class
 {
-    /// <summary>
-    /// Gets the payload value.
-    /// </summary>
+    /// <summary>Gets the payload.</summary>
     T Payload { get; }
 }

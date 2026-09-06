@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for partition key send topology convention.
-/// </summary>
+/// <summary>Defines the operations required by partition key send topology convention.</summary>
 public interface IPartitionKeySendTopologyConvention :
     ISendTopologyConvention
 {

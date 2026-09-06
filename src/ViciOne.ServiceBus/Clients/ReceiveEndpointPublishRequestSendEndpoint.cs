@@ -2,31 +2,25 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>
-/// Provides a receive endpoint publish request send endpoint implementation.
-/// </summary>
-/// <typeparam name="TRequest">The t request type.</typeparam>
+/// <summary>Provides an endpoint for receive endpoint publish request send.</summary>
+/// <typeparam name="TRequest">The request type.</typeparam>
 public class ReceiveEndpointPublishRequestSendEndpoint<TRequest> :
     RequestSendEndpoint<TRequest>
     where TRequest : class
 {
     readonly HostReceiveEndpointHandle _handle;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="handle">The handle value.</param>
-    /// <param name="consumeContext">The consume context value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="handle">The handle.</param>
+    /// <param name="consumeContext">The consume context.</param>
     public ReceiveEndpointPublishRequestSendEndpoint(HostReceiveEndpointHandle handle, ConsumeContext? consumeContext)
         : base(consumeContext)
     {
         _handle = handle;
     }
 
-    /// <summary>
-    /// Gets send endpoint.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets send endpoint.</summary>
+    /// <returns>A task that produces the requested value.</returns>
     protected override async Task<ISendEndpoint> GetSendEndpointAsync()
     {
         var ready = await _handle.Ready.ConfigureAwait(false);

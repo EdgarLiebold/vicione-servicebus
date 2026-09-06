@@ -3,18 +3,14 @@ using ViciOne.ServiceBus.RabbitMq.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a rabbit mq dead letter settings implementation.
-/// </summary>
+/// <summary>Builds the RabbitMQ exchange and queue used to hold dead-lettered messages.</summary>
 public class RabbitMqDeadLetterSettings :
     QueueBindingConfigurator,
     DeadLetterSettings
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="source">The source value.</param>
-    /// <param name="name">The name value.</param>
+    /// <summary>Creates dead-letter settings derived from a receive endpoint.</summary>
+    /// <param name="source">The source receive settings whose durability and declaration arguments are copied.</param>
+    /// <param name="name">The dead-letter exchange and queue name.</param>
     public RabbitMqDeadLetterSettings(ReceiveSettings source, string name)
         : base(name, source.ExchangeType, source.Durable, source.AutoDelete)
     {
@@ -27,10 +23,8 @@ public class RabbitMqDeadLetterSettings :
             SetQueueArgument(argument.Key, argument.Value);
     }
 
-    /// <summary>
-    /// Gets broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the exchange, queue, and binding required by the dead-letter transport.</summary>
+    /// <returns>The dead-letter broker topology.</returns>
     public BrokerTopology GetBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder();

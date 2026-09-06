@@ -4,27 +4,21 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Courier.Messages;
 
-/// <summary>
-/// Provides a routing slip activity log implementation.
-/// </summary>
+/// <summary>Carries the activity log for routing slip activity.</summary>
 public class RoutingSlipActivityLog :
     ActivityLog
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public RoutingSlipActivityLog()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="host">The host value.</param>
-    /// <param name="executionId">The execution id value.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="timestamp">The timestamp value.</param>
-    /// <param name="duration">The duration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="host">The host.</param>
+    /// <param name="executionId">The execution id.</param>
+    /// <param name="name">The name.</param>
+    /// <param name="timestamp">The timestamp.</param>
+    /// <param name="duration">The duration.</param>
     public RoutingSlipActivityLog(HostInfo host, Guid executionId, string name, DateTimeOffset timestamp, TimeSpan duration)
     {
         ExecutionId = executionId;
@@ -34,10 +28,8 @@ public class RoutingSlipActivityLog :
         Host = host;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="activityLog">The activity log value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="activityLog">The activity log.</param>
     public RoutingSlipActivityLog(ActivityLog activityLog)
     {
         if (string.IsNullOrEmpty(activityLog.Name))
@@ -50,24 +42,14 @@ public class RoutingSlipActivityLog :
         Host = activityLog.Host;
     }
 
-    /// <summary>
-    /// Gets or sets the execution id value.
-    /// </summary>
+    /// <summary>Gets or sets the execution id.</summary>
     public Guid ExecutionId { get; set; }
-    /// <summary>
-    /// Gets or sets the name value.
-    /// </summary>
+    /// <summary>Gets or sets the name.</summary>
     public string Name { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the timestamp value.
-    /// </summary>
+    /// <summary>Gets or sets the timestamp.</summary>
     public DateTimeOffset Timestamp { get; set; }
-    /// <summary>
-    /// Gets or sets the duration value.
-    /// </summary>
+    /// <summary>Gets or sets the duration.</summary>
     public TimeSpan Duration { get; set; }
-    /// <summary>
-    /// Gets or sets the host value.
-    /// </summary>
+    /// <summary>Gets or sets the host.</summary>
     public HostInfo Host { get; set; } = null!;
 }

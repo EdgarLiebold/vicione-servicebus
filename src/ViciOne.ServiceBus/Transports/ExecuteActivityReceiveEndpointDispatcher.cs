@@ -1,21 +1,17 @@
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides an execute activity receive endpoint dispatcher implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Dispatches execute activity receive endpoint operations.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class ExecuteActivityReceiveEndpointDispatcher<TActivity, TArguments> :
     ITypeReceiveEndpointDispatcherFactory
     where TActivity : class, IExecuteActivity<TArguments>
     where TArguments : class
 {
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="formatter">The formatter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="formatter">The formatter.</param>
+    /// <returns>The newly created instance.</returns>
     public IReceiveEndpointDispatcher Create(IReceiveEndpointDispatcherFactory factory, IEndpointNameFormatter formatter)
     {
         var queueName = formatter.ExecuteActivity<TActivity, TArguments>();

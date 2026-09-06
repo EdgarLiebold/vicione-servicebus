@@ -3,18 +3,14 @@ using ViciOne.ServiceBus.AzureStorage.MessageData;
 
 namespace ViciOne.ServiceBus.Azure.Storage;
 
-/// <summary>
-/// Provides extension methods for azure storage configuration.
-/// </summary>
+/// <summary>Creates Azure Blob Storage message-data repositories from caller-owned clients.</summary>
 public static class AzureStorageConfigurationExtensions
 {
-    /// <summary>
-    /// Creates message data repository.
-    /// </summary>
-    /// <param name="client">The client value.</param>
-    /// <param name="containerName">The container name value.</param>
-    /// <param name="compress">The compress value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a repository that stores message payloads in the named blob container.</summary>
+    /// <param name="client">The caller-owned blob service client.</param>
+    /// <param name="containerName">The container that stores message payloads.</param>
+    /// <param name="compress">Whether payloads are GZip-compressed before upload.</param>
+    /// <returns>A repository backed by the supplied Azure Blob Storage client.</returns>
     public static AzureStorageMessageDataRepository CreateMessageDataRepository(this BlobServiceClient client, string containerName, bool compress = false)
     {
         return new AzureStorageMessageDataRepository(client, containerName, compress);

@@ -5,28 +5,22 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Quartz;
 
-/// <summary>
-/// Provides a resume scheduled message consumer implementation.
-/// </summary>
+/// <summary>Resumes recurring Quartz triggers addressed by scheduling commands.</summary>
 public class ResumeScheduledMessageConsumer :
     IConsumer<ResumeScheduledRecurringMessage>
 {
     readonly ISchedulerFactory _schedulerFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="schedulerFactory">The scheduler factory value.</param>
+    /// <summary>Initializes the consumer with the factory used to resolve the active Quartz scheduler.</summary>
+    /// <param name="schedulerFactory">The factory that resolves the active Quartz scheduler.</param>
     public ResumeScheduledMessageConsumer(ISchedulerFactory schedulerFactory)
     {
         _schedulerFactory = schedulerFactory ?? throw new ArgumentNullException(nameof(schedulerFactory));
     }
 
-    /// <summary>
-    /// Consumes the message provided by the context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Resumes the recurring trigger identified by schedule group and identifier.</summary>
+    /// <param name="context">The recurring resume command context.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ConsumeAsync(ConsumeContext<ResumeScheduledRecurringMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);

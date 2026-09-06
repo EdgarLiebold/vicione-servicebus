@@ -3,11 +3,9 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>
-/// Provides an in memory saga consume context implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Carries state for in memory saga consume operations.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class InMemorySagaConsumeContext<TSaga, TMessage> :
     DefaultSagaConsumeContext<TSaga, TMessage>,
     IDisposable
@@ -16,20 +14,16 @@ public class InMemorySagaConsumeContext<TSaga, TMessage> :
 {
     readonly SagaInstance<TSaga> _saga;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="saga">The saga value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="saga">The saga.</param>
     public InMemorySagaConsumeContext(ConsumeContext<TMessage> context, SagaInstance<TSaga> saga)
         : base(context, saga.Instance)
     {
         _saga = saga;
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         _saga.Release();

@@ -5,18 +5,14 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides a scope client context factory implementation.
-/// </summary>
+/// <summary>Creates nested shared Amazon client contexts from a parent client supervisor.</summary>
 public class ScopeClientContextFactory :
     IPipeContextFactory<ClientContext>
 {
     readonly IClientContextSupervisor _supervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="supervisor">The supervisor value.</param>
+    /// <summary>Initializes a scoped client-context factory.</summary>
+    /// <param name="supervisor">The parent client-context supervisor.</param>
     public ScopeClientContextFactory(IClientContextSupervisor supervisor)
     {
         _supervisor = supervisor;

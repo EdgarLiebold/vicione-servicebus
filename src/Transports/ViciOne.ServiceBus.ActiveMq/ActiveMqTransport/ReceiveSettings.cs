@@ -2,29 +2,21 @@ using System;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Specify the receive settings for a receive transport
-/// </summary>
+/// <summary>Defines ActiveMQ queue, selector, prefetch, and concurrency settings for a receive transport.</summary>
 public interface ReceiveSettings :
     EntitySettings
 {
-    /// <summary>
-    /// The number of unacknowledged messages to allow to be processed concurrently
-    /// </summary>
+    /// <summary>Gets the maximum number of unacknowledged messages prefetched from the broker.</summary>
     int PrefetchCount { get; }
 
-    /// <summary>
-    /// Gets the concurrent message limit value.
-    /// </summary>
+    /// <summary>Gets the maximum number of messages processed concurrently.</summary>
     int ConcurrentMessageLimit { get; }
 
-    /// <summary>
-    /// Gets the selector value.
-    /// </summary>
+    /// <summary>Gets the optional Apache NMS message selector.</summary>
     string? Selector { get; }
 
-    /// <summary>
-    /// Get the input address for the transport on the specified host
-    /// </summary>
+    /// <summary>Builds the receive transport's input address against a broker host.</summary>
+    /// <param name="hostAddress">The configured broker address.</param>
+    /// <returns>The absolute queue input address.</returns>
     Uri GetInputAddress(Uri hostAddress);
 }

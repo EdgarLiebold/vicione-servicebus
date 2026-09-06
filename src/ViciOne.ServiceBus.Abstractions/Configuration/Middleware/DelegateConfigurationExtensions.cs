@@ -4,17 +4,13 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for delegate configuration.
-/// </summary>
+/// <summary>Provides extension methods for delegate configuration.</summary>
 public static class DelegateConfigurationExtensions
 {
-    /// <summary>
-    /// Executes a synchronous method on the pipe
-    /// </summary>
-    /// <typeparam name="TContext">The context type</typeparam>
-    /// <param name="configurator">The pipe configurator</param>
-    /// <param name="callback">The callback to invoke</param>
+    /// <summary>Executes a synchronous method on the pipe.</summary>
+    /// <typeparam name="TContext">The context type.</typeparam>
+    /// <param name="configurator">The pipe configurator.</param>
+    /// <param name="callback">The callback to invoke.</param>
     public static void UseExecute<TContext>(this IPipeConfigurator<TContext> configurator, Action<TContext> callback)
         where TContext : class, PipeContext
     {
@@ -26,12 +22,10 @@ public static class DelegateConfigurationExtensions
         configurator.AddPipeSpecification(pipeBuilderConfigurator);
     }
 
-    /// <summary>
-    /// Executes an asynchronous method on the pipe
-    /// </summary>
-    /// <typeparam name="TContext">The context type</typeparam>
-    /// <param name="configurator">The pipe configurator</param>
-    /// <param name="callback">The callback to invoke</param>
+    /// <summary>Executes an asynchronous method on the pipe.</summary>
+    /// <typeparam name="TContext">The context type.</typeparam>
+    /// <param name="configurator">The pipe configurator.</param>
+    /// <param name="callback">The callback to invoke.</param>
     public static void UseExecuteAsync<TContext>(this IPipeConfigurator<TContext> configurator, Func<TContext, Task> callback)
         where TContext : class, PipeContext
     {

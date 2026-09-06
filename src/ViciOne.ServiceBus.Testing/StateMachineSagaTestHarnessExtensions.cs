@@ -7,20 +7,16 @@ using ViciOne.ServiceBus.Testing.Implementations;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides extension methods for state machine saga test harness.
-/// </summary>
+/// <summary>Provides extension methods for state machine saga test harness.</summary>
 public static class StateMachineSagaTestHarnessExtensions
 {
-    /// <summary>
-    /// Performs the state machine saga operation.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <param name="harness">The harness value.</param>
-    /// <param name="stateMachine">The state machine value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Configures the state-machine saga.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <param name="harness">The harness.</param>
+    /// <param name="stateMachine">The state machine.</param>
+    /// <param name="queueName">The queue name.</param>
+    /// <returns>The saga state machine test harness produced by the operation.</returns>
     public static ISagaStateMachineTestHarness<TStateMachine, TInstance> StateMachineSaga<TInstance, TStateMachine>(this BusTestHarness harness,
         TStateMachine stateMachine, string? queueName = null)
         where TInstance : class, SagaStateMachineInstance
@@ -34,16 +30,14 @@ public static class StateMachineSagaTestHarnessExtensions
         return new StateMachineSagaTestHarness<TInstance, TStateMachine>(harness, repository, repository, repository, stateMachine, queueName);
     }
 
-    /// <summary>
-    /// Performs the state machine saga operation.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <param name="harness">The harness value.</param>
-    /// <param name="stateMachine">The state machine value.</param>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Configures the state-machine saga.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <param name="harness">The harness.</param>
+    /// <param name="stateMachine">The state machine.</param>
+    /// <param name="repository">The repository.</param>
+    /// <param name="queueName">The queue name.</param>
+    /// <returns>The saga state machine test harness produced by the operation.</returns>
     public static ISagaStateMachineTestHarness<TStateMachine, TInstance> StateMachineSaga<TInstance, TStateMachine>(this BusTestHarness harness,
         TStateMachine stateMachine, ISagaRepository<TInstance> repository, string? queueName = null)
         where TInstance : class, SagaStateMachineInstance
@@ -61,16 +55,14 @@ public static class StateMachineSagaTestHarnessExtensions
             queueName);
     }
 
-    /// <summary>
-    /// Performs the contains in state operation.
-    /// </summary>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="sagas">The sagas value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="stateSelector">The state selector value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Determines whether the current value contains in state.</summary>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="sagas">The sagas.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="machine">The machine.</param>
+    /// <param name="stateSelector">The state selector.</param>
+    /// <returns>The t instance produced by the operation.</returns>
     public static TInstance? ContainsInState<TStateMachine, TInstance>(this ISagaList<TInstance> sagas, Guid correlationId, TStateMachine machine,
         Func<TStateMachine, State> stateSelector)
         where TStateMachine : SagaStateMachine<TInstance>
@@ -81,15 +73,13 @@ public static class StateMachineSagaTestHarnessExtensions
         return ContainsInState(sagas, correlationId, machine, state);
     }
 
-    /// <summary>
-    /// Performs the contains in state operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="sagas">The sagas value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="state">The state value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Determines whether the current value contains in state.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="sagas">The sagas.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="machine">The machine.</param>
+    /// <param name="state">The state.</param>
+    /// <returns>The t produced by the operation.</returns>
     public static T? ContainsInState<T>(this ISagaList<T> sagas, Guid correlationId, SagaStateMachine<T> machine, State state)
         where T : class, SagaStateMachineInstance
     {
@@ -99,18 +89,16 @@ public static class StateMachineSagaTestHarnessExtensions
         return any ? sagas.Contains(correlationId) : null;
     }
 
-    /// <summary>
-    /// Performs the should contain saga in state operation.
-    /// </summary>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="stateSelector">The state selector value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should contain contain saga in state.</summary>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="machine">The machine.</param>
+    /// <param name="stateSelector">The state selector.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga in state outcome.</returns>
     public static Task<Guid?> ShouldContainSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository, Guid correlationId,
         TStateMachine machine, Func<TStateMachine, State> stateSelector, TimeSpan timeout, CancellationToken cancellationToken = default)
         where TStateMachine : SagaStateMachine<TInstance>
@@ -119,19 +107,17 @@ public static class StateMachineSagaTestHarnessExtensions
         return ShouldContainSagaInStateAsync(repository, correlationId, machine, stateSelector, timeout, TimeProvider.System, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga in state operation.
-    /// </summary>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="stateSelector">The state selector value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should contain contain saga in state.</summary>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="machine">The machine.</param>
+    /// <param name="stateSelector">The state selector.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga in state outcome.</returns>
     public static Task<Guid?> ShouldContainSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository, Guid correlationId,
         TStateMachine machine, Func<TStateMachine, State> stateSelector, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where TStateMachine : SagaStateMachine<TInstance>
@@ -142,18 +128,16 @@ public static class StateMachineSagaTestHarnessExtensions
         return ShouldContainSagaInStateAsync(repository, correlationId, machine, state, timeout, timeProvider, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga in state operation.
-    /// </summary>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="state">The state value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should contain contain saga in state.</summary>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="machine">The machine.</param>
+    /// <param name="state">The state.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga in state outcome.</returns>
     public static Task<Guid?> ShouldContainSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository, Guid correlationId,
         TStateMachine machine, State state, TimeSpan timeout, CancellationToken cancellationToken = default)
         where TStateMachine : SagaStateMachine<TInstance>
@@ -162,19 +146,17 @@ public static class StateMachineSagaTestHarnessExtensions
         return ShouldContainSagaInStateAsync(repository, correlationId, machine, state, timeout, TimeProvider.System, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga in state operation.
-    /// </summary>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="state">The state value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should contain contain saga in state.</summary>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="correlationId">The correlation id.</param>
+    /// <param name="machine">The machine.</param>
+    /// <param name="state">The state.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga in state outcome.</returns>
     public static Task<Guid?> ShouldContainSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository, Guid correlationId,
         TStateMachine machine, State state, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where TStateMachine : SagaStateMachine<TInstance>
@@ -183,18 +165,16 @@ public static class StateMachineSagaTestHarnessExtensions
         return ShouldContainSagaInStateAsync(repository, x => x.CorrelationId == correlationId, machine, state, timeout, timeProvider, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga in state operation.
-    /// </summary>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="expression">The expression value.</param>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="stateSelector">The state selector value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should contain contain saga in state.</summary>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="expression">The expression.</param>
+    /// <param name="machine">The machine.</param>
+    /// <param name="stateSelector">The state selector.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga in state outcome.</returns>
     public static Task<Guid?> ShouldContainSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
         Expression<Func<TInstance, bool>> expression, TStateMachine machine, Func<TStateMachine, State> stateSelector, TimeSpan timeout, CancellationToken cancellationToken = default)
         where TStateMachine : SagaStateMachine<TInstance>
@@ -203,19 +183,17 @@ public static class StateMachineSagaTestHarnessExtensions
         return ShouldContainSagaInStateAsync(repository, expression, machine, stateSelector, timeout, TimeProvider.System, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga in state operation.
-    /// </summary>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="expression">The expression value.</param>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="stateSelector">The state selector value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should contain contain saga in state.</summary>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="expression">The expression.</param>
+    /// <param name="machine">The machine.</param>
+    /// <param name="stateSelector">The state selector.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga in state outcome.</returns>
     public static Task<Guid?> ShouldContainSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
         Expression<Func<TInstance, bool>> expression, TStateMachine machine, Func<TStateMachine, State> stateSelector, TimeSpan timeout,
         TimeProvider timeProvider, CancellationToken cancellationToken = default)
@@ -227,18 +205,16 @@ public static class StateMachineSagaTestHarnessExtensions
         return ShouldContainSagaInStateAsync(repository, expression, machine, state, timeout, timeProvider, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the should contain saga in state operation.
-    /// </summary>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="expression">The expression value.</param>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="state">The state value.</param>
-    /// <param name="timeout">The timeout value.</param>
+    /// <summary>Determines whether the result should contain contain saga in state.</summary>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="expression">The expression.</param>
+    /// <param name="machine">The machine.</param>
+    /// <param name="state">The state.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga in state outcome.</returns>
     public static async Task<Guid?> ShouldContainSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
         Expression<Func<TInstance, bool>> expression, TStateMachine machine, State state, TimeSpan timeout, CancellationToken cancellationToken = default)
         where TStateMachine : SagaStateMachine<TInstance>
@@ -247,19 +223,17 @@ public static class StateMachineSagaTestHarnessExtensions
         return await ShouldContainSagaInStateAsync(repository, expression, machine, state, timeout, TimeProvider.System, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the should contain saga in state operation.
-    /// </summary>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="expression">The expression value.</param>
-    /// <param name="machine">The machine value.</param>
-    /// <param name="state">The state value.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Determines whether the result should contain contain saga in state.</summary>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="repository">The repository.</param>
+    /// <param name="expression">The expression.</param>
+    /// <param name="machine">The machine.</param>
+    /// <param name="state">The state.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the should contain saga in state outcome.</returns>
     public static async Task<Guid?> ShouldContainSagaInStateAsync<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
         Expression<Func<TInstance, bool>> expression, TStateMachine machine, State state, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where TStateMachine : SagaStateMachine<TInstance>

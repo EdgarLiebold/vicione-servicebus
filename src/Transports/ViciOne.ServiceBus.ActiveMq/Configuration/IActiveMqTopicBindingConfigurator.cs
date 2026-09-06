@@ -1,13 +1,9 @@
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Used to configure the binding of an exchange (to either a queue or another exchange)
-/// </summary>
+/// <summary>Configures an ActiveMQ topic subscription.</summary>
 public interface IActiveMqTopicBindingConfigurator :
     IActiveMqTopicConfigurator
 {
-    /// <summary>
-    /// A routing key for the exchange binding
-    /// </summary>
+    /// <summary>Sets the Apache NMS message selector applied to the topic subscription.</summary>
     string? Selector { set; }
 }

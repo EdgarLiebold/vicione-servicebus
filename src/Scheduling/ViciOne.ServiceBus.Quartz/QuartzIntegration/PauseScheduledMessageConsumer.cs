@@ -5,28 +5,22 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Quartz;
 
-/// <summary>
-/// Provides a pause scheduled message consumer implementation.
-/// </summary>
+/// <summary>Pauses recurring Quartz triggers addressed by scheduling commands.</summary>
 public class PauseScheduledMessageConsumer :
     IConsumer<PauseScheduledRecurringMessage>
 {
     readonly ISchedulerFactory _schedulerFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="schedulerFactory">The scheduler factory value.</param>
+    /// <summary>Initializes the consumer with the factory used to resolve the active Quartz scheduler.</summary>
+    /// <param name="schedulerFactory">The factory that resolves the active Quartz scheduler.</param>
     public PauseScheduledMessageConsumer(ISchedulerFactory schedulerFactory)
     {
         _schedulerFactory = schedulerFactory ?? throw new ArgumentNullException(nameof(schedulerFactory));
     }
 
-    /// <summary>
-    /// Consumes the message provided by the context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Pauses the recurring trigger identified by schedule group and identifier.</summary>
+    /// <param name="context">The recurring pause command context.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ConsumeAsync(ConsumeContext<PauseScheduledRecurringMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);

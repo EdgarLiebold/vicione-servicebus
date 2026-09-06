@@ -4,15 +4,11 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a raw message serializer implementation.
-/// </summary>
+/// <summary>Serializes and deserializes raw message data.</summary>
 public abstract class RawMessageSerializer
 {
-    /// <summary>
-    /// Sets raw message headers.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Sets raw message headers.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     protected virtual void SetRawMessageHeaders(SendContext context)
     {
         if (context.MessageId.HasValue)

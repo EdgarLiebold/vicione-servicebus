@@ -6,21 +6,15 @@ using System.Net.Sockets;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Identifies a RabbitMQ cluster node by host name and optional TCP port.
-/// </summary>
+/// <summary>Identifies a RabbitMQ cluster node by host name and optional TCP port.</summary>
 public readonly record struct ClusterNode :
     IParsable<ClusterNode>,
     ISpanParsable<ClusterNode>
 {
-    /// <summary>
-    /// Gets the unbracketed DNS name or IP address.
-    /// </summary>
+    /// <summary>Gets the DNS name or normalized IP address.</summary>
     public string HostName { get; }
 
-    /// <summary>
-    /// Gets the explicit TCP port, or <see langword="null" /> when the connection default applies.
-    /// </summary>
+    /// <summary>Gets the explicit AMQP port, or <see langword="null"/> to use the connection-factory default.</summary>
     public int? Port { get; }
 
     private ClusterNode(string hostName, int? port)
@@ -29,9 +23,7 @@ public readonly record struct ClusterNode :
         Port = port;
     }
 
-    /// <summary>
-    /// Returns the canonical node representation, using brackets for IPv6 hosts.
-    /// </summary>
+    /// <summary>Returns the canonical node representation, using brackets for IPv6 hosts.</summary>
     /// <returns>The canonical host and optional port.</returns>
     public override string ToString()
     {
@@ -46,11 +38,9 @@ public readonly record struct ClusterNode :
             : host;
     }
 
-    /// <summary>
-    /// Parses a RabbitMQ cluster-node representation.
-    /// </summary>
+    /// <summary>Parses a RabbitMQ cluster-node representation.</summary>
     /// <param name="address">A DNS name, IPv4 address, or bracketed/unbracketed IPv6 address with an optional port.</param>
-    /// <returns>The parsed node.</returns>
+    /// <returns>The parsed value.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="address" /> is null.</exception>
     /// <exception cref="ArgumentException"><paramref name="address" /> is not a valid node.</exception>
     public static ClusterNode Parse(string address)
@@ -66,12 +56,10 @@ public readonly record struct ClusterNode :
         return Parse(address.AsSpan(), provider);
     }
 
-    /// <summary>
-    /// Parses a RabbitMQ cluster-node representation from a character span.
-    /// </summary>
-    /// <param name="address">The node representation.</param>
+    /// <summary>Parses a RabbitMQ cluster-node representation from a character span.</summary>
+    /// <param name="address">The node representation to parse.</param>
     /// <param name="provider">Ignored because node syntax is culture-independent.</param>
-    /// <returns>The parsed node.</returns>
+    /// <returns>The parsed value.</returns>
     /// <exception cref="ArgumentException"><paramref name="address" /> is not a valid node.</exception>
     public static ClusterNode Parse(ReadOnlySpan<char> address, IFormatProvider? provider = null)
     {
@@ -81,11 +69,9 @@ public readonly record struct ClusterNode :
         throw new ArgumentException($"Invalid RabbitMQ cluster node: '{address.ToString()}'.", nameof(address));
     }
 
-    /// <summary>
-    /// Attempts to parse a RabbitMQ cluster-node representation.
-    /// </summary>
-    /// <param name="address">The node representation.</param>
-    /// <param name="result">The parsed node when successful; otherwise, the default value.</param>
+    /// <summary>Attempts to parse a RabbitMQ cluster-node representation.</summary>
+    /// <param name="address">The node representation to parse.</param>
+    /// <param name="result">The parsed node when successful.</param>
     /// <returns><see langword="true" /> when parsing succeeds; otherwise, <see langword="false" />.</returns>
     public static bool TryParse([NotNullWhen(true)] string? address, out ClusterNode result) =>
         TryParse(address, CultureInfo.InvariantCulture, out result);

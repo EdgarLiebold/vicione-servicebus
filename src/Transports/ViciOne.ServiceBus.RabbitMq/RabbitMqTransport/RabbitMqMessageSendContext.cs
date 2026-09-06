@@ -5,22 +5,18 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq message send context implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Combines a typed send context with RabbitMQ exchange and AMQP property state.</summary>
+/// <typeparam name="T">The message contract.</typeparam>
 public class RabbitMqMessageSendContext<T> :
     MessageSendContext<T>,
     RabbitMqSendContext<T>
     where T : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="basicProperties">The basic properties value.</param>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a send context that awaits acknowledgement and uses an empty routing key by default.</summary>
+    /// <param name="basicProperties">The mutable AMQP message properties.</param>
+    /// <param name="exchange">The destination exchange.</param>
+    /// <param name="message">The message being sent.</param>
+    /// <param name="cancellationToken">Cancellation for the send pipeline.</param>
     public RabbitMqMessageSendContext(BasicProperties basicProperties, string exchange, T message, CancellationToken cancellationToken)
         : base(message, cancellationToken)
     {
@@ -33,27 +29,17 @@ public class RabbitMqMessageSendContext<T> :
         Exchange = exchange;
     }
 
-    /// <summary>
-    /// Gets or sets the exchange value.
-    /// </summary>
+    /// <summary>Gets the destination exchange, which persisted transport properties may replace internally.</summary>
     public string Exchange { get; private set; }
-    /// <summary>
-    /// Gets or sets the routing key value.
-    /// </summary>
+    /// <summary>Gets or sets the publish routing key.</summary>
     public string? RoutingKey { get; set; }
-    /// <summary>
-    /// Gets the basic properties value.
-    /// </summary>
+    /// <summary>Gets the mutable AMQP message properties.</summary>
     public BasicProperties BasicProperties { get; }
-    /// <summary>
-    /// Gets or sets the await ack value.
-    /// </summary>
+    /// <summary>Gets or sets whether the caller awaits the RabbitMQ client publish outcome.</summary>
     public bool AwaitAck { get; set; }
 
-    /// <summary>
-    /// Performs the read properties from operation.
-    /// </summary>
-    /// <param name="properties">The properties value.</param>
+    /// <summary>Restores RabbitMQ exchange, routing, and AMQP properties from persisted transport properties.</summary>
+    /// <param name="properties">The persisted transport-property bag.</param>
     public override void ReadPropertiesFrom(IReadOnlyDictionary<string, object> properties)
     {
         base.ReadPropertiesFrom(properties);
@@ -68,10 +54,8 @@ public class RabbitMqMessageSendContext<T> :
         BasicProperties.UserId = ReadString(properties, RabbitMqTransportPropertyNames.UserId);
     }
 
-    /// <summary>
-    /// Performs the write properties to operation.
-    /// </summary>
-    /// <param name="properties">The properties value.</param>
+    /// <summary>Writes nonempty RabbitMQ exchange, routing, and AMQP properties for persistence.</summary>
+    /// <param name="properties">The transport-property bag to update.</param>
     public override void WritePropertiesTo(IDictionary<string, object> properties)
     {
         base.WritePropertiesTo(properties);

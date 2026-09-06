@@ -2,19 +2,15 @@ using System;
 
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
-/// <summary>
-/// Provides a sql queue subscription configurator implementation.
-/// </summary>
+/// <summary>Configures sql queue subscription.</summary>
 public class SqlQueueSubscriptionConfigurator :
     SqlTopicSubscriptionConfigurator
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="subscriptionType">The subscription type value.</param>
-    /// <param name="autoDeleteOnIdle">The auto delete on idle value.</param>
-    /// <param name="routingKey">The routing key value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="topicName">The topic name.</param>
+    /// <param name="subscriptionType">The runtime subscription type used by the operation.</param>
+    /// <param name="autoDeleteOnIdle">The auto delete on idle.</param>
+    /// <param name="routingKey">The routing key.</param>
     protected SqlQueueSubscriptionConfigurator(string topicName, SqlSubscriptionType subscriptionType = SqlSubscriptionType.All,
         TimeSpan? autoDeleteOnIdle = null, string? routingKey = null)
         : base(topicName, subscriptionType, routingKey)

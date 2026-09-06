@@ -3,11 +3,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Converts the ConsumeContext to a JobContext, and executes the job
-/// </summary>
-/// <typeparam name="TConsumer">The consumer type</typeparam>
-/// <typeparam name="TJob">The message type</typeparam>
+/// <summary>Converts the ConsumeContext to a JobContext, and executes the job.</summary>
+/// <typeparam name="TConsumer">The consumer type.</typeparam>
+/// <typeparam name="TJob">The message type.</typeparam>
 public class JobConsumerMessageFilter<TConsumer, TJob> :
     IConsumerMessageFilter<TConsumer, TJob>
     where TConsumer : class, IJobConsumer<TJob>
@@ -15,31 +13,25 @@ public class JobConsumerMessageFilter<TConsumer, TJob> :
 {
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="retryPolicy">The retry policy value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="retryPolicy">The retry policy.</param>
     public JobConsumerMessageFilter(IRetryPolicy retryPolicy)
     {
         _retryPolicy = retryPolicy;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("consume");
         scope.Add("method", $"Consume(ConsumeContext<{TypeCache<TJob>.ShortName}> context)");
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(ConsumerConsumeContext<TConsumer, TJob> context,
         IPipe<ConsumerConsumeContext<TConsumer, TJob>> next)
     {

@@ -2,17 +2,13 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for raw json serializer configuration.
-/// </summary>
+/// <summary>Provides extension methods for raw json serializer configuration.</summary>
 public static class RawJsonSerializerConfigurationExtensions
 {
-    /// <summary>
-    /// Serialize and deserialize messages using the raw JSON message serializer
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="options">Options for the raw serializer behavior</param>
-    /// <param name="isDefault">If true, set the default content type to the content type of the deserializer</param>
+    /// <summary>Serialize and deserialize messages using the raw JSON message serializer.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="options">Options for the raw serializer behavior.</param>
+    /// <param name="isDefault">If true, set the default content type to the content type of the deserializer.</param>
     public static void UseRawJsonSerializer(this IBusFactoryConfigurator configurator, RawSerializerOptions options = RawSerializerOptions.Default,
         bool isDefault = false)
     {
@@ -22,11 +18,9 @@ public static class RawJsonSerializerConfigurationExtensions
         configurator.AddDeserializer(factory, isDefault);
     }
 
-    /// <summary>
-    /// Add support for RAW JSON message serialization and deserialization (does not change the default serializer)
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="options">Options for the raw serializer behavior</param>
+    /// <summary>Add support for RAW JSON message serialization and deserialization (does not change the default serializer).</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="options">Options for the raw serializer behavior.</param>
     public static void AddRawJsonSerializer(this IBusFactoryConfigurator configurator, RawSerializerOptions options =
         RawSerializerOptions.AddTransportHeaders | RawSerializerOptions.CopyHeaders)
     {
@@ -36,12 +30,10 @@ public static class RawJsonSerializerConfigurationExtensions
         configurator.AddDeserializer(factory);
     }
 
-    /// <summary>
-    /// Deserialize messages using the raw JSON message serializer
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="options">Options for the raw serializer behavior</param>
-    /// <param name="isDefault">If true, set the default content type to the content type of the deserializer</param>
+    /// <summary>Deserialize messages using the raw JSON message serializer.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="options">Options for the raw serializer behavior.</param>
+    /// <param name="isDefault">If true, set the default content type to the content type of the deserializer.</param>
     public static void UseRawJsonDeserializer(this IBusFactoryConfigurator configurator, RawSerializerOptions options = RawSerializerOptions.Default,
         bool isDefault = false)
     {
@@ -50,12 +42,10 @@ public static class RawJsonSerializerConfigurationExtensions
         configurator.AddDeserializer(factory, isDefault);
     }
 
-    /// <summary>
-    /// Serialize and deserialize messages using the raw JSON message serializer
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="options">Options for the raw serializer behavior</param>
-    /// <param name="isDefault">If true, set the default content type to the content type of the deserializer</param>
+    /// <summary>Serialize and deserialize messages using the raw JSON message serializer.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="options">Options for the raw serializer behavior.</param>
+    /// <param name="isDefault">If true, set the default content type to the content type of the deserializer.</param>
     public static void UseRawJsonSerializer(this IReceiveEndpointConfigurator configurator, RawSerializerOptions options = RawSerializerOptions.Default,
         bool isDefault = false)
     {
@@ -65,12 +55,10 @@ public static class RawJsonSerializerConfigurationExtensions
         configurator.AddDeserializer(factory, isDefault);
     }
 
-    /// <summary>
-    /// Deserialize messages using the raw JSON message serializer
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="options">Options for the raw serializer behavior</param>
-    /// <param name="isDefault">If true, set the default content type to the content type of the deserializer</param>
+    /// <summary>Deserialize messages using the raw JSON message serializer.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="options">Options for the raw serializer behavior.</param>
+    /// <param name="isDefault">If true, set the default content type to the content type of the deserializer.</param>
     public static void UseRawJsonDeserializer(this IReceiveEndpointConfigurator configurator, RawSerializerOptions options = RawSerializerOptions.Default,
         bool isDefault = false)
     {

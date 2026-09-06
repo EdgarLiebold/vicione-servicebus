@@ -1,24 +1,23 @@
 using System;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
-/// <summary>
-/// Bus-owned immutable policy for the application body and final transport envelope.
-/// </summary>
+/// <summary>Bus-owned immutable policy for the application body and final transport envelope.</summary>
 public sealed record PayloadAdmissionPolicy
 {
-    /// <summary>Gets the observation-only body warning threshold.</summary>
+    /// <summary>Gets or sets the warning body bytes.</summary>
     public int? WarningBodyBytes { get; init; }
 
-    /// <summary>Gets the threshold above which the existing MessageData owner is required.</summary>
+    /// <summary>Gets or sets the message data offload threshold bytes.</summary>
     public int? MessageDataOffloadThresholdBytes { get; init; }
 
-    /// <summary>Gets the hard serialized application-body maximum.</summary>
+    /// <summary>Gets or sets the maximum serialized body bytes.</summary>
     public int? MaximumSerializedBodyBytes { get; init; }
 
-    /// <summary>Gets the independent hard final transport-envelope maximum.</summary>
+    /// <summary>Gets or sets the maximum transport envelope bytes.</summary>
     public int? MaximumTransportEnvelopeBytes { get; init; }
 
     /// <summary>Validates and returns this immutable policy.</summary>
+    /// <returns>The validation failures.</returns>
     public PayloadAdmissionPolicy Validate()
     {
         ValidatePositiveOrNull(WarningBodyBytes, nameof(WarningBodyBytes));

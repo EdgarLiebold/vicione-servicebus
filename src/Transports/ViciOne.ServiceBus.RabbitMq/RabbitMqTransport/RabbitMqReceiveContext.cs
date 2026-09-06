@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq receive context implementation.
-/// </summary>
+/// <summary>Adapts one RabbitMQ delivery to the transport receive context.</summary>
 public sealed class RabbitMqReceiveContext :
     BaseReceiveContext,
     RabbitMqBasicConsumeContext,
@@ -20,18 +18,16 @@ public sealed class RabbitMqReceiveContext :
 {
     readonly MessageBody _body;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="routingKey">The routing key value.</param>
-    /// <param name="consumerTag">The consumer tag value.</param>
-    /// <param name="deliveryTag">The delivery tag value.</param>
-    /// <param name="body">The body value.</param>
-    /// <param name="redelivered">The redelivered value.</param>
-    /// <param name="properties">The properties value.</param>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="payloads">The payloads value.</param>
+    /// <summary>Creates a receive context from immutable AMQP delivery data.</summary>
+    /// <param name="exchange">The source exchange.</param>
+    /// <param name="routingKey">The delivery routing key.</param>
+    /// <param name="consumerTag">The broker-assigned consumer tag.</param>
+    /// <param name="deliveryTag">The channel-scoped delivery tag.</param>
+    /// <param name="body">The serialized message body.</param>
+    /// <param name="redelivered">Whether RabbitMQ previously delivered this message.</param>
+    /// <param name="properties">The immutable AMQP message properties.</param>
+    /// <param name="receiveEndpointContext">The endpoint context and message limits.</param>
+    /// <param name="payloads">Additional transport payloads.</param>
     public RabbitMqReceiveContext(string exchange, string routingKey, string consumerTag, ulong deliveryTag, ReadOnlyMemory<byte> body,
         bool redelivered, IReadOnlyBasicProperties properties, RabbitMqReceiveEndpointContext receiveEndpointContext, params object[] payloads)
         : base(redelivered, receiveEndpointContext, payloads)
@@ -45,46 +41,28 @@ public sealed class RabbitMqReceiveContext :
         _body = new MemoryMessageBody(body);
     }
 
-    /// <summary>
-    /// Gets the header provider value.
-    /// </summary>
+    /// <summary>Gets a header provider over the immutable AMQP properties.</summary>
     protected override IHeaderProvider HeaderProvider => new RabbitMqHeaderProvider(this);
 
-    /// <summary>
-    /// Gets the body value.
-    /// </summary>
+    /// <summary>Gets the body after enforcing configured transport message limits.</summary>
     public override MessageBody Body => EnforceMessageLimits(_body);
 
-    /// <summary>
-    /// Gets the sequence number value.
-    /// </summary>
+    /// <summary>Gets the channel-scoped delivery tag as the transport sequence number.</summary>
     public ulong? SequenceNumber => DeliveryTag;
 
-    /// <summary>
-    /// Gets the consumer tag value.
-    /// </summary>
+    /// <summary>Gets the tag of the RabbitMQ consumer that received the delivery.</summary>
     public string ConsumerTag { get; }
-    /// <summary>
-    /// Gets the delivery tag value.
-    /// </summary>
+    /// <summary>Gets the channel-scoped delivery tag used for acknowledgement.</summary>
     public ulong DeliveryTag { get; }
-    /// <summary>
-    /// Gets the exchange value.
-    /// </summary>
+    /// <summary>Gets the exchange from which RabbitMQ routed the delivery.</summary>
     public string Exchange { get; }
-    /// <summary>
-    /// Gets the routing key value.
-    /// </summary>
+    /// <summary>Gets the routing key attached to the delivery.</summary>
     public string RoutingKey { get; }
-    /// <summary>
-    /// Gets the properties value.
-    /// </summary>
+    /// <summary>Gets the immutable AMQP message properties.</summary>
     public IReadOnlyBasicProperties Properties { get; }
 
-    /// <summary>
-    /// Gets transport properties.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Captures nonempty RabbitMQ routing and AMQP properties for later replay.</summary>
+    /// <returns>The transport-property bag, or <see langword="null" /> when no values are present.</returns>
     public IDictionary<string, object>? GetTransportProperties()
     {
         var properties = new Lazy<Dictionary<string, object>>(() => new Dictionary<string, object>());
@@ -106,10 +84,8 @@ public sealed class RabbitMqReceiveContext :
         return properties.IsValueCreated ? properties.Value : null;
     }
 
-    /// <summary>
-    /// Gets content type.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the AMQP content type or the base transport default.</summary>
+    /// <returns>The parsed message content type.</returns>
     protected override ContentType GetContentType()
     {
         ContentType? contentType = default;
@@ -119,10 +95,8 @@ public sealed class RabbitMqReceiveContext :
         return contentType ?? base.GetContentType();
     }
 
-    /// <summary>
-    /// Gets send endpoint provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Wraps the send endpoint provider when the delivery carries a direct-reply-to address.</summary>
+    /// <returns>The endpoint provider for sends from this consume context.</returns>
     protected override ISendEndpointProvider GetSendEndpointProvider()
     {
         var provider = base.GetSendEndpointProvider();

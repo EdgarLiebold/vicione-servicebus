@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Defines the contract for pipe context converter factory.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Creates pipe context converter instances.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
 public interface IPipeContextConverterFactory<in TInput>
     where TInput : class, PipeContext
 {
@@ -11,8 +9,8 @@ public interface IPipeContextConverterFactory<in TInput>
     /// Given a known input context type, convert it to the correct output
     /// context type.
     /// </summary>
-    /// <typeparam name="TOutput"></typeparam>
-    /// <returns></returns>
+    /// <typeparam name="TOutput">The output type.</typeparam>
+    /// <returns>The converter.</returns>
     IPipeContextConverter<TInput, TOutput> GetConverter<TOutput>()
         where TOutput : class, PipeContext;
 }

@@ -14,9 +14,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides an active mq connection context implementation.
-/// </summary>
+/// <summary>Owns an Apache NMS connection, its session executor, and cached temporary destinations.</summary>
 public class ActiveMqConnectionContext :
     BasePipeContext,
     ConnectionContext,
@@ -27,19 +25,16 @@ public class ActiveMqConnectionContext :
     readonly ConcurrentDictionary<string, IDestination> _temporaryEntities;
 
     /// <summary>
-    /// Regular expression to distinguish if a destination is not for consuming data from a VirtualTopic. If yes we must get a standard destination because the name of
-    /// the destination must match specific
-    /// pattern. A temporary destination has generated name.
+    /// Matches consumer destinations that follow the configured ActiveMQ virtual-topic naming pattern.
+    /// Such destinations must retain their configured names and cannot be replaced with broker-generated names.
     /// </summary>
     /// <seealso href="https://activemq.apache.org/virtual-destinations">Virtual Destinations</seealso>
     readonly Regex _virtualTopicConsumerPattern;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connection">The connection value.</param>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates a connection context for an established Apache NMS connection.</summary>
+    /// <param name="connection">The established Apache NMS connection owned by the context.</param>
+    /// <param name="hostConfiguration">The ActiveMQ host and topology configuration.</param>
+    /// <param name="cancellationToken">The token that signals connection-context shutdown.</param>
     public ActiveMqConnectionContext(IConnection connection, IActiveMqHostConfiguration hostConfiguration, CancellationToken cancellationToken)
         : base(cancellationToken)
     {
@@ -56,28 +51,18 @@ public class ActiveMqConnectionContext :
         _virtualTopicConsumerPattern = new Regex(hostConfiguration.Topology.PublishTopology.VirtualTopicConsumerPattern, RegexOptions.Compiled);
     }
 
-    /// <summary>
-    /// Gets the connection value.
-    /// </summary>
+    /// <summary>Gets the underlying Apache NMS connection.</summary>
     public IConnection Connection => _connection;
-    /// <summary>
-    /// Gets the description value.
-    /// </summary>
+    /// <summary>Gets the broker description used for diagnostics.</summary>
     public string Description { get; }
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the configured broker address.</summary>
     public Uri HostAddress { get; }
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the ActiveMQ bus topology.</summary>
     public IActiveMqBusTopology Topology { get; }
 
-    /// <summary>
-    /// Creates session.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an Apache NMS session that uses individual acknowledgement.</summary>
+    /// <param name="cancellationToken">The token used to cancel session creation.</param>
+    /// <returns>A task that produces the newly created session.</returns>
     public async Task<ISession> CreateSessionAsync(CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
@@ -86,55 +71,45 @@ public class ActiveMqConnectionContext :
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Determines whether virtual topic consumer.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether a destination name matches the configured virtual-topic consumer pattern.</summary>
+    /// <param name="name">The destination name to test.</param>
+    /// <returns><see langword="true" /> when the name identifies a virtual-topic consumer; otherwise, <see langword="false" />.</returns>
     public bool IsVirtualTopicConsumer(string name)
     {
         return _virtualTopicConsumerPattern.IsMatch(name);
     }
 
-    /// <summary>
-    /// Gets temporary queue.
-    /// </summary>
-    /// <param name="session">The session value.</param>
-    /// <param name="topicName">The topic name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets or creates the cached temporary queue for a destination name.</summary>
+    /// <param name="session">The session used to resolve the broker destination.</param>
+    /// <param name="topicName">The destination name used as the cache key.</param>
+    /// <returns>The cached or newly resolved temporary queue.</returns>
     public IQueue GetTemporaryQueue(ISession session, string topicName)
     {
         return (IQueue)_temporaryEntities.GetOrAdd(topicName, _ => (IQueue)SessionUtil.GetDestination(session, topicName, DestinationType.TemporaryQueue));
     }
 
-    /// <summary>
-    /// Gets temporary topic.
-    /// </summary>
-    /// <param name="session">The session value.</param>
-    /// <param name="topicName">The topic name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets or creates the cached temporary topic for a destination name.</summary>
+    /// <param name="session">The session used to resolve the broker destination.</param>
+    /// <param name="topicName">The destination name used as the cache key.</param>
+    /// <returns>The cached or newly resolved temporary topic.</returns>
     public ITopic GetTemporaryTopic(ISession session, string topicName)
     {
         return (ITopic)_temporaryEntities.GetOrAdd(topicName, _ => (ITopic)SessionUtil.GetDestination(session, topicName, DestinationType.TemporaryTopic));
     }
 
-    /// <summary>
-    /// Attempts to get temporary entity.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="destination">The destination value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Tries to retrieve a cached temporary destination by name.</summary>
+    /// <param name="name">The destination name.</param>
+    /// <param name="destination">The cached destination, when found.</param>
+    /// <returns><see langword="true" /> when the destination is cached; otherwise, <see langword="false" />.</returns>
     public bool TryGetTemporaryEntity(string name, out IDestination? destination)
     {
         return _temporaryEntities.TryGetValue(name, out destination);
     }
 
-    /// <summary>
-    /// Performs the try remove temporary entity operation.
-    /// </summary>
-    /// <param name="session">The session value.</param>
-    /// <param name="name">The name value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Tries to remove a cached temporary destination and delete it from the broker.</summary>
+    /// <param name="session">The session used to delete the broker destination.</param>
+    /// <param name="name">The cached destination name.</param>
+    /// <returns><see langword="true" /> when a cached destination was deleted; otherwise, <see langword="false" />.</returns>
     public bool TryRemoveTemporaryEntity(ISession session, string name)
     {
         if (_temporaryEntities.TryRemove(name, out var destination))
@@ -156,10 +131,8 @@ public class ActiveMqConnectionContext :
         return false;
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that completes after connection and executor cleanup.</returns>
     public async ValueTask DisposeAsync()
     {
         TransportLogMessages.DisconnectHost(Description);

@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Provides a rabbit mq topology configuration implementation.
-/// </summary>
+/// <summary>Composes RabbitMQ send, publish, consume, and message topology.</summary>
 public class RabbitMqTopologyConfiguration :
     IRabbitMqTopologyConfiguration
 {
@@ -16,10 +14,8 @@ public class RabbitMqTopologyConfiguration :
     readonly IRabbitMqPublishTopologyConfigurator _publishTopology;
     readonly IRabbitMqSendTopologyConfigurator _sendTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Creates root topology with RabbitMQ routing-key and global topology conventions.</summary>
+    /// <param name="messageTopology">The provider-neutral message topology.</param>
     public RabbitMqTopologyConfiguration(IMessageTopologyConfigurator messageTopology)
     {
         _messageTopology = messageTopology;
@@ -37,10 +33,8 @@ public class RabbitMqTopologyConfiguration :
         _consumeTopology = new RabbitMqConsumeTopology(messageTopology, _publishTopology);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Creates endpoint topology that shares send and publish topology with its parent.</summary>
+    /// <param name="topologyConfiguration">The parent RabbitMQ topology.</param>
     public RabbitMqTopologyConfiguration(IRabbitMqTopologyConfiguration topologyConfiguration)
     {
         _messageTopology = topologyConfiguration.Message;
@@ -59,10 +53,8 @@ public class RabbitMqTopologyConfiguration :
     IRabbitMqSendTopologyConfigurator IRabbitMqTopologyConfiguration.Send => _sendTopology;
     IRabbitMqConsumeTopologyConfigurator IRabbitMqTopologyConfiguration.Consume => _consumeTopology;
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates RabbitMQ send, publish, and consume topology.</summary>
+    /// <returns>All validation failures from the three topology components.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return _sendTopology.Validate()

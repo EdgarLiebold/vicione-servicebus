@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 
-/// <summary>
-/// Provides an outbox consume context proxy implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Forwards outbox consume context operations to an underlying context.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public abstract class OutboxConsumeContextProxy<TMessage> :
     ConsumeContextProxy<TMessage>,
     OutboxConsumeContext<TMessage>
@@ -16,12 +14,10 @@ public abstract class OutboxConsumeContextProxy<TMessage> :
 {
     readonly IServiceProvider _provider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="provider">The service provider.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
     protected OutboxConsumeContextProxy(ConsumeContext<TMessage> context, OutboxConsumeOptions options, IServiceProvider provider)
         : base(context)
     {
@@ -42,92 +38,62 @@ public abstract class OutboxConsumeContextProxy<TMessage> :
         }
     }
 
-    /// <summary>
-    /// Gets the options value.
-    /// </summary>
+    /// <summary>Gets the options.</summary>
     protected OutboxConsumeOptions Options { get; }
 
-    /// <summary>
-    /// Gets the consumer id value.
-    /// </summary>
+    /// <summary>Gets the consumer id.</summary>
     protected Guid ConsumerId => Options.ConsumerId;
 
-    /// <summary>
-    /// Gets the captured context value.
-    /// </summary>
+    /// <summary>Gets the captured context.</summary>
     public ConsumeContext CapturedContext { get; }
 
-    /// <summary>
-    /// Gets or sets the continue processing value.
-    /// </summary>
+    /// <summary>Gets or sets the continue processing.</summary>
     public abstract bool ContinueProcessing { get; set; }
-    /// <summary>
-    /// Gets the is message consumed value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether message consumed.</summary>
     public abstract bool IsMessageConsumed { get; }
-    /// <summary>
-    /// Gets the is outbox delivered value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether outbox delivered.</summary>
     public abstract bool IsOutboxDelivered { get; }
-    /// <summary>
-    /// Gets the receive count value.
-    /// </summary>
+    /// <summary>Gets the receive count.</summary>
     public abstract int ReceiveCount { get; }
-    /// <summary>
-    /// Gets the last sequence number value.
-    /// </summary>
+    /// <summary>Gets the last sequence number.</summary>
     public abstract long? LastSequenceNumber { get; }
 
-    /// <summary>
-    /// Sets consumed.
-    /// </summary>
+    /// <summary>Sets consumed.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public abstract Task SetConsumedAsync(CancellationToken cancellationToken = default);
-    /// <summary>
-    /// Sets delivered.
-    /// </summary>
+    /// <summary>Sets delivered.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public abstract Task SetDeliveredAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the load outbox messages operation.
-    /// </summary>
+    /// <summary>Loads outbox messages.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the load outbox messages outcome.</returns>
     public abstract Task<List<OutboxMessageContext>> LoadOutboxMessagesAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the notify outbox message delivered operation.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Reports that notify outbox message has been delivered.</summary>
+    /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public abstract Task NotifyOutboxMessageDeliveredAsync(OutboxMessageContext message, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the remove outbox messages operation.
-    /// </summary>
+    /// <summary>Removes outbox messages.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public abstract Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Adds send to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds send to the configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public abstract Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>
-    /// Gets service.
-    /// </summary>
-    /// <param name="serviceType">The service type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets service.</summary>
+    /// <param name="serviceType">The runtime service type used by the operation.</param>
+    /// <returns>The service.</returns>
     public object? GetService(Type serviceType)
     {
         return _provider.GetService(serviceType);

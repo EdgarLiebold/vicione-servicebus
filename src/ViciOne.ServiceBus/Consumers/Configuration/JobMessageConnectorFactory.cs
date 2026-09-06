@@ -2,11 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a job message connector factory implementation.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
-/// <typeparam name="TJob">The t job type.</typeparam>
+/// <summary>Creates job message connector instances.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+/// <typeparam name="TJob">The job type.</typeparam>
 public class JobMessageConnectorFactory<TConsumer, TJob> :
     IMessageConnectorFactory
     where TConsumer : class, IJobConsumer<TJob>
@@ -14,19 +12,15 @@ public class JobMessageConnectorFactory<TConsumer, TJob> :
 {
     readonly IConsumerMessageConnector<TConsumer> _jobConsumerConnector;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public JobMessageConnectorFactory()
     {
         _jobConsumerConnector = new JobConsumerMessageConnector<TConsumer, TJob>();
     }
 
-    /// <summary>
-    /// Creates consumer connector.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates consumer connector.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The created consumer connector.</returns>
     public IConsumerMessageConnector<T> CreateConsumerConnector<T>()
         where T : class
     {

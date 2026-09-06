@@ -7,18 +7,14 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Configuration;
 
-/// <summary>
-/// Provides an amazon sqs host configurator implementation.
-/// </summary>
+/// <summary>Builds immutable Amazon SQS and Amazon SNS host settings.</summary>
 public class AmazonSqsHostConfigurator :
     IAmazonSqsHostConfigurator
 {
     readonly ConfigurationHostSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Initializes host settings from an Amazon SQS host address.</summary>
+    /// <param name="address">The host address containing the AWS region and optional scope.</param>
     public AmazonSqsHostConfigurator(Uri address)
     {
         var hostAddress = new AmazonSqsHostAddress(address);
@@ -33,16 +29,12 @@ public class AmazonSqsHostConfigurator :
 
     }
 
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets an immutable snapshot of the configured host settings.</summary>
     public AmazonSqsHostSettings Settings => _settings.Freeze();
 
-    /// <summary>
-    /// Performs the scope operation.
-    /// </summary>
-    /// <param name="scope">The scope value.</param>
-    /// <param name="scopeTopics">The scope topics value.</param>
+    /// <summary>Sets the entity-name scope and optionally applies it to topics.</summary>
+    /// <param name="scope">The prefix applied to scoped entity names.</param>
+    /// <param name="scopeTopics">Whether topic names also receive the scope prefix.</param>
     public void Scope(string scope, bool scopeTopics)
     {
         _settings.Scope = scope;
@@ -51,46 +43,36 @@ public class AmazonSqsHostConfigurator :
             EnableScopedTopics();
     }
 
-    /// <summary>
-    /// Performs the enable scoped topics operation.
-    /// </summary>
+    /// <summary>Applies the configured scope prefix to topic names as well as queue names.</summary>
     public void EnableScopedTopics()
     {
         _settings.ScopeTopics = true;
     }
 
-    /// <summary>
-    /// Performs the credentials operation.
-    /// </summary>
-    /// <param name="credentials">The credentials value.</param>
+    /// <summary>Sets the AWS credentials used to create Amazon SQS and Amazon SNS clients.</summary>
+    /// <param name="credentials">The AWS credentials.</param>
     public void Credentials(AWSCredentials credentials)
     {
         _settings.SetCredentials(credentials);
     }
 
-    /// <summary>
-    /// Performs the client factories operation.
-    /// </summary>
-    /// <param name="sqsClientFactory">The sqs client factory value.</param>
-    /// <param name="snsClientFactory">The sns client factory value.</param>
+    /// <summary>Sets custom factories for Amazon SQS and Amazon SNS clients.</summary>
+    /// <param name="sqsClientFactory">The Amazon SQS client factory.</param>
+    /// <param name="snsClientFactory">The Amazon SNS client factory.</param>
     public void ClientFactories(Func<IAmazonSQS> sqsClientFactory, Func<IAmazonSimpleNotificationService> snsClientFactory)
     {
         _settings.SetClientFactories(sqsClientFactory, snsClientFactory);
     }
 
-    /// <summary>
-    /// Performs the client context cache operation.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Configures queue and topic metadata caching.</summary>
+    /// <param name="options">The cache lifetime and capacity options.</param>
     public void ClientContextCache(AmazonSqsClientContextCacheOptions options)
     {
         _settings.ClientContextCacheOptions = options;
     }
 
-    /// <summary>
-    /// Performs the allow transport header operation.
-    /// </summary>
-    /// <param name="allowTransportHeader">The allow transport header value.</param>
+    /// <summary>Sets the predicate used to include or reject outbound transport headers.</summary>
+    /// <param name="allowTransportHeader">The header predicate, or <see langword="null"/> to use the default policy.</param>
     public void AllowTransportHeader(AllowTransportHeader? allowTransportHeader)
     {
         _settings.AllowTransportHeader = allowTransportHeader;

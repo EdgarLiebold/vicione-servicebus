@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides an event correlation expression converter implementation.
-/// </summary>
-/// <typeparam name="TInstance">The t instance type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Converts event correlation expression values.</summary>
+/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class EventCorrelationExpressionConverter<TInstance, TMessage> :
     ExpressionVisitor
     where TInstance : class, SagaStateMachineInstance
@@ -17,20 +15,16 @@ public class EventCorrelationExpressionConverter<TInstance, TMessage> :
 {
     readonly ConsumeContext<TMessage> _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public EventCorrelationExpressionConverter(ConsumeContext<TMessage> context)
     {
         _context = context;
     }
 
-    /// <summary>
-    /// Performs the convert operation.
-    /// </summary>
-    /// <param name="expression">The expression value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts the supplied value.</summary>
+    /// <param name="expression">The expression.</param>
+    /// <returns>The converted value.</returns>
     public Expression<Func<TInstance, bool>> Convert(Expression<Func<TInstance, ConsumeContext<TMessage>, bool>> expression)
     {
         var result = Visit(expression) as LambdaExpression
@@ -46,11 +40,9 @@ public class EventCorrelationExpressionConverter<TInstance, TMessage> :
         return Expression.Lambda<Func<TInstance, bool>>(lambda.Body, parameters);
     }
 
-    /// <summary>
-    /// Performs the visit member operation.
-    /// </summary>
-    /// <param name="m">The m value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Visits member.</summary>
+    /// <param name="m">The <c>m</c> value.</param>
+    /// <returns>The expression produced by the operation.</returns>
     protected override Expression VisitMember(MemberExpression m)
     {
         if (m.Expression == null)

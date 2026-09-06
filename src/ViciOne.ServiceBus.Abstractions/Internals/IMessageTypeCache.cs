@@ -6,34 +6,22 @@ namespace ViciOne.ServiceBus.Internals;
 
 interface IMessageTypeCache
 {
-    /// <summary>
-    /// The friendly diagnostic address for display in metrics applications
-    /// </summary>
+    /// <summary>The friendly diagnostic address for display in metrics applications.</summary>
     string DiagnosticAddress { get; }
 
-    /// <summary>
-    /// True if the message type is a valid message type
-    /// </summary>
+    /// <summary>True if the message type is a valid message type.</summary>
     bool IsValidMessageType { get; }
 
-    /// <summary>
-    /// Once checked, the reason why the message type is invalid
-    /// </summary>
+    /// <summary>Once checked, the reason why the message type is invalid.</summary>
     string? InvalidMessageTypeReason { get; }
 
-    /// <summary>
-    /// True if this message is not a public type
-    /// </summary>
+    /// <summary>True if this message is not a public type.</summary>
     bool IsTemporaryMessageType { get; }
 
-    /// <summary>
-    /// Returns all valid message types that are contained within the s
-    /// </summary>
+    /// <summary>Returns all valid message types that are contained within the s.</summary>
     IReadOnlyList<Type> MessageTypes { get; }
 
-    /// <summary>
-    /// The names of all the message types supported by the message type
-    /// </summary>
+    /// <summary>The names of all the message types supported by the message type.</summary>
     IReadOnlyList<string> MessageTypeNames { get; }
 
     IReadOnlyList<PropertyInfo> Properties { get; }

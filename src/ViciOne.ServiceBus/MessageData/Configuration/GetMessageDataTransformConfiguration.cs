@@ -5,11 +5,9 @@ using ViciOne.ServiceBus.MessageData.PropertyProviders;
 
 namespace ViciOne.ServiceBus.MessageData.Configuration;
 
-/// <summary>
-/// Provides a get message data transform configuration implementation.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
-/// <typeparam name="TValue">The t value type.</typeparam>
+/// <summary>Stores and validates get message data transform configuration.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TValue">The value stored by the member.</typeparam>
 public class GetMessageDataTransformConfiguration<TInput, TValue> :
     IMessageDataTransformConfiguration<TInput>
     where TInput : class
@@ -17,11 +15,9 @@ public class GetMessageDataTransformConfiguration<TInput, TValue> :
     readonly PropertyInfo _property;
     readonly IMessageDataRepository _repository;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="property">The property value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="repository">The repository.</param>
+    /// <param name="property">The property.</param>
     public GetMessageDataTransformConfiguration(IMessageDataRepository repository, PropertyInfo property)
     {
         if (repository == null)
@@ -31,10 +27,8 @@ public class GetMessageDataTransformConfiguration<TInput, TValue> :
         _repository = repository;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public void Apply(ITransformConfigurator<TInput> configurator)
     {
         var inputPropertyProvider = new InputPropertyProvider<TInput, MessageData<TValue>>(_property);

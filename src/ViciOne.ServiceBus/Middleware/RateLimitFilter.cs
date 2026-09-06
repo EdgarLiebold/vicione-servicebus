@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Middleware;
 /// Limits the number of calls through the filter to a specified count per time interval
 /// specified.
 /// </summary>
-/// <typeparam name="TContext"></typeparam>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class RateLimitFilter<TContext> :
     IFilter<TContext>,
     IPipe<CommandContext<SetRateLimit>>,
@@ -24,12 +24,10 @@ public class RateLimitFilter<TContext> :
     int _count;
     int _rateLimit;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="rateLimit">The rate limit value.</param>
-    /// <param name="interval">The interval value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="rateLimit">The rate limit.</param>
+    /// <param name="interval">The interval.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public RateLimitFilter(int rateLimit, TimeSpan interval, TimeProvider? timeProvider = null)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(rateLimit, 1);
@@ -43,9 +41,7 @@ public class RateLimitFilter<TContext> :
         _timer = (timeProvider ?? TimeProvider.System).CreateTimer(Reset, null, interval, interval);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         _timer.Dispose();
@@ -53,10 +49,8 @@ public class RateLimitFilter<TContext> :
         _limit.Dispose();
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("rateLimit");
@@ -65,12 +59,10 @@ public class RateLimitFilter<TContext> :
         scope.Add("interval", _interval);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [DebuggerNonUserCode]
     public Task SendAsync(TContext context, IPipe<TContext> next)
     {
@@ -94,11 +86,9 @@ public class RateLimitFilter<TContext> :
         return SendAsync();
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(CommandContext<SetRateLimit> context)
     {
         ArgumentNullException.ThrowIfNull(context);

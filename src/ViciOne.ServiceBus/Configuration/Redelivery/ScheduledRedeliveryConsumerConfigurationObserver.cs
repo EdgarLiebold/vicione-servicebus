@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// Configures scheduled message redelivery for a consumer, on the consumer configurator, which is constrained to
 /// the message types for that consumer, and only applies to the consumer prior to the consumer factory.
 /// </summary>
-/// <typeparam name="TConsumer">The consumer type</typeparam>
+/// <typeparam name="TConsumer">The consumer type.</typeparam>
 public class ScheduledRedeliveryConsumerConfigurationObserver<TConsumer> :
     IConsumerConfigurationObserver
     where TConsumer : class
@@ -14,11 +14,9 @@ public class ScheduledRedeliveryConsumerConfigurationObserver<TConsumer> :
     readonly IConsumerConfigurator<TConsumer> _configurator;
     readonly Action<IRetryConfigurator> _configure;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public ScheduledRedeliveryConsumerConfigurationObserver(IConsumerConfigurator<TConsumer> configurator, Action<IRetryConfigurator> configure)
     {
         _configurator = configurator;

@@ -3,9 +3,7 @@ using Amazon.SQS.Model;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides a sqs message body implementation.
-/// </summary>
+/// <summary>Reads a native Amazon SQS body or unwraps the JSON envelope delivered by Amazon SNS.</summary>
 public class SqsMessageBody :
     StringMessageBody,
     JsonMessageBody
@@ -13,26 +11,20 @@ public class SqsMessageBody :
     readonly Message _message;
     JsonElement? _topicArn;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Initializes a body reader for an Amazon SQS message.</summary>
+    /// <param name="message">The received Amazon SQS message.</param>
     public SqsMessageBody(Message message)
         : base(message.Body)
     {
         _message = message;
     }
 
-    /// <summary>
-    /// Gets the topic arn value.
-    /// </summary>
+    /// <summary>Gets the Amazon SNS topic ARN discovered while parsing an enveloped message.</summary>
     public string? TopicArn => _topicArn?.GetString();
 
-    /// <summary>
-    /// Gets json element.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Parses the body and unwraps an Amazon SNS <c>Message</c> payload when an SNS topic ARN is present.</summary>
+    /// <param name="options">The JSON serializer options used for both envelope and nested payload.</param>
+    /// <returns>The native body element, the unwrapped SNS payload, or <see langword="null"/> when the body is absent.</returns>
     public JsonElement? GetJsonElement(JsonSerializerOptions options)
     {
         if (_message.Body == null)

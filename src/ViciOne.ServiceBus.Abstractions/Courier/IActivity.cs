@@ -1,10 +1,8 @@
 namespace ViciOne.ServiceBus.Courier;
 
-/// <summary>
-/// An Activity implements the execute and compensate methods for an activity
-/// </summary>
-/// <typeparam name="TArguments">The activity argument type</typeparam>
-/// <typeparam name="TLog">The activity log argument type</typeparam>
+/// <summary>An Activity implements the execute and compensate methods for an activity.</summary>
+/// <typeparam name="TArguments">The activity argument type.</typeparam>
+/// <typeparam name="TLog">The activity log argument type.</typeparam>
 public interface IActivity<in TArguments, in TLog> :
     IExecuteActivity<TArguments>,
     ICompensateActivity<TLog>,
@@ -18,7 +16,7 @@ public interface IActivity<in TArguments, in TLog> :
 /// <summary>
 /// Marker interface used to assist identification in IoC containers.
 /// Not to be used directly as it does not contain the message type of the
-/// consumer
+/// consumer.
 /// </summary>
 /// <remarks>
 /// Not to be used directly by application code, for internal reflection only

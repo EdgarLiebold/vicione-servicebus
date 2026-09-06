@@ -11,10 +11,8 @@ using ViciOne.ServiceBus.SignalR.Utils;
 
 namespace ViciOne.ServiceBus.SignalR;
 
-/// <summary>
-/// Provides a vici one service bus hub lifetime manager implementation.
-/// </summary>
-/// <typeparam name="THub">The t hub type.</typeparam>
+/// <summary>Manages vici one service bus hub lifetime.</summary>
+/// <typeparam name="THub">The hub type.</typeparam>
 public class ViciOneServiceBusHubLifetimeManager<THub> :
     HubLifetimeManager<THub>
     where THub : Hub
@@ -23,12 +21,10 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
     readonly IHubProtocolResolver _resolver;
     readonly IHubLifetimeScopeProvider _scopeProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <param name="scopeProvider">The scope provider value.</param>
-    /// <param name="resolver">The resolver value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="scopeProvider">The scope provider.</param>
+    /// <param name="resolver">The resolver.</param>
     public ViciOneServiceBusHubLifetimeManager(HubLifetimeManagerOptions<THub> options, IHubLifetimeScopeProvider scopeProvider, IHubProtocolResolver resolver)
     {
         ArgumentNullException.ThrowIfNull(options);
@@ -40,28 +36,18 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
 
     IReadOnlyList<IHubProtocol> Protocols => _resolver.AllProtocols;
 
-    /// <summary>
-    /// Gets the server name value.
-    /// </summary>
+    /// <summary>Gets the server name.</summary>
     public string ServerName => _options.ServerName;
-    /// <summary>
-    /// Gets the connections value.
-    /// </summary>
+    /// <summary>Gets the connections.</summary>
     public HubConnectionStore Connections => _options.ConnectionStore;
-    /// <summary>
-    /// Gets the groups value.
-    /// </summary>
+    /// <summary>Gets the groups.</summary>
     public ViciOneServiceBusSubscriptionManager Groups => _options.GroupsSubscriptionManager;
-    /// <summary>
-    /// Gets the users value.
-    /// </summary>
+    /// <summary>Gets the users.</summary>
     public ViciOneServiceBusSubscriptionManager Users => _options.UsersSubscriptionManager;
 
-    /// <summary>
-    /// Performs the on connected operation.
-    /// </summary>
-    /// <param name="connection">The connection value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Handles the notification for connected.</summary>
+    /// <param name="connection">The connection.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override Task OnConnectedAsync(HubConnectionContext connection)
     {
         var feature = new ViciOneServiceBusFeature();
@@ -74,23 +60,20 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the on disconnected operation.
-    /// </summary>
-    /// <param name="connection">The connection value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Handles the notification for disconnected.</summary>
+    /// <param name="connection">The connection.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override Task OnDisconnectedAsync(HubConnectionContext connection)
     {
         Connections.Remove(connection);
         if (!string.IsNullOrEmpty(connection.UserIdentifier))
             Users.RemoveSubscription(connection.UserIdentifier, connection);
 
-        // Also unsubscribe from any groups
+        // Disconnecting removes every local group subscription owned by this connection.
         ConcurrentHashSet<string>? groups = connection.Features.Get<IViciOneServiceBusFeature>()?.Groups;
 
         if (groups != null)
         {
-            // Removes connection from all groups locally
             foreach (var groupName in groups.ToArray())
                 RemoveGroupCore(connection, groupName);
         }
@@ -98,13 +81,11 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Sends all.
-    /// </summary>
-    /// <param name="methodName">The method name value.</param>
-    /// <param name="args">The args value.</param>
+    /// <summary>Sends all.</summary>
+    /// <param name="methodName">The method name.</param>
+    /// <param name="args">The args.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task SendAllAsync(string methodName, object?[] args, CancellationToken cancellationToken = default)
     {
         await using IHubLifetimeScope<THub> scope = _scopeProvider.CreateScope<THub>();
@@ -113,14 +94,12 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
             new { Messages = Protocols.ToProtocolDictionary(methodName, args) }, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends all except.
-    /// </summary>
-    /// <param name="methodName">The method name value.</param>
-    /// <param name="args">The args value.</param>
-    /// <param name="excludedConnectionIds">The excluded connection ids value.</param>
+    /// <summary>Sends all except.</summary>
+    /// <param name="methodName">The method name.</param>
+    /// <param name="args">The args.</param>
+    /// <param name="excludedConnectionIds">The excluded connection ids.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task SendAllExceptAsync(string methodName, object?[] args, IReadOnlyList<string> excludedConnectionIds,
         CancellationToken cancellationToken = default)
     {
@@ -133,25 +112,21 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         }, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends connection.
-    /// </summary>
-    /// <param name="connectionId">The connection id value.</param>
-    /// <param name="methodName">The method name value.</param>
-    /// <param name="args">The args value.</param>
+    /// <summary>Sends connection.</summary>
+    /// <param name="connectionId">The connection id.</param>
+    /// <param name="methodName">The method name.</param>
+    /// <param name="args">The args.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task SendConnectionAsync(string connectionId, string methodName, object?[] args, CancellationToken cancellationToken = default)
     {
         if (connectionId == null)
             throw new ArgumentNullException(nameof(connectionId));
 
-        // If the connection is local we can skip sending the message through the bus since we require sticky connections.
-        // This also saves serializing and deserializing the message!
+        // Sticky connections permit direct delivery when this server owns the connection.
         var connection = Connections[connectionId];
         if (connection != null)
         {
-            // Connection is local, so we can skip publish
             await connection.WriteAsync(new InvocationMessage(methodName, args), cancellationToken).AsTask();
             return;
         }
@@ -166,14 +141,12 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
             cancellationToken);
     }
 
-    /// <summary>
-    /// Sends connections.
-    /// </summary>
-    /// <param name="connectionIds">The connection ids value.</param>
-    /// <param name="methodName">The method name value.</param>
-    /// <param name="args">The args value.</param>
+    /// <summary>Sends connections.</summary>
+    /// <param name="connectionIds">The connection ids.</param>
+    /// <param name="methodName">The method name.</param>
+    /// <param name="args">The args.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task SendConnectionsAsync(IReadOnlyList<string> connectionIds, string methodName, object?[] args,
         CancellationToken cancellationToken = default)
     {
@@ -196,14 +169,12 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         }
     }
 
-    /// <summary>
-    /// Sends group.
-    /// </summary>
-    /// <param name="groupName">The group name value.</param>
-    /// <param name="methodName">The method name value.</param>
-    /// <param name="args">The args value.</param>
+    /// <summary>Sends group.</summary>
+    /// <param name="groupName">The group name.</param>
+    /// <param name="methodName">The method name.</param>
+    /// <param name="args">The args.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task SendGroupAsync(string groupName, string methodName, object?[] args, CancellationToken cancellationToken = default)
     {
         if (groupName == null)
@@ -219,15 +190,13 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
             cancellationToken);
     }
 
-    /// <summary>
-    /// Sends group except.
-    /// </summary>
-    /// <param name="groupName">The group name value.</param>
-    /// <param name="methodName">The method name value.</param>
-    /// <param name="args">The args value.</param>
-    /// <param name="excludedConnectionIds">The excluded connection ids value.</param>
+    /// <summary>Sends group except.</summary>
+    /// <param name="groupName">The group name.</param>
+    /// <param name="methodName">The method name.</param>
+    /// <param name="args">The args.</param>
+    /// <param name="excludedConnectionIds">The excluded connection ids.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task SendGroupExceptAsync(string groupName, string methodName, object?[] args, IReadOnlyList<string> excludedConnectionIds,
         CancellationToken cancellationToken = default)
     {
@@ -244,14 +213,12 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         }, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends groups.
-    /// </summary>
-    /// <param name="groupNames">The group names value.</param>
-    /// <param name="methodName">The method name value.</param>
-    /// <param name="args">The args value.</param>
+    /// <summary>Sends groups.</summary>
+    /// <param name="groupNames">The group names.</param>
+    /// <param name="methodName">The method name.</param>
+    /// <param name="args">The args.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task SendGroupsAsync(IReadOnlyList<string> groupNames, string methodName, object?[] args,
         CancellationToken cancellationToken = default)
     {
@@ -274,14 +241,12 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         }
     }
 
-    /// <summary>
-    /// Sends user.
-    /// </summary>
-    /// <param name="userId">The user id value.</param>
-    /// <param name="methodName">The method name value.</param>
-    /// <param name="args">The args value.</param>
+    /// <summary>Sends user.</summary>
+    /// <param name="userId">The user id.</param>
+    /// <param name="methodName">The method name.</param>
+    /// <param name="args">The args.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task SendUserAsync(string userId, string methodName, object?[] args, CancellationToken cancellationToken = default)
     {
         await using IHubLifetimeScope<THub> scope = _scopeProvider.CreateScope<THub>();
@@ -293,14 +258,12 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         }, cancellationToken);
     }
 
-    /// <summary>
-    /// Sends users.
-    /// </summary>
-    /// <param name="userIds">The user ids value.</param>
-    /// <param name="methodName">The method name value.</param>
-    /// <param name="args">The args value.</param>
+    /// <summary>Sends users.</summary>
+    /// <param name="userIds">The user ids.</param>
+    /// <param name="methodName">The method name.</param>
+    /// <param name="args">The args.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task SendUsersAsync(IReadOnlyList<string> userIds, string methodName, object?[] args,
         CancellationToken cancellationToken = default)
     {
@@ -322,13 +285,11 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         }
     }
 
-    /// <summary>
-    /// Adds to group to the configuration.
-    /// </summary>
-    /// <param name="connectionId">The connection id value.</param>
-    /// <param name="groupName">The group name value.</param>
+    /// <summary>Adds to group to the configuration.</summary>
+    /// <param name="connectionId">The connection id.</param>
+    /// <param name="groupName">The group name.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task AddToGroupAsync(string connectionId, string groupName, CancellationToken cancellationToken = default)
     {
         if (connectionId == null)
@@ -340,13 +301,13 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         var connection = Connections[connectionId];
         if (connection != null)
         {
-            // short circuit if connection is on this server
+            // Local ownership makes the group update immediately authoritative.
             AddGroupCore(connection, groupName);
 
             return;
         }
 
-        // Publish to ViciOne.ServiceBus group management instead, but it waits for an ack...
+        // Remote ownership requires an acknowledged group-management request.
         await using IHubLifetimeScope<THub> scope = _scopeProvider.CreateScope<THub>();
         try
         {
@@ -365,18 +326,16 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         }
         catch (RequestTimeoutException e)
         {
-            // That's okay, just log and swallow
+            // A missing acknowledgement is non-fatal because connection ownership may have ended.
             LogContext.Warning?.Log(e, "GroupManagement<THub> add ack timed out.", e);
         }
     }
 
-    /// <summary>
-    /// Performs the remove from group operation.
-    /// </summary>
-    /// <param name="connectionId">The connection id value.</param>
-    /// <param name="groupName">The group name value.</param>
+    /// <summary>Removes from group.</summary>
+    /// <param name="connectionId">The connection id.</param>
+    /// <param name="groupName">The group name.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task RemoveFromGroupAsync(string connectionId, string groupName, CancellationToken cancellationToken = default)
     {
         if (connectionId == null)
@@ -388,13 +347,13 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         var connection = Connections[connectionId];
         if (connection != null)
         {
-            // short circuit if connection is on this server
+            // Local ownership makes the group update immediately authoritative.
             RemoveGroupCore(connection, groupName);
 
             return;
         }
 
-        // Publish to ViciOne.ServiceBus group management instead, but it waits for an ack...
+        // Remote ownership requires an acknowledged group-management request.
         await using IHubLifetimeScope<THub> scope = _scopeProvider.CreateScope<THub>();
         try
         {
@@ -413,16 +372,14 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         }
         catch (RequestTimeoutException e)
         {
-            // That's okay, just log and swallow
+            // A missing acknowledgement is non-fatal because connection ownership may have ended.
             LogContext.Warning?.Log(e, "GroupManagement<THub> remove ack timed out.", e);
         }
     }
 
-    /// <summary>
-    /// Adds the connection to the named group in local connection state.
-    /// </summary>
-    /// <param name="connection">The connection value.</param>
-    /// <param name="groupName">The group name value.</param>
+    /// <summary>Adds the connection to the named group in local connection state.</summary>
+    /// <param name="connection">The connection.</param>
+    /// <param name="groupName">The group name.</param>
     public void AddGroupCore(HubConnectionContext connection, string groupName)
     {
         var feature = connection.Features.Get<IViciOneServiceBusFeature>()
@@ -432,11 +389,9 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         Groups.AddSubscription(groupName, connection);
     }
 
-    /// <summary>
-    /// Removes the connection from the named group in local connection state.
-    /// </summary>
-    /// <param name="connection">The connection value.</param>
-    /// <param name="groupName">The group name value.</param>
+    /// <summary>Removes the connection from the named group in local connection state.</summary>
+    /// <param name="connection">The connection.</param>
+    /// <param name="groupName">The group name.</param>
     public void RemoveGroupCore(HubConnectionContext connection, string groupName)
     {
         Groups.RemoveSubscription(groupName, connection);

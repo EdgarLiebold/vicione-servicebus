@@ -3,28 +3,22 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides a future state map implementation.
-/// </summary>
+/// <summary>Maps persisted future state, including JSON-owned collections and optional row-version concurrency.</summary>
 public class FutureStateMap :
     SagaClassMap<FutureState>
 {
     readonly bool _optimistic;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="optimistic">The optimistic value.</param>
+    /// <summary>Initializes a future-state mapping with the selected concurrency model.</summary>
+    /// <param name="optimistic"><see langword="true"/> to map <c>RowVersion</c>; otherwise it is ignored.</param>
     public FutureStateMap(bool optimistic)
     {
         _optimistic = optimistic;
     }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="entity">The entity value.</param>
-    /// <param name="model">The model value.</param>
+    /// <summary>Configures future-state scalar, JSON, and concurrency properties.</summary>
+    /// <param name="entity">The future-state entity builder.</param>
+    /// <param name="model">The containing EF Core model builder.</param>
     protected override void Configure(EntityTypeBuilder<FutureState> entity, ModelBuilder model)
     {
         entity.Property(x => x.CurrentState);

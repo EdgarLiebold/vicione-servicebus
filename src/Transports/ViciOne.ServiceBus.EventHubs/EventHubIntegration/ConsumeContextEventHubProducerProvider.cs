@@ -7,32 +7,26 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides a consume context event hub producer provider implementation.
-/// </summary>
+/// <summary>Wraps Event Hubs producers so produced messages inherit headers from a consumed message.</summary>
 public class ConsumeContextEventHubProducerProvider :
     IEventHubProducerProvider
 {
     readonly ConsumeContext _consumeContext;
     readonly IEventHubProducerProvider _provider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    /// <param name="consumeContext">The consume context value.</param>
+    /// <summary>Creates a consume-context-aware wrapper over an existing producer provider.</summary>
+    /// <param name="provider">The underlying Event Hubs producer provider.</param>
+    /// <param name="consumeContext">The consume context whose headers are transferred during production.</param>
     public ConsumeContextEventHubProducerProvider(IEventHubProducerProvider provider, ConsumeContext consumeContext)
     {
         _provider = provider;
         _consumeContext = consumeContext;
     }
 
-    /// <summary>
-    /// Gets producer.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets a producer wrapper that transfers this provider's consume-context headers.</summary>
+    /// <param name="address">The Event Hubs endpoint address.</param>
+    /// <param name="cancellationToken">Cancels underlying producer resolution.</param>
+    /// <returns>A task whose result is the consume-context-aware producer.</returns>
     public Task<IEventHubProducer> GetProducerAsync(Uri address, CancellationToken cancellationToken = default)
     {
         Task<IEventHubProducer> producerTask = _provider.GetProducerAsync(address, cancellationToken: cancellationToken);
@@ -40,11 +34,9 @@ public class ConsumeContextEventHubProducerProvider :
         return Task.FromResult(producer);
     }
 
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a send observer to the underlying provider.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _provider.ConnectSendObserver(observer);

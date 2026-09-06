@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a send endpoint provider implementation.
-/// </summary>
+/// <summary>Provides send endpoint services.</summary>
 public class SendEndpointProvider :
     ISendEndpointProvider,
     IMessageRouteProvider,
@@ -18,13 +16,11 @@ public class SendEndpointProvider :
     readonly ISendTransportProvider _provider;
     readonly ISendPipe _sendPipe;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    /// <param name="observers">The observers value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="sendPipe">The send pipe value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="observers">The observers.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="sendPipe">The send pipe.</param>
     public SendEndpointProvider(ISendTransportProvider provider, SendObservable observers, ReceiveEndpointContext context, ISendPipe sendPipe)
     {
         _provider = provider;
@@ -36,12 +32,10 @@ public class SendEndpointProvider :
         _cache = new SendEndpointCache<Uri>();
     }
 
-    /// <summary>
-    /// Gets send endpoint.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Gets send endpoint.</summary>
+    /// <param name="address">The address.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
         address = _provider.NormalizeAddress(address);
@@ -51,20 +45,16 @@ public class SendEndpointProvider :
 
     IMessageRouteTable IMessageRouteProvider.MessageRoutes => _context.MessageRoutes;
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         return _cache.DisposeAsync();
     }
 
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects send observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _observers.Connect(observer);

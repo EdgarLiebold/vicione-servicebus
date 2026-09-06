@@ -7,11 +7,9 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.Factories;
 
-/// <summary>
-/// Provides a message initializer factory implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Creates message initializer instances.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class MessageInitializerFactory<TMessage, TInput> :
     IMessageInitializerFactory<TMessage>
     where TMessage : class
@@ -20,30 +18,24 @@ public class MessageInitializerFactory<TMessage, TInput> :
     readonly IInitializerConvention[] _conventions;
     readonly IMessageFactory<TMessage>? _messageFactory = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="conventions">The conventions value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="conventions">The conventions.</param>
     public MessageInitializerFactory(IInitializerConvention[] conventions)
     {
         _conventions = conventions;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageFactory">The message factory value.</param>
-    /// <param name="conventions">The conventions value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="messageFactory">The message factory.</param>
+    /// <param name="conventions">The conventions.</param>
     public MessageInitializerFactory(IMessageFactory<TMessage>? messageFactory, IInitializerConvention[] conventions)
     {
         _messageFactory = messageFactory;
         _conventions = conventions;
     }
 
-    /// <summary>
-    /// Creates message initializer.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates message initializer.</summary>
+    /// <returns>The created message initializer.</returns>
     public IMessageInitializer<TMessage> CreateMessageInitializer()
     {
         var builder = new MessageInitializerBuilder<TMessage, TInput>(_messageFactory);

@@ -3,12 +3,10 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a faulted send activity implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TException">The t exception type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Executes the faulted send activity.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TException">The exception handled by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class FaultedSendActivity<TSaga, TException, TMessage> :
     IStateMachineActivity<TSaga>
     where TSaga : class, SagaStateMachineInstance
@@ -18,11 +16,9 @@ public class FaultedSendActivity<TSaga, TException, TMessage> :
     readonly DestinationAddressProvider<TSaga> _destinationAddressProvider;
     readonly ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, TMessage> _messageFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="destinationAddressProvider">The destination address provider value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="destinationAddressProvider">The destination address provider.</param>
+    /// <param name="messageFactory">The message factory.</param>
     public FaultedSendActivity(DestinationAddressProvider<TSaga> destinationAddressProvider,
         ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, TMessage> messageFactory)
     {
@@ -30,55 +26,45 @@ public class FaultedSendActivity<TSaga, TException, TMessage> :
         _messageFactory = messageFactory;
     }
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="inspector">The inspector value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="inspector">The inspector.</param>
     public void Accept(StateMachineVisitor inspector)
     {
         inspector.Visit(this);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateScope("send-faulted");
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         return next.ExecuteAsync(context);
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
         return next.ExecuteAsync(context);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
         where T : Exception
     {
@@ -88,14 +74,12 @@ public class FaultedSendActivity<TSaga, TException, TMessage> :
         await next.FaultedAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TOtherException">The t other exception type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TOtherException">The other exception type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task FaultedAsync<T, TOtherException>(BehaviorExceptionContext<TSaga, T, TOtherException> context, IBehavior<TSaga, T> next)
         where T : class
         where TOtherException : Exception
@@ -117,13 +101,11 @@ public class FaultedSendActivity<TSaga, TException, TMessage> :
 }
 
 
-/// <summary>
-/// Provides a faulted send activity implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TData">The t data type.</typeparam>
-/// <typeparam name="TException">The t exception type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Executes the faulted send activity.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TData">The data type.</typeparam>
+/// <typeparam name="TException">The exception handled by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class FaultedSendActivity<TSaga, TData, TException, TMessage> :
     IStateMachineActivity<TSaga, TData>
     where TSaga : class, SagaStateMachineInstance
@@ -134,11 +116,9 @@ public class FaultedSendActivity<TSaga, TData, TException, TMessage> :
     readonly DestinationAddressProvider<TSaga, TData> _destinationAddressProvider;
     readonly ContextMessageFactory<BehaviorExceptionContext<TSaga, TData, TException>, TMessage> _messageFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="destinationAddressProvider">The destination address provider value.</param>
-    /// <param name="messageFactory">The message factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="destinationAddressProvider">The destination address provider.</param>
+    /// <param name="messageFactory">The message factory.</param>
     public FaultedSendActivity(DestinationAddressProvider<TSaga, TData> destinationAddressProvider,
         ContextMessageFactory<BehaviorExceptionContext<TSaga, TData, TException>, TMessage> messageFactory)
     {
@@ -146,42 +126,34 @@ public class FaultedSendActivity<TSaga, TData, TException, TMessage> :
         _messageFactory = messageFactory;
     }
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="inspector">The inspector value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="inspector">The inspector.</param>
     public void Accept(StateMachineVisitor inspector)
     {
         inspector.Visit(this);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateScope("send-faulted");
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
     {
         return next.ExecuteAsync(context);
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, TData, T> context, IBehavior<TSaga, TData> next)
         where T : Exception
     {

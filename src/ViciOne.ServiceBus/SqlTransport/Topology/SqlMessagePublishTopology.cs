@@ -6,10 +6,8 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>
-/// Provides a sql message publish topology implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Defines the topology for sql message publish.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class SqlMessagePublishTopology<TMessage> :
     MessagePublishTopology<TMessage>,
     ISqlMessagePublishTopologyConfigurator<TMessage>
@@ -18,11 +16,9 @@ public class SqlMessagePublishTopology<TMessage> :
     readonly List<ISqlMessagePublishTopology> _implementedMessageTypes;
     readonly SqlTopicConfigurator _topic;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="publishTopology">The publish topology value.</param>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="publishTopology">The publish topology.</param>
+    /// <param name="messageTopology">The message topology.</param>
     public SqlMessagePublishTopology(ISqlPublishTopology publishTopology, IMessageTopology<TMessage> messageTopology)
         : base(publishTopology)
     {
@@ -33,15 +29,11 @@ public class SqlMessagePublishTopology<TMessage> :
         _implementedMessageTypes = new List<ISqlMessagePublishTopology>();
     }
 
-    /// <summary>
-    /// Gets the topic value.
-    /// </summary>
+    /// <summary>Gets the topic.</summary>
     public Topic Topic => _topic;
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPublishEndpointBrokerTopologyBuilder builder)
     {
         if (Exclude)
@@ -58,11 +50,9 @@ public class SqlMessagePublishTopology<TMessage> :
             configurator.Apply(builder);
     }
 
-    /// <summary>
-    /// Attempts to get publish address.
-    /// </summary>
-    /// <param name="baseAddress">The base address value.</param>
-    /// <param name="publishAddress">The publish address value.</param>
+    /// <summary>Attempts to get publish address.</summary>
+    /// <param name="baseAddress">The base address.</param>
+    /// <param name="publishAddress">Receives the publish address produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool TryGetPublishAddress(Uri baseAddress, [NotNullWhen(true)] out Uri? publishAddress)
     {
@@ -70,10 +60,8 @@ public class SqlMessagePublishTopology<TMessage> :
         return true;
     }
 
-    /// <summary>
-    /// Gets broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets broker topology.</summary>
+    /// <returns>The broker topology.</returns>
     public BrokerTopology GetBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder();
@@ -83,22 +71,18 @@ public class SqlMessagePublishTopology<TMessage> :
         return builder.BuildBrokerTopology();
     }
 
-    /// <summary>
-    /// Gets send settings.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets send settings.</summary>
+    /// <param name="hostAddress">The host address.</param>
+    /// <returns>The send settings.</returns>
     public SendSettings GetSendSettings(Uri hostAddress)
     {
         return new QueueSendSettings(_topic.GetEndpointAddress(hostAddress));
     }
 
-    /// <summary>
-    /// Adds implemented message configurator to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="direct">The direct value.</param>
+    /// <summary>Adds implemented message configurator to the configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="direct">The direct.</param>
     public void AddImplementedMessageConfigurator<T>(ISqlMessagePublishTopologyConfigurator<T> configurator, bool direct)
         where T : class
     {

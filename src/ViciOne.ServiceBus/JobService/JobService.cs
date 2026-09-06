@@ -13,9 +13,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.JobService;
 
-/// <summary>
-/// Provides a job service implementation.
-/// </summary>
+/// <summary>Provides the job service.</summary>
 public class JobService :
     IJobService
 {
@@ -52,10 +50,8 @@ public class JobService :
     /// <summary>Guarded by <see cref="_admission" />; never read outside it.</summary>
     bool _stopping;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="settings">The settings that control the operation.</param>
     public JobService(JobServiceSettings settings)
     {
         Settings = settings ?? throw new ArgumentNullException(nameof(settings));
@@ -65,33 +61,25 @@ public class JobService :
         _jobCompletions = new PendingTaskCollection(16);
     }
 
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the settings.</summary>
     public JobServiceSettings Settings { get; }
 
-    /// <summary>
-    /// Gets the instance address value.
-    /// </summary>
+    /// <summary>Gets the instance address.</summary>
     public Uri InstanceAddress => Settings.InstanceAddress
         ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Job service", "unknown", "The job service instance address must be configured before the service is used.", "Correct the named configuration before starting the host"));
 
-    /// <summary>
-    /// Attempts to get job.
-    /// </summary>
-    /// <param name="jobId">The job id value.</param>
-    /// <param name="jobReference">The job reference value.</param>
+    /// <summary>Attempts to get job.</summary>
+    /// <param name="jobId">The job id.</param>
+    /// <param name="jobReference">Receives the job reference produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetJob(Guid jobId, [NotNullWhen(true)] out JobHandle? jobReference)
     {
         return _jobs.TryGetValue(jobId, out jobReference);
     }
 
-    /// <summary>
-    /// Performs the try remove job operation.
-    /// </summary>
-    /// <param name="jobId">The job id value.</param>
-    /// <param name="jobHandle">The job handle value.</param>
+    /// <summary>Attempts to remove job.</summary>
+    /// <param name="jobId">The job id.</param>
+    /// <param name="jobHandle">Receives the job handle produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryRemoveJob(Guid jobId, [NotNullWhen(true)] out JobHandle? jobHandle)
     {
@@ -106,16 +94,14 @@ public class JobService :
         return false;
     }
 
-    /// <summary>
-    /// Starts job.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="job">The job value.</param>
-    /// <param name="jobPipe">The job pipe value.</param>
-    /// <param name="jobOptions">The job options value.</param>
+    /// <summary>Starts job.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="job">The job.</param>
+    /// <param name="jobPipe">The job pipe.</param>
+    /// <param name="jobOptions">The job options.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task StartJobAsync<T>(ConsumeContext<StartJob> context, T job, IPipe<ConsumeContext<T>> jobPipe, JobOptions<T> jobOptions, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -126,9 +112,8 @@ public class JobService :
 
         var jobContext = new ConsumeJobContext<T>(context, InstanceAddress, job, jobOptions);
 
-        // Admission and refusal are one decision, taken under the lock that Stop also takes. Reading a
-        // flag and registering afterwards left a window in which a stop could begin, find nothing to
-        // drain and finish, while this job was already on its way in.
+        // Admission and refusal share the lock used by Stop. No job can be admitted after shutdown
+        // begins, and every admitted job is included in the shutdown drain.
         var admitted = false;
 
         lock (_admission)
@@ -170,12 +155,10 @@ public class JobService :
         }
     }
 
-    /// <summary>
-    /// Stops the configured component.
-    /// </summary>
-    /// <param name="publishEndpoint">The publish endpoint value.</param>
+    /// <summary>Stops the configured component.</summary>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task StopAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); await _lifecycle.WaitAsync().ConfigureAwait(false);
@@ -234,14 +217,10 @@ public class JobService :
     }
 
     /// <summary>
-    /// Ends the running heartbeat and waits for it. Called only under the lifecycle gate.
-    /// <para>
-    /// Waiting is the point. A timer was disposed without waiting for the publication it had already
-    /// started, so a heartbeat could reach the broker after Stop had returned — the service announcing
-    /// itself alive after saying it had stopped. The loop owns its own publication and is awaited here,
-    /// so when this returns nothing of it is still in flight.
-    /// </para>
+    /// Cancels the running heartbeat and waits until its publication loop has finished. The lifecycle
+    /// gate is held by the caller, and no heartbeat publication remains in flight when this method returns.
     /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     async Task StopHeartbeatAsync()
     {
         var heartbeat = _heartbeat;
@@ -253,14 +232,12 @@ public class JobService :
         await heartbeat.StopAsync().ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the register job type operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="jobTypeId">The job type id value.</param>
-    /// <param name="jobTypeName">The job type name value.</param>
+    /// <summary>Registers job type.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="jobTypeId">The job type id.</param>
+    /// <param name="jobTypeName">The job type name.</param>
     public void RegisterJobType<T>(IReceiveEndpointConfigurator configurator, JobOptions<T> options, Guid jobTypeId, string jobTypeName)
         where T : class
     {
@@ -270,36 +247,30 @@ public class JobService :
         _jobTypes.Add(typeof(T), new JobTypeRegistration<T>(options, InstanceAddress, jobTypeId, jobTypeName));
     }
 
-    /// <summary>
-    /// Performs the bus started operation.
-    /// </summary>
-    /// <param name="publishEndpoint">The publish endpoint value.</param>
+    /// <summary>Notifies the component that the bus has started.</summary>
+    /// <param name="publishEndpoint">The publish endpoint.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task BusStartedAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); await _lifecycle.WaitAsync().ConfigureAwait(false);
         try
         {
-            // Whatever a previous lifecycle left behind goes first, so a successful start owns exactly
-            // one heartbeat rather than adding a second one beside an older timer.
+            // Each successful lifecycle owns exactly one heartbeat loop.
             await StopHeartbeatAsync().ConfigureAwait(false);
 
             await Task.WhenAll(_jobTypes.Values.Select(x => x.PublishConcurrentJobLimitAsync(publishEndpoint))).ConfigureAwait(false);
 
-            // Exactly one generation per successful start: the previous one is ended and awaited above,
-            // so two loops never publish side by side.
+            // Create the heartbeat only after the prior loop has stopped completely.
             _heartbeat = new Heartbeat(this, publishEndpoint, Settings.HeartbeatInterval, Settings.TimeProvider);
 
-            // Last, and only on the success path. Stop sets this and nothing cleared it again, which is
-            // what left a restarted service rejecting every job for good; clearing it before the start
-            // has actually completed would be the same defect with the sign reversed.
+            // Admission opens only after every startup action has completed successfully.
             lock (_admission)
                 _stopping = false;
         }
         catch
         {
-            // A start that did not complete leaves no running state and no live heartbeat behind.
+            // Failed startup leaves neither running state nor a live heartbeat.
             await StopHeartbeatAsync().ConfigureAwait(false);
 
             lock (_admission)
@@ -318,11 +289,9 @@ public class JobService :
         return Task.WhenAll(_jobTypes.Values.Select(x => x.PublishHeartbeatAsync(publishEndpoint)));
     }
 
-    /// <summary>
-    /// Gets job type id.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets job type id.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The job type id.</returns>
     public Guid GetJobTypeId<T>()
         where T : class
     {
@@ -332,10 +301,8 @@ public class JobService :
         throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Job service", "unknown", $"The job type was not registered: {TypeCache<T>.ShortName}", "Correct the named configuration before starting the host"));
     }
 
-    /// <summary>
-    /// Configures supervise job consumer.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Configures supervise job consumer.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public void ConfigureSuperviseJobConsumer(IReceiveEndpointConfigurator configurator)
     {
         var partition = new Middleware.Partitioner(16, new Murmur3UnsafeHashGenerator());
@@ -376,16 +343,9 @@ public class JobService :
 
 
     /// <summary>
-    /// One generation of heartbeat publication, owned by the start that created it.
+    /// Owns one cancellable heartbeat publication loop and exposes its completion to the enclosing service.
     /// <para>
-    /// A timer plus a fire-and-forget Task.Run cannot be ended: disposing the timer stops further ticks
-    /// but says nothing about the publication already running, so a heartbeat could still reach the
-    /// broker after Stop had returned. This loop holds its own cancellation and its own task, so ending
-    /// it is something that can be awaited — and Stop does await it.
-    /// </para>
-    /// <para>
-    /// The interval is a delay between publications rather than a rate, so two publications of the same
-    /// generation never overlap however slow the broker is.
+    /// The interval is a delay between publications, so publications from the same generation never overlap.
     /// </para>
     /// </summary>
     class Heartbeat

@@ -17,10 +17,8 @@ static class MediatorReceiveContext
 }
 
 
-/// <summary>
-/// Provides a mediator receive context implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Carries state for mediator receive operations.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public sealed class MediatorReceiveContext<TMessage> :
     ProxyPipeContext,
     ReceiveContext
@@ -35,16 +33,14 @@ public sealed class MediatorReceiveContext<TMessage> :
     readonly long _receiveStartedAt;
     readonly TimeProvider _timeProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="sendContext">The send context value.</param>
-    /// <param name="sendEndpointProvider">The send endpoint provider value.</param>
-    /// <param name="publishEndpointProvider">The publish endpoint provider value.</param>
-    /// <param name="publishTopology">The publish topology value.</param>
-    /// <param name="observers">The observers value.</param>
-    /// <param name="objectDeserializer">The object deserializer value.</param>
-    /// <param name="serializedBodyBytes">The measured serialized application-body length.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="sendContext">The send context.</param>
+    /// <param name="sendEndpointProvider">The send endpoint provider.</param>
+    /// <param name="publishEndpointProvider">The publish endpoint provider.</param>
+    /// <param name="publishTopology">The publish topology.</param>
+    /// <param name="observers">The observers.</param>
+    /// <param name="objectDeserializer">The object deserializer.</param>
+    /// <param name="serializedBodyBytes">The serialized body bytes.</param>
     public MediatorReceiveContext(SendContext<TMessage> sendContext, ISendEndpointProvider sendEndpointProvider,
         IPublishEndpointProvider publishEndpointProvider, IPublishTopology publishTopology, IReceiveObserver observers,
         IObjectDeserializer objectDeserializer, long serializedBodyBytes)
@@ -78,70 +74,46 @@ public sealed class MediatorReceiveContext<TMessage> :
         AddOrUpdatePayload<ConsumeContext>(() => _consumeContext, existing => _consumeContext);
     }
 
-    /// <summary>
-    /// Gets the publish topology value.
-    /// </summary>
+    /// <summary>Gets the publish topology.</summary>
     public IPublishTopology PublishTopology { get; }
 
-    /// <summary>
-    /// Gets or sets the is delivered value.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether delivered.</summary>
     public bool IsDelivered { get; internal set; }
-    /// <summary>
-    /// Gets or sets the is faulted value.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether faulted.</summary>
     public bool IsFaulted { get; private set; }
 
-    /// <summary>
-    /// Gets the publish faults value.
-    /// </summary>
+    /// <summary>Gets the publish faults.</summary>
     public bool PublishFaults => false;
-    /// <summary>
-    /// Gets the body value.
-    /// </summary>
+    /// <summary>Gets the body.</summary>
     public MessageBody Body => _messageBody;
 
-    /// <summary>
-    /// Gets the receive completed value.
-    /// </summary>
+    /// <summary>Gets the receive completed.</summary>
     public Task ReceiveCompleted => _receiveTasks.CompletedAsync(CancellationToken);
 
-    /// <summary>
-    /// Adds receive task to the configuration.
-    /// </summary>
-    /// <param name="task">The task value.</param>
+    /// <summary>Adds receive task to the configuration.</summary>
+    /// <param name="task">The task.</param>
     public void AddReceiveTask(Task task)
     {
         _receiveTasks.Add(task);
     }
 
-    /// <summary>
-    /// Gets the send endpoint provider value.
-    /// </summary>
+    /// <summary>Gets the send endpoint provider.</summary>
     public ISendEndpointProvider SendEndpointProvider { get; }
-    /// <summary>
-    /// Gets the publish endpoint provider value.
-    /// </summary>
+    /// <summary>Gets the publish endpoint provider.</summary>
     public IPublishEndpointProvider PublishEndpointProvider { get; }
 
-    /// <summary>
-    /// Gets the redelivered value.
-    /// </summary>
+    /// <summary>Gets the redelivered.</summary>
     public bool Redelivered => false;
-    /// <summary>
-    /// Gets the transport headers value.
-    /// </summary>
+    /// <summary>Gets the transport headers.</summary>
     public Headers TransportHeaders => _headers;
 
-    /// <summary>
-    /// Performs the notify consumed operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="duration">The duration value.</param>
-    /// <param name="consumerType">The consumer type value.</param>
+    /// <summary>Reports that notify has been consumed.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -152,16 +124,14 @@ public sealed class MediatorReceiveContext<TMessage> :
         return _observers.PostConsumeAsync(context, duration, consumerType);
     }
 
-    /// <summary>
-    /// Performs the notify faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="duration">The duration value.</param>
-    /// <param name="consumerType">The consumer type value.</param>
+    /// <summary>Reports that notify has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -174,12 +144,10 @@ public sealed class MediatorReceiveContext<TMessage> :
         return _observers.ConsumeFaultAsync(context, duration, consumerType, exception);
     }
 
-    /// <summary>
-    /// Performs the notify faulted operation.
-    /// </summary>
+    /// <summary>Reports that notify has faulted.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IsFaulted = true;
@@ -189,17 +157,11 @@ public sealed class MediatorReceiveContext<TMessage> :
         return _observers.ReceiveFaultAsync(this, exception);
     }
 
-    /// <summary>
-    /// Gets the elapsed time value.
-    /// </summary>
+    /// <summary>Gets the elapsed time.</summary>
     public TimeSpan ElapsedTime => _timeProvider.GetElapsedTime(_receiveStartedAt);
-    /// <summary>
-    /// Gets the input address value.
-    /// </summary>
+    /// <summary>Gets the input address.</summary>
     public Uri InputAddress => _inputAddress;
-    /// <summary>
-    /// Gets the content type value.
-    /// </summary>
+    /// <summary>Gets the content type.</summary>
     public ContentType ContentType => MediatorReceiveContext.ObjectContentType;
 
 

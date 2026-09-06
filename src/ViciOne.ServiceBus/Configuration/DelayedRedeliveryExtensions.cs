@@ -5,17 +5,16 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for delayed redelivery.
-/// </summary>
+/// <summary>Provides extension methods for delayed redelivery.</summary>
 public static class DelayedRedeliveryExtensions
 {
     /// <summary>
     /// Uses the transport's delayed-delivery capability to redeliver a message according to the
     /// configured retry policy.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseDelayedRedelivery<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<IRedeliveryConfigurator> configure)
         where T : class
     {
@@ -30,11 +29,10 @@ public static class DelayedRedeliveryExtensions
         configurator.AddPipeSpecification(retrySpecification);
     }
 
-    /// <summary>
-    /// Use the message scheduler to schedule redelivery of a specific message type based upon the retry policy.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="retryPolicy"></param>
+    /// <summary>Use the message scheduler to schedule redelivery of a specific message type based upon the retry policy.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="retryPolicy">The retry policy.</param>
     public static void UseDelayedRedelivery<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IRetryPolicy retryPolicy)
         where T : class
     {
@@ -61,8 +59,8 @@ public static class DelayedRedeliveryExtensions
     /// For all configured messages type (handlers, consumers, and sagas), configures delayed redelivery using the retry configuration specified.
     /// Redelivery is configured once for each message type, and is added prior to the consumer factory or saga repository in the pipeline.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configureRetry"></param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configureRetry">The configure retry.</param>
     public static void UseDelayedRedelivery(this IConsumePipeConfigurator configurator, Action<IRedeliveryConfigurator> configureRetry)
     {
         if (configurator == null)
@@ -74,11 +72,10 @@ public static class DelayedRedeliveryExtensions
         var observer = new DelayedRedeliveryConfigurationObserver(configurator, configureRetry);
     }
 
-    /// <summary>
-    /// Configure scheduled redelivery for the consumer, regardless of message type.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
+    /// <summary>Configure scheduled redelivery for the consumer, regardless of message type.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseDelayedRedelivery<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, Action<IRedeliveryConfigurator> configure)
         where TConsumer : class
     {
@@ -89,11 +86,10 @@ public static class DelayedRedeliveryExtensions
         configurator.ConnectConsumerConfigurationObserver(observer);
     }
 
-    /// <summary>
-    /// Configures the message retry for the handler, regardless of message type.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
+    /// <summary>Configures the message retry for the handler, regardless of message type.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseDelayedRedelivery<TMessage>(this IHandlerConfigurator<TMessage> configurator, Action<IRedeliveryConfigurator> configure)
         where TMessage : class
     {

@@ -10,9 +10,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Encrypts and authenticates complete message-data objects in a versioned AES-GCM envelope.
-/// </summary>
+/// <summary>Encrypts and authenticates complete message-data objects in a versioned AES-GCM envelope.</summary>
 internal static class AesGcmMessageDataEncryption
 {
     internal const int NonceSize = 12;

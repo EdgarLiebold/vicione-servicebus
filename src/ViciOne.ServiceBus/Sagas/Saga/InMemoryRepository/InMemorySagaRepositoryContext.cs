@@ -8,11 +8,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>
-/// Provides an in memory saga repository context implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Carries state for in memory saga repository operations.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class InMemorySagaRepositoryContext<TSaga, TMessage> :
     ConsumeContextScope<TMessage>,
     SagaRepositoryContext<TSaga, TMessage>,
@@ -25,12 +23,10 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
     readonly IndexedSagaDictionary<TSaga> _sagas;
     bool _sagasLocked;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="sagas">The sagas value.</param>
-    /// <param name="factory">The factory value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="sagas">The sagas.</param>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public InMemorySagaRepositoryContext(IndexedSagaDictionary<TSaga> sagas, ISagaConsumeContextFactory<IndexedSagaDictionary<TSaga>, TSaga> factory,
         ConsumeContext<TMessage> context)
         : base(context)
@@ -41,9 +37,7 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         _sagasLocked = true;
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         if (_sagasLocked)
@@ -53,12 +47,10 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="instance">The instance.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the add outcome.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>> AddAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); if (_sagasLocked)
@@ -83,12 +75,10 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>
-    /// Performs the insert operation.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
+    /// <summary>Inserts the supplied value.</summary>
+    /// <param name="instance">The instance.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the insert outcome.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>?> InsertAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); if (_sagasLocked)
@@ -119,12 +109,10 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
-    /// <param name="correlationId">The correlation id value.</param>
+    /// <summary>Loads the requested state.</summary>
+    /// <param name="correlationId">The correlation id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the load outcome.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); SagaInstance<TSaga>? saga;
@@ -168,34 +156,28 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         return await _factory.CreateSagaConsumeContextAsync(_sagas, _context, saga.Instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the save operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Persists the current state.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the update operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Updates the current value.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         return SaveAsync(context, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the delete operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Deletes the selected entity.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); await _sagas.MarkInUseAsync(CancellationToken).ConfigureAwait(false);
@@ -212,36 +194,30 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    /// <summary>
-    /// Performs the discard operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Discards the current value.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         return DeleteAsync(context, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the undo operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Reverts the current operation.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Creates saga consume context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="consumeContext">The consume context value.</param>
-    /// <param name="instance">The instance value.</param>
-    /// <param name="mode">The mode value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates saga consume context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="consumeContext">The consume context.</param>
+    /// <param name="instance">The instance.</param>
+    /// <param name="mode">The mode.</param>
+    /// <returns>A task that produces the created value.</returns>
     public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
         where T : class
     {
@@ -250,10 +226,8 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
 }
 
 
-/// <summary>
-/// Provides an in memory saga repository context implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Carries state for in memory saga repository operations.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class InMemorySagaRepositoryContext<TSaga> :
     BasePipeContext,
     QuerySagaRepositoryContext<TSaga>,
@@ -262,10 +236,8 @@ public class InMemorySagaRepositoryContext<TSaga> :
 {
     readonly IndexedSagaDictionary<TSaga> _sagas;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="sagas">The sagas value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="sagas">The sagas.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public InMemorySagaRepositoryContext(IndexedSagaDictionary<TSaga> sagas, CancellationToken cancellationToken)
         : base(cancellationToken)
@@ -273,12 +245,10 @@ public class InMemorySagaRepositoryContext<TSaga> :
         _sagas = sagas;
     }
 
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
-    /// <param name="correlationId">The correlation id value.</param>
+    /// <summary>Loads the requested state.</summary>
+    /// <param name="correlationId">The correlation id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the load outcome.</returns>
     public async Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); await _sagas.MarkInUseAsync(CancellationToken).ConfigureAwait(false);
@@ -302,12 +272,10 @@ public class InMemorySagaRepositoryContext<TSaga> :
         }
     }
 
-    /// <summary>
-    /// Performs the query operation.
-    /// </summary>
-    /// <param name="query">The query value.</param>
+    /// <summary>Queries the configured data source.</summary>
+    /// <param name="query">The query.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the query outcome.</returns>
     public async Task<SagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested(); List<Guid> matchingInstances = _sagas.Where(query).Select(x => x.Instance.CorrelationId).ToList();

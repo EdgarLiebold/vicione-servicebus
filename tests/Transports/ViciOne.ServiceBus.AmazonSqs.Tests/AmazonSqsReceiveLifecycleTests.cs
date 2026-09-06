@@ -197,6 +197,67 @@ public sealed class AmazonSqsReceiveLifecycleTests
             () => receiveLock.ValidateLockStatusAsync(TestContext.Current.CancellationToken));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-VISIBILITY", "settlement-links-caller-lifetime")]
+    public async Task Settlement_LinksCallerCancellationToTheProviderOperationAsync(bool faulted)
+    {
+        using var receiveLifetime = new CancellationTokenSource();
+        using var callerLifetime = new CancellationTokenSource();
+        var providerStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        CancellationToken observedToken = default;
+        QueueReceiveSettings settings = CreateSettings();
+        settings.VisibilityTimeout = 30;
+        var receiveLock = new AmazonSqsReceiveLockContext(
+            new Uri("amazonsqs://eu-central-1/orders"),
+            new Message { ReceiptHandle = "receipt" },
+            settings,
+            receiveLifetime.Token,
+            new FakeTimeProvider(StartTime),
+            (_, _, _, token) => WaitForProviderCancellationAsync(token),
+            (_, _, token) => WaitForProviderCancellationAsync(token),
+            () => false);
+
+        Task settlement = faulted
+            ? receiveLock.FaultedAsync(new InvalidOperationException("consumer failure"), callerLifetime.Token)
+            : receiveLock.CompleteAsync(callerLifetime.Token);
+        await providerStarted.Task.WaitAsync(TestContext.Current.CancellationToken);
+
+        try
+        {
+            callerLifetime.Cancel();
+            Task completed = await Task.WhenAny(settlement, Task.Delay(TimeSpan.FromMilliseconds(500), TestContext.Current.CancellationToken));
+
+            Assert.Same(settlement, completed);
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => settlement);
+            Assert.True(observedToken.IsCancellationRequested);
+        }
+        finally
+        {
+            receiveLifetime.Cancel();
+            await IgnoreCancellationAsync(settlement);
+        }
+
+        async Task WaitForProviderCancellationAsync(CancellationToken cancellationToken)
+        {
+            observedToken = cancellationToken;
+            providerStarted.TrySetResult();
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+        }
+    }
+
+    private static async Task IgnoreCancellationAsync(Task task)
+    {
+        try
+        {
+            await task;
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
     private static QueueReceiveSettings CreateSettings()
     {
         var topology = new AmazonSqsTopologyConfiguration(AmazonSqsBusFactory.CreateMessageTopology());

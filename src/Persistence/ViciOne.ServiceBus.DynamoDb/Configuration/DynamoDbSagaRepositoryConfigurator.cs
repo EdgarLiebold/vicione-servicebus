@@ -8,10 +8,8 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a dynamo db saga repository configurator implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Collects and validates Amazon DynamoDB persistence settings for one versioned saga type.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class DynamoDbSagaRepositoryConfigurator<TSaga> :
     IDynamoDbSagaRepositoryConfigurator<TSaga>,
     ISpecification
@@ -19,9 +17,7 @@ public class DynamoDbSagaRepositoryConfigurator<TSaga> :
 {
     Func<IServiceProvider, IDynamoDBContext>? _contextFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Creates a configurator with strongly consistent reads, current conversion rules, UTC retrieval, and system time.</summary>
     public DynamoDbSagaRepositoryConfigurator()
     {
         TimeProvider = TimeProvider.System;
@@ -31,39 +27,23 @@ public class DynamoDbSagaRepositoryConfigurator<TSaga> :
         Conversion = DynamoDBEntryConversion.V2;
     }
 
-    /// <summary>
-    /// Gets or sets the table name value.
-    /// </summary>
+    /// <summary>Gets or sets the Amazon DynamoDB table that stores saga documents.</summary>
     public string TableName { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the expiration value.
-    /// </summary>
+    /// <summary>Gets or sets the optional lifetime written to the saga document's time-to-live attribute.</summary>
     public TimeSpan? Expiration { get; set; }
-    /// <summary>
-    /// Gets or sets the time provider value.
-    /// </summary>
+    /// <summary>Gets or sets the time source used to calculate the expiration epoch.</summary>
     public TimeProvider TimeProvider { get; set; }
-    /// <summary>
-    /// Gets or sets the consistent read value.
-    /// </summary>
+    /// <summary>Gets or sets whether saga loads use strongly consistent reads.</summary>
     public bool ConsistentRead { get; set; }
-    /// <summary>
-    /// Gets or sets the is empty string value enabled value.
-    /// </summary>
+    /// <summary>Gets or sets whether the AWS object-persistence model accepts empty string values.</summary>
     public bool IsEmptyStringValueEnabled { get; set; }
-    /// <summary>
-    /// Gets or sets the retrieve date time in utc value.
-    /// </summary>
+    /// <summary>Gets or sets whether the AWS object-persistence model materializes <see cref="DateTime"/> values in UTC.</summary>
     public bool RetrieveDateTimeInUtc { get; set; }
-    /// <summary>
-    /// Gets or sets the conversion value.
-    /// </summary>
+    /// <summary>Gets or sets the immutable AWS SDK entry-conversion version used for persistence.</summary>
     public DynamoDBEntryConversion Conversion { get; set; }
 
-    /// <summary>
-    /// Performs the context factory operation.
-    /// </summary>
-    /// <param name="contextFactory">The context factory value.</param>
+    /// <summary>Supplies a factory that creates the Amazon DynamoDB persistence context.</summary>
+    /// <param name="contextFactory">The context factory invoked by each repository context.</param>
     public void ContextFactory(Func<IDynamoDBContext> contextFactory)
     {
         ArgumentNullException.ThrowIfNull(contextFactory);
@@ -71,19 +51,15 @@ public class DynamoDbSagaRepositoryConfigurator<TSaga> :
         _contextFactory = _ => contextFactory();
     }
 
-    /// <summary>
-    /// Performs the context factory operation.
-    /// </summary>
-    /// <param name="contextFactory">The context factory value.</param>
+    /// <summary>Supplies a service-provider-aware factory that creates the Amazon DynamoDB persistence context.</summary>
+    /// <param name="contextFactory">The factory that resolves the context from the registration service provider.</param>
     public void ContextFactory(Func<IServiceProvider, IDynamoDBContext> contextFactory)
     {
         _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_contextFactory == null)
@@ -98,10 +74,8 @@ public class DynamoDbSagaRepositoryConfigurator<TSaga> :
             yield return this.Failure("Conversion", "must be the immutable DynamoDBEntryConversion.V1 or V2 instance");
     }
 
-    /// <summary>
-    /// Performs the register operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Registers the validated Amazon DynamoDB repository services for the saga type.</summary>
+    /// <param name="configurator">The saga repository registration to update.</param>
     public void Register(ISagaRepositoryRegistrationConfigurator<TSaga> configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);

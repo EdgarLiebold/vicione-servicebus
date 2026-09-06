@@ -1,37 +1,27 @@
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides a published message filter implementation.
-/// </summary>
+/// <summary>Processes published message pipeline stages.</summary>
 public class PublishedMessageFilter
 {
     readonly PublishedMessageFilterSet _excludes = new PublishedMessageFilterSet();
     readonly PublishedMessageFilterSet _includes = new PublishedMessageFilterSet();
 
-    /// <summary>
-    /// Gets the includes value.
-    /// </summary>
+    /// <summary>Gets the includes.</summary>
     public PublishedMessageFilterSet Includes => _includes;
 
-    /// <summary>
-    /// Gets the excludes value.
-    /// </summary>
+    /// <summary>Gets the excludes.</summary>
     public PublishedMessageFilterSet Excludes => _excludes;
 
-    /// <summary>
-    /// Performs the any operation.
-    /// </summary>
-    /// <param name="element">The element value.</param>
+    /// <summary>Selects any matching value.</summary>
+    /// <param name="element">The element.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Any(IPublishedMessage element)
     {
         return _includes.Any(element) && _excludes.None(element);
     }
 
-    /// <summary>
-    /// Performs the none operation.
-    /// </summary>
-    /// <param name="element">The element value.</param>
+    /// <summary>Selects no values.</summary>
+    /// <param name="element">The element.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool None(IPublishedMessage element)
     {

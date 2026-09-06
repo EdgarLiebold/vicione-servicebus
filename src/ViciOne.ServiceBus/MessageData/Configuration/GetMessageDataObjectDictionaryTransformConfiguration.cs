@@ -7,13 +7,11 @@ using ViciOne.ServiceBus.Initializers.PropertyProviders;
 
 namespace ViciOne.ServiceBus.MessageData.Configuration;
 
-/// <summary>
-/// Provides a get message data object dictionary transform configuration implementation.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
-/// <typeparam name="TProperty">The t property type.</typeparam>
-/// <typeparam name="TKey">The t key type.</typeparam>
-/// <typeparam name="TValue">The t value type.</typeparam>
+/// <summary>Stores and validates get message data object dictionary transform configuration.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TProperty">The property type.</typeparam>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
+/// <typeparam name="TValue">The value stored by the member.</typeparam>
 public class GetMessageDataObjectDictionaryTransformConfiguration<TInput, TProperty, TKey, TValue> :
     IMessageDataTransformConfiguration<TInput>
     where TInput : class
@@ -23,12 +21,10 @@ public class GetMessageDataObjectDictionaryTransformConfiguration<TInput, TPrope
     readonly PropertyInfo _property;
     readonly GetMessageDataTransformSpecification<TValue> _transformConfigurator;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="repository">The repository value.</param>
-    /// <param name="knownTypes">The known types value.</param>
-    /// <param name="property">The property value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="repository">The repository.</param>
+    /// <param name="knownTypes">The known types.</param>
+    /// <param name="property">The property.</param>
     public GetMessageDataObjectDictionaryTransformConfiguration(IMessageDataRepository repository, IEnumerable<Type> knownTypes, PropertyInfo property)
     {
         _property = property;
@@ -36,10 +32,8 @@ public class GetMessageDataObjectDictionaryTransformConfiguration<TInput, TPrope
         _transformConfigurator = new GetMessageDataTransformSpecification<TValue>(repository, knownTypes);
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public void Apply(ITransformConfigurator<TInput> configurator)
     {
         if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TValue, TValue>? converter))

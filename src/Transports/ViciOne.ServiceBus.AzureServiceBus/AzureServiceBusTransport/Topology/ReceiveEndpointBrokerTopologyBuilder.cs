@@ -1,14 +1,10 @@
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a receive endpoint broker topology builder implementation.
-/// </summary>
+/// <summary>Builds topology for an Azure Service Bus queue receive endpoint.</summary>
 public class ReceiveEndpointBrokerTopologyBuilder :
     BrokerTopologyBuilder,
     IReceiveEndpointBrokerTopologyBuilder
 {
-    /// <summary>
-    /// Gets or sets the queue value.
-    /// </summary>
+    /// <summary>Gets or sets the receive queue handle.</summary>
     public QueueHandle Queue { get; set; } = null!;
 }

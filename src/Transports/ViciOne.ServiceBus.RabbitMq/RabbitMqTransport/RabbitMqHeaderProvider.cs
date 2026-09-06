@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq header provider implementation.
-/// </summary>
+/// <summary>Exposes AMQP properties and RabbitMQ delivery metadata through the receive-header abstraction.</summary>
 public class RabbitMqHeaderProvider :
     IHeaderProvider
 {
@@ -17,19 +15,15 @@ public class RabbitMqHeaderProvider :
 
     readonly RabbitMqBasicConsumeContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Creates a header provider over one RabbitMQ delivery.</summary>
+    /// <param name="context">The delivery metadata and AMQP properties.</param>
     public RabbitMqHeaderProvider(RabbitMqBasicConsumeContext context)
     {
         _context = context;
     }
 
-    /// <summary>
-    /// Gets all.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Enumerates transport metadata and every non-null, nonblank AMQP header.</summary>
+    /// <returns>The normalized receive headers.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
         if (!string.IsNullOrWhiteSpace(_context.Exchange))
@@ -65,12 +59,10 @@ public class RabbitMqHeaderProvider :
         }
     }
 
-    /// <summary>
-    /// Attempts to get header.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Reads an AMQP header or synthesized RabbitMQ delivery header.</summary>
+    /// <param name="key">The case-insensitive header key.</param>
+    /// <param name="value">The normalized non-null header value when present.</param>
+    /// <returns><see langword="true" /> when a usable value is available.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         if (_context.Properties.IsHeadersPresent() && _context.Properties.Headers != null

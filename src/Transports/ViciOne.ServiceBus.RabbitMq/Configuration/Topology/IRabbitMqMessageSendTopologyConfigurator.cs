@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for rabbit mq message send topology configurator.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures RabbitMQ send topology for one message contract.</summary>
+/// <typeparam name="TMessage">The message contract.</typeparam>
 public interface IRabbitMqMessageSendTopologyConfigurator<TMessage> :
     IMessageSendTopologyConfigurator<TMessage>,
     IRabbitMqMessageSendTopology<TMessage>,
@@ -13,9 +11,7 @@ public interface IRabbitMqMessageSendTopologyConfigurator<TMessage> :
 }
 
 
-/// <summary>
-/// Defines the contract for rabbit mq message send topology configurator.
-/// </summary>
+/// <summary>Configures RabbitMQ send-topology conventions for one message contract.</summary>
 public interface IRabbitMqMessageSendTopologyConfigurator :
     IMessageSendTopologyConfigurator
 {

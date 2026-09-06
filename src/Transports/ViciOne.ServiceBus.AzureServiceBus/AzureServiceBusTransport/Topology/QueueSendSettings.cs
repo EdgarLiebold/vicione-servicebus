@@ -3,27 +3,21 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a queue send settings implementation.
-/// </summary>
+/// <summary>Provides Azure Service Bus queue declaration and sender settings.</summary>
 public class QueueSendSettings :
     SendSettings,
     IServiceBusEntityConfigurator
 {
     readonly CreateQueueOptions _createQueueOptions;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="createQueueOptions">The create queue options value.</param>
+    /// <summary>Creates sender settings from Azure queue declaration options.</summary>
+    /// <param name="createQueueOptions">The queue declaration options.</param>
     public QueueSendSettings(CreateQueueOptions createQueueOptions)
     {
         _createQueueOptions = createQueueOptions;
     }
 
-    /// <summary>
-    /// Gets or sets the auto delete on idle value.
-    /// </summary>
+    /// <summary>Sets the idle interval after which the queue is deleted.</summary>
     public TimeSpan? AutoDeleteOnIdle
     {
         set
@@ -33,9 +27,7 @@ public class QueueSendSettings :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the default message time to live value.
-    /// </summary>
+    /// <summary>Sets the default time to live for messages sent to the queue.</summary>
     public TimeSpan? DefaultMessageTimeToLive
     {
         set
@@ -45,9 +37,7 @@ public class QueueSendSettings :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the enable batched operations value.
-    /// </summary>
+    /// <summary>Enables or disables broker-side batching.</summary>
     public bool? EnableBatchedOperations
     {
         set
@@ -57,23 +47,17 @@ public class QueueSendSettings :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the user metadata value.
-    /// </summary>
+    /// <summary>Sets provider metadata stored with the queue.</summary>
     public string UserMetadata
     {
         set => _createQueueOptions.UserMetadata = value;
     }
 
-    /// <summary>
-    /// Gets the entity path value.
-    /// </summary>
+    /// <summary>Gets the namespace-relative queue path.</summary>
     public string EntityPath => _createQueueOptions.Name;
 
-    /// <summary>
-    /// Gets broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds broker topology containing the destination queue.</summary>
+    /// <returns>The queue declaration topology.</returns>
     public BrokerTopology GetBrokerTopology()
     {
         var builder = new SendEndpointBrokerTopologyBuilder();

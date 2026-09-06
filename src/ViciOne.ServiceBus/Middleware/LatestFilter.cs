@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Retains the last value that was sent through the filter, usable as a source to a join pipe
-/// </summary>
+/// <summary>Retains the last value that was sent through the filter, usable as a source to a join pipe.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class LatestFilter<T> :
     IFilter<T>,
     ILatestFilter<T>
@@ -15,9 +14,7 @@ public class LatestFilter<T> :
     readonly TaskCompletionSource<bool> _hasValue;
     T _latest = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public LatestFilter()
     {
         _hasValue = new TaskCompletionSource<bool>(TaskCreationOptions.None | TaskCreationOptions.RunContinuationsAsynchronously);

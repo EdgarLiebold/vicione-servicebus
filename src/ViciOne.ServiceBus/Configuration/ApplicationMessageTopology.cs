@@ -8,18 +8,14 @@ namespace ViciOne.ServiceBus.Configuration;
 /// </summary>
 public static class ApplicationMessageTopology
 {
-    /// <summary>
-    /// Performs the exclude from consume topology operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Excludes from consume topology.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     public static void ExcludeFromConsumeTopology<T>()
     {
         GlobalTopology.MarkMessageTypeNotConsumable(typeof(T));
     }
 
-    /// <summary>
-    /// Performs the separate publish from send conventions operation.
-    /// </summary>
+    /// <summary>Uses independent conventions for publish and send topology.</summary>
     public static void SeparatePublishFromSendConventions()
     {
         GlobalTopology.SeparatePublishFromSend();

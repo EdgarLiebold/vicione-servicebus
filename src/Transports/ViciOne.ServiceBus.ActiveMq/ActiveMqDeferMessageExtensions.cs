@@ -4,20 +4,16 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides extension methods for active mq defer message.
-/// </summary>
+/// <summary>Provides broker-scheduled redelivery for messages consumed from ActiveMQ.</summary>
 public static class ActiveMqDeferMessageExtensions
 {
-    /// <summary>
-    /// Defers the message for redelivery using a delayed exchange.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="context"></param>
-    /// <param name="delay"></param>
-    /// <param name="callback"></param>
-    /// <returns></returns>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Defers the message for broker-scheduled redelivery.</summary>
+    /// <typeparam name="T">The consumed message type.</typeparam>
+    /// <param name="context">The message consumption context.</param>
+    /// <param name="delay">The delay before broker-scheduled redelivery.</param>
+    /// <param name="callback">An optional callback that configures the redelivery send context.</param>
+    /// <param name="cancellationToken">The token used to cancel scheduling.</param>
+    /// <returns>A task that completes when redelivery has been scheduled.</returns>
     public static Task DeferAsync<T>(this ConsumeContext<T> context, TimeSpan delay, Action<ConsumeContext, SendContext>? callback = null, CancellationToken cancellationToken = default)
         where T : class
     {

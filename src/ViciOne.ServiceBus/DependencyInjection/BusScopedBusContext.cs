@@ -4,10 +4,8 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>
-/// Provides a bus scoped bus context implementation.
-/// </summary>
-/// <typeparam name="TBus">The t bus type.</typeparam>
+/// <summary>Carries state for bus scoped bus operations.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 public class BusScopedBusContext<TBus> :
     ScopedBusContext
     where TBus : class, IBus
@@ -19,12 +17,10 @@ public class BusScopedBusContext<TBus> :
     IScopedClientFactory? _scopedClientFactory;
     ISendEndpointProvider? _sendEndpointProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
-    /// <param name="clientFactory">The client factory value.</param>
-    /// <param name="provider">The service provider.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="bus">The bus.</param>
+    /// <param name="clientFactory">The client factory.</param>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
     public BusScopedBusContext(TBus bus, IClientFactory clientFactory, IServiceProvider provider)
     {
         _bus = bus;
@@ -32,25 +28,19 @@ public class BusScopedBusContext<TBus> :
         _provider = provider;
     }
 
-    /// <summary>
-    /// Gets the send endpoint provider value.
-    /// </summary>
+    /// <summary>Gets the send endpoint provider.</summary>
     public ISendEndpointProvider SendEndpointProvider
     {
         get { return _sendEndpointProvider ??= new ScopedSendEndpointProvider(_bus, _provider); }
     }
 
-    /// <summary>
-    /// Gets the publish endpoint value.
-    /// </summary>
+    /// <summary>Gets the publish endpoint.</summary>
     public IPublishEndpoint PublishEndpoint
     {
         get { return _publishEndpoint ??= new PublishEndpoint(new ScopedPublishEndpointProvider(_bus, _provider)); }
     }
 
-    /// <summary>
-    /// Gets the client factory value.
-    /// </summary>
+    /// <summary>Gets the client factory.</summary>
     public IScopedClientFactory ClientFactory
     {
         get
@@ -62,9 +52,7 @@ public class BusScopedBusContext<TBus> :
 }
 
 
-/// <summary>
-/// Provides a bus scoped bus context implementation.
-/// </summary>
+/// <summary>Carries state for bus scoped bus operations.</summary>
 public class BusScopedBusContext :
     ScopedBusContext
 {
@@ -73,12 +61,10 @@ public class BusScopedBusContext :
     readonly ScopedBusContext _scopedBusContext;
     IScopedClientFactory? _scopedClientFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="scopedBusContext">The scoped bus context value.</param>
-    /// <param name="clientFactory">The client factory value.</param>
-    /// <param name="provider">The service provider.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="scopedBusContext">The scoped bus context.</param>
+    /// <param name="clientFactory">The client factory.</param>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
     public BusScopedBusContext(ScopedBusContext scopedBusContext, IClientFactory clientFactory, IServiceProvider provider)
     {
         _scopedBusContext = scopedBusContext;
@@ -86,19 +72,13 @@ public class BusScopedBusContext :
         _provider = provider;
     }
 
-    /// <summary>
-    /// Gets the send endpoint provider value.
-    /// </summary>
+    /// <summary>Gets the send endpoint provider.</summary>
     public ISendEndpointProvider SendEndpointProvider => _scopedBusContext.SendEndpointProvider;
 
-    /// <summary>
-    /// Gets the publish endpoint value.
-    /// </summary>
+    /// <summary>Gets the publish endpoint.</summary>
     public IPublishEndpoint PublishEndpoint => _scopedBusContext.PublishEndpoint;
 
-    /// <summary>
-    /// Gets the client factory value.
-    /// </summary>
+    /// <summary>Gets the client factory.</summary>
     public IScopedClientFactory ClientFactory
     {
         get

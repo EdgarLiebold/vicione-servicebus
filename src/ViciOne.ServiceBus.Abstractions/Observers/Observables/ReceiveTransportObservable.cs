@@ -3,38 +3,30 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Observables;
 
-/// <summary>
-/// Provides a receive transport observable implementation.
-/// </summary>
+/// <summary>Publishes observations for receive transport.</summary>
 public class ReceiveTransportObservable :
     Connectable<IReceiveTransportObserver>,
     IReceiveTransportObserver
 {
-    /// <summary>
-    /// Performs the ready operation.
-    /// </summary>
-    /// <param name="ready">The ready value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the component is ready.</summary>
+    /// <param name="ready">The ready.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ReadyAsync(ReceiveTransportReady ready)
     {
         return ForEachAsync(x => x.ReadyAsync(ready));
     }
 
-    /// <summary>
-    /// Performs the completed operation.
-    /// </summary>
-    /// <param name="completed">The completed value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports successful completion.</summary>
+    /// <param name="completed">The completed.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CompletedAsync(ReceiveTransportCompleted completed)
     {
         return ForEachAsync(x => x.CompletedAsync(completed));
     }
 
-    /// <summary>
-    /// Performs the faulted operation.
-    /// </summary>
-    /// <param name="faulted">The faulted value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that the operation has faulted.</summary>
+    /// <param name="faulted">The faulted.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task FaultedAsync(ReceiveTransportFaulted faulted)
     {
         return ForEachAsync(x => x.FaultedAsync(faulted));

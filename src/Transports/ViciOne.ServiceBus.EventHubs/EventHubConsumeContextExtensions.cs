@@ -2,27 +2,21 @@ using System;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides extension methods for event hub consume context.
-/// </summary>
+/// <summary>Reads Event Hubs metadata from a consume context when that metadata is available.</summary>
 public static class EventHubConsumeContextExtensions
 {
 
-    /// <summary>
-    /// Performs the offset string operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the provider-defined partition offset for the consumed Event Hubs event.</summary>
+    /// <param name="context">The consume context to inspect.</param>
+    /// <returns>The partition offset, or <see langword="null" /> when the context did not originate from Event Hubs.</returns>
     public static string? OffsetString(this ConsumeContext context)
     {
         return context.TryGetPayload(out EventHubConsumeContext? consumeContext) ? consumeContext.OffsetString : null;
     }
 
-    /// <summary>
-    /// Performs the sequence number operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the Event Hubs sequence number.</summary>
+    /// <param name="context">The consume context to inspect.</param>
+    /// <returns>The sequence number, or <see langword="null" /> when the context did not originate from Event Hubs.</returns>
     public static long? SequenceNumber(this ConsumeContext context)
     {
         return context.TryGetPayload(out EventHubConsumeContext? consumeContext) ? consumeContext.SequenceNumber : null;

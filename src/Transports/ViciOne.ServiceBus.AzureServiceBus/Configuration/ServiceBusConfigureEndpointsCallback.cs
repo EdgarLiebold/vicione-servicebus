@@ -1,10 +1,7 @@
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Represents the method that handles service bus configure endpoints callback.
-/// </summary>
-/// <param name="context">The operation context.</param>
-/// <param name="queueName">The queue name value.</param>
-/// <param name="configurator">The configurator value.</param>
-/// <returns>The result of the operation.</returns>
+/// <summary>Configures a named Azure Service Bus receive endpoint during endpoint registration.</summary>
+/// <param name="context">The registration context that resolves endpoint dependencies.</param>
+/// <param name="queueName">The namespace-relative queue name.</param>
+/// <param name="configurator">The Azure Service Bus endpoint configurator.</param>
 public delegate void ServiceBusConfigureEndpointsCallback(IRegistrationContext context, string queueName, IServiceBusReceiveEndpointConfigurator configurator);

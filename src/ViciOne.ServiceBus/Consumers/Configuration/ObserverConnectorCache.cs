@@ -2,10 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an observer connector cache implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Caches observer connector data.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class ObserverConnectorCache<TMessage> :
     IObserverConnectorCache<TMessage>
     where TMessage : class
@@ -17,9 +15,7 @@ public class ObserverConnectorCache<TMessage> :
         _connector = new Lazy<MessageObserverConnector<TMessage>>(() => new MessageObserverConnector<TMessage>());
     }
 
-    /// <summary>
-    /// Gets the connector value.
-    /// </summary>
+    /// <summary>Gets the connector.</summary>
     public static IObserverConnector<TMessage> Connector => InstanceCache.Cached.Value.Connector;
 
     IObserverConnector<TMessage> IObserverConnectorCache<TMessage>.Connector => _connector.Value;

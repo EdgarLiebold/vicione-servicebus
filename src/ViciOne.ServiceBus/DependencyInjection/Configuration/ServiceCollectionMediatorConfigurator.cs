@@ -9,20 +9,16 @@ using ViciOne.ServiceBus.Mediator;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service collection mediator configurator implementation.
-/// </summary>
+/// <summary>Configures service collection mediator.</summary>
 public class ServiceCollectionMediatorConfigurator :
     RegistrationConfigurator,
     IMediatorRegistrationConfigurator
 {
     Action<IMediatorRegistrationContext, IMediatorConfigurator> _configure = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="collection">The collection value.</param>
-    /// <param name="baseAddress">The base address value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="baseAddress">The base address.</param>
     public ServiceCollectionMediatorConfigurator(IServiceCollection collection, Uri? baseAddress)
         : base(collection, new DependencyInjectionMediatorContainerRegistrar(collection))
     {
@@ -39,10 +35,8 @@ public class ServiceCollectionMediatorConfigurator :
         AddViciOneServiceBusComponents(collection);
     }
 
-    /// <summary>
-    /// Configures mediator.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Configures mediator.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void ConfigureMediator(Action<IMediatorRegistrationContext, IMediatorConfigurator> configure)
     {
         if (configure == null)

@@ -6,19 +6,15 @@ using RabbitMQ.Client.Exceptions;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq.Middleware;
-/// <summary>
-/// A filter that uses the channel context to create a basic consumer and connect it to the channel
-/// </summary>
+/// <summary>Starts a RabbitMQ consumer, reports its lifecycle, and keeps the channel pipeline active until it completes.</summary>
 public class RabbitMqConsumerFilter :
     IFilter<ChannelContext>
 {
     readonly RabbitMqReceiveEndpointContext _context;
     string _consumerTag;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Creates the consumer filter for a receive endpoint.</summary>
+    /// <param name="context">The endpoint context that receives deliveries and lifecycle notifications.</param>
     public RabbitMqConsumerFilter(RabbitMqReceiveEndpointContext context)
     {
         _context = context;
@@ -26,20 +22,16 @@ public class RabbitMqConsumerFilter :
         _consumerTag = "";
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Participates in probing without adding provider-specific values.</summary>
+    /// <param name="context">The probe context supplied by the receive pipeline.</param>
     public void Probe(ProbeContext context)
     {
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Starts the broker consumer and waits for its completion before continuing the channel pipeline.</summary>
+    /// <param name="context">The active RabbitMQ channel context.</param>
+    /// <param name="next">The remainder of the channel pipeline.</param>
+    /// <returns>A task that completes after the consumer and remaining pipeline complete.</returns>
     public async Task SendAsync(ChannelContext context, IPipe<ChannelContext> next)
     {
         var receiveSettings = context.GetPayload<ReceiveSettings>();
@@ -56,10 +48,7 @@ public class RabbitMqConsumerFilter :
         }
         catch (OperationCanceledException)
         {
-            // A cancellation this process asked for stays a cancellation. Dressing it up as a broker
-            // answer told every layer above that the peer had closed the channel, which was never true
-            // and which the retry policy has to reason about. The channel is handed back to its owner
-            // rather than closed here, so the single disposal path still applies.
+            // Local cancellation remains cancellation and returns the channel to its single lifetime owner.
             if (context is RabbitMqChannelContext owned)
                 await owned.DisposeAsync().ConfigureAwait(false);
 

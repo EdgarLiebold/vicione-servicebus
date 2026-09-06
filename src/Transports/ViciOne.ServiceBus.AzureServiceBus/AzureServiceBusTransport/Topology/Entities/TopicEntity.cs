@@ -4,18 +4,14 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a topic entity implementation.
-/// </summary>
+/// <summary>Represents an Azure Service Bus topic declaration in broker topology.</summary>
 public class TopicEntity :
     Topic,
     TopicHandle
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="createTopicOptions">The create topic options value.</param>
+    /// <summary>Creates a topology topic from Azure declaration options.</summary>
+    /// <param name="id">The topology-local identifier.</param>
+    /// <param name="createTopicOptions">The Azure topic declaration options.</param>
     public TopicEntity(long id, CreateTopicOptions createTopicOptions)
     {
         Id = id;
@@ -23,32 +19,20 @@ public class TopicEntity :
         CreateTopicOptions = createTopicOptions;
     }
 
-    /// <summary>
-    /// Gets the name comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that considers only the Azure topic name.</summary>
     public static IEqualityComparer<TopicEntity> NameComparer { get; } = new NameEqualityComparer();
-    /// <summary>
-    /// Gets the entity comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that considers the topic name and declaration properties.</summary>
     public static IEqualityComparer<TopicEntity> EntityComparer { get; } = new TopicEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the create topic options value.
-    /// </summary>
+    /// <summary>Gets the Azure topic declaration options.</summary>
     public CreateTopicOptions CreateTopicOptions { get; }
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the topology-local identifier.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the topic value.
-    /// </summary>
+    /// <summary>Gets this entity through the read-only topic contract.</summary>
     public Topic Topic => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the topic path for diagnostics.</summary>
+    /// <returns>A diagnostic string containing the topic path.</returns>
     public override string ToString()
     {
         return string.Join(", ", new[] { $"path: {CreateTopicOptions.Name}" }.Where(x => !string.IsNullOrWhiteSpace(x)));

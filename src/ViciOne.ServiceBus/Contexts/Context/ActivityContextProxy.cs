@@ -5,18 +5,14 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>
-/// Proxies transport-independent activity execution metadata.
-/// </summary>
+/// <summary>Proxies transport-independent activity execution metadata.</summary>
 public abstract class ActivityContextProxy :
     ConsumeContextProxy,
     ActivityContext
 {
     readonly ActivityContext _activityContext;
 
-    /// <summary>
-    /// Initializes the proxy for the specified activity context.
-    /// </summary>
+    /// <summary>Initializes the proxy for the specified activity context.</summary>
     /// <param name="activityContext">The activity context.</param>
     protected ActivityContextProxy(ActivityContext activityContext)
         : base(activityContext)

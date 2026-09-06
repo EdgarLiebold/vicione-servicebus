@@ -2,38 +2,28 @@ using ViciOne.ServiceBus.ActiveMq;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Defines the contract for active mq send topology.
-/// </summary>
+/// <summary>Exposes ActiveMQ destination, error, dead-letter, and per-message send topology.</summary>
 public interface IActiveMqSendTopology :
     ISendTopology
 {
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets configurable send topology for a message type.</summary>
+    /// <typeparam name="T">The sent message type.</typeparam>
+    /// <returns>The ActiveMQ message send-topology configurator.</returns>
     new IActiveMqMessageSendTopologyConfigurator<T> GetMessageTopology<T>()
         where T : class;
 
-    /// <summary>
-    /// Gets send settings.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates queue or topic send settings for an endpoint address.</summary>
+    /// <param name="address">The parsed ActiveMQ destination address.</param>
+    /// <returns>The destination-specific send settings.</returns>
     SendSettings GetSendSettings(ActiveMqEndpointAddress address);
 
-    /// <summary>
-    /// Return the error settings for the queue
-    /// </summary>
-    /// <param name="settings"></param>
-    /// <returns></returns>
+    /// <summary>Creates error-queue settings derived from a source entity.</summary>
+    /// <param name="settings">The source entity settings.</param>
+    /// <returns>The error-destination settings.</returns>
     ErrorSettings GetErrorSettings(EntitySettings settings);
 
-    /// <summary>
-    /// Return the dead letter settings for the queue
-    /// </summary>
-    /// <param name="settings"></param>
-    /// <returns></returns>
+    /// <summary>Creates dead-letter queue settings derived from a source entity.</summary>
+    /// <param name="settings">The source entity settings.</param>
+    /// <returns>The dead-letter destination settings.</returns>
     DeadLetterSettings GetDeadLetterSettings(EntitySettings settings);
 }

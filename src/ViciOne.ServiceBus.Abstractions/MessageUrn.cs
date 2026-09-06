@@ -6,15 +6,11 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides a message urn implementation.
-/// </summary>
+/// <summary>Builds and parses canonical URNs for message contract types.</summary>
 public class MessageUrn :
     Uri
 {
-    /// <summary>
-    /// Defines the prefix value.
-    /// </summary>
+    /// <summary>Exposes the prefix used by the containing type.</summary>
     public const string Prefix = "urn:message:";
 
     static readonly ConcurrentDictionary<Type, Cached> _cache = new ConcurrentDictionary<Type, Cached>();
@@ -24,31 +20,25 @@ public class MessageUrn :
     {
     }
 
-    /// <summary>
-    /// Performs the for type operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Selects the configuration for the supplied type.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The message urn produced by the operation.</returns>
     public static MessageUrn ForType<T>()
     {
         return MessageUrnCache<T>.Urn;
     }
 
-    /// <summary>
-    /// Performs the for type string operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the canonical name for the supplied type.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The string produced by the operation.</returns>
     public static string ForTypeString<T>()
     {
         return MessageUrnCache<T>.UrnString;
     }
 
-    /// <summary>
-    /// Performs the for type operation.
-    /// </summary>
-    /// <param name="type">The type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Selects the configuration for the supplied type.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns>The message urn produced by the operation.</returns>
     public static MessageUrn ForType(Type type)
     {
         ValidateType(type);
@@ -56,11 +46,9 @@ public class MessageUrn :
         return _cache.GetOrAdd(type, ValueFactory).Urn;
     }
 
-    /// <summary>
-    /// Performs the for type string operation.
-    /// </summary>
-    /// <param name="type">The type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the canonical name for the supplied type.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns>The string produced by the operation.</returns>
     public static string ForTypeString(Type type)
     {
         ValidateType(type);
@@ -93,12 +81,10 @@ public class MessageUrn :
     }
 
 
-    /// <summary>
-    /// Deconstructs this value into its components.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="ns">The ns value.</param>
-    /// <param name="assemblyName">The assembly name value.</param>
+    /// <summary>Deconstructs this value into its components.</summary>
+    /// <param name="name">Receives the name produced by the operation.</param>
+    /// <param name="ns">Receives the ns produced by the operation.</param>
+    /// <param name="assemblyName">Receives the assembly name produced by the operation.</param>
     public void Deconstruct(out string? name, out string? ns, out string? assemblyName)
     {
         name = null;
@@ -178,12 +164,10 @@ public class MessageUrn :
         {
             var name = type.GetGenericTypeDefinition().Name;
 
-            //remove `1
+            // The CLR generic arity suffix is not part of a message URN.
             var index = name.IndexOf('`');
             if (index > 0)
                 name = name.Remove(index);
-            //
-
             sb.Append(name);
             sb.Append('[');
 

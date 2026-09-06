@@ -4,12 +4,10 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyProviders;
 
-/// <summary>
-/// Provides a property converter property provider implementation.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
-/// <typeparam name="TProperty">The t property type.</typeparam>
-/// <typeparam name="TInputProperty">The t input property type.</typeparam>
+/// <summary>Provides property converter property services.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TProperty">The property type.</typeparam>
+/// <typeparam name="TInputProperty">The input property type.</typeparam>
 public class PropertyConverterPropertyProvider<TInput, TProperty, TInputProperty> :
     IPropertyProvider<TInput, TProperty>
     where TInput : class
@@ -17,11 +15,9 @@ public class PropertyConverterPropertyProvider<TInput, TProperty, TInputProperty
     readonly IPropertyConverter<TProperty, TInputProperty> _converter;
     readonly IPropertyProvider<TInput, TInputProperty> _inputProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="converter">The converter value.</param>
-    /// <param name="inputProvider">The input provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="converter">The converter.</param>
+    /// <param name="inputProvider">The input provider.</param>
     public PropertyConverterPropertyProvider(IPropertyConverter<TProperty, TInputProperty>? converter,
         IPropertyProvider<TInput, TInputProperty>? inputProvider)
     {
@@ -35,13 +31,11 @@ public class PropertyConverterPropertyProvider<TInput, TProperty, TInputProperty
         _inputProvider = inputProvider;
     }
 
-    /// <summary>
-    /// Gets property.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Gets property.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {

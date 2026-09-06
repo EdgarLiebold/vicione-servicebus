@@ -6,17 +6,13 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides extension methods for amqp timestamp.
-/// </summary>
+/// <summary>Writes AMQP timestamps with an ISO-8601 fallback for out-of-range instants.</summary>
 public static class AmqpTimestampExtensions
 {
-    /// <summary>
-    /// Assign a dictionary key to the value of the <paramref name="timestamp" /> as an <seealso cref="AmqpTimestamp" />.
-    /// </summary>
-    /// <param name="dictionary">The dictionary</param>
-    /// <param name="key">The dictionary key</param>
-    /// <param name="timestamp">The timestamp</param>
+    /// <summary>Stores a timestamp as epoch seconds when representable, or as a round-trip string otherwise.</summary>
+    /// <param name="dictionary">The AMQP field table to update.</param>
+    /// <param name="key">The field-table key.</param>
+    /// <param name="timestamp">The instant to store.</param>
     public static void SetAmqpTimestamp(this IDictionary<string, object?> dictionary, string key, DateTimeOffset timestamp)
     {
         dictionary[key] = TryConvert(timestamp, out AmqpTimestamp? result)

@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.SqlTransport.Middleware;
 
-/// <summary>
-/// Defines the contract for configure topology context.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Exposes state for configure topology operations.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface ConfigureTopologyContext<T>
     where T : class
 {

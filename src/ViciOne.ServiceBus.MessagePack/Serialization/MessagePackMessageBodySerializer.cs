@@ -36,8 +36,7 @@ class MessagePackMessageBodySerializer :
 
         if (_envelope.Message is not null)
         {
-            // Without the internal option set this read used the global default resolver and none of the
-            // hardening, so the one path that reads a payload back was the one path that was not bounded.
+            // Overlay reads use the internal resolver so the same depth and size limits guard every payload path.
             currentMessage = InternalMessagePackResolver
                 .Deserialize<Dictionary<string, object>>((byte[])_envelope.Message);
         }
@@ -50,8 +49,7 @@ class MessagePackMessageBodySerializer :
 
         if (messageToMerge is null)
         {
-            // If we are unable to transform the message,
-            // we should not override the message.
+            // A failed projection leaves the original envelope payload intact.
             return;
         }
 

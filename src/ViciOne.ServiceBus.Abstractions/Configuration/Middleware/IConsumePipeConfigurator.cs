@@ -2,9 +2,7 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for consume pipe configurator.
-/// </summary>
+/// <summary>Configures consume pipe.</summary>
 public interface IConsumePipeConfigurator :
     IPipeConfigurator<ConsumeContext>,
     IConsumerConfigurationObserverConnector,
@@ -16,23 +14,19 @@ public interface IConsumePipeConfigurator :
     IHandlerConfigurationObserver,
     IActivityConfigurationObserver
 {
-    /// <summary>
-    /// If set to false, the transport will only be started when a connection is made to the consume pipe.
-    /// </summary>
+    /// <summary>If set to false, the transport will only be started when a connection is made to the consume pipe.</summary>
     bool AutoStart { set; }
 
-    /// <summary>
-    /// Adds a type-specific pipe specification to the consume pipe
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="specification"></param>
+    /// <summary>Adds a type-specific pipe specification to the consume pipe.</summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="specification">The specification.</param>
     void AddPipeSpecification<T>(IPipeSpecification<ConsumeContext<T>> specification)
         where T : class;
 
     /// <summary>
     /// Adds a pipe specification prior to the message type router so that a single
-    /// instance is used for all message types
+    /// instance is used for all message types.
     /// </summary>
-    /// <param name="specification"></param>
+    /// <param name="specification">The specification.</param>
     void AddPrePipeSpecification(IPipeSpecification<ConsumeContext> specification);
 }

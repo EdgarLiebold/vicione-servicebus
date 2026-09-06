@@ -3,23 +3,17 @@ using System.Text.RegularExpressions;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a rabbit mq entity name validator implementation.
-/// </summary>
+/// <summary>Validates RabbitMQ entity names against the transport's character and UTF-8 length constraints.</summary>
 public sealed partial class RabbitMqEntityNameValidator :
     IEntityNameValidator
 {
     const int MaxEntityNameBytes = 255;
 
-    /// <summary>
-    /// Gets the validator value.
-    /// </summary>
+    /// <summary>Gets the shared RabbitMQ entity-name validator.</summary>
     public static IEntityNameValidator Validator => Cached.EntityNameValidator;
 
-    /// <summary>
-    /// Performs the throw if invalid entity name operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
+    /// <summary>Throws a RabbitMQ address exception when an entity name is invalid.</summary>
+    /// <param name="name">The entity name to validate.</param>
     public void ThrowIfInvalidEntityName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -35,11 +29,9 @@ public sealed partial class RabbitMqEntityNameValidator :
         }
     }
 
-    /// <summary>
-    /// Determines whether valid entity name.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether an entity name is nonblank, no longer than 255 UTF-8 bytes, and contains only supported characters.</summary>
+    /// <param name="name">The entity name to validate.</param>
+    /// <returns><see langword="true"/> when the name satisfies every constraint; otherwise, <see langword="false"/>.</returns>
     public bool IsValidEntityName(string name)
     {
         return !string.IsNullOrWhiteSpace(name)

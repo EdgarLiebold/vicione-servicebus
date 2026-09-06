@@ -1,12 +1,8 @@
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Defines the contract for partition key consume context.
-/// </summary>
+/// <summary>Exposes state for partition key consume operations.</summary>
 public interface PartitionKeyConsumeContext
 {
-    /// <summary>
-    /// The partition key for the message (defaults to "")
-    /// </summary>
+    /// <summary>The partition key for the message (defaults to "").</summary>
     string? PartitionKey { get; }
 }

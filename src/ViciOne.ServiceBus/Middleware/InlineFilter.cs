@@ -3,20 +3,16 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides an inline filter implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Processes inline pipeline stages.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class InlineFilter<TContext> :
     IFilter<TContext>
     where TContext : class, PipeContext
 {
     readonly InlineFilterMethod<TContext> _filterMethod;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="filterMethod">The filter method value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="filterMethod">The filter method.</param>
     public InlineFilter(InlineFilterMethod<TContext> filterMethod)
     {
         _filterMethod = filterMethod;
@@ -27,12 +23,10 @@ public class InlineFilter<TContext> :
         context.CreateFilterScope("inline");
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
     public Task SendAsync(TContext context, IPipe<TContext> next)

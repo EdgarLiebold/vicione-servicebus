@@ -4,10 +4,8 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Advanced.Topology;
 
-/// <summary>
-/// Provides a message entity name formatter implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Formats message entity name values.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class MessageEntityNameFormatter<TMessage> :
     IMessageEntityNameFormatter<TMessage>
     where TMessage : class
@@ -15,10 +13,8 @@ public class MessageEntityNameFormatter<TMessage> :
     readonly IEntityNameFormatter _entityNameFormatter;
     string? _entityName;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="entityNameFormatter">The entity name formatter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="entityNameFormatter">The entity name formatter.</param>
     public MessageEntityNameFormatter(IEntityNameFormatter entityNameFormatter)
     {
         _entityNameFormatter = entityNameFormatter;
@@ -26,9 +22,7 @@ public class MessageEntityNameFormatter<TMessage> :
         InitializeEntityNameFromAttributeIfSpecified();
     }
 
-    /// <summary>
-    /// Formats and caches the entity name for <typeparamref name="TMessage"/>.
-    /// </summary>
+    /// <summary>Formats and caches the entity name for <typeparamref name="TMessage"/>.</summary>
     /// <returns>The configured entity name, or the name produced by the underlying formatter.</returns>
     public string FormatEntityName()
     {

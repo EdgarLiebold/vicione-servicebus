@@ -10,11 +10,9 @@ namespace ViciOne.ServiceBus.Providers.Persistence;
 /// </summary>
 public readonly record struct DurableSendStoreLimits
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="maximumStoredCount">The maximum stored count value.</param>
-    /// <param name="maximumStoredBytes">The maximum stored bytes value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="maximumStoredCount">The maximum stored count.</param>
+    /// <param name="maximumStoredBytes">The maximum stored bytes.</param>
     public DurableSendStoreLimits(int maximumStoredCount, long maximumStoredBytes)
     {
         if (maximumStoredCount < 1)
@@ -26,13 +24,9 @@ public readonly record struct DurableSendStoreLimits
         MaximumStoredBytes = maximumStoredBytes;
     }
 
-    /// <summary>
-    /// Gets the maximum stored count value.
-    /// </summary>
+    /// <summary>Gets the maximum stored count.</summary>
     public int MaximumStoredCount { get; }
 
-    /// <summary>
-    /// Maximum logical retained content bytes (serialized body + ServiceBus metadata) across retained records.
-    /// </summary>
+    /// <summary>Maximum logical retained content bytes (serialized body + ServiceBus metadata) across retained records.</summary>
     public long MaximumStoredBytes { get; }
 }

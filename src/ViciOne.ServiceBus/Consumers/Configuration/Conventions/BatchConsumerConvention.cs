@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a batch consumer convention implementation.
-/// </summary>
+/// <summary>Applies conventions for batch consumer.</summary>
 public class BatchConsumerConvention :
     IConsumerConvention
 {

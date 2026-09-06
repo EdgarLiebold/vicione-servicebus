@@ -3,19 +3,13 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>
-/// Defines the contract for sql receive endpoint context.
-/// </summary>
+/// <summary>Exposes state for sql receive endpoint operations.</summary>
 public interface SqlReceiveEndpointContext :
     ReceiveEndpointContext
 {
-    /// <summary>
-    /// Gets the client context supervisor value.
-    /// </summary>
+    /// <summary>Gets the client context supervisor.</summary>
     IClientContextSupervisor ClientContextSupervisor { get; }
 
-    /// <summary>
-    /// Gets the broker topology value.
-    /// </summary>
+    /// <summary>Gets the broker topology.</summary>
     BrokerTopology BrokerTopology { get; }
 }

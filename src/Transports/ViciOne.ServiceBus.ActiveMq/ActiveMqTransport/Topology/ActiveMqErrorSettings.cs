@@ -2,27 +2,21 @@ using ViciOne.ServiceBus.ActiveMq.Configuration;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides an active mq error settings implementation.
-/// </summary>
+/// <summary>Defines the ActiveMQ queue and topology used for faulted messages.</summary>
 public class ActiveMqErrorSettings :
     ActiveMqQueueBindingConfigurator,
     ErrorSettings
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="source">The source value.</param>
-    /// <param name="queueName">The queue name value.</param>
+    /// <summary>Creates error-queue settings that inherit source lifecycle behavior.</summary>
+    /// <param name="source">The source endpoint settings.</param>
+    /// <param name="queueName">The error queue name.</param>
     public ActiveMqErrorSettings(EntitySettings source, string queueName)
         : base(queueName, source.Durable, source.AutoDelete)
     {
     }
 
-    /// <summary>
-    /// Gets broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds topology containing the error queue.</summary>
+    /// <returns>The queue-only broker topology.</returns>
     public BrokerTopology GetBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder();

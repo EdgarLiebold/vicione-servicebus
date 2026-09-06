@@ -6,15 +6,10 @@ using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Provides a vici one service bus state machine implementation.
-/// </summary>
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, SagaStateMachineInstance
 {
-    /// <summary>
-    /// Provides a state machine state implementation.
-    /// </summary>
+    /// <summary>Carries state for state machine.</summary>
     public class StateMachineState :
         State<TInstance>,
         IEquatable<State>
@@ -25,13 +20,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         readonly HashSet<State<TInstance>> _subStates;
         readonly StateMachineUnhandledEventCallback<TInstance> _unhandledEventCallback;
 
-        /// <summary>
-        /// Initializes a new instance of the containing type.
-        /// </summary>
-        /// <param name="unhandledEventCallback">The unhandled event callback value.</param>
-        /// <param name="name">The name value.</param>
-        /// <param name="observer">The observer value.</param>
-        /// <param name="superState">The super state value.</param>
+        /// <summary>Initializes a new instance.</summary>
+        /// <param name="unhandledEventCallback">The unhandled event callback.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="observer">The observer to connect.</param>
+        /// <param name="superState">The super state.</param>
         public StateMachineState(StateMachineUnhandledEventCallback<TInstance> unhandledEventCallback, string name, IEventObserver<TInstance> observer,
             State<TInstance>? superState = null)
         {
@@ -58,46 +51,30 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             superState?.AddSubstate(this);
         }
 
-        /// <summary>
-        /// Determines whether this instance equals the supplied value.
-        /// </summary>
-        /// <param name="other">The other value.</param>
+        /// <summary>Determines whether this instance equals the supplied value.</summary>
+        /// <param name="other">The other.</param>
         /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
         public bool Equals(State? other)
         {
             return string.CompareOrdinal(Name, other?.Name ?? "") == 0;
         }
 
-        /// <summary>
-        /// Gets the super state value.
-        /// </summary>
+        /// <summary>Gets the super state.</summary>
         public State<TInstance>? SuperState { get; }
-        /// <summary>
-        /// Gets the name value.
-        /// </summary>
+        /// <summary>Gets the name.</summary>
         public string Name { get; }
 
-        /// <summary>
-        /// Gets the enter value.
-        /// </summary>
+        /// <summary>Gets the enter.</summary>
         public Event Enter { get; }
-        /// <summary>
-        /// Gets the leave value.
-        /// </summary>
+        /// <summary>Gets the leave.</summary>
         public Event Leave { get; }
-        /// <summary>
-        /// Gets the before enter value.
-        /// </summary>
+        /// <summary>Gets the before enter.</summary>
         public Event<State> BeforeEnter { get; }
-        /// <summary>
-        /// Gets the after leave value.
-        /// </summary>
+        /// <summary>Gets the after leave.</summary>
         public Event<State> AfterLeave { get; }
 
-        /// <summary>
-        /// Performs the accept operation.
-        /// </summary>
-        /// <param name="visitor">The visitor value.</param>
+        /// <summary>Accepts the supplied value.</summary>
+        /// <param name="visitor">The visitor.</param>
         public void Accept(StateMachineVisitor visitor)
         {
             visitor.Visit(this, _ =>
@@ -110,10 +87,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             });
         }
 
-        /// <summary>
-        /// Performs the probe operation.
-        /// </summary>
-        /// <param name="context">The operation context.</param>
+        /// <summary>Writes diagnostic information to the probe context.</summary>
+        /// <param name="context">The context associated with the operation.</param>
         public void Probe(ProbeContext context)
         {
             var scope = context.CreateScope("state");
@@ -161,7 +136,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                     }
                     catch (UnhandledEventException)
                     {
-                        // the exception is better if it's from the substate
+                        // The substate owns the more specific unhandled-event decision.
                     }
                 }
 
@@ -201,7 +176,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                     }
                     catch (UnhandledEventException)
                     {
-                        // the exception is better if it's from the substate
+                        // The substate owns the more specific unhandled-event decision.
                     }
                 }
 
@@ -225,11 +200,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             }
         }
 
-        /// <summary>
-        /// Performs the bind operation.
-        /// </summary>
-        /// <param name="event">The event value.</param>
-        /// <param name="activity">The activity value.</param>
+        /// <summary>Binds the configured entities.</summary>
+        /// <param name="event">The event.</param>
+        /// <param name="activity">The activity.</param>
         public void Bind(Event @event, IStateMachineActivity<TInstance> activity)
         {
             if (!_behaviors.TryGetValue(@event, out ActivityBehaviorBuilder<TInstance>? builder))
@@ -241,31 +214,25 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             builder.Add(activity);
         }
 
-        /// <summary>
-        /// Performs the ignore operation.
-        /// </summary>
-        /// <param name="event">The event value.</param>
+        /// <summary>Ignores the selected event or message.</summary>
+        /// <param name="event">The event.</param>
         public void Ignore(Event @event)
         {
             _ignoredEvents[@event] = new AllStateEventFilter<TInstance>();
         }
 
-        /// <summary>
-        /// Performs the ignore operation.
-        /// </summary>
-        /// <typeparam name="T">The t type.</typeparam>
-        /// <param name="event">The event value.</param>
-        /// <param name="filter">The filter value.</param>
+        /// <summary>Ignores the selected event or message.</summary>
+        /// <typeparam name="T">The value type.</typeparam>
+        /// <param name="event">The event.</param>
+        /// <param name="filter">The filter to add to the pipeline.</param>
         public void Ignore<T>(Event<T> @event, StateMachineCondition<TInstance, T> filter)
             where T : class
         {
             _ignoredEvents[@event] = new SelectedStateEventFilter<TInstance, T>(filter);
         }
 
-        /// <summary>
-        /// Adds substate to the configuration.
-        /// </summary>
-        /// <param name="subState">The sub state value.</param>
+        /// <summary>Adds substate to the configuration.</summary>
+        /// <param name="subState">The sub state.</param>
         public void AddSubstate(State<TInstance> subState)
         {
             if (subState == null)
@@ -277,36 +244,28 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _subStates.Add(subState);
         }
 
-        /// <summary>
-        /// Determines whether the current value has state.
-        /// </summary>
-        /// <param name="state">The state value.</param>
+        /// <summary>Determines whether the current value has state.</summary>
+        /// <param name="state">The state.</param>
         /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
         public bool HasState(State<TInstance> state)
         {
             return Name.Equals(state.Name) || _subStates.Any(s => s.HasState(state));
         }
 
-        /// <summary>
-        /// Determines whether state of.
-        /// </summary>
-        /// <param name="state">The state value.</param>
+        /// <summary>Determines whether state of.</summary>
+        /// <param name="state">The state.</param>
         /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
         public bool IsStateOf(State<TInstance> state)
         {
             return Name.Equals(state.Name) || (SuperState != null && SuperState.IsStateOf(state));
         }
 
-        /// <summary>
-        /// Gets the events value.
-        /// </summary>
+        /// <summary>Gets the events.</summary>
         public IEnumerable<Event> Events => SuperState != null ? SuperState.Events.Union(GetStateEvents()).Distinct() : GetStateEvents();
 
-        /// <summary>
-        /// Compares this instance with the supplied value.
-        /// </summary>
-        /// <param name="other">The other value.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Compares this instance with the supplied value.</summary>
+        /// <param name="other">The other.</param>
+        /// <returns>The int produced by the operation.</returns>
         public int CompareTo(State? other)
         {
             return other == null ? 1 : string.CompareOrdinal(Name, other.Name);
@@ -328,10 +287,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 .Distinct();
         }
 
-        /// <summary>
-        /// Determines whether this instance equals the supplied value.
-        /// </summary>
-        /// <param name="obj">The obj value.</param>
+        /// <summary>Determines whether this instance equals the supplied value.</summary>
+        /// <param name="obj">The obj.</param>
         /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object? obj)
         {
@@ -343,85 +300,69 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             return other != null && Equals(other);
         }
 
-        /// <summary>
-        /// Gets hash code.
-        /// </summary>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Gets hash code.</summary>
+        /// <returns>The hash code for this instance.</returns>
         public override int GetHashCode()
         {
             return Name?.GetHashCode() ?? 0;
         }
 
-        /// <summary>
-        /// Applies the <c>==</c> operator.
-        /// </summary>
-        /// <param name="left">The left value.</param>
-        /// <param name="right">The right value.</param>
+        /// <summary>Applies the <c>==</c> operator.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
         /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
         public static bool operator ==(State<TInstance> left, StateMachineState right)
         {
             return Equals(left, right);
         }
 
-        /// <summary>
-        /// Applies the <c>!=</c> operator.
-        /// </summary>
-        /// <param name="left">The left value.</param>
-        /// <param name="right">The right value.</param>
+        /// <summary>Applies the <c>!=</c> operator.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
         /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
         public static bool operator !=(State<TInstance> left, StateMachineState right)
         {
             return !Equals(left, right);
         }
 
-        /// <summary>
-        /// Applies the <c>==</c> operator.
-        /// </summary>
-        /// <param name="left">The left value.</param>
-        /// <param name="right">The right value.</param>
+        /// <summary>Applies the <c>==</c> operator.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
         /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
         public static bool operator ==(StateMachineState left, State<TInstance> right)
         {
             return Equals(left, right);
         }
 
-        /// <summary>
-        /// Applies the <c>!=</c> operator.
-        /// </summary>
-        /// <param name="left">The left value.</param>
-        /// <param name="right">The right value.</param>
+        /// <summary>Applies the <c>!=</c> operator.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
         /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
         public static bool operator !=(StateMachineState left, State<TInstance> right)
         {
             return !Equals(left, right);
         }
 
-        /// <summary>
-        /// Applies the <c>==</c> operator.
-        /// </summary>
-        /// <param name="left">The left value.</param>
-        /// <param name="right">The right value.</param>
+        /// <summary>Applies the <c>==</c> operator.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
         /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
         public static bool operator ==(StateMachineState left, StateMachineState right)
         {
             return Equals(left, right);
         }
 
-        /// <summary>
-        /// Applies the <c>!=</c> operator.
-        /// </summary>
-        /// <param name="left">The left value.</param>
-        /// <param name="right">The right value.</param>
+        /// <summary>Applies the <c>!=</c> operator.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
         /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
         public static bool operator !=(StateMachineState left, StateMachineState right)
         {
             return !Equals(left, right);
         }
 
-        /// <summary>
-        /// Returns the string representation of this instance.
-        /// </summary>
-        /// <returns>The result of the operation.</returns>
+        /// <summary>Returns the string representation of this instance.</summary>
+        /// <returns>The converted string.</returns>
         public override string ToString()
         {
             return $"{Name} (State)";

@@ -6,10 +6,10 @@ namespace ViciOne.ServiceBus.DependencyInjection;
 
 /// <summary>
 /// Used by Send/Publish filters to send within either a scoped endpoint/request client context or within the consume context
-/// currently active
+/// currently active.
 /// </summary>
-/// <typeparam name="TFilter"></typeparam>
-/// <typeparam name="TContext"></typeparam>
+/// <typeparam name="TFilter">The filter type.</typeparam>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class FilterScopeProvider<TFilter, TContext> :
     IFilterScopeProvider<TContext>
     where TFilter : class, IFilter<TContext>
@@ -17,29 +17,23 @@ public class FilterScopeProvider<TFilter, TContext> :
 {
     readonly IServiceProvider _serviceProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="serviceProvider">The service provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="serviceProvider">The service provider.</param>
     public FilterScopeProvider(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
 
-    /// <summary>
-    /// Performs the create operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the requested value.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The newly created instance.</returns>
     public IFilterScopeContext<TContext> Create(TContext context)
     {
         return new DependencyInjectionFilterScopeContext(context, _serviceProvider);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.Add("filter", TypeCache<TFilter>.ShortName);

@@ -2,17 +2,13 @@ using System;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides a sent message filter set implementation.
-/// </summary>
+/// <summary>Stores a unique set of sent message filter values.</summary>
 public class SentMessageFilterSet :
     FilterSet<ISentMessage>
 {
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The sent message filter set produced by the operation.</returns>
     public SentMessageFilterSet Add<T>()
         where T : class
     {
@@ -26,12 +22,10 @@ public class SentMessageFilterSet :
         return this;
     }
 
-    /// <summary>
-    /// Performs the add operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="filter">The filter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <returns>The sent message filter set produced by the operation.</returns>
     public SentMessageFilterSet Add<T>(FilterDelegate<ISentMessage<T>> filter)
         where T : class
     {

@@ -4,22 +4,18 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>
-/// Provides a base schedule message provider implementation.
-/// </summary>
+/// <summary>Provides base schedule message services.</summary>
 public abstract class BaseScheduleMessageProvider :
     IScheduleMessageProvider
 {
-    /// <summary>
-    /// Schedules send.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="destinationAddress">The destination address value.</param>
-    /// <param name="dueAt">The due at value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Schedules send.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="destinationAddress">The destination address.</param>
+    /// <param name="dueAt">The due at.</param>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the schedule send outcome.</returns>
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
@@ -41,54 +37,46 @@ public abstract class BaseScheduleMessageProvider :
             command.Destination, message);
     }
 
-    /// <summary>
-    /// Determines whether the current value can cel scheduled send.
-    /// </summary>
-    /// <param name="tokenId">The token id value.</param>
+    /// <summary>Determines whether the current value can cel scheduled send.</summary>
+    /// <param name="tokenId">The token id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CancelScheduledSendAsync(Guid tokenId, CancellationToken cancellationToken)
     {
         return CancelScheduledSendAsync(tokenId, null, cancellationToken);
     }
 
-    /// <summary>
-    /// Determines whether the current value can cel scheduled send.
-    /// </summary>
-    /// <param name="destinationAddress">The destination address value.</param>
-    /// <param name="tokenId">The token id value.</param>
+    /// <summary>Determines whether the current value can cel scheduled send.</summary>
+    /// <param name="destinationAddress">The destination address.</param>
+    /// <param name="tokenId">The token id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
     {
         return CancelScheduledSendAsync(tokenId, destinationAddress, cancellationToken);
     }
 
-    /// <summary>
-    /// Schedules send.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Schedules send.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected abstract Task ScheduleSendAsync(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Determines whether the current value can cel scheduled send.
-    /// </summary>
-    /// <param name="tokenId">The token id value.</param>
-    /// <param name="destinationAddress">The destination address value.</param>
+    /// <summary>Determines whether the current value can cel scheduled send.</summary>
+    /// <param name="tokenId">The token id.</param>
+    /// <param name="destinationAddress">The destination address.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected abstract Task CancelScheduledSendAsync(Guid tokenId, Uri? destinationAddress, CancellationToken cancellationToken);
 }
 
 
 /// <summary>
 /// For remote endpoint schedulers, used to invoke the <see cref="SendContext{T}" /> pipe and
-/// manage the ScheduledMessageId
+/// manage the ScheduledMessageId.
 /// </summary>
-/// <typeparam name="T">The message type</typeparam>
+/// <typeparam name="T">The message type.</typeparam>
 class ScheduleMessageContextPipe<T> :
     IPipe<SendContext<ScheduleMessage>>
     where T : class

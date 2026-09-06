@@ -5,19 +5,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Provides a connection context supervisor implementation.
-/// </summary>
+/// <summary>Supervises the shared Event Hubs connection context.</summary>
 public class ConnectionContextSupervisor :
     TransportPipeContextSupervisor<ConnectionContext>,
     IConnectionContextSupervisor
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostSettings">The host settings value.</param>
-    /// <param name="storageSettings">The storage settings value.</param>
-    /// <param name="configureOptions">The configure options value.</param>
+    /// <summary>Creates a connection supervisor from namespace, storage, and producer client settings.</summary>
+    /// <param name="hostSettings">The Event Hubs namespace authentication settings.</param>
+    /// <param name="storageSettings">The Blob Storage checkpoint settings carried by the connection context.</param>
+    /// <param name="configureOptions">The optional producer client options callback.</param>
     public ConnectionContextSupervisor(IHostSettings hostSettings, IStorageSettings storageSettings, Action<EventHubProducerClientOptions>? configureOptions)
         : base(new ConnectionContextFactory(hostSettings, storageSettings, configureOptions))
     {

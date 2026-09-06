@@ -2,9 +2,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Defines the contract for receive pipe.
-/// </summary>
+/// <summary>Defines the operations required by receive pipe.</summary>
 public interface IReceivePipe :
     IPipe<ReceiveContext>,
     IConsumePipeConnector,
@@ -12,8 +10,6 @@ public interface IReceivePipe :
     IConsumeMessageObserverConnector,
     IConsumeObserverConnector
 {
-    /// <summary>
-    /// Task is completed once a connection has been made to the consume pipe (any type of consumer, response handler, etc.
-    /// </summary>
+    /// <summary>Task is completed once a connection has been made to the consume pipe (any type of consumer, response handler, etc.</summary>
     Task Connected { get; }
 }

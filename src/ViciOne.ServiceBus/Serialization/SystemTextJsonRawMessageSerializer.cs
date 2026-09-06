@@ -5,28 +5,22 @@ using System.Text.Json;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a system text json raw message serializer implementation.
-/// </summary>
+/// <summary>Serializes and deserializes system text json raw message data.</summary>
 public class SystemTextJsonRawMessageSerializer :
     RawMessageSerializer,
     IMessageDeserializer,
     IMessageSerializer
 {
-    /// <summary>
-    /// Defines the json content type value.
-    /// </summary>
+    /// <summary>Exposes the json content type used by the containing type.</summary>
     public static readonly ContentType JsonContentType = new ContentType("application/json");
 
     readonly IObjectDeserializer _objectDeserializer;
     readonly JsonSerializerOptions _serializerOptions;
     readonly RawSerializerOptions _rawOptions;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="serializerOptions">The serializer options value.</param>
-    /// <param name="rawOptions">The raw options value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="serializerOptions">The serializer options.</param>
+    /// <param name="rawOptions">The raw options.</param>
     public SystemTextJsonRawMessageSerializer(JsonSerializerOptions serializerOptions, RawSerializerOptions rawOptions = RawSerializerOptions.Default)
     {
         _serializerOptions = serializerOptions ?? throw new ArgumentNullException(nameof(serializerOptions));
@@ -37,15 +31,11 @@ public class SystemTextJsonRawMessageSerializer :
         _objectDeserializer = new SystemTextJsonMessageSerializer(_serializerOptions);
     }
 
-    /// <summary>
-    /// Gets the content type value.
-    /// </summary>
+    /// <summary>Gets the content type.</summary>
     public ContentType ContentType => JsonContentType;
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("json");
@@ -53,23 +43,19 @@ public class SystemTextJsonRawMessageSerializer :
         scope.Add("provider", "System.Text.Json");
     }
 
-    /// <summary>
-    /// Performs the deserialize operation.
-    /// </summary>
-    /// <param name="receiveContext">The receive context value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deserializes the supplied payload.</summary>
+    /// <param name="receiveContext">The receive context.</param>
+    /// <returns>The deserialized value.</returns>
     public ConsumeContext Deserialize(ReceiveContext receiveContext)
     {
         return new BodyConsumeContext(receiveContext, Deserialize(receiveContext.Body, receiveContext.TransportHeaders, receiveContext.InputAddress));
     }
 
-    /// <summary>
-    /// Performs the deserialize operation.
-    /// </summary>
-    /// <param name="body">The body value.</param>
-    /// <param name="headers">The headers value.</param>
-    /// <param name="destinationAddress">The destination address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deserializes the supplied payload.</summary>
+    /// <param name="body">The body.</param>
+    /// <param name="headers">The headers.</param>
+    /// <param name="destinationAddress">The destination address.</param>
+    /// <returns>The deserialized value.</returns>
     public SerializerContext Deserialize(MessageBody body, Headers headers, Uri? destinationAddress = null)
     {
         try
@@ -103,22 +89,18 @@ public class SystemTextJsonRawMessageSerializer :
         }
     }
 
-    /// <summary>
-    /// Gets message body.
-    /// </summary>
-    /// <param name="text">The text value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message body.</summary>
+    /// <param name="text">The text.</param>
+    /// <returns>The message body.</returns>
     public MessageBody GetMessageBody(string text)
     {
         return new StringMessageBody(text);
     }
 
-    /// <summary>
-    /// Gets message body.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets message body.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The message body.</returns>
     public MessageBody GetMessageBody<T>(SendContext<T> context)
         where T : class
     {

@@ -3,39 +3,29 @@ using System.IO;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a not supported message body implementation.
-/// </summary>
+/// <summary>Carries not supported message content.</summary>
 public class NotSupportedMessageBody :
     MessageBody
 {
-    /// <summary>
-    /// Gets the length value.
-    /// </summary>
+    /// <summary>Gets the length.</summary>
     public long? Length => throw new NotSupportedException();
 
-    /// <summary>
-    /// Gets stream.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets stream.</summary>
+    /// <returns>The stream.</returns>
     public Stream GetStream()
     {
         throw new NotSupportedException();
     }
 
-    /// <summary>
-    /// Gets bytes.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets bytes.</summary>
+    /// <returns>The bytes.</returns>
     public byte[] GetBytes()
     {
         throw new NotSupportedException();
     }
 
-    /// <summary>
-    /// Gets string.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets string.</summary>
+    /// <returns>The string.</returns>
     public string GetString()
     {
         throw new NotSupportedException();

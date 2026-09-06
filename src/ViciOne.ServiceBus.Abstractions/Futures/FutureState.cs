@@ -3,9 +3,7 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Futures;
 
-/// <summary>
-/// Provides a future state implementation.
-/// </summary>
+/// <summary>Carries state for future.</summary>
 public class FutureState :
     SagaStateMachineInstance,
     IConsumerKindOwnedState,
@@ -17,37 +15,23 @@ public class FutureState :
     HashSet<FutureSubscription>? _subscriptions = new(FutureSubscription.Comparer);
     Dictionary<string, object>? _variables = new(StringComparer.OrdinalIgnoreCase);
 
-    /// <summary>
-    /// Gets or sets the current state value.
-    /// </summary>
+    /// <summary>Gets or sets the current state.</summary>
     public int CurrentState { get; set; }
 
-    /// <summary>
-    /// Gets or sets the created value.
-    /// </summary>
+    /// <summary>Gets or sets the created.</summary>
     public DateTimeOffset Created { get; set; }
-    /// <summary>
-    /// Gets or sets the completed value.
-    /// </summary>
+    /// <summary>Gets or sets the completed.</summary>
     public DateTimeOffset? Completed { get; set; }
-    /// <summary>
-    /// Gets or sets the faulted value.
-    /// </summary>
+    /// <summary>Gets or sets the faulted.</summary>
     public DateTimeOffset? Faulted { get; set; }
 
-    /// <summary>
-    /// Gets or sets the location value.
-    /// </summary>
+    /// <summary>Gets or sets the location.</summary>
     public Uri Location { get; set; } = null!;
 
-    /// <summary>
-    /// Gets or sets the command value.
-    /// </summary>
+    /// <summary>Gets or sets the command.</summary>
     public FutureMessage Command { get; set; } = null!;
 
-    /// <summary>
-    /// Gets or sets the pending value.
-    /// </summary>
+    /// <summary>Gets or sets the pending.</summary>
     public HashSet<Guid> Pending
     {
         get
@@ -63,9 +47,7 @@ public class FutureState :
         set => _pending = value;
     }
 
-    /// <summary>
-    /// Gets or sets the subscriptions value.
-    /// </summary>
+    /// <summary>Gets or sets the subscriptions.</summary>
     public HashSet<FutureSubscription> Subscriptions
     {
         get
@@ -81,9 +63,7 @@ public class FutureState :
         set => _subscriptions = value;
     }
 
-    /// <summary>
-    /// Gets or sets the variables value.
-    /// </summary>
+    /// <summary>Gets or sets the variables.</summary>
     public Dictionary<string, object> Variables
     {
         get
@@ -99,9 +79,7 @@ public class FutureState :
         set => _variables = value != null ? new Dictionary<string, object>(value, StringComparer.OrdinalIgnoreCase) : null;
     }
 
-    /// <summary>
-    /// Gets or sets the results value.
-    /// </summary>
+    /// <summary>Gets or sets the results.</summary>
     public Dictionary<Guid, FutureMessage> Results
     {
         get
@@ -117,9 +95,7 @@ public class FutureState :
         set => _results = value;
     }
 
-    /// <summary>
-    /// Gets or sets the faults value.
-    /// </summary>
+    /// <summary>Gets or sets the faults.</summary>
     public Dictionary<Guid, FutureMessage> Faults
     {
         get
@@ -135,59 +111,43 @@ public class FutureState :
         set => _faults = value;
     }
 
-    /// <summary>
-    /// Gets or sets the row version value.
-    /// </summary>
+    /// <summary>Gets or sets the row version.</summary>
     public byte[] RowVersion { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the version value.
-    /// </summary>
+    /// <summary>Gets or sets the version.</summary>
     public int Version { get; set; }
 
-    /// <summary>
-    /// Gets or sets the correlation id value.
-    /// </summary>
+    /// <summary>Gets or sets the correlation id.</summary>
     public Guid CorrelationId { get; set; }
 
-    /// <summary>
-    /// Determines whether the current value has subscriptions.
-    /// </summary>
+    /// <summary>Determines whether the current value has subscriptions.</summary>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool HasSubscriptions()
     {
         return _subscriptions != null && _subscriptions.Count > 0;
     }
 
-    /// <summary>
-    /// Determines whether the current value has variables.
-    /// </summary>
+    /// <summary>Determines whether the current value has variables.</summary>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool HasVariables()
     {
         return _variables != null && _variables.Count > 0;
     }
 
-    /// <summary>
-    /// Determines whether the current value has results.
-    /// </summary>
+    /// <summary>Determines whether the current value has results.</summary>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool HasResults()
     {
         return _results != null && _results.Count > 0;
     }
 
-    /// <summary>
-    /// Determines whether the current value has faults.
-    /// </summary>
+    /// <summary>Determines whether the current value has faults.</summary>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool HasFaults()
     {
         return _faults != null && _faults.Count > 0;
     }
 
-    /// <summary>
-    /// Determines whether the current value has pending.
-    /// </summary>
+    /// <summary>Determines whether the current value has pending.</summary>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool HasPending()
     {

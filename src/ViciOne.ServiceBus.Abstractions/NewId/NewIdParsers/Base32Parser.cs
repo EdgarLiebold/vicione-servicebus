@@ -3,9 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace ViciOne.ServiceBus.NewIdParsers;
 
-/// <summary>
-/// Provides a base32 parser implementation.
-/// </summary>
+/// <summary>Parses base32 values.</summary>
 public class Base32Parser :
     INewIdParser
 {
@@ -15,17 +13,13 @@ public class Base32Parser :
 
     readonly string _chars;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public Base32Parser()
         : this(ConvertChars)
     {
     }
 
-    /// <summary>
-    /// Creates a parser with one or more 32-character alphabets.
-    /// </summary>
+    /// <summary>Creates a parser with one or more 32-character alphabets.</summary>
     /// <param name="chars">The accepted alphabets, concatenated in 32-character groups.</param>
     /// <exception cref="ArgumentNullException"><paramref name="chars" /> is null.</exception>
     /// <exception cref="ArgumentException"><paramref name="chars" /> is not a multiple of 32 characters.</exception>
@@ -38,11 +32,9 @@ public class Base32Parser :
         _chars = chars;
     }
 
-    /// <summary>
-    /// Parses the supplied Base32 representation.
-    /// </summary>
-    /// <param name="text">The 26-character encoded identifier.</param>
-    /// <returns>The parsed identifier.</returns>
+    /// <summary>Parses the supplied Base32 representation.</summary>
+    /// <param name="text">The text.</param>
+    /// <returns>The parsed value.</returns>
     /// <exception cref="ArgumentException"><paramref name="text" /> is not a valid 26-character representation.</exception>
     public NewId Parse(ReadOnlySpan<char> text)
     {

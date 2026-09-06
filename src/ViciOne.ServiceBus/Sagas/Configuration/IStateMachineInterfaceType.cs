@@ -1,15 +1,11 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for state machine interface type.
-/// </summary>
+/// <summary>Defines the operations required by state machine interface type.</summary>
 public interface IStateMachineInterfaceType
 {
-    /// <summary>
-    /// Gets connector.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets connector.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The connector.</returns>
     ISagaMessageConnector<T> GetConnector<T>()
         where T : class, ISaga;
 }

@@ -7,13 +7,11 @@ using ViciOne.ServiceBus.Futures;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a future routing slip configurator implementation.
-/// </summary>
-/// <typeparam name="TCommand">The t command type.</typeparam>
-/// <typeparam name="TResult">The t result type.</typeparam>
-/// <typeparam name="TFault">The t fault type.</typeparam>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Configures future routing slip.</summary>
+/// <typeparam name="TCommand">The command type.</typeparam>
+/// <typeparam name="TResult">The result produced by the operation.</typeparam>
+/// <typeparam name="TFault">The fault type.</typeparam>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput> :
     FutureRoutingSlipHandle,
     IFutureRoutingSlipConfigurator<TResult, TFault, TInput>,
@@ -29,12 +27,10 @@ public class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput> :
     FutureFault<TCommand, TFault, RoutingSlipFaulted> _fault = null!;
     FutureResult<TCommand, TResult, RoutingSlipCompleted> _result = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="routingSlipCompleted">The routing slip completed value.</param>
-    /// <param name="routingSlipFaulted">The routing slip faulted value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="routingSlipCompleted">The routing slip completed.</param>
+    /// <param name="routingSlipFaulted">The routing slip faulted.</param>
     public FutureRoutingSlipConfigurator(IFutureStateMachineConfigurator configurator, Event<RoutingSlipCompleted> routingSlipCompleted,
         Event<RoutingSlipFaulted> routingSlipFaulted)
     {
@@ -47,27 +43,17 @@ public class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput> :
         OnRoutingSlipFaulted(fault => fault.SetFaultedUsingInitializer(context => RoutingSlipFaultedValueProvider(context)));
     }
 
-    /// <summary>
-    /// Gets or sets the completed id provider value.
-    /// </summary>
+    /// <summary>Gets or sets the completed id provider.</summary>
     public PendingFutureIdProvider<RoutingSlipCompleted> CompletedIdProvider { get; private set; } = null!;
-    /// <summary>
-    /// Gets or sets the faulted id provider value.
-    /// </summary>
+    /// <summary>Gets or sets the faulted id provider.</summary>
     public PendingFutureIdProvider<RoutingSlipFaulted> FaultedIdProvider { get; private set; } = null!;
-    /// <summary>
-    /// Gets the completed value.
-    /// </summary>
+    /// <summary>Gets the completed.</summary>
     public Event<RoutingSlipCompleted> Completed { get; }
-    /// <summary>
-    /// Gets the faulted value.
-    /// </summary>
+    /// <summary>Gets the faulted.</summary>
     public Event<RoutingSlipFaulted> Faulted { get; }
 
-    /// <summary>
-    /// Performs the on routing slip completed operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Reports that on routing slip has completed.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void OnRoutingSlipCompleted(Action<IFutureResultConfigurator<TResult, RoutingSlipCompleted>> configure)
     {
         _result ??= new FutureResult<TCommand, TResult, RoutingSlipCompleted>();
@@ -77,10 +63,8 @@ public class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput> :
         configure?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Performs the on routing slip faulted operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Reports that on routing slip has faulted.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void OnRoutingSlipFaulted(Action<IFutureFaultConfigurator<TFault, RoutingSlipFaulted>> configure)
     {
         _fault ??= new FutureFault<TCommand, TFault, RoutingSlipFaulted>();
@@ -90,29 +74,23 @@ public class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput> :
         configure?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Performs the when routing slip completed operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Reports that when routing slip has completed.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void WhenRoutingSlipCompleted(
         Func<EventActivityBinder<FutureState, RoutingSlipCompleted>, EventActivityBinder<FutureState, RoutingSlipCompleted>> configure)
     {
         _configurator.DuringAnyWhen(Completed, configure);
     }
 
-    /// <summary>
-    /// Performs the when routing slip faulted operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Reports that when routing slip has faulted.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void WhenRoutingSlipFaulted(
         Func<EventActivityBinder<FutureState, RoutingSlipFaulted>, EventActivityBinder<FutureState, RoutingSlipFaulted>> configure)
     {
         _configurator.DuringAnyWhen(Faulted, configure);
     }
 
-    /// <summary>
-    /// Performs the track pending routing slip operation.
-    /// </summary>
+    /// <summary>Tracks pending routing slip.</summary>
     public void TrackPendingRoutingSlip()
     {
         _executor.TrackRoutingSlip = true;
@@ -121,27 +99,21 @@ public class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput> :
         FaultedIdProvider = GetTrackingNumber;
     }
 
-    /// <summary>
-    /// Performs the build itinerary operation.
-    /// </summary>
-    /// <param name="buildItinerary">The build itinerary value.</param>
+    /// <summary>Builds itinerary.</summary>
+    /// <param name="buildItinerary">The build itinerary.</param>
     public void BuildItinerary(BuildItineraryCallback<TInput> buildItinerary)
     {
         _executor = new BuildRoutingSlipExecutor<TInput>(buildItinerary);
     }
 
-    /// <summary>
-    /// Performs the build using itinerary planner operation.
-    /// </summary>
+    /// <summary>Builds using itinerary planner.</summary>
     public void BuildUsingItineraryPlanner()
     {
         _executor = new PlanRoutingSlipExecutor<TInput>();
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_result != null)
@@ -185,10 +157,8 @@ public class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput> :
         };
     }
 
-    /// <summary>
-    /// Determines whether the current value has result.
-    /// </summary>
-    /// <param name="result">The result value.</param>
+    /// <summary>Determines whether the current value has result.</summary>
+    /// <param name="result">Receives the result produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool HasResult(out FutureResult<TCommand, TResult, RoutingSlipCompleted> result)
     {
@@ -196,10 +166,8 @@ public class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput> :
         return result != null;
     }
 
-    /// <summary>
-    /// Determines whether the current value has fault.
-    /// </summary>
-    /// <param name="fault">The fault value.</param>
+    /// <summary>Determines whether the current value has fault.</summary>
+    /// <param name="fault">Receives the fault produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool HasFault(out FutureFault<TCommand, TFault, RoutingSlipFaulted> fault)
     {
@@ -207,12 +175,10 @@ public class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput> :
         return fault != null;
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ExecuteAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         return _executor.ExecuteAsync(context, cancellationToken: cancellationToken);

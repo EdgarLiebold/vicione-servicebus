@@ -9,9 +9,9 @@ namespace Microsoft.Extensions.DependencyInjection;
 /// <summary>Registers the volatile InMemory adapter for one typed durable sender.</summary>
 public static class InMemoryDurableSendServiceCollectionExtensions
 {
-    /// <summary>
-    /// Selects the volatile in-memory store for tests and local process-only hosts. It does not provide restart durability.
-    /// </summary>
+    /// <summary>Selects the volatile in-memory store for tests and local process-only hosts. It does not provide restart durability.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <returns>The configured in memory store.</returns>
     public static IReliableMessagingConfigurator UseInMemoryStore(this IReliableMessagingConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -27,6 +27,9 @@ public static class InMemoryDurableSendServiceCollectionExtensions
     }
 
     /// <summary>Low-level adapter registration. InMemory bus configuration adds this capability automatically.</summary>
+    /// <typeparam name="TBus">The bus type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddViciOneInMemoryDurableSendDispatcher<TBus>(this IServiceCollection services)
         where TBus : class, IBus
     {

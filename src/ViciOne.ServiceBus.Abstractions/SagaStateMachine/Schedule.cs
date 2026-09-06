@@ -2,46 +2,34 @@ using System;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Holds the state of a scheduled message
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
+/// <summary>Holds the state of a scheduled message.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public interface Schedule<TSaga>
     where TSaga : class, SagaStateMachineInstance
 {
-    /// <summary>
-    /// The name of the scheduled message
-    /// </summary>
+    /// <summary>The name of the scheduled message.</summary>
     string Name { get; }
 
-    /// <summary>
-    /// Returns the delay, given the instance, for the scheduled message
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <summary>Returns the delay, given the instance, for the scheduled message.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The delay.</returns>
     TimeSpan GetDelay(BehaviorContext<TSaga> context);
 
-    /// <summary>
-    /// Return the TokenId for the instance
-    /// </summary>
-    /// <param name="instance"></param>
-    /// <returns></returns>
+    /// <summary>Return the TokenId for the instance.</summary>
+    /// <param name="instance">The instance.</param>
+    /// <returns>The token id.</returns>
     Guid? GetTokenId(TSaga instance);
 
-    /// <summary>
-    /// Set the token ID on the Instance
-    /// </summary>
-    /// <param name="instance"></param>
-    /// <param name="tokenId"></param>
+    /// <summary>Set the token ID on the Instance.</summary>
+    /// <param name="instance">The instance.</param>
+    /// <param name="tokenId">The token id.</param>
     void SetTokenId(TSaga instance, Guid? tokenId);
 }
 
 
-/// <summary>
-/// Holds the state of a scheduled message
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
-/// <typeparam name="TMessage"></typeparam>
+/// <summary>Holds the state of a scheduled message.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public interface Schedule<TSaga, TMessage> :
     Schedule<TSaga>
     where TSaga : class, SagaStateMachineInstance

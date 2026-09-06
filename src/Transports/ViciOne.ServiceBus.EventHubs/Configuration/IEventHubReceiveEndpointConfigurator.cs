@@ -5,49 +5,33 @@ using Azure.Messaging.EventHubs.Processor;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
-/// <summary>
-/// Defines the contract for event hub receive endpoint configurator.
-/// </summary>
+/// <summary>Configures an Event Hubs processor-backed receive endpoint.</summary>
 public interface IEventHubReceiveEndpointConfigurator :
     IReceiveEndpointConfigurator
 {
-    /// <summary>
-    /// The name of the container in the storage account to reference.
-    /// </summary>
+    /// <summary>Sets the Blob Storage container name used for partition ownership and checkpoints.</summary>
     string ContainerName { set; }
 
-    /// <summary>
-    /// Sets interval before checkpoint, low interval will decrease throughput (default: 1min)
-    /// </summary>
+    /// <summary>Sets the maximum time between completed partition checkpoints. The default is one minute.</summary>
     TimeSpan CheckpointInterval { set; }
 
-    /// <summary>
-    /// Set max message count for checkpoint, low message count will decrease throughput (default: 5000)
-    /// </summary>
+    /// <summary>Sets how many completed events trigger a partition checkpoint. The default is 5,000.</summary>
     ushort CheckpointMessageCount { set; }
 
-    /// <summary>
-    /// The maximum number of messages in a single partition before checkpoint (default: 10000)
-    /// </summary>
+    /// <summary>Sets the maximum number of uncheckpointed events retained for one partition. The default is 10,000.</summary>
     ushort CheckpointMessageLimit { set; }
 
-    /// <summary>
-    /// Set number of concurrent messages per single Key-partition, higher value will increase throughput but will break delivery order (default: 1)
-    /// </summary>
+    /// <summary>Sets the maximum concurrent deliveries for events with the same partition key. Values above one permit reordering. The default is one.</summary>
     int ConcurrentDeliveryLimit { set; }
 
-    /// <summary>
-    /// Configure <see cref="EventProcessorClientOptions" />
-    /// </summary>
+    /// <summary>Sets the callback applied when the processor client options are created.</summary>
     Action<EventProcessorClientOptions> ConfigureOptions { set; }
 
-    /// <summary>
-    /// The event to be raised once event processing stops for a given partition.
-    /// </summary>
+    /// <summary>Registers a handler invoked after processing has stopped for a partition.</summary>
+    /// <param name="handler">The asynchronous partition-closing handler.</param>
     void OnPartitionClosing(Func<PartitionClosingEventArgs, Task> handler);
 
-    /// <summary>
-    /// The event to be raised just before event processing starts for a given partition.
-    /// </summary>
+    /// <summary>Registers a handler invoked before processing begins for a partition.</summary>
+    /// <param name="handler">The asynchronous partition-initializing handler.</param>
     void OnPartitionInitializing(Func<PartitionInitializingEventArgs, Task> handler);
 }

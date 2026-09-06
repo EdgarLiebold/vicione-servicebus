@@ -4,34 +4,26 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
-/// <summary>
-/// Provides an in memory send context implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Carries state for in memory send operations.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class InMemorySendContext<T> :
     MessageSendContext<T>,
     RoutingKeySendContext
     where T : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public InMemorySendContext(T message, CancellationToken cancellationToken = default)
         : base(message, cancellationToken)
     {
     }
 
-    /// <summary>
-    /// Gets or sets the routing key value.
-    /// </summary>
+    /// <summary>Gets or sets the routing key.</summary>
     public string? RoutingKey { get; set; }
 
-    /// <summary>
-    /// Performs the read properties from operation.
-    /// </summary>
-    /// <param name="properties">The properties value.</param>
+    /// <summary>Reads properties from.</summary>
+    /// <param name="properties">The properties.</param>
     public override void ReadPropertiesFrom(IReadOnlyDictionary<string, object> properties)
     {
         base.ReadPropertiesFrom(properties);
@@ -39,10 +31,8 @@ public class InMemorySendContext<T> :
         RoutingKey = ReadString(properties, PropertyNames.RoutingKey);
     }
 
-    /// <summary>
-    /// Performs the write properties to operation.
-    /// </summary>
-    /// <param name="properties">The properties value.</param>
+    /// <summary>Writes properties to.</summary>
+    /// <param name="properties">The properties.</param>
     public override void WritePropertiesTo(IDictionary<string, object> properties)
     {
         base.WritePropertiesTo(properties);

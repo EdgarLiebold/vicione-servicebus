@@ -1,13 +1,11 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for future response handle.
-/// </summary>
-/// <typeparam name="TCommand">The t command type.</typeparam>
-/// <typeparam name="TResult">The t result type.</typeparam>
-/// <typeparam name="TFault">The t fault type.</typeparam>
-/// <typeparam name="TRequest">The t request type.</typeparam>
-/// <typeparam name="TResponse">The t response type.</typeparam>
+/// <summary>Controls the lifetime of future response.</summary>
+/// <typeparam name="TCommand">The command type.</typeparam>
+/// <typeparam name="TResult">The result produced by the operation.</typeparam>
+/// <typeparam name="TFault">The fault type.</typeparam>
+/// <typeparam name="TRequest">The request type.</typeparam>
+/// <typeparam name="TResponse">The response type.</typeparam>
 public interface FutureResponseHandle<out TCommand, TResult, TFault, TRequest, out TResponse> :
     FutureRequestHandle<TCommand, TResult, TFault, TRequest>
     where TCommand : class
@@ -16,8 +14,6 @@ public interface FutureResponseHandle<out TCommand, TResult, TFault, TRequest, o
     where TRequest : class
     where TResponse : class
 {
-    /// <summary>
-    /// The Response Completed event
-    /// </summary>
+    /// <summary>The Response Completed event.</summary>
     Event<TResponse> Completed { get; }
 }

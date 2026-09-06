@@ -4,38 +4,30 @@ using ViciOne.ServiceBus.RabbitMq.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Used to bind an exchange to the sending
-/// </summary>
+/// <summary>Declares a destination exchange and binds the published message exchange to it.</summary>
 public class ExchangeBindingPublishTopologySpecification :
     RabbitMqExchangeBindingConfigurator,
     IRabbitMqPublishTopologySpecification
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="exchangeType">The exchange type value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
+    /// <summary>Creates a publish binding from explicit destination exchange settings.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="exchangeType">The RabbitMQ exchange type.</param>
+    /// <param name="durable">Whether the exchange survives broker restarts.</param>
+    /// <param name="autoDelete">Whether RabbitMQ deletes the exchange when unused.</param>
     public ExchangeBindingPublishTopologySpecification(string exchangeName, string exchangeType, bool durable = true, bool autoDelete = false)
         : base(exchangeName, exchangeType, durable, autoDelete)
     {
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports no additional validation failures for this declarative topology fragment.</summary>
+    /// <returns>An empty sequence.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Declares the destination exchange and binds the current publish exchange to it.</summary>
+    /// <param name="builder">The publish-endpoint topology builder.</param>
     public void Apply(IPublishEndpointBrokerTopologyBuilder builder)
     {
         var exchangeHandle = builder.ExchangeDeclare(ExchangeName, ExchangeType, Durable, AutoDelete, ExchangeArguments);

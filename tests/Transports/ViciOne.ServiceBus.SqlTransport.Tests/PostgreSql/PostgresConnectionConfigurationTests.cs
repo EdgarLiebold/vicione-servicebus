@@ -1,4 +1,5 @@
 using Npgsql;
+using System.Text;
 using ViciOne.ServiceBus.SqlTransport.PostgreSql;
 using ViciOne.ServiceBus.SqlTransport.PostgreSql.Helpers;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -10,27 +11,23 @@ public sealed class PostgresConnectionConfigurationTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0022", "native-owner")]
-    public void NotifyChannel_TruncatesSchemaToIdentifierBudget()
+    public void NotifyChannel_UsesStableNamespaceHashAndQueueId()
     {
-        const string schema = "string that has 40 characters 1234567890";
+        string actual = NotifyChannel.CreateName("transport", 42);
 
-        string actual = NotifyChannel.SanitizeSchemaName(schema);
-
-        Assert.Equal(39, actual.Length);
-        Assert.Equal("string that has 40 characters 123456789", actual);
+        Assert.Equal("vsb_6694ea8075001f6628da20f1afdafc74a7_msg_42", actual);
     }
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0023", "native-owner")]
-    public void NotifyChannel_PreservesSchemasWithinIdentifierBudget()
+    public void NotifyChannel_DistinguishesSchemasThatShareALongPrefix()
     {
-        string[] schemas =
-        [
-            "string that has 38 characters 12345678",
-            "string that has 39 characters 123456789",
-        ];
+        string commonPrefix = new('x', 1_000);
 
-        Assert.All(schemas, schema => Assert.Equal(schema, NotifyChannel.SanitizeSchemaName(schema)));
+        string first = NotifyChannel.CreateName($"{commonPrefix}-first", 42);
+        string second = NotifyChannel.CreateName($"{commonPrefix}-second", 42);
+
+        Assert.NotEqual(first, second);
     }
 
     [Fact]
@@ -38,8 +35,23 @@ public sealed class PostgresConnectionConfigurationTests
     public void NotifyChannel_DefaultsMissingSchema()
     {
         string?[] schemas = [null, string.Empty, " \t"];
+        string expected = NotifyChannel.CreateName("transport", 42);
 
-        Assert.All(schemas, schema => Assert.Equal("transport", NotifyChannel.SanitizeSchemaName(schema)));
+        Assert.All(schemas, schema => Assert.Equal(expected, NotifyChannel.CreateName(schema, 42)));
+    }
+
+    [Theory]
+    [InlineData(long.MinValue)]
+    [InlineData(long.MaxValue)]
+    [RequirementCoverage("REQ-VSB-POSTGRES-NOTIFY-CHANNEL", "utf8-identifier-budget")]
+    public void NotifyChannel_UsesAtMostSixtyThreeBytesForUnicodeSchemaAndAnyQueueId(long queueId)
+    {
+        const string schema = "租户-🚚-äöü-very-long-schema-name-that-exceeds-the-original-character-budget";
+
+        string actual = NotifyChannel.CreateName(schema, queueId);
+
+        Assert.InRange(Encoding.UTF8.GetByteCount(actual), 1, 63);
+        Assert.Matches("^[a-z0-9_-]+$", actual);
     }
 
     [Fact]

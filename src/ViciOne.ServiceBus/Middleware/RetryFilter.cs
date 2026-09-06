@@ -7,8 +7,9 @@ namespace ViciOne.ServiceBus.Middleware;
 
 /// <summary>
 /// Uses a retry policy to handle exceptions, retrying the operation in according
-/// with the policy
+/// with the policy.
 /// </summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class RetryFilter<TContext> :
     IFilter<TContext>
     where TContext : class, PipeContext
@@ -16,11 +17,9 @@ public class RetryFilter<TContext> :
     readonly RetryObservable _observers;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="observers">The observers value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="observers">The observers.</param>
     public RetryFilter(IRetryPolicy retryPolicy, RetryObservable observers)
     {
         _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));

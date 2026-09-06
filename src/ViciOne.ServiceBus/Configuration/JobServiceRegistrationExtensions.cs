@@ -6,17 +6,13 @@ using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for job service registration.
-/// </summary>
+/// <summary>Provides extension methods for job service registration.</summary>
 public static class JobServiceRegistrationExtensions
 {
-    /// <summary>
-    /// Set the job consumer options (optional, not required to use job consumers)
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure">Configure the job consumer options using this callback</param>
-    /// <returns></returns>
+    /// <summary>Set the job consumer options (optional, not required to use job consumers).</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">Configure the job consumer options using this callback.</param>
+    /// <returns>The job service registration configurator produced by the operation.</returns>
     public static IJobServiceRegistrationConfigurator SetJobConsumerOptions(this IBusRegistrationConfigurator configurator,
         Action<JobConsumerOptions>? configure = null)
     {
@@ -31,11 +27,10 @@ public static class JobServiceRegistrationExtensions
         return registrationConfigurator;
     }
 
-    /// <summary>
-    /// Add registrations for the job service saga state machines
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure">Configure the job saga options</param>
+    /// <summary>Add registrations for the job service saga state machines.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">Configure the job saga options.</param>
+    /// <returns>The job saga registration configurator produced by the operation.</returns>
     public static IJobSagaRegistrationConfigurator AddJobSagaStateMachines(this IBusRegistrationConfigurator configurator,
         Action<JobSagaOptions>? configure = null)
     {
@@ -44,12 +39,10 @@ public static class JobServiceRegistrationExtensions
         return registrationConfigurator;
     }
 
-    /// <summary>
-    /// Register a custom job distribution strategy for the job saga state machines
-    /// </summary>
-    /// <param name="services"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Register a custom job distribution strategy for the job saga state machines.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection TryAddJobDistributionStrategy<T>(this IServiceCollection services)
         where T : class, IJobDistributionStrategy
     {
@@ -62,9 +55,9 @@ public static class JobServiceRegistrationExtensions
     /// Compares the <paramref name="name" /> to the known job saga endpoints and returns true if the name matches.
     /// Use this inside an AddConfigureEndpointsCallback to avoid adding filters to the job saga endpoints.
     /// </summary>
-    /// <param name="context">The registration context</param>
-    /// <param name="name">The endpoint name</param>
-    /// <returns>true if matched, otherwise false</returns>
+    /// <param name="context">The registration context.</param>
+    /// <param name="name">The endpoint name.</param>
+    /// <returns>true if matched, otherwise false.</returns>
     public static bool IsJobServiceEndpoint(this IRegistrationContext context, string name)
     {
         var selector = context.GetRequiredService<IContainerSelector>();

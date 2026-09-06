@@ -3,9 +3,7 @@ using System.Linq;
 using System.Net;
 
 namespace ViciOne.ServiceBus.AmazonS3.MessageData;
-/// <summary>
-/// Immutable Amazon S3 message-data storage contract.
-/// </summary>
+/// <summary>Immutable Amazon S3 message-data storage contract.</summary>
 public sealed class AmazonS3MessageDataRepositoryOptions
 {
     private static readonly string[] ReservedSuffixes =
@@ -17,11 +15,9 @@ public sealed class AmazonS3MessageDataRepositoryOptions
         "--table-s3",
     ];
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="bucketName">The bucket name value.</param>
-    /// <param name="lifecycleExpirationDays">The lifecycle expiration days value.</param>
+    /// <summary>Creates validated settings for one general-purpose Amazon S3 bucket used for message data.</summary>
+    /// <param name="bucketName">The DNS-compatible general-purpose bucket name.</param>
+    /// <param name="lifecycleExpirationDays">The optional positive whole-day expiration applied by the repository-owned lifecycle rule.</param>
     public AmazonS3MessageDataRepositoryOptions(
         string bucketName,
         int? lifecycleExpirationDays = null)
@@ -39,14 +35,10 @@ public sealed class AmazonS3MessageDataRepositoryOptions
         LifecycleExpirationDays = lifecycleExpirationDays;
     }
 
-    /// <summary>
-    /// Gets the bucket name value.
-    /// </summary>
+    /// <summary>Gets the general-purpose Amazon S3 bucket that stores message data.</summary>
     public string BucketName { get; }
 
-    /// <summary>
-    /// Gets the lifecycle expiration days value.
-    /// </summary>
+    /// <summary>Gets the whole-day expiration for the repository-owned lifecycle rule, or <see langword="null"/> when no rule is managed.</summary>
     public int? LifecycleExpirationDays { get; }
 
     internal void ValidateTimeToLive(TimeSpan? timeToLive)

@@ -11,9 +11,7 @@ using ViciOne.ServiceBus.Testing.Implementations;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Testing;
 
-/// <summary>
-/// Provides a container test harness implementation.
-/// </summary>
+/// <summary>Provides a test harness for container test.</summary>
 public class ContainerTestHarness :
     ITestHarness,
     IAsyncDisposable
@@ -31,12 +29,10 @@ public class ContainerTestHarness :
     int _disposed;
     IEnumerable<IHostedService>? _hostedServices;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public ContainerTestHarness(IServiceProvider provider, IOptions<TestHarnessOptions> options, TimeProvider timeProvider)
     {
         ArgumentNullException.ThrowIfNull(provider);
@@ -85,10 +81,8 @@ public class ContainerTestHarness :
         return observer;
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask DisposeAsync()
     {
         if (Interlocked.Exchange(ref _disposed, 1) != 0)
@@ -131,106 +125,74 @@ public class ContainerTestHarness :
             _inactivityObserver.Value.Dispose();
     }
 
-    /// <summary>
-    /// Gets the inactivity task value.
-    /// </summary>
+    /// <summary>Gets the inactivity task.</summary>
     public Task InactivityTask => _inactivityObserver.Value.InactivityTask;
 
-    /// <summary>
-    /// Gets the consumed value.
-    /// </summary>
+    /// <summary>Gets the consumed.</summary>
     public IReceivedMessageList Consumed => _consumed.Value.Messages;
-    /// <summary>
-    /// Gets the published value.
-    /// </summary>
+    /// <summary>Gets the published.</summary>
     public IPublishedMessageList Published => _published.Value.Messages;
-    /// <summary>
-    /// Gets the sent value.
-    /// </summary>
+    /// <summary>Gets the sent.</summary>
     public ISentMessageList Sent => _sent.Value.Messages;
 
-    /// <summary>
-    /// Gets the scope value.
-    /// </summary>
+    /// <summary>Gets the scope.</summary>
     public IServiceScope Scope => _scope.Value;
-    /// <summary>
-    /// Gets the provider value.
-    /// </summary>
+    /// <summary>Gets the provider.</summary>
     public IServiceProvider Provider => _provider;
 
-    /// <summary>
-    /// Gets the endpoint name formatter value.
-    /// </summary>
+    /// <summary>Gets the endpoint name formatter.</summary>
     public IEndpointNameFormatter EndpointNameFormatter => _provider.GetService<IEndpointNameFormatter>() ?? DefaultEndpointNameFormatter.Instance;
 
-    /// <summary>
-    /// Gets the bus value.
-    /// </summary>
+    /// <summary>Gets the bus.</summary>
     public IBus Bus => _provider.GetRequiredService<IBus>();
 
-    /// <summary>
-    /// Connects consume observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects consume observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer) => Bus.ConnectConsumeObserver(observer);
-    /// <summary>
-    /// Connects publish observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects publish observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer) => Bus.ConnectPublishObserver(observer);
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects send observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer) => Bus.ConnectSendObserver(observer);
 
-    /// <summary>
-    /// Determines whether the current value can cel.
-    /// </summary>
+    /// <summary>Determines whether the current value can cel.</summary>
     public void Cancel()
     {
         _cancellationTokenSource?.Cancel();
     }
 
-    /// <summary>
-    /// Performs the force inactive operation.
-    /// </summary>
+    /// <summary>Forces inactive.</summary>
     public void ForceInactive()
     {
         _inactivityObserver.Value.ForceInactive();
     }
 
-    /// <summary>
-    /// Gets consumer harness.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets consumer harness.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The consumer harness.</returns>
     public IConsumerTestHarness<T> GetConsumerHarness<T>()
         where T : class, IConsumer
     {
         return _provider.GetRequiredService<IConsumerTestHarness<T>>();
     }
 
-    /// <summary>
-    /// Gets saga harness.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets saga harness.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The saga harness.</returns>
     public ISagaTestHarness<T> GetSagaHarness<T>()
         where T : class, ISaga
     {
         return _provider.GetRequiredService<ISagaTestHarness<T>>();
     }
 
-    /// <summary>
-    /// Gets saga state machine harness.
-    /// </summary>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets saga state machine harness.</summary>
+    /// <typeparam name="TStateMachine">The state machine type.</typeparam>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The saga state machine harness.</returns>
     public ISagaStateMachineTestHarness<TStateMachine, T> GetSagaStateMachineHarness<TStateMachine, T>()
         where TStateMachine : class, SagaStateMachine<T>
         where T : class, SagaStateMachineInstance
@@ -238,23 +200,19 @@ public class ContainerTestHarness :
         return _provider.GetRequiredService<ISagaStateMachineTestHarness<TStateMachine, T>>();
     }
 
-    /// <summary>
-    /// Gets request client.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets request client.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The request client.</returns>
     public IRequestClient<T> GetRequestClient<T>()
         where T : class
     {
         return _scope.Value.ServiceProvider.GetRequiredService<IRequestClient<T>>();
     }
 
-    /// <summary>
-    /// Gets consumer endpoint.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Gets consumer endpoint.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<ISendEndpoint> GetConsumerEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class, IConsumer
     {
@@ -263,46 +221,38 @@ public class ContainerTestHarness :
         return provider.GetSendEndpointAsync(GetConsumerAddress<T>(), cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Gets handler endpoint.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Gets handler endpoint.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<ISendEndpoint> GetHandlerEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
         return GetConsumerEndpointAsync<MessageHandlerConsumer<T>>(cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Gets consumer address.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets consumer address.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The consumer address.</returns>
     public Uri GetConsumerAddress<T>()
         where T : class, IConsumer
     {
         return new Uri($"queue:{EndpointNameFormatter.Consumer<T>()}");
     }
 
-    /// <summary>
-    /// Gets handler address.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets handler address.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The handler address.</returns>
     public Uri GetHandlerAddress<T>()
         where T : class
     {
         return GetConsumerAddress<MessageHandlerConsumer<T>>();
     }
 
-    /// <summary>
-    /// Gets saga endpoint.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Gets saga endpoint.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<ISendEndpoint> GetSagaEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class, ISaga
     {
@@ -311,24 +261,20 @@ public class ContainerTestHarness :
         return provider.GetSendEndpointAsync(GetSagaAddress<T>(), cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Gets saga address.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets saga address.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The saga address.</returns>
     public Uri GetSagaAddress<T>()
         where T : class, ISaga
     {
         return new Uri($"queue:{EndpointNameFormatter.Saga<T>()}");
     }
 
-    /// <summary>
-    /// Gets execute activity endpoint.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <summary>Gets execute activity endpoint.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<ISendEndpoint> GetExecuteActivityEndpointAsync<T, TArguments>(CancellationToken cancellationToken = default)
         where T : class, IExecuteActivity<TArguments>
         where TArguments : class
@@ -338,12 +284,10 @@ public class ContainerTestHarness :
         return provider.GetSendEndpointAsync(GetExecuteActivityAddress<T, TArguments>(), cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Gets execute activity address.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets execute activity address.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <returns>The execute activity address.</returns>
     public Uri GetExecuteActivityAddress<T, TArguments>()
         where T : class, IExecuteActivity<TArguments>
         where TArguments : class
@@ -351,11 +295,9 @@ public class ContainerTestHarness :
         return new Uri($"queue:{EndpointNameFormatter.ExecuteActivity<T, TArguments>()}");
     }
 
-    /// <summary>
-    /// Starts the configured component.
-    /// </summary>
+    /// <summary>Starts the configured component.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task StartAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); _hostedServices = _provider.GetServices<IHostedService>().ToArray();
@@ -366,35 +308,21 @@ public class ContainerTestHarness :
             await service.StartAsync(CancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Gets or sets the test timeout value.
-    /// </summary>
+    /// <summary>Gets or sets the test timeout.</summary>
     public TimeSpan TestTimeout { get; set; }
-    /// <summary>
-    /// Gets or sets the test inactivity timeout value.
-    /// </summary>
+    /// <summary>Gets or sets the test inactivity timeout.</summary>
     public TimeSpan TestInactivityTimeout { get; set; }
-    /// <summary>
-    /// Gets the time provider value.
-    /// </summary>
+    /// <summary>Gets the time provider.</summary>
     public TimeProvider TimeProvider { get; }
-    /// <summary>
-    /// Gets the context save mode value.
-    /// </summary>
+    /// <summary>Gets the context save mode.</summary>
     public TestContextSaveMode ContextSaveMode { get; }
-    /// <summary>
-    /// Gets the maximum saved contexts value.
-    /// </summary>
+    /// <summary>Gets the maximum saved contexts.</summary>
     public int MaximumSavedContexts { get; }
 
-    /// <summary>
-    /// CancellationToken that is cancelled when the test inactivity timeout has elapsed with no bus activity
-    /// </summary>
+    /// <summary>CancellationToken that is cancelled when the test inactivity timeout has elapsed with no bus activity.</summary>
     public CancellationToken InactivityToken => _inactivityObserver.Value.InactivityToken;
 
-    /// <summary>
-    /// CancellationToken that is canceled when the test is being aborted
-    /// </summary>
+    /// <summary>CancellationToken that is canceled when the test is being aborted.</summary>
     public CancellationToken CancellationToken
     {
         get
@@ -410,11 +338,9 @@ public class ContainerTestHarness :
         }
     }
 
-    /// <summary>
-    /// Gets task.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets task.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The task.</returns>
     public TaskCompletionSource<T> GetTask<T>()
     {
         var source = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -427,10 +353,8 @@ public class ContainerTestHarness :
         return source;
     }
 
-    /// <summary>
-    /// Performs the post create operation.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
+    /// <summary>Runs after create.</summary>
+    /// <param name="bus">The bus.</param>
     public void PostCreate(IBus bus)
     {
         _handles.Add(bus.ConnectReceiveEndpointObserver(new TestReceiveEndpointObserver(_published.Value)));
@@ -446,10 +370,8 @@ public class ContainerTestHarness :
         _handles.Add(bus.ConnectSendObserver(_sent.Value));
     }
 
-    /// <summary>
-    /// Performs the post start operation.
-    /// </summary>
-    /// <param name="bus">The bus value.</param>
+    /// <summary>Runs after start.</summary>
+    /// <param name="bus">The bus.</param>
     public void PostStart(IBus bus)
     {
         _ = _received.Value.RestartTimerAsync();

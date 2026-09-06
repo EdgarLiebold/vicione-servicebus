@@ -2,14 +2,10 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Defines the contract for queue handle.
-/// </summary>
+/// <summary>Identifies a queue declaration created by a broker-topology builder.</summary>
 public interface QueueHandle :
     EntityHandle
 {
-    /// <summary>
-    /// Gets the queue value.
-    /// </summary>
+    /// <summary>Gets the represented queue declaration.</summary>
     Queue Queue { get; }
 }

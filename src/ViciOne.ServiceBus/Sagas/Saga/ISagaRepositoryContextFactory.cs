@@ -2,31 +2,26 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>
-/// </summary>
-/// <typeparam name="TSaga"></typeparam>
+/// <summary>Creates saga repository context instances.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public interface ISagaRepositoryContextFactory<TSaga> :
     IProbeSite
     where TSaga : class, ISaga
 {
-    /// <summary>
-    /// Create a <see cref="SagaRepositoryContext{TSaga,T}" /> and send it to the next pipe.
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="next"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Create a <see cref="SagaRepositoryContext{TSaga,T}" /> and send it to the next pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
         where T : class;
 
-    /// <summary>
-    /// Create a <see cref="SagaRepositoryQueryContext{TSaga,T}" /> and send it to the next pipe.
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="query"></param>
-    /// <param name="next"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Create a <see cref="SagaRepositoryQueryContext{TSaga,T}" /> and send it to the next pipe.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="query">The query.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class;
 }

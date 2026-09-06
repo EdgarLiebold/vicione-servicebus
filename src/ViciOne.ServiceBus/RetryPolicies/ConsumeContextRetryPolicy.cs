@@ -3,19 +3,15 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>
-/// Provides a consume context retry policy implementation.
-/// </summary>
+/// <summary>Defines policy for consume context retry.</summary>
 public class ConsumeContextRetryPolicy :
     IRetryPolicy
 {
     readonly CancellationToken _cancellationToken;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="retryPolicy">The retry policy value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="retryPolicy">The retry policy.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public ConsumeContextRetryPolicy(IRetryPolicy retryPolicy, CancellationToken cancellationToken)
     {
@@ -23,10 +19,8 @@ public class ConsumeContextRetryPolicy :
         _cancellationToken = cancellationToken;
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("retry-consumeContext");
@@ -50,9 +44,7 @@ public class ConsumeContextRetryPolicy :
         throw new ArgumentException("The argument must be a ConsumeContext", nameof(context));
     }
 
-    /// <summary>
-    /// Determines whether handled.
-    /// </summary>
+    /// <summary>Determines whether handled.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)
@@ -62,11 +54,9 @@ public class ConsumeContextRetryPolicy :
 }
 
 
-/// <summary>
-/// Provides a consume context retry policy implementation.
-/// </summary>
-/// <typeparam name="TFilter">The t filter type.</typeparam>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Defines policy for consume context retry.</summary>
+/// <typeparam name="TFilter">The filter type.</typeparam>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class ConsumeContextRetryPolicy<TFilter, TContext> :
     IRetryPolicy
     where TFilter : class, PipeContext
@@ -76,12 +66,10 @@ public class ConsumeContextRetryPolicy<TFilter, TContext> :
     readonly Func<TFilter, IRetryPolicy, RetryContext?, TContext> _contextFactory;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="retryPolicy">The retry policy value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="retryPolicy">The retry policy.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="contextFactory">The context factory value.</param>
+    /// <param name="contextFactory">The context factory.</param>
     public ConsumeContextRetryPolicy(IRetryPolicy retryPolicy, CancellationToken cancellationToken,
         Func<TFilter, IRetryPolicy, RetryContext?, TContext> contextFactory)
     {
@@ -90,10 +78,8 @@ public class ConsumeContextRetryPolicy<TFilter, TContext> :
         _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("retry-consumeContext");
@@ -118,9 +104,7 @@ public class ConsumeContextRetryPolicy<TFilter, TContext> :
             ?? throw new InvalidOperationException($"The retry policy context cannot be represented as {TypeCache<T>.ShortName}.");
     }
 
-    /// <summary>
-    /// Determines whether handled.
-    /// </summary>
+    /// <summary>Determines whether handled.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)

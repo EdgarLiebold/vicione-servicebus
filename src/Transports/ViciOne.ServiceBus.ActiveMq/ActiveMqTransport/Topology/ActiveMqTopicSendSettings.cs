@@ -4,36 +4,28 @@ using ViciOne.ServiceBus.ActiveMq.Configuration;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides an active mq topic send settings implementation.
-/// </summary>
+/// <summary>Defines the address, lifecycle, and topology of an ActiveMQ topic send destination.</summary>
 public class ActiveMqTopicSendSettings :
     ActiveMqTopicConfigurator,
     SendSettings
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
+    /// <summary>Creates topic send settings from a parsed ActiveMQ endpoint address.</summary>
+    /// <param name="address">The topic endpoint address.</param>
     public ActiveMqTopicSendSettings(ActiveMqEndpointAddress address)
         : base(address.Name, address.Durable, address.AutoDelete)
     {
     }
 
-    /// <summary>
-    /// Gets send address.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the absolute topic send address.</summary>
+    /// <param name="hostAddress">The configured broker address.</param>
+    /// <returns>The absolute topic address.</returns>
     public Uri GetSendAddress(Uri hostAddress)
     {
         return GetEndpointAddress(hostAddress);
     }
 
-    /// <summary>
-    /// Gets broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds topology containing the send topic.</summary>
+    /// <returns>The topic-only broker topology.</returns>
     public BrokerTopology GetBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder();
@@ -52,10 +44,8 @@ public class ActiveMqTopicSendSettings :
             yield return "auto-delete";
     }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the enabled topic lifecycle flags.</summary>
+    /// <returns>A comma-separated list containing <c>durable</c> and/or <c>auto-delete</c>.</returns>
     public override string ToString()
     {
         return string.Join(", ", GetSettingStrings());

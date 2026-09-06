@@ -2,19 +2,19 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced.Topology;
 
-/// <summary>
-/// A discovered endpoint QoS declaration used during topology validation.
-/// </summary>
+/// <summary>A discovered endpoint QoS declaration used during topology validation.</summary>
+/// <param name="EndpointName">The endpoint name.</param>
+/// <param name="ConsumerType">The runtime consumer type used by the operation.</param>
+/// <param name="Qos">The qos.</param>
+/// <param name="Ownership">The ownership.</param>
 public sealed record EndpointQosDeclaration(
     string EndpointName,
     Type ConsumerType,
     EndpointTransportQos Qos,
     EndpointQosOwnership Ownership)
 {
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public EndpointQosDeclaration Validate()
     {
         if (string.IsNullOrWhiteSpace(EndpointName))

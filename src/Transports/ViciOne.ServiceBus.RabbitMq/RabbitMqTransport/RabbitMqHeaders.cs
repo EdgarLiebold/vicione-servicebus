@@ -1,28 +1,16 @@
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq headers implementation.
-/// </summary>
+/// <summary>Defines transport header names for RabbitMQ delivery metadata.</summary>
 public static class RabbitMqHeaders
 {
-    /// <summary>
-    /// Defines the exchange value.
-    /// </summary>
+    /// <summary>The source exchange header.</summary>
     public const string Exchange = "RabbitMQ-ExchangeName";
-    /// <summary>
-    /// Defines the routing key value.
-    /// </summary>
+    /// <summary>The delivery routing-key header.</summary>
     public const string RoutingKey = "RabbitMQ-RoutingKey";
-    /// <summary>
-    /// Defines the delivery tag value.
-    /// </summary>
+    /// <summary>The channel-scoped delivery-tag header.</summary>
     public const string DeliveryTag = "RabbitMQ-DeliveryTag";
-    /// <summary>
-    /// Defines the consumer tag value.
-    /// </summary>
+    /// <summary>The broker-assigned consumer-tag header.</summary>
     public const string ConsumerTag = "RabbitMQ-ConsumerTag";
-    /// <summary>
-    /// Defines the redelivery routing key value.
-    /// </summary>
+    /// <summary>The original routing-key header used by queue redelivery.</summary>
     public const string RedeliveryRoutingKey = "RabbitMQ-Redelivery-RoutingKey";
 }

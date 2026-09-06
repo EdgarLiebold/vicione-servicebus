@@ -5,20 +5,16 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Advanced.Middleware;
 
-/// <summary>
-/// Provides extension methods for event.
-/// </summary>
+/// <summary>Provides extension methods for event.</summary>
 public static class EventExtensions
 {
-    /// <summary>
-    /// Publishes event.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Publishes event.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="message">The message to process.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task PublishEventAsync<T>(this IPipe<EventContext> pipe, T message, TimeProvider? timeProvider = null, CancellationToken cancellationToken = default)
         where T : class
     {

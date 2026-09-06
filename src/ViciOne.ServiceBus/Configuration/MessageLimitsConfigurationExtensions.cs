@@ -3,9 +3,7 @@ using ViciOne.ServiceBus.Advanced.Serialization;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Configures mandatory message-size and JSON-depth boundaries inside a bus registration block.
-/// </summary>
+/// <summary>Configures mandatory message-size and JSON-depth boundaries inside a bus registration block.</summary>
 public static class MessageLimitsConfigurationExtensions
 {
     internal static bool HasLimits<TBus>(IServiceCollection services)
@@ -18,11 +16,9 @@ public static class MessageLimitsConfigurationExtensions
             && string.Equals(registration.BusKey, busKey, StringComparison.Ordinal));
     }
 
-    /// <summary>
-    /// Assigns explicit limits to the default bus.
-    /// </summary>
-    /// <param name="configurator">The default-bus registration block.</param>
-    /// <param name="limits">The complete immutable limits policy.</param>
+    /// <summary>Assigns explicit limits to the default bus.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="limits">The limits.</param>
     /// <returns>The registration block for continued configuration.</returns>
     public static IBusRegistrationConfigurator Limits(
         this IBusRegistrationConfigurator configurator,
@@ -33,12 +29,10 @@ public static class MessageLimitsConfigurationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Assigns explicit limits to a typed bus.
-    /// </summary>
+    /// <summary>Assigns explicit limits to a typed bus.</summary>
     /// <typeparam name="TBus">The bus interface that owns the limits.</typeparam>
-    /// <param name="configurator">The typed-bus registration block.</param>
-    /// <param name="limits">The complete immutable limits policy.</param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="limits">The limits.</param>
     /// <returns>The registration block for continued configuration.</returns>
     public static IBusRegistrationConfigurator<TBus> Limits<TBus>(
         this IBusRegistrationConfigurator<TBus> configurator,

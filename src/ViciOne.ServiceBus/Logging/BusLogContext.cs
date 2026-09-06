@@ -2,19 +2,15 @@ using Microsoft.Extensions.Logging;
 
 namespace ViciOne.ServiceBus.Logging;
 
-/// <summary>
-/// Provides a bus log context implementation.
-/// </summary>
+/// <summary>Carries state for bus log operations.</summary>
 public class BusLogContext :
     ILogContext
 {
     readonly ILoggerFactory _loggerFactory;
     readonly ILogContext _messageLogger;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="loggerFactory">The logger factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="loggerFactory">The logger factory.</param>
     public BusLogContext(ILoggerFactory loggerFactory)
     {
         _loggerFactory = loggerFactory;
@@ -40,11 +36,9 @@ public class BusLogContext :
 
     ILogContext ILogContext.Messages => _messageLogger;
 
-    /// <summary>
-    /// Creates log context.
-    /// </summary>
-    /// <param name="categoryName">The category name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates log context.</summary>
+    /// <param name="categoryName">The category name.</param>
+    /// <returns>The created log context.</returns>
     public ILogContext CreateLogContext(string categoryName)
     {
         var logger = _loggerFactory.CreateLogger(categoryName);
@@ -52,38 +46,24 @@ public class BusLogContext :
         return new BusLogContext(_loggerFactory, _messageLogger, logger);
     }
 
-    /// <summary>
-    /// Gets the logger value.
-    /// </summary>
+    /// <summary>Gets the logger.</summary>
     public ILogger Logger { get; }
 
-    /// <summary>
-    /// Gets the critical value.
-    /// </summary>
+    /// <summary>Gets the critical.</summary>
     public EnabledLogger? Critical => Logger.IsEnabled(LogLevel.Critical) ? new EnabledLogger(Logger, LogLevel.Critical) : default(EnabledLogger?);
 
-    /// <summary>
-    /// Gets the debug value.
-    /// </summary>
+    /// <summary>Gets the debug.</summary>
     public EnabledLogger? Debug => Logger.IsEnabled(LogLevel.Debug) ? new EnabledLogger(Logger, LogLevel.Debug) : default(EnabledLogger?);
 
-    /// <summary>
-    /// Gets the error value.
-    /// </summary>
+    /// <summary>Gets the error.</summary>
     public EnabledLogger? Error => Logger.IsEnabled(LogLevel.Error) ? new EnabledLogger(Logger, LogLevel.Error) : default(EnabledLogger?);
 
-    /// <summary>
-    /// Gets the info value.
-    /// </summary>
+    /// <summary>Gets the info.</summary>
     public EnabledLogger? Info => Logger.IsEnabled(LogLevel.Information) ? new EnabledLogger(Logger, LogLevel.Information) : default(EnabledLogger?);
 
-    /// <summary>
-    /// Gets the trace value.
-    /// </summary>
+    /// <summary>Gets the trace.</summary>
     public EnabledLogger? Trace => Logger.IsEnabled(LogLevel.Trace) ? new EnabledLogger(Logger, LogLevel.Trace) : default(EnabledLogger?);
 
-    /// <summary>
-    /// Gets the warning value.
-    /// </summary>
+    /// <summary>Gets the warning.</summary>
     public EnabledLogger? Warning => Logger.IsEnabled(LogLevel.Warning) ? new EnabledLogger(Logger, LogLevel.Warning) : default(EnabledLogger?);
 }

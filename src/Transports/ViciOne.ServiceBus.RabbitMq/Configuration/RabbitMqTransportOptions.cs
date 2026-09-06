@@ -2,9 +2,7 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines configuration options for rabbit mq transport.
-/// </summary>
+/// <summary>Defines named-options binding for RabbitMQ connection and management settings.</summary>
 public sealed class RabbitMqTransportOptions
 {
     const int DefaultPort = 5672;
@@ -14,9 +12,7 @@ public sealed class RabbitMqTransportOptions
 
     bool _useSsl;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Creates options with local-development connection defaults.</summary>
     public RabbitMqTransportOptions()
     {
         Host = HostMetadataCache.IsRunningInContainer ? "rabbitmq" : "localhost";
@@ -27,38 +23,22 @@ public sealed class RabbitMqTransportOptions
         Pass = "guest";
     }
 
-    /// <summary>
-    /// Gets or sets the host value.
-    /// </summary>
+    /// <summary>Gets or sets the RabbitMQ host name.</summary>
     public string Host { get; set; }
-    /// <summary>
-    /// Gets or sets the port value.
-    /// </summary>
+    /// <summary>Gets or sets the AMQP port.</summary>
     public ushort Port { get; set; }
-    /// <summary>
-    /// Gets or sets the management port value.
-    /// </summary>
+    /// <summary>Gets or sets the RabbitMQ management API port.</summary>
     public ushort ManagementPort { get; set; }
-    /// <summary>
-    /// Gets or sets the v host value.
-    /// </summary>
+    /// <summary>Gets or sets the RabbitMQ virtual host.</summary>
     public string VHost { get; set; }
-    /// <summary>
-    /// Gets or sets the user value.
-    /// </summary>
+    /// <summary>Gets or sets the RabbitMQ user name.</summary>
     public string User { get; set; }
-    /// <summary>
-    /// Gets or sets the pass value.
-    /// </summary>
+    /// <summary>Gets or sets the RabbitMQ password.</summary>
     public string Pass { get; set; }
-    /// <summary>
-    /// Gets or sets the connection name value.
-    /// </summary>
+    /// <summary>Gets or sets the client-provided connection name shown by RabbitMQ.</summary>
     public string? ConnectionName { get; set; }
 
-    /// <summary>
-    /// Gets or sets the use ssl value.
-    /// </summary>
+    /// <summary>Gets or sets whether AMQP and management connections use TLS.</summary>
     public bool UseSsl
     {
         get => _useSsl;

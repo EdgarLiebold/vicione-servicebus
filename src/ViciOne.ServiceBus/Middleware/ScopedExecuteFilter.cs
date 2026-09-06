@@ -4,11 +4,9 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a scoped execute filter implementation.
-/// </summary>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
-/// <typeparam name="TFilter">The t filter type.</typeparam>
+/// <summary>Processes scoped execute pipeline stages.</summary>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
+/// <typeparam name="TFilter">The filter type.</typeparam>
 public class ScopedExecuteFilter<TArguments, TFilter> :
     IFilter<ExecuteContext<TArguments>>
     where TArguments : class
@@ -16,21 +14,17 @@ public class ScopedExecuteFilter<TArguments, TFilter> :
 {
     readonly ExecuteScopeProvider<TArguments> _scopeProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="scopeProvider">The scope provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="scopeProvider">The scope provider.</param>
     public ScopedExecuteFilter(ExecuteScopeProvider<TArguments> scopeProvider)
     {
         _scopeProvider = scopeProvider;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ExecuteContext<TArguments> context, IPipe<ExecuteContext<TArguments>> next)
     {
         await using IExecuteScopeContext<TArguments> scope = await _scopeProvider.GetScopeAsync(context).ConfigureAwait(false);
@@ -40,10 +34,8 @@ public class ScopedExecuteFilter<TArguments, TFilter> :
         await filter.SendAsync(scope.Context, next).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("scopedFilter");

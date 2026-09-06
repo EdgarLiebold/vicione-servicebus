@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides a queue sqs receive endpoint context implementation.
-/// </summary>
+/// <summary>Provides Amazon SQS-specific runtime services for a queue receive endpoint.</summary>
 public class QueueSqsReceiveEndpointContext :
     BaseReceiveEndpointContext,
     SqsReceiveEndpointContext
@@ -17,12 +15,10 @@ public class QueueSqsReceiveEndpointContext :
     readonly IAmazonSqsReceiveEndpointConfiguration _configuration;
     readonly IAmazonSqsHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="configuration">The configuration callback.</param>
-    /// <param name="brokerTopology">The broker topology value.</param>
+    /// <summary>Initializes an Amazon SQS queue receive-endpoint context.</summary>
+    /// <param name="hostConfiguration">The owning host configuration.</param>
+    /// <param name="configuration">The receive-endpoint configuration.</param>
+    /// <param name="brokerTopology">The endpoint's queue, topics, and subscriptions.</param>
     public QueueSqsReceiveEndpointContext(IAmazonSqsHostConfiguration hostConfiguration, IAmazonSqsReceiveEndpointConfiguration configuration,
         BrokerTopology brokerTopology)
         : base(hostConfiguration, configuration)
@@ -34,49 +30,37 @@ public class QueueSqsReceiveEndpointContext :
         _clientContext = new Recycle<IClientContextSupervisor>(() => new ClientContextSupervisor(_hostConfiguration.ConnectionContextSupervisor));
     }
 
-    /// <summary>
-    /// Gets the broker topology value.
-    /// </summary>
+    /// <summary>Gets the endpoint's Amazon topology.</summary>
     public BrokerTopology BrokerTopology { get; }
 
-    /// <summary>
-    /// Gets the client context supervisor value.
-    /// </summary>
+    /// <summary>Gets the recyclable Amazon client-context supervisor.</summary>
     public IClientContextSupervisor ClientContextSupervisor => _clientContext.Supervisor;
 
-    /// <summary>
-    /// Adds send agent to the configuration.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
+    /// <summary>Adds a send agent to the endpoint's client supervisor.</summary>
+    /// <param name="agent">The send agent.</param>
     public override void AddSendAgent(IAgent agent)
     {
         _clientContext.Supervisor.AddSendAgent(agent);
     }
 
-    /// <summary>
-    /// Adds consume agent to the configuration.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
+    /// <summary>Adds a consume agent to the endpoint's client supervisor.</summary>
+    /// <param name="agent">The consume agent.</param>
     public override void AddConsumeAgent(IAgent agent)
     {
         _clientContext.Supervisor.AddConsumeAgent(agent);
     }
 
-    /// <summary>
-    /// Performs the convert exception operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Wraps a transport failure with the configured Amazon host identity.</summary>
+    /// <param name="exception">The underlying failure.</param>
+    /// <param name="message">The contextual error message.</param>
+    /// <returns>The Amazon SQS connection exception.</returns>
     public override Exception ConvertException(Exception exception, string message)
     {
         return new AmazonSqsConnectionException(message + _hostConfiguration.Settings, exception);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds queue, concurrency, polling, and topology settings to a diagnostic probe.</summary>
+    /// <param name="context">The probe context.</param>
     public override void Probe(ProbeContext context)
     {
         context.Add("type", "AmazonSQS");
@@ -95,19 +79,15 @@ public class QueueSqsReceiveEndpointContext :
         BrokerTopology.Probe(topologyScope);
     }
 
-    /// <summary>
-    /// Creates send transport provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the endpoint's Amazon SQS send-transport provider.</summary>
+    /// <returns>The send-transport provider.</returns>
     protected override ISendTransportProvider CreateSendTransportProvider()
     {
         return new AmazonSqsSendTransportProvider(_hostConfiguration.ConnectionContextSupervisor, this);
     }
 
-    /// <summary>
-    /// Creates publish transport provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the endpoint's Amazon SNS publish-transport provider.</summary>
+    /// <returns>The publish-transport provider.</returns>
     protected override IPublishTransportProvider CreatePublishTransportProvider()
     {
         return new AmazonSqsPublishTransportProvider(_hostConfiguration.ConnectionContextSupervisor, this);

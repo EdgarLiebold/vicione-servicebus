@@ -11,6 +11,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
 /// <summary>Owns the application-to-persisted-intent transition for one typed bus.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
     where TBus : class, IBus
 {

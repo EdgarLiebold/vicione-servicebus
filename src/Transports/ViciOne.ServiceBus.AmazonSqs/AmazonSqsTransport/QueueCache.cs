@@ -10,9 +10,7 @@ using ViciOne.ServiceBus.Caching;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides a queue cache implementation.
-/// </summary>
+/// <summary>Resolves and caches Amazon SQS queue metadata with distinct durable and evictable ownership.</summary>
 public sealed class QueueCache :
     IAsyncDisposable
 {
@@ -22,12 +20,10 @@ public sealed class QueueCache :
     readonly DurableResourceStore<string, QueueInfo> _durableQueues;
     readonly KeyedResourceCache<string, QueueInfo> _ephemeralQueues;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="client">The client value.</param>
-    /// <param name="options">The options value.</param>
-    /// <param name="lifetimeCancellationToken">The lifetime cancellation token value.</param>
+    /// <summary>Initializes an Amazon SQS queue cache.</summary>
+    /// <param name="client">The Amazon SQS client used to resolve and create queues.</param>
+    /// <param name="options">The capacity and lifetime settings for evictable entries.</param>
+    /// <param name="lifetimeCancellationToken">The token that ends durable resource ownership.</param>
     public QueueCache(IAmazonSQS client, AmazonSqsClientContextCacheOptions options, CancellationToken lifetimeCancellationToken)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
@@ -38,22 +34,18 @@ public sealed class QueueCache :
             options.CreateResourceCacheOptions(lifetimeCancellationToken), StringComparer.Ordinal);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Disposes evictable and durable queue metadata resources.</summary>
+    /// <returns>A task that completes when both cache partitions have been disposed.</returns>
     public async ValueTask DisposeAsync()
     {
         await _ephemeralQueues.DisposeAsync().ConfigureAwait(false);
         await _durableQueues.DisposeAsync().ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets or creates queue metadata using the topology entity's attributes, tags, and lifetime.</summary>
+    /// <param name="queue">The queue topology entity.</param>
+    /// <param name="cancellationToken">The token used to cancel this caller's wait.</param>
+    /// <returns>The resolved queue metadata.</returns>
     public async Task<QueueInfo> GetAsync(Queue queue, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(queue);
@@ -74,12 +66,10 @@ public sealed class QueueCache :
             (_, ownerToken) => ResolveQueueAsync(queue, ownerToken), cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Gets by name.
-    /// </summary>
-    /// <param name="entityName">The entity name value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets metadata for an existing queue by logical name.</summary>
+    /// <param name="entityName">The logical queue name.</param>
+    /// <param name="cancellationToken">The token used to cancel this caller's wait.</param>
+    /// <returns>The resolved queue metadata.</returns>
     public async Task<QueueInfo> GetByNameAsync(string entityName, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(entityName);
@@ -91,12 +81,10 @@ public sealed class QueueCache :
             (name, ownerToken) => GetExistingQueueAsync(name, ownerToken), cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the remove by name operation.
-    /// </summary>
-    /// <param name="entityName">The entity name value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Removes and disposes queue metadata from either cache partition.</summary>
+    /// <param name="entityName">The logical queue name.</param>
+    /// <param name="cancellationToken">The token used to cancel removal from the evictable cache.</param>
+    /// <returns><see langword="true"/> when an entry was removed; otherwise, <see langword="false"/>.</returns>
     public async Task<bool> RemoveByNameAsync(string entityName, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(entityName);

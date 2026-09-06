@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides a connection context supervisor implementation.
-/// </summary>
+/// <summary>Supervises ActiveMQ connections and creates destination-specific send transports.</summary>
 public class ConnectionContextSupervisor :
     TransportPipeContextSupervisor<ConnectionContext>,
     IConnectionContextSupervisor
@@ -17,11 +15,9 @@ public class ConnectionContextSupervisor :
     readonly IActiveMqHostConfiguration _hostConfiguration;
     readonly IActiveMqTopologyConfiguration _topologyConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Creates a connection supervisor for an ActiveMQ host and topology.</summary>
+    /// <param name="hostConfiguration">The ActiveMQ host configuration.</param>
+    /// <param name="topologyConfiguration">The ActiveMQ topology configuration.</param>
     public ConnectionContextSupervisor(IActiveMqHostConfiguration hostConfiguration, IActiveMqTopologyConfiguration topologyConfiguration)
         : base(new ConnectionContextFactory(hostConfiguration))
     {
@@ -29,24 +25,20 @@ public class ConnectionContextSupervisor :
         _topologyConfiguration = topologyConfiguration;
     }
 
-    /// <summary>
-    /// Performs the normalize address operation.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Normalizes a destination address against the configured broker host.</summary>
+    /// <param name="address">The queue, topic, or absolute destination address.</param>
+    /// <returns>The canonical absolute ActiveMQ destination URI.</returns>
     public Uri NormalizeAddress(Uri address)
     {
         return new ActiveMqEndpointAddress(_hostConfiguration.HostAddress, address);
     }
 
-    /// <summary>
-    /// Creates send transport.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="sessionContextSupervisor">The session context supervisor value.</param>
-    /// <param name="address">The address value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a send transport for an ActiveMQ queue or topic address.</summary>
+    /// <param name="context">The receive-endpoint context that owns the transport.</param>
+    /// <param name="sessionContextSupervisor">The parent session supervisor.</param>
+    /// <param name="address">The destination address.</param>
+    /// <param name="cancellationToken">The token checked before transport creation.</param>
+    /// <returns>A task that produces the configured send transport.</returns>
     public Task<ISendTransport> CreateSendTransportAsync(ActiveMqReceiveEndpointContext context, ISessionContextSupervisor sessionContextSupervisor, Uri address, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Transports.ISendTransport>(cancellationToken); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
@@ -64,14 +56,12 @@ public class ConnectionContextSupervisor :
             endpointAddress.Type == ActiveMqEndpointAddress.AddressType.Queue ? DestinationType.Queue : DestinationType.Topic);
     }
 
-    /// <summary>
-    /// Creates publish transport.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="sessionContextSupervisor">The session context supervisor value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a topic send transport from a message type's publish topology.</summary>
+    /// <typeparam name="T">The published message type.</typeparam>
+    /// <param name="context">The receive-endpoint context that owns the transport.</param>
+    /// <param name="sessionContextSupervisor">The parent session supervisor.</param>
+    /// <param name="cancellationToken">The token checked before transport creation.</param>
+    /// <returns>A task that produces the configured publish transport.</returns>
     public Task<ISendTransport> CreatePublishTransportAsync<T>(ActiveMqReceiveEndpointContext context, ISessionContextSupervisor sessionContextSupervisor, CancellationToken cancellationToken = default)
         where T : class
     {

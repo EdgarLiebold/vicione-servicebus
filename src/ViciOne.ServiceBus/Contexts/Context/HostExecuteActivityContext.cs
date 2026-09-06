@@ -1,10 +1,8 @@
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>
-/// Provides a host execute activity context implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Carries state for host execute activity operations.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class HostExecuteActivityContext<TActivity, TArguments> :
     ExecuteContextProxy<TArguments>,
     ExecuteActivityContext<TActivity, TArguments>
@@ -13,11 +11,9 @@ public class HostExecuteActivityContext<TActivity, TArguments> :
 {
     readonly TActivity _activity;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="activity">The activity value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="activity">The activity.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public HostExecuteActivityContext(TActivity activity, ExecuteContext<TArguments> context)
         : base(context)
     {

@@ -5,18 +5,14 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a system text json message serializer factory implementation.
-/// </summary>
+/// <summary>Creates system text json message serializer instances.</summary>
 public class SystemTextJsonMessageSerializerFactory :
     ISerializerFactory,
     IJsonSerializerFactory
 {
     readonly Lazy<SystemTextJsonMessageSerializer>? _serializer;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public SystemTextJsonMessageSerializerFactory()
     {
     }
@@ -26,24 +22,18 @@ public class SystemTextJsonMessageSerializerFactory :
         _serializer = new Lazy<SystemTextJsonMessageSerializer>(() => new SystemTextJsonMessageSerializer(options));
     }
 
-    /// <summary>
-    /// Gets the content type value.
-    /// </summary>
+    /// <summary>Gets the content type.</summary>
     public ContentType ContentType => SystemTextJsonMessageSerializer.JsonContentType;
 
-    /// <summary>
-    /// Creates serializer.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates serializer.</summary>
+    /// <returns>The created serializer.</returns>
     public IMessageSerializer CreateSerializer()
     {
         return GetSerializer();
     }
 
-    /// <summary>
-    /// Creates deserializer.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates deserializer.</summary>
+    /// <returns>The created deserializer.</returns>
     public IMessageDeserializer CreateDeserializer()
     {
         return GetSerializer();

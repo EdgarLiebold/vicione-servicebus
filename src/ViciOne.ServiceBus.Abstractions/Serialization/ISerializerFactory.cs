@@ -2,25 +2,17 @@ using System.Net.Mime;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 
-/// <summary>
-/// Defines the contract for serializer factory.
-/// </summary>
+/// <summary>Creates serializer instances.</summary>
 public interface ISerializerFactory
 {
-    /// <summary>
-    /// Gets the content type value.
-    /// </summary>
+    /// <summary>Gets the content type.</summary>
     ContentType ContentType { get; }
 
-    /// <summary>
-    /// Creates serializer.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates serializer.</summary>
+    /// <returns>The created serializer.</returns>
     IMessageSerializer CreateSerializer();
 
-    /// <summary>
-    /// Creates deserializer.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates deserializer.</summary>
+    /// <returns>The created deserializer.</returns>
     IMessageDeserializer CreateDeserializer();
 }

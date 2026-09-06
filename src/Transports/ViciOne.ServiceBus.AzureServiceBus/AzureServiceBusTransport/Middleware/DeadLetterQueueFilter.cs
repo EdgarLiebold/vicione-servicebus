@@ -2,9 +2,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Middleware;
 
-/// <summary>
-/// Moves a message to the dead-letter queue, rather than the _skipped queue
-/// </summary>
+/// <summary>Dead-letters an unconsumed delivery in Azure Service Bus instead of forwarding it to the transport skipped queue.</summary>
 public class DeadLetterQueueFilter :
     IFilter<ReceiveContext>
 {

@@ -6,10 +6,8 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a receive transport implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Transports receive messages.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class ReceiveTransport<TContext> :
     IReceiveTransport
     where TContext : class, PipeContext
@@ -19,13 +17,11 @@ public class ReceiveTransport<TContext> :
     readonly Func<ITransportSupervisor<TContext>> _supervisorFactory;
     readonly IPipe<TContext> _transportPipe;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="supervisorFactory">The supervisor factory value.</param>
-    /// <param name="transportPipe">The transport pipe value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="supervisorFactory">The supervisor factory.</param>
+    /// <param name="transportPipe">The transport pipe.</param>
     public ReceiveTransport(IHostConfiguration hostConfiguration, ReceiveEndpointContext context, Func<ITransportSupervisor<TContext>> supervisorFactory,
         IPipe<TContext> transportPipe)
     {
@@ -35,14 +31,10 @@ public class ReceiveTransport<TContext> :
         _transportPipe = transportPipe;
     }
 
-    /// <summary>
-    /// Gets or sets the pre start pipe value.
-    /// </summary>
+    /// <summary>Gets or sets the pre start pipe.</summary>
     public IPipe<TContext> PreStartPipe { get; set; } = null!;
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("receiveTransport");
@@ -50,50 +42,40 @@ public class ReceiveTransport<TContext> :
         _context.Probe(scope);
     }
 
-    /// <summary>
-    /// Starts the receive transport.
-    /// </summary>
+    /// <summary>Starts the receive transport.</summary>
     /// <returns>A handle that exposes transport readiness and controls its lifetime.</returns>
     public ReceiveTransportHandle Start()
     {
         return new ReceiveTransportAgent(_hostConfiguration.ReceiveTransportRetryPolicy, _context, _supervisorFactory, _transportPipe, PreStartPipe);
     }
 
-    /// <summary>
-    /// Connects receive observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveObserver(IReceiveObserver observer)
     {
         return _context.ConnectReceiveObserver(observer);
     }
 
-    /// <summary>
-    /// Connects receive transport observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects receive transport observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveTransportObserver(IReceiveTransportObserver observer)
     {
         return _context.ConnectReceiveTransportObserver(observer);
     }
 
-    /// <summary>
-    /// Connects publish observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects publish observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
         return _context.ConnectPublishObserver(observer);
     }
 
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects send observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _context.ConnectSendObserver(observer);
@@ -222,7 +204,7 @@ public class ReceiveTransport<TContext> :
                 if (_preStartPipe.IsNotEmpty())
                     await _supervisor.SendAsync(_preStartPipe, Stopping).ConfigureAwait(false);
 
-                // Nothing connected to the pipe, so signal early we are available
+                // An unconnected receive pipe can report transport availability before the supervisor loop.
                 if (!_context.ReceivePipe.Connected.IsCompleted)
                     await _context.OnTransportStartupAsync(_supervisor, Stopping).ConfigureAwait(false);
 

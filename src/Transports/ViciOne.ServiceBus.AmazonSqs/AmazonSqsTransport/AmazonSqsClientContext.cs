@@ -15,9 +15,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides an amazon sqs client context implementation.
-/// </summary>
+/// <summary>Provides operation-scoped access to Amazon SQS and Amazon SNS entities and messaging operations.</summary>
 public class AmazonSqsClientContext :
     ScopePipeContext,
     ClientContext
@@ -25,13 +23,11 @@ public class AmazonSqsClientContext :
     readonly IAmazonSimpleNotificationService _snsClient;
     readonly IAmazonSQS _sqsClient;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionContext">The connection context value.</param>
-    /// <param name="sqsClient">The sqs client value.</param>
-    /// <param name="snsClient">The sns client value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Initializes an Amazon SQS client context.</summary>
+    /// <param name="connectionContext">The connection that owns the entity caches used by this context.</param>
+    /// <param name="sqsClient">The client used for Amazon SQS operations.</param>
+    /// <param name="snsClient">The client used for Amazon SNS operations.</param>
+    /// <param name="cancellationToken">The cancellation token associated with the context lifetime.</param>
     public AmazonSqsClientContext(ConnectionContext connectionContext,
         IAmazonSQS sqsClient,
         IAmazonSimpleNotificationService snsClient,
@@ -45,45 +41,35 @@ public class AmazonSqsClientContext :
         CancellationToken = cancellationToken;
     }
 
-    /// <summary>
-    /// Gets the cancellation token value.
-    /// </summary>
+    /// <summary>Gets the cancellation token associated with the context lifetime.</summary>
     public override CancellationToken CancellationToken { get; }
 
-    /// <summary>
-    /// Gets the connection context value.
-    /// </summary>
+    /// <summary>Gets the connection that owns the entity caches used by this context.</summary>
     public ConnectionContext ConnectionContext { get; }
 
-    /// <summary>
-    /// Creates topic.
-    /// </summary>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets or creates the Amazon SNS topic represented by the topology entity.</summary>
+    /// <param name="topic">The topic topology entity.</param>
+    /// <param name="cancellationToken">The token used to cancel entity resolution.</param>
+    /// <returns>The resolved Amazon SNS topic information.</returns>
     public Task<TopicInfo> CreateTopicAsync(Topology.Topic topic, CancellationToken cancellationToken)
     {
         return ConnectionContext.GetTopicAsync(topic, cancellationToken);
     }
 
-    /// <summary>
-    /// Creates queue.
-    /// </summary>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets or creates the Amazon SQS queue represented by the topology entity.</summary>
+    /// <param name="queue">The queue topology entity.</param>
+    /// <param name="cancellationToken">The token used to cancel entity resolution.</param>
+    /// <returns>The resolved Amazon SQS queue information.</returns>
     public Task<QueueInfo> CreateQueueAsync(Queue queue, CancellationToken cancellationToken)
     {
         return ConnectionContext.GetQueueAsync(queue, cancellationToken);
     }
 
-    /// <summary>
-    /// Creates queue subscription.
-    /// </summary>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates or updates an Amazon SNS subscription from a topic to an Amazon SQS queue and grants the topic permission to send.</summary>
+    /// <param name="topic">The source topic topology entity.</param>
+    /// <param name="queue">The subscribed queue topology entity.</param>
+    /// <param name="cancellationToken">The token used to cancel the subscription and policy operations.</param>
+    /// <returns><see langword="true"/> when the queue policy was changed; <see langword="false"/> when permission already existed or no matching existing subscription could be resolved.</returns>
     public async Task<bool> CreateQueueSubscriptionAsync(Topology.Topic topic, Queue queue, CancellationToken cancellationToken)
     {
         var topicInfo = await ConnectionContext.GetTopicAsync(topic, cancellationToken).ConfigureAwait(false);
@@ -154,12 +140,10 @@ public class AmazonSqsClientContext :
         return await queueInfo.UpdatePolicyAsync(sqsQueueArn, topicInfo.Arn, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the delete topic operation.
-    /// </summary>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deletes an Amazon SNS topic and evicts its cached entity information.</summary>
+    /// <param name="topic">The topic topology entity to delete.</param>
+    /// <param name="cancellationToken">The token used to cancel the delete operation.</param>
+    /// <returns>A task that completes when the topic has been deleted and its cache entry removed.</returns>
     public async Task DeleteTopicAsync(Topology.Topic topic, CancellationToken cancellationToken)
     {
         var topicInfo = await ConnectionContext.GetTopicAsync(topic, cancellationToken).ConfigureAwait(false);
@@ -173,12 +157,10 @@ public class AmazonSqsClientContext :
         await ConnectionContext.RemoveTopicByNameAsync(topic.EntityName, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the delete queue operation.
-    /// </summary>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deletes a queue's Amazon SNS subscriptions, deletes the Amazon SQS queue, and evicts its cached entity information.</summary>
+    /// <param name="queue">The queue topology entity to delete.</param>
+    /// <param name="cancellationToken">The token used to cancel the delete operations.</param>
+    /// <returns>A task that completes when the subscriptions and queue have been deleted and the cache entry removed.</returns>
     public async Task DeleteQueueAsync(Queue queue, CancellationToken cancellationToken)
     {
         var queueInfo = await ConnectionContext.GetQueueAsync(queue, cancellationToken).ConfigureAwait(false);
@@ -199,13 +181,11 @@ public class AmazonSqsClientContext :
         await ConnectionContext.RemoveQueueByNameAsync(queue.EntityName, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <param name="topicName">The topic name value.</param>
-    /// <param name="request">The request value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Publishes a prepared batch entry through the named Amazon SNS topic.</summary>
+    /// <param name="topicName">The logical topic name used to resolve the cached topic.</param>
+    /// <param name="request">The Amazon SNS batch entry to publish.</param>
+    /// <param name="cancellationToken">The token used to cancel topic resolution or publishing.</param>
+    /// <returns>A task that completes when Amazon SNS accepts the batch entry.</returns>
     public async Task PublishAsync(string topicName, PublishBatchRequestEntry request, CancellationToken cancellationToken)
     {
         var topicInfo = await ConnectionContext.GetTopicByNameAsync(topicName, cancellationToken).ConfigureAwait(false);
@@ -213,13 +193,11 @@ public class AmazonSqsClientContext :
         await topicInfo.PublishAsync(request, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Sends message.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="request">The request value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a prepared batch entry to the named Amazon SQS queue.</summary>
+    /// <param name="queueName">The logical queue name used to resolve the cached queue.</param>
+    /// <param name="request">The Amazon SQS batch entry to send.</param>
+    /// <param name="cancellationToken">The token used to cancel queue resolution or sending.</param>
+    /// <returns>A task that completes when Amazon SQS accepts the batch entry.</returns>
     public async Task SendMessageAsync(string queueName, SendMessageBatchRequestEntry request, CancellationToken cancellationToken)
     {
         var queueInfo = await ConnectionContext.GetQueueByNameAsync(queueName, cancellationToken).ConfigureAwait(false);
@@ -227,13 +205,11 @@ public class AmazonSqsClientContext :
         await queueInfo.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the delete message operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="receiptHandle">The receipt handle value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deletes a received message from the named Amazon SQS queue.</summary>
+    /// <param name="queueName">The logical queue name used to resolve the cached queue.</param>
+    /// <param name="receiptHandle">The receipt handle returned by Amazon SQS for the received message.</param>
+    /// <param name="cancellationToken">The token used to cancel queue resolution or deletion.</param>
+    /// <returns>A task that completes when Amazon SQS accepts the delete request.</returns>
     public async Task DeleteMessageAsync(string queueName, string receiptHandle, CancellationToken cancellationToken)
     {
         var queueInfo = await ConnectionContext.GetQueueByNameAsync(queueName, cancellationToken).ConfigureAwait(false);
@@ -241,12 +217,10 @@ public class AmazonSqsClientContext :
         await queueInfo.DeleteAsync(receiptHandle, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the purge queue operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Requests removal of all available messages from the named Amazon SQS queue.</summary>
+    /// <param name="queueName">The logical queue name used to resolve the cached queue.</param>
+    /// <param name="cancellationToken">The token used to cancel queue resolution or the purge request.</param>
+    /// <returns>A task that completes when Amazon SQS accepts the purge request.</returns>
     public async Task PurgeQueueAsync(string queueName, CancellationToken cancellationToken)
     {
         var queueInfo = await ConnectionContext.GetQueueByNameAsync(queueName, cancellationToken).ConfigureAwait(false);
@@ -256,14 +230,12 @@ public class AmazonSqsClientContext :
         response.EnsureSuccessfulResponse();
     }
 
-    /// <summary>
-    /// Performs the receive messages operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="messageLimit">The message limit value.</param>
-    /// <param name="waitTime">The wait time value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Receives messages and all message attributes from the named Amazon SQS queue.</summary>
+    /// <param name="queueName">The logical queue name used to resolve the cached queue.</param>
+    /// <param name="messageLimit">The maximum number of messages requested from Amazon SQS.</param>
+    /// <param name="waitTime">The long-poll wait time, in seconds.</param>
+    /// <param name="cancellationToken">The token used to cancel queue resolution or receiving.</param>
+    /// <returns>The messages returned by Amazon SQS, or an empty list when the response does not contain a message collection.</returns>
     public async Task<IList<Message>> ReceiveMessagesAsync(string queueName, int messageLimit, int waitTime, CancellationToken cancellationToken)
     {
         var queueInfo = await ConnectionContext.GetQueueByNameAsync(queueName, cancellationToken).ConfigureAwait(false);
@@ -283,25 +255,21 @@ public class AmazonSqsClientContext :
         return response.Messages ?? new List<Message>();
     }
 
-    /// <summary>
-    /// Gets queue info.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Resolves cached entity information for a named Amazon SQS queue.</summary>
+    /// <param name="queueName">The logical queue name.</param>
+    /// <param name="cancellationToken">The token used to cancel queue resolution.</param>
+    /// <returns>The resolved Amazon SQS queue information.</returns>
     public Task<QueueInfo> GetQueueInfoAsync(string queueName, CancellationToken cancellationToken)
     {
         return ConnectionContext.GetQueueByNameAsync(queueName, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the change message visibility operation.
-    /// </summary>
-    /// <param name="queueUrl">The queue url value.</param>
-    /// <param name="receiptHandle">The receipt handle value.</param>
-    /// <param name="seconds">The seconds value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Changes the visibility timeout of a received Amazon SQS message.</summary>
+    /// <param name="queueUrl">The Amazon SQS queue URL.</param>
+    /// <param name="receiptHandle">The receipt handle returned for the received message.</param>
+    /// <param name="seconds">The new visibility timeout, in seconds.</param>
+    /// <param name="cancellationToken">The token used to cancel the request.</param>
+    /// <returns>A task that completes when Amazon SQS accepts the visibility change.</returns>
     public async Task ChangeMessageVisibilityAsync(string queueUrl, string receiptHandle, int seconds, CancellationToken cancellationToken)
     {
         var response = await _sqsClient.ChangeMessageVisibilityAsync(new ChangeMessageVisibilityRequest

@@ -7,33 +7,25 @@ namespace ViciOne.ServiceBus.MessageData.Values;
 /// MessageData that has been stored by the repository, has a valid address, and is ready to
 /// be serialized.
 /// </summary>
-/// <typeparam name="T"></typeparam>
+/// <typeparam name="T">The value type.</typeparam>
 public class StoredMessageData<T> :
     MessageData<T>
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="address">The address.</param>
+    /// <param name="value">The value to process.</param>
     public StoredMessageData(Uri? address, T value)
     {
         Address = address;
         Value = Task.FromResult<T?>(value);
     }
 
-    /// <summary>
-    /// Gets the address value.
-    /// </summary>
+    /// <summary>Gets the address.</summary>
     public Uri? Address { get; }
 
-    /// <summary>
-    /// Gets the has value value.
-    /// </summary>
+    /// <summary>Gets whether this instance contains a value.</summary>
     public bool HasValue => true;
 
-    /// <summary>
-    /// Gets the underlying value.
-    /// </summary>
+    /// <summary>Gets the value.</summary>
     public Task<T?> Value { get; }
 }

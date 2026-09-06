@@ -3,18 +3,14 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides an active mq broker topology implementation.
-/// </summary>
+/// <summary>Provides an immutable snapshot of ActiveMQ topics, queues, and consumer bindings.</summary>
 public class ActiveMqBrokerTopology :
     BrokerTopology
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topics">The topics value.</param>
-    /// <param name="queues">The queues value.</param>
-    /// <param name="consumers">The consumers value.</param>
+    /// <summary>Creates a broker-topology snapshot from the supplied entity sequences.</summary>
+    /// <param name="topics">The declared topics.</param>
+    /// <param name="queues">The declared queues.</param>
+    /// <param name="consumers">The topic-to-queue or direct-topic consumer bindings.</param>
     public ActiveMqBrokerTopology(IEnumerable<Topic> topics, IEnumerable<Queue> queues, IEnumerable<Consumer> consumers)
     {
         Topics = topics.ToArray();
@@ -22,17 +18,11 @@ public class ActiveMqBrokerTopology :
         Consumers = consumers.ToArray();
     }
 
-    /// <summary>
-    /// Gets the topics value.
-    /// </summary>
+    /// <summary>Gets the topic snapshot.</summary>
     public Topic[] Topics { get; }
-    /// <summary>
-    /// Gets the queues value.
-    /// </summary>
+    /// <summary>Gets the queue snapshot.</summary>
     public Queue[] Queues { get; }
-    /// <summary>
-    /// Gets the consumers value.
-    /// </summary>
+    /// <summary>Gets the consumer-binding snapshot.</summary>
     public Consumer[] Consumers { get; }
 
     void IProbeSite.Probe(ProbeContext context)
@@ -65,7 +55,7 @@ public class ActiveMqBrokerTopology :
             {
                 Source = binding.Source.EntityName,
                 Destination = binding.Destination?.EntityName,
-                RoutingKey = binding.Selector,
+                binding.Selector,
                 binding.ConsumerName,
                 binding.IsShared
             });

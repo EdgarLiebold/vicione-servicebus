@@ -3,16 +3,14 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides extension methods for service bus schedule message.
-/// </summary>
+/// <summary>Enables native Azure Service Bus delayed delivery on consume pipelines.</summary>
 public static class ServiceBusScheduleMessageExtensions
 {
     /// <summary>
-    /// Uses the Enqueue time of Service Bus messages to schedule future delivery of messages instead
-    /// of using Quartz. A natively supported feature that is highly reliable.
+    /// Adds the consume-pipeline payload that schedules future delivery by setting Azure Service Bus
+    /// scheduled enqueue time rather than using an external scheduler.
     /// </summary>
-    /// <param name="configurator"></param>
+    /// <param name="configurator">The bus factory pipeline to configure.</param>
     public static void ConfigureServiceBusMessageScheduler(this IBusFactoryConfigurator configurator)
     {
         if (configurator == null)

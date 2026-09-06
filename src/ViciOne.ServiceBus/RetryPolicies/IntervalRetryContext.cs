@@ -3,10 +3,8 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>
-/// Provides an interval retry context implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Carries state for interval retry operations.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class IntervalRetryContext<TContext> :
     BaseRetryContext<TContext>,
     RetryContext<TContext>
@@ -14,13 +12,11 @@ public class IntervalRetryContext<TContext> :
 {
     readonly IntervalRetryPolicy _policy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="policy">The policy value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="policy">The policy.</param>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="retryCount">The retry count value.</param>
+    /// <param name="retryCount">The retry count.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public IntervalRetryContext(IntervalRetryPolicy policy, TContext context, Exception exception, int retryCount, CancellationToken cancellationToken)
         : base(context, exception, retryCount, cancellationToken)
@@ -28,9 +24,7 @@ public class IntervalRetryContext<TContext> :
         _policy = policy;
     }
 
-    /// <summary>
-    /// Gets the delay value.
-    /// </summary>
+    /// <summary>Gets the delay.</summary>
     public override TimeSpan? Delay => _policy.Intervals[RetryCount];
 
     bool RetryContext<TContext>.CanRetry(Exception exception, out RetryContext<TContext> retryContext)

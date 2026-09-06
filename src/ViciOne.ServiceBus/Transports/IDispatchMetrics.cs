@@ -1,31 +1,19 @@
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Defines the contract for dispatch metrics.
-/// </summary>
+/// <summary>Defines the operations required by dispatch metrics.</summary>
 public interface IDispatchMetrics
 {
-    /// <summary>
-    /// Gets the active dispatch count value.
-    /// </summary>
+    /// <summary>Gets the active dispatch count.</summary>
     int ActiveDispatchCount { get; }
-    /// <summary>
-    /// Gets the dispatch count value.
-    /// </summary>
+    /// <summary>Gets the dispatch count.</summary>
     long DispatchCount { get; }
-    /// <summary>
-    /// Gets the max concurrent dispatch count value.
-    /// </summary>
+    /// <summary>Gets the max concurrent dispatch count.</summary>
     int MaxConcurrentDispatchCount { get; }
 
-    /// <summary>
-    /// Occurs when zero activity.
-    /// </summary>
+    /// <summary>Occurs when zero activity.</summary>
     event ZeroActiveDispatchHandler ZeroActivity;
 
-    /// <summary>
-    /// Gets metrics.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets metrics.</summary>
+    /// <returns>The metrics.</returns>
     DeliveryMetrics GetMetrics();
 }

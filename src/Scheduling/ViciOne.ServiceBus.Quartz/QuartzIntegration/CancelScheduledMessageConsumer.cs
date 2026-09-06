@@ -5,29 +5,23 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Quartz;
 
-/// <summary>
-/// Provides a cancel scheduled message consumer implementation.
-/// </summary>
+/// <summary>Removes one-time and recurring Quartz triggers addressed by cancellation commands.</summary>
 public class CancelScheduledMessageConsumer :
     IConsumer<CancelScheduledMessage>,
     IConsumer<CancelScheduledRecurringMessage>
 {
     readonly ISchedulerFactory _schedulerFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="schedulerFactory">The scheduler factory value.</param>
+    /// <summary>Initializes the consumer with the factory used to resolve the active Quartz scheduler.</summary>
+    /// <param name="schedulerFactory">The factory that resolves the active Quartz scheduler.</param>
     public CancelScheduledMessageConsumer(ISchedulerFactory schedulerFactory)
     {
         _schedulerFactory = schedulerFactory ?? throw new ArgumentNullException(nameof(schedulerFactory));
     }
 
-    /// <summary>
-    /// Consumes the message provided by the context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Unschedules the one-time trigger identified by the command token.</summary>
+    /// <param name="context">The one-time cancellation command context.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ConsumeAsync(ConsumeContext<CancelScheduledMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -44,11 +38,9 @@ public class CancelScheduledMessageConsumer :
             LogContext.Debug?.Log("CancelScheduledMessage: no message found for {Id}", triggerKey);
     }
 
-    /// <summary>
-    /// Consumes the message provided by the context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Unschedules the recurring trigger identified by schedule group and identifier.</summary>
+    /// <param name="context">The recurring cancellation command context.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ConsumeAsync(ConsumeContext<CancelScheduledRecurringMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);

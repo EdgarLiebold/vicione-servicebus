@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.RabbitMq.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a rabbit mq consume topology implementation.
-/// </summary>
+/// <summary>Collects RabbitMQ receive bindings and per-message consume topology.</summary>
 public class RabbitMqConsumeTopology :
     ConsumeTopology,
     IRabbitMqConsumeTopologyConfigurator
@@ -16,11 +14,9 @@ public class RabbitMqConsumeTopology :
     readonly IRabbitMqPublishTopology _publishTopology;
     readonly List<IRabbitMqConsumeTopologySpecification> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
-    /// <param name="publishTopology">The publish topology value.</param>
+    /// <summary>Creates a RabbitMQ consume topology with fanout exchanges by default.</summary>
+    /// <param name="messageTopology">The message metadata used to derive entity names.</param>
+    /// <param name="publishTopology">The publish topology used for consumed message contracts.</param>
     public RabbitMqConsumeTopology(IMessageTopology messageTopology, IRabbitMqPublishTopology publishTopology)
         : base(255)
     {
@@ -31,9 +27,7 @@ public class RabbitMqConsumeTopology :
         _specifications = new List<IRabbitMqConsumeTopologySpecification>();
     }
 
-    /// <summary>
-    /// Gets the exchange type selector value.
-    /// </summary>
+    /// <summary>Gets the selector used to determine exchange types for consumed message contracts.</summary>
     public IExchangeTypeSelector ExchangeTypeSelector { get; }
 
     IRabbitMqMessageConsumeTopology<T> IRabbitMqConsumeTopology.GetMessageTopology<T>()
@@ -42,10 +36,8 @@ public class RabbitMqConsumeTopology :
             ?? throw new InvalidOperationException($"The message topology for '{typeof(T)}' is not a RabbitMQ consume topology.");
     }
 
-    /// <summary>
-    /// Adds specification to the configuration.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Adds a receive-topology specification.</summary>
+    /// <param name="specification">The specification to apply when the endpoint topology is built.</param>
     public void AddSpecification(IRabbitMqConsumeTopologySpecification specification)
     {
         if (specification == null)
@@ -60,10 +52,8 @@ public class RabbitMqConsumeTopology :
             ?? throw new InvalidOperationException($"The message topology for '{typeof(T)}' is not a RabbitMQ consume topology.");
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies explicit bindings followed by every configured message topology.</summary>
+    /// <param name="builder">The receive-endpoint topology builder.</param>
     public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
     {
         foreach (var specification in _specifications)
@@ -72,11 +62,9 @@ public class RabbitMqConsumeTopology :
         ForEach<IRabbitMqMessageConsumeTopologyConfigurator>(x => x.Apply(builder));
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Adds a binding from a named source exchange to the receive endpoint exchange.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="configure">An optional callback that customizes the source exchange and binding.</param>
     public void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator>? configure = null)
     {
         if (string.IsNullOrWhiteSpace(exchangeName))
@@ -91,12 +79,10 @@ public class RabbitMqConsumeTopology :
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Performs the bind queue operation.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Adds a binding from a named exchange to a named queue.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configure">An optional callback that customizes the exchange, queue, and binding.</param>
     public void BindQueue(string exchangeName, string queueName, Action<IRabbitMqQueueBindingConfigurator>? configure = null)
     {
         if (string.IsNullOrWhiteSpace(exchangeName))
@@ -111,20 +97,16 @@ public class RabbitMqConsumeTopology :
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the message topologies and all explicit binding specifications.</summary>
+    /// <returns>Every validation failure found in the consume topology.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the RabbitMQ consume topology for a message contract.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <returns>The message-specific consume topology.</returns>
     protected override IMessageConsumeTopologyConfigurator CreateMessageTopology<T>()
     {
         var exchangeTypeSelector = new MessageExchangeTypeSelector<T>(ExchangeTypeSelector);

@@ -2,11 +2,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Splits apart the data from the behavior so it can be invoked properly.
-/// </summary>
-/// <typeparam name="TSaga">The instance type</typeparam>
-/// <typeparam name="TMessage">The event data type</typeparam>
+/// <summary>Splits apart the data from the behavior so it can be invoked properly.</summary>
+/// <typeparam name="TSaga">The instance type.</typeparam>
+/// <typeparam name="TMessage">The event data type.</typeparam>
 public class DataBehavior<TSaga, TMessage> :
     IBehavior<TSaga, TMessage>
     where TSaga : class, SagaStateMachineInstance
@@ -14,28 +12,22 @@ public class DataBehavior<TSaga, TMessage> :
 {
     readonly IBehavior<TSaga> _behavior;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="behavior">The behavior value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="behavior">The state-machine behavior to compose or inspect.</param>
     public DataBehavior(IBehavior<TSaga> behavior)
     {
         _behavior = behavior;
     }
 
-    /// <summary>
-    /// Performs the accept operation.
-    /// </summary>
-    /// <param name="visitor">The visitor value.</param>
+    /// <summary>Accepts the supplied value.</summary>
+    /// <param name="visitor">The visitor.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         _behavior.Accept(visitor);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         _behavior.Probe(context);

@@ -2,24 +2,16 @@ using System;
 
 namespace ViciOne.ServiceBus.Util.Scanning;
 
-/// <summary>
-/// Provides an assembly scan record implementation.
-/// </summary>
+/// <summary>Carries the persisted record for assembly scan.</summary>
 public class AssemblyScanRecord
 {
-    /// <summary>
-    /// Defines the load exception value.
-    /// </summary>
+    /// <summary>Exposes the load exception used by the containing type.</summary>
     public Exception? LoadException;
-    /// <summary>
-    /// Defines the name value.
-    /// </summary>
+    /// <summary>Exposes the name used by the containing type.</summary>
     public string? Name;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the string representation of this instance.</summary>
+    /// <returns>The converted string.</returns>
     public override string ToString()
     {
         return LoadException == null ? Name ?? "" : $"{Name} (Failed)";

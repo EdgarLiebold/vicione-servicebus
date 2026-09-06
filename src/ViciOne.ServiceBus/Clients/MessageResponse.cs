@@ -3,20 +3,16 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>
-/// A result from a request
-/// </summary>
-/// <typeparam name="TResult"></typeparam>
+/// <summary>A result from a request.</summary>
+/// <typeparam name="TResult">The result produced by the operation.</typeparam>
 public class MessageResponse<TResult> :
     Response<TResult>
     where TResult : class
 {
     readonly ConsumeContext<TResult> _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public MessageResponse(ConsumeContext<TResult> context)
     {
         _context = context;
@@ -38,18 +34,14 @@ public class MessageResponse<TResult> :
     Headers MessageContext.Headers => _context.Headers;
     HostInfo MessageContext.Host => _context.Host;
 
-    /// <summary>
-    /// Gets the message value.
-    /// </summary>
+    /// <summary>Gets the message.</summary>
     public TResult Message { get; }
     object Response.Message => Message;
 
-    /// <summary>
-    /// Performs the deserialize object operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="dictionary">The dictionary value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deserializes object.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <returns>The deserialized object.</returns>
     public T? DeserializeObject<T>(Dictionary<string, object> dictionary)
         where T : class
     {

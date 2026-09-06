@@ -5,43 +5,31 @@ using ViciOne.ServiceBus.AzureServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus message publish topology.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Describes the Azure Service Bus publish topic for a message contract.</summary>
+/// <typeparam name="TMessage">The published message contract.</typeparam>
 public interface IServiceBusMessagePublishTopology<TMessage> :
     IMessagePublishTopology<TMessage>,
     IServiceBusMessagePublishTopology
     where TMessage : class
 {
-    /// <summary>
-    /// Returns the topic options for the message type
-    /// </summary>
+    /// <summary>Gets the topic declaration options for the message contract.</summary>
     CreateTopicOptions CreateTopicOptions { get; }
 
-    /// <summary>
-    /// Gets send settings.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the settings used to publish to the message topic.</summary>
+    /// <returns>The topic send settings.</returns>
     SendSettings GetSendSettings();
 
-    /// <summary>
-    /// Gets subscription configurator.
-    /// </summary>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets a configurator for a subscription to the message topic.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <returns>A configurator bound to the message topic.</returns>
     ServiceBusSubscriptionConfigurator GetSubscriptionConfigurator(string subscriptionName);
 }
 
 
-/// <summary>
-/// Defines the contract for service bus message publish topology.
-/// </summary>
+/// <summary>Applies runtime-typed Azure Service Bus publish topology to a broker builder.</summary>
 public interface IServiceBusMessagePublishTopology
 {
-    /// <summary>
-    /// Apply the message topology to the builder, including any implemented types
-    /// </summary>
-    /// <param name="builder">The topology builder</param>
+    /// <summary>Applies the message topic and implemented-message topology to a broker builder.</summary>
+    /// <param name="builder">The publish topology builder.</param>
     void Apply(IPublishEndpointBrokerTopologyBuilder builder);
 }

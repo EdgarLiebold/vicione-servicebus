@@ -4,21 +4,17 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>
-/// Provides a message topic exchange implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Routes message topic messages through an exchange.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class MessageTopicExchange<T> :
     IMessageExchange<T>
     where T : class
 {
     readonly TopicNode<T> _root;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="comparer">The comparer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="comparer">The comparer.</param>
     public MessageTopicExchange(string name, StringComparer? comparer = default)
     {
         Name = name;
@@ -26,22 +22,16 @@ public class MessageTopicExchange<T> :
         _root = new TopicNode<T>(comparer ?? StringComparer.Ordinal);
     }
 
-    /// <summary>
-    /// Gets the sinks value.
-    /// </summary>
+    /// <summary>Gets the sinks.</summary>
     public IEnumerable<IMessageSink<T>> Sinks => _root.Sinks;
 
-    /// <summary>
-    /// Gets the name value.
-    /// </summary>
+    /// <summary>Gets the name.</summary>
     public string Name { get; }
 
-    /// <summary>
-    /// Performs the deliver operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Delivers the current message.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task DeliverAsync(DeliveryContext<T> context, CancellationToken cancellationToken = default)
     {
         var routingKey = context.RoutingKey;
@@ -49,21 +39,17 @@ public class MessageTopicExchange<T> :
         return _root.DeliverAsync(context, routingKey, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the connect operation.
-    /// </summary>
-    /// <param name="sink">The sink value.</param>
-    /// <param name="routingKey">The routing key value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects the configured observer or endpoint.</summary>
+    /// <param name="sink">The sink.</param>
+    /// <param name="routingKey">The routing key.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle Connect(IMessageSink<T> sink, string? routingKey)
     {
         return _root.Add(sink, routingKey);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("exchange");
@@ -75,10 +61,8 @@ public class MessageTopicExchange<T> :
         _root.Probe(topicScope);
     }
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the string representation of this instance.</summary>
+    /// <returns>The converted string.</returns>
     public override string ToString()
     {
         return $"Exchange({Name})";

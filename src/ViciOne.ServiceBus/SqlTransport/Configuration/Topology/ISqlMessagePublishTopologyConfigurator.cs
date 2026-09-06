@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Defines the contract for sql message publish topology configurator.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures sql message publish topology.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public interface ISqlMessagePublishTopologyConfigurator<TMessage> :
     IMessagePublishTopologyConfigurator<TMessage>,
     ISqlMessagePublishTopology<TMessage>,
@@ -13,9 +11,7 @@ public interface ISqlMessagePublishTopologyConfigurator<TMessage> :
 }
 
 
-/// <summary>
-/// Defines the contract for sql message publish topology configurator.
-/// </summary>
+/// <summary>Configures sql message publish topology.</summary>
 public interface ISqlMessagePublishTopologyConfigurator :
     IMessagePublishTopologyConfigurator,
     ISqlTopicConfigurator

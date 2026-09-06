@@ -4,20 +4,14 @@ using ViciOne.ServiceBus.SignalR.Contracts;
 
 namespace ViciOne.ServiceBus.SignalR.Scoping;
 
-/// <summary>
-/// Defines the contract for hub lifetime scope.
-/// </summary>
-/// <typeparam name="THub">The t hub type.</typeparam>
+/// <summary>Defines the operations required by hub lifetime scope.</summary>
+/// <typeparam name="THub">The hub type.</typeparam>
 public interface IHubLifetimeScope<THub> :
     IAsyncDisposable
     where THub : Hub
 {
-    /// <summary>
-    /// Gets the publish endpoint value.
-    /// </summary>
+    /// <summary>Gets the publish endpoint.</summary>
     IPublishEndpoint PublishEndpoint { get; }
-    /// <summary>
-    /// Gets the request client value.
-    /// </summary>
+    /// <summary>Gets the request client.</summary>
     IRequestClient<GroupManagement<THub>> RequestClient { get; }
 }

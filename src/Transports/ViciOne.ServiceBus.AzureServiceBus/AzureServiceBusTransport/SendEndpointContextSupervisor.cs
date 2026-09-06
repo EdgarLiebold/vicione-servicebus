@@ -3,17 +3,13 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a send endpoint context supervisor implementation.
-/// </summary>
+/// <summary>Supervises the lifecycle and recycling of an Azure Service Bus sender context.</summary>
 public class SendEndpointContextSupervisor :
     TransportPipeContextSupervisor<SendEndpointContext>,
     ISendEndpointContextSupervisor
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="contextFactory">The context factory value.</param>
+    /// <summary>Creates a supervisor around a sender-context factory.</summary>
+    /// <param name="contextFactory">The factory used to create and recreate sender contexts.</param>
     public SendEndpointContextSupervisor(IPipeContextFactory<SendEndpointContext> contextFactory)
         : base(contextFactory)
     {

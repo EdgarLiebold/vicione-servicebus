@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>
-/// Provides a message pack message serializer implementation.
-/// </summary>
+/// <summary>Serializes ViciOne transport envelopes and standalone values with MessagePack.</summary>
 public class MessagePackMessageSerializer :
     IMessageSerializer,
     IMessageDeserializer,
@@ -19,34 +17,26 @@ public class MessagePackMessageSerializer :
     const string ContentTypeHeaderValue = "application/vnd.vicione.servicebus+msgpack";
     const string ProviderKey = "MessagePack";
 
-    /// <summary>
-    /// Defines the message pack content type value.
-    /// </summary>
+    /// <summary>The media type used for ViciOne MessagePack transport envelopes.</summary>
     public static readonly ContentType MessagePackContentType = new(ContentTypeHeaderValue);
 
-    /// <summary>
-    /// Gets the content type value.
-    /// </summary>
+    /// <summary>Gets the media type produced and consumed by this serializer.</summary>
     public ContentType ContentType => MessagePackContentType;
 
-    /// <summary>
-    /// Performs the deserialize operation.
-    /// </summary>
-    /// <param name="receiveContext">The receive context value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deserializes the received envelope and combines its serializer context with the transport context.</summary>
+    /// <param name="receiveContext">The receive context that supplies the body and transport metadata.</param>
+    /// <returns>A consume context backed by the decoded MessagePack envelope.</returns>
     public ConsumeContext Deserialize(ReceiveContext receiveContext)
     {
         var serializerContext = Deserialize(receiveContext.Body, receiveContext.TransportHeaders, receiveContext.InputAddress);
         return new BodyConsumeContext(receiveContext, serializerContext);
     }
 
-    /// <summary>
-    /// Performs the deserialize operation.
-    /// </summary>
-    /// <param name="body">The body value.</param>
-    /// <param name="headers">The headers value.</param>
-    /// <param name="destinationAddress">The destination address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deserializes a MessagePack transport envelope into a serializer context.</summary>
+    /// <param name="body">The body containing the encoded envelope.</param>
+    /// <param name="headers">The transport headers associated with the body.</param>
+    /// <param name="destinationAddress">The transport destination associated with the body.</param>
+    /// <returns>A serializer context that exposes the envelope metadata and lazily decodes message contracts.</returns>
     public SerializerContext Deserialize(MessageBody body, Headers headers, Uri? destinationAddress = null)
     {
         var messageBuffer = body.GetBytes();
@@ -59,32 +49,26 @@ public class MessagePackMessageSerializer :
         return new MessagePackMessageSerializerContext(this, messageContext, messageTypes, envelope);
     }
 
-    /// <summary>
-    /// Gets message body.
-    /// </summary>
-    /// <param name="text">The text value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a message body from Base64-encoded MessagePack text.</summary>
+    /// <param name="text">The Base64-encoded MessagePack bytes.</param>
+    /// <returns>A body that decodes the supplied Base64 text on access.</returns>
     public MessageBody GetMessageBody(string text)
     {
         return new Base64MessageBody(text);
     }
 
-    /// <summary>
-    /// Gets message body.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a lazily serialized MessagePack envelope for a send context.</summary>
+    /// <typeparam name="T">The message contract being sent.</typeparam>
+    /// <param name="context">The send context that supplies message content and envelope metadata.</param>
+    /// <returns>A lazy MessagePack message body.</returns>
     public MessageBody GetMessageBody<T>(SendContext<T> context)
         where T : class
     {
         return new MessagePackMessageBody<T>(context);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds this serializer's media type and provider identity to a probe.</summary>
+    /// <param name="context">The probe context that receives the serializer details.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("messagepack");
@@ -92,11 +76,9 @@ public class MessagePackMessageSerializer :
         scope.Add("provider", ProviderKey);
     }
 
-    /// <summary>
-    /// Performs the ensure object buffer format is byte array operation.
-    /// </summary>
-    /// <param name="serializedObjectAsUnknownFormat">The serialized object as unknown format value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Normalizes Base64 text, MessagePack bytes, or an arbitrary value to MessagePack bytes.</summary>
+    /// <param name="serializedObjectAsUnknownFormat">The Base64 text, byte array, or value to normalize.</param>
+    /// <returns>The original byte array, decoded Base64 bytes, or newly serialized MessagePack bytes.</returns>
     public static byte[] EnsureObjectBufferFormatIsByteArray(object serializedObjectAsUnknownFormat)
     {
         return serializedObjectAsUnknownFormat switch
@@ -107,45 +89,37 @@ public class MessagePackMessageSerializer :
         };
     }
 
-    /// <summary>
-    /// Performs the deserialize object operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="value">The value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts an envelope value to a reference-type contract.</summary>
+    /// <typeparam name="T">The requested reference-type contract.</typeparam>
+    /// <param name="value">A direct value, object dictionary, textual scalar, Base64 body, or MessagePack payload.</param>
+    /// <param name="defaultValue">The value returned when <paramref name="value"/> is absent or equal to this default.</param>
+    /// <returns>The existing instance, converted scalar, projected dictionary, decoded contract, or supplied default.</returns>
     public T? DeserializeObject<T>(object? value, T? defaultValue = default)
         where T : class
     {
         if (value is Dictionary<string, object> objectByStringPairs)
         {
-            // If the object is a Dictionary<string, object>, we deserialize internally using JSON.
-            // MessagePack is case-sensitive, and would not be able to deserialize without correct casing.
-
+            // Metadata-aware JSON projection resolves dictionary keys without MessagePack's case sensitivity.
             return objectByStringPairs.Transform<T>(ServiceBusMetadataJson.Options);
         }
 
         return InternalDeserializeObject(value, defaultValue);
     }
 
-    /// <summary>
-    /// Performs the deserialize object operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="value">The value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts an envelope value to a nullable value-type contract.</summary>
+    /// <typeparam name="T">The requested value type.</typeparam>
+    /// <param name="value">A direct value, textual scalar, Base64 body, or MessagePack payload.</param>
+    /// <param name="defaultValue">The value returned when <paramref name="value"/> is absent or equal to this default.</param>
+    /// <returns>The direct value, converted scalar, decoded value, or supplied default.</returns>
     public T? DeserializeObject<T>(object? value, T? defaultValue = null)
         where T : struct
     {
         return InternalDeserializeObject(value, defaultValue);
     }
 
-    /// <summary>
-    /// Performs the serialize object operation.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a standalone MessagePack body for an object.</summary>
+    /// <param name="value">The value to serialize, or <see langword="null"/> for an empty body.</param>
+    /// <returns>A lazy MessagePack body, or an empty body for a null value.</returns>
     public MessageBody SerializeObject(object? value)
     {
         if (value is null)

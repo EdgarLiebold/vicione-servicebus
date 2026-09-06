@@ -6,21 +6,17 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides a sqs error transport implementation.
-/// </summary>
+/// <summary>Moves faulted messages to their configured Amazon SQS destination.</summary>
 public class SqsErrorTransport :
     SqsMoveTransport<ErrorSettings>,
     IErrorTransport
 {
     readonly ITransportSetHeaderAdapter<MessageAttributeValue> _headerAdapter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="headerAdapter">The header adapter value.</param>
-    /// <param name="topologyFilter">The topology filter value.</param>
+    /// <summary>Initializes an Amazon SQS faulted-message transport.</summary>
+    /// <param name="destination">The logical destination queue name.</param>
+    /// <param name="headerAdapter">The adapter used to add exception headers.</param>
+    /// <param name="topologyFilter">The filter that declares the destination topology.</param>
     public SqsErrorTransport(string destination, ITransportSetHeaderAdapter<MessageAttributeValue> headerAdapter,
         ConfigureAmazonSqsTopologyFilter<ErrorSettings> topologyFilter)
         : base(destination, topologyFilter)
@@ -28,19 +24,17 @@ public class SqsErrorTransport :
         _headerAdapter = headerAdapter;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Moves a faulted message after copying its exception headers.</summary>
+    /// <param name="context">The faulted receive context.</param>
+    /// <param name="cancellationToken">The caller token used to cancel topology declaration and provider submission.</param>
+    /// <returns>A task that completes when the message has been sent to the error queue.</returns>
     public Task SendAsync(ExceptionReceiveContext context, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); void PreSend(SendMessageBatchRequestEntry entry, IDictionary<string, MessageAttributeValue> headers)
+        void PreSend(SendMessageBatchRequestEntry entry, IDictionary<string, MessageAttributeValue> headers)
         {
             _headerAdapter.CopyFrom(headers, context.ExceptionHeaders);
         }
 
-        return MoveAsync(context, PreSend);
+        return MoveAsync(context, PreSend, cancellationToken);
     }
 }

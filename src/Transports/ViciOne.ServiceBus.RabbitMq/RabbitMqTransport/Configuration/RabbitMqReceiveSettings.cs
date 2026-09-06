@@ -4,23 +4,19 @@ using RabbitMQ.Client;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Provides a rabbit mq receive settings implementation.
-/// </summary>
+/// <summary>Stores RabbitMQ receive, queue, exchange, binding, and consumer settings.</summary>
 public class RabbitMqReceiveSettings :
     QueueBindingConfigurator,
     ReceiveSettings
 {
     readonly IRabbitMqEndpointConfiguration _configuration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configuration">The configuration callback.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="type">The type value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
+    /// <summary>Creates matching receive queue and exchange settings.</summary>
+    /// <param name="configuration">The endpoint configuration that owns transport concurrency settings.</param>
+    /// <param name="name">The queue and exchange name.</param>
+    /// <param name="type">The RabbitMQ exchange type.</param>
+    /// <param name="durable">Whether endpoint topology survives broker restarts.</param>
+    /// <param name="autoDelete">Whether RabbitMQ deletes endpoint topology when unused.</param>
     public RabbitMqReceiveSettings(IRabbitMqEndpointConfiguration configuration, string name, string type, bool durable, bool autoDelete)
         : base(name, type, durable, autoDelete)
     {
@@ -29,56 +25,38 @@ public class RabbitMqReceiveSettings :
         ConsumeArguments = new Dictionary<string, object?>();
     }
 
-    /// <summary>
-    /// Gets or sets the consumer priority value.
-    /// </summary>
+    /// <summary>Sets the RabbitMQ consumer priority argument.</summary>
     public int ConsumerPriority
     {
         set => ConsumeArguments[RabbitMQ.Client.Headers.XPriority] = value;
     }
 
-    /// <summary>
-    /// Gets or sets the prefetch count value.
-    /// </summary>
+    /// <summary>Gets or sets the prefetch count.</summary>
     public ushort PrefetchCount
     {
         get => (ushort)_configuration.Transport.PrefetchCount;
         set => _configuration.Transport.Configurator.PrefetchCount = value;
     }
 
-    /// <summary>
-    /// Gets or sets the purge on startup value.
-    /// </summary>
+    /// <summary>Gets or sets the purge on startup.</summary>
     public bool PurgeOnStartup { get; set; }
-    /// <summary>
-    /// Gets or sets the exclusive consumer value.
-    /// </summary>
+    /// <summary>Gets or sets the exclusive consumer.</summary>
     public bool ExclusiveConsumer { get; set; }
-    /// <summary>
-    /// Gets or sets the no ack value.
-    /// </summary>
+    /// <summary>Gets or sets whether RabbitMQ considers deliveries acknowledged immediately.</summary>
     public bool NoAck { get; set; }
 
-    /// <summary>
-    /// Gets or sets the bind queue value.
-    /// </summary>
+    /// <summary>Gets or sets whether deployment includes the queue and its exchange binding.</summary>
     public bool BindQueue { get; set; } = true;
 
-    /// <summary>
-    /// Gets the consume arguments value.
-    /// </summary>
+    /// <summary>Gets the consume arguments.</summary>
     public IDictionary<string, object?> ConsumeArguments { get; }
 
-    /// <summary>
-    /// Gets or sets the consumer tag value.
-    /// </summary>
+    /// <summary>Gets or sets the consumer tag.</summary>
     public string ConsumerTag { get; set; } = "";
 
-    /// <summary>
-    /// Gets input address.
-    /// </summary>
-    /// <param name="hostAddress">The host address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the normalized input address from the receive topology settings.</summary>
+    /// <param name="hostAddress">The RabbitMQ host and virtual-host address.</param>
+    /// <returns>The receive endpoint address.</returns>
     public Uri GetInputAddress(Uri hostAddress)
     {
         return GetEndpointAddress(hostAddress);

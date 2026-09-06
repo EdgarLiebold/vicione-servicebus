@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Transformation;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Applies a transform to the message
-/// </summary>
-/// <typeparam name="T">The message type</typeparam>
+/// <summary>Applies a transform to the message.</summary>
+/// <typeparam name="T">The message type.</typeparam>
 public class TransformFilter<T> :
     IFilter<ConsumeContext<T>>,
     IFilter<ExecuteContext<T>>,
@@ -18,10 +16,8 @@ public class TransformFilter<T> :
 {
     readonly IMessageInitializer<T> _initializer;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="initializer">The initializer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="initializer">The initializer.</param>
     public TransformFilter(IMessageInitializer<T> initializer)
     {
         _initializer = initializer;

@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.SqlTransport.PostgreSql.Helpers;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
-/// <summary>
-/// Provides a postgres database migrator implementation.
-/// </summary>
+/// <summary>Creates, removes, and provisions the PostgreSQL database infrastructure required by the SQL transport.</summary>
 public class PostgresDatabaseMigrator :
     ISqlTransportDatabaseMigrator
 {
@@ -1061,7 +1059,7 @@ public class PostgresDatabaseMigrator :
                     'enqueue_time', to_char(NEW.enqueue_time, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')
                 );
 
-                PERFORM pg_notify('{2}_msg_' || NEW.queue_id, v_payload::text);
+                PERFORM pg_notify('{2}' || NEW.queue_id, v_payload::text);
             END IF;
 
             RETURN NEW;
@@ -1461,32 +1459,26 @@ public class PostgresDatabaseMigrator :
 
     readonly ILogger<PostgresDatabaseMigrator> _logger;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="logger">The logger value.</param>
+    /// <summary>Initializes the PostgreSQL database migrator.</summary>
+    /// <param name="logger">The logger used to report migration failures.</param>
     public PostgresDatabaseMigrator(ILogger<PostgresDatabaseMigrator> logger)
     {
         _logger = logger;
     }
 
-    /// <summary>
-    /// Creates database.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Creates the configured PostgreSQL database and transport role when they do not exist.</summary>
+    /// <param name="options">The database name, connection settings, and migration credentials.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CreateDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken = default)
     {
         await CreateDatabaseIfNotExistAsync(options, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Performs the delete database operation.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Forcibly drops the configured PostgreSQL database when it exists.</summary>
+    /// <param name="options">The database name, connection settings, and migration credentials.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task DeleteDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken = default)
     {
         await using var connection = PostgresSqlTransportConnection.GetSystemDatabaseConnection(options);
@@ -1501,12 +1493,10 @@ public class PostgresDatabaseMigrator :
         }
     }
 
-    /// <summary>
-    /// Creates infrastructure.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Creates the PostgreSQL transport types, tables, functions, indexes, and grants in the configured schema.</summary>
+    /// <param name="options">The target schema, transport role, and database connection settings.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CreateInfrastructureAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = PostgresSqlTransportConnection.GetDatabaseConnection(options);
@@ -1514,9 +1504,9 @@ public class PostgresDatabaseMigrator :
 
         try
         {
-            var sanitizedSchemaName = NotifyChannel.SanitizeSchemaName(options.Schema);
+            string notifyChannelPrefix = NotifyChannel.CreatePrefix(options.Schema);
 
-            await connection.Connection.ExecuteScalarAsync<int>(string.Format(CreateInfrastructureSql, options.Schema, options.Role, sanitizedSchemaName))
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(CreateInfrastructureSql, options.Schema, options.Role, notifyChannelPrefix))
                 .ConfigureAwait(false);
 
             _logger.LogDebug("Transport infrastructure in schema {Schema} created (or updated)", options.Schema);
@@ -1550,12 +1540,10 @@ public class PostgresDatabaseMigrator :
         }
     }
 
-    /// <summary>
-    /// Creates schema if not exist.
-    /// </summary>
-    /// <param name="options">The options value.</param>
+    /// <summary>Creates the configured PostgreSQL schema when necessary and grants it to the transport role.</summary>
+    /// <param name="options">The target schema, transport role, and database connection settings.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CreateSchemaIfNotExistAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = PostgresSqlTransportConnection.GetDatabaseAdminConnection(options);

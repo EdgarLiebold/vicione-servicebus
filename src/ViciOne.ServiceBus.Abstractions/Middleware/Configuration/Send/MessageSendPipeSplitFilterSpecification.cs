@@ -3,11 +3,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a message send pipe split filter specification implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Describes requirements for message send pipe split filter.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <typeparam name="T">The value type.</typeparam>
 public class MessageSendPipeSplitFilterSpecification<TMessage, T> :
     ISpecificationPipeSpecification<SendContext<TMessage>>
     where TMessage : class
@@ -15,19 +13,15 @@ public class MessageSendPipeSplitFilterSpecification<TMessage, T> :
 {
     readonly ISpecificationPipeSpecification<SendContext<T>> _specification;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="specification">The specification value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="specification">The specification.</param>
     public MessageSendPipeSplitFilterSpecification(ISpecificationPipeSpecification<SendContext<T>> specification)
     {
         _specification = specification;
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(ISpecificationPipeBuilder<SendContext<TMessage>> builder)
     {
         var splitBuilder = new Builder(builder);
@@ -35,10 +29,8 @@ public class MessageSendPipeSplitFilterSpecification<TMessage, T> :
         _specification.Apply(splitBuilder);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;

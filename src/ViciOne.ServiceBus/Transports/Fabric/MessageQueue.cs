@@ -8,11 +8,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>
-/// Provides a message queue implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Queues message messages.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+/// <typeparam name="T">The value type.</typeparam>
 public class MessageQueue<TContext, T> :
     Agent,
     IMessageQueue<TContext, T>
@@ -28,13 +26,11 @@ public class MessageQueue<TContext, T> :
     readonly IMessageFabricObserver<TContext> _observer;
     readonly MessageReceiverCollection<T> _receivers;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="delayProvider">The delay provider value.</param>
-    /// <param name="capacity">The capacity value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <param name="name">The name.</param>
+    /// <param name="delayProvider">The delay provider.</param>
+    /// <param name="capacity">The capacity.</param>
     public MessageQueue(IMessageFabricObserver<TContext> observer, string name, IInMemoryDelayProvider delayProvider, int capacity = 1024)
     {
         if (capacity <= 0)
@@ -60,17 +56,13 @@ public class MessageQueue<TContext, T> :
         _dispatcher = StartDispatcherAsync();
     }
 
-    /// <summary>
-    /// Gets the name value.
-    /// </summary>
+    /// <summary>Gets the name.</summary>
     public string Name { get; }
 
-    /// <summary>
-    /// Connects message receiver.
-    /// </summary>
-    /// <param name="nodeContext">The node context value.</param>
-    /// <param name="receiver">The receiver value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects message receiver.</summary>
+    /// <param name="nodeContext">The node context.</param>
+    /// <param name="receiver">The receiver.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public TopologyHandle ConnectMessageReceiver(TContext nodeContext, IMessageReceiver<T> receiver)
     {
         try
@@ -87,12 +79,10 @@ public class MessageQueue<TContext, T> :
         }
     }
 
-    /// <summary>
-    /// Performs the deliver operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Delivers the current message.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task DeliverAsync(DeliveryContext<T> context, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); if (context.WasAlreadyDelivered(this))
@@ -113,10 +103,8 @@ public class MessageQueue<TContext, T> :
         }
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("queue");
@@ -125,11 +113,9 @@ public class MessageQueue<TContext, T> :
         _receivers.Probe(scope);
     }
 
-    /// <summary>
-    /// Stops agent.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Stops agent.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected override async Task StopAgentAsync(StopContext context)
     {
         await _delayedDeliveries.CompletedAsync().ConfigureAwait(false);

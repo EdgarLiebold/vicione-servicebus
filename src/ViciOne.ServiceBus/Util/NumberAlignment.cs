@@ -8,17 +8,11 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Util;
 
-/// <summary>
-/// Specifies the available number alignment values.
-/// </summary>
+/// <summary>Specifies the available number alignment values.</summary>
 public enum NumberAlignment
 {
-    /// <summary>
-    /// Indicates left.
-    /// </summary>
+    /// <summary>Indicates left.</summary>
     Left,
-    /// <summary>
-    /// Indicates right.
-    /// </summary>
+    /// <summary>Indicates right.</summary>
     Right
 }

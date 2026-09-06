@@ -3,39 +3,27 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a rabbit mq send topology implementation.
-/// </summary>
+/// <summary>Creates RabbitMQ send, error, and dead-letter settings.</summary>
 public class RabbitMqSendTopology :
     SendTopology,
     IRabbitMqSendTopologyConfigurator
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="validator">The validator value.</param>
+    /// <summary>Creates send topology that uses fanout exchanges by default.</summary>
+    /// <param name="validator">The validator applied to RabbitMQ entity names.</param>
     public RabbitMqSendTopology(IEntityNameValidator validator)
     {
         ExchangeTypeSelector = new FanoutExchangeTypeSelector();
         EntityNameValidator = validator;
     }
 
-    /// <summary>
-    /// Gets the exchange type selector value.
-    /// </summary>
+    /// <summary>Gets the selector used to determine exchange types for sent message contracts.</summary>
     public IExchangeTypeSelector ExchangeTypeSelector { get; }
-    /// <summary>
-    /// Gets the entity name validator value.
-    /// </summary>
+    /// <summary>Gets the validator applied to RabbitMQ entity names.</summary>
     public IEntityNameValidator EntityNameValidator { get; }
 
-    /// <summary>
-    /// Gets or sets the configure error settings value.
-    /// </summary>
+    /// <summary>Gets or sets the callback that customizes the generated error exchange and queue.</summary>
     public Action<IRabbitMqQueueBindingConfigurator>? ConfigureErrorSettings { get; set; }
-    /// <summary>
-    /// Gets or sets the configure dead letter settings value.
-    /// </summary>
+    /// <summary>Gets or sets the callback that customizes the generated dead-letter exchange and queue.</summary>
     public Action<IRabbitMqQueueBindingConfigurator>? ConfigureDeadLetterSettings { get; set; }
 
     IRabbitMqMessageSendTopologyConfigurator<T> IRabbitMqSendTopology.GetMessageTopology<T>()
@@ -46,21 +34,17 @@ public class RabbitMqSendTopology :
             ?? throw new InvalidOperationException($"The message topology for '{typeof(T)}' is not a RabbitMQ send topology.");
     }
 
-    /// <summary>
-    /// Gets send settings.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates send settings from a RabbitMQ endpoint address.</summary>
+    /// <param name="address">The destination address and its encoded topology options.</param>
+    /// <returns>The RabbitMQ send settings.</returns>
     public SendSettings GetSendSettings(RabbitMqEndpointAddress address)
     {
         return new RabbitMqSendSettings(address);
     }
 
-    /// <summary>
-    /// Gets error settings.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and customizes error-queue settings for a receive endpoint.</summary>
+    /// <param name="settings">The source receive endpoint settings.</param>
+    /// <returns>The RabbitMQ error transport settings.</returns>
     public ErrorSettings GetErrorSettings(ReceiveSettings settings)
     {
         var errorSettings = new RabbitMqErrorSettings(settings, ErrorQueueNameFormatter.FormatErrorQueueName(settings.ExchangeName));
@@ -70,11 +54,9 @@ public class RabbitMqSendTopology :
         return errorSettings;
     }
 
-    /// <summary>
-    /// Gets dead letter settings.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and customizes dead-letter-queue settings for a receive endpoint.</summary>
+    /// <param name="settings">The source receive endpoint settings.</param>
+    /// <returns>The RabbitMQ dead-letter transport settings.</returns>
     public DeadLetterSettings GetDeadLetterSettings(ReceiveSettings settings)
     {
         var deadLetterSetting = new RabbitMqDeadLetterSettings(settings, DeadLetterQueueNameFormatter.FormatDeadLetterQueueName(settings.ExchangeName));
@@ -84,12 +66,10 @@ public class RabbitMqSendTopology :
         return deadLetterSetting;
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="type">The type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates provider-specific send topology for a message contract.</summary>
+    /// <typeparam name="T">The sent message contract type.</typeparam>
+    /// <param name="type">The runtime message contract type supplied by the base topology.</param>
+    /// <returns>The RabbitMQ message send topology.</returns>
     protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
     {
         var messageTopology = new RabbitMqMessageSendTopology<T>();

@@ -3,17 +3,13 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.NewIdProviders;
 
-/// <summary>
-/// Provides a best possible worker id provider implementation.
-/// </summary>
+/// <summary>Provides best possible worker id services.</summary>
 public class BestPossibleWorkerIdProvider :
     IWorkerIdProvider
 {
-    /// <summary>
-    /// Gets worker id.
-    /// </summary>
-    /// <param name="index">The index value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets worker id.</summary>
+    /// <param name="index">The index.</param>
+    /// <returns>The worker id.</returns>
     public byte[] GetWorkerId(int index)
     {
         var exceptions = new List<Exception>();

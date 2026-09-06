@@ -2,14 +2,10 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Defines the contract for subscription handle.
-/// </summary>
+/// <summary>Identifies a subscription stored in a broker-topology builder.</summary>
 public interface SubscriptionHandle :
     EntityHandle
 {
-    /// <summary>
-    /// Gets the subscription value.
-    /// </summary>
+    /// <summary>Gets the subscription declaration represented by the handle.</summary>
     Subscription Subscription { get; }
 }

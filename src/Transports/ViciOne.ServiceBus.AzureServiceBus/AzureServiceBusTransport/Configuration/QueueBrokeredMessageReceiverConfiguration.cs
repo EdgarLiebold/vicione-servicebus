@@ -4,20 +4,16 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Provides a queue brokered message receiver configuration implementation.
-/// </summary>
+/// <summary>Builds a standalone Azure Service Bus queue receiver from validated endpoint configuration.</summary>
 public class QueueBrokeredMessageReceiverConfiguration :
     ReceiverConfiguration
 {
     readonly IServiceBusReceiveEndpointConfiguration _endpointConfiguration;
     readonly IServiceBusHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
+    /// <summary>Initializes the receiver configuration for a namespace and queue endpoint.</summary>
+    /// <param name="hostConfiguration">The namespace host configuration.</param>
+    /// <param name="endpointConfiguration">The queue endpoint configuration and middleware specifications.</param>
     public QueueBrokeredMessageReceiverConfiguration(IServiceBusHostConfiguration hostConfiguration,
         IServiceBusReceiveEndpointConfiguration endpointConfiguration)
         : base(endpointConfiguration)
@@ -26,10 +22,8 @@ public class QueueBrokeredMessageReceiverConfiguration :
         _endpointConfiguration = endpointConfiguration;
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the configuration and creates a standalone message receiver.</summary>
+    /// <returns>The receiver backed by the configured queue endpoint context.</returns>
     public IServiceBusMessageReceiver Build()
     {
         IReadOnlyList<ValidationResult> result = Validate().ThrowIfContainsFailure($"{GetType().Name} configuration is invalid:");

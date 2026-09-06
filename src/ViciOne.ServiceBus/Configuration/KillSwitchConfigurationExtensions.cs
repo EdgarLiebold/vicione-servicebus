@@ -5,15 +5,15 @@ using ViciOne.ServiceBus.Transports.Components;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for kill switch configuration.
-/// </summary>
+/// <summary>Provides extension methods for kill switch configuration.</summary>
 public static class KillSwitchConfigurationExtensions
 {
     /// <summary>
     /// Monitors every receive endpoint and temporarily pauses delivery when the configured matching-failure ratio is reached.
     /// Configuration is captured once and shared as an immutable snapshot by the endpoint-specific runtime instances.
     /// </summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseKillSwitch(
         this IBusFactoryConfigurator configurator,
         Action<KillSwitchOptions>? configure = null)
@@ -32,6 +32,8 @@ public static class KillSwitchConfigurationExtensions
     /// Monitors one receive endpoint and temporarily pauses delivery when the configured matching-failure ratio is reached.
     /// Configuration is captured before the runtime observer is installed.
     /// </summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void UseKillSwitch(
         this IReceiveEndpointConfigurator configurator,
         Action<KillSwitchOptions>? configure = null)

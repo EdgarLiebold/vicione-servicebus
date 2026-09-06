@@ -1,8 +1,6 @@
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
-/// <summary>
-/// Defines the acceptance boundary after which a durable sender may remove its local persisted intent.
-/// </summary>
+/// <summary>Defines the acceptance boundary after which a durable sender may remove its local persisted intent.</summary>
 public enum DurableSendCompletionMode
 {
     /// <summary>

@@ -5,14 +5,14 @@ using ViciOne.ServiceBus.Mediator;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-/// <summary>
-/// Provides dependency-injection registration for the mediator capability package.
-/// </summary>
+/// <summary>Provides dependency-injection registration for the mediator capability package.</summary>
 public static class MediatorServiceCollectionExtensions
 {
-    /// <summary>
-    /// Adds the mediator with the specified base address.
-    /// </summary>
+    /// <summary>Adds the mediator with the specified base address.</summary>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="baseAddress">The base address.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddMediator(this IServiceCollection services, Uri? baseAddress,
         Action<IMediatorRegistrationConfigurator>? configure = null)
     {
@@ -32,9 +32,10 @@ public static class MediatorServiceCollectionExtensions
         return services;
     }
 
-    /// <summary>
-    /// Adds the mediator using its default loopback base address.
-    /// </summary>
+    /// <summary>Adds the mediator using its default loopback base address.</summary>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddMediator(this IServiceCollection services,
         Action<IMediatorRegistrationConfigurator>? configure = null) =>
         services.AddMediator(null, configure);

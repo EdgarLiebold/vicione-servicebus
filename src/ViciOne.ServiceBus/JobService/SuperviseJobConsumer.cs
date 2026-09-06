@@ -5,29 +5,23 @@ using ViciOne.ServiceBus.JobService.Messages;
 
 namespace ViciOne.ServiceBus.JobService;
 
-/// <summary>
-/// Provides a supervise job consumer implementation.
-/// </summary>
+/// <summary>Consumes supervise job messages.</summary>
 public class SuperviseJobConsumer :
     IConsumer<CancelJobAttempt>,
     IConsumer<GetJobAttemptStatus>
 {
     readonly IJobService _jobService;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="jobService">The job service value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="jobService">The job service.</param>
     public SuperviseJobConsumer(IJobService jobService)
     {
         _jobService = jobService;
     }
 
-    /// <summary>
-    /// Consumes the message provided by the context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Consumes the message provided by the context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ConsumeAsync(ConsumeContext<CancelJobAttempt> context)
     {
         if (_jobService.TryGetJob(context.Message.JobId, out var handle))
@@ -36,11 +30,9 @@ public class SuperviseJobConsumer :
         }
     }
 
-    /// <summary>
-    /// Consumes the message provided by the context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Consumes the message provided by the context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ConsumeAsync(ConsumeContext<GetJobAttemptStatus> context)
     {
         if (_jobService.TryGetJob(context.Message.JobId, out var jobHandle))

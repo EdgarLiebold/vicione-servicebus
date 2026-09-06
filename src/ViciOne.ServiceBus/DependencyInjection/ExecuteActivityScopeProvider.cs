@@ -5,62 +5,50 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>
-/// Provides an execute activity scope provider implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Provides execute activity scope services.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class ExecuteActivityScopeProvider<TActivity, TArguments> :
     BaseConsumeScopeProvider,
     IExecuteActivityScopeProvider<TActivity, TArguments>
     where TActivity : class, IExecuteActivity<TArguments>
     where TArguments : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public ExecuteActivityScopeProvider(IRegistrationContext context)
         : base(context)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="serviceProvider">The service provider value.</param>
-    /// <param name="setScopedConsumeContext">The set scoped consume context value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="serviceProvider">The service provider.</param>
+    /// <param name="setScopedConsumeContext">The set scoped consume context.</param>
     public ExecuteActivityScopeProvider(IServiceProvider serviceProvider, ISetScopedConsumeContext setScopedConsumeContext)
         : base(serviceProvider, setScopedConsumeContext)
     {
     }
 
-    /// <summary>
-    /// Gets scope.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Gets scope.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public ValueTask<IExecuteScopeContext<TArguments>> GetScopeAsync(ExecuteContext<TArguments> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::ViciOne.ServiceBus.DependencyInjection.IExecuteScopeContext<TArguments>>(cancellationToken); return GetScopeContextAsync(context, ExistingScopeContextFactory, CreatedScopeContextFactory, PipeContextFactory);
     }
 
-    /// <summary>
-    /// Gets activity scope.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Gets activity scope.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public ValueTask<IExecuteActivityScopeContext<TActivity, TArguments>> GetActivityScopeAsync(ExecuteContext<TArguments> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::ViciOne.ServiceBus.DependencyInjection.IExecuteActivityScopeContext<TActivity, TArguments>>(cancellationToken); return GetScopeContextAsync(context, ExistingActivityScopeContextFactory, CreatedActivityScopeContextFactory, PipeContextFactory);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.Add("provider", "dependencyInjection");

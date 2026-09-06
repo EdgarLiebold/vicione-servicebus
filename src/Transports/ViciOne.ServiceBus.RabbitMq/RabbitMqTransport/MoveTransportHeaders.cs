@@ -8,28 +8,22 @@ using RabbitMQ.Client;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a move transport headers implementation.
-/// </summary>
+/// <summary>Adapts RabbitMQ AMQP basic-property headers to the send-header contract used by message moves.</summary>
 public class MoveTransportHeaders :
     SendHeaders
 {
     readonly IBasicProperties _basicProperties;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="basicProperties">The basic properties value.</param>
+    /// <summary>Creates a header adapter over mutable AMQP basic properties.</summary>
+    /// <param name="basicProperties">The properties whose header table is read and updated.</param>
     public MoveTransportHeaders(IBasicProperties basicProperties)
     {
         _basicProperties = basicProperties;
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets a string header, or removes it when the value is <see langword="null" />.</summary>
+    /// <param name="key">The AMQP header key.</param>
+    /// <param name="value">The string header value.</param>
     public void Set(string key, string? value)
     {
         if (key == null)
@@ -43,12 +37,10 @@ public class MoveTransportHeaders :
             _basicProperties.Headers[key] = value;
     }
 
-    /// <summary>
-    /// Performs the set operation.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <param name="overwrite">The overwrite value.</param>
+    /// <summary>Sets or conditionally adds an AMQP header.</summary>
+    /// <param name="key">The AMQP header key.</param>
+    /// <param name="value">The header value; <see langword="null" /> removes an overwritten value.</param>
+    /// <param name="overwrite">Whether an existing value may be replaced or removed.</param>
     public void Set(string key, object? value, bool overwrite)
     {
         if (key == null)
@@ -67,12 +59,10 @@ public class MoveTransportHeaders :
             _basicProperties.Headers.Add(key, value);
     }
 
-    /// <summary>
-    /// Attempts to get header.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Reads a non-null AMQP header and decodes byte arrays as UTF-8 text.</summary>
+    /// <param name="key">The AMQP header key.</param>
+    /// <param name="value">The decoded header value when present.</param>
+    /// <returns><see langword="true" /> when a non-null header exists.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         if (_basicProperties.Headers == null)
@@ -94,10 +84,8 @@ public class MoveTransportHeaders :
         return false;
     }
 
-    /// <summary>
-    /// Gets all.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Enumerates all non-null AMQP headers as key/value pairs.</summary>
+    /// <returns>The current non-null headers.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
         return _basicProperties.IsHeadersPresent() && _basicProperties.Headers != null
@@ -105,36 +93,30 @@ public class MoveTransportHeaders :
             : Enumerable.Empty<KeyValuePair<string, object>>();
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Throws because typed object retrieval is not supported by this move-header adapter.</summary>
+    /// <typeparam name="T">The requested reference type.</typeparam>
+    /// <param name="key">The AMQP header name.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The requested value.</returns>
     public T Get<T>(string key, T? defaultValue)
         where T : class
     {
         throw new NotSupportedException("RabbitMQ move-transport headers do not support object-based retrieval.");
     }
 
-    /// <summary>
-    /// Performs the get operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="key">The key value.</param>
-    /// <param name="defaultValue">The default value value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Throws because typed object retrieval is not supported by this move-header adapter.</summary>
+    /// <typeparam name="T">The requested value type.</typeparam>
+    /// <param name="key">The AMQP header name.</param>
+    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
+    /// <returns>The requested value.</returns>
     public T? Get<T>(string key, T? defaultValue)
         where T : struct
     {
         throw new NotSupportedException("RabbitMQ move-transport headers do not support object-based retrieval.");
     }
 
-    /// <summary>
-    /// Gets enumerator.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Enumerates all non-null AMQP headers through the send-header abstraction.</summary>
+    /// <returns>An enumerator over the current headers.</returns>
     public IEnumerator<HeaderValue> GetEnumerator()
     {
         return _basicProperties.IsHeadersPresent() && _basicProperties.Headers != null

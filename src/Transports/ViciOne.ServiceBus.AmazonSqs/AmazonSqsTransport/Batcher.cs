@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -7,11 +8,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides a batcher implementation.
-/// </summary>
-/// <typeparam name="TEntry">The t entry type.</typeparam>
-public abstract class Batcher<TEntry> :
+abstract class Batcher<TEntry> :
     IBatcher<TEntry>
 {
     readonly Task _batchTask;
@@ -19,10 +16,6 @@ public abstract class Batcher<TEntry> :
     readonly TaskExecutor _executor;
     readonly BatchSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
     protected Batcher(BatchSettings? settings = null)
     {
         _settings = settings ?? ClientContextBatchSettings.GetBatchSettings();
@@ -40,25 +33,25 @@ public abstract class Batcher<TEntry> :
         _batchTask = WaitForBatchAsync();
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="entry">The entry value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
     public async Task ExecuteAsync(TEntry entry, CancellationToken cancellationToken)
     {
-        var batchEntry = new BatchEntry<TEntry>(entry);
+        cancellationToken.ThrowIfCancellationRequested();
 
-        await _channel.Writer.WriteAsync(batchEntry, cancellationToken).ConfigureAwait(false);
+        var batchEntry = new BatchEntry<TEntry>(entry, cancellationToken);
+
+        try
+        {
+            await _channel.Writer.WriteAsync(batchEntry, cancellationToken).ConfigureAwait(false);
+        }
+        catch
+        {
+            batchEntry.Dispose();
+            throw;
+        }
 
         await batchEntry.Completed.ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
     public async ValueTask DisposeAsync()
     {
         _channel.Writer.TryComplete();
@@ -92,20 +85,20 @@ public abstract class Batcher<TEntry> :
         {
             try
             {
-                var entryId = 0;
+                var entryCount = 0;
                 var batchLength = 0;
 
-                while (entryId < _settings.MessageLimit && batchLength < _settings.SizeLimit)
+                while (entryCount < _settings.MessageLimit && batchLength < _settings.SizeLimit)
                 {
                     if (_channel.Reader.TryPeek(out BatchEntry<TEntry>? entry))
                     {
-                        var entryLength = CalculateEntryLength(entry.Entry, entryId.ToString());
-                        if (entryId > 0 && entryLength + batchLength > _settings.SizeLimit)
+                        var entryLength = CalculateEntryLength(entry.Entry);
+                        if (entryCount > 0 && entryLength + batchLength > _settings.SizeLimit)
                             break;
 
                         batchLength += entryLength;
                         batch.Add(entry);
-                        entryId++;
+                        entryCount++;
 
                         await _channel.Reader.ReadAsync(CancellationToken.None).ConfigureAwait(false);
                     }
@@ -133,27 +126,12 @@ public abstract class Batcher<TEntry> :
         }
     }
 
-    /// <summary>
-    /// Performs the calculate entry length operation.
-    /// </summary>
-    /// <param name="entry">The entry value.</param>
-    /// <param name="entryId">The entry id value.</param>
-    /// <returns>The result of the operation.</returns>
-    protected abstract int CalculateEntryLength(TEntry entry, string entryId);
+    protected abstract void AssignEntryId(TEntry entry, string entryId);
 
-    /// <summary>
-    /// Sends batch.
-    /// </summary>
-    /// <param name="batch">The batch value.</param>
-    /// <returns>The result of the operation.</returns>
+    protected abstract int CalculateEntryLength(TEntry entry);
+
     protected abstract Task SendBatchAsync(IList<BatchEntry<TEntry>> batch);
 
-    /// <summary>
-    /// Performs the apply response operation.
-    /// </summary>
-    /// <param name="batch">The batch value.</param>
-    /// <param name="successfulIds">The successful ids value.</param>
-    /// <param name="failures">The failures value.</param>
     protected void ApplyResponse(
         IList<BatchEntry<TEntry>> batch,
         IEnumerable<string>? successfulIds,
@@ -201,13 +179,33 @@ public abstract class Batcher<TEntry> :
 
     async Task ExecuteBatchAsync(IList<BatchEntry<TEntry>> batch)
     {
+        var dispatchedBatch = new List<BatchEntry<TEntry>>(batch.Count);
+        foreach (BatchEntry<TEntry> entry in batch)
+        {
+            if (entry.TryBeginDispatch())
+                dispatchedBatch.Add(entry);
+            else
+                entry.Dispose();
+        }
+
+        if (dispatchedBatch.Count == 0)
+            return;
+
+        for (var index = 0; index < dispatchedBatch.Count; index++)
+            AssignEntryId(dispatchedBatch[index].Entry, index.ToString(CultureInfo.InvariantCulture));
+
         try
         {
-            await SendBatchAsync(batch).ConfigureAwait(false);
+            await SendBatchAsync(dispatchedBatch).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception)
+        {
+            foreach (BatchEntry<TEntry> entry in dispatchedBatch)
+                entry.SetCanceled(exception.CancellationToken);
         }
         catch (Exception exception)
         {
-            foreach (BatchEntry<TEntry> entry in batch)
+            foreach (BatchEntry<TEntry> entry in dispatchedBatch)
                 entry.SetFaulted(exception);
         }
     }

@@ -6,11 +6,9 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Consumes a message via an existing class instance
-/// </summary>
-/// <typeparam name="TConsumer"></typeparam>
-/// <typeparam name="TMessage"></typeparam>
+/// <summary>Consumes a message via an existing class instance.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class InstanceMessageFilter<TConsumer, TMessage> :
     IFilter<ConsumeContext<TMessage>>
     where TConsumer : class
@@ -19,11 +17,9 @@ public class InstanceMessageFilter<TConsumer, TMessage> :
     readonly TConsumer _instance;
     readonly IPipe<ConsumerConsumeContext<TConsumer, TMessage>> _instancePipe;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="instance">The instance value.</param>
-    /// <param name="instancePipe">The instance pipe value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="instance">The instance.</param>
+    /// <param name="instancePipe">The instance pipe.</param>
     public InstanceMessageFilter(TConsumer instance, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> instancePipe)
     {
         _instance = instance ?? throw new ArgumentNullException(nameof(instance));

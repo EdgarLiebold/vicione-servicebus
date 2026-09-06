@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>
-/// A connection to a request which handles a result, and completes the Task when it's received
-/// </summary>
-/// <typeparam name="TResponse"></typeparam>
+/// <summary>A connection to a request which handles a result, and completes the Task when it's received.</summary>
+/// <typeparam name="TResponse">The response type.</typeparam>
 public class ResponseHandlerConnectHandle<TResponse> :
     HandlerConnectHandle<TResponse>
     where TResponse : class
@@ -17,12 +15,10 @@ public class ResponseHandlerConnectHandle<TResponse> :
     readonly ConnectHandle _handle;
     readonly Task _requestTask;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="handle">The handle value.</param>
-    /// <param name="completed">The completed value.</param>
-    /// <param name="requestTask">The request task value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="handle">The handle.</param>
+    /// <param name="completed">The completed.</param>
+    /// <param name="requestTask">The request task.</param>
     public ResponseHandlerConnectHandle(ConnectHandle handle, TaskCompletionSource<ConsumeContext<TResponse>> completed, Task requestTask)
     {
         _handle = handle;
@@ -32,25 +28,19 @@ public class ResponseHandlerConnectHandle<TResponse> :
         Task = GetTaskAsync();
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         _handle.Dispose();
     }
 
-    /// <summary>
-    /// Performs the disconnect operation.
-    /// </summary>
+    /// <summary>Disconnects the current observer or endpoint.</summary>
     public void Disconnect()
     {
         _handle.Disconnect();
     }
 
-    /// <summary>
-    /// Performs the try set exception operation.
-    /// </summary>
+    /// <summary>Attempts to set exception.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     public void TrySetException(Exception exception)
     {
@@ -58,9 +48,7 @@ public class ResponseHandlerConnectHandle<TResponse> :
         _completed.Task.IgnoreUnobservedExceptions();
     }
 
-    /// <summary>
-    /// Performs the try set canceled operation.
-    /// </summary>
+    /// <summary>Attempts to set canceled.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public void TrySetCanceled(CancellationToken cancellationToken)
     {
@@ -68,9 +56,7 @@ public class ResponseHandlerConnectHandle<TResponse> :
         _completed.Task.IgnoreUnobservedExceptions();
     }
 
-    /// <summary>
-    /// Gets the task value.
-    /// </summary>
+    /// <summary>Gets the task.</summary>
     public Task<Response<TResponse>> Task { get; }
 
     async Task<Response<TResponse>> GetTaskAsync()

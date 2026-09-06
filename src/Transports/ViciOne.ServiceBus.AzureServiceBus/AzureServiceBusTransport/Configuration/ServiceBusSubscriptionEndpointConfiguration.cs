@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus subscription endpoint configuration implementation.
-/// </summary>
+/// <summary>Configures an Azure Service Bus topic-subscription receive endpoint and its topology.</summary>
 public class ServiceBusSubscriptionEndpointConfiguration :
     ServiceBusEntityReceiveEndpointConfiguration,
     IServiceBusSubscriptionEndpointConfiguration,
@@ -22,12 +20,10 @@ public class ServiceBusSubscriptionEndpointConfiguration :
     readonly Lazy<Uri> _inputAddress;
     readonly SubscriptionEndpointSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
+    /// <summary>Initializes a subscription endpoint for a namespace and topic.</summary>
+    /// <param name="hostConfiguration">The namespace host configuration.</param>
+    /// <param name="settings">The topic, subscription, and processor settings.</param>
+    /// <param name="endpointConfiguration">The endpoint pipeline and topology configuration.</param>
     public ServiceBusSubscriptionEndpointConfiguration(IServiceBusHostConfiguration hostConfiguration,
         SubscriptionEndpointSettings settings, IServiceBusEndpointConfiguration endpointConfiguration)
         : base(hostConfiguration, settings, endpointConfiguration)
@@ -40,25 +36,17 @@ public class ServiceBusSubscriptionEndpointConfiguration :
         _inputAddress = new Lazy<Uri>(FormatInputAddress);
     }
 
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the topic, subscription, and processor settings.</summary>
     public SubscriptionSettings Settings => _settings;
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the namespace address.</summary>
     public override Uri HostAddress { get; }
 
-    /// <summary>
-    /// Gets the input address value.
-    /// </summary>
+    /// <summary>Gets the lazily formatted subscription input address.</summary>
     public override Uri InputAddress => _inputAddress.Value;
 
-    /// <summary>
-    /// Creates receive endpoint context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds a receive-endpoint context from the current subscription configuration.</summary>
+    /// <returns>The Azure Service Bus receive-endpoint context.</returns>
     public override ReceiveEndpointContext CreateReceiveEndpointContext()
     {
         return CreateServiceBusReceiveEndpointContext();
@@ -66,20 +54,16 @@ public class ServiceBusSubscriptionEndpointConfiguration :
 
     IServiceBusTopologyConfiguration IServiceBusEndpointConfiguration.Topology => _endpointConfiguration.Topology;
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Combines subscription-entity validation with the shared endpoint validation.</summary>
+    /// <returns>All subscription and endpoint validation failures.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         return _settings.SubscriptionConfigurator.Validate()
             .Concat(base.Validate());
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <param name="host">The host value.</param>
+    /// <summary>Configures dead-letter transports and topology, then registers the receive endpoint with the host.</summary>
+    /// <param name="host">The host that owns the receive endpoint.</param>
     public void Build(IHost host)
     {
         this.ConfigureDeadLetterQueueDeadLetterTransport();
@@ -93,17 +77,13 @@ public class ServiceBusSubscriptionEndpointConfiguration :
         CreateReceiveEndpoint(host, context);
     }
 
-    /// <summary>
-    /// Gets or sets the filter value.
-    /// </summary>
+    /// <summary>Sets the filter for the subscription's default rule.</summary>
     public RuleFilter Filter
     {
         set => _settings.Filter = value;
     }
 
-    /// <summary>
-    /// Gets or sets the rule value.
-    /// </summary>
+    /// <summary>Sets the complete rule created with the subscription.</summary>
     public CreateRuleOptions Rule
     {
         set => _settings.Rule = value;

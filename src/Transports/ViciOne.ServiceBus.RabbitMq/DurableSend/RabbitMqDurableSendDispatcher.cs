@@ -8,9 +8,8 @@ using ViciOne.ServiceBus.Serialization;
 
 
 namespace ViciOne.ServiceBus.RabbitMq;
-/// <summary>
-/// Replays the exact retained envelope through RabbitMQ and reports only its durable broker-acceptance boundary.
-/// </summary>
+/// <summary>Replays the exact retained envelope through RabbitMQ and reports acceptance after the configured client publish task completes.</summary>
+/// <typeparam name="TBus">The bus type.</typeparam>
 internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatcher<TBus>
     where TBus : class, IBus
 {
@@ -53,8 +52,8 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
                 cancellationToken)
             .ConfigureAwait(false);
 
-        // RabbitMqDurableSendPipe forces persistent + mandatory + publisher-confirm acknowledgement. The transport's
-        // Send task completes only after RabbitMQ.Client has observed that boundary; returns/nacks surface as errors.
+        // RabbitMqDurableSendPipe marks the message persistent, requests mandatory routing, and awaits the RabbitMQ client publish task.
+        // That task includes publisher confirmation when confirmations are enabled; returns and nacks surface as errors.
         return DurableSendDispatchResult.TransportAccepted;
     }
 

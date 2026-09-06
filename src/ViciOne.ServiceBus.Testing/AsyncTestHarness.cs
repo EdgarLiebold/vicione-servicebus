@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides an async test harness implementation.
-/// </summary>
+/// <summary>Provides a test harness for async test.</summary>
 public abstract class AsyncTestHarness :
     IDisposable
 {
@@ -21,18 +19,14 @@ public abstract class AsyncTestHarness :
     int _maximumSavedContexts;
     bool _disposed;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     protected AsyncTestHarness()
         : this(TimeProvider.System)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     protected AsyncTestHarness(TimeProvider timeProvider)
     {
         TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
@@ -44,11 +38,7 @@ public abstract class AsyncTestHarness :
         _scopeLock = new object();
         _harnessLifetime = new CancellationTokenSource();
 
-        // The observer is connected to the message lists once, when the bus starts, and it lives for
-        // the whole fixture. Its timeout loop awaits Task.Delay(timeout, token); if that token were
-        // the per test budget, the first expired test would end the loop for good and inactivity
-        // detection would be dead for every later test in the same fixture. It is therefore bound to
-        // the lifetime of the harness instead, which ends in Dispose.
+        // The fixture-lifetime token keeps inactivity observation active across every test scope.
         _inactivityObserver = new Lazy<AsyncInactivityObserver>(
             () => new AsyncInactivityObserver(TestInactivityTimeout, _harnessLifetime.Token, TimeProvider));
     }
@@ -84,9 +74,7 @@ public abstract class AsyncTestHarness :
         }
     }
 
-    /// <summary>
-    /// CancellationToken that is canceled when the test is being aborted
-    /// </summary>
+    /// <summary>CancellationToken that is canceled when the test is being aborted.</summary>
     public CancellationToken TestCancellationToken
     {
         get
@@ -105,57 +93,38 @@ public abstract class AsyncTestHarness :
         }
     }
 
-    /// <summary>
-    /// Task that is completed when the bus inactivity timeout has elapsed with no bus activity
-    /// </summary>
+    /// <summary>Task that is completed when the bus inactivity timeout has elapsed with no bus activity.</summary>
     public Task InactivityTask => _inactivityObserver.Value.InactivityTask;
 
-    /// <summary>
-    /// CancellationToken that is cancelled when the test inactivity timeout has elapsed with no bus activity
-    /// </summary>
+    /// <summary>CancellationToken that is cancelled when the test inactivity timeout has elapsed with no bus activity.</summary>
     public CancellationToken InactivityToken => _inactivityObserver.Value.InactivityToken;
 
-    /// <summary>
-    /// Gets the inactivity observer value.
-    /// </summary>
+    /// <summary>Gets the inactivity observer.</summary>
     public IInactivityObserver InactivityObserver => _inactivityObserver.Value;
 
-    /// <summary>
-    /// Timeout for the test, used for any delay timers
-    /// </summary>
+    /// <summary>Timeout for the test, used for any delay timers.</summary>
     public TimeSpan TestTimeout { get; set; }
 
-    /// <summary>
-    /// Timeout specifying the elapsed time with no bus activity after which the test could be completed
-    /// </summary>
+    /// <summary>Timeout specifying the elapsed time with no bus activity after which the test could be completed.</summary>
     public TimeSpan TestInactivityTimeout { get; set; }
 
-    /// <summary>
-    /// Gets the time provider value.
-    /// </summary>
+    /// <summary>Gets the time provider.</summary>
     public TimeProvider TimeProvider { get; }
 
-    /// <summary>
-    /// Gets or sets the context save mode value.
-    /// </summary>
+    /// <summary>Gets or sets the context save mode.</summary>
     public TestContextSaveMode ContextSaveMode { get; set; }
 
-    /// <summary>
-    /// Gets or sets the maximum saved contexts value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum saved contexts.</summary>
     public int MaximumSavedContexts
     {
         get => _maximumSavedContexts;
         set => _maximumSavedContexts = value > 0 ? value : throw new ArgumentOutOfRangeException(nameof(value));
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public virtual void Dispose()
     {
-        // Disposing twice has to stay harmless: a container fixture disposes the harness itself and
-        // the service provider disposes it again, and Cancel on an already disposed source throws.
+        // Both a container fixture and its service provider may dispose this shared harness.
         lock (_scopeLock)
         {
             if (_disposed)
@@ -166,40 +135,33 @@ public abstract class AsyncTestHarness :
             _cancellationTokenSource?.Dispose();
         }
 
-        // Ends the inactivity timeout loop, which runs for the lifetime of the harness.
+        // Disposal terminates the fixture-lifetime inactivity loop.
         _harnessLifetime.Cancel();
         if (_inactivityObserver.IsValueCreated)
             _inactivityObserver.Value.Dispose();
         _harnessLifetime.Dispose();
     }
 
-    /// <summary>
-    /// Forces the test to be cancelled, aborting any awaiting tasks
-    /// </summary>
+    /// <summary>Forces the test to be cancelled, aborting any awaiting tasks.</summary>
     public void Cancel()
     {
         CancellationTokenSource? source;
         lock (_scopeLock)
             source = _cancellationTokenSource;
 
-        // Applies to the running test. The next test does not inherit the cancelled state, because
-        // BeginTestScope refuses to revive a cancelled source.
+        // Timeout cancellation is scoped to the currently running test.
         source?.Cancel();
     }
 
-    /// <summary>
-    /// Performs the force inactive operation.
-    /// </summary>
+    /// <summary>Forces inactive.</summary>
     public void ForceInactive()
     {
         _inactivityObserver.Value.ForceInactive();
     }
 
-    /// <summary>
-    /// Returns a task completion that is automatically canceled when the test is canceled
-    /// </summary>
-    /// <typeparam name="T">The task type</typeparam>
-    /// <returns></returns>
+    /// <summary>Returns a task completion that is automatically canceled when the test is canceled.</summary>
+    /// <typeparam name="T">The task type.</typeparam>
+    /// <returns>The task.</returns>
     public TaskCompletionSource<T> GetTask<T>()
     {
         TaskCompletionSource<T> source = TaskCompletionSources.Create<T>();
@@ -213,21 +175,17 @@ public abstract class AsyncTestHarness :
         return source;
     }
 
-    /// <summary>
-    /// Gets consume observer.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets consume observer.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The consume observer.</returns>
     public TestConsumeMessageObserver<T> GetConsumeObserver<T>()
         where T : class
     {
         return new TestConsumeMessageObserver<T>(GetTask<T>(), GetTask<T>(), GetTask<T>());
     }
 
-    /// <summary>
-    /// Gets consume observer.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets consume observer.</summary>
+    /// <returns>The consume observer.</returns>
     public TestConsumeObserver GetConsumeObserver()
     {
         return new TestConsumeObserver(TestTimeout, InactivityToken, TimeProvider);

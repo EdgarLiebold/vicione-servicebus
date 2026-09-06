@@ -3,60 +3,42 @@ using ViciOne.ServiceBus.AmazonSqs;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Defines the contract for amazon sqs bus topology.
-/// </summary>
+/// <summary>Resolves Amazon SQS send and Amazon SNS publish topology and destination addresses for a bus.</summary>
 public interface IAmazonSqsBusTopology :
     IBusTopology
 {
-    /// <summary>
-    /// Gets the publish topology value.
-    /// </summary>
+    /// <summary>Gets the Amazon SNS publish topology.</summary>
     new IAmazonSqsPublishTopology PublishTopology { get; }
 
-    /// <summary>
-    /// Gets the send topology value.
-    /// </summary>
+    /// <summary>Gets the Amazon SQS send topology.</summary>
     new IAmazonSqsSendTopology SendTopology { get; }
 
-    /// <summary>
-    /// Returns the destination address for the specified topic
-    /// </summary>
-    /// <param name="topicName"></param>
-    /// <param name="configure">Callback to configure exchange settings</param>
-    /// <returns></returns>
+    /// <summary>Creates an Amazon SNS destination address for a named topic.</summary>
+    /// <param name="topicName">The topic name.</param>
+    /// <param name="configure">The callback that configures the topic.</param>
+    /// <returns>The configured topic address.</returns>
     Uri GetDestinationAddress(string topicName, Action<IAmazonSqsTopicConfigurator>? configure = null);
 
-    /// <summary>
-    /// Returns the destination address for the topic identified by the message type
-    /// </summary>
-    /// <param name="messageType">The message type</param>
-    /// <param name="configure">Callback to configure exchange settings</param>
-    /// <returns></returns>
+    /// <summary>Creates an Amazon SNS destination address for a message type.</summary>
+    /// <param name="messageType">The message type.</param>
+    /// <param name="configure">The callback that configures the message topic.</param>
+    /// <returns>The configured topic address.</returns>
     Uri GetDestinationAddress(Type messageType, Action<IAmazonSqsTopicConfigurator>? configure = null);
 
-    /// <summary>
-    /// Returns the settings for sending to the specified address. Will parse any arguments
-    /// off the query string to properly configure the settings, including exchange and queue
-    /// durability, etc.
-    /// </summary>
-    /// <param name="address">The AmazonSQS endpoint address</param>
-    /// <returns>The send settings for the address</returns>
+    /// <summary>Resolves queue or topic send settings from an endpoint address and its query options.</summary>
+    /// <param name="address">The Amazon SQS endpoint address.</param>
+    /// <returns>The send settings for the address.</returns>
     SendSettings GetSendSettings(Uri address);
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets Amazon SNS publish topology for a message type.</summary>
+    /// <typeparam name="T">The published message type.</typeparam>
+    /// <returns>The typed message publish topology.</returns>
     new IAmazonSqsMessagePublishTopology<T> Publish<T>()
         where T : class;
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets Amazon SQS send topology for a message type.</summary>
+    /// <typeparam name="T">The sent message type.</typeparam>
+    /// <returns>The typed message send topology.</returns>
     new IAmazonSqsMessageSendTopology<T> Send<T>()
         where T : class;
 }

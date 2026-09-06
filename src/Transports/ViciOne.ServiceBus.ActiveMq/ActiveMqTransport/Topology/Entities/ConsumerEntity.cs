@@ -3,9 +3,7 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides a consumer entity implementation.
-/// </summary>
+/// <summary>Represents a de-duplicated ActiveMQ consumer binding.</summary>
 public class ConsumerEntity :
     Consumer,
     ConsumerHandle
@@ -13,15 +11,13 @@ public class ConsumerEntity :
     readonly QueueEntity? _queue;
     readonly TopicEntity _topic;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="selector">The selector value.</param>
-    /// <param name="consumerName">The consumer name value.</param>
-    /// <param name="shared">The shared value.</param>
+    /// <summary>Creates a consumer binding with optional named-subscription settings.</summary>
+    /// <param name="id">The builder-local entity identifier.</param>
+    /// <param name="topic">The source topic entity.</param>
+    /// <param name="queue">The destination queue, or <see langword="null" /> for direct topic consumption.</param>
+    /// <param name="selector">An optional Apache NMS message selector.</param>
+    /// <param name="consumerName">An optional native subscription name.</param>
+    /// <param name="shared">Whether the named topic subscription is shared.</param>
     public ConsumerEntity(long id, TopicEntity topic, QueueEntity? queue, string? selector, string? consumerName, bool shared)
         : this(id, topic, queue, selector)
     {
@@ -29,13 +25,11 @@ public class ConsumerEntity :
         IsShared = shared;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="selector">The selector value.</param>
+    /// <summary>Creates an unnamed, non-shared consumer binding.</summary>
+    /// <param name="id">The builder-local entity identifier.</param>
+    /// <param name="topic">The source topic entity.</param>
+    /// <param name="queue">The destination queue, or <see langword="null" /> for direct topic consumption.</param>
+    /// <param name="selector">An optional Apache NMS message selector.</param>
     public ConsumerEntity(long id, TopicEntity topic, QueueEntity? queue, string? selector)
     {
         Id = id;
@@ -44,49 +38,29 @@ public class ConsumerEntity :
         _queue = queue;
     }
 
-    /// <summary>
-    /// Gets the name comparer value.
-    /// </summary>
+    /// <summary>Gets the comparer that de-duplicates bindings by consumer destination or topic/subscription name.</summary>
     public static IEqualityComparer<ConsumerEntity> NameComparer { get; } = new NameEqualityComparer();
-    /// <summary>
-    /// Gets the entity comparer value.
-    /// </summary>
+    /// <summary>Gets the comparer that includes all binding settings.</summary>
     public static IEqualityComparer<ConsumerEntity> EntityComparer { get; } = new ConsumerEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the source value.
-    /// </summary>
+    /// <summary>Gets the source topic.</summary>
     public Topic Source => _topic.Topic;
-    /// <summary>
-    /// Gets the destination value.
-    /// </summary>
+    /// <summary>Gets the destination queue, or <see langword="null" /> for direct topic consumption.</summary>
     public Queue? Destination => _queue?.Queue;
-    /// <summary>
-    /// Gets the selector value.
-    /// </summary>
+    /// <summary>Gets the Apache NMS message selector.</summary>
     public string? Selector { get; }
-    /// <summary>
-    /// Gets the consumer name value.
-    /// </summary>
+    /// <summary>Gets the native subscription name.</summary>
     public string? ConsumerName { get; }
-    /// <summary>
-    /// Gets the is shared value.
-    /// </summary>
+    /// <summary>Gets whether the named topic subscription is shared.</summary>
     public bool IsShared { get; }
 
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the builder-local entity identifier.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the consumer value.
-    /// </summary>
+    /// <summary>Gets this entity as its consumer-binding contract.</summary>
     public Consumer Consumer => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the non-empty source, destination, selector, and consumer-name settings.</summary>
+    /// <returns>A comma-separated diagnostic representation.</returns>
     public override string ToString()
     {
         return string.Join(", ",

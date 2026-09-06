@@ -2,21 +2,17 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a receive endpoint dispatcher receive context implementation.
-/// </summary>
+/// <summary>Carries state for receive endpoint dispatcher receive operations.</summary>
 public sealed class ReceiveEndpointDispatcherReceiveContext :
     BaseReceiveContext
 {
     readonly MessageBody _body;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="body">The body value.</param>
-    /// <param name="headers">The headers value.</param>
-    /// <param name="payloads">The payloads value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="receiveEndpointContext">The receive endpoint context.</param>
+    /// <param name="body">The body.</param>
+    /// <param name="headers">The headers.</param>
+    /// <param name="payloads">The payloads.</param>
     public ReceiveEndpointDispatcherReceiveContext(ReceiveEndpointContext receiveEndpointContext, byte[] body, IReadOnlyDictionary<string, object> headers,
         params object[] payloads)
         : base(IsRedelivered(headers), receiveEndpointContext, payloads)
@@ -26,14 +22,10 @@ public sealed class ReceiveEndpointDispatcherReceiveContext :
         HeaderProvider = new ReadOnlyDictionaryHeaderProvider(headers);
     }
 
-    /// <summary>
-    /// Gets the header provider value.
-    /// </summary>
+    /// <summary>Gets the header provider.</summary>
     protected override IHeaderProvider HeaderProvider { get; }
 
-    /// <summary>
-    /// Gets the body value.
-    /// </summary>
+    /// <summary>Gets the body.</summary>
     public override MessageBody Body => EnforceMessageLimits(_body);
 
     static bool IsRedelivered(IReadOnlyDictionary<string, object> headers)

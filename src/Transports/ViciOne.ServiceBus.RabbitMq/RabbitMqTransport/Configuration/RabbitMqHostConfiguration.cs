@@ -9,9 +9,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Provides a rabbit mq host configuration implementation.
-/// </summary>
+/// <summary>Owns RabbitMQ host settings, topology, endpoint registrations, and connection supervision.</summary>
 public class RabbitMqHostConfiguration :
     BaseHostConfiguration<IRabbitMqReceiveEndpointConfiguration, IRabbitMqReceiveEndpointConfigurator>,
     IRabbitMqHostConfiguration
@@ -21,11 +19,9 @@ public class RabbitMqHostConfiguration :
     readonly IRabbitMqBusTopology _topology;
     RabbitMqHostSettings _hostSettings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="busConfiguration">The bus configuration value.</param>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Creates a RabbitMQ host configuration with secure defaults, transport retry, and recyclable connection supervision.</summary>
+    /// <param name="busConfiguration">The bus configuration that creates endpoint-level configuration.</param>
+    /// <param name="topologyConfiguration">The topology configuration shared by endpoints and broker connections.</param>
     public RabbitMqHostConfiguration(IRabbitMqBusConfiguration busConfiguration, IRabbitMqTopologyConfiguration topologyConfiguration)
         : base(busConfiguration)
     {
@@ -45,19 +41,9 @@ public class RabbitMqHostConfiguration :
 
         ReceiveTransportRetryPolicy = Retry.CreatePolicy(x =>
         {
-            // Everything the broker answers is retried, except the one answer that repeating cannot
-            // change: a queue this connection cannot obtain exclusively. Retrying it kept the failed
-            // endpoint start alive in the background indefinitely, so the caller never learned the
-            // reason and the declare loop went on knocking at a queue that belonged to someone else.
-            //
-            // The exclusion sits on every rule that can carry that answer, and it took two
-            // measurements to get the list right. The same refusal reaches this policy in three
-            // shapes: raw as OperationInterruptedException, wrapped as RabbitMqConnectionException
-            // once the transport has converted it, and — under load, when the channel is already
-            // gone by the time the next operation runs — as AlreadyClosedException, which derives
-            // from OperationInterruptedException and so slipped past a rule written for the base
-            // type alone. Each shape left behind produced a retry loop that the isolated spec did
-            // not show and the full suite did.
+            // Exclusive-resource conflicts are terminal because retrying cannot acquire a queue owned
+            // by another connection. The client may surface that refusal directly, after transport
+            // conversion, or through an already-closed channel, so every carrier applies the same rule.
             x.Handle<ConnectionException>(exception => !exception.IsExclusiveResourceConflict());
             x.Handle<AlreadyClosedException>(exception => !exception.IsExclusiveResourceConflict());
             x.Handle<EndOfStreamException>();
@@ -73,52 +59,36 @@ public class RabbitMqHostConfiguration :
         _connectionContext = new Recycle<IConnectionContextSupervisor>(() => new ConnectionContextSupervisor(this, topologyConfiguration));
     }
 
-    /// <summary>
-    /// Gets the connection context supervisor value.
-    /// </summary>
+    /// <summary>Gets the recyclable supervisor for the shared RabbitMQ connection context.</summary>
     public IConnectionContextSupervisor ConnectionContextSupervisor => _connectionContext.Supervisor;
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the address of the configured RabbitMQ host.</summary>
     public override Uri HostAddress => _hostSettings.HostAddress;
 
-    /// <summary>
-    /// Gets the publisher confirmation value.
-    /// </summary>
+    /// <summary>Gets whether published messages require broker confirmation.</summary>
     public bool PublisherConfirmation => _hostSettings.PublisherConfirmation;
 
-    /// <summary>
-    /// Gets the batch settings value.
-    /// </summary>
+    /// <summary>Gets the current RabbitMQ publish-batch limits.</summary>
     public BatchSettings BatchSettings => _hostSettings.BatchSettings;
 
     IRabbitMqBusTopology IRabbitMqHostConfiguration.Topology => _topology;
 
-    /// <summary>
-    /// Gets the receive transport retry policy value.
-    /// </summary>
+    /// <summary>Gets the policy used to retry transient receive-transport connection failures.</summary>
     public override IRetryPolicy ReceiveTransportRetryPolicy { get; }
 
-    /// <summary>
-    /// Gets the topology value.
-    /// </summary>
+    /// <summary>Gets the RabbitMQ bus topology.</summary>
     public override IBusTopology Topology => _topology;
 
-    /// <summary>
-    /// Gets or sets the settings value.
-    /// </summary>
+    /// <summary>Gets or sets the RabbitMQ host settings.</summary>
     public RabbitMqHostSettings Settings
     {
         get => _hostSettings;
         set => _hostSettings = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    /// <summary>
-    /// Performs the apply endpoint definition operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="definition">The definition value.</param>
+    /// <summary>Applies common endpoint settings and maps temporary endpoints to expiring, non-durable RabbitMQ queues.</summary>
+    /// <param name="configurator">The RabbitMQ receive endpoint configurator to update.</param>
+    /// <param name="definition">The endpoint definition whose settings are applied.</param>
     public void ApplyEndpointDefinition(IRabbitMqReceiveEndpointConfigurator configurator, IEndpointDefinition definition)
     {
         if (definition.IsTemporary)
@@ -131,12 +101,10 @@ public class RabbitMqHostConfiguration :
         base.ApplyEndpointDefinition(configurator, definition);
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and registers a durable RabbitMQ queue endpoint using the configured default exchange type.</summary>
+    /// <param name="queueName">The RabbitMQ queue name.</param>
+    /// <param name="configure">An optional callback applied before observers are notified and the endpoint is registered.</param>
+    /// <returns>The registered RabbitMQ receive endpoint configuration.</returns>
     public IRabbitMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
         Action<IRabbitMqReceiveEndpointConfigurator>? configure)
     {
@@ -147,13 +115,11 @@ public class RabbitMqHostConfiguration :
         return CreateReceiveEndpointConfiguration(settings, endpointConfiguration, configure);
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and registers a RabbitMQ receive endpoint from explicit queue and endpoint settings.</summary>
+    /// <param name="settings">The RabbitMQ queue and exchange settings used by the receive endpoint.</param>
+    /// <param name="endpointConfiguration">The shared endpoint pipeline and serialization configuration.</param>
+    /// <param name="configure">An optional callback applied before observers are notified and the endpoint is registered.</param>
+    /// <returns>The registered RabbitMQ receive endpoint configuration.</returns>
     public IRabbitMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(RabbitMqReceiveSettings settings,
         IRabbitMqEndpointConfiguration endpointConfiguration, Action<IRabbitMqReceiveEndpointConfigurator>? configure)
     {
@@ -173,12 +139,10 @@ public class RabbitMqHostConfiguration :
         return configuration;
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="definition">The definition value.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Registers a RabbitMQ receive endpoint described by an endpoint definition.</summary>
+    /// <param name="definition">The endpoint definition that supplies the name and common settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null"/> to use the default formatter.</param>
+    /// <param name="configureEndpoint">An optional callback that applies RabbitMQ-specific settings after the definition.</param>
     public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IRabbitMqReceiveEndpointConfigurator>? configureEndpoint = null)
     {
@@ -191,20 +155,16 @@ public class RabbitMqHostConfiguration :
         });
     }
 
-    /// <summary>
-    /// Performs the receive endpoint operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <summary>Creates and registers a RabbitMQ receive endpoint for a named queue.</summary>
+    /// <param name="queueName">The RabbitMQ queue name.</param>
+    /// <param name="configureEndpoint">The callback applied before the endpoint is registered.</param>
     public override void ReceiveEndpoint(string queueName, Action<IRabbitMqReceiveEndpointConfigurator> configureEndpoint)
     {
         CreateReceiveEndpointConfiguration(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates inherited endpoint settings and RabbitMQ batch timeout, message-count, and byte-size limits.</summary>
+    /// <returns>The failures that prevent the RabbitMQ host from being built.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         foreach (var result in base.Validate())
@@ -218,27 +178,27 @@ public class RabbitMqHostConfiguration :
             if (_hostSettings.BatchSettings.MessageLimit <= 1 || _hostSettings.BatchSettings.MessageLimit > 100)
                 yield return this.Failure("BatchMessageLimit", "must be > 1 and <= 100");
 
-            if (_hostSettings.BatchSettings.SizeLimit < 1024 || _hostSettings.BatchSettings.MessageLimit > 256 * 1024)
+            if (_hostSettings.BatchSettings.SizeLimit < 1024 || _hostSettings.BatchSettings.SizeLimit > 256 * 1024)
                 yield return this.Failure("BatchSizeLimit", "must be >= 1K and <= 256K");
         }
     }
 
-    /// <summary>
-    /// Creates receive endpoint configuration.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a RabbitMQ endpoint while exposing it through the provider-neutral host contract.</summary>
+    /// <param name="queueName">The RabbitMQ queue name.</param>
+    /// <param name="configure">An optional provider-neutral callback adapted to the RabbitMQ configurator.</param>
+    /// <returns>The registered RabbitMQ receive endpoint configuration.</returns>
     public override IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
         Action<IReceiveEndpointConfigurator>? configure = null)
     {
-        return CreateReceiveEndpointConfiguration(queueName, configure);
+        Action<IRabbitMqReceiveEndpointConfigurator>? configureEndpoint = configure == null
+            ? null
+            : endpoint => configure(endpoint);
+
+        return CreateReceiveEndpointConfiguration(queueName, configureEndpoint);
     }
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the RabbitMQ host and attaches every registered receive endpoint.</summary>
+    /// <returns>The configured RabbitMQ host.</returns>
     public override IHost Build()
     {
         var host = new RabbitMqHost(this, _topology);

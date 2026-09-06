@@ -3,75 +3,57 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a message type filter configurator implementation.
-/// </summary>
+/// <summary>Configures message type filter.</summary>
 public class MessageTypeFilterConfigurator :
     IMessageTypeFilterConfigurator
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public MessageTypeFilterConfigurator()
     {
         Filter = new CompositeFilter<Type>();
     }
 
-    /// <summary>
-    /// Gets the filter value.
-    /// </summary>
+    /// <summary>Gets the filter.</summary>
     public CompositeFilter<Type> Filter { get; }
 
-    /// <summary>
-    /// Performs the include operation.
-    /// </summary>
-    /// <param name="messageTypes">The message types value.</param>
+    /// <summary>Includes the selected value.</summary>
+    /// <param name="messageTypes">The message types.</param>
     public void Include(params Type[] messageTypes)
     {
         Filter.Includes.Add(type => Match(type, messageTypes));
     }
 
-    /// <summary>
-    /// Performs the include operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Includes the selected value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public void Include(Func<Type, bool> filter)
     {
         Filter.Includes.Add(type => filter(type));
     }
 
-    /// <summary>
-    /// Performs the include operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Includes the selected value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     public void Include<T>()
         where T : class
     {
         Filter.Includes.Add(type => Match<T>(type));
     }
 
-    /// <summary>
-    /// Performs the exclude operation.
-    /// </summary>
-    /// <param name="messageTypes">The message types value.</param>
+    /// <summary>Excludes the selected value.</summary>
+    /// <param name="messageTypes">The message types.</param>
     public void Exclude(params Type[] messageTypes)
     {
         Filter.Excludes.Add(type => Match(type, messageTypes));
     }
 
-    /// <summary>
-    /// Performs the exclude operation.
-    /// </summary>
-    /// <param name="filter">The filter value.</param>
+    /// <summary>Excludes the selected value.</summary>
+    /// <param name="filter">The filter to add to the pipeline.</param>
     public void Exclude(Func<Type, bool> filter)
     {
         Filter.Excludes.Add(type => filter(type));
     }
 
-    /// <summary>
-    /// Performs the exclude operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Excludes the selected value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     public void Exclude<T>()
         where T : class
     {

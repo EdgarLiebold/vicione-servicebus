@@ -3,9 +3,7 @@ using RabbitMQ.Client;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Represents the method that handles refresh connection factory callback.
-/// </summary>
-/// <param name="connectionFactory">The connection factory value.</param>
-/// <returns>The result of the operation.</returns>
+/// <summary>Refreshes RabbitMQ client-factory settings immediately before a connection attempt.</summary>
+/// <param name="connectionFactory">The factory that will create the connection.</param>
+/// <returns>A task that completes when the settings have been refreshed.</returns>
 public delegate Task RefreshConnectionFactoryCallback(ConnectionFactory connectionFactory);

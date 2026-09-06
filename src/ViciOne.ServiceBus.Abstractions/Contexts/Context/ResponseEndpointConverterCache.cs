@@ -14,28 +14,24 @@ public class ResponseEndpointConverterCache
 
     IResponseEndpointConverter this[Type type] => _types.GetOrAdd(type, CreateTypeConverter).Value;
 
-    /// <summary>
-    /// Performs the respond operation.
-    /// </summary>
-    /// <param name="consumeContext">The consume context value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="messageType">The message type value.</param>
+    /// <summary>Sends the configured response.</summary>
+    /// <param name="consumeContext">The consume context.</param>
+    /// <param name="message">The message to process.</param>
+    /// <param name="messageType">The runtime type of the message contract.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task RespondAsync(ConsumeContext consumeContext, object message, Type messageType, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Cached.Converters.Value[messageType].RespondAsync(consumeContext, message);
     }
 
-    /// <summary>
-    /// Performs the respond operation.
-    /// </summary>
-    /// <param name="consumeContext">The consume context value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Sends the configured response.</summary>
+    /// <param name="consumeContext">The consume context.</param>
+    /// <param name="message">The message to process.</param>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task RespondAsync(ConsumeContext consumeContext, object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Cached.Converters.Value[messageType].RespondAsync(consumeContext, message, pipe);
@@ -55,9 +51,7 @@ public class ResponseEndpointConverterCache
     }
 
 
-    /// <summary>
-    /// Calls the generic version of the ISendEndpoint.Send method with the object's type
-    /// </summary>
+    /// <summary>Calls the generic version of the ISendEndpoint.Send method with the object's type.</summary>
     interface IResponseEndpointConverter
     {
         Task RespondAsync(ConsumeContext consumeContext, object message);
@@ -70,7 +64,7 @@ public class ResponseEndpointConverterCache
     /// Converts the object type message to the appropriate generic type and invokes the send method with that
     /// generic overload.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The value type.</typeparam>
     class ResponseEndpointConverter<T> :
         IResponseEndpointConverter
         where T : class

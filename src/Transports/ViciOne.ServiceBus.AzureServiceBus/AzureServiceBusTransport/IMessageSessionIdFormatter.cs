@@ -1,16 +1,12 @@
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for message session id formatter.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Derives Azure Service Bus session identifiers from typed send contexts.</summary>
+/// <typeparam name="TMessage">The sent message contract.</typeparam>
 public interface IMessageSessionIdFormatter<in TMessage>
     where TMessage : class
 {
-    /// <summary>
-    /// Performs the format session id operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the session identifier for an outgoing message.</summary>
+    /// <param name="context">The typed send context.</param>
+    /// <returns>The session identifier, or <see langword="null"/> when no identifier should be assigned.</returns>
     string? FormatSessionId(SendContext<TMessage> context);
 }

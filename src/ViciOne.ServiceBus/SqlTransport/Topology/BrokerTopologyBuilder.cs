@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>
-/// Provides a broker topology builder implementation.
-/// </summary>
+/// <summary>Builds broker topology components.</summary>
 public abstract class BrokerTopologyBuilder
 {
     readonly NamedEntityCollection<QueueEntity, QueueHandle> _queues;
@@ -15,9 +13,7 @@ public abstract class BrokerTopologyBuilder
     readonly EntityCollection<TopicSubscriptionEntity, TopicSubscriptionHandle> _topicSubscriptions;
     long _nextId;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     protected BrokerTopologyBuilder()
     {
         _topics = new NamedEntityCollection<TopicEntity, TopicHandle>(TopicEntity.EntityComparer, TopicEntity.NameComparer);
@@ -32,11 +28,9 @@ public abstract class BrokerTopologyBuilder
         return Interlocked.Increment(ref _nextId);
     }
 
-    /// <summary>
-    /// Creates topic.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates topic.</summary>
+    /// <param name="name">The name.</param>
+    /// <returns>The created topic.</returns>
     public TopicHandle CreateTopic(string name)
     {
         var id = GetNextId();
@@ -46,14 +40,12 @@ public abstract class BrokerTopologyBuilder
         return _topics.GetOrAdd(exchange);
     }
 
-    /// <summary>
-    /// Creates topic subscription.
-    /// </summary>
+    /// <summary>Creates topic subscription.</summary>
     /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="subscriptionType">The subscription type value.</param>
-    /// <param name="routingKey">The routing key value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="destination">The destination.</param>
+    /// <param name="subscriptionType">The runtime subscription type used by the operation.</param>
+    /// <param name="routingKey">The routing key.</param>
+    /// <returns>The created topic subscription.</returns>
     public TopicSubscriptionHandle CreateTopicSubscription(TopicHandle source, TopicHandle destination, SqlSubscriptionType subscriptionType,
         string? routingKey)
     {
@@ -68,13 +60,11 @@ public abstract class BrokerTopologyBuilder
         return _topicSubscriptions.GetOrAdd(binding);
     }
 
-    /// <summary>
-    /// Creates queue.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <param name="autoDeleteOnIdle">The auto delete on idle value.</param>
-    /// <param name="maxDeliveryCount">The max delivery count value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates queue.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="autoDeleteOnIdle">The auto delete on idle.</param>
+    /// <param name="maxDeliveryCount">The max delivery count.</param>
+    /// <returns>The created queue.</returns>
     public QueueHandle CreateQueue(string name, TimeSpan? autoDeleteOnIdle = null, int? maxDeliveryCount = null)
     {
         var id = GetNextId();
@@ -84,14 +74,12 @@ public abstract class BrokerTopologyBuilder
         return _queues.GetOrAdd(queue);
     }
 
-    /// <summary>
-    /// Creates queue subscription.
-    /// </summary>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="subscriptionType">The subscription type value.</param>
-    /// <param name="routingKey">The routing key value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates queue subscription.</summary>
+    /// <param name="topic">The topic.</param>
+    /// <param name="queue">The queue.</param>
+    /// <param name="subscriptionType">The runtime subscription type used by the operation.</param>
+    /// <param name="routingKey">The routing key.</param>
+    /// <returns>The created queue subscription.</returns>
     public QueueSubscriptionHandle CreateQueueSubscription(TopicHandle topic, QueueHandle queue, SqlSubscriptionType subscriptionType, string? routingKey)
     {
         var id = GetNextId();
@@ -105,10 +93,8 @@ public abstract class BrokerTopologyBuilder
         return _queueSubscriptions.GetOrAdd(binding);
     }
 
-    /// <summary>
-    /// Performs the build broker topology operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds broker topology.</summary>
+    /// <returns>The configured broker topology.</returns>
     public BrokerTopology BuildBrokerTopology()
     {
         return new SqlBrokerTopology(_topics, _topicSubscriptions, _queues, _queueSubscriptions);

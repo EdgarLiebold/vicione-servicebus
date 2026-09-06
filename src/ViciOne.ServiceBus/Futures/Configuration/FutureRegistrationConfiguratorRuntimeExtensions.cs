@@ -4,17 +4,14 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides runtime future registration extensions.
-/// </summary>
+/// <summary>Provides runtime future registration extensions.</summary>
 public static class FutureRegistrationConfiguratorRuntimeExtensions
 {
-    /// <summary>
-    /// Adds a future registration, along with an optional definition
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="futureType"></param>
-    /// <param name="futureDefinitionType">The future definition type</param>
+    /// <summary>Adds a future registration, along with an optional definition.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="futureType">The runtime future type used by the operation.</param>
+    /// <param name="futureDefinitionType">The future definition type.</param>
+    /// <returns>The future registration configurator produced by the operation.</returns>
     public static IFutureRegistrationConfigurator AddFuture(this IRegistrationConfigurator configurator, Type futureType,
         Type? futureDefinitionType = null)
     {

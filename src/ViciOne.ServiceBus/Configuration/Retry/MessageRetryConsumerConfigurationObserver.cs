@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// Configures a message retry for a consumer, on the consumer configurator, which is constrained to
 /// the message types for that consumer, and only applies to the consumer prior to the consumer factory.
 /// </summary>
-/// <typeparam name="TConsumer">The consumer type</typeparam>
+/// <typeparam name="TConsumer">The consumer type.</typeparam>
 public class MessageRetryConsumerConfigurationObserver<TConsumer> :
     IConsumerConfigurationObserver
     where TConsumer : class
@@ -18,12 +18,10 @@ public class MessageRetryConsumerConfigurationObserver<TConsumer> :
     readonly IConsumerConfigurator<TConsumer> _configurator;
     readonly Action<IRetryConfigurator> _configure;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public MessageRetryConsumerConfigurationObserver(IConsumerConfigurator<TConsumer> configurator, CancellationToken cancellationToken,
         Action<IRetryConfigurator> configure)
     {
@@ -59,11 +57,9 @@ public class MessageRetryConsumerConfigurationObserver<TConsumer> :
         }
     }
 
-    /// <summary>
-    /// Performs the batch consumer configured operation.
-    /// </summary>
-    /// <typeparam name="TMessage">The t message type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that batch consumer has been configured.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void BatchConsumerConfigured<TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
         where TMessage : class
     {

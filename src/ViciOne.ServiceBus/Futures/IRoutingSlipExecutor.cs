@@ -2,22 +2,16 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Futures;
 
-/// <summary>
-/// Defines the contract for routing slip executor.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Defines the operations required by routing slip executor.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
 public interface IRoutingSlipExecutor<in TInput>
     where TInput : class
 {
-    /// <summary>
-    /// Gets or sets the track routing slip value.
-    /// </summary>
+    /// <summary>Gets or sets the track routing slip.</summary>
     bool TrackRoutingSlip { set; }
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Runs the configured action.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task ExecuteAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default);
 }

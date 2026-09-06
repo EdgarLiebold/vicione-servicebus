@@ -3,9 +3,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a service bus bus topology implementation.
-/// </summary>
+/// <summary>Exposes Azure Service Bus send and publish topology through a bus topology.</summary>
 public class ServiceBusBusTopology :
     BusTopology,
     IServiceBusBusTopology
@@ -13,11 +11,9 @@ public class ServiceBusBusTopology :
     readonly IServiceBusTopologyConfiguration _configuration;
     readonly IServiceBusHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="configuration">The configuration callback.</param>
+    /// <summary>Creates a bus topology over the host and provider topology configuration.</summary>
+    /// <param name="hostConfiguration">The Azure Service Bus host configuration.</param>
+    /// <param name="configuration">The send, publish, and consume topology configuration.</param>
     public ServiceBusBusTopology(IServiceBusHostConfiguration hostConfiguration, IServiceBusTopologyConfiguration configuration)
         : base(hostConfiguration, configuration)
     {

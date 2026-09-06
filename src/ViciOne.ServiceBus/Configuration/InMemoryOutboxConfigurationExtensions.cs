@@ -8,9 +8,7 @@ using ViciOne.ServiceBus.Middleware.Outbox;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for in memory outbox configuration.
-/// </summary>
+/// <summary>Provides extension methods for in memory outbox configuration.</summary>
 public static class InMemoryOutboxConfigurationExtensions
 {
     /// <summary>
@@ -18,9 +16,10 @@ public static class InMemoryOutboxConfigurationExtensions
     /// of the pipeline returns to the outbox filter. At this point, the message execution pipeline should be
     /// nearly complete with only the ack remaining. If an exception is thrown, the messages are not sent/published.
     /// </summary>
-    /// <param name="configurator">The pipe configurator</param>
-    /// <param name="context"></param>
-    /// <param name="configure">Configure the outbox</param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The pipe configurator.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="configure">Configure the outbox.</param>
     public static void UseVolatileOutbox<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IRegistrationContext context,
         Action<IOutboxConfigurator>? configure = default)
         where T : class
@@ -40,8 +39,9 @@ public static class InMemoryOutboxConfigurationExtensions
     /// of the pipeline returns to the outbox filter. At this point, the message execution pipeline should be
     /// nearly complete with only the ack remaining. If an exception is thrown, the messages are not sent/published.
     /// </summary>
-    /// <param name="configurator">The pipe configurator</param>
-    /// <param name="configure">Configure the outbox</param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurator">The pipe configurator.</param>
+    /// <param name="configure">Configure the outbox.</param>
     public static void UseVolatileOutbox<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<IOutboxConfigurator>? configure = default)
         where T : class
     {
@@ -60,9 +60,9 @@ public static class InMemoryOutboxConfigurationExtensions
     /// of the pipeline returns to the outbox filter. At this point, the message execution pipeline should be
     /// nearly complete with only the ack remaining. If an exception is thrown, the messages are not sent/published.
     /// </summary>
-    /// <param name="configurator">The pipe configurator</param>
-    /// <param name="context"></param>
-    /// <param name="configure">Configure the outbox</param>
+    /// <param name="configurator">The pipe configurator.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="configure">Configure the outbox.</param>
     public static void UseVolatileOutbox(this IConsumePipeConfigurator configurator, IRegistrationContext context,
         Action<IOutboxConfigurator>? configure = default)
     {
@@ -77,8 +77,8 @@ public static class InMemoryOutboxConfigurationExtensions
     /// of the pipeline returns to the outbox filter. At this point, the message execution pipeline should be
     /// nearly complete with only the ack remaining. If an exception is thrown, the messages are not sent/published.
     /// </summary>
-    /// <param name="configurator">The pipe configurator</param>
-    /// <param name="configure">Configure the outbox</param>
+    /// <param name="configurator">The pipe configurator.</param>
+    /// <param name="configure">Configure the outbox.</param>
     public static void UseVolatileOutbox(this IConsumePipeConfigurator configurator, Action<IOutboxConfigurator>? configure = default)
     {
         if (configurator == null)
@@ -92,9 +92,10 @@ public static class InMemoryOutboxConfigurationExtensions
     /// of the pipeline returns to the outbox filter. At this point, the message execution pipeline should be
     /// nearly complete with only the ack remaining. If an exception is thrown, the messages are not sent/published.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="context"></param>
-    /// <param name="configure">Configure the outbox</param>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="configure">Configure the outbox.</param>
     public static void UseVolatileOutbox<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, IRegistrationContext context,
         Action<IOutboxConfigurator>? configure = default)
         where TConsumer : class
@@ -111,8 +112,9 @@ public static class InMemoryOutboxConfigurationExtensions
     /// of the pipeline returns to the outbox filter. At this point, the message execution pipeline should be
     /// nearly complete with only the ack remaining. If an exception is thrown, the messages are not sent/published.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure">Configure the outbox</param>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">Configure the outbox.</param>
     public static void UseVolatileOutbox<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, Action<IOutboxConfigurator>? configure = default)
         where TConsumer : class
     {
@@ -128,9 +130,10 @@ public static class InMemoryOutboxConfigurationExtensions
     /// of the pipeline returns to the outbox filter. At this point, the message execution pipeline should be
     /// nearly complete with only the ack remaining. If an exception is thrown, the messages are not sent/published.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="context"></param>
-    /// <param name="configure">Configure the outbox</param>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="configure">Configure the outbox.</param>
     public static void UseVolatileOutbox<TMessage>(this IHandlerConfigurator<TMessage> configurator, IRegistrationContext context,
         Action<IOutboxConfigurator>? configure = default)
         where TMessage : class
@@ -147,8 +150,9 @@ public static class InMemoryOutboxConfigurationExtensions
     /// of the pipeline returns to the outbox filter. At this point, the message execution pipeline should be
     /// nearly complete with only the ack remaining. If an exception is thrown, the messages are not sent/published.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure">Configure the outbox</param>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">Configure the outbox.</param>
     public static void UseVolatileOutbox<TMessage>(this IHandlerConfigurator<TMessage> configurator, Action<IOutboxConfigurator>? configure = default)
         where TMessage : class
     {
@@ -163,8 +167,8 @@ public static class InMemoryOutboxConfigurationExtensions
     /// Adds the required components to support the in-memory version of the InboxOutbox, which is intended for
     /// testing purposes only.
     /// </summary>
-    /// <param name="collection"></param>
-    /// <returns></returns>
+    /// <param name="collection">The collection.</param>
+    /// <returns>The service collection produced by the operation.</returns>
     public static IServiceCollection AddInMemoryInboxOutbox(this IServiceCollection collection)
     {
         collection.TryAddSingleton<InMemoryOutboxMessageRepository>();
@@ -177,8 +181,8 @@ public static class InMemoryOutboxConfigurationExtensions
     /// Includes a combination inbox/outbox in the consume pipeline, which stores outgoing messages in memory until
     /// the message consumer completes.
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="context">Configuration service provider</param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">Configuration service provider.</param>
     public static void UseInMemoryInboxOutbox(this IReceiveEndpointConfigurator configurator, IRegistrationContext context)
     {
         if (configurator == null)

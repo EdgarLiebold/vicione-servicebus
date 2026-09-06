@@ -4,19 +4,15 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>
-/// Provides extension methods for saga query expression property.
-/// </summary>
+/// <summary>Provides extension methods for saga query expression property.</summary>
 public static class SagaQueryExpressionPropertyExtensions
 {
-    /// <summary>
-    /// Analyzes the saga query and determines if it contains a binary expression that queries by a property value
-    /// </summary>
-    /// <param name="query"></param>
-    /// <param name="value"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
+    /// <summary>Analyzes the saga query and determines if it contains a binary expression that queries by a property value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="query">The query.</param>
+    /// <param name="value">Receives the value produced by the operation.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <exception cref="ArgumentException">Thrown when an argument does not satisfy the operation contract.</exception>
     public static bool TryGetPropertyValue<T>(this ISagaQuery<T> query, out object? value)
         where T : class, ISaga
     {
@@ -40,15 +36,13 @@ public static class SagaQueryExpressionPropertyExtensions
         return false;
     }
 
-    /// <summary>
-    /// Analyzes the saga query and determines if it contains a binary expression that queries by a property value
-    /// </summary>
-    /// <param name="query"></param>
-    /// <param name="value"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TProperty"></typeparam>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
+    /// <summary>Analyzes the saga query and determines if it contains a binary expression that queries by a property value.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TProperty">The property type.</typeparam>
+    /// <param name="query">The query.</param>
+    /// <param name="value">Receives the value produced by the operation.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <exception cref="ArgumentException">Thrown when an argument does not satisfy the operation contract.</exception>
     public static bool TryGetPropertyValue<T, TProperty>(this ISagaQuery<T> query, out TProperty? value)
         where T : class, ISaga
     {

@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus token provider configurator.
-/// </summary>
+/// <summary>Marks an Azure Service Bus token-provider configurator.</summary>
 public interface IServiceBusTokenProviderConfigurator
 {
 }

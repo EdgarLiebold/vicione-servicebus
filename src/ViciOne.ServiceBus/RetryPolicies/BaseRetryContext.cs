@@ -4,20 +4,16 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>
-/// Provides a base retry context implementation.
-/// </summary>
-/// <typeparam name="TContext">The t context type.</typeparam>
+/// <summary>Carries state for base retry operations.</summary>
+/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class BaseRetryContext<TContext> :
     RetryContext
     where TContext : class, PipeContext
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="retryCount">The retry count value.</param>
+    /// <param name="retryCount">The retry count.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     protected BaseRetryContext(TContext context, Exception exception, int retryCount, CancellationToken cancellationToken)
     {
@@ -29,54 +25,38 @@ public class BaseRetryContext<TContext> :
         RetryAttempt = retryCount + 1;
     }
 
-    /// <summary>
-    /// Gets the context value.
-    /// </summary>
+    /// <summary>Gets the context.</summary>
     public TContext Context { get; }
 
-    /// <summary>
-    /// Gets the cancellation token value.
-    /// </summary>
+    /// <summary>Gets the cancellation token.</summary>
     public CancellationToken CancellationToken { get; }
 
-    /// <summary>
-    /// Gets the exception value.
-    /// </summary>
+    /// <summary>Gets the exception.</summary>
     public Exception Exception { get; }
 
-    /// <summary>
-    /// Gets the retry attempt value.
-    /// </summary>
+    /// <summary>Gets the retry attempt.</summary>
     public int RetryAttempt { get; }
 
-    /// <summary>
-    /// Gets the retry count value.
-    /// </summary>
+    /// <summary>Gets the retry count.</summary>
     public int RetryCount { get; }
 
-    /// <summary>
-    /// Gets the delay value.
-    /// </summary>
+    /// <summary>Gets the delay.</summary>
     public virtual TimeSpan? Delay => null;
 
     Type RetryContext.ContextType => typeof(TContext);
 
-    /// <summary>
-    /// Performs the pre retry operation.
-    /// </summary>
+    /// <summary>Runs before retry.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public virtual Task PreRetryAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the retry faulted operation.
-    /// </summary>
+    /// <summary>Reports that retry has faulted.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public virtual Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;

@@ -2,56 +2,35 @@ using System;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for rabbit mq stream configurator.
-/// </summary>
+/// <summary>Configures RabbitMQ stream retention and consumer offset behavior.</summary>
 public interface IRabbitMqStreamConfigurator
 {
-    /// <summary>
-    /// Set the maximum length of the stream, in bytes
-    /// </summary>
+    /// <summary>Sets the maximum stream length in bytes.</summary>
     long MaxLength { set; }
 
-    /// <summary>
-    /// Set the maximum age of messages in the stream
-    /// </summary>
+    /// <summary>Sets the maximum age of messages retained in the stream.</summary>
     TimeSpan MaxAge { set; }
 
-    /// <summary>
-    /// Set the maximum segment size for the stream
-    /// </summary>
+    /// <summary>Sets the maximum segment size for the stream, in bytes.</summary>
     long MaxSegmentSize { set; }
 
-    /// <summary>
-    /// Set the stream filter value for the consumer
-    /// </summary>
+    /// <summary>Sets the server-side stream filter value for the consumer.</summary>
     string Filter { set; }
 
-    /// <summary>
-    /// Begin consuming messages from the specified offset
-    /// </summary>
-    /// <param name="offset"></param>
+    /// <summary>Starts consuming at an absolute stream offset.</summary>
+    /// <param name="offset">The zero-based stream offset.</param>
     void FromOffset(long offset);
 
-    /// <summary>
-    /// Begin consuming messages from the specified timestamp
-    /// </summary>
-    /// <param name="timestamp"></param>
+    /// <summary>Starts consuming with the first message at or after a timestamp.</summary>
+    /// <param name="timestamp">The UTC-aware stream timestamp.</param>
     void FromTimestamp(DateTimeOffset timestamp);
 
-    /// <summary>
-    /// Begin consuming messages from the first message in the stream
-    /// </summary>
+    /// <summary>Starts consuming at the first retained message in the stream.</summary>
     void FromFirst();
 
-    /// <summary>
-    /// Begin consuming messages from the last message in the stream
-    /// </summary>
+    /// <summary>Starts consuming from RabbitMQ's <c>last</c> stream offset, at the beginning of the latest retained chunk.</summary>
     void FromLast();
 
-    /// <summary>
-    /// Consumer reference name.
-    /// Used to identify the consumer server side when storing the messages offset.
-    /// </summary>
+    /// <summary>Sets the stable server-side consumer reference used to store the consumed offset.</summary>
     string Reference { set; }
 }

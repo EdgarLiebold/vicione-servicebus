@@ -3,40 +3,32 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>
-/// Provides a task message factory implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Creates task message instances.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public class TaskMessageFactory<T>
     where T : class
 {
     readonly Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> _messageFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageFactory">The message factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="messageFactory">The message factory.</param>
     public TaskMessageFactory(Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> messageFactory)
     {
         _messageFactory = messageFactory;
     }
 
-    /// <summary>
-    /// Gets message.
-    /// </summary>
+    /// <summary>Gets message.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> GetMessageAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>>(cancellationToken); return _messageFactory;
     }
 
-    /// <summary>
-    /// Performs the use operation.
-    /// </summary>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Applies the selected configuration.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UseAsync(Func<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>, Task> callback, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> msgTask = _messageFactory;

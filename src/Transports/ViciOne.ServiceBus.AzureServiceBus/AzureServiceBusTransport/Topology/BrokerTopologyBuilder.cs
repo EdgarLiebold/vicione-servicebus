@@ -4,17 +4,13 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a broker topology builder implementation.
-/// </summary>
+/// <summary>Collects deduplicated Azure Service Bus entity declarations and subscriptions.</summary>
 public class BrokerTopologyBuilder :
     IBrokerTopologyBuilder
 {
     long _nextId;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Creates empty entity collections keyed by broker identity and name.</summary>
     public BrokerTopologyBuilder()
     {
         Topics = new NamedEntityCollection<TopicEntity, TopicHandle>(TopicEntity.EntityComparer, TopicEntity.NameComparer);
@@ -30,32 +26,20 @@ public class BrokerTopologyBuilder :
             TopicSubscriptionEntity.NameComparer);
     }
 
-    /// <summary>
-    /// Gets the subscriptions value.
-    /// </summary>
+    /// <summary>Gets topic-to-consumer subscription declarations.</summary>
     protected EntityCollection<SubscriptionEntity, SubscriptionHandle> Subscriptions { get; }
-    /// <summary>
-    /// Gets the topics value.
-    /// </summary>
+    /// <summary>Gets topic declarations keyed by entity name.</summary>
     protected NamedEntityCollection<TopicEntity, TopicHandle> Topics { get; }
-    /// <summary>
-    /// Gets the queue subscriptions value.
-    /// </summary>
+    /// <summary>Gets topic-to-queue forwarding subscriptions.</summary>
     protected EntityCollection<QueueSubscriptionEntity, QueueSubscriptionHandle> QueueSubscriptions { get; }
-    /// <summary>
-    /// Gets the topic subscriptions value.
-    /// </summary>
+    /// <summary>Gets topic-to-topic forwarding subscriptions.</summary>
     protected EntityCollection<TopicSubscriptionEntity, TopicSubscriptionHandle> TopicSubscriptions { get; }
-    /// <summary>
-    /// Gets the queues value.
-    /// </summary>
+    /// <summary>Gets queue declarations keyed by entity name.</summary>
     protected NamedEntityCollection<QueueEntity, QueueHandle> Queues { get; }
 
-    /// <summary>
-    /// Creates topic.
-    /// </summary>
-    /// <param name="createTopicOptions">The create topic options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds or reuses a topic declaration.</summary>
+    /// <param name="createTopicOptions">The Azure topic declaration options.</param>
+    /// <returns>A handle to the topology topic.</returns>
     public TopicHandle CreateTopic(CreateTopicOptions createTopicOptions)
     {
         var exchange = new TopicEntity(GetNextId(), createTopicOptions);
@@ -63,14 +47,12 @@ public class BrokerTopologyBuilder :
         return Topics.GetOrAdd(exchange);
     }
 
-    /// <summary>
-    /// Creates subscription.
-    /// </summary>
-    /// <param name="topic">The topic value.</param>
-    /// <param name="createSubscriptionOptions">The create subscription options value.</param>
-    /// <param name="rule">The rule value.</param>
-    /// <param name="filter">The filter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds or reuses a consumer subscription on a topic.</summary>
+    /// <param name="topic">The source topic handle.</param>
+    /// <param name="createSubscriptionOptions">The Azure subscription declaration options.</param>
+    /// <param name="rule">The optional initial subscription rule.</param>
+    /// <param name="filter">The optional broker rule filter.</param>
+    /// <returns>A handle to the topology subscription.</returns>
     public SubscriptionHandle CreateSubscription(TopicHandle topic, CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions? rule,
         RuleFilter? filter)
     {
@@ -81,11 +63,9 @@ public class BrokerTopologyBuilder :
         return Subscriptions.GetOrAdd(subscriptionEntity);
     }
 
-    /// <summary>
-    /// Creates queue.
-    /// </summary>
-    /// <param name="createQueueOptions">The create queue options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds or reuses a queue declaration.</summary>
+    /// <param name="createQueueOptions">The Azure queue declaration options.</param>
+    /// <returns>A handle to the topology queue.</returns>
     public QueueHandle CreateQueue(CreateQueueOptions createQueueOptions)
     {
         var queue = new QueueEntity(GetNextId(), createQueueOptions);
@@ -93,15 +73,13 @@ public class BrokerTopologyBuilder :
         return Queues.GetOrAdd(queue);
     }
 
-    /// <summary>
-    /// Creates queue subscription.
-    /// </summary>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="queue">The queue value.</param>
-    /// <param name="createSubscriptionOptions">The create subscription options value.</param>
-    /// <param name="rule">The rule value.</param>
-    /// <param name="filter">The filter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates queue subscription.</summary>
+    /// <param name="exchange">The source topic handle.</param>
+    /// <param name="queue">The forwarding destination queue.</param>
+    /// <param name="createSubscriptionOptions">The Azure forwarding subscription declaration options.</param>
+    /// <param name="rule">The optional initial subscription rule.</param>
+    /// <param name="filter">The optional broker rule filter.</param>
+    /// <returns>A handle to the topic-to-queue relationship.</returns>
     public QueueSubscriptionHandle CreateQueueSubscription(TopicHandle exchange, QueueHandle queue, CreateSubscriptionOptions createSubscriptionOptions,
         CreateRuleOptions? rule, RuleFilter? filter)
     {
@@ -117,13 +95,11 @@ public class BrokerTopologyBuilder :
         return QueueSubscriptions.GetOrAdd(binding);
     }
 
-    /// <summary>
-    /// Creates topic subscription.
-    /// </summary>
-    /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="createSubscriptionOptions">The create subscription options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates topic subscription.</summary>
+    /// <param name="source">The source topic.</param>
+    /// <param name="destination">The forwarding destination topic.</param>
+    /// <param name="createSubscriptionOptions">The Azure forwarding subscription declaration options.</param>
+    /// <returns>A handle to the topic-to-topic relationship.</returns>
     public TopicSubscriptionHandle CreateTopicSubscription(TopicHandle source, TopicHandle destination, CreateSubscriptionOptions createSubscriptionOptions)
     {
         var sourceEntity = Topics.Get(source);
@@ -138,10 +114,8 @@ public class BrokerTopologyBuilder :
         return TopicSubscriptions.GetOrAdd(subscriptionEntity);
     }
 
-    /// <summary>
-    /// Performs the build broker topology operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds an immutable view over the collected entity relationships.</summary>
+    /// <returns>The complete Azure Service Bus broker topology.</returns>
     public BrokerTopology BuildBrokerTopology()
     {
         return new ServiceBusBrokerTopology(Topics, Subscriptions, Queues, QueueSubscriptions, TopicSubscriptions);

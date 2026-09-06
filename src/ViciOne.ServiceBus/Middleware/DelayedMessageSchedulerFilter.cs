@@ -6,27 +6,21 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a delayed message scheduler filter implementation.
-/// </summary>
+/// <summary>Processes delayed message scheduler pipeline stages.</summary>
 public class DelayedMessageSchedulerFilter :
     IFilter<ConsumeContext>
 {
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateFilterScope("delayedMessageScheduler");
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [DebuggerNonUserCode]
     public Task SendAsync(ConsumeContext context, IPipe<ConsumeContext> next)
     {

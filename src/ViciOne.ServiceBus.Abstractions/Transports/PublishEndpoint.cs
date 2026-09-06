@@ -5,74 +5,60 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// The publish endpoint delivers messages to the topic/exchange/whatever based upon the publish topology of the broker, by message type.
-/// </summary>
+/// <summary>Provides an endpoint for publish.</summary>
 public class PublishEndpoint :
     IPublishEndpoint,
     Advanced.IAdvancedPublishEndpoint
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="provider">The service provider used to resolve dependencies.</param>
     public PublishEndpoint(IPublishEndpointProvider provider)
     {
         PublishEndpointProvider = provider;
     }
 
-    /// <summary>
-    /// Gets or sets the publish endpoint provider value.
-    /// </summary>
+    /// <summary>Gets or sets the publish endpoint provider.</summary>
     protected IPublishEndpointProvider PublishEndpointProvider { get; set; }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PublishAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
         return PublishInternalAsync(cancellationToken, message);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <param name="publishPipe">The publish pipe.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
         return PublishInternalAsync(cancellationToken, message, publishPipe);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <param name="publishPipe">The publish pipe.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
         return PublishInternalAsync(cancellationToken, message, publishPipe);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PublishAsync(object message, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -83,13 +69,11 @@ public class PublishEndpoint :
         return PublishEndpointConverterCache.PublishAsync(this, message, messageType, cancellationToken);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="publishPipe">The publish pipe.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PublishAsync(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -100,38 +84,32 @@ public class PublishEndpoint :
         return PublishEndpointConverterCache.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="messageType">The message type value.</param>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="messageType">The runtime type of the message contract.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PublishAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
         return PublishEndpointConverterCache.PublishAsync(this, message, messageType, cancellationToken);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="messageType">The message type value.</param>
-    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <param name="message">The message to process.</param>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="publishPipe">The publish pipe.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PublishAsync(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
     {
         return PublishEndpointConverterCache.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="values">The values.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PublishAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
@@ -141,14 +119,12 @@ public class PublishEndpoint :
         return PublishInternalAsync<T>(cancellationToken, values);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
-    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="values">The values.</param>
+    /// <param name="publishPipe">The publish pipe.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -158,14 +134,12 @@ public class PublishEndpoint :
         return PublishInternalAsync(cancellationToken, values, publishPipe);
     }
 
-    /// <summary>
-    /// Publishes a message to its configured consumers.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="values">The values value.</param>
-    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="values">The values.</param>
+    /// <param name="publishPipe">The publish pipe.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PublishAsync<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -175,21 +149,17 @@ public class PublishEndpoint :
         return PublishInternalAsync<T>(cancellationToken, values, publishPipe);
     }
 
-    /// <summary>
-    /// Connects publish observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects publish observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
         return PublishEndpointProvider.ConnectPublishObserver(observer);
     }
 
-    /// <summary>
-    /// Gets publish send endpoint.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets publish send endpoint.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>A task that produces the requested value.</returns>
     protected virtual Task<ISendEndpoint> GetPublishSendEndpointAsync<T>()
         where T : class
     {

@@ -3,38 +3,24 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Introspection;
 
-/// <summary>
-/// The result of a probe
-/// </summary>
+/// <summary>Represents the outcome of probe.</summary>
 public interface ProbeResult
 {
-    /// <summary>
-    /// Unique identifies this result
-    /// </summary>
+    /// <summary>Unique identifies this result.</summary>
     Guid ResultId { get; }
 
-    /// <summary>
-    /// Identifies the initiator of the probe
-    /// </summary>
+    /// <summary>Identifies the initiator of the probe.</summary>
     Guid ProbeId { get; }
 
-    /// <summary>
-    /// When the probe was initiated through the system
-    /// </summary>
+    /// <summary>When the probe was initiated through the system.</summary>
     DateTimeOffset StartTimestamp { get; }
 
-    /// <summary>
-    /// How long the probe took to execute
-    /// </summary>
+    /// <summary>How long the probe took to execute.</summary>
     TimeSpan Duration { get; }
 
-    /// <summary>
-    /// The host from which the result was generated
-    /// </summary>
+    /// <summary>The host from which the result was generated.</summary>
     HostInfo Host { get; }
 
-    /// <summary>
-    /// The results returned by the probe
-    /// </summary>
+    /// <summary>The results returned by the probe.</summary>
     IDictionary<string, object> Results { get; }
 }

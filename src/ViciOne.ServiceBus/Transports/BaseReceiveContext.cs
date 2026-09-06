@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a base receive context implementation.
-/// </summary>
+/// <summary>Carries state for base receive operations.</summary>
 public abstract class BaseReceiveContext :
     ScopePipeContext,
     ReceiveContext,
@@ -26,12 +24,10 @@ public abstract class BaseReceiveContext :
     readonly TimeProvider _timeProvider;
     MessageBody? _validatedBody;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="redelivered">The redelivered value.</param>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="payloads">The payloads value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="redelivered">The redelivered.</param>
+    /// <param name="receiveEndpointContext">The receive endpoint context.</param>
+    /// <param name="payloads">The payloads.</param>
     protected BaseReceiveContext(bool redelivered, ReceiveEndpointContext receiveEndpointContext, params object[] payloads)
         : base(receiveEndpointContext, payloads)
     {
@@ -53,15 +49,11 @@ public abstract class BaseReceiveContext :
         _publishEndpointProvider = new Lazy<IPublishEndpointProvider>(GetPublishEndpointProvider);
     }
 
-    /// <summary>
-    /// Gets the header provider value.
-    /// </summary>
+    /// <summary>Gets the header provider.</summary>
     protected abstract IHeaderProvider HeaderProvider { get; }
 
-    /// <summary>
-    /// Applies the bus-owned receive limit before a transport body can be read by a deserializer.
-    /// </summary>
-    /// <param name="body">The transport body to expose.</param>
+    /// <summary>Applies the bus-owned receive limit before a transport body can be read by a deserializer.</summary>
+    /// <param name="body">The body.</param>
     /// <returns>The same body after successful admission.</returns>
     protected MessageBody EnforceMessageLimits(MessageBody body)
     {
@@ -80,78 +72,52 @@ public abstract class BaseReceiveContext :
         return body;
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public virtual void Dispose()
     {
         _cancellationTokenSource.Dispose();
     }
 
-    /// <summary>
-    /// Gets the cancellation token value.
-    /// </summary>
+    /// <summary>Gets the cancellation token.</summary>
     public override CancellationToken CancellationToken => _cancellationTokenSource.Token;
 
-    /// <summary>
-    /// Gets or sets the is delivered value.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether delivered.</summary>
     public bool IsDelivered { get; private set; }
-    /// <summary>
-    /// Gets or sets the is faulted value.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether faulted.</summary>
     public bool IsFaulted { get; private set; }
 
-    /// <summary>
-    /// Gets the publish faults value.
-    /// </summary>
+    /// <summary>Gets the publish faults.</summary>
     public bool PublishFaults => _receiveEndpointContext.PublishFaults;
-    /// <summary>
-    /// Gets the body value.
-    /// </summary>
+    /// <summary>Gets the body.</summary>
     public abstract MessageBody Body { get; }
 
-    /// <summary>
-    /// Gets the send endpoint provider value.
-    /// </summary>
+    /// <summary>Gets the send endpoint provider.</summary>
     public ISendEndpointProvider SendEndpointProvider => _sendEndpointProvider.Value;
-    /// <summary>
-    /// Gets the publish endpoint provider value.
-    /// </summary>
+    /// <summary>Gets the publish endpoint provider.</summary>
     public IPublishEndpointProvider PublishEndpointProvider => _publishEndpointProvider.Value;
 
-    /// <summary>
-    /// Gets the receive completed value.
-    /// </summary>
+    /// <summary>Gets the receive completed.</summary>
     public Task ReceiveCompleted => _receiveTasks.CompletedAsync(CancellationToken);
 
-    /// <summary>
-    /// Adds receive task to the configuration.
-    /// </summary>
-    /// <param name="task">The task value.</param>
+    /// <summary>Adds receive task to the configuration.</summary>
+    /// <param name="task">The task.</param>
     public void AddReceiveTask(Task task)
     {
         _receiveTasks.Add(task);
     }
 
-    /// <summary>
-    /// Gets the redelivered value.
-    /// </summary>
+    /// <summary>Gets the redelivered.</summary>
     public bool Redelivered { get; }
-    /// <summary>
-    /// Gets the transport headers value.
-    /// </summary>
+    /// <summary>Gets the transport headers.</summary>
     public Headers TransportHeaders => _headers.Value;
 
-    /// <summary>
-    /// Performs the notify consumed operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="duration">The duration value.</param>
-    /// <param name="consumerType">The consumer type value.</param>
+    /// <summary>Reports that notify has been consumed.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public virtual Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -162,16 +128,14 @@ public abstract class BaseReceiveContext :
         return _receiveEndpointContext.ReceiveObservers.PostConsumeAsync(context, duration, consumerType);
     }
 
-    /// <summary>
-    /// Performs the notify faulted operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="duration">The duration value.</param>
-    /// <param name="consumerType">The consumer type value.</param>
+    /// <summary>Reports that notify has faulted.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public virtual Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -193,12 +157,10 @@ public abstract class BaseReceiveContext :
         return _receiveEndpointContext.ReceiveObservers.ConsumeFaultAsync(context, duration, consumerType, exception);
     }
 
-    /// <summary>
-    /// Performs the notify faulted operation.
-    /// </summary>
+    /// <summary>Reports that notify has faulted.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public virtual Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IsFaulted = true;
@@ -208,41 +170,29 @@ public abstract class BaseReceiveContext :
         return _receiveEndpointContext.ReceiveObservers.ReceiveFaultAsync(this, exception);
     }
 
-    /// <summary>
-    /// Gets the elapsed time value.
-    /// </summary>
+    /// <summary>Gets the elapsed time.</summary>
     public TimeSpan ElapsedTime => _timeProvider.GetElapsedTime(_receiveStartedAt);
-    /// <summary>
-    /// Gets or sets the input address value.
-    /// </summary>
+    /// <summary>Gets or sets the input address.</summary>
     public Uri InputAddress { get; protected set; }
-    /// <summary>
-    /// Gets the content type value.
-    /// </summary>
+    /// <summary>Gets the content type.</summary>
     public ContentType ContentType => _contentType.Value;
 
-    /// <summary>
-    /// Gets send endpoint provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets send endpoint provider.</summary>
+    /// <returns>The send endpoint provider.</returns>
     protected virtual ISendEndpointProvider GetSendEndpointProvider()
     {
         return _receiveEndpointContext.SendEndpointProvider;
     }
 
-    /// <summary>
-    /// Gets publish endpoint provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets publish endpoint provider.</summary>
+    /// <returns>The publish endpoint provider.</returns>
     protected virtual IPublishEndpointProvider GetPublishEndpointProvider()
     {
         return _receiveEndpointContext.PublishEndpointProvider;
     }
 
-    /// <summary>
-    /// Gets content type.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets content type.</summary>
+    /// <returns>The content type.</returns>
     protected virtual ContentType GetContentType()
     {
         if (_headers.Value.TryGetHeader("Content-Type", out var contentTypeHeader) || _headers.Value.TryGetHeader("ContentType", out contentTypeHeader))
@@ -257,19 +207,15 @@ public abstract class BaseReceiveContext :
         return _receiveEndpointContext.Serialization.DefaultContentType;
     }
 
-    /// <summary>
-    /// Determines whether the current value can cel.
-    /// </summary>
+    /// <summary>Determines whether the current value can cel.</summary>
     public void Cancel()
     {
         _cancellationTokenSource.Cancel();
     }
 
-    /// <summary>
-    /// Performs the convert to content type operation.
-    /// </summary>
-    /// <param name="text">The text value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Converts to content type.</summary>
+    /// <param name="text">The text.</param>
+    /// <returns>The converted to content type.</returns>
     protected static ContentType? ConvertToContentType(string text)
     {
         try

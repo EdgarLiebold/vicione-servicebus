@@ -4,40 +4,28 @@ using ViciOne.ServiceBus.ActiveMq.Topology;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Defines the contract for active mq consume topology.
-/// </summary>
+/// <summary>Exposes ActiveMQ receive bindings and per-message consume topology.</summary>
 public interface IActiveMqConsumeTopology :
     IConsumeTopology
 {
-    /// <summary>
-    /// Gets the consumer endpoint queue name formatter value.
-    /// </summary>
+    /// <summary>Gets the formatter for virtual-topic consumer queues or subscriptions.</summary>
     IActiveMqConsumerEndpointQueueNameFormatter? ConsumerEndpointQueueNameFormatter { get; }
 
-    /// <summary>
-    /// Gets the temporary queue name formatter value.
-    /// </summary>
+    /// <summary>Gets the formatter applied to generated temporary queue names.</summary>
     IActiveMqTemporaryQueueNameFormatter? TemporaryQueueNameFormatter { get; }
 
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets consume topology for a message type.</summary>
+    /// <typeparam name="T">The consumed message type.</typeparam>
+    /// <returns>The ActiveMQ message consume topology.</returns>
     new IActiveMqMessageConsumeTopology<T> GetMessageTopology<T>()
         where T : class;
 
-    /// <summary>
-    /// Apply the entire topology to the builder
-    /// </summary>
-    /// <param name="builder"></param>
+    /// <summary>Applies the complete consume topology to a receive-topology builder.</summary>
+    /// <param name="builder">The builder to update.</param>
     void Apply(IReceiveEndpointBrokerTopologyBuilder builder);
 
-    /// <summary>
-    /// Bind an exchange, using the configurator
-    /// </summary>
-    /// <param name="topicName"></param>
-    /// <param name="configure"></param>
+    /// <summary>Binds a topic to the receive endpoint using the supplied configurator.</summary>
+    /// <param name="topicName">The topic name.</param>
+    /// <param name="configure">An optional callback that configures the topic binding.</param>
     void Bind(string topicName, Action<IActiveMqTopicBindingConfigurator>? configure = null);
 }

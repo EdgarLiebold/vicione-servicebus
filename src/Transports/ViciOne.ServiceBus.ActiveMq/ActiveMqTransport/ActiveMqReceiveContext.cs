@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Provides an active mq receive context implementation.
-/// </summary>
+/// <summary>Adapts a received Apache NMS message to the transport receive context.</summary>
 public sealed class ActiveMqReceiveContext :
     BaseReceiveContext,
     ActiveMqMessageContext,
@@ -17,12 +15,10 @@ public sealed class ActiveMqReceiveContext :
 {
     readonly MessageBody _body;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="transportMessage">The transport message value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="payloads">The payloads value.</param>
+    /// <summary>Creates a receive context for a native ActiveMQ message.</summary>
+    /// <param name="transportMessage">The received Apache NMS message.</param>
+    /// <param name="context">The ActiveMQ receive-endpoint context.</param>
+    /// <param name="payloads">Additional context payloads.</param>
     public ActiveMqReceiveContext(IMessage transportMessage, ActiveMqReceiveEndpointContext context, params object[] payloads)
         : base(transportMessage.NMSRedelivered, context, payloads)
     {
@@ -31,45 +27,29 @@ public sealed class ActiveMqReceiveContext :
         _body = new ActiveMqMessageBody(transportMessage);
     }
 
-    /// <summary>
-    /// Gets the header provider value.
-    /// </summary>
+    /// <summary>Gets a provider for the native message headers.</summary>
     protected override IHeaderProvider HeaderProvider => new ActiveMqHeaderProvider(TransportMessage);
 
-    /// <summary>
-    /// Gets the body value.
-    /// </summary>
+    /// <summary>Gets the message body with the configured receive limits enforced.</summary>
     public override MessageBody Body => EnforceMessageLimits(_body);
 
-    /// <summary>
-    /// Gets the transport message value.
-    /// </summary>
+    /// <summary>Gets the underlying Apache NMS message.</summary>
     public IMessage TransportMessage { get; }
 
-    /// <summary>
-    /// Gets the properties value.
-    /// </summary>
+    /// <summary>Gets the native message-property map.</summary>
     public IPrimitiveMap Properties => TransportMessage.Properties;
 
-    /// <summary>
-    /// Gets the activity system value.
-    /// </summary>
+    /// <summary>Gets the OpenTelemetry messaging-system identifier.</summary>
     public string ActivitySystem => "activemq";
 
-    /// <summary>
-    /// Gets the group id value.
-    /// </summary>
+    /// <summary>Gets the JMSX message-group identifier.</summary>
     public string? GroupId => TransportMessage.GetGroupId();
 
-    /// <summary>
-    /// Gets the group sequence value.
-    /// </summary>
+    /// <summary>Gets the JMSX message-group sequence number.</summary>
     public int GroupSequence => TransportMessage.GetGroupSequence();
 
-    /// <summary>
-    /// Gets transport properties.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the non-default ActiveMQ delivery properties recorded for diagnostics.</summary>
+    /// <returns>The priority and message-group properties, or <see langword="null" /> when all use their defaults.</returns>
     public IDictionary<string, object>? GetTransportProperties()
     {
         var properties = new Lazy<Dictionary<string, object>>(() => new Dictionary<string, object>());
@@ -84,10 +64,8 @@ public sealed class ActiveMqReceiveContext :
         return properties.IsValueCreated ? properties.Value : null;
     }
 
-    /// <summary>
-    /// Gets send endpoint provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets a send-endpoint provider that preserves the message's native reply destination.</summary>
+    /// <returns>The endpoint's provider, optionally decorated with the native reply destination.</returns>
     protected override ISendEndpointProvider GetSendEndpointProvider()
     {
         var provider = base.GetSendEndpointProvider();

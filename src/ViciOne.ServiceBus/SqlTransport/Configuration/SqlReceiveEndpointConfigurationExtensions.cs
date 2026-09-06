@@ -2,9 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Provides extension methods for sql receive endpoint configuration.
-/// </summary>
+/// <summary>Provides extension methods for sql receive endpoint configuration.</summary>
 public static class SqlReceiveEndpointConfigurationExtensions
 {
     /// <summary>
@@ -12,19 +10,17 @@ public static class SqlReceiveEndpointConfigurationExtensions
     /// and non-durable. By default all services bus instances include a default receiveEndpoint that is
     /// of this type (created automatically upon the first receiver binding).
     /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void ReceiveEndpoint(this ISqlBusFactoryConfigurator configurator, Action<ISqlReceiveEndpointConfigurator>? configure = null)
     {
         configurator.ReceiveEndpoint(new TemporaryEndpointDefinition(), DefaultEndpointNameFormatter.Instance, configure);
     }
 
-    /// <summary>
-    /// Declare a receive endpoint using the endpoint <paramref name="definition"/>.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="definition"></param>
-    /// <param name="configure"></param>
+    /// <summary>Declare a receive endpoint using the endpoint <paramref name="definition"/>.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="definition">The definition.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void ReceiveEndpoint(this ISqlBusFactoryConfigurator configurator, IEndpointDefinition definition,
         Action<ISqlReceiveEndpointConfigurator>? configure = null)
     {

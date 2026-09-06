@@ -3,18 +3,14 @@ using ViciOne.ServiceBus.RabbitMq.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides a rabbit mq error settings implementation.
-/// </summary>
+/// <summary>Builds the RabbitMQ exchange and queue used to hold faulted messages.</summary>
 public class RabbitMqErrorSettings :
     QueueBindingConfigurator,
     ErrorSettings
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="source">The source value.</param>
-    /// <param name="name">The name value.</param>
+    /// <summary>Creates error settings derived from a receive endpoint.</summary>
+    /// <param name="source">The source receive settings whose durability and declaration arguments are copied.</param>
+    /// <param name="name">The error exchange and queue name.</param>
     public RabbitMqErrorSettings(ReceiveSettings source, string name)
         : base(name, source.ExchangeType, source.Durable, source.AutoDelete)
     {
@@ -27,10 +23,8 @@ public class RabbitMqErrorSettings :
             SetQueueArgument(argument.Key, argument.Value);
     }
 
-    /// <summary>
-    /// Gets broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the exchange, queue, and binding required by the error transport.</summary>
+    /// <returns>The error broker topology.</returns>
     public BrokerTopology GetBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder();

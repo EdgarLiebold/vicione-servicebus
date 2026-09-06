@@ -1,21 +1,15 @@
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides a receive endpoint broker topology builder implementation.
-/// </summary>
+/// <summary>Builds the ActiveMQ queue, topics, and consumer bindings for a receive endpoint.</summary>
 public class ReceiveEndpointBrokerTopologyBuilder :
     BrokerTopologyBuilder,
     IReceiveEndpointBrokerTopologyBuilder
 {
-    /// <summary>
-    /// Gets or sets the queue value.
-    /// </summary>
+    /// <summary>Gets or sets the endpoint's consuming queue.</summary>
     public QueueHandle Queue { get; set; } = null!;
 
-    /// <summary>
-    /// Performs the build topology layout operation.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates an immutable snapshot of the accumulated receive topology.</summary>
+    /// <returns>The configured ActiveMQ broker topology.</returns>
     public BrokerTopology BuildTopologyLayout()
     {
         return new ActiveMqBrokerTopology(Topics, Queues, Consumers);

@@ -6,133 +6,75 @@ namespace ViciOne.ServiceBus.Monitoring;
 /// </summary>
 public static class ServiceBusTelemetry
 {
-    /// <summary>
-    /// Defines the name value.
-    /// </summary>
+    /// <summary>The product-wide diagnostic source identity.</summary>
     public const string Name = "ViciOne.ServiceBus";
-    /// <summary>
-    /// Defines the activity source name value.
-    /// </summary>
+    /// <summary>The <see cref="System.Diagnostics.ActivitySource"/> name used for distributed traces.</summary>
     public const string ActivitySourceName = Name;
-    /// <summary>
-    /// Defines the meter name value.
-    /// </summary>
+    /// <summary>The <see cref="System.Diagnostics.Metrics.Meter"/> name used for metrics.</summary>
     public const string MeterName = Name;
 
-    /// <summary>
-    /// Provides a metrics implementation.
-    /// </summary>
+    /// <summary>Defines the OpenTelemetry metric instrument names emitted by the service bus.</summary>
     public static class Metrics
     {
-        /// <summary>
-        /// Defines the sent messages value.
-        /// </summary>
+        /// <summary>Counts messages submitted by messaging clients.</summary>
         public const string SentMessages = "messaging.client.sent.messages";
-        /// <summary>
-        /// Defines the consumed messages value.
-        /// </summary>
+        /// <summary>Counts messages received by messaging clients.</summary>
         public const string ConsumedMessages = "messaging.client.consumed.messages";
-        /// <summary>
-        /// Defines the client operation duration value.
-        /// </summary>
+        /// <summary>Measures send and receive client-operation durations in seconds.</summary>
         public const string ClientOperationDuration = "messaging.client.operation.duration";
-        /// <summary>
-        /// Defines the process duration value.
-        /// </summary>
+        /// <summary>Measures consumer and handler processing durations in seconds.</summary>
         public const string ProcessDuration = "messaging.process.duration";
-        /// <summary>
-        /// Defines the active operations value.
-        /// </summary>
+        /// <summary>Tracks messaging operations that are currently executing.</summary>
         public const string ActiveOperations = "vicione.servicebus.messaging.operations.active";
-        /// <summary>
-        /// Defines the retry attempts value.
-        /// </summary>
+        /// <summary>Counts delivery attempts that execute after an initial failure.</summary>
         public const string RetryAttempts = "vicione.servicebus.messaging.retry.attempts";
-        /// <summary>
-        /// Defines the delivery duration value.
-        /// </summary>
+        /// <summary>Measures elapsed time between message dispatch and processing.</summary>
         public const string DeliveryDuration = "vicione.servicebus.messaging.delivery.duration";
-        /// <summary>
-        /// Defines the outbox messages value.
-        /// </summary>
+        /// <summary>Counts outbox enqueue and delivery outcomes.</summary>
         public const string OutboxMessages = "vicione.servicebus.outbox.messages";
     }
 
-    /// <summary>
-    /// Provides an attributes implementation.
-    /// </summary>
+    /// <summary>Defines the OpenTelemetry attribute names emitted by the service bus.</summary>
     public static class Attributes
     {
-        /// <summary>
-        /// Defines the messaging system value.
-        /// </summary>
+        /// <summary>Identifies the broker or transport implementation.</summary>
         public const string MessagingSystem = "messaging.system";
-        /// <summary>
-        /// Defines the operation name value.
-        /// </summary>
+        /// <summary>Identifies the messaging operation.</summary>
         public const string OperationName = "messaging.operation.name";
-        /// <summary>
-        /// Defines the operation type value.
-        /// </summary>
+        /// <summary>Classifies the operation as send, receive, or process.</summary>
         public const string OperationType = "messaging.operation.type";
-        /// <summary>
-        /// Defines the error type value.
-        /// </summary>
+        /// <summary>Identifies the exception type for a failed operation.</summary>
         public const string ErrorType = "error.type";
-        /// <summary>
-        /// Defines the processor kind value.
-        /// </summary>
+        /// <summary>Distinguishes consumer and handler processors.</summary>
         public const string ProcessorKind = "vicione.servicebus.processor.kind";
-        /// <summary>
-        /// Defines the outbox operation value.
-        /// </summary>
+        /// <summary>Identifies the outbox operation being observed.</summary>
         public const string OutboxOperation = "vicione.servicebus.outbox.operation";
-        /// <summary>
-        /// Defines the outcome value.
-        /// </summary>
+        /// <summary>Records whether an operation succeeded or faulted.</summary>
         public const string Outcome = "vicione.servicebus.outcome";
     }
 
-    /// <summary>
-    /// Provides a messaging systems implementation.
-    /// </summary>
+    /// <summary>Defines the OpenTelemetry messaging-system identifiers used by supported transports.</summary>
     public static class MessagingSystems
     {
-        /// <summary>
-        /// Defines the active mq value.
-        /// </summary>
+        /// <summary>The OpenTelemetry identifier for Apache ActiveMQ transports.</summary>
         public const string ActiveMq = "activemq";
-        /// <summary>
-        /// Defines the amazon sqs value.
-        /// </summary>
+        /// <summary>The OpenTelemetry identifier for Amazon Simple Notification Service.</summary>
+        public const string AmazonSns = "aws.sns";
+        /// <summary>The OpenTelemetry identifier for Amazon Simple Queue Service.</summary>
         public const string AmazonSqs = "aws_sqs";
-        /// <summary>
-        /// Defines the azure event hubs value.
-        /// </summary>
+        /// <summary>The bounded identifier used for Azure Event Hubs transports.</summary>
         public const string AzureEventHubs = "eventhubs";
-        /// <summary>
-        /// Defines the azure service bus value.
-        /// </summary>
+        /// <summary>The bounded identifier used for Azure Service Bus transports.</summary>
         public const string AzureServiceBus = "servicebus";
-        /// <summary>
-        /// Defines the in memory value.
-        /// </summary>
+        /// <summary>The bounded identifier used for the in-memory transport.</summary>
         public const string InMemory = "in-memory";
-        /// <summary>
-        /// Defines the rabbit mq value.
-        /// </summary>
+        /// <summary>The OpenTelemetry identifier for RabbitMQ transports.</summary>
         public const string RabbitMq = "rabbitmq";
-        /// <summary>
-        /// Defines the sql value.
-        /// </summary>
+        /// <summary>The bounded identifier shared by SQL-backed transports.</summary>
         public const string Sql = "sql";
-        /// <summary>
-        /// Defines the other value.
-        /// </summary>
+        /// <summary>The bounded identifier for a nonempty unrecognized transport.</summary>
         public const string Other = "other";
-        /// <summary>
-        /// Defines the unknown value.
-        /// </summary>
+        /// <summary>The bounded identifier used when no transport identity is available.</summary>
         public const string Unknown = "unknown";
     }
 }

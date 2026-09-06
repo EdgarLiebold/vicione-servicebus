@@ -9,20 +9,16 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-/// <summary>
-/// Provides a sql lock statement provider implementation.
-/// </summary>
+/// <summary>Maps EF Core entities to relational identifiers and delegates SQL syntax to a provider formatter.</summary>
 public class SqlLockStatementProvider :
     ILockStatementProvider
 {
     readonly ILockStatementFormatter _formatter;
     readonly ConditionalWeakTable<IModel, ConcurrentDictionary<LockStatementCacheKey, SchemaTableColumnTrio>> _modelMappings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="defaultSchema">The default schema value.</param>
-    /// <param name="formatter">The formatter value.</param>
+    /// <summary>Initializes the lock-statement provider with an explicit fallback schema.</summary>
+    /// <param name="defaultSchema">The schema used when an entity mapping does not specify one.</param>
+    /// <param name="formatter">The provider-specific SQL formatter.</param>
     public SqlLockStatementProvider(string defaultSchema, ILockStatementFormatter formatter)
     {
         if (string.IsNullOrWhiteSpace(defaultSchema))
@@ -35,10 +31,8 @@ public class SqlLockStatementProvider :
         _modelMappings = new ConditionalWeakTable<IModel, ConcurrentDictionary<LockStatementCacheKey, SchemaTableColumnTrio>>();
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
+    /// <summary>Initializes the lock-statement provider without a fallback schema.</summary>
+    /// <param name="formatter">The provider-specific SQL formatter.</param>
     public SqlLockStatementProvider(ILockStatementFormatter formatter)
     {
         ArgumentNullException.ThrowIfNull(formatter);
@@ -50,36 +44,30 @@ public class SqlLockStatementProvider :
 
     string DefaultSchema { get; }
 
-    /// <summary>
-    /// Gets row lock statement.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds a row-lock query using the mapped <c>CorrelationId</c> property.</summary>
+    /// <typeparam name="T">The mapped entity type.</typeparam>
+    /// <param name="context">The DbContext whose model supplies relational identifiers.</param>
+    /// <returns>Parameterized provider-specific SQL.</returns>
     public virtual string GetRowLockStatement<T>(DbContext context)
         where T : class
     {
         return FormatLockStatement<T>(context, "CorrelationId");
     }
 
-    /// <summary>
-    /// Gets row lock statement.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="propertyNames">The property names value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds a row-lock query using explicitly named mapped properties.</summary>
+    /// <typeparam name="T">The mapped entity type.</typeparam>
+    /// <param name="context">The DbContext whose model supplies relational identifiers.</param>
+    /// <param name="propertyNames">The mapped properties used as equality predicates.</param>
+    /// <returns>Parameterized provider-specific SQL.</returns>
     public virtual string GetRowLockStatement<T>(DbContext context, params string[] propertyNames)
         where T : class
     {
         return FormatLockStatement<T>(context, propertyNames);
     }
 
-    /// <summary>
-    /// Gets outbox statement.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds a query that locks the next due outbox row for one bus.</summary>
+    /// <param name="context">The DbContext whose model supplies outbox identifiers.</param>
+    /// <returns>Parameterized provider-specific SQL.</returns>
     public virtual string GetOutboxStatement(DbContext context)
     {
         var schemaTableTrio = GetSchemaAndTableNameAndColumnName(context, typeof(OutboxState),
@@ -94,11 +82,9 @@ public class SqlLockStatementProvider :
         return sb.ToString();
     }
 
-    /// <summary>
-    /// Gets inbox cleanup lock statement.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds a transaction-scoped ownership query for inbox cleanup.</summary>
+    /// <param name="context">The DbContext whose model supplies inbox identifiers.</param>
+    /// <returns>Provider-specific SQL that reports whether ownership was acquired.</returns>
     public virtual string GetInboxCleanupLockStatement(DbContext context)
     {
         var mapping = GetSchemaAndTableNameAndColumnName(context, typeof(InboxState), nameof(InboxState.Delivered));
@@ -177,17 +163,13 @@ public class SqlLockStatementProvider :
 
     readonly record struct LockStatementCacheKey(Type EntityType, string PropertyKey);
 
-    /// <summary>
-    /// Represents a schema table column trio value.
-    /// </summary>
+    /// <summary>Contains the resolved schema, table, and ordered predicate columns for one statement.</summary>
     protected readonly struct SchemaTableColumnTrio
     {
-        /// <summary>
-        /// Initializes a new instance of the containing type.
-        /// </summary>
-        /// <param name="schema">The schema value.</param>
-        /// <param name="table">The table value.</param>
-        /// <param name="columnNames">The column names value.</param>
+        /// <summary>Initializes a resolved saga table mapping in primary-key parameter order.</summary>
+        /// <param name="schema">The resolved or fallback schema.</param>
+        /// <param name="table">The mapped table name.</param>
+        /// <param name="columnNames">The mapped column names in parameter order.</param>
         public SchemaTableColumnTrio(string schema, string table, string[] columnNames)
         {
             Schema = schema;
@@ -195,17 +177,11 @@ public class SqlLockStatementProvider :
             ColumnNames = columnNames;
         }
 
-        /// <summary>
-        /// Defines the schema value.
-        /// </summary>
+        /// <summary>The resolved or fallback schema.</summary>
         public readonly string Schema;
-        /// <summary>
-        /// Defines the table value.
-        /// </summary>
+        /// <summary>The mapped table name.</summary>
         public readonly string Table;
-        /// <summary>
-        /// Defines the column names value.
-        /// </summary>
+        /// <summary>The mapped column names in parameter order.</summary>
         public readonly string[] ColumnNames;
     }
 }

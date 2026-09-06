@@ -1,15 +1,11 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for saga repository registration provider.
-/// </summary>
+/// <summary>Provides saga repository registration services.</summary>
 public interface ISagaRepositoryRegistrationProvider
 {
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
         where TSaga : class, ISaga;
 }

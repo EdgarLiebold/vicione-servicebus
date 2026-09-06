@@ -2,10 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Defines the contract for request pipe configurator.
-/// </summary>
-/// <typeparam name="TRequest">The t request type.</typeparam>
+/// <summary>Configures request pipe.</summary>
+/// <typeparam name="TRequest">The request type.</typeparam>
 public interface IRequestPipeConfigurator<TRequest> :
     IRequestPipeConfigurator,
     IPipeConfigurator<SendContext<TRequest>>
@@ -14,14 +12,10 @@ public interface IRequestPipeConfigurator<TRequest> :
 }
 
 
-/// <summary>
-/// Defines the contract for request pipe configurator.
-/// </summary>
+/// <summary>Configures request pipe.</summary>
 public interface IRequestPipeConfigurator
 {
-    /// <summary>
-    /// The RequestId assigned to the request, and used in the header for the outgoing request message
-    /// </summary>
+    /// <summary>The RequestId assigned to the request, and used in the header for the outgoing request message.</summary>
     Guid RequestId { get; }
 
     /// <summary>

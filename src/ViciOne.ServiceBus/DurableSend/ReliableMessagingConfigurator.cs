@@ -174,8 +174,11 @@ internal sealed class ReliableMessagingRegistration<TBus>
 
 internal enum ReliableSchedulerAdapterKind
 {
+    /// <summary>Indicates store.</summary>
     Store,
+    /// <summary>Indicates transport.</summary>
     Transport,
+    /// <summary>Indicates endpoint.</summary>
     Endpoint,
 }
 

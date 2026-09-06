@@ -6,9 +6,7 @@ using Azure.Data.Tables;
 using ViciOne.ServiceBus.MessageJournal;
 
 namespace ViciOne.ServiceBus.AzureTable.MessageJournal;
-/// <summary>
-/// Azure Table representation of one sanitized message-journal entry.
-/// </summary>
+/// <summary>Azure Table representation of one sanitized message-journal entry.</summary>
 public sealed class MessageJournalRecord : ITableEntity
 {
     internal const string RowKeyPrefix = "entry|";
@@ -19,79 +17,49 @@ public sealed class MessageJournalRecord : ITableEntity
 
     private static readonly JsonSerializerOptions JsonOptions = JsonSerializerOptions.Web;
 
-    /// <summary>
-    /// Gets or sets the partition key value.
-    /// </summary>
+    /// <summary>Gets or sets the journal partition key.</summary>
     public string PartitionKey { get; set; } = "";
 
-    /// <summary>
-    /// Gets or sets the row key value.
-    /// </summary>
+    /// <summary>Gets or sets the reverse-time row key used to order journal entries newest first.</summary>
     public string RowKey { get; set; } = "";
 
-    /// <summary>
-    /// Gets or sets the timestamp value.
-    /// </summary>
+    /// <summary>Gets or sets the service-maintained entity modification timestamp.</summary>
     public DateTimeOffset? Timestamp { get; set; }
 
-    /// <summary>
-    /// Gets or sets the e tag value.
-    /// </summary>
+    /// <summary>Gets or sets the entity tag used by Azure Table concurrency control.</summary>
     public ETag ETag { get; set; }
 
-    /// <summary>
-    /// Gets or sets the entry id value.
-    /// </summary>
+    /// <summary>Gets or sets the stable journal-entry identifier.</summary>
     public Guid EntryId { get; set; }
 
-    /// <summary>
-    /// Gets or sets the observed at value.
-    /// </summary>
+    /// <summary>Gets or sets the UTC instant at which the journal observation occurred.</summary>
     public DateTimeOffset ObservedAt { get; set; }
 
-    /// <summary>
-    /// Gets or sets the operation value.
-    /// </summary>
+    /// <summary>Gets or sets the serialized journal operation name.</summary>
     public string Operation { get; set; } = "";
 
-    /// <summary>
-    /// Gets or sets the outcome value.
-    /// </summary>
+    /// <summary>Gets or sets the serialized journal outcome name.</summary>
     public string Outcome { get; set; } = "";
 
-    /// <summary>
-    /// Gets or sets the data classification value.
-    /// </summary>
+    /// <summary>Gets or sets the serialized data-classification name.</summary>
     public string DataClassification { get; set; } = "";
 
-    /// <summary>
-    /// Gets or sets the content type value.
-    /// </summary>
+    /// <summary>Gets or sets the media type of the sanitized body, when one was recorded.</summary>
     public string? ContentType { get; set; }
 
-    /// <summary>
-    /// Gets or sets the message types json value.
-    /// </summary>
+    /// <summary>Gets or sets the JSON array of message contract identities.</summary>
     public string MessageTypesJson { get; set; } = "[]";
 
-    /// <summary>
-    /// Gets or sets the metadata json value.
-    /// </summary>
+    /// <summary>Gets or sets the sanitized journal metadata as JSON.</summary>
     public string MetadataJson { get; set; } = "{}";
 
-    /// <summary>
-    /// Gets or sets the headers json value.
-    /// </summary>
+    /// <summary>Gets or sets the sanitized message headers as JSON.</summary>
     public string HeadersJson { get; set; } = "{}";
 
-    /// <summary>
-    /// Gets or sets the body value.
-    /// </summary>
+    /// <summary>Gets or sets the sanitized message body.</summary>
     public byte[] Body { get; set; } = [];
 
-    /// <summary>
-    /// Gets or sets the content size in bytes value.
-    /// </summary>
+    /// <summary>Gets or sets the combined byte size used for journal entry-limit enforcement.</summary>
     public int ContentSizeInBytes { get; set; }
 
     internal static MessageJournalRecord FromEntry(MessageJournalEntry entry, string partitionKey)

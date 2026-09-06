@@ -6,10 +6,8 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
-/// <summary>
-/// Provides a future registration implementation.
-/// </summary>
-/// <typeparam name="TFuture">The t future type.</typeparam>
+/// <summary>Registers future services.</summary>
+/// <typeparam name="TFuture">The future type.</typeparam>
 public class FutureRegistration<TFuture> :
     IFutureRegistration
     where TFuture : class, SagaStateMachine<FutureState>
@@ -17,31 +15,23 @@ public class FutureRegistration<TFuture> :
     readonly IContainerSelector _selector;
     IFutureDefinition<TFuture> _definition = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="selector">The selector value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="selector">The selector.</param>
     public FutureRegistration(IContainerSelector selector)
     {
         _selector = selector;
         IncludeInConfigureEndpoints = !Type.HasAttribute<ExcludeFromConfigureEndpointsAttribute>();
     }
 
-    /// <summary>
-    /// Gets the type value.
-    /// </summary>
+    /// <summary>Gets the type.</summary>
     public Type Type => typeof(TFuture);
 
-    /// <summary>
-    /// Gets or sets the include in configure endpoints value.
-    /// </summary>
+    /// <summary>Gets or sets the include in configure endpoints.</summary>
     public bool IncludeInConfigureEndpoints { get; set; }
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="context">The context associated with the operation.</param>
     public void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
     {
         var stateMachine = context.GetRequiredService<TFuture>();
@@ -62,11 +52,9 @@ public class FutureRegistration<TFuture> :
         configurator.AddEndpointSpecification(sagaConfigurator);
     }
 
-    /// <summary>
-    /// Gets definition.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets definition.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>The definition.</returns>
     public IFutureDefinition GetDefinition(IRegistrationContext context)
     {
         return GetFutureDefinition(context);

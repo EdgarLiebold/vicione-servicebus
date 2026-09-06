@@ -5,19 +5,14 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Advanced.Registration;
 
-/// <summary>
-/// Provides extension methods for consumer.
-/// </summary>
+/// <summary>Provides extension methods for consumer.</summary>
 public static class ConsumerExtensions
 {
-    /// <summary>
-    /// Connect a consumer to the receiving endpoint
-    /// </summary>
-    /// <typeparam name="TConsumer"></typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="consumerFactory"></param>
-    /// <param name="configure">Optional, configure the consumer</param>
-    /// <returns></returns>
+    /// <summary>Connect a consumer to the receiving endpoint.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="consumerFactory">The consumer factory.</param>
+    /// <param name="configure">Optional, configure the consumer.</param>
     public static void Consumer<TConsumer>(this IReceiveEndpointConfigurator configurator, IConsumerFactory<TConsumer> consumerFactory,
         Action<IConsumerConfigurator<TConsumer>>? configure = null)
         where TConsumer : class, IConsumer
@@ -36,14 +31,12 @@ public static class ConsumerExtensions
         configurator.AddEndpointSpecification(consumerConfigurator);
     }
 
-    /// <summary>
-    /// Connect a consumer to the bus instance's default endpoint
-    /// </summary>
-    /// <typeparam name="TConsumer"></typeparam>
-    /// <param name="connector"></param>
-    /// <param name="consumerFactory"></param>
-    /// <param name="pipeSpecifications"></param>
-    /// <returns></returns>
+    /// <summary>Connect a consumer to the bus instance's default endpoint.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="connector">The connector.</param>
+    /// <param name="consumerFactory">The consumer factory.</param>
+    /// <param name="pipeSpecifications">The pipe specifications.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectConsumer<TConsumer>(this IConsumePipeConnector connector, IConsumerFactory<TConsumer> consumerFactory,
         params IPipeSpecification<ConsumerConsumeContext<TConsumer>>[] pipeSpecifications)
         where TConsumer : class, IConsumer
@@ -62,13 +55,10 @@ public static class ConsumerExtensions
         return ConsumerConnectorCache<TConsumer>.Connector.ConnectConsumer(connector, consumerFactory, specification);
     }
 
-    /// <summary>
-    /// Subscribes a consumer with a default constructor to the endpoint
-    /// </summary>
-    /// <typeparam name="TConsumer">The consumer type</typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Subscribes a consumer with a default constructor to the endpoint.</summary>
+    /// <typeparam name="TConsumer">The consumer type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void Consumer<TConsumer>(this IReceiveEndpointConfigurator configurator, Action<IConsumerConfigurator<TConsumer>>? configure = null)
         where TConsumer : class, IConsumer, new()
     {
@@ -86,13 +76,11 @@ public static class ConsumerExtensions
         configurator.AddEndpointSpecification(consumerConfigurator);
     }
 
-    /// <summary>
-    /// Subscribe a consumer with a default constructor to the bus's default endpoint
-    /// </summary>
-    /// <typeparam name="TConsumer"></typeparam>
-    /// <param name="connector"></param>
-    /// <param name="pipeSpecifications"></param>
-    /// <returns></returns>
+    /// <summary>Subscribe a consumer with a default constructor to the bus's default endpoint.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="connector">The connector.</param>
+    /// <param name="pipeSpecifications">The pipe specifications.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectConsumer<TConsumer>(this IConsumePipeConnector connector,
         params IPipeSpecification<ConsumerConsumeContext<TConsumer>>[] pipeSpecifications)
         where TConsumer : class, IConsumer, new()
@@ -105,14 +93,11 @@ public static class ConsumerExtensions
         return ConnectConsumer(connector, new DefaultConstructorConsumerFactory<TConsumer>(), pipeSpecifications);
     }
 
-    /// <summary>
-    /// Connect a consumer with a consumer factory method
-    /// </summary>
-    /// <typeparam name="TConsumer"></typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="consumerFactoryMethod"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Connect a consumer with a consumer factory method.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="consumerFactoryMethod">The consumer factory method.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public static void Consumer<TConsumer>(this IReceiveEndpointConfigurator configurator, Func<TConsumer> consumerFactoryMethod,
         Action<IConsumerConfigurator<TConsumer>>? configure = null)
         where TConsumer : class, IConsumer
@@ -133,14 +118,12 @@ public static class ConsumerExtensions
         configurator.AddEndpointSpecification(consumerConfigurator);
     }
 
-    /// <summary>
-    /// Subscribe a consumer with a consumer factor method to the bus's default endpoint
-    /// </summary>
-    /// <typeparam name="TConsumer"></typeparam>
-    /// <param name="connector"></param>
-    /// <param name="consumerFactoryMethod"></param>
-    /// <param name="pipeSpecifications"></param>
-    /// <returns></returns>
+    /// <summary>Subscribe a consumer with a consumer factor method to the bus's default endpoint.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="connector">The connector.</param>
+    /// <param name="consumerFactoryMethod">The consumer factory method.</param>
+    /// <param name="pipeSpecifications">The pipe specifications.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectConsumer<TConsumer>(this IConsumePipeConnector connector, Func<TConsumer> consumerFactoryMethod,
         params IPipeSpecification<ConsumerConsumeContext<TConsumer>>[] pipeSpecifications)
         where TConsumer : class, IConsumer
@@ -157,13 +140,10 @@ public static class ConsumerExtensions
         return ConnectConsumer(connector, consumerFactory, pipeSpecifications);
     }
 
-    /// <summary>
-    /// Connect a consumer with a consumer type and object factory method for the consumer (used by containers mostly)
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="consumerType"></param>
-    /// <param name="consumerFactory"></param>
-    /// <returns></returns>
+    /// <summary>Connect a consumer with a consumer type and object factory method for the consumer (used by containers mostly).</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
+    /// <param name="consumerFactory">The consumer factory.</param>
     public static void Consumer(this IReceiveEndpointConfigurator configurator, Type consumerType, Func<Type, object> consumerFactory)
     {
         if (configurator == null)
@@ -182,13 +162,11 @@ public static class ConsumerExtensions
         configurator.AddEndpointSpecification(consumerConfigurator);
     }
 
-    /// <summary>
-    /// Connect a consumer with a consumer type and object factory method for the consumer
-    /// </summary>
-    /// <param name="connector"></param>
-    /// <param name="consumerType"></param>
-    /// <param name="objectFactory"></param>
-    /// <returns></returns>
+    /// <summary>Connect a consumer with a consumer type and object factory method for the consumer.</summary>
+    /// <param name="connector">The connector.</param>
+    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
+    /// <param name="objectFactory">The object factory.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static ConnectHandle ConnectConsumer(this IConsumePipeConnector connector, Type consumerType, Func<Type, object> objectFactory)
     {
         if (connector == null)

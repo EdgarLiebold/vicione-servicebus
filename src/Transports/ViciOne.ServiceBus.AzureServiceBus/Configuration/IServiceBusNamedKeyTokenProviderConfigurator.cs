@@ -2,13 +2,9 @@ using Azure;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus named key token provider configurator.
-/// </summary>
+/// <summary>Configures Azure Service Bus authentication with a shared-access key credential.</summary>
 public interface IServiceBusNamedKeyTokenProviderConfigurator
 {
-    /// <summary>
-    /// Gets or sets the named key credential value.
-    /// </summary>
+    /// <summary>Sets the shared-access key credential.</summary>
     AzureNamedKeyCredential NamedKeyCredential { set; }
 }

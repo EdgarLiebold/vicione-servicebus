@@ -2,9 +2,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Simply ignores/discards the not-consumed message
-/// </summary>
+/// <summary>Simply ignores/discards the not-consumed message.</summary>
 public class DiscardDeadLetterFilter :
     IFilter<ReceiveContext>
 {

@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// Configures scheduled message redelivery for a saga, on the saga configurator, which is constrained to
 /// the message types for that saga, and only applies to the saga prior to the saga repository.
 /// </summary>
-/// <typeparam name="TSaga">The saga type</typeparam>
+/// <typeparam name="TSaga">The saga type.</typeparam>
 public class DelayedRedeliverySagaConfigurationObserver<TSaga> :
     ISagaConfigurationObserver
     where TSaga : class, ISaga
@@ -14,11 +14,9 @@ public class DelayedRedeliverySagaConfigurationObserver<TSaga> :
     readonly ISagaConfigurator<TSaga> _configurator;
     readonly Action<IRedeliveryConfigurator> _configure;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public DelayedRedeliverySagaConfigurationObserver(ISagaConfigurator<TSaga> configurator, Action<IRedeliveryConfigurator> configure)
     {
         _configurator = configurator;
@@ -29,12 +27,10 @@ public class DelayedRedeliverySagaConfigurationObserver<TSaga> :
     {
     }
 
-    /// <summary>
-    /// Performs the state machine saga configured operation.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="stateMachine">The state machine value.</param>
+    /// <summary>Reports that state machine saga has been configured.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="stateMachine">The state machine.</param>
     public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
         where TInstance : class
     {

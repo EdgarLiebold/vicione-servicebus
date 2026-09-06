@@ -2,15 +2,11 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
-/// <summary>
-/// Represents an observer on a change in boolean condition state.
-/// </summary>
+/// <summary>Represents an observer on a change in boolean condition state.</summary>
 public interface IConditionObserver
 {
-    /// <summary>
-    /// Performs the condition updated operation.
-    /// </summary>
+    /// <summary>Reevaluates state after a condition changes.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task ConditionUpdatedAsync(CancellationToken cancellationToken = default);
 }

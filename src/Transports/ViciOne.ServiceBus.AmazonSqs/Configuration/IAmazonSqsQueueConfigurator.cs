@@ -1,34 +1,21 @@
 using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
-/// <summary>
-/// Configures a queue/exchange pair in AmazonSQS
-/// </summary>
+/// <summary>Configures an Amazon SQS queue and its topic subscriptions.</summary>
 public interface IAmazonSqsQueueConfigurator
 {
-    /// <summary>
-    /// Specify the queue should be durable (survives broker restart) or in-memory
-    /// </summary>
-    /// <value>True for a durable queue, False for an in-memory queue</value>
+    /// <summary>Sets whether the queue is retained when its endpoint stops.</summary>
     bool Durable { set; }
 
-    /// <summary>
-    /// Specify that the queue (and the exchange of the same name) should be created as auto-delete
-    /// </summary>
+    /// <summary>Sets whether the transport deletes the queue when its endpoint stops.</summary>
     bool AutoDelete { set; }
 
-    /// <summary>
-    /// Specify optional <see href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_SetQueueAttributes.html">attributes</see> for the queue.
-    /// </summary>
+    /// <summary>Gets optional <see href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_SetQueueAttributes.html">Amazon SQS queue attributes</see>.</summary>
     IDictionary<string, object> QueueAttributes { get; }
 
-    /// <summary>
-    /// Additional <see href="https://docs.aws.amazon.com/sns/latest/api/API_SetSubscriptionAttributes.html">attributes</see> for the queue's subscription.
-    /// </summary>
+    /// <summary>Gets optional <see href="https://docs.aws.amazon.com/sns/latest/api/API_SetSubscriptionAttributes.html">Amazon SNS attributes</see> for subscriptions targeting the queue.</summary>
     IDictionary<string, object> QueueSubscriptionAttributes { get; }
 
-    /// <summary>
-    /// Collection of tags to assign to queue when created.
-    /// </summary>
+    /// <summary>Gets the tags assigned when the queue is created.</summary>
     IDictionary<string, string> QueueTags { get; }
 }

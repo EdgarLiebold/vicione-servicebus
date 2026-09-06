@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a dispatch pipe specification implementation.
-/// </summary>
-/// <typeparam name="TInput">The t input type.</typeparam>
+/// <summary>Describes requirements for dispatch pipe.</summary>
+/// <typeparam name="TInput">The input type.</typeparam>
 public class DispatchPipeSpecification<TInput> :
     IPipeSpecification<TInput>,
     IDispatchConfigurator<TInput>
@@ -17,10 +15,8 @@ public class DispatchPipeSpecification<TInput> :
     readonly IPipeContextConverterFactory<TInput> _pipeContextConverterFactory;
     readonly List<IPipeConnectorSpecification> _specifications;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="pipeContextConverterFactory">The pipe context converter factory value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="pipeContextConverterFactory">The pipe context converter factory.</param>
     public DispatchPipeSpecification(IPipeContextConverterFactory<TInput> pipeContextConverterFactory)
     {
         _pipeContextConverterFactory = pipeContextConverterFactory
@@ -29,11 +25,9 @@ public class DispatchPipeSpecification<TInput> :
         _specifications = new List<IPipeConnectorSpecification>();
     }
 
-    /// <summary>
-    /// Performs the pipe operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configurePipe">The configure pipe value.</param>
+    /// <summary>Builds the configured pipeline.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="configurePipe">The configure pipe.</param>
     public void Pipe<T>(Action<IPipeConfigurator<T>> configurePipe)
         where T : class, PipeContext
     {
@@ -44,10 +38,8 @@ public class DispatchPipeSpecification<TInput> :
         _specifications.Add(specification);
     }
 
-    /// <summary>
-    /// Applies this specification to the target builder.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies this specification to the target builder.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     public void Apply(IPipeBuilder<TInput> builder)
     {
         var dynamicFilter = new DynamicFilter<TInput>(_pipeContextConverterFactory);
@@ -59,10 +51,8 @@ public class DispatchPipeSpecification<TInput> :
         builder.AddFilter(dynamicFilter);
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         foreach (var result in _specifications.SelectMany(x => x.Validate()))

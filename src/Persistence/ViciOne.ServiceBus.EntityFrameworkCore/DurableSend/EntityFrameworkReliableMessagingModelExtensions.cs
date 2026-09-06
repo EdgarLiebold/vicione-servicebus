@@ -6,12 +6,10 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// <summary>EF model mapping for the unified ViciOne reliable-messaging store.</summary>
 public static class EntityFrameworkReliableMessagingModelExtensions
 {
-    /// <summary>
-    /// Adds vici one durable sender to the configuration.
-    /// </summary>
-    /// <param name="modelBuilder">The model builder value.</param>
-    /// <param name="schema">The schema value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Adds outbox, inbox, capacity-ledger, and recurring-schedule mappings to an EF Core model.</summary>
+    /// <param name="modelBuilder">The model builder to configure.</param>
+    /// <param name="schema">The schema for all reliable-messaging tables, or <see langword="null"/> for the provider default.</param>
+    /// <returns>The same model builder.</returns>
     public static ModelBuilder AddViciOneReliableMessaging(this ModelBuilder modelBuilder, string? schema = null)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);

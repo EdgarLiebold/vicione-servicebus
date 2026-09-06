@@ -3,11 +3,9 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
-/// <summary>
-/// Provides an execute activity registration configurator implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Configures execute activity registration.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class ExecuteActivityRegistrationConfigurator<TActivity, TArguments> :
     IExecuteActivityRegistrationConfigurator<TActivity, TArguments>
     where TActivity : class, IExecuteActivity<TArguments>
@@ -16,21 +14,17 @@ public class ExecuteActivityRegistrationConfigurator<TActivity, TArguments> :
     readonly IRegistrationConfigurator _configurator;
     readonly IExecuteActivityRegistration _registration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="registration">The registration value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="registration">The registration.</param>
     public ExecuteActivityRegistrationConfigurator(IRegistrationConfigurator configurator, IExecuteActivityRegistration registration)
     {
         _configurator = configurator;
         _registration = registration;
     }
 
-    /// <summary>
-    /// Performs the endpoint operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Applies the endpoint configuration.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     public void Endpoint(Action<IEndpointRegistrationConfigurator> configure)
     {
         if (!_registration.IncludeInConfigureEndpoints)
@@ -44,9 +38,7 @@ public class ExecuteActivityRegistrationConfigurator<TActivity, TArguments> :
             configurator.Settings);
     }
 
-    /// <summary>
-    /// Performs the exclude from configure endpoints operation.
-    /// </summary>
+    /// <summary>Excludes from configure endpoints.</summary>
     public void ExcludeFromConfigureEndpoints()
     {
         _registration.IncludeInConfigureEndpoints = false;

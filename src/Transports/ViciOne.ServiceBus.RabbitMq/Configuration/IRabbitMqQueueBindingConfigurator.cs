@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Defines the contract for rabbit mq queue binding configurator.
-/// </summary>
+/// <summary>Configures a RabbitMQ queue, its exchange, and the binding between them.</summary>
 public interface IRabbitMqQueueBindingConfigurator :
     IRabbitMqQueueConfigurator,
     IRabbitMqExchangeBindingConfigurator

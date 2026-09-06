@@ -6,16 +6,12 @@ using ViciOne.ServiceBus.SqlTransport.SqlServer;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for sql server bus factory configurator.
-/// </summary>
+/// <summary>Provides SQL Server transport registration extensions.</summary>
 public static class SqlServerBusFactoryConfiguratorExtensions
 {
-    /// <summary>
-    /// Configure the bus to use the SQL Server transport
-    /// </summary>
-    /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus)</param>
-    /// <param name="configure">The configuration callback for the bus factory</param>
+    /// <summary>Configures the bus to use SQL Server settings resolved from dependency injection.</summary>
+    /// <param name="configurator">The bus registration configurator.</param>
+    /// <param name="configure">An optional callback that configures the SQL bus factory.</param>
     public static void UsingSqlServer(this IBusRegistrationConfigurator configurator,
         Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
     {
@@ -28,15 +24,13 @@ public static class SqlServerBusFactoryConfiguratorExtensions
         }));
     }
 
-    /// <summary>
-    /// Configure the bus to use the PostgreSQL database transport
-    /// </summary>
-    /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus)</param>
+    /// <summary>Configures the bus to use SQL Server with the specified connection string.</summary>
+    /// <param name="configurator">The bus registration configurator.</param>
     /// <param name="connectionString">
     /// Connection string to be used/parsed by the transport. <see cref="SqlTransportOptions" /> are not
-    /// used with this overload
+    /// used with this overload.
     /// </param>
-    /// <param name="configure">The configuration callback for the bus factory</param>
+    /// <param name="configure">An optional callback that configures the SQL bus factory.</param>
     public static void UsingSqlServer(this IBusRegistrationConfigurator configurator, string connectionString,
         Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
     {

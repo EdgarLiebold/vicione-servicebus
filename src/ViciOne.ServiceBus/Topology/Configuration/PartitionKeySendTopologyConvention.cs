@@ -1,16 +1,12 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a partition key send topology convention implementation.
-/// </summary>
+/// <summary>Applies conventions for partition key send topology.</summary>
 public class PartitionKeySendTopologyConvention :
     IPartitionKeySendTopologyConvention
 {
     readonly ITopologyConventionCache<IMessageSendTopologyConvention> _cache;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public PartitionKeySendTopologyConvention()
     {
         _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(typeof(IPartitionKeyMessageSendTopologyConvention<>), new Factory());

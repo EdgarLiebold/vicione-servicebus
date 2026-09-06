@@ -5,37 +5,27 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides an amazon sqs message send context implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Represents an Amazon SQS send context for a typed message.</summary>
+/// <typeparam name="T">The message type.</typeparam>
 public class AmazonSqsMessageSendContext<T> :
     MessageSendContext<T>,
     AmazonSqsSendContext<T>
     where T : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Initializes an Amazon SQS send context for a message.</summary>
+    /// <param name="message">The message being sent.</param>
+    /// <param name="cancellationToken">The token used to cancel the send operation.</param>
     public AmazonSqsMessageSendContext(T message, CancellationToken cancellationToken)
         : base(message, cancellationToken)
     {
     }
 
-    /// <summary>
-    /// Gets or sets the group id value.
-    /// </summary>
+    /// <summary>Gets or sets the FIFO message-group identifier.</summary>
     public string? GroupId { get; set; }
-    /// <summary>
-    /// Gets or sets the deduplication id value.
-    /// </summary>
+    /// <summary>Gets or sets the FIFO message-deduplication identifier.</summary>
     public string? DeduplicationId { get; set; }
 
-    /// <summary>
-    /// Gets or sets the delay seconds value.
-    /// </summary>
+    /// <summary>Sets the delivery delay in seconds; setting <see langword="null"/> clears the delay.</summary>
     public int? DelaySeconds
     {
         set => Delay = value.HasValue
@@ -43,10 +33,8 @@ public class AmazonSqsMessageSendContext<T> :
             : null;
     }
 
-    /// <summary>
-    /// Performs the read properties from operation.
-    /// </summary>
-    /// <param name="properties">The properties value.</param>
+    /// <summary>Restores the Amazon SQS FIFO identifiers from transport properties.</summary>
+    /// <param name="properties">The transport properties to read.</param>
     public override void ReadPropertiesFrom(IReadOnlyDictionary<string, object> properties)
     {
         base.ReadPropertiesFrom(properties);
@@ -55,10 +43,8 @@ public class AmazonSqsMessageSendContext<T> :
         DeduplicationId = ReadString(properties, AmazonSqsTransportPropertyNames.DeduplicationId);
     }
 
-    /// <summary>
-    /// Performs the write properties to operation.
-    /// </summary>
-    /// <param name="properties">The properties value.</param>
+    /// <summary>Writes nonempty Amazon SQS FIFO identifiers to transport properties.</summary>
+    /// <param name="properties">The transport properties to update.</param>
     public override void WritePropertiesTo(IDictionary<string, object> properties)
     {
         base.WritePropertiesTo(properties);

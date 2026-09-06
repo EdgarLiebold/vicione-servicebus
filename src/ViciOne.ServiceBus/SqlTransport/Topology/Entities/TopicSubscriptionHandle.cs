@@ -2,14 +2,10 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>
-/// Defines the contract for topic subscription handle.
-/// </summary>
+/// <summary>Controls the lifetime of topic subscription.</summary>
 public interface TopicSubscriptionHandle :
     EntityHandle
 {
-    /// <summary>
-    /// Gets the subscription value.
-    /// </summary>
+    /// <summary>Gets the subscription.</summary>
     TopicToTopicSubscription Subscription { get; }
 }

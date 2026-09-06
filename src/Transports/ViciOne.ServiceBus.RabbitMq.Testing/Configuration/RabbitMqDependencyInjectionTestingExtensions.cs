@@ -6,17 +6,13 @@ using ViciOne.ServiceBus.Testing;
 
 namespace ViciOne.ServiceBus.RabbitMq.Testing;
 
-/// <summary>
-/// Provides extension methods for rabbit mq dependency injection testing.
-/// </summary>
+/// <summary>Registers RabbitMQ test-harness startup preparation in dependency injection.</summary>
 public static class RabbitMqDependencyInjectionTestingExtensions
 {
-    /// <summary>
-    /// Specify the test and/or the test inactivity timeouts that should be used by the test harness.
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <summary>Configures broker preparation performed before the RabbitMQ test host starts.</summary>
+    /// <param name="services">The dependency-injection service collection.</param>
+    /// <param name="configure">An optional callback that selects virtual-host creation, cleanup, and post-creation configuration.</param>
+    /// <returns>The same service collection, for fluent registration.</returns>
     public static IServiceCollection ConfigureRabbitMqTestOptions(this IServiceCollection services, Action<RabbitMqTestHarnessOptions>? configure)
     {
         var descriptor = services.FirstOrDefault(x => x.ServiceType == typeof(IBus));

@@ -7,10 +7,8 @@ using ViciOne.ServiceBus.Courier.Results;
 
 namespace ViciOne.ServiceBus.Courier;
 
-/// <summary>
-/// Provides a host compensate context implementation.
-/// </summary>
-/// <typeparam name="TLog">The t log type.</typeparam>
+/// <summary>Carries state for host compensate operations.</summary>
+/// <typeparam name="TLog">The log type.</typeparam>
 public class HostCompensateContext<TLog> :
     BaseCourierContext,
     CompensateContext<TLog>
@@ -19,10 +17,8 @@ public class HostCompensateContext<TLog> :
     readonly ActivityLog _activityLog;
     readonly CompensateLog _compensateLog;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public HostCompensateContext(ConsumeContext<RoutingSlip> context)
         : base(context)
     {
@@ -38,30 +34,22 @@ public class HostCompensateContext<TLog> :
         Log = RoutingSlip.GetCompensateLogData<TLog>();
     }
 
-    /// <summary>
-    /// Gets the activity name value.
-    /// </summary>
+    /// <summary>Gets the activity name.</summary>
     public override string ActivityName => _activityLog.Name;
-    /// <summary>
-    /// Gets the log value.
-    /// </summary>
+    /// <summary>Gets the log.</summary>
     public TLog Log { get; }
 
-    /// <summary>
-    /// Creates activity context.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <param name="activity">The activity value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates activity context.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <param name="activity">The activity.</param>
+    /// <returns>The created activity context.</returns>
     public CompensateActivityContext<TActivity, TLog> CreateActivityContext<TActivity>(TActivity activity)
         where TActivity : class
     {
         return new HostCompensateActivityContext<TActivity, TLog>(activity, this);
     }
 
-    /// <summary>
-    /// Gets or sets the result value.
-    /// </summary>
+    /// <summary>Gets or sets the result.</summary>
     public CompensationResult Result { get; set; } = null!;
     CompensationResult CompensateContext.Compensated()
     {
@@ -97,11 +85,9 @@ public class HostCompensateContext<TLog> :
         return Failed(new RoutingSlipException("The routing slip compensation failed"));
     }
 
-    /// <summary>
-    /// Performs the failed operation.
-    /// </summary>
+    /// <summary>Reports a failed result.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The compensation result produced by the operation.</returns>
     public CompensationResult Failed(Exception exception)
     {
         return new FailedCompensationResult<TLog>(this, Publisher, _compensateLog, RoutingSlip, exception);

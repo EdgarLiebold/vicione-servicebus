@@ -10,9 +10,7 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a base send transport context implementation.
-/// </summary>
+/// <summary>Carries state for base send transport operations.</summary>
 public abstract class BaseSendTransportContext :
     BasePipeContext,
     SendTransportContext
@@ -21,11 +19,9 @@ public abstract class BaseSendTransportContext :
     readonly Lazy<string> _destination;
     readonly IHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="serialization">The serialization value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="serialization">The serialization.</param>
     protected BaseSendTransportContext(IHostConfiguration hostConfiguration, ISerialization serialization)
     {
         _hostConfiguration = hostConfiguration;
@@ -52,37 +48,23 @@ public abstract class BaseSendTransportContext :
         _activityName = new Lazy<string>(() => $"{_destination.Value} send");
     }
 
-    /// <summary>
-    /// Gets the entity name value.
-    /// </summary>
+    /// <summary>Gets the entity name.</summary>
     public abstract string EntityName { get; }
 
-    /// <summary>
-    /// Gets the log context value.
-    /// </summary>
+    /// <summary>Gets the log context.</summary>
     public ILogContext LogContext => _hostConfiguration.SendLogContext ?? throw new InvalidOperationException("SendLogContext should not be null");
 
-    /// <summary>
-    /// Gets the activity name value.
-    /// </summary>
+    /// <summary>Gets the activity name.</summary>
     public string ActivityName => _activityName.Value;
-    /// <summary>
-    /// Gets the activity destination value.
-    /// </summary>
+    /// <summary>Gets the activity destination.</summary>
     public string ActivityDestination => _destination.Value;
-    /// <summary>
-    /// Gets the activity system value.
-    /// </summary>
+    /// <summary>Gets the activity system.</summary>
     public abstract string ActivitySystem { get; }
 
-    /// <summary>
-    /// Gets the send observers value.
-    /// </summary>
+    /// <summary>Gets the send observers.</summary>
     public SendObservable SendObservers { get; }
 
-    /// <summary>
-    /// Gets the serialization value.
-    /// </summary>
+    /// <summary>Gets the serialization.</summary>
     public ISerialization Serialization { get; }
 
     internal void ApplyPayloadAdmission<T>(SendContext<T> context)
@@ -91,31 +73,25 @@ public abstract class BaseSendTransportContext :
         PayloadAdmissionTransportBoundary.Apply(_hostConfiguration, context);
     }
 
-    /// <summary>
-    /// Creates send context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
+    /// <summary>Creates send context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the created value.</returns>
     public abstract Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class;
 
-    /// <summary>
-    /// Connects send observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects send observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return SendObservers.Connect(observer);
     }
 
-    /// <summary>
-    /// Gets agent handles.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets agent handles.</summary>
+    /// <returns>The agent handles.</returns>
     public virtual IEnumerable<IAgent> GetAgentHandles()
     {
         return [];

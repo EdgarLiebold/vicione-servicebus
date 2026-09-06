@@ -1,14 +1,10 @@
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a subscription endpoint broker topology builder implementation.
-/// </summary>
+/// <summary>Builds topology for an Azure Service Bus topic subscription endpoint.</summary>
 public class SubscriptionEndpointBrokerTopologyBuilder :
     BrokerTopologyBuilder,
     ISubscriptionEndpointBrokerTopologyBuilder
 {
-    /// <summary>
-    /// Gets or sets the topic value.
-    /// </summary>
+    /// <summary>Gets or sets the subscribed topic handle.</summary>
     public TopicHandle Topic { get; set; } = null!;
 }

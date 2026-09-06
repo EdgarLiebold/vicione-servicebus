@@ -3,36 +3,26 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>
-/// Defines the contract for message lock context.
-/// </summary>
+/// <summary>Exposes state for message lock operations.</summary>
 public interface MessageLockContext
 {
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
+    /// <summary>Marks the current operation as complete.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task CompleteAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Performs the abandon operation.
-    /// </summary>
+    /// <summary>Abandons the current message or operation.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task AbandonAsync(Exception exception, CancellationToken cancellationToken = default);
-    /// <summary>
-    /// Performs the dead letter operation.
-    /// </summary>
+    /// <summary>Moves the current message to the dead-letter destination.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task DeadLetterAsync(CancellationToken cancellationToken = default);
-    /// <summary>
-    /// Performs the dead letter operation.
-    /// </summary>
+    /// <summary>Moves the current message to the dead-letter destination.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task DeadLetterAsync(Exception exception, CancellationToken cancellationToken = default);
 }

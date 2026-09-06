@@ -8,38 +8,24 @@ namespace ViciOne.ServiceBus.Contracts;
 /// </summary>
 public interface RequestStarted
 {
-    /// <summary>
-    /// The saga correlationId, used to reconnect to the saga once the request is completed
-    /// </summary>
+    /// <summary>The saga correlationId, used to reconnect to the saga once the request is completed.</summary>
     Guid CorrelationId { get; }
 
-    /// <summary>
-    /// The RequestId header value that was specified in the original request
-    /// </summary>
+    /// <summary>The RequestId header value that was specified in the original request.</summary>
     Guid RequestId { get; }
 
-    /// <summary>
-    /// The ResponseAddress header value from the original request
-    /// </summary>
+    /// <summary>The ResponseAddress header value from the original request.</summary>
     Uri ResponseAddress { get; }
 
-    /// <summary>
-    /// The FaultAddress header value from the original request
-    /// </summary>
+    /// <summary>The FaultAddress header value from the original request.</summary>
     Uri FaultAddress { get; }
 
-    /// <summary>
-    /// The expiration time for this request, which if completed after, the response is discarded
-    /// </summary>
+    /// <summary>The expiration time for this request, which if completed after, the response is discarded.</summary>
     DateTimeOffset? ExpirationTime { get; }
 
-    /// <summary>
-    /// The payload types supported by the payload
-    /// </summary>
+    /// <summary>The payload types supported by the payload.</summary>
     string[] PayloadType { get; }
 
-    /// <summary>
-    /// The actual message payload
-    /// </summary>
+    /// <summary>The actual message payload.</summary>
     object Payload { get; }
 }

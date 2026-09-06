@@ -12,6 +12,11 @@ namespace ViciOne.ServiceBus.Providers.Configuration;
 public static class ConfigurationMessages
 {
     /// <summary>Creates one actionable configuration-failure line.</summary>
+    /// <param name="feature">The feature.</param>
+    /// <param name="bus">The bus.</param>
+    /// <param name="problem">The problem.</param>
+    /// <param name="fix">The fix.</param>
+    /// <returns>The newly created instance.</returns>
     public static string Create(string feature, string bus, string problem, string fix)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(feature);
@@ -22,6 +27,8 @@ public static class ConfigurationMessages
     }
 
     /// <summary>Combines previously formatted failure lines without losing their individual causes.</summary>
+    /// <param name="failures">The failures.</param>
+    /// <returns>The string produced by the operation.</returns>
     public static string Aggregate(IEnumerable<string> failures)
     {
         ArgumentNullException.ThrowIfNull(failures);

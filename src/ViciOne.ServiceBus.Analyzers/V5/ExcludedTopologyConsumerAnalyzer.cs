@@ -7,15 +7,11 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace ViciOne.ServiceBus.Analyzers.V5;
 
-/// <summary>
-/// Provides an excluded topology consumer analyzer implementation.
-/// </summary>
+/// <summary>Analyzes source code for excluded topology consumer.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ExcludedTopologyConsumerAnalyzer : DiagnosticAnalyzer
 {
-    /// <summary>
-    /// Defines the diagnostic id value.
-    /// </summary>
+    /// <summary>Exposes the diagnostic id used by the containing type.</summary>
     public const string DiagnosticId = "VOSB5004";
 
     private static readonly DiagnosticDescriptor s_rule = new(
@@ -26,15 +22,11 @@ public sealed class ExcludedTopologyConsumerAnalyzer : DiagnosticAnalyzer
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
 
-    /// <summary>
-    /// Gets the supported diagnostics value.
-    /// </summary>
+    /// <summary>Gets the supported diagnostics.</summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [s_rule];
 
-    /// <summary>
-    /// Performs the initialize operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes the target component.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context is null)

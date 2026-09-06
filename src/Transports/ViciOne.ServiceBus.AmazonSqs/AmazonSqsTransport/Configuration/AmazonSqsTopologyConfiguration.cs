@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Configuration;
 
-/// <summary>
-/// Provides an amazon sqs topology configuration implementation.
-/// </summary>
+/// <summary>Coordinates Amazon SQS send, Amazon SNS publish, and subscription topology configuration.</summary>
 public class AmazonSqsTopologyConfiguration :
     IAmazonSqsTopologyConfiguration
 {
@@ -16,10 +14,8 @@ public class AmazonSqsTopologyConfiguration :
     readonly IAmazonSqsPublishTopologyConfigurator _publishTopology;
     readonly IAmazonSqsSendTopologyConfigurator _sendTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Initializes root Amazon topology and connects global topology observers.</summary>
+    /// <param name="messageTopology">The message-topology convention source.</param>
     public AmazonSqsTopologyConfiguration(IMessageTopologyConfigurator messageTopology)
     {
         _messageTopology = messageTopology;
@@ -36,10 +32,8 @@ public class AmazonSqsTopologyConfiguration :
         _consumeTopology = new AmazonSqsConsumeTopology(messageTopology, _publishTopology);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    /// <summary>Initializes an endpoint topology scope that shares send and publish topology with its parent.</summary>
+    /// <param name="topologyConfiguration">The parent topology configuration.</param>
     public AmazonSqsTopologyConfiguration(IAmazonSqsTopologyConfiguration topologyConfiguration)
     {
         _messageTopology = topologyConfiguration.Message;
@@ -58,10 +52,8 @@ public class AmazonSqsTopologyConfiguration :
     IAmazonSqsSendTopologyConfigurator IAmazonSqsTopologyConfiguration.Send => _sendTopology;
     IAmazonSqsConsumeTopologyConfigurator IAmazonSqsTopologyConfiguration.Consume => _consumeTopology;
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates send, publish, and consume topology configuration.</summary>
+    /// <returns>All detected topology validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return _sendTopology.Validate()

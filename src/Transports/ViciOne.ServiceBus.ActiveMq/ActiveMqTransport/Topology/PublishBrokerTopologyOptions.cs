@@ -2,18 +2,12 @@ using System;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Specifies the available publish broker topology options values.
-/// </summary>
+/// <summary>Controls whether publish topology preserves implemented-message hierarchy.</summary>
 [Flags]
 public enum PublishBrokerTopologyOptions
 {
-    /// <summary>
-    /// Indicates flatten hierarchy.
-    /// </summary>
+    /// <summary>Adds all publish topics to one flat topology.</summary>
     FlattenHierarchy = 0,
-    /// <summary>
-    /// Indicates maintain hierarchy.
-    /// </summary>
+    /// <summary>Uses nested builder scopes for implemented message contracts.</summary>
     MaintainHierarchy = 1
 }

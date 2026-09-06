@@ -7,9 +7,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus message lock context implementation.
-/// </summary>
+/// <summary>Settles a non-session Azure Service Bus delivery through its processor callback context.</summary>
 public class ServiceBusMessageLockContext :
     MessageLockContext
 {
@@ -18,12 +16,10 @@ public class ServiceBusMessageLockContext :
     readonly ServiceBusReceivedMessage _message;
     bool _deadLettered;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="eventArgs">The event args value.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Initializes settlement for a received message.</summary>
+    /// <param name="eventArgs">The processor callback context used for settlement.</param>
+    /// <param name="message">The received message to settle.</param>
+    /// <param name="cancellationToken">The processor callback token passed to SDK settlement calls.</param>
     public ServiceBusMessageLockContext(ProcessMessageEventArgs eventArgs, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
     {
         _eventArgs = eventArgs;
@@ -31,27 +27,29 @@ public class ServiceBusMessageLockContext :
         _cancellationToken = cancellationToken;
     }
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Completes the message unless it has already been dead-lettered by this context.</summary>
+    /// <param name="cancellationToken">The token checked before settlement begins.</param>
+    /// <returns>The Azure SDK completion task, or a completed task when this context already dead-lettered the message.</returns>
     public Task CompleteAsync(CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return _deadLettered
-                    ? Task.CompletedTask
-                    : _eventArgs.CompleteMessageAsync(_message, _cancellationToken);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        return _deadLettered
+            ? Task.CompletedTask
+            : _eventArgs.CompleteMessageAsync(_message, _cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the abandon operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Abandons the message with exception details unless it has already been dead-lettered.</summary>
+    /// <param name="exception">The failure serialized into message properties.</param>
+    /// <param name="cancellationToken">The token checked before settlement begins.</param>
+    /// <returns>The Azure SDK abandon task, or a completed task when this context already dead-lettered the message.</returns>
     public Task AbandonAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (_deadLettered)
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        if (_deadLettered)
             return Task.CompletedTask;
 
         (Dictionary<string, object> dictionary, _) = ExceptionUtil.GetExceptionHeaderDetail(exception, ServiceBusSendTransportContext.Adapter);
@@ -59,28 +57,31 @@ public class ServiceBusMessageLockContext :
         return _eventArgs.AbandonMessageAsync(_message, dictionary, _cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the dead letter operation.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Dead-letters the message with the transport's generic dead-letter reason.</summary>
+    /// <param name="cancellationToken">The token checked before settlement begins.</param>
+    /// <returns>The dead-letter operation whose success is recorded by this settlement context.</returns>
     public async Task DeadLetterAsync(CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); await _eventArgs.DeadLetterMessageAsync(_message, new Dictionary<string, object> { { MessageHeaders.Reason, "dead-letter" } }, _cancellationToken)
-                    .ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        await _eventArgs.DeadLetterMessageAsync(
+                _message,
+                new Dictionary<string, object> { { MessageHeaders.Reason, "dead-letter" } },
+                _cancellationToken)
+            .ConfigureAwait(false);
 
         _deadLettered = true;
     }
 
-    /// <summary>
-    /// Performs the dead letter operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Dead-letters the message with serialized exception details.</summary>
+    /// <param name="exception">The failure serialized into dead-letter properties.</param>
+    /// <param name="cancellationToken">The token checked before settlement begins.</param>
+    /// <returns>The dead-letter operation that stores the serialized failure and records settlement in this context.</returns>
     public async Task DeadLetterAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); (Dictionary<string, object> dictionary, _) = ExceptionUtil.GetExceptionHeaderDetail(exception, ServiceBusSendTransportContext.Adapter);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        (Dictionary<string, object> dictionary, _) = ExceptionUtil.GetExceptionHeaderDetail(exception, ServiceBusSendTransportContext.Adapter);
 
         await _eventArgs.DeadLetterMessageAsync(_message, dictionary, _cancellationToken).ConfigureAwait(false);
 

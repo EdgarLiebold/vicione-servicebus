@@ -14,9 +14,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq send transport context implementation.
-/// </summary>
+/// <summary>Creates RabbitMQ send contexts, maps AMQP properties, declares topology, and publishes messages.</summary>
 public class RabbitMqSendTransportContext :
     BaseSendTransportContext,
     SendTransportContext<ChannelContext>
@@ -29,16 +27,14 @@ public class RabbitMqSendTransportContext :
     readonly IRabbitMqHostConfiguration _hostConfiguration;
     readonly IChannelContextSupervisor _supervisor;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
-    /// <param name="supervisor">The supervisor value.</param>
-    /// <param name="configureTopologyFilter">The configure topology filter value.</param>
-    /// <param name="exchange">The exchange value.</param>
-    /// <param name="delayConfigureTopologyPipe">The delay configure topology pipe value.</param>
-    /// <param name="delayExchange">The delay exchange value.</param>
+    /// <summary>Creates a send context bound to destination and delayed-delivery topology.</summary>
+    /// <param name="hostConfiguration">The owning RabbitMQ host configuration.</param>
+    /// <param name="receiveEndpointContext">The endpoint serialization and observer context.</param>
+    /// <param name="supervisor">The RabbitMQ channel supervisor.</param>
+    /// <param name="configureTopologyFilter">The destination topology filter.</param>
+    /// <param name="exchange">The destination exchange name.</param>
+    /// <param name="delayConfigureTopologyPipe">The delayed-exchange topology pipeline.</param>
+    /// <param name="delayExchange">The delayed-delivery exchange name.</param>
     public RabbitMqSendTransportContext(IRabbitMqHostConfiguration hostConfiguration, ReceiveEndpointContext receiveEndpointContext,
         IChannelContextSupervisor supervisor,
         ConfigureRabbitMqTopologyFilter<SendSettings> configureTopologyFilter, string exchange,
@@ -55,54 +51,42 @@ public class RabbitMqSendTransportContext :
         _delayExchange = delayExchange;
     }
 
-    /// <summary>
-    /// Gets the entity name value.
-    /// </summary>
+    /// <summary>Gets the destination exchange name.</summary>
     public override string EntityName => _exchange;
-    /// <summary>
-    /// Gets the activity system value.
-    /// </summary>
+    /// <summary>Gets the activity system.</summary>
     public override string ActivitySystem => "rabbitmq";
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs a channel send pipeline under the host's transient connection retry policy.</summary>
+    /// <param name="pipe">The channel pipeline to execute.</param>
+    /// <param name="cancellationToken">Cancellation for retry waits and channel execution.</param>
+    /// <returns>A task that completes with the channel pipeline.</returns>
     public Task SendAsync(IPipe<ChannelContext> pipe, CancellationToken cancellationToken = default)
     {
         return _hostConfiguration.RetryAsync(() => _supervisor.SendAsync(pipe, cancellationToken),
             stoppingToken: _supervisor.SendStopping, cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Delegates diagnostic probing to the channel supervisor.</summary>
+    /// <param name="context">The probe context that receives channel-supervisor details.</param>
     public void Probe(ProbeContext context)
     {
         _supervisor.Probe(context);
     }
 
-    /// <summary>
-    /// Gets agent handles.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the channel supervisor as this transport's lifecycle dependency.</summary>
+    /// <returns>The single supervised channel agent.</returns>
     public override IEnumerable<IAgent> GetAgentHandles()
     {
         return [_supervisor];
     }
 
-    /// <summary>
-    /// Creates send context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="context">The operation context.</param>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and configures a typed RabbitMQ send context for an existing channel.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="context">The active RabbitMQ channel context.</param>
+    /// <param name="message">The message being sent.</param>
+    /// <param name="pipe">The send-context configuration pipeline.</param>
+    /// <param name="cancellationToken">Cancellation for the send context.</param>
+    /// <returns>The configured RabbitMQ send context.</returns>
     public async Task<SendContext<T>> CreateSendContextAsync<T>(ChannelContext context, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
@@ -125,14 +109,12 @@ public class RabbitMqSendTransportContext :
         return sendContext;
     }
 
-    /// <summary>
-    /// Creates send context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates and configures a typed RabbitMQ send context.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="message">The message being sent.</param>
+    /// <param name="pipe">The send-context configuration pipeline.</param>
+    /// <param name="cancellationToken">Cancellation for the send context.</param>
+    /// <returns>The configured RabbitMQ send context.</returns>
     public override async Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -154,14 +136,12 @@ public class RabbitMqSendTransportContext :
         return sendContext;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="transportContext">The transport context value.</param>
-    /// <param name="sendContext">The send context value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Maps a send context to AMQP properties and publishes it to RabbitMQ.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="transportContext">The active RabbitMQ channel context.</param>
+    /// <param name="sendContext">The configured RabbitMQ message send context.</param>
+    /// <param name="cancellationToken">Cancellation checked before publishing; the send context governs broker operations.</param>
+    /// <returns>A task that follows the publish according to the context's acknowledgement setting.</returns>
     public async Task SendAsync<T>(ChannelContext transportContext, SendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class
     {

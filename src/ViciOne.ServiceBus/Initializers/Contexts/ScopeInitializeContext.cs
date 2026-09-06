@@ -2,37 +2,27 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Initializers.Contexts;
 
-/// <summary>
-/// Provides a scope initialize context implementation.
-/// </summary>
+/// <summary>Carries state for scope initialize operations.</summary>
 public class ScopeInitializeContext :
     ScopePipeContext,
     InitializeContext
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public ScopeInitializeContext(PipeContext context)
         : base(context)
     {
     }
 
-    /// <summary>
-    /// Gets the depth value.
-    /// </summary>
+    /// <summary>Gets the depth.</summary>
     public virtual int Depth => 0;
 
-    /// <summary>
-    /// Gets the parent value.
-    /// </summary>
+    /// <summary>Gets the parent.</summary>
     public virtual InitializeContext? Parent => null;
 
-    /// <summary>
-    /// Attempts to get parent.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="parentContext">The parent context value.</param>
+    /// <summary>Attempts to get parent.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="parentContext">Receives the parent context produced by the operation.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public virtual bool TryGetParent<T>([NotNullWhen(true)] out InitializeContext<T>? parentContext)
         where T : class
@@ -41,12 +31,10 @@ public class ScopeInitializeContext :
         return false;
     }
 
-    /// <summary>
-    /// Creates message context.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates message context.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="message">The message to process.</param>
+    /// <returns>The created message context.</returns>
     public InitializeContext<T> CreateMessageContext<T>(T message)
         where T : class
     {

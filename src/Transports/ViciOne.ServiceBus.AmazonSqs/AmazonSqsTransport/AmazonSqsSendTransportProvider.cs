@@ -4,9 +4,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides an amazon sqs send transport provider implementation.
-/// </summary>
+/// <summary>Creates Amazon SQS send transports for a receive endpoint.</summary>
 public class AmazonSqsSendTransportProvider :
     ISendTransportProvider
 {
@@ -14,11 +12,9 @@ public class AmazonSqsSendTransportProvider :
     readonly IConnectionContextSupervisor _connectionContextSupervisor;
     readonly SqsReceiveEndpointContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionContextSupervisor">The connection context supervisor value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Initializes an Amazon SQS send-transport provider.</summary>
+    /// <param name="connectionContextSupervisor">The supervisor used to normalize addresses and create connection-scoped transports.</param>
+    /// <param name="context">The receive-endpoint context that owns the client supervisor.</param>
     public AmazonSqsSendTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, SqsReceiveEndpointContext context)
     {
         _connectionContextSupervisor = connectionContextSupervisor;
@@ -26,22 +22,18 @@ public class AmazonSqsSendTransportProvider :
         _clientContextSupervisor = context.ClientContextSupervisor;
     }
 
-    /// <summary>
-    /// Performs the normalize address operation.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Resolves an endpoint address relative to the configured Amazon SQS host.</summary>
+    /// <param name="address">The absolute or relative endpoint address.</param>
+    /// <returns>The normalized absolute endpoint address.</returns>
     public Uri NormalizeAddress(Uri address)
     {
         return _connectionContextSupervisor.NormalizeAddress(address);
     }
 
-    /// <summary>
-    /// Gets send transport.
-    /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets the Amazon SQS transport for an endpoint address.</summary>
+    /// <param name="address">The queue endpoint address.</param>
+    /// <param name="cancellationToken">The token used to cancel transport creation.</param>
+    /// <returns>The queue send transport.</returns>
     public Task<ISendTransport> GetSendTransportAsync(Uri address, CancellationToken cancellationToken = default)
     {
         return _connectionContextSupervisor.CreateSendTransportAsync(_context, _clientContextSupervisor, address, cancellationToken: cancellationToken);

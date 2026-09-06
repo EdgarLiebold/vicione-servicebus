@@ -3,20 +3,16 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>
-/// Provides a topic entity implementation.
-/// </summary>
+/// <summary>Represents a de-duplicated ActiveMQ topic declaration.</summary>
 public class TopicEntity :
     Topic,
     TopicHandle
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
+    /// <summary>Creates a topic declaration.</summary>
+    /// <param name="id">The builder-local entity identifier.</param>
+    /// <param name="name">The topic name.</param>
+    /// <param name="durable">Whether the topic persists across broker restarts.</param>
+    /// <param name="autoDelete">Whether the broker removes the topic when it is no longer used.</param>
     public TopicEntity(long id, string name, bool durable, bool autoDelete)
     {
         Id = id;
@@ -25,41 +21,25 @@ public class TopicEntity :
         AutoDelete = autoDelete;
     }
 
-    /// <summary>
-    /// Gets the name comparer value.
-    /// </summary>
+    /// <summary>Gets the comparer that uses the topic name only.</summary>
     public static IEqualityComparer<TopicEntity> NameComparer { get; } = new NameEqualityComparer();
 
-    /// <summary>
-    /// Gets the entity comparer value.
-    /// </summary>
+    /// <summary>Gets the comparer that includes name and lifecycle settings.</summary>
     public static IEqualityComparer<TopicEntity> EntityComparer { get; } = new ExchangeEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the entity name value.
-    /// </summary>
+    /// <summary>Gets the topic name.</summary>
     public string EntityName { get; }
-    /// <summary>
-    /// Gets the durable value.
-    /// </summary>
+    /// <summary>Gets whether the topic persists across broker restarts.</summary>
     public bool Durable { get; }
-    /// <summary>
-    /// Gets the auto delete value.
-    /// </summary>
+    /// <summary>Gets whether the broker removes the topic when it is no longer used.</summary>
     public bool AutoDelete { get; }
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the builder-local entity identifier.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the topic value.
-    /// </summary>
+    /// <summary>Gets this declaration as its topic contract.</summary>
     public Topic Topic => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Returns the topic name and enabled lifecycle flags.</summary>
+    /// <returns>A comma-separated diagnostic representation.</returns>
     public override string ToString()
     {
         return string.Join(", ",

@@ -6,16 +6,12 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides an amazon sqs bus factory implementation.
-/// </summary>
+/// <summary>Creates Amazon SQS bus controls and their default message topology.</summary>
 public static class AmazonSqsBusFactory
 {
-    /// <summary>
-    /// Configure and create a bus for AmazonSQS
-    /// </summary>
-    /// <param name="configure">The configuration callback to configure the bus</param>
-    /// <returns></returns>
+    /// <summary>Creates an Amazon SQS bus control using the supplied transport configuration.</summary>
+    /// <param name="configure">The callback that configures the Amazon SQS bus.</param>
+    /// <returns>The configured bus control.</returns>
     public static IBusControl Create(Action<IAmazonSqsBusFactoryConfigurator> configure)
     {
         var topologyConfiguration = new AmazonSqsTopologyConfiguration(CreateMessageTopology());
@@ -28,10 +24,8 @@ public static class AmazonSqsBusFactory
         return configurator.Build(busConfiguration);
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates message topology that uses the Amazon entity-name formatter.</summary>
+    /// <returns>A new message-topology configurator.</returns>
     public static IMessageTopologyConfigurator CreateMessageTopology()
     {
         return new MessageTopology(Cached.EntityNameFormatter);

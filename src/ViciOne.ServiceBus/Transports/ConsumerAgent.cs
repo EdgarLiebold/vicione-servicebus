@@ -9,10 +9,8 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>
-/// Provides a consumer agent implementation.
-/// </summary>
-/// <typeparam name="TKey">The t key type.</typeparam>
+/// <summary>Manages the lifecycle of consumer.</summary>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
 public abstract class ConsumerAgent<TKey> :
     Agent,
     DeliveryMetrics
@@ -27,11 +25,9 @@ public abstract class ConsumerAgent<TKey> :
     Task _consumeTaskObserver = null!;
     TaskCompletionSource<bool> _consumeTaskSource = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="equalityComparer">The equality comparer value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="equalityComparer">The equality comparer.</param>
     protected ConsumerAgent(ReceiveEndpointContext context, IEqualityComparer<TKey>? equalityComparer = default)
     {
         _context = context;
@@ -43,29 +39,19 @@ public abstract class ConsumerAgent<TKey> :
         _dispatcher.ZeroActivity += HandleDeliveryCompleteAsync;
     }
 
-    /// <summary>
-    /// Gets the is idle value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether idle.</summary>
     protected bool IsIdle => ActiveDispatchCount == 0;
 
-    /// <summary>
-    /// Gets the active dispatch count value.
-    /// </summary>
+    /// <summary>Gets the active dispatch count.</summary>
     protected long ActiveDispatchCount => _dispatcher.ActiveDispatchCount;
 
-    /// <summary>
-    /// Gets or sets the is graceful shutdown value.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether graceful shutdown.</summary>
     protected bool IsGracefulShutdown { get; private set; } = true;
 
-    /// <summary>
-    /// Gets the delivery count value.
-    /// </summary>
+    /// <summary>Gets the delivery count.</summary>
     public long DeliveryCount => _dispatcher.DispatchCount;
 
-    /// <summary>
-    /// Gets the concurrent delivery count value.
-    /// </summary>
+    /// <summary>Gets the concurrent delivery count.</summary>
     public int ConcurrentDeliveryCount => _dispatcher.MaxConcurrentDispatchCount;
 
     Task HandleDeliveryCompleteAsync()
@@ -76,9 +62,7 @@ public abstract class ConsumerAgent<TKey> :
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Performs the try set manual consume task operation.
-    /// </summary>
+    /// <summary>Attempts to set manual consume task.</summary>
     protected void TrySetManualConsumeTask()
     {
         if (_consumeTask != null || _consumeTaskSource != null)
@@ -94,10 +78,8 @@ public abstract class ConsumerAgent<TKey> :
         }
     }
 
-    /// <summary>
-    /// Performs the try set consume task operation.
-    /// </summary>
-    /// <param name="consumeTask">The consume task value.</param>
+    /// <summary>Attempts to set consume task.</summary>
+    /// <param name="consumeTask">The consume task.</param>
     protected void TrySetConsumeTask(Task consumeTask)
     {
         if (_consumeTask != null)
@@ -151,11 +133,9 @@ public abstract class ConsumerAgent<TKey> :
         }
     }
 
-    /// <summary>
-    /// Stops agent.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Stops agent.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected override Task StopAgentAsync(StopContext context)
     {
         LogContext.Debug?.Log("Consumer Stopping: {InputAddress} ({Reason})", _context.InputAddress, context.Reason);
@@ -176,17 +156,13 @@ public abstract class ConsumerAgent<TKey> :
         }
     }
 
-    /// <summary>
-    /// Performs the try set consume completed operation.
-    /// </summary>
+    /// <summary>Reports that try set consume has completed.</summary>
     protected void TrySetConsumeCompleted()
     {
         _consumeTaskSource?.TrySetResult(true);
     }
 
-    /// <summary>
-    /// Performs the try set consume canceled operation.
-    /// </summary>
+    /// <summary>Attempts to set consume canceled.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     protected void TrySetConsumeCanceled(CancellationToken cancellationToken = default)
     {
@@ -198,9 +174,7 @@ public abstract class ConsumerAgent<TKey> :
         _consumeTaskSource.TrySetCanceled(cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the try set consume exception operation.
-    /// </summary>
+    /// <summary>Attempts to set consume exception.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     protected void TrySetConsumeException(Exception exception)
     {
@@ -212,11 +186,9 @@ public abstract class ConsumerAgent<TKey> :
         _consumeTaskSource.TrySetException(exception);
     }
 
-    /// <summary>
-    /// Performs the active and actual agents completed operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Reports that active and actual agents has completed.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected virtual async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
         if (!IsIdle)
@@ -263,24 +235,20 @@ public abstract class ConsumerAgent<TKey> :
         }
     }
 
-    /// <summary>
-    /// Determines whether trackable.
-    /// </summary>
-    /// <param name="key">The key value.</param>
+    /// <summary>Determines whether trackable.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     protected virtual bool IsTrackable(TKey key)
     {
         return true;
     }
 
-    /// <summary>
-    /// Performs the dispatch operation.
-    /// </summary>
-    /// <typeparam name="TContext">The t context type.</typeparam>
-    /// <param name="key">The key value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="receiveLockContext">The receive lock context value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Dispatches the current message.</summary>
+    /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="receiveLockContext">The receive lock context.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected Task DispatchAsync<TContext>(TKey key, TContext context, ReceiveLockContext receiveLockContext)
         where TContext : BaseReceiveContext
     {

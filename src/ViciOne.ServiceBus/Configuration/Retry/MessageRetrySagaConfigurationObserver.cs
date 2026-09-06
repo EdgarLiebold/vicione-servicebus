@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// Configures a message retry for a saga, on the saga configurator, which is constrained to
 /// the message types for that saga, and only applies to the saga prior to the saga repository.
 /// </summary>
-/// <typeparam name="TSaga">The saga type</typeparam>
+/// <typeparam name="TSaga">The saga type.</typeparam>
 public class MessageRetrySagaConfigurationObserver<TSaga> :
     ISagaConfigurationObserver
     where TSaga : class, ISaga
@@ -17,12 +17,10 @@ public class MessageRetrySagaConfigurationObserver<TSaga> :
     readonly ISagaConfigurator<TSaga> _configurator;
     readonly Action<IRetryConfigurator> _configure;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
     public MessageRetrySagaConfigurationObserver(ISagaConfigurator<TSaga> configurator, CancellationToken cancellationToken,
         Action<IRetryConfigurator> configure)
     {
@@ -35,12 +33,10 @@ public class MessageRetrySagaConfigurationObserver<TSaga> :
     {
     }
 
-    /// <summary>
-    /// Performs the state machine saga configured operation.
-    /// </summary>
-    /// <typeparam name="TInstance">The t instance type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="stateMachine">The state machine value.</param>
+    /// <summary>Reports that state machine saga has been configured.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="stateMachine">The state machine.</param>
     public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
         where TInstance : class
     {

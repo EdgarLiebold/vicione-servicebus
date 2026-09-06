@@ -2,15 +2,11 @@ using ViciOne.ServiceBus.AmazonSqs.Topology;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Defines the contract for dead letter settings.
-/// </summary>
+/// <summary>Defines the Amazon SQS entity and topology used for skipped-message delivery.</summary>
 public interface DeadLetterSettings :
     EntitySettings
 {
-    /// <summary>
-    /// Return the BrokerTopology to apply at startup (to create exchange and queue if binding is specified)
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Creates the topic, queue, and subscription topology required by this dead-letter destination.</summary>
+    /// <returns>The broker topology.</returns>
     BrokerTopology GetBrokerTopology();
 }

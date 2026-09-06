@@ -2,10 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for consumer registration configurator.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
+/// <summary>Configures consumer registration.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
 public interface IConsumerRegistrationConfigurator<TConsumer> :
     IConsumerRegistrationConfigurator
     where TConsumer : class, IConsumer
@@ -13,18 +11,12 @@ public interface IConsumerRegistrationConfigurator<TConsumer> :
 }
 
 
-/// <summary>
-/// Defines the contract for consumer registration configurator.
-/// </summary>
+/// <summary>Configures consumer registration.</summary>
 public interface IConsumerRegistrationConfigurator
 {
-    /// <summary>
-    /// Performs the endpoint operation.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Applies the endpoint configuration.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
     void Endpoint(Action<IEndpointRegistrationConfigurator> configure);
-    /// <summary>
-    /// Performs the exclude from configure endpoints operation.
-    /// </summary>
+    /// <summary>Excludes from configure endpoints.</summary>
     void ExcludeFromConfigureEndpoints();
 }

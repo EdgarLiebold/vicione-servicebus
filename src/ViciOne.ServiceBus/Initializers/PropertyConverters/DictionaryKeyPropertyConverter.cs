@@ -5,9 +5,9 @@ using ViciOne.ServiceBus.Util;
 namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 
 /// <summary>Converts dictionary keys while preserving their associated values.</summary>
-/// <typeparam name="TKey">The target dictionary key type.</typeparam>
-/// <typeparam name="TInputKey">The source dictionary key type.</typeparam>
-/// <typeparam name="TElement">The dictionary value type.</typeparam>
+/// <typeparam name="TKey">The key used for lookup.</typeparam>
+/// <typeparam name="TInputKey">The input key type.</typeparam>
+/// <typeparam name="TElement">The element type.</typeparam>
 public class DictionaryKeyPropertyConverter<TKey, TInputKey, TElement> :
     IPropertyConverter<Dictionary<TKey, TElement>, IEnumerable<KeyValuePair<TInputKey, TElement>>>,
     IPropertyConverter<IDictionary<TKey, TElement>, IEnumerable<KeyValuePair<TInputKey, TElement>>>,
@@ -25,8 +25,8 @@ public class DictionaryKeyPropertyConverter<TKey, TInputKey, TElement> :
     }
 
     /// <summary>Converts the keys in the input dictionary sequence.</summary>
-    /// <typeparam name="TMessage">The message contract being initialized.</typeparam>
-    /// <param name="context">The active message-initialization context.</param>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="context">The context associated with the operation.</param>
     /// <param name="input">The source key/value sequence.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The converted dictionary, or <see langword="null" /> when the input is null.</returns>

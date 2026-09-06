@@ -15,38 +15,26 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>
-/// Provides a rabbit mq test harness implementation.
-/// </summary>
+/// <summary>Hosts an isolated RabbitMQ bus and provides virtual-host cleanup for transport tests.</summary>
 public class RabbitMqTestHarness :
     BusTestHarness
 {
     Uri? _hostAddress;
     Uri? _inputQueueAddress;
 
-    /// <summary>
-    /// Environment variable carrying the user of the run-scoped broker account.
-    /// </summary>
+    /// <summary>Environment variable carrying the user of the run-scoped broker account.</summary>
     public const string UsernameVariable = "VICIONE_SERVICEBUS_RMQ_USER";
 
-    /// <summary>
-    /// Environment variable carrying the secret of the run-scoped broker account.
-    /// </summary>
+    /// <summary>Environment variable carrying the secret of the run-scoped broker account.</summary>
     public const string PasswordVariable = "VICIONE_SERVICEBUS_RMQ_PASS";
 
-    /// <summary>
-    /// Environment variable carrying the host the fixture is reachable on.
-    /// </summary>
+    /// <summary>Environment variable carrying the host the fixture is reachable on.</summary>
     public const string HostVariable = "VICIONE_SERVICEBUS_RMQ_HOST";
 
-    /// <summary>
-    /// Environment variable carrying the AMQP port Docker bound for this run.
-    /// </summary>
+    /// <summary>Environment variable carrying the AMQP port Docker bound for this run.</summary>
     public const string PortVariable = "VICIONE_SERVICEBUS_RMQ_PORT";
 
-    /// <summary>
-    /// Environment variable carrying the management API port Docker bound for this run.
-    /// </summary>
+    /// <summary>Environment variable carrying the management API port Docker bound for this run.</summary>
     public const string ManagementPortVariable = "VICIONE_SERVICEBUS_RMQ_MGMT_PORT";
 
     const int DefaultManagementPort = 15672;
@@ -77,10 +65,8 @@ public class RabbitMqTestHarness :
             : new Uri($"rabbitmq://{host}/test/");
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="inputQueueName">The input queue name value.</param>
+    /// <summary>Creates a harness whose broker connection defaults to the run-scoped environment configuration.</summary>
+    /// <param name="inputQueueName">The receive queue name, or <c>input_queue</c> when omitted.</param>
     public RabbitMqTestHarness(string? inputQueueName = null)
     {
         // Environment-provided credentials support isolated broker accounts. Guest credentials
@@ -95,9 +81,7 @@ public class RabbitMqTestHarness :
         HostAddress = ReadHostAddress();
     }
 
-    /// <summary>
-    /// Gets or sets the host address value.
-    /// </summary>
+    /// <summary>Gets or sets the RabbitMQ host and virtual-host address.</summary>
     public Uri HostAddress
     {
         get => _hostAddress ?? throw new InvalidOperationException("The RabbitMQ host address has not been configured.");
@@ -108,95 +92,63 @@ public class RabbitMqTestHarness :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the username value.
-    /// </summary>
+    /// <summary>Gets or sets the RabbitMQ user name.</summary>
     public string Username { get; set; }
-    /// <summary>
-    /// Gets or sets the password value.
-    /// </summary>
+    /// <summary>Gets or sets the RabbitMQ password.</summary>
     public string Password { get; set; }
-    /// <summary>
-    /// Gets or sets the clean virtual host value.
-    /// </summary>
+    /// <summary>Gets or sets whether known test entities are removed before the bus is created.</summary>
     public bool CleanVirtualHost { get; set; } = true;
-    /// <summary>
-    /// Gets the input queue name value.
-    /// </summary>
+    /// <summary>Gets the receive queue name used by the test bus.</summary>
     public override string InputQueueName { get; }
-    /// <summary>
-    /// Gets or sets the node host name value.
-    /// </summary>
+    /// <summary>Gets or sets the cluster node used for AMQP resolution and management access.</summary>
     public string? NodeHostName { get; set; }
-    /// <summary>
-    /// Gets the name formatter value.
-    /// </summary>
+    /// <summary>Gets the RabbitMQ entity-name formatter used by the harness.</summary>
     public IMessageNameFormatter NameFormatter { get; }
 
-    /// <summary>
-    /// Gets the input queue address value.
-    /// </summary>
+    /// <summary>Gets the transport address of the harness receive queue.</summary>
     public override Uri InputQueueAddress => _inputQueueAddress
         ?? throw new InvalidOperationException("The RabbitMQ input queue address has not been configured.");
 
-    /// <summary>
-    /// Occurs when on configure rabbit mq bus.
-    /// </summary>
+    /// <summary>Occurs while the RabbitMQ bus factory is being configured.</summary>
     public event Action<IRabbitMqBusFactoryConfigurator>? OnConfigureRabbitMqBus;
-    /// <summary>
-    /// Occurs when on configure rabbit mq receive endpoint.
-    /// </summary>
+    /// <summary>Occurs while the harness receive endpoint is being configured.</summary>
     public event Action<IRabbitMqReceiveEndpointConfigurator>? OnConfigureRabbitMqReceiveEndpoint;
-    /// <summary>
-    /// Occurs when on configure rabbit mq host.
-    /// </summary>
+    /// <summary>Occurs while RabbitMQ host credentials and cluster settings are being configured.</summary>
     public event Action<IRabbitMqHostConfigurator>? OnConfigureRabbitMqHost;
-    /// <summary>
-    /// Occurs when on cleanup virtual host.
-    /// </summary>
+    /// <summary>Occurs after the harness has removed its known entities from the virtual host.</summary>
     public event Func<IChannel, Task>? OnCleanupVirtualHost;
 
-    /// <summary>
-    /// Configures rabbit mq bus.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Invokes subscribers that customize the RabbitMQ bus.</summary>
+    /// <param name="configurator">The bus factory configurator.</param>
     protected virtual void ConfigureRabbitMqBus(IRabbitMqBusFactoryConfigurator configurator)
     {
         OnConfigureRabbitMqBus?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Configures rabbit mq receive endpoint.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Invokes subscribers that customize the harness receive endpoint.</summary>
+    /// <param name="configurator">The RabbitMQ receive-endpoint configurator.</param>
     protected virtual void ConfigureRabbitMqReceiveEndpoint(IRabbitMqReceiveEndpointConfigurator configurator)
     {
         OnConfigureRabbitMqReceiveEndpoint?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Configures rabbit mq host.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Invokes subscribers that customize the RabbitMQ host.</summary>
+    /// <param name="configurator">The RabbitMQ host configurator.</param>
     protected virtual void ConfigureRabbitMqHost(IRabbitMqHostConfigurator configurator)
     {
         OnConfigureRabbitMqHost?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Performs the cleanup virtual host operation.
-    /// </summary>
-    /// <param name="channel">The channel value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Removes test resources from the RabbitMQ virtual host.</summary>
+    /// <param name="channel">The open channel used by cleanup subscribers.</param>
+    /// <returns>A task that completes when all registered cleanup work completes.</returns>
     protected virtual Task CleanupVirtualHostAsync(IChannel channel)
     {
         return OnCleanupVirtualHost != null ? OnCleanupVirtualHost(channel) : Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Configures host.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Applies harness credentials, cluster selection, and host callbacks to the bus factory.</summary>
+    /// <param name="configurator">The RabbitMQ bus factory configurator.</param>
     protected virtual void ConfigureHost(IRabbitMqBusFactoryConfigurator configurator)
     {
         configurator.Host(HostAddress, h =>
@@ -205,10 +157,8 @@ public class RabbitMqTestHarness :
         });
     }
 
-    /// <summary>
-    /// Gets host settings.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds the effective RabbitMQ host settings used for direct cleanup connections.</summary>
+    /// <returns>The configured host settings.</returns>
     public RabbitMqHostSettings GetHostSettings()
     {
         var host = new RabbitMqHostConfigurator(HostAddress);
@@ -218,11 +168,9 @@ public class RabbitMqTestHarness :
         return host.Settings;
     }
 
-    /// <summary>
-    /// Performs the clean operation.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Deletes every non-system exchange and queue currently listed by the management API.</summary>
+    /// <param name="cancellationToken">Cancellation for AMQP connection, deletion, and close operations.</param>
+    /// <returns>A task that completes after the listed broker entities have been deleted.</returns>
     public override async Task CleanAsync(CancellationToken cancellationToken = default)
     {
         var settings = GetHostSettings();
@@ -262,7 +210,8 @@ public class RabbitMqTestHarness :
     /// on it, so no separate permission call is needed.
     /// </para>
     /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="cancellationToken">Cancellation checked before the management reset begins.</param>
+    /// <returns>A task that completes after the dedicated virtual host has been deleted and recreated.</returns>
     public async Task RecreateVirtualHostAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var virtualHost = HostAddress.AbsolutePath.Trim('/');
@@ -323,10 +272,8 @@ public class RabbitMqTestHarness :
         return entities.OfType<string>().Where(x => !string.IsNullOrWhiteSpace(x) && !x.StartsWith("amq.")).ToList();
     }
 
-    /// <summary>
-    /// Creates bus.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the RabbitMQ test bus and optionally removes known entities before returning it.</summary>
+    /// <returns>The configured bus control.</returns>
     protected override async Task<IBusControl> CreateBusAsync()
     {
         var busControl = ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingRabbitMq(x =>

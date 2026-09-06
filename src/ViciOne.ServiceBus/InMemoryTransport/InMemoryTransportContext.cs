@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
-/// <summary>
-/// Defines the contract for in memory transport context.
-/// </summary>
+/// <summary>Exposes state for in memory transport operations.</summary>
 public interface InMemoryTransportContext
 {
 }

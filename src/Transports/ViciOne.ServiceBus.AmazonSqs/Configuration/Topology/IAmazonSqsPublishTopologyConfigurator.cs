@@ -2,25 +2,19 @@ using System;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Defines the contract for amazon sqs publish topology configurator.
-/// </summary>
+/// <summary>Configures Amazon SNS publish topology for message types.</summary>
 public interface IAmazonSqsPublishTopologyConfigurator :
     IPublishTopologyConfigurator,
     IAmazonSqsPublishTopology
 {
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets publish topology for a message type.</summary>
+    /// <typeparam name="T">The published message type.</typeparam>
+    /// <returns>The typed Amazon SNS publish-topology configurator.</returns>
     new IAmazonSqsMessagePublishTopologyConfigurator<T> GetMessageTopology<T>()
         where T : class;
 
-    /// <summary>
-    /// Gets message topology.
-    /// </summary>
-    /// <param name="messageType">The message type value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets publish topology for a runtime message type.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <returns>The untyped Amazon SNS publish-topology configurator.</returns>
     new IAmazonSqsMessagePublishTopologyConfigurator GetMessageTopology(Type messageType);
 }

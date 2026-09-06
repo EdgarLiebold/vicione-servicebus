@@ -2,16 +2,12 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>
-/// Defines the contract for queue notification listener.
-/// </summary>
+/// <summary>Defines the operations required by queue notification listener.</summary>
 public interface IQueueNotificationListener
 {
-    /// <summary>
-    /// Performs the message ready operation.
-    /// </summary>
-    /// <param name="queueName">The queue name value.</param>
+    /// <summary>Reports that the message is ready for delivery.</summary>
+    /// <param name="queueName">The queue name.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     Task MessageReadyAsync(string queueName, CancellationToken cancellationToken = default);
 }

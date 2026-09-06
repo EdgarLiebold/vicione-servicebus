@@ -2,9 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for job service configurator.
-/// </summary>
+/// <summary>Configures job service.</summary>
 public interface IJobServiceConfigurator
 {
     /// <summary>
@@ -25,39 +23,25 @@ public interface IJobServiceConfigurator
     /// </summary>
     ISagaRepository<JobAttemptSaga> JobAttemptRepository { set; }
 
-    /// <summary>
-    /// Override the default turnout state endpoint name (defaults to TurnoutState, turnout_state, or turnout-state)
-    /// </summary>
+    /// <summary>Override the default turnout state endpoint name (defaults to TurnoutState, turnout_state, or turnout-state).</summary>
     string JobServiceStateEndpointName { set; }
 
-    /// <summary>
-    /// Override the default turnout state endpoint name (defaults to TurnoutJobState, turnout_job_state, or turnout-job-state)
-    /// </summary>
+    /// <summary>Override the default turnout state endpoint name (defaults to TurnoutJobState, turnout_job_state, or turnout-job-state).</summary>
     string JobServiceJobStateEndpointName { set; }
 
-    /// <summary>
-    /// Override the default turnout state endpoint name (defaults to TurnoutJobAttemptState, turnout_job_attempt_state, or turnout-job-attempt-state)
-    /// </summary>
+    /// <summary>Override the default turnout state endpoint name (defaults to TurnoutJobAttemptState, turnout_job_attempt_state, or turnout-job-attempt-state).</summary>
     string JobServiceJobAttemptStateEndpointName { set; }
 
-    /// <summary>
-    /// The time to wait before attempting to allocate a job slot when no slots are available
-    /// </summary>
+    /// <summary>The time to wait before attempting to allocate a job slot when no slots are available.</summary>
     TimeSpan SlotWaitTime { set; }
 
-    /// <summary>
-    /// Time to wait before checking the status of a job to ensure it is still running (not dead)
-    /// </summary>
+    /// <summary>Time to wait before checking the status of a job to ensure it is still running (not dead).</summary>
     TimeSpan StatusCheckInterval { set; }
 
-    /// <summary>
-    /// The number of times to retry a suspect job before it is faulted. Defaults to zero.
-    /// </summary>
+    /// <summary>The number of times to retry a suspect job before it is faulted. Defaults to zero.</summary>
     int SuspectJobRetryCount { set; }
 
-    /// <summary>
-    /// The delay before retrying a suspect job
-    /// </summary>
+    /// <summary>The delay before retrying a suspect job.</summary>
     TimeSpan SuspectJobRetryDelay { set; }
 
     /// <summary>
@@ -66,13 +50,9 @@ public interface IJobServiceConfigurator
     /// </summary>
     int? SagaPartitionCount { set; }
 
-    /// <summary>
-    /// If true, completed jobs are finalized, removing them from the saga repository
-    /// </summary>
+    /// <summary>If true, completed jobs are finalized, removing them from the saga repository.</summary>
     bool FinalizeCompleted { set; }
 
-    /// <summary>
-    /// Optional resolver for time zone identifiers not provided by the operating system.
-    /// </summary>
+    /// <summary>Optional resolver for time zone identifiers not provided by the operating system.</summary>
     Func<string, TimeZoneInfo> TimeZoneResolver { set; }
 }

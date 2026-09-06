@@ -4,26 +4,18 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a publish endpoint broker topology builder implementation.
-/// </summary>
+/// <summary>Builds publish topics and optional forwarding links between implemented message types.</summary>
 public class PublishEndpointBrokerTopologyBuilder :
     BrokerTopologyBuilder,
     IPublishEndpointBrokerTopologyBuilder
 {
-    /// <summary>
-    /// Specifies the available options values.
-    /// </summary>
+    /// <summary>Controls whether implemented-message topic hierarchy is represented by broker forwarding links.</summary>
     [Flags]
     public enum Options
     {
-        /// <summary>
-        /// Indicates flatten hierarchy.
-        /// </summary>
+        /// <summary>Declares topics without forwarding links between implemented message types.</summary>
         FlattenHierarchy = 0,
-        /// <summary>
-        /// Indicates maintain hierarchy.
-        /// </summary>
+        /// <summary>Creates subscriptions that forward implemented-message topics into parent topics.</summary>
         MaintainHierarchy = 1
     }
 
@@ -32,26 +24,20 @@ public class PublishEndpointBrokerTopologyBuilder :
 
     readonly IServiceBusPublishTopology _topology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topology">The topology value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Creates a publish topology builder.</summary>
+    /// <param name="topology">The publish topology used to bound generated subscription names.</param>
+    /// <param name="options">Controls whether implemented-message hierarchy is retained.</param>
     public PublishEndpointBrokerTopologyBuilder(IServiceBusPublishTopology topology, Options options = Options.MaintainHierarchy)
     {
         _topology = topology;
         _options = options;
     }
 
-    /// <summary>
-    /// The topic where the published message is sent
-    /// </summary>
+    /// <summary>Gets or sets the topic to which the current message contract is published.</summary>
     public TopicHandle? Topic { get; set; }
 
-    /// <summary>
-    /// Creates implemented builder.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a child builder for an implemented message contract.</summary>
+    /// <returns>A hierarchy-aware child builder, or this builder when hierarchy is flattened.</returns>
     public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
     {
         if (_options.HasFlag(Options.MaintainHierarchy))

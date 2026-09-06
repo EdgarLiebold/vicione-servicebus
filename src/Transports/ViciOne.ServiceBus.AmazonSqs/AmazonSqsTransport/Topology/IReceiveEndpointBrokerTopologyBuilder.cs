@@ -1,15 +1,9 @@
 namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 
-/// <summary>
-/// A unique builder context should be created for each specification, so that the items added
-/// by it can be combined together into a group - so that if a subsequent specification yanks
-/// something that conflicts, the system can yank the group or warn that it's impacted.
-/// </summary>
+/// <summary>Builds an Amazon SQS receive queue and its Amazon SNS subscription topology.</summary>
 public interface IReceiveEndpointBrokerTopologyBuilder :
     IBrokerTopologyBuilder
 {
-    /// <summary>
-    /// A handle to the consuming queue
-    /// </summary>
+    /// <summary>Gets the consuming Amazon SQS queue handle.</summary>
     QueueHandle? Queue { get; }
 }

@@ -5,9 +5,7 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a scoped execute activity pipe specification observer implementation.
-/// </summary>
+/// <summary>Observes scoped execute activity pipe specification events.</summary>
 public class ScopedExecuteActivityPipeSpecificationObserver :
     IActivityConfigurationObserver
 {
@@ -15,12 +13,10 @@ public class ScopedExecuteActivityPipeSpecificationObserver :
     readonly Type _filterType;
     readonly CompositeFilter<Type> _messageTypeFilter;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="filterType">The filter type value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <param name="messageTypeFilter">The message type filter value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="filterType">The runtime filter type used by the operation.</param>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="messageTypeFilter">The message type filter.</param>
     public ScopedExecuteActivityPipeSpecificationObserver(Type filterType, IRegistrationContext context,
         CompositeFilter<Type> messageTypeFilter)
     {
@@ -29,13 +25,11 @@ public class ScopedExecuteActivityPipeSpecificationObserver :
         _messageTypeFilter = messageTypeFilter;
     }
 
-    /// <summary>
-    /// Performs the activity configured operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="compensateAddress">The compensate address value.</param>
+    /// <summary>Reports that activity has been configured.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="compensateAddress">The compensate address.</param>
     public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator,
         Uri compensateAddress)
         where TActivity : class
@@ -44,12 +38,10 @@ public class ScopedExecuteActivityPipeSpecificationObserver :
         ExecuteActivityConfigured(configurator);
     }
 
-    /// <summary>
-    /// Performs the execute activity configured operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that execute activity has been configured.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
         where TActivity : class
         where TArguments : class
@@ -73,12 +65,10 @@ public class ScopedExecuteActivityPipeSpecificationObserver :
         configurator.Arguments(x => x.AddPipeSpecification(specification));
     }
 
-    /// <summary>
-    /// Performs the compensate activity configured operation.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
+    /// <summary>Reports that compensate activity has been configured.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
     public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
         where TActivity : class
         where TLog : class

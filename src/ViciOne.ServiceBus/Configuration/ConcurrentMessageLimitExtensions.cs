@@ -5,16 +5,13 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for concurrent message limit.
-/// </summary>
+/// <summary>Provides extension methods for concurrent message limit.</summary>
 public static class ConcurrentMessageLimitExtensions
 {
-    /// <summary>
-    /// Limits the number of concurrent messages consumed by the consumer, regardless of message type.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit for all message types for the consumer</param>
+    /// <summary>Limits the number of concurrent messages consumed by the consumer, regardless of message type.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="concurrentMessageLimit">The concurrent message limit for all message types for the consumer.</param>
     public static void UseConcurrentMessageLimit<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, int concurrentMessageLimit)
         where TConsumer : class
     {
@@ -24,13 +21,12 @@ public static class ConcurrentMessageLimitExtensions
         configurator.ConcurrencyPolicy = ConsumerConcurrencyPolicy.Parallel(concurrentMessageLimit);
     }
 
-    /// <summary>
-    /// Limits the number of concurrent messages consumed by the consumer, regardless of message type.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit for all message types for the consumer</param>
-    /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment</param>
-    /// <param name="id">An identifier for the concurrency limit to allow selective adjustment</param>
+    /// <summary>Limits the number of concurrent messages consumed by the consumer, regardless of message type.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="concurrentMessageLimit">The concurrent message limit for all message types for the consumer.</param>
+    /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment.</param>
+    /// <param name="id">An identifier for the concurrency limit to allow selective adjustment.</param>
     public static void UseConcurrentMessageLimit<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, int concurrentMessageLimit,
         IReceiveEndpointConfigurator managementEndpointConfigurator, string? id = null)
         where TConsumer : class
@@ -51,11 +47,10 @@ public static class ConcurrentMessageLimitExtensions
         });
     }
 
-    /// <summary>
-    /// Limits the number of concurrent messages consumed by the handler.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit for the handler message type</param>
+    /// <summary>Limits the number of concurrent messages consumed by the handler.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="concurrentMessageLimit">The concurrent message limit for the handler message type.</param>
     public static void UseConcurrentMessageLimit<TMessage>(this IHandlerConfigurator<TMessage> configurator, int concurrentMessageLimit)
         where TMessage : class
     {
@@ -66,13 +61,12 @@ public static class ConcurrentMessageLimitExtensions
         configurator.ConnectHandlerConfigurationObserver(observer);
     }
 
-    /// <summary>
-    /// Limits the number of concurrent messages consumed by the handler.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit for the handler message type</param>
-    /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment</param>
-    /// <param name="id">An identifier for the concurrency limit to allow selective adjustment</param>
+    /// <summary>Limits the number of concurrent messages consumed by the handler.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="concurrentMessageLimit">The concurrent message limit for the handler message type.</param>
+    /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment.</param>
+    /// <param name="id">An identifier for the concurrency limit to allow selective adjustment.</param>
     public static void UseConcurrentMessageLimit<TMessage>(this IHandlerConfigurator<TMessage> configurator, int concurrentMessageLimit,
         IReceiveEndpointConfigurator managementEndpointConfigurator, string? id = null)
         where TMessage : class
@@ -90,11 +84,10 @@ public static class ConcurrentMessageLimitExtensions
         });
     }
 
-    /// <summary>
-    /// Limits the number of concurrent messages consumed for the specified message type.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit for the message type</param>
+    /// <summary>Limits the number of concurrent messages consumed for the specified message type.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="concurrentMessageLimit">The concurrent message limit for the message type.</param>
     public static void UseConcurrentMessageLimit<TMessage>(this IPipeConfigurator<ConsumeContext<TMessage>> configurator, int concurrentMessageLimit)
         where TMessage : class
     {
@@ -108,13 +101,12 @@ public static class ConcurrentMessageLimitExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>
-    /// Limits the number of concurrent messages consumed for the specified message type.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit for the message type</param>
-    /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment</param>
-    /// <param name="id">An identifier for the concurrency limit to allow selective adjustment</param>
+    /// <summary>Limits the number of concurrent messages consumed for the specified message type.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="concurrentMessageLimit">The concurrent message limit for the message type.</param>
+    /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment.</param>
+    /// <param name="id">An identifier for the concurrency limit to allow selective adjustment.</param>
     public static void UseConcurrentMessageLimit<TMessage>(this IPipeConfigurator<ConsumeContext<TMessage>> configurator, int concurrentMessageLimit,
         IReceiveEndpointConfigurator managementEndpointConfigurator, string? id = null)
         where TMessage : class

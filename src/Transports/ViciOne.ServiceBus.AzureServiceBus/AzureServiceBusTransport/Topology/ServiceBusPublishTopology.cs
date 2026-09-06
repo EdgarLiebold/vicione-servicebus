@@ -4,19 +4,15 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// Provides a service bus publish topology implementation.
-/// </summary>
+/// <summary>Creates Azure Service Bus publish topics and their implemented-message relationships.</summary>
 public class ServiceBusPublishTopology :
     PublishTopology,
     IServiceBusPublishTopologyConfigurator
 {
     readonly IMessageTopology _messageTopology;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="messageTopology">The message topology value.</param>
+    /// <summary>Creates publish topology linked to provider-neutral message metadata.</summary>
+    /// <param name="messageTopology">The message topology used to derive entity names and implemented contracts.</param>
     public ServiceBusPublishTopology(IMessageTopology messageTopology)
     {
         _messageTopology = messageTopology;
@@ -28,10 +24,8 @@ public class ServiceBusPublishTopology :
             ?? throw new InvalidOperationException($"The publish topology for {typeof(T).FullName} is not an Azure Service Bus topology.");
     }
 
-    /// <summary>
-    /// Fits a subscription name within the Azure Service Bus limit using a stable hash suffix when shortening is required.
-    /// </summary>
-    /// <param name="subscriptionName">The non-empty subscription name.</param>
+    /// <summary>Fits a subscription name within the Azure Service Bus limit using a stable hash suffix when shortening is required.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
     /// <returns>The original name when it fits; otherwise, a deterministic 50-character name.</returns>
     public string FormatSubscriptionName(string subscriptionName)
     {
@@ -40,10 +34,8 @@ public class ServiceBusPublishTopology :
         return EntityNameShortener.Shorten(subscriptionName, 50);
     }
 
-    /// <summary>
-    /// Creates a subscription name from an entity and optional host scope.
-    /// </summary>
-    /// <param name="entityName">The non-empty entity name.</param>
+    /// <summary>Creates a subscription name from an entity and optional host scope.</summary>
+    /// <param name="entityName">The entity name.</param>
     /// <param name="hostScope">An optional scope appended to the entity name.</param>
     /// <returns>A deterministic name within the Azure Service Bus subscription limit.</returns>
     public string GenerateSubscriptionName(string entityName, string? hostScope = null)
@@ -59,10 +51,8 @@ public class ServiceBusPublishTopology :
             ?? throw new InvalidOperationException($"The publish topology for {messageType.FullName} is not an Azure Service Bus topology.");
     }
 
-    /// <summary>
-    /// Gets publish broker topology.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds broker topology for every configured publish message type.</summary>
+    /// <returns>The topics and relationships to declare.</returns>
     public BrokerTopology GetPublishBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder(this);
@@ -83,11 +73,9 @@ public class ServiceBusPublishTopology :
             ?? throw new InvalidOperationException($"The publish topology for {typeof(T).FullName} is not an Azure Service Bus topology.");
     }
 
-    /// <summary>
-    /// Creates message topology.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates publish topology for a message contract and connects its implemented contracts.</summary>
+    /// <typeparam name="T">The published message contract.</typeparam>
+    /// <returns>The message-specific Azure publish topology.</returns>
     protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()
     {
         var messageTopology = new ServiceBusMessagePublishTopology<T>(this, _messageTopology.GetMessageTopology<T>());

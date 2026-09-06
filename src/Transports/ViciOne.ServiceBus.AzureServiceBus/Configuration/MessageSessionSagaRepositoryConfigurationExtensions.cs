@@ -4,17 +4,13 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides extension methods for message session saga repository configuration.
-/// </summary>
+/// <summary>Configures saga persistence backed by Azure Service Bus sessions.</summary>
 public static class MessageSessionSagaRepositoryConfigurationExtensions
 {
-    /// <summary>
-    /// Configures the saga to use the Azure Service Bus session for saga persistence.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Configures the saga to use the Azure Service Bus session for saga persistence.</summary>
+    /// <typeparam name="T">The saga state type.</typeparam>
+    /// <param name="configurator">The saga registration to configure.</param>
+    /// <returns>The same registration configurator for fluent chaining.</returns>
     public static ISagaRegistrationConfigurator<T> MessageSessionRepository<T>(this ISagaRegistrationConfigurator<T> configurator)
         where T : class, ISaga
     {
@@ -24,10 +20,8 @@ public static class MessageSessionSagaRepositoryConfigurationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Use the Azure Service Bus session saga repository for sagas configured by type (without a specific generic call to AddSaga/AddSagaStateMachine)
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Uses Azure Service Bus session state for sagas registered without a type-specific repository call.</summary>
+    /// <param name="configurator">The registration collection to configure.</param>
     public static void SetMessageSessionSagaRepositoryProvider(this IRegistrationConfigurator configurator)
     {
         configurator.SetSagaRepositoryProvider(new MessageSessionSagaRepositoryRegistrationProvider());

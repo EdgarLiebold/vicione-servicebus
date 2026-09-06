@@ -4,33 +4,27 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Provides a service bus publish transport provider implementation.
-/// </summary>
+/// <summary>Resolves Azure Service Bus publish transports for a receive endpoint.</summary>
 public class ServiceBusPublishTransportProvider :
     IPublishTransportProvider
 {
     readonly IConnectionContextSupervisor _connectionContextSupervisor;
     readonly ReceiveEndpointContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="connectionContextSupervisor">The connection context supervisor value.</param>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Creates a provider bound to a namespace connection and receive endpoint.</summary>
+    /// <param name="connectionContextSupervisor">The namespace connection supervisor.</param>
+    /// <param name="context">The receive endpoint requesting publish transports.</param>
     public ServiceBusPublishTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, ReceiveEndpointContext context)
     {
         _connectionContextSupervisor = connectionContextSupervisor;
         _context = context;
     }
 
-    /// <summary>
-    /// Gets publish transport.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="publishAddress">The publish address value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets a transport that publishes a message contract to its Azure Service Bus topic.</summary>
+    /// <typeparam name="T">The published message contract.</typeparam>
+    /// <param name="publishAddress">The topic address resolved by publish topology.</param>
+    /// <param name="cancellationToken">Cancels transport acquisition.</param>
+    /// <returns>A task that produces the publish transport.</returns>
     public Task<ISendTransport> GetPublishTransportAsync<T>(Uri? publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {

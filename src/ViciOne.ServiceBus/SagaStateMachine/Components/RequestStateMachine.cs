@@ -12,10 +12,8 @@ namespace ViciOne.ServiceBus.Components;
 public class RequestStateMachine :
     ViciOneServiceBusStateMachine<RequestState>
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configureMissingInstanceRedelivery">The configure missing instance redelivery value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configureMissingInstanceRedelivery">The configure missing instance redelivery.</param>
     public RequestStateMachine(Action<IMissingInstanceRedeliveryConfigurator>? configureMissingInstanceRedelivery = null)
     {
         IRequestStateMachineMissingInstanceConfigurator? missingInstanceConfigurator = configureMissingInstanceRedelivery == null
@@ -61,23 +59,14 @@ public class RequestStateMachine :
         SetCompletedWhenFinalized();
     }
 
-    //
-    /// <summary>
-    /// Gets the pending value.
-    /// </summary>
+    /// <summary>Gets the pending.</summary>
     public State Pending { get; } = null!;
 
-    /// <summary>
-    /// Gets the started value.
-    /// </summary>
+    /// <summary>Gets the started.</summary>
     public Event<RequestStarted> Started { get; } = null!;
-    /// <summary>
-    /// Gets the completed value.
-    /// </summary>
+    /// <summary>Gets the completed.</summary>
     public Event<RequestCompleted> Completed { get; } = null!;
-    /// <summary>
-    /// Gets the faulted value.
-    /// </summary>
+    /// <summary>Gets the faulted.</summary>
     public Event<RequestFaulted> Faulted { get; } = null!;
     static void InitializeInstance(BehaviorContext<RequestState, RequestStarted> context)
     {

@@ -6,28 +6,24 @@ namespace ViciOne.ServiceBus.Configuration;
 /// Configures a concurrency limit for a consumer, on the consumer configurator, which is constrained to
 /// the message types for that consumer, and only applies to the consumer prior to the consumer factory.
 /// </summary>
-/// <typeparam name="TConsumer">The consumer type</typeparam>
+/// <typeparam name="TConsumer">The consumer type.</typeparam>
 public class ConcurrencyLimitConsumerConfigurationObserver<TConsumer> :
     IConsumerConfigurationObserver
     where TConsumer : class
 {
     readonly IConsumerConfigurator<TConsumer> _configurator;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit value.</param>
-    /// <param name="id">The id value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="concurrentMessageLimit">The concurrent message limit.</param>
+    /// <param name="id">The id.</param>
     public ConcurrencyLimitConsumerConfigurationObserver(IConsumerConfigurator<TConsumer> configurator, int concurrentMessageLimit, string? id = null)
     {
         _configurator = configurator;
         Limiter = new ConcurrencyLimiter(concurrentMessageLimit, id);
     }
 
-    /// <summary>
-    /// Gets the limiter value.
-    /// </summary>
+    /// <summary>Gets the limiter.</summary>
     public IConcurrencyLimiter Limiter { get; }
 
     void IConsumerConfigurationObserver.ConsumerConfigured<T>(IConsumerConfigurator<T> configurator)

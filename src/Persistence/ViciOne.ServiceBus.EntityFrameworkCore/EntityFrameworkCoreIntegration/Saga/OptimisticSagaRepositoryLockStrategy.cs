@@ -7,10 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
-/// <summary>
-/// Provides an optimistic saga repository lock strategy implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <summary>Uses tracked queries and optional transactions for optimistic saga concurrency.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class OptimisticSagaRepositoryLockStrategy<TSaga> :
     ISagaRepositoryLockStrategy<TSaga>
     where TSaga : class, ISaga
@@ -18,13 +16,11 @@ public class OptimisticSagaRepositoryLockStrategy<TSaga> :
     readonly ILoadQueryExecutor<TSaga> _executor;
     readonly Func<IQueryable<TSaga>, IQueryable<TSaga>>? _queryCustomization;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="executor">The executor value.</param>
-    /// <param name="queryCustomization">The query customization value.</param>
-    /// <param name="isolationLevel">The isolation level value.</param>
-    /// <param name="isTransactionEnabled">The is transaction enabled value.</param>
+    /// <summary>Initializes the optimistic saga repository transaction and query strategy.</summary>
+    /// <param name="executor">The optimistic single-row loader.</param>
+    /// <param name="queryCustomization">An optional transformation applied to saga queries.</param>
+    /// <param name="isolationLevel">The isolation level used when transactions are enabled.</param>
+    /// <param name="isTransactionEnabled">Whether repository operations create transactions.</param>
     public OptimisticSagaRepositoryLockStrategy(ILoadQueryExecutor<TSaga> executor, Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization,
         IsolationLevel isolationLevel, bool isTransactionEnabled)
     {
@@ -35,45 +31,35 @@ public class OptimisticSagaRepositoryLockStrategy<TSaga> :
         IsTransactionEnabled = isTransactionEnabled;
     }
 
-    /// <summary>
-    /// Gets the isolation level value.
-    /// </summary>
+    /// <summary>Gets the isolation level used when transactions are enabled.</summary>
     public IsolationLevel IsolationLevel { get; }
 
-    /// <summary>
-    /// Gets the is transaction enabled value.
-    /// </summary>
+    /// <summary>Gets whether repository operations create transactions.</summary>
     public bool IsTransactionEnabled { get; }
 
-    /// <summary>
-    /// Performs the apply query customization operation.
-    /// </summary>
-    /// <param name="query">The query value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Applies the configured saga-query transformation.</summary>
+    /// <param name="query">The base saga query.</param>
+    /// <returns>The transformed query.</returns>
     public IQueryable<TSaga> ApplyQueryCustomization(IQueryable<TSaga> query)
     {
         return SagaQueryCustomization.Apply(query, _queryCustomization);
     }
 
-    /// <summary>
-    /// Performs the load operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="correlationId">The correlation id value.</param>
+    /// <summary>Loads the requested state.</summary>
+    /// <param name="context">The DbContext that contains the saga set.</param>
+    /// <param name="correlationId">The saga correlation identifier.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The tracked saga entity, or <see langword="null"/> when no row matches.</returns>
     public Task<TSaga?> LoadAsync(DbContext context, Guid correlationId, CancellationToken cancellationToken)
     {
         return _executor.LoadAsync(context, correlationId, cancellationToken);
     }
 
-    /// <summary>
-    /// Creates lock context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="query">The query value.</param>
+    /// <summary>Creates a context that defers the filtered tracked query until transaction scope.</summary>
+    /// <param name="context">The DbContext that contains the saga set.</param>
+    /// <param name="query">The saga filter to execute.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The optimistic query context.</returns>
     public async Task<SagaLockContext<TSaga>> CreateLockContextAsync(DbContext context, ISagaQuery<TSaga> query, CancellationToken cancellationToken)
     {
         return new OptimisticSagaLockContext<TSaga>(context, query, cancellationToken, _queryCustomization);

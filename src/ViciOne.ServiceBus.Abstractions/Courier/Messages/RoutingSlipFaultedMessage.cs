@@ -5,27 +5,21 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Courier.Messages;
 
-/// <summary>
-/// Provides a routing slip faulted message implementation.
-/// </summary>
+/// <summary>Carries routing slip faulted message data.</summary>
 public class RoutingSlipFaultedMessage :
     RoutingSlipFaulted
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public RoutingSlipFaultedMessage()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="trackingNumber">The tracking number value.</param>
-    /// <param name="timestamp">The timestamp value.</param>
-    /// <param name="duration">The duration value.</param>
-    /// <param name="activityExceptions">The activity exceptions value.</param>
-    /// <param name="variables">The variables value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="trackingNumber">The tracking number.</param>
+    /// <param name="timestamp">The timestamp.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="activityExceptions">The activity exceptions.</param>
+    /// <param name="variables">The variables.</param>
     public RoutingSlipFaultedMessage(Guid trackingNumber, DateTimeOffset timestamp, TimeSpan duration,
         IEnumerable<ActivityException> activityExceptions, IDictionary<string, object> variables)
     {
@@ -37,13 +31,11 @@ public class RoutingSlipFaultedMessage :
         Variables = variables;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="trackingNumber">The tracking number value.</param>
-    /// <param name="timestamp">The timestamp value.</param>
-    /// <param name="duration">The duration value.</param>
-    /// <param name="activityException">The activity exception value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="trackingNumber">The tracking number.</param>
+    /// <param name="timestamp">The timestamp.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="activityException">The activity exception.</param>
     public RoutingSlipFaultedMessage(Guid trackingNumber, DateTimeOffset timestamp, TimeSpan duration, ActivityException activityException)
     {
         Timestamp = timestamp;
@@ -54,24 +46,14 @@ public class RoutingSlipFaultedMessage :
         Variables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>
-    /// Gets or sets the tracking number value.
-    /// </summary>
+    /// <summary>Gets or sets the tracking number.</summary>
     public Guid TrackingNumber { get; set; }
-    /// <summary>
-    /// Gets or sets the timestamp value.
-    /// </summary>
+    /// <summary>Gets or sets the timestamp.</summary>
     public DateTimeOffset Timestamp { get; set; }
-    /// <summary>
-    /// Gets or sets the duration value.
-    /// </summary>
+    /// <summary>Gets or sets the duration.</summary>
     public TimeSpan Duration { get; set; }
-    /// <summary>
-    /// Gets or sets the activity exceptions value.
-    /// </summary>
+    /// <summary>Gets or sets the activity exceptions.</summary>
     public ActivityException[] ActivityExceptions { get; set; } = null!;
-    /// <summary>
-    /// Gets or sets the variables value.
-    /// </summary>
+    /// <summary>Gets or sets the variables.</summary>
     public IDictionary<string, object> Variables { get; set; } = null!;
 }

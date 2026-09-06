@@ -2,38 +2,30 @@ using System;
 
 namespace ViciOne.ServiceBus.DynamoDb;
 
-/// <summary>
-/// Represents an error related to dynamo db saga concurrency.
-/// </summary>
+/// <summary>Indicates that an Amazon DynamoDB conditional write rejected a conflicting saga insert, update, or delete.</summary>
 public class DynamoDbSagaConcurrencyException :
     ConcurrencyException
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="sagaType">The saga type value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
+    /// <summary>Creates a concurrency exception for the conflicting saga identity.</summary>
+    /// <param name="message">A description of the concurrency conflict.</param>
+    /// <param name="sagaType">The saga state type involved in the conflict.</param>
+    /// <param name="correlationId">The conflicting saga correlation identifier.</param>
     public DynamoDbSagaConcurrencyException(string message, Type sagaType, Guid correlationId)
         : base(message, sagaType, correlationId)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="sagaType">The saga type value.</param>
-    /// <param name="correlationId">The correlation id value.</param>
-    /// <param name="innerException">The inner exception value.</param>
+    /// <summary>Creates a concurrency exception that retains the rejected Amazon DynamoDB operation error.</summary>
+    /// <param name="message">A description of the concurrency conflict.</param>
+    /// <param name="sagaType">The saga state type involved in the conflict.</param>
+    /// <param name="correlationId">The conflicting saga correlation identifier.</param>
+    /// <param name="innerException">The conditional-write exception reported by Amazon DynamoDB.</param>
     public DynamoDbSagaConcurrencyException(string message, Type sagaType, Guid correlationId, Exception innerException)
         : base(message, sagaType, correlationId, innerException)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Creates an empty exception for serializers that require a parameterless constructor.</summary>
     public DynamoDbSagaConcurrencyException()
     {
     }

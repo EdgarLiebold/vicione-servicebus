@@ -6,10 +6,8 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Util;
 
-/// <summary>
-/// Provides a partitioned task executor implementation.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Maps values onto stable bounded worker queues so related work remains ordered.</summary>
+/// <typeparam name="T">The value type used to select a worker partition.</typeparam>
 public sealed class PartitionedTaskExecutor<T> :
     IPartitionedTaskExecutor<T>
 {
@@ -19,14 +17,12 @@ public sealed class PartitionedTaskExecutor<T> :
     readonly Lazy<TaskExecutor>[] _partitions;
     Task? _disposeTask;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="partitionKeyProvider">The partition key provider value.</param>
-    /// <param name="hashGenerator">The hash generator value.</param>
-    /// <param name="partitionCount">The partition count value.</param>
-    /// <param name="concurrentDeliveryLimit">The concurrent delivery limit value.</param>
-    /// <param name="partitionCapacity">The partition capacity value.</param>
+    /// <summary>Creates lazily allocated worker partitions with explicit concurrency and optional capacity limits.</summary>
+    /// <param name="partitionKeyProvider">Extracts the bytes used to select a stable worker partition.</param>
+    /// <param name="hashGenerator">Hashes extracted partition keys.</param>
+    /// <param name="partitionCount">The number of independently scheduled worker partitions.</param>
+    /// <param name="concurrentDeliveryLimit">The maximum concurrent delegates within each worker partition.</param>
+    /// <param name="partitionCapacity">The optional number of delegates that may wait within each worker partition.</param>
     public PartitionedTaskExecutor(PartitionKeyProvider<T> partitionKeyProvider, IHashGenerator hashGenerator, int partitionCount,
         int concurrentDeliveryLimit = 1, int? partitionCapacity = null)
     {
@@ -49,10 +45,8 @@ public sealed class PartitionedTaskExecutor<T> :
             .ToArray();
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Stops new admissions and drains every worker partition that was activated.</summary>
+    /// <returns>A task that completes after all activated partitions stop.</returns>
     public ValueTask DisposeAsync()
     {
         lock (_lifecycleLock)
@@ -66,25 +60,21 @@ public sealed class PartitionedTaskExecutor<T> :
         }
     }
 
-    /// <summary>
-    /// Performs the enqueue operation.
-    /// </summary>
-    /// <param name="partition">The partition value.</param>
-    /// <param name="method">The method value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Transfers a delegate to the bounded queue selected by its partition value.</summary>
+    /// <param name="partition">The value used to select a stable worker partition.</param>
+    /// <param name="method">The delegate whose execution ownership transfers to the selected worker.</param>
+    /// <param name="cancellationToken">Cancels only the queue-admission wait.</param>
+    /// <returns>A task that completes when the selected queue accepts the delegate.</returns>
     public Task EnqueueAsync(T partition, Func<Task> method, CancellationToken cancellationToken = default)
     {
         return GetExecutor(partition).EnqueueAsync(method, cancellationToken);
     }
 
-    /// <summary>
-    /// Performs the execute operation.
-    /// </summary>
-    /// <param name="partition">The partition value.</param>
-    /// <param name="method">The method value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Runs a delegate on the queue selected by its partition value and waits for completion.</summary>
+    /// <param name="partition">The value used to select a stable worker partition.</param>
+    /// <param name="method">The delegate to execute.</param>
+    /// <param name="cancellationToken">Cancels queue admission or execution before the delegate begins.</param>
+    /// <returns>A task that completes with the delegate.</returns>
     public Task ExecuteAsync(T partition, Func<Task> method, CancellationToken cancellationToken = default)
     {
         return GetExecutor(partition).ExecuteAsync(method, cancellationToken);

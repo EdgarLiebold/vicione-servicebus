@@ -2,10 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>
-/// Defines the contract for sql send context.
-/// </summary>
-/// <typeparam name="T">The t type.</typeparam>
+/// <summary>Exposes state for sql send operations.</summary>
+/// <typeparam name="T">The value type.</typeparam>
 public interface SqlSendContext<out T> :
     SqlSendContext,
     SendContext<T>
@@ -14,21 +12,15 @@ public interface SqlSendContext<out T> :
 }
 
 
-/// <summary>
-/// Defines the contract for sql send context.
-/// </summary>
+/// <summary>Exposes state for sql send operations.</summary>
 public interface SqlSendContext :
     SendContext,
     RoutingKeySendContext,
     PartitionKeySendContext
 {
-    /// <summary>
-    /// Gets the transport message id value.
-    /// </summary>
+    /// <summary>Gets the transport message id.</summary>
     Guid TransportMessageId { get; }
 
-    /// <summary>
-    /// Gets or sets the priority value.
-    /// </summary>
+    /// <summary>Gets or sets the priority.</summary>
     public short? Priority { set; }
 }

@@ -5,19 +5,17 @@ using ViciOne.ServiceBus.Mediator;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for mediator configuration.
-/// </summary>
+/// <summary>Provides extension methods for mediator configuration.</summary>
 public static class MediatorConfigurationExtensions
 {
     /// <summary>
     /// Create a mediator, which sends messages to consumers, handlers, and sagas. Messages are dispatched to the consumers asynchronously.
     /// Consumers are not directly coupled to the sender. Can be used entirely in-memory without a broker.
     /// </summary>
-    /// <param name="selector"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <param name="selector">The selector.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The created mediator.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when a required argument is <see langword="null" />.</exception>
     public static IMediator CreateMediator(this IBusFactorySelector selector, Action<IMediatorConfigurator> configure)
     {
         return CreateMediator(selector, null, configure);
@@ -27,24 +25,22 @@ public static class MediatorConfigurationExtensions
     /// Create a mediator, which sends messages to consumers, handlers, and sagas. Messages are dispatched to the consumers asynchronously.
     /// Consumers are not directly coupled to the sender. Can be used entirely in-memory without a broker.
     /// </summary>
-    /// <param name="selector"></param>
-    /// <param name="configure"></param>
-    /// <param name="baseAddress"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <param name="selector">The selector.</param>
+    /// <param name="baseAddress">The base address.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The created mediator.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when a required argument is <see langword="null" />.</exception>
     public static IMediator CreateMediator(this IBusFactorySelector selector, Uri? baseAddress, Action<IMediatorConfigurator> configure)
     {
         return CreateMediator(selector, baseAddress, configure, TimeProvider.System);
     }
 
-    /// <summary>
-    /// Create a mediator using an explicit standard .NET time source for request deadlines.
-    /// </summary>
-    /// <param name="selector"></param>
-    /// <param name="baseAddress"></param>
-    /// <param name="configure"></param>
-    /// <param name="timeProvider"></param>
-    /// <returns></returns>
+    /// <summary>Create a mediator using an explicit standard .NET time source for request deadlines.</summary>
+    /// <param name="selector">The selector.</param>
+    /// <param name="baseAddress">The base address.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <returns>The created mediator.</returns>
     public static IMediator CreateMediator(
         this IBusFactorySelector selector,
         Uri? baseAddress,

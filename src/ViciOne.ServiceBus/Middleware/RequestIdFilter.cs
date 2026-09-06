@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Handles the registration of requests and connecting them to the consume pipe
-/// </summary>
+/// <summary>Handles the registration of requests and connecting them to the consume pipe.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class RequestIdFilter<TMessage> :
     IFilter<ConsumeContext<TMessage>>,
     IKeyPipeConnector<TMessage, Guid>
@@ -15,18 +14,14 @@ public class RequestIdFilter<TMessage> :
 {
     readonly ConcurrentDictionary<Guid, IPipe<ConsumeContext<TMessage>>> _pipes;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public RequestIdFilter()
     {
         _pipes = new ConcurrentDictionary<Guid, IPipe<ConsumeContext<TMessage>>>();
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("key");
@@ -38,12 +33,10 @@ public class RequestIdFilter<TMessage> :
             pipe.Probe(scope);
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <param name="next">The next value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="next">The next pipeline stage to invoke.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
         Guid? key = context.RequestId;
@@ -53,12 +46,10 @@ public class RequestIdFilter<TMessage> :
         await next.SendAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Connects pipe.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="pipe">The pipe value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects pipe.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPipe(Guid key, IPipe<ConsumeContext<TMessage>> pipe)
     {
         if (pipe == null)

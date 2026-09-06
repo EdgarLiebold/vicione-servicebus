@@ -2,33 +2,25 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides extension methods for receive pipe configuration.
-/// </summary>
+/// <summary>Provides extension methods for receive pipe configuration.</summary>
 public static class ReceivePipeConfigurationExtensions
 {
-    /// <summary>
-    /// Use the default _skipped transport for messages that are not consumed
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Use the default _skipped transport for messages that are not consumed.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public static void ConfigureDefaultDeadLetterTransport(this IReceivePipelineConfigurator configurator)
     {
         configurator.ConfigureDeadLetter(x => x.UseFilter(new DeadLetterTransportFilter()));
     }
 
-    /// <summary>
-    /// Messages that are not consumed should be discarded instead of being moved to _skipped queue
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Messages that are not consumed should be discarded instead of being moved to _skipped queue.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public static void DiscardSkippedMessages(this IReceivePipelineConfigurator configurator)
     {
         configurator.ConfigureDeadLetter(x => x.UseFilter(new DiscardDeadLetterFilter()));
     }
 
-    /// <summary>
-    /// Generate a <see cref="ReceiveFault" /> event and move the message to the _error transport.
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Generate a <see cref="ReceiveFault" /> event and move the message to the _error transport.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public static void ConfigureDefaultErrorTransport(this IReceivePipelineConfigurator configurator)
     {
         configurator.ConfigureError(x =>
@@ -42,7 +34,7 @@ public static class ReceivePipeConfigurationExtensions
     /// Messages that fault should be discarded instead of being moved to the _error queue. Fault events
     /// will still be published.
     /// </summary>
-    /// <param name="configurator"></param>
+    /// <param name="configurator">The configurator to update.</param>
     public static void DiscardFaultedMessages(this IReceivePipelineConfigurator configurator)
     {
         configurator.ConfigureError(x =>
@@ -52,10 +44,8 @@ public static class ReceivePipeConfigurationExtensions
         });
     }
 
-    /// <summary>
-    /// Messages that fault should throw exceptions, suppressing the default error queue behavior
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Messages that fault should throw exceptions, suppressing the default error queue behavior.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public static void RethrowFaultedMessages(this IReceivePipelineConfigurator configurator)
     {
         configurator.ConfigureError(x =>
@@ -64,10 +54,8 @@ public static class ReceivePipeConfigurationExtensions
         });
     }
 
-    /// <summary>
-    /// Messages that are not consumed should throw an exception, forcing the default dead letter behavior
-    /// </summary>
-    /// <param name="configurator"></param>
+    /// <summary>Messages that are not consumed should throw an exception, forcing the default dead letter behavior.</summary>
+    /// <param name="configurator">The configurator to update.</param>
     public static void ThrowOnSkippedMessages(this IReceivePipelineConfigurator configurator)
     {
         configurator.ConfigureDeadLetter(x => x.UseFilter(new FaultDeadLetterFilter()));

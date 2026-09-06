@@ -2,17 +2,14 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// Provides extension methods for host connect receive endpoint.
-/// </summary>
+/// <summary>Provides extension methods for host connect receive endpoint.</summary>
 public static class HostConnectReceiveEndpointExtensions
 {
-    /// <summary>
-    /// Connect a response endpoint for the host
-    /// </summary>
-    /// <param name="connector">The host to connect</param>
-    /// <param name="endpointNameFormatter"></param>
-    /// <param name="configureEndpoint">The configuration callback</param>
+    /// <summary>Connect a response endpoint for the host.</summary>
+    /// <param name="connector">The host to connect.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
+    /// <param name="configureEndpoint">The configuration callback.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static HostReceiveEndpointHandle ConnectResponseEndpoint(this IReceiveConnector connector,
         IEndpointNameFormatter? endpointNameFormatter = null,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
@@ -20,11 +17,10 @@ public static class HostConnectReceiveEndpointExtensions
         return connector.ConnectReceiveEndpoint(new ResponseEndpointDefinition(), endpointNameFormatter, configureEndpoint);
     }
 
-    /// <summary>
-    /// Connect an endpoint for the host
-    /// </summary>
-    /// <param name="connector">The host to connect</param>
-    /// <param name="configureEndpoint">The configuration callback</param>
+    /// <summary>Connect an endpoint for the host.</summary>
+    /// <param name="connector">The host to connect.</param>
+    /// <param name="configureEndpoint">The configuration callback.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public static HostReceiveEndpointHandle ConnectReceiveEndpoint(this IReceiveConnector connector,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {

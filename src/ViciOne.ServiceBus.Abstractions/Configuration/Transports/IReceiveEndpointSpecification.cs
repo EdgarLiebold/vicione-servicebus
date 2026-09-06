@@ -2,15 +2,11 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Specification for configuring a receive endpoint
-/// </summary>
+/// <summary>Specification for configuring a receive endpoint.</summary>
 public interface IReceiveEndpointSpecification :
     ISpecification
 {
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="builder">The builder value.</param>
+    /// <summary>Applies the supplied configuration.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
     void Configure(IReceiveEndpointBuilder builder);
 }

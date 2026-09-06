@@ -17,7 +17,10 @@ public sealed class ArtemisTopologyTests
         var formatter = new ArtemisConsumerEndpointQueueNameFormatter();
         var builder = new ReceiveEndpointBrokerTopologyBuilder();
         builder.Queue = builder.CreateQueue(endpointName, durable: true, autoDelete: false);
-        var specification = new ConsumerConsumeTopologySpecification(topicName, formatter);
+        var specification = new ConsumerConsumeTopologySpecification(topicName, formatter)
+        {
+            Selector = "priority = 7",
+        };
 
         specification.Apply(builder);
         BrokerTopology topology = builder.BuildTopologyLayout();
@@ -36,6 +39,8 @@ public sealed class ArtemisTopologyTests
             Assert.Contains("consumer", probe.Results));
         Assert.Equal(topicName, Assert.Contains("source", consumerProbe));
         Assert.DoesNotContain("destination", consumerProbe);
+        Assert.Equal("priority = 7", Assert.Contains("selector", consumerProbe));
+        Assert.DoesNotContain("routingKey", consumerProbe);
         Assert.Equal(consumer.ConsumerName, Assert.Contains("consumerName", consumerProbe));
         Assert.Equal(true, Assert.Contains("isShared", consumerProbe));
     }

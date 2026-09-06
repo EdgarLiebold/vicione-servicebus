@@ -3,22 +3,18 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
-/// <summary>
-/// Provides an exchange entity implementation.
-/// </summary>
+/// <summary>Represents a de-duplicated exchange declaration in a broker topology.</summary>
 public class ExchangeEntity :
     Exchange,
     ExchangeHandle
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="id">The id value.</param>
-    /// <param name="name">The name value.</param>
-    /// <param name="type">The type value.</param>
-    /// <param name="durable">The durable value.</param>
-    /// <param name="autoDelete">The auto delete value.</param>
-    /// <param name="arguments">The arguments value.</param>
+    /// <summary>Creates an exchange entity.</summary>
+    /// <param name="id">The topology-local entity identifier.</param>
+    /// <param name="name">The exchange name.</param>
+    /// <param name="type">The RabbitMQ exchange type.</param>
+    /// <param name="durable">Whether the exchange survives broker restarts.</param>
+    /// <param name="autoDelete">Whether RabbitMQ deletes the exchange when it is no longer used.</param>
+    /// <param name="arguments">The broker-specific declaration arguments.</param>
     public ExchangeEntity(long id, string name, string type, bool durable, bool autoDelete, IDictionary<string, object?> arguments)
     {
         Id = id;
@@ -29,49 +25,29 @@ public class ExchangeEntity :
         ExchangeArguments = arguments ?? new Dictionary<string, object?>();
     }
 
-    /// <summary>
-    /// Gets the name comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that considers only the exchange name.</summary>
     public static IEqualityComparer<ExchangeEntity> NameComparer { get; } = new NameEqualityComparer();
 
-    /// <summary>
-    /// Gets the entity comparer value.
-    /// </summary>
+    /// <summary>Gets a comparer that includes all exchange declaration properties.</summary>
     public static IEqualityComparer<ExchangeEntity> EntityComparer { get; } = new ExchangeEntityEqualityComparer();
 
-    /// <summary>
-    /// Gets the exchange name value.
-    /// </summary>
+    /// <summary>Gets the exchange name.</summary>
     public string ExchangeName { get; }
-    /// <summary>
-    /// Gets the exchange type value.
-    /// </summary>
+    /// <summary>Gets the RabbitMQ exchange type.</summary>
     public string ExchangeType { get; }
-    /// <summary>
-    /// Gets the durable value.
-    /// </summary>
+    /// <summary>Gets whether the exchange survives broker restarts.</summary>
     public bool Durable { get; }
-    /// <summary>
-    /// Gets the auto delete value.
-    /// </summary>
+    /// <summary>Gets whether RabbitMQ deletes the exchange when it is no longer used.</summary>
     public bool AutoDelete { get; }
-    /// <summary>
-    /// Gets the exchange arguments value.
-    /// </summary>
+    /// <summary>Gets the broker-specific declaration arguments.</summary>
     public IDictionary<string, object?> ExchangeArguments { get; }
-    /// <summary>
-    /// Gets the id value.
-    /// </summary>
+    /// <summary>Gets the topology-local entity identifier.</summary>
     public long Id { get; }
-    /// <summary>
-    /// Gets the exchange value.
-    /// </summary>
+    /// <summary>Gets this entity as an exchange declaration.</summary>
     public Exchange Exchange => this;
 
-    /// <summary>
-    /// Returns the string representation of this instance.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the exchange properties for diagnostics.</summary>
+    /// <returns>A diagnostic description of the exchange.</returns>
     public override string ToString()
     {
         return string.Join(", ",

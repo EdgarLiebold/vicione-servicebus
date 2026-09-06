@@ -2,33 +2,25 @@ using System;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>
-/// Represents an error related to active mq transport.
-/// </summary>
+/// <summary>Represents an ActiveMQ transport failure.</summary>
 public class ActiveMqTransportException :
     ViciOneServiceBusException
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Creates an ActiveMQ transport exception.</summary>
     public ActiveMqTransportException()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
+    /// <summary>Creates an ActiveMQ transport exception with an error message.</summary>
+    /// <param name="message">The transport error message.</param>
     public ActiveMqTransportException(string message)
         : base(message)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="message">The message value.</param>
-    /// <param name="innerException">The inner exception value.</param>
+    /// <summary>Creates an ActiveMQ transport exception with an underlying failure.</summary>
+    /// <param name="message">The transport error message.</param>
+    /// <param name="innerException">The underlying transport failure.</param>
     public ActiveMqTransportException(string message, Exception innerException)
         : base(message, innerException)
     {

@@ -1,8 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for rider factory configurator.
-/// </summary>
+/// <summary>Configures rider factory.</summary>
 public interface IRiderFactoryConfigurator :
     IReceiveEndpointObserverConnector
 {

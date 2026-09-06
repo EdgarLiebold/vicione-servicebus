@@ -1,29 +1,23 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an execute activity endpoint definition implementation.
-/// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
-/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <summary>Defines configuration for execute activity endpoint.</summary>
+/// <typeparam name="TActivity">The activity type.</typeparam>
+/// <typeparam name="TArguments">The arguments type.</typeparam>
 public class ExecuteActivityEndpointDefinition<TActivity, TArguments> :
     SettingsEndpointDefinition<IExecuteActivity<TArguments>>
     where TActivity : class, IExecuteActivity<TArguments>
     where TArguments : class
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="settings">The settings value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="settings">The settings that control the operation.</param>
     public ExecuteActivityEndpointDefinition(IEndpointSettings<IEndpointDefinition<IExecuteActivity<TArguments>>> settings)
         : base(settings)
     {
     }
 
-    /// <summary>
-    /// Performs the format endpoint name operation.
-    /// </summary>
-    /// <param name="formatter">The formatter value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats endpoint name.</summary>
+    /// <param name="formatter">The formatter.</param>
+    /// <returns>The formatted endpoint name.</returns>
     protected override string FormatEndpointName(IEndpointNameFormatter formatter)
     {
         return formatter.ExecuteActivity<TActivity, TArguments>();

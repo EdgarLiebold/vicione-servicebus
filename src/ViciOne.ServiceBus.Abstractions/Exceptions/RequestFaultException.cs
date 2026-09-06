@@ -3,17 +3,13 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>
-/// Represents an error related to request fault.
-/// </summary>
+/// <summary>Represents an error related to request fault.</summary>
 public class RequestFaultException :
     RequestException
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="requestType">The request type value.</param>
-    /// <param name="fault">The fault value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="requestType">The runtime request type used by the operation.</param>
+    /// <param name="fault">The fault.</param>
     public RequestFaultException(string requestType, Fault fault)
         : base($"The {requestType} request faulted: {string.Join(Environment.NewLine, fault.Exceptions?.Select(x => x.Message) ?? [])}")
     {
@@ -21,19 +17,13 @@ public class RequestFaultException :
         Fault = fault;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public RequestFaultException()
     {
     }
 
-    /// <summary>
-    /// Gets or sets the request type value.
-    /// </summary>
+    /// <summary>Gets or sets the request type.</summary>
     public string? RequestType { get; private set; }
-    /// <summary>
-    /// Gets or sets the fault value.
-    /// </summary>
+    /// <summary>Gets or sets the fault.</summary>
     public Fault? Fault { get; private set; }
 }

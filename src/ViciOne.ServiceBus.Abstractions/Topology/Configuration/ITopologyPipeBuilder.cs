@@ -5,14 +5,14 @@ namespace ViciOne.ServiceBus.Configuration;
 /// is either delegated (called from a sub-specification) or implemented (being called
 /// when the actual type is a subtype and this is an implemented type).
 /// </summary>
-/// <typeparam name="T">The pipe context type</typeparam>
+/// <typeparam name="T">The pipe context type.</typeparam>
 public interface ITopologyPipeBuilder<T> :
     IPipeBuilder<T>
     where T : class, PipeContext
 {
     /// <summary>
     /// If true, this is a delegated builder, and implemented message types
-    /// and/or topology items should not be applied
+    /// and/or topology items should not be applied.
     /// </summary>
     bool IsDelegated { get; }
 
@@ -22,9 +22,7 @@ public interface ITopologyPipeBuilder<T> :
     /// </summary>
     bool IsImplemented { get; }
 
-    /// <summary>
-    /// Creates a new builder where the Delegated flag is true
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>Creates a new builder where the Delegated flag is true.</summary>
+    /// <returns>The created delegated builder.</returns>
     ITopologyPipeBuilder<T> CreateDelegatedBuilder();
 }

@@ -10,9 +10,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>
-/// Provides a rabbit mq receive endpoint configuration implementation.
-/// </summary>
+/// <summary>Stores RabbitMQ receive, topology, channel, and connection pipeline configuration.</summary>
 public class RabbitMqReceiveEndpointConfiguration :
     ReceiveEndpointConfiguration,
     IRabbitMqReceiveEndpointConfiguration,
@@ -26,12 +24,10 @@ public class RabbitMqReceiveEndpointConfiguration :
     readonly List<RabbitMqQueueRedeliveryPlan> _queueRedeliveryPlans = new();
     readonly RabbitMqReceiveSettings _settings;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="settings">The settings value.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
+    /// <summary>Creates a receive-endpoint configuration from host, queue, and provider-neutral settings.</summary>
+    /// <param name="hostConfiguration">The owning RabbitMQ host configuration.</param>
+    /// <param name="settings">The RabbitMQ receive and queue settings.</param>
+    /// <param name="endpointConfiguration">The provider-neutral endpoint configuration.</param>
     public RabbitMqReceiveEndpointConfiguration(IRabbitMqHostConfiguration hostConfiguration, RabbitMqReceiveSettings settings,
         IRabbitMqEndpointConfiguration endpointConfiguration)
         : base(hostConfiguration, endpointConfiguration)
@@ -54,24 +50,16 @@ public class RabbitMqReceiveEndpointConfiguration :
         }
     }
 
-    /// <summary>
-    /// Gets the settings value.
-    /// </summary>
+    /// <summary>Gets the effective RabbitMQ receive settings.</summary>
     public ReceiveSettings Settings => _settings;
 
-    /// <summary>
-    /// Gets the host address value.
-    /// </summary>
+    /// <summary>Gets the RabbitMQ host and virtual-host address.</summary>
     public override Uri HostAddress => _hostConfiguration.HostAddress;
-    /// <summary>
-    /// Gets the input address value.
-    /// </summary>
+    /// <summary>Gets the normalized receive endpoint address.</summary>
     public override Uri InputAddress => _inputAddress.Value;
 
-    /// <summary>
-    /// Creates receive endpoint context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates the runtime context and broker topology for this endpoint.</summary>
+    /// <returns>The RabbitMQ receive-endpoint context.</returns>
     public override ReceiveEndpointContext CreateReceiveEndpointContext()
     {
         return CreateRabbitMqReceiveEndpointContext();
@@ -79,10 +67,8 @@ public class RabbitMqReceiveEndpointConfiguration :
 
     IRabbitMqTopologyConfiguration IRabbitMqEndpointConfiguration.Topology => _endpointConfiguration.Topology;
 
-    /// <summary>
-    /// Performs the build operation.
-    /// </summary>
-    /// <param name="host">The host value.</param>
+    /// <summary>Builds the channel pipeline and attaches the receive endpoint to a host.</summary>
+    /// <param name="host">The host that owns the receive endpoint.</param>
     public void Build(IHost host)
     {
         var context = CreateRabbitMqReceiveEndpointContext();
@@ -137,10 +123,8 @@ public class RabbitMqReceiveEndpointConfiguration :
         return plan;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the queue name, reports destructive startup purge, and includes base endpoint validation.</summary>
+    /// <returns>All RabbitMQ receive-endpoint validation results.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         var queueName = $"{_settings.QueueName}";
@@ -155,9 +139,7 @@ public class RabbitMqReceiveEndpointConfiguration :
             yield return result.WithParentKey(queueName);
     }
 
-    /// <summary>
-    /// Gets or sets the durable value.
-    /// </summary>
+    /// <summary>Sets whether endpoint topology survives broker restarts.</summary>
     public bool Durable
     {
         set
@@ -168,9 +150,7 @@ public class RabbitMqReceiveEndpointConfiguration :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the exclusive value.
-    /// </summary>
+    /// <summary>Sets whether the queue is exclusive to its declaring connection.</summary>
     public bool Exclusive
     {
         set
@@ -181,9 +161,7 @@ public class RabbitMqReceiveEndpointConfiguration :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the auto delete value.
-    /// </summary>
+    /// <summary>Sets whether RabbitMQ deletes endpoint topology when unused.</summary>
     public bool AutoDelete
     {
         set
@@ -194,42 +172,32 @@ public class RabbitMqReceiveEndpointConfiguration :
         }
     }
 
-    /// <summary>
-    /// Gets or sets the exchange type value.
-    /// </summary>
+    /// <summary>Sets the endpoint exchange type.</summary>
     public string ExchangeType
     {
         set => _settings.ExchangeType = value;
     }
 
-    /// <summary>
-    /// Gets or sets the purge on startup value.
-    /// </summary>
+    /// <summary>Sets whether the endpoint queue is purged on first startup.</summary>
     public bool PurgeOnStartup
     {
         set => _settings.PurgeOnStartup = value;
     }
 
-    /// <summary>
-    /// Gets or sets the consumer priority value.
-    /// </summary>
+    /// <summary>Sets the RabbitMQ consumer priority.</summary>
     public int ConsumerPriority
     {
         set => _settings.ConsumerPriority = value;
     }
 
-    /// <summary>
-    /// Gets or sets the exclusive consumer value.
-    /// </summary>
+    /// <summary>Sets whether the broker permits only this endpoint consumer on the queue.</summary>
     public bool ExclusiveConsumer
     {
         set => _settings.ExclusiveConsumer = value;
     }
 
-    /// <summary>
-    /// Performs the stream operation.
-    /// </summary>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Configures the endpoint queue as a RabbitMQ stream.</summary>
+    /// <param name="callback">An optional callback that configures retention and consumer offset.</param>
     public void Stream(Action<IRabbitMqStreamConfigurator>? callback = null)
     {
         _settings.QueueArguments[RabbitMQ.Client.Headers.XQueueType] = "stream";
@@ -239,11 +207,9 @@ public class RabbitMqReceiveEndpointConfiguration :
         callback?.Invoke(configurator);
     }
 
-    /// <summary>
-    /// Performs the stream operation.
-    /// </summary>
-    /// <param name="consumerTag">The consumer tag value.</param>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Configures the endpoint queue as a RabbitMQ stream with an explicit consumer tag.</summary>
+    /// <param name="consumerTag">The stable stream consumer tag.</param>
+    /// <param name="callback">An optional callback that configures retention and consumer offset.</param>
     public void Stream(string consumerTag, Action<IRabbitMqStreamConfigurator>? callback = null)
     {
         if (string.IsNullOrWhiteSpace(consumerTag))
@@ -254,108 +220,84 @@ public class RabbitMqReceiveEndpointConfiguration :
         Stream(callback);
     }
 
-    /// <summary>
-    /// Gets or sets the lazy value.
-    /// </summary>
+    /// <summary>Sets RabbitMQ queue mode to <c>lazy</c> or <c>default</c>.</summary>
     public bool Lazy
     {
         set => _settings.Lazy = value;
     }
 
-    /// <summary>
-    /// Gets or sets the bind queue value.
-    /// </summary>
+    /// <summary>Sets whether deployment includes the endpoint queue and its exchange binding.</summary>
     public bool BindQueue
     {
         set => _settings.BindQueue = value;
     }
 
-    /// <summary>
-    /// Gets or sets the queue expiration value.
-    /// </summary>
+    /// <summary>Sets how long an unused endpoint queue may remain before RabbitMQ deletes it.</summary>
     public TimeSpan? QueueExpiration
     {
         set => _settings.QueueExpiration = value;
     }
 
-    /// <summary>
-    /// Gets or sets the single active consumer value.
-    /// </summary>
+    /// <summary>Sets or removes RabbitMQ single-active-consumer behavior.</summary>
     public bool SingleActiveConsumer
     {
         set => _settings.SingleActiveConsumer = value;
     }
 
-    /// <summary>
-    /// Gets or sets the dead letter exchange value.
-    /// </summary>
+    /// <summary>Sets the exchange that receives expired or rejected queue messages.</summary>
     public string DeadLetterExchange
     {
         set => SetQueueArgument(RabbitMQ.Client.Headers.XDeadLetterExchange, value);
     }
 
-    /// <summary>
-    /// Sets queue argument.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets or removes a queue declaration argument.</summary>
+    /// <param name="key">The RabbitMQ queue-argument key.</param>
+    /// <param name="value">The argument value, or <see langword="null" /> to remove it.</param>
     public void SetQueueArgument(string key, object? value)
     {
         _settings.SetQueueArgument(key, value);
     }
 
-    /// <summary>
-    /// Sets queue argument.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets a queue declaration argument from a duration converted to milliseconds.</summary>
+    /// <param name="key">The RabbitMQ queue-argument key.</param>
+    /// <param name="value">The duration to convert.</param>
     public void SetQueueArgument(string key, TimeSpan value)
     {
         _settings.SetQueueArgument(key, value);
     }
 
-    /// <summary>
-    /// Sets exchange argument.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets or removes an exchange declaration argument.</summary>
+    /// <param name="key">The RabbitMQ exchange-argument key.</param>
+    /// <param name="value">The argument value, or <see langword="null" /> to remove it.</param>
     public void SetExchangeArgument(string key, object? value)
     {
         _settings.SetExchangeArgument(key, value);
     }
 
-    /// <summary>
-    /// Sets exchange argument.
-    /// </summary>
-    /// <param name="key">The key value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Sets an exchange declaration argument from a duration converted to milliseconds.</summary>
+    /// <param name="key">The RabbitMQ exchange-argument key.</param>
+    /// <param name="value">The duration to convert.</param>
     public void SetExchangeArgument(string key, TimeSpan value)
     {
         _settings.SetExchangeArgument(key, value);
     }
 
-    /// <summary>
-    /// Performs the enable priority operation.
-    /// </summary>
-    /// <param name="maxPriority">The max priority value.</param>
+    /// <summary>Enables priority delivery on the endpoint queue.</summary>
+    /// <param name="maxPriority">The highest accepted message priority.</param>
     public void EnablePriority(byte maxPriority)
     {
         _settings.EnablePriority(maxPriority);
     }
 
-    /// <summary>
-    /// Sets quorum queue.
-    /// </summary>
-    /// <param name="replicationFactor">The replication factor value.</param>
+    /// <summary>Configures the endpoint as a RabbitMQ quorum queue.</summary>
+    /// <param name="replicationFactor">The optional initial quorum-group size.</param>
     public void SetQuorumQueue(int? replicationFactor = default)
     {
         _settings.SetQuorumQueue(replicationFactor);
     }
 
-    /// <summary>
-    /// Sets delivery acknowledgement timeout.
-    /// </summary>
-    /// <param name="timeSpan">The time span value.</param>
+    /// <summary>Sets the queue's RabbitMQ consumer acknowledgement timeout.</summary>
+    /// <param name="timeSpan">The positive acknowledgement timeout.</param>
     public void SetDeliveryAcknowledgementTimeout(TimeSpan timeSpan)
     {
         if (timeSpan <= TimeSpan.Zero)
@@ -364,14 +306,12 @@ public class RabbitMqReceiveEndpointConfiguration :
         SetQueueArgument("x-consumer-timeout", (long)timeSpan.TotalMilliseconds);
     }
 
-    /// <summary>
-    /// Sets delivery acknowledgement timeout.
-    /// </summary>
-    /// <param name="d">The d value.</param>
-    /// <param name="h">The h value.</param>
-    /// <param name="m">The m value.</param>
-    /// <param name="s">The s value.</param>
-    /// <param name="ms">The ms value.</param>
+    /// <summary>Sets the queue's RabbitMQ consumer acknowledgement timeout from duration components.</summary>
+    /// <param name="d">Days.</param>
+    /// <param name="h">Hours.</param>
+    /// <param name="m">Minutes.</param>
+    /// <param name="s">Seconds.</param>
+    /// <param name="ms">Milliseconds.</param>
     public void SetDeliveryAcknowledgementTimeout(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null)
     {
         var value = new TimeSpan(d ?? 0, h ?? 0, m ?? 0, s ?? 0, ms ?? 0);
@@ -379,11 +319,9 @@ public class RabbitMqReceiveEndpointConfiguration :
         SetDeliveryAcknowledgementTimeout(value);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Binds an exchange to the receive endpoint exchange.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="callback">An optional callback that customizes the exchange and binding.</param>
     public void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator>? callback)
     {
         if (exchangeName == null)
@@ -392,23 +330,19 @@ public class RabbitMqReceiveEndpointConfiguration :
         _endpointConfiguration.Topology.Consume.Bind(exchangeName, callback);
     }
 
-    /// <summary>
-    /// Performs the bind operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="callback">The callback value.</param>
+    /// <summary>Binds a message contract's publish exchange to the receive endpoint.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="callback">An optional callback that customizes the exchange binding.</param>
     public void Bind<T>(Action<IRabbitMqExchangeBindingConfigurator>? callback)
         where T : class
     {
         _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Bind(callback);
     }
 
-    /// <summary>
-    /// Performs the bind dead letter queue operation.
-    /// </summary>
-    /// <param name="exchangeName">The exchange name value.</param>
-    /// <param name="queueName">The queue name value.</param>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Declares a dead-letter exchange and queue and assigns the exchange to this endpoint queue.</summary>
+    /// <param name="exchangeName">The exchange name.</param>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configure">An optional callback that customizes the dead-letter topology.</param>
     public void BindDeadLetterQueue(string exchangeName, string? queueName, Action<IRabbitMqQueueBindingConfigurator>? configure)
     {
         _endpointConfiguration.Topology.Consume.BindQueue(exchangeName, queueName ?? exchangeName, configure);
@@ -416,28 +350,22 @@ public class RabbitMqReceiveEndpointConfiguration :
         DeadLetterExchange = exchangeName;
     }
 
-    /// <summary>
-    /// Configures channel.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Adds middleware to the RabbitMQ channel pipeline.</summary>
+    /// <param name="configure">The channel-pipeline configuration callback.</param>
     public void ConfigureChannel(Action<IPipeConfigurator<ChannelContext>> configure)
     {
         configure?.Invoke(_channelConfigurator);
     }
 
-    /// <summary>
-    /// Configures connection.
-    /// </summary>
-    /// <param name="configure">The configuration callback.</param>
+    /// <summary>Adds middleware to the RabbitMQ connection pipeline.</summary>
+    /// <param name="configure">The connection-pipeline configuration callback.</param>
     public void ConfigureConnection(Action<IPipeConfigurator<ConnectionContext>> configure)
     {
         configure?.Invoke(_connectionConfigurator);
     }
 
-    /// <summary>
-    /// Performs the override consumer tag operation.
-    /// </summary>
-    /// <param name="consumerTag">The consumer tag value.</param>
+    /// <summary>Overrides the broker-generated consumer tag.</summary>
+    /// <param name="consumerTag">The explicit RabbitMQ consumer tag.</param>
     public void OverrideConsumerTag(string consumerTag)
     {
         _settings.ConsumerTag = consumerTag;
@@ -457,10 +385,8 @@ public class RabbitMqReceiveEndpointConfiguration :
         return _settings.GetInputAddress(_hostConfiguration.HostAddress);
     }
 
-    /// <summary>
-    /// Determines whether already configured.
-    /// </summary>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether address evaluation or base configuration has frozen the endpoint.</summary>
+    /// <returns><see langword="true" /> when the endpoint can no longer be changed.</returns>
     protected override bool IsAlreadyConfigured()
     {
         return _inputAddress.IsValueCreated || base.IsAlreadyConfigured();

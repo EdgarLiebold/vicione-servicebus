@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 /// A saga registration represents a single saga, which will use the container for the scope provider, as well as
 /// to resolve the saga repository.
 /// </summary>
-/// <typeparam name="TSaga">The saga type</typeparam>
+/// <typeparam name="TSaga">The saga type.</typeparam>
 public class SagaRegistration<TSaga> :
     ISagaRegistration
     where TSaga : class, ISaga
@@ -20,10 +20,8 @@ public class SagaRegistration<TSaga> :
     readonly IContainerSelector _selector;
     ISagaDefinition<TSaga> _definition = null!;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="selector">The selector value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="selector">The selector.</param>
     public SagaRegistration(IContainerSelector selector)
     {
         _selector = selector;
@@ -31,17 +29,13 @@ public class SagaRegistration<TSaga> :
         IncludeInConfigureEndpoints = !Type.HasAttribute<ExcludeFromConfigureEndpointsAttribute>();
     }
 
-    /// <summary>
-    /// Gets the type value.
-    /// </summary>
+    /// <summary>Gets the type.</summary>
     public Type Type => typeof(TSaga);
 
     /// <inheritdoc />
     public Type? StateMachineType => null;
 
-    /// <summary>
-    /// Gets or sets the include in configure endpoints value.
-    /// </summary>
+    /// <summary>Gets or sets the include in configure endpoints.</summary>
     public bool IncludeInConfigureEndpoints { get; set; }
 
     void ISagaRegistration.AddConfigureAction<T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure)

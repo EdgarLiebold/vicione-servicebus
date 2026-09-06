@@ -7,22 +7,13 @@ using Amazon.SimpleNotificationService.Model;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
 
-/// <summary>
-/// Provides a publish batcher implementation.
-/// </summary>
-public class PublishBatcher :
+class PublishBatcher :
     Batcher<PublishBatchRequestEntry>
 {
     readonly CancellationToken _cancellationToken;
     readonly IAmazonSimpleNotificationService _client;
     readonly string _topicArn;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="client">The client value.</param>
-    /// <param name="topicArn">The topic arn value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public PublishBatcher(IAmazonSimpleNotificationService client, string topicArn, CancellationToken cancellationToken)
         : base(PublishBatchSettings.GetBatchSettings())
     {
@@ -31,28 +22,12 @@ public class PublishBatcher :
         _cancellationToken = cancellationToken;
     }
 
-    /// <summary>
-    /// Performs the calculate entry length operation.
-    /// </summary>
-    /// <param name="entry">The entry value.</param>
-    /// <param name="entryId">The entry id value.</param>
-    /// <returns>The result of the operation.</returns>
-    protected override int CalculateEntryLength(PublishBatchRequestEntry entry, string entryId)
-    {
-        entry.Id = entryId;
+    protected override void AssignEntryId(PublishBatchRequestEntry entry, string entryId) => entry.Id = entryId;
 
-        var encoding = MessageDefaults.Encoding;
+    protected override int CalculateEntryLength(PublishBatchRequestEntry entry) =>
+        MessageDefaults.Encoding.GetByteCount(entry.Message)
+        + AmazonMessageAttributeSizeCalculator.Calculate(entry.MessageAttributes);
 
-        return encoding.GetByteCount(entry.Message)
-            + (entry.MessageAttributes?.Where(x => x.Value.DataType == "String")
-                .Sum(x => encoding.GetByteCount(x.Key) + encoding.GetByteCount(x.Value.StringValue))).GetValueOrDefault();
-    }
-
-    /// <summary>
-    /// Sends batch.
-    /// </summary>
-    /// <param name="batch">The batch value.</param>
-    /// <returns>The result of the operation.</returns>
     protected override async Task SendBatchAsync(IList<BatchEntry<PublishBatchRequestEntry>> batch)
     {
         var batchRequest = new PublishBatchRequest

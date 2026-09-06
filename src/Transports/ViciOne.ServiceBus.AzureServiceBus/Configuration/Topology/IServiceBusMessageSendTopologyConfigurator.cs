@@ -1,9 +1,7 @@
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>
-/// Defines the contract for service bus message send topology configurator.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures Azure Service Bus send conventions for a message contract.</summary>
+/// <typeparam name="TMessage">The sent message contract.</typeparam>
 public interface IServiceBusMessageSendTopologyConfigurator<TMessage> :
     IMessageSendTopologyConfigurator<TMessage>,
     IServiceBusMessageSendTopology<TMessage>,
@@ -13,9 +11,7 @@ public interface IServiceBusMessageSendTopologyConfigurator<TMessage> :
 }
 
 
-/// <summary>
-/// Defines the contract for service bus message send topology configurator.
-/// </summary>
+/// <summary>Configures runtime-typed Azure Service Bus send conventions.</summary>
 public interface IServiceBusMessageSendTopologyConfigurator :
     IMessageSendTopologyConfigurator
 {

@@ -7,10 +7,8 @@ using ViciOne.ServiceBus.JobService.Scheduling;
 
 namespace ViciOne.ServiceBus.JobService;
 
-/// <summary>
-/// Handles the <see cref="SubmitJob{TJob}" /> command
-/// </summary>
-/// <typeparam name="TJob">The job type</typeparam>
+/// <summary>Handles the <see cref="SubmitJob{TJob}" /> command.</summary>
+/// <typeparam name="TJob">The job type.</typeparam>
 public class SubmitJobConsumer<TJob> :
     IConsumer<TJob>,
     IConsumer<SubmitJob<TJob>>
@@ -19,22 +17,18 @@ public class SubmitJobConsumer<TJob> :
     readonly Guid _jobTypeId;
     readonly JobOptions<TJob> _options;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="options">The options value.</param>
-    /// <param name="jobTypeId">The job type id value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="jobTypeId">The job type id.</param>
     public SubmitJobConsumer(JobOptions<TJob> options, Guid jobTypeId)
     {
         _options = options;
         _jobTypeId = jobTypeId;
     }
 
-    /// <summary>
-    /// Consumes the message provided by the context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Consumes the message provided by the context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ConsumeAsync(ConsumeContext<SubmitJob<TJob>> context)
     {
         if (context.Message.Schedule != null)
@@ -50,11 +44,9 @@ public class SubmitJobConsumer<TJob> :
             context.Message.Properties);
     }
 
-    /// <summary>
-    /// Consumes the message provided by the context.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Consumes the message provided by the context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ConsumeAsync(ConsumeContext<TJob> context)
     {
         var jobId = context.RequestId ?? NewId.NextGuid();

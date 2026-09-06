@@ -5,18 +5,14 @@ using ViciOne.ServiceBus.AzureServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>
-/// Provides a service bus topic configurator implementation.
-/// </summary>
+/// <summary>Builds and validates the Azure Service Bus creation options for a topic.</summary>
 public class ServiceBusTopicConfigurator :
     ServiceBusMessageEntityConfigurator,
     IServiceBusTopicConfigurator
 {
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="topicPath">The topic path value.</param>
-    /// <param name="temporary">The temporary value.</param>
+    /// <summary>Initializes a topic and applies the temporary-entity idle timeout when requested.</summary>
+    /// <param name="topicPath">The topic path.</param>
+    /// <param name="temporary">Whether the topic should use the transport's temporary-entity lifetime.</param>
     public ServiceBusTopicConfigurator(string topicPath, bool temporary)
         : base(topicPath)
     {
@@ -24,10 +20,8 @@ public class ServiceBusTopicConfigurator :
             AutoDeleteOnIdle = Defaults.TemporaryAutoDeleteOnIdle;
     }
 
-    /// <summary>
-    /// Validates the current configuration.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Validates the topic path and Azure Service Bus idle-deletion constraint.</summary>
+    /// <returns>The topic configuration failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (!ServiceBusEntityNameValidator.Validator.IsValidEntityName(Path))
@@ -37,15 +31,11 @@ public class ServiceBusTopicConfigurator :
             yield return this.Failure("AutoDeleteOnIdle", "must be zero, or >= 5:00");
     }
 
-    /// <summary>
-    /// Gets or sets the support ordering value.
-    /// </summary>
+    /// <summary>Gets or sets whether the topic supports ordered message processing.</summary>
     public bool? SupportOrdering { get; set; }
 
-    /// <summary>
-    /// Gets create topic options.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Projects the configured values into Azure SDK topic-creation options.</summary>
+    /// <returns>The SDK options for creating or comparing the topic.</returns>
     public CreateTopicOptions GetCreateTopicOptions()
     {
         var options = new CreateTopicOptions(FullPath);

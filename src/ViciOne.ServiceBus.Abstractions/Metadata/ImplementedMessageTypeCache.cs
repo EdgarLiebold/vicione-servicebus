@@ -5,10 +5,8 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>
-/// Provides an implemented message type cache implementation.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Caches implemented message type data.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class ImplementedMessageTypeCache<TMessage> :
     IImplementedMessageTypeCache<TMessage>
     where TMessage : class
@@ -33,10 +31,8 @@ public class ImplementedMessageTypeCache<TMessage> :
         }
     }
 
-    /// <summary>
-    /// Enumerate the implemented message types
-    /// </summary>
-    /// <param name="implementedMessageType">The interface reference to invoke for each type</param>
+    /// <summary>Enumerate the implemented message types.</summary>
+    /// <param name="implementedMessageType">The interface reference to invoke for each type.</param>
     public static void EnumerateImplementedTypes(IImplementedMessageType implementedMessageType)
     {
         Cached.Instance.Value.EnumerateImplementedTypes(implementedMessageType);
@@ -59,6 +55,8 @@ public class ImplementedMessageTypeCache<TMessage> :
     /// the base class intentionally remain direct topology edges: an excluded base-class
     /// topology must not hide an independently valid message contract.
     /// </summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <returns>The direct topology types.</returns>
     static IEnumerable<Type> GetDirectTopologyTypes(Type messageType)
     {
         if (messageType.TryGetSingleClosedGenericArguments(typeof(Fault<>), out Type[] arguments))
@@ -104,14 +102,10 @@ public class ImplementedMessageTypeCache<TMessage> :
 
     struct ImplementedType
     {
-        /// <summary>
-        /// The implemented type
-        /// </summary>
+        /// <summary>The implemented type.</summary>
         public readonly Type Type;
 
-        /// <summary>
-        /// True if the interface is directly implemented by the type
-        /// </summary>
+        /// <summary>True if the interface is directly implemented by the type.</summary>
         public readonly bool Direct;
 
         public ImplementedType(Type type, bool direct)

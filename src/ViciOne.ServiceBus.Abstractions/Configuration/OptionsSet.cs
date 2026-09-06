@@ -4,28 +4,22 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides an options set implementation.
-/// </summary>
+/// <summary>Stores a unique set of options values.</summary>
 public class OptionsSet :
     IOptionsSet
 {
     readonly IDictionary<Type, IOptions> _options;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     public OptionsSet()
     {
         _options = new Dictionary<Type, IOptions>();
     }
 
-    /// <summary>
-    /// Configure the options, adding the option type if it is not present
-    /// </summary>
-    /// <param name="configure"></param>
-    /// <typeparam name="T">The option type</typeparam>
-    /// <returns></returns>
+    /// <summary>Configure the options, adding the option type if it is not present.</summary>
+    /// <typeparam name="T">The option type.</typeparam>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The t produced by the operation.</returns>
     public T Options<T>(Action<T>? configure = null)
         where T : IOptions, new()
     {
@@ -49,13 +43,11 @@ public class OptionsSet :
         }
     }
 
-    /// <summary>
-    /// Configure the options, adding the option type if it is not present
-    /// </summary>
-    /// <param name="options"></param>
-    /// <param name="configure"></param>
-    /// <typeparam name="T">The option type</typeparam>
-    /// <returns></returns>
+    /// <summary>Configure the options, adding the option type if it is not present.</summary>
+    /// <typeparam name="T">The option type.</typeparam>
+    /// <param name="options">The options that control the operation.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The t produced by the operation.</returns>
     public T Options<T>(T options, Action<T>? configure = null)
         where T : IOptions
     {
@@ -71,11 +63,10 @@ public class OptionsSet :
         return options;
     }
 
-    /// <summary>
-    /// Return the options, if present
-    /// </summary>
-    /// <param name="options"></param>
-    /// <typeparam name="T">The option type</typeparam>
+    /// <summary>Return the options, if present.</summary>
+    /// <typeparam name="T">The option type.</typeparam>
+    /// <param name="options">Receives the options produced by the operation.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetOptions<T>(out T options)
         where T : IOptions
     {
@@ -94,11 +85,9 @@ public class OptionsSet :
         return false;
     }
 
-    /// <summary>
-    /// Enumerate the options which are assignable to the specified type
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <summary>Enumerate the options which are assignable to the specified type.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The selected options.</returns>
     public IEnumerable<T> SelectOptions<T>()
         where T : class
     {
@@ -109,9 +98,8 @@ public class OptionsSet :
         }
     }
 
-    /// <summary>
-    /// Enumerate the options which are assignable to the specified type
-    /// </summary>
+    /// <summary>Enumerate the options which are assignable to the specified type.</summary>
+    /// <returns>The enumerable produced by the operation.</returns>
     protected IEnumerable<ValidationResult> ValidateOptions()
     {
         return SelectOptions<ISpecification>().SelectMany(specification => specification.Validate());

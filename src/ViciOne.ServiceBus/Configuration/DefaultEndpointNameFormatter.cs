@@ -21,42 +21,34 @@ public class DefaultEndpointNameFormatter :
 
     static readonly Regex _nonAlpha = new Regex("[^a-zA-Z0-9]", RegexOptions.Compiled | RegexOptions.Singleline);
 
-    /// <summary>
-    /// Default endpoint name formatter.
-    /// </summary>
-    /// <param name="includeNamespace">If true, the namespace is included in the name</param>
+    /// <summary>Default endpoint name formatter.</summary>
+    /// <param name="includeNamespace">If true, the namespace is included in the name.</param>
     public DefaultEndpointNameFormatter(bool includeNamespace)
     {
         IncludeNamespace = includeNamespace;
     }
 
-    /// <summary>
-    /// Default endpoint name formatter with prefix.
-    /// </summary>
-    /// <param name="prefix">Prefix to start the name, should match the casing of the formatter (such as Dev or PreProd)</param>
-    /// <param name="includeNamespace">If true, the namespace is included in the name</param>
+    /// <summary>Default endpoint name formatter with prefix.</summary>
+    /// <param name="prefix">Prefix to start the name, should match the casing of the formatter (such as Dev or PreProd).</param>
+    /// <param name="includeNamespace">If true, the namespace is included in the name.</param>
     public DefaultEndpointNameFormatter(string? prefix, bool includeNamespace)
     {
         Prefix = prefix;
         IncludeNamespace = includeNamespace;
     }
 
-    /// <summary>
-    /// Default endpoint name formatter with prefix.
-    /// </summary>
-    /// <param name="prefix">Prefix to start the name, should match the casing of the formatter (such as Dev or PreProd)</param>
+    /// <summary>Default endpoint name formatter with prefix.</summary>
+    /// <param name="prefix">Prefix to start the name, should match the casing of the formatter (such as Dev or PreProd).</param>
     public DefaultEndpointNameFormatter(string prefix)
     {
         Prefix = prefix;
         IncludeNamespace = false;
     }
 
-    /// <summary>
-    /// Default endpoint name formatter with join separator and prefix.
-    /// </summary>
-    /// <param name="joinSeparator">Define the join separator between the words</param>
-    /// <param name="prefix">Prefix to start the name, should match the casing of the formatter (such as Dev or PreProd)</param>
-    /// <param name="includeNamespace">If true, the namespace is included in the name</param>
+    /// <summary>Default endpoint name formatter with join separator and prefix.</summary>
+    /// <param name="joinSeparator">Define the join separator between the words.</param>
+    /// <param name="prefix">Prefix to start the name, should match the casing of the formatter (such as Dev or PreProd).</param>
+    /// <param name="includeNamespace">If true, the namespace is included in the name.</param>
     public DefaultEndpointNameFormatter(string joinSeparator, string prefix, bool includeNamespace)
     {
         Prefix = prefix;
@@ -64,86 +56,64 @@ public class DefaultEndpointNameFormatter :
         JoinSeparator = joinSeparator;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
+    /// <summary>Initializes a new instance.</summary>
     protected DefaultEndpointNameFormatter()
     {
         IncludeNamespace = false;
     }
 
-    /// <summary>
-    /// Gets a value indicating whether the namespace is included in the name.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the namespace is included in the name.</summary>
     protected bool IncludeNamespace { get; }
 
-    /// <summary>
-    /// Gets the Prefix to start the name.
-    /// </summary>
+    /// <summary>Gets the prefix.</summary>
     protected string? Prefix { get; }
-    /// <summary>
-    /// Gets the join separator between the words
-    /// </summary>
+    /// <summary>Gets the join separator between the words.</summary>
     protected string JoinSeparator { get; } = null!;
-    /// <summary>
-    /// Gets the instance value.
-    /// </summary>
+    /// <summary>Gets the instance.</summary>
     public static IEndpointNameFormatter Instance { get; } = new DefaultEndpointNameFormatter();
 
-    /// <summary>
-    /// Gets or sets the separator value.
-    /// </summary>
+    /// <summary>Gets or sets the separator.</summary>
     public string Separator { get; protected set; } = "";
 
-    /// <summary>
-    /// Performs the temporary endpoint operation.
-    /// </summary>
-    /// <param name="tag">The tag value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Configures a temporary endpoint.</summary>
+    /// <param name="tag">The tag.</param>
+    /// <returns>The string produced by the operation.</returns>
     public virtual string TemporaryEndpoint(string tag)
     {
         return GetTemporaryQueueName(tag);
     }
 
-    /// <summary>
-    /// Consumes r.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Formats the endpoint name for the selected consumer type.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The string produced by the operation.</returns>
     public virtual string Consumer<T>()
         where T : class, IConsumer
     {
         return GetConsumerName(typeof(T));
     }
 
-    /// <summary>
-    /// Performs the message operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Applies the message configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The string produced by the operation.</returns>
     public virtual string Message<T>()
         where T : class
     {
         return GetMessageName(typeof(T));
     }
 
-    /// <summary>
-    /// Performs the saga operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Applies the saga configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <returns>The string produced by the operation.</returns>
     public virtual string Saga<T>()
         where T : class
     {
         return GetSagaName(typeof(T));
     }
 
-    /// <summary>
-    /// Performs the execute activity operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Executes activity.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <returns>The string produced by the operation.</returns>
     public virtual string ExecuteActivity<T, TArguments>()
         where T : class
         where TArguments : class
@@ -153,12 +123,10 @@ public class DefaultEndpointNameFormatter :
         return $"{activityName}_execute";
     }
 
-    /// <summary>
-    /// Performs the compensate activity operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Compensates activity.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <returns>The string produced by the operation.</returns>
     public virtual string CompensateActivity<T, TLog>()
         where T : class
         where TLog : class
@@ -168,21 +136,17 @@ public class DefaultEndpointNameFormatter :
         return $"{activityName}_compensate";
     }
 
-    /// <summary>
-    /// Performs the sanitize name operation.
-    /// </summary>
-    /// <param name="name">The name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sanitizes name.</summary>
+    /// <param name="name">The name.</param>
+    /// <returns>The string produced by the operation.</returns>
     public virtual string SanitizeName(string name)
     {
         return name;
     }
 
-    /// <summary>
-    /// Gets temporary queue name.
-    /// </summary>
-    /// <param name="tag">The tag value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets temporary queue name.</summary>
+    /// <param name="tag">The tag.</param>
+    /// <returns>The temporary queue name.</returns>
     public static string GetTemporaryQueueName(string tag)
     {
         if (string.IsNullOrWhiteSpace(tag))
@@ -236,11 +200,9 @@ public class DefaultEndpointNameFormatter :
         return sb.ToString();
     }
 
-    /// <summary>
-    /// Gets the endpoint name for a consumer of the given type.
-    /// </summary>
-    /// <param name="type">The type of the consumer implementing <see cref="IConsumer" /></param>
-    /// <returns>The fully formatted name as it will be provided via <see cref="Consumer{T}" /></returns>
+    /// <summary>Gets consumer name.</summary>
+    /// <param name="type">The type of the consumer implementing <see cref="IConsumer" />.</param>
+    /// <returns>The fully formatted name as it will be provided via <see cref="Consumer{T}" />.</returns>
     protected virtual string GetConsumerName(Type type)
     {
         if (type.IsGenericType && type.Name.Contains('`'))
@@ -261,11 +223,9 @@ public class DefaultEndpointNameFormatter :
         return SanitizeName(consumerName);
     }
 
-    /// <summary>
-    /// Gets the endpoint name for a message of the given type.
-    /// </summary>
-    /// <param name="type">The type of the message</param>
-    /// <returns>The fully formatted name as it will be provided via <see cref="Message{T}" /></returns>
+    /// <summary>Gets message name.</summary>
+    /// <param name="type">The type of the message.</param>
+    /// <returns>The fully formatted name as it will be provided via <see cref="Message{T}" />.</returns>
     protected virtual string GetMessageName(Type type)
     {
         if (type.IsGenericType && type.Name.Contains('`'))
@@ -276,11 +236,9 @@ public class DefaultEndpointNameFormatter :
         return SanitizeName(messageName);
     }
 
-    /// <summary>
-    /// Gets the endpoint name for a saga of the given type.
-    /// </summary>
-    /// <param name="type">The registered saga type.</param>
-    /// <returns>The fully formatted name as it will be provided via <see cref="Saga{T}" /></returns>
+    /// <summary>Gets saga name.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns>The fully formatted name as it will be provided via <see cref="Saga{T}" />.</returns>
     protected virtual string GetSagaName(Type type)
     {
         const string saga = "Saga";
@@ -297,17 +255,13 @@ public class DefaultEndpointNameFormatter :
         return SanitizeName(sagaName);
     }
 
-    /// <summary>
-    /// Gets the name for an activity of the given type.
-    /// </summary>
+    /// <summary>Gets activity name.</summary>
+    /// <param name="activityType">The runtime activity type used by the operation.</param>
+    /// <param name="argumentType">For execution endpoints this is the activity arguments, for compensation this is the log type.</param>
+    /// <returns>The formatted activity name further used in <see cref="ExecuteActivity{T,TArguments}" /> and <see cref="CompensateActivity{T,TLog}" />.</returns>
     /// <remarks>
     /// The activity name is used both for execution and compensation endpoint names.
     /// </remarks>
-    /// <param name="activityType">The activity implementation type.</param>
-    /// <param name="argumentType">
-    /// For execution endpoints this is the activity arguments, for compensation this is the log type.
-    /// </param>
-    /// <returns>The formatted activity name further used in <see cref="ExecuteActivity{T,TArguments}" /> and <see cref="CompensateActivity{T,TLog}" />.</returns>
     protected virtual string GetActivityName(Type activityType, Type argumentType)
     {
         const string activity = "Activity";
@@ -324,10 +278,8 @@ public class DefaultEndpointNameFormatter :
         return SanitizeName(activityName);
     }
 
-    /// <summary>
-    /// Does a basic formatting of the type respecting settings like <see cref="IncludeNamespace" />.
-    /// </summary>
-    /// <param name="type">The type to format.</param>
+    /// <summary>Does a basic formatting of the type respecting settings like <see cref="IncludeNamespace" />.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
     /// <returns>A formatted type name, not yet sanitized via <see cref="SanitizeName" />.</returns>
     protected virtual string FormatName(Type type)
     {

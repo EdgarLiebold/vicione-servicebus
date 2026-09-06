@@ -5,17 +5,13 @@ using System.Text;
 
 namespace ViciOne.ServiceBus.NewIdProviders;
 
-/// <summary>
-/// Provides a host name hash worker id provider implementation.
-/// </summary>
+/// <summary>Provides host name hash worker id services.</summary>
 public class HostNameHashWorkerIdProvider :
     IWorkerIdProvider
 {
-    /// <summary>
-    /// Gets worker id.
-    /// </summary>
-    /// <param name="index">The index value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets worker id.</summary>
+    /// <param name="index">The index.</param>
+    /// <returns>The worker id.</returns>
     public byte[] GetWorkerId(int index)
     {
         return GetNetworkAddress();

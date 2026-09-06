@@ -6,9 +6,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.RabbitMq;
 
-/// <summary>
-/// Provides a rabbit mq queue receive endpoint context implementation.
-/// </summary>
+/// <summary>Owns RabbitMQ receive topology, channel supervision, and transport providers for one queue endpoint.</summary>
 public class RabbitMqQueueReceiveEndpointContext :
     BaseReceiveEndpointContext,
     RabbitMqReceiveEndpointContext
@@ -17,12 +15,10 @@ public class RabbitMqQueueReceiveEndpointContext :
     readonly IRabbitMqHostConfiguration _hostConfiguration;
     readonly Recycle<IChannelContextSupervisor> _channelContext;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="configuration">The configuration callback.</param>
-    /// <param name="brokerTopology">The broker topology value.</param>
+    /// <summary>Creates a runtime endpoint context from validated host, endpoint, and broker topology.</summary>
+    /// <param name="hostConfiguration">The owning RabbitMQ host configuration.</param>
+    /// <param name="configuration">The receive-endpoint configuration.</param>
+    /// <param name="brokerTopology">The topology deployed for the endpoint.</param>
     public RabbitMqQueueReceiveEndpointContext(IRabbitMqHostConfiguration hostConfiguration, IRabbitMqReceiveEndpointConfiguration configuration,
         BrokerTopology brokerTopology)
         : base(hostConfiguration, configuration)
@@ -43,58 +39,42 @@ public class RabbitMqQueueReceiveEndpointContext :
             new ChannelContextSupervisor(hostConfiguration.ConnectionContextSupervisor, (ushort)concurrentMessageLimit));
     }
 
-    /// <summary>
-    /// Gets the broker topology value.
-    /// </summary>
+    /// <summary>Gets the broker topology.</summary>
     public BrokerTopology BrokerTopology { get; }
 
-    /// <summary>
-    /// Gets the exclusive consumer value.
-    /// </summary>
+    /// <summary>Gets whether the broker permits only this consumer on the queue.</summary>
     public bool ExclusiveConsumer { get; }
-    /// <summary>
-    /// Gets the is not reply to value.
-    /// </summary>
+    /// <summary>Gets whether the endpoint is a normal queue rather than the direct-reply-to pseudo-queue.</summary>
     public bool IsNotReplyTo { get; }
 
-    /// <summary>
-    /// Gets the channel context supervisor value.
-    /// </summary>
+    /// <summary>Gets the channel context supervisor.</summary>
     public IChannelContextSupervisor ChannelContextSupervisor => _channelContext.Supervisor;
 
-    /// <summary>
-    /// Adds send agent to the configuration.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
+    /// <summary>Adds a send-side dependent to the current channel supervisor.</summary>
+    /// <param name="agent">The send transport agent to supervise.</param>
     public override void AddSendAgent(IAgent agent)
     {
         _channelContext.Supervisor.AddSendAgent(agent);
     }
 
-    /// <summary>
-    /// Adds consume agent to the configuration.
-    /// </summary>
-    /// <param name="agent">The agent value.</param>
+    /// <summary>Adds a consume-side dependent to the current channel supervisor.</summary>
+    /// <param name="agent">The consumer agent to supervise.</param>
     public override void AddConsumeAgent(IAgent agent)
     {
         _channelContext.Supervisor.AddConsumeAgent(agent);
     }
 
-    /// <summary>
-    /// Performs the convert exception operation.
-    /// </summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="message">The message value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Wraps an endpoint failure with RabbitMQ connection classification and a sanitized host description.</summary>
+    /// <param name="exception">The underlying endpoint or client failure.</param>
+    /// <param name="message">The contextual failure prefix.</param>
+    /// <returns>The RabbitMQ connection exception.</returns>
     public override Exception ConvertException(Exception exception, string message)
     {
         return new RabbitMqConnectionException(message + _hostConfiguration.Settings.ToDescription(), exception);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Adds RabbitMQ endpoint settings and broker topology to the diagnostic probe.</summary>
+    /// <param name="context">The probe context that receives endpoint details.</param>
     public override void Probe(ProbeContext context)
     {
         context.Add("type", "RabbitMQ");
@@ -106,19 +86,15 @@ public class RabbitMqQueueReceiveEndpointContext :
         BrokerTopology.Probe(topologyScope);
     }
 
-    /// <summary>
-    /// Creates send transport provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a send-transport provider bound to this endpoint's channel supervisor.</summary>
+    /// <returns>The RabbitMQ send-transport provider.</returns>
     protected override ISendTransportProvider CreateSendTransportProvider()
     {
         return new RabbitMqSendTransportProvider(_hostConfiguration.ConnectionContextSupervisor, this);
     }
 
-    /// <summary>
-    /// Creates publish transport provider.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Creates a publish-transport provider bound to this endpoint's channel supervisor.</summary>
+    /// <returns>The RabbitMQ publish-transport provider.</returns>
     protected override IPublishTransportProvider CreatePublishTransportProvider()
     {
         return new RabbitMqPublishTransportProvider(_hostConfiguration.ConnectionContextSupervisor, this);

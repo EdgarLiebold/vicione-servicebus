@@ -9,10 +9,9 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
 /// <summary>
-/// Everything one concrete type needs, compiled once: how to obtain its formatter from a resolver, and
-/// how to call that formatter without reflection. The formatter itself is a parameter rather than a
-/// captured constant, so one compiled entry serves every resolver and option set.
+/// Holds compiled delegates that resolve and invoke the formatter for one concrete implementation type.
 /// </summary>
+/// <typeparam name="TInterface">The interface type.</typeparam>
 sealed class ConcreteFormatterAccess<TInterface>
 {
     public ConcreteFormatterAccess(Func<IFormatterResolver, object> getFormatter,
@@ -30,32 +29,11 @@ sealed class ConcreteFormatterAccess<TInterface>
 
 
 /// <summary>
-/// The compiled invokers of one closed interface formatter, one entry per concrete type that has
-/// travelled through it.
-/// <para>
-/// The operational bound is the admitted contract set: one entry per concrete message type this
-/// process actually sends through this interface, which is finite because the deployed model is finite,
-/// and reset by process restart. That is why no numeric capacity is invented here — a capacity would
-/// only decide which live contract to recompile next.
-/// </para>
-/// <para>
-/// The entries are additionally held against weak keys, so this table cannot be the thing that keeps a
-/// type alive. That is a statement about this table and nothing more: it is not a promise that a module
-/// becomes collectible, because asking a resolver for a type's formatter and compiling any delegate
-/// over it both root that type before this cache stores anything. The architecture does not promise
-/// in-process unload either; activation changes take effect through controlled restart.
-/// </para>
-/// <para>
-/// Compilation happens exactly once per type even when many threads arrive together. The table may run
-/// the creation callback on more than one thread, but only one returned <see cref="Lazy{T}" /> is
-/// installed, and the expensive build runs on the installed instance, so a losing thread waits for that
-/// one compilation instead of starting a second.
-/// </para>
-/// <para>
-/// The cache is an instance rather than a static member of the formatter, so each owner controls its
-/// own lifetime and observes a genuinely cold first use.
-/// </para>
+/// Caches lazily compiled formatter delegates by concrete implementation type for one closed interface
+/// formatter. Weak keys prevent this table from retaining a concrete type on their own, and
+/// <see cref="Lazy{T}" /> ensures the installed entry is compiled once under concurrent access.
 /// </summary>
+/// <typeparam name="TInterface">The interface type.</typeparam>
 sealed class ConcreteFormatterCache<TInterface>
 {
     readonly Func<Type, ConcreteFormatterAccess<TInterface>> _build;
@@ -69,21 +47,19 @@ sealed class ConcreteFormatterCache<TInterface>
     }
 
     /// <summary>
-    /// The build step is injectable so the table's ownership can be observed independently of
-    /// compilation. Compiled delegates and resolved formatters may root generated types in runtime
-    /// tables outside this cache.
+    /// Initializes the cache with the delegate factory used for each concrete type.
     /// </summary>
+    /// <param name="build">The factory that compiles formatter access for a concrete type.</param>
     internal ConcreteFormatterCache(Func<Type, ConcreteFormatterAccess<TInterface>> build)
     {
         _build = build;
 
-        // Held once instead of built per call, so neither the hit nor the miss path allocates a closure.
+        // Reusing the callback avoids allocating a closure on cache hits and misses.
         _createEntry = CreateEntry;
     }
 
     /// <summary>
-    /// How many entries this cache has actually compiled. Counting entries instead would prove nothing:
-    /// a version that rebuilt on every call and replaced the same entry would leave the count at one.
+    /// Gets the number of concrete formatter entries compiled by this cache instance.
     /// </summary>
     internal int CompiledCount => Volatile.Read(ref _compiled);
 
@@ -102,9 +78,10 @@ sealed class ConcreteFormatterCache<TInterface>
 
     ConcreteFormatterAccess<TInterface> Build(Type concreteType)
     {
+        ConcreteFormatterAccess<TInterface> access = _build(concreteType);
         Interlocked.Increment(ref _compiled);
 
-        return _build(concreteType);
+        return access;
     }
 
     static ConcreteFormatterAccess<TInterface> BuildAccess(Type concreteType)
@@ -116,10 +93,10 @@ sealed class ConcreteFormatterCache<TInterface>
     }
 
     /// <summary>
-    /// Replaces a <see cref="System.Reflection.MethodInfo" /> invocation on every single serialize and
-    /// deserialize call. The generic method is closed once here and called through a delegate after
-    /// that.
+    /// Compiles a delegate that obtains the concrete formatter from an arbitrary resolver.
     /// </summary>
+    /// <param name="concreteType">The concrete message implementation type.</param>
+    /// <returns>A delegate that resolves that type's formatter.</returns>
     static Func<IFormatterResolver, object> BuildGetFormatter(Type concreteType)
     {
         var getFormatter = typeof(IFormatterResolver)
@@ -135,11 +112,12 @@ sealed class ConcreteFormatterCache<TInterface>
     }
 
     /// <summary>
-    /// The value parameter is the interface and the cast to the concrete type happens inside the
-    /// compiled body. Compiling the delegate over the concrete type and reinterpreting it with
-    /// <c>Unsafe.As</c> asserts a conversion the runtime never checks, and it points the wrong way along
-    /// the variance of the delegate.
+    /// Compiles a serializer delegate that accepts the interface value and casts it to the concrete
+    /// implementation before invoking the concrete formatter.
     /// </summary>
+    /// <param name="concreteType">The concrete message implementation type.</param>
+    /// <param name="formatterType">The closed MessagePack formatter type.</param>
+    /// <returns>The compiled serialization delegate.</returns>
     static SerializeDelegate<TInterface> BuildSerialize(Type concreteType, Type formatterType)
     {
         var serialize = formatterType.GetMethod(nameof(IMessagePackFormatter<object>.Serialize))!;

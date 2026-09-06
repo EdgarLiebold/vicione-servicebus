@@ -6,20 +6,16 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Configuration;
 
-/// <summary>
-/// Provides an amazon sqs receive endpoint builder implementation.
-/// </summary>
+/// <summary>Builds the topology, context, and move transports for an Amazon SQS receive endpoint.</summary>
 public class AmazonSqsReceiveEndpointBuilder :
     ReceiveEndpointBuilder
 {
     readonly IAmazonSqsReceiveEndpointConfiguration _configuration;
     readonly IAmazonSqsHostConfiguration _hostConfiguration;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="hostConfiguration">The host configuration value.</param>
-    /// <param name="configuration">The configuration callback.</param>
+    /// <summary>Initializes an Amazon SQS receive-endpoint builder.</summary>
+    /// <param name="hostConfiguration">The host configuration that supplies transport settings and topology.</param>
+    /// <param name="configuration">The receive-endpoint configuration to build.</param>
     public AmazonSqsReceiveEndpointBuilder(IAmazonSqsHostConfiguration hostConfiguration, IAmazonSqsReceiveEndpointConfiguration configuration)
         : base(configuration)
     {
@@ -27,13 +23,11 @@ public class AmazonSqsReceiveEndpointBuilder :
         _configuration = configuration;
     }
 
-    /// <summary>
-    /// Connects consume pipe.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="pipe">The pipe value.</param>
-    /// <param name="options">The options value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects a consumer pipe and, when requested, subscribes its message type in the consume topology.</summary>
+    /// <typeparam name="T">The consumed message type.</typeparam>
+    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="options">Flags controlling whether consume topology is configured.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public override ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
     {
         if (_configuration.ConfigureConsumeTopology && options.HasFlag(ConnectPipeOptions.ConfigureConsumeTopology))
@@ -46,10 +40,8 @@ public class AmazonSqsReceiveEndpointBuilder :
         return base.ConnectConsumePipe(pipe, options);
     }
 
-    /// <summary>
-    /// Creates receive endpoint context.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Builds broker topology and creates the Amazon SQS receive-endpoint context with error and dead-letter transports.</summary>
+    /// <returns>The configured receive-endpoint context.</returns>
     public SqsReceiveEndpointContext CreateReceiveEndpointContext()
     {
         var brokerTopology = BuildTopology(_configuration.Settings);

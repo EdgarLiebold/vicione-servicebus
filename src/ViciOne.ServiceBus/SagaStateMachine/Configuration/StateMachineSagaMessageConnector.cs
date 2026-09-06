@@ -1,13 +1,8 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a state machine interface type implementation.
-/// </summary>
 public partial class StateMachineInterfaceType<TInstance, TData>
 {
-    /// <summary>
-    /// Provides a state machine saga message connector implementation.
-    /// </summary>
+    /// <summary>Connects state machine saga message to the service bus pipeline.</summary>
     public class StateMachineSagaMessageConnector :
         SagaConnector<TInstance, TData>.SagaMessageConnector
     {
@@ -15,14 +10,12 @@ public partial class StateMachineInterfaceType<TInstance, TData>
         readonly ISagaPolicy<TInstance, TData> _policy;
         readonly SagaFilterFactory<TInstance, TData>? _sagaFilterFactory;
 
-        /// <summary>
-        /// Initializes a new instance of the containing type.
-        /// </summary>
-        /// <param name="consumeFilter">The consume filter value.</param>
-        /// <param name="policy">The policy value.</param>
-        /// <param name="sagaFilterFactory">The saga filter factory value.</param>
-        /// <param name="messageFilter">The message filter value.</param>
-        /// <param name="configureConsumeTopology">The configure consume topology value.</param>
+        /// <summary>Initializes a new instance.</summary>
+        /// <param name="consumeFilter">The consume filter.</param>
+        /// <param name="policy">The policy.</param>
+        /// <param name="sagaFilterFactory">The saga filter factory.</param>
+        /// <param name="messageFilter">The message filter.</param>
+        /// <param name="configureConsumeTopology">The configure consume topology.</param>
         public StateMachineSagaMessageConnector(IFilter<SagaConsumeContext<TInstance, TData>> consumeFilter, ISagaPolicy<TInstance, TData>? policy,
             SagaFilterFactory<TInstance, TData>? sagaFilterFactory, IFilter<ConsumeContext<TData>>? messageFilter, bool configureConsumeTopology)
             : base(consumeFilter)
@@ -33,17 +26,13 @@ public partial class StateMachineInterfaceType<TInstance, TData>
             _messageFilter = messageFilter;
         }
 
-        /// <summary>
-        /// Gets the configure consume topology value.
-        /// </summary>
+        /// <summary>Gets the configure consume topology.</summary>
         protected override bool ConfigureConsumeTopology { get; }
 
-        /// <summary>
-        /// Configures message pipe.
-        /// </summary>
-        /// <param name="configurator">The configurator value.</param>
-        /// <param name="repository">The repository value.</param>
-        /// <param name="sagaPipe">The saga pipe value.</param>
+        /// <summary>Configures message pipe.</summary>
+        /// <param name="configurator">The configurator to update.</param>
+        /// <param name="repository">The repository.</param>
+        /// <param name="sagaPipe">The saga pipe.</param>
         protected override void ConfigureMessagePipe(IPipeConfigurator<ConsumeContext<TData>> configurator, ISagaRepository<TInstance> repository,
             IPipe<SagaConsumeContext<TInstance, TData>> sagaPipe)
         {

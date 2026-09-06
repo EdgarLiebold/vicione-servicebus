@@ -56,8 +56,7 @@ internal sealed class BufferedBus :
                     cancellationToken.ThrowIfCancellationRequested();
                 }
 
-                // This action is no longer buffered. Releasing before execution also allows an
-                // action to enqueue a successor when the bounded buffer was previously full.
+                // Release capacity before execution so a reentrant action can enqueue its successor.
                 _capacity.Release();
 
                 try

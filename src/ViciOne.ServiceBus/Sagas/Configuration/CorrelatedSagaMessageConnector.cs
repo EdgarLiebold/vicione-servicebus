@@ -3,9 +3,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Provides a saga connector implementation.
-/// </summary>
+/// <summary>Connects a correlated saga message to its saga repository and message pipeline.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public partial class SagaConnector<TSaga, TMessage>
     where TSaga : class, ISaga
     where TMessage : class
@@ -20,12 +20,10 @@ public partial class SagaConnector<TSaga, TMessage>
         readonly Func<ConsumeContext<TMessage>, Guid> _correlationIdSelector;
         readonly ISagaPolicy<TSaga, TMessage> _policy;
 
-        /// <summary>
-        /// Initializes a new instance of the containing type.
-        /// </summary>
-        /// <param name="consumeFilter">The consume filter value.</param>
-        /// <param name="policy">The policy value.</param>
-        /// <param name="correlationIdSelector">The correlation id selector value.</param>
+        /// <summary>Initializes a new instance.</summary>
+        /// <param name="consumeFilter">The consume filter.</param>
+        /// <param name="policy">The policy.</param>
+        /// <param name="correlationIdSelector">The correlation id selector.</param>
         public CorrelatedSagaMessageConnector(IFilter<SagaConsumeContext<TSaga, TMessage>> consumeFilter, ISagaPolicy<TSaga, TMessage> policy,
             Func<ConsumeContext<TMessage>, Guid> correlationIdSelector)
             : base(consumeFilter)
@@ -34,12 +32,10 @@ public partial class SagaConnector<TSaga, TMessage>
             _correlationIdSelector = correlationIdSelector;
         }
 
-        /// <summary>
-        /// Configures message pipe.
-        /// </summary>
-        /// <param name="configurator">The configurator value.</param>
-        /// <param name="repository">The repository value.</param>
-        /// <param name="sagaPipe">The saga pipe value.</param>
+        /// <summary>Configures message pipe.</summary>
+        /// <param name="configurator">The configurator to update.</param>
+        /// <param name="repository">The repository.</param>
+        /// <param name="sagaPipe">The saga pipe.</param>
         protected override void ConfigureMessagePipe(IPipeConfigurator<ConsumeContext<TMessage>> configurator, ISagaRepository<TSaga> repository,
             IPipe<SagaConsumeContext<TSaga, TMessage>> sagaPipe)
         {

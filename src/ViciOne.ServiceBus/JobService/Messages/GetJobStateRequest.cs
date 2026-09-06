@@ -3,14 +3,10 @@ using ViciOne.ServiceBus.Contracts.JobService;
 
 namespace ViciOne.ServiceBus.JobService.Messages;
 
-/// <summary>
-/// Provides a get job state request implementation.
-/// </summary>
+/// <summary>Carries the request for get job state.</summary>
 public class GetJobStateRequest :
     GetJobState
 {
-    /// <summary>
-    /// Gets or sets the job id value.
-    /// </summary>
+    /// <summary>Gets or sets the job id.</summary>
     public Guid JobId { get; set; }
 }

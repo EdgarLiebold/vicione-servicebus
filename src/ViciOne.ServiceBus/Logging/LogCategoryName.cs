@@ -1,28 +1,18 @@
 namespace ViciOne.ServiceBus.Logging;
 
-/// <summary>
-/// Provides a log category name implementation.
-/// </summary>
+/// <summary>Represents the canonical name for log category.</summary>
 public static class LogCategoryName
 {
-    /// <summary>
-    /// Defines the vici one service bus value.
-    /// </summary>
+    /// <summary>Exposes the vici one service bus used by the containing type.</summary>
     public const string ViciOneServiceBus = "ViciOne.ServiceBus";
 
 
-    /// <summary>
-    /// Provides a transport implementation.
-    /// </summary>
+    /// <summary>Defines logging category names for transport components.</summary>
     public static class Transport
     {
-        /// <summary>
-        /// Defines the receive value.
-        /// </summary>
+        /// <summary>Exposes the receive used by the containing type.</summary>
         public const string Receive = "ViciOne.ServiceBus.ReceiveTransport";
-        /// <summary>
-        /// Defines the send value.
-        /// </summary>
+        /// <summary>Exposes the send used by the containing type.</summary>
         public const string Send = "ViciOne.ServiceBus.SendTransport";
     }
 }

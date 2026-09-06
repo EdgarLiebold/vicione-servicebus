@@ -4,16 +4,12 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>
-/// Provides a registration metadata implementation.
-/// </summary>
+/// <summary>Carries metadata for registration.</summary>
 public static class RegistrationMetadata
 {
-    /// <summary>
-    /// Returns true if the type is a consumer, or a consumer definition
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
+    /// <summary>Returns true if the type is a consumer, or a consumer definition.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsConsumerOrDefinition(Type type)
     {
         Type[] interfaces = type.GetInterfaces();
@@ -23,20 +19,16 @@ public static class RegistrationMetadata
                 || interfaces.Any(candidate => candidate.ImplementsInterface(typeof(IConsumerDefinition<>))));
     }
 
-    /// <summary>
-    /// Returns true if the type is a consumer, or a consumer definition
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
+    /// <summary>Returns true if the type is a consumer, or a consumer definition.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsConsumer(Type type)
     {
         return !IsConsumerRegistrationExcluded(type) && typeof(IConsumer).IsAssignableFrom(type);
     }
 
-    /// <summary>
-    /// Returns whether a capability package, rather than the core consumer kind, owns registration of the type.
-    /// </summary>
-    /// <param name="type">The candidate handler type.</param>
+    /// <summary>Returns whether a capability package, rather than the core consumer kind, owns registration of the type.</summary>
+    /// <param name="type">The runtime type to inspect or use.</param>
     /// <returns><see langword="true" /> when an implemented handler contract excludes core consumer registration.</returns>
     public static bool IsConsumerRegistrationExcluded(Type type)
     {

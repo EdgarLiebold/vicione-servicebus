@@ -1,20 +1,12 @@
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>
-/// Defines the contract for scoped bus context.
-/// </summary>
+/// <summary>Exposes state for scoped bus operations.</summary>
 public interface ScopedBusContext
 {
-    /// <summary>
-    /// Gets the send endpoint provider value.
-    /// </summary>
+    /// <summary>Gets the send endpoint provider.</summary>
     ISendEndpointProvider SendEndpointProvider { get; }
-    /// <summary>
-    /// Gets the publish endpoint value.
-    /// </summary>
+    /// <summary>Gets the publish endpoint.</summary>
     IPublishEndpoint PublishEndpoint { get; }
-    /// <summary>
-    /// Gets the client factory value.
-    /// </summary>
+    /// <summary>Gets the client factory.</summary>
     IScopedClientFactory ClientFactory { get; }
 }

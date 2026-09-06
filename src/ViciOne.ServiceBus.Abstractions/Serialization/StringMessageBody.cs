@@ -3,19 +3,15 @@ using System.Text;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 
-/// <summary>
-/// Provides a string message body implementation.
-/// </summary>
+/// <summary>Carries string message content.</summary>
 public class StringMessageBody :
     MessageBody
 {
     readonly string _body;
     byte[]? _bytes;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="body">The body value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="body">The body.</param>
     public StringMessageBody(string body)
     {
         _body = body;
@@ -33,6 +29,7 @@ public class StringMessageBody :
     /// array from <see cref="GetBytes" /> is still a caller's to write into, so this is one closed
     /// route rather than immutability.
     /// </summary>
+    /// <returns>The stream.</returns>
     public Stream GetStream()
     {
         return new MemoryStream(GetBytes(), false);
@@ -43,6 +40,7 @@ public class StringMessageBody :
     /// <see cref="GetString" /> still returned the whitespace, so the two accessors disagreed about
     /// the same body and the reported length belonged to neither.
     /// </summary>
+    /// <returns>The bytes.</returns>
     public byte[] GetBytes()
     {
         return _bytes ??= _body != null
@@ -50,10 +48,8 @@ public class StringMessageBody :
             : [];
     }
 
-    /// <summary>
-    /// Gets string.
-    /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Gets string.</summary>
+    /// <returns>The string.</returns>
     public string GetString()
     {
         return _body;

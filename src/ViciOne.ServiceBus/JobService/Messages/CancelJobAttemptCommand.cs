@@ -3,22 +3,14 @@ using ViciOne.ServiceBus.Contracts.JobService;
 
 namespace ViciOne.ServiceBus.JobService.Messages;
 
-/// <summary>
-/// Provides a cancel job attempt command implementation.
-/// </summary>
+/// <summary>Carries the command for cancel job attempt.</summary>
 public class CancelJobAttemptCommand :
     CancelJobAttempt
 {
-    /// <summary>
-    /// Gets or sets the job id value.
-    /// </summary>
+    /// <summary>Gets or sets the job id.</summary>
     public Guid JobId { get; set; }
-    /// <summary>
-    /// Gets or sets the attempt id value.
-    /// </summary>
+    /// <summary>Gets or sets the attempt id.</summary>
     public Guid AttemptId { get; set; }
-    /// <summary>
-    /// Gets or sets the reason value.
-    /// </summary>
+    /// <summary>Gets or sets the reason.</summary>
     public string? Reason { get; set; }
 }

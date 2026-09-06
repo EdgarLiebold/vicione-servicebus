@@ -2,10 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Defines the contract for consumer message configurator.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures consumer message.</summary>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public interface IConsumerMessageConfigurator<TMessage> :
     IPipeConfigurator<ConsumeContext<TMessage>>
     where TMessage : class
@@ -13,11 +11,9 @@ public interface IConsumerMessageConfigurator<TMessage> :
 }
 
 
-/// <summary>
-/// Defines the contract for consumer message configurator.
-/// </summary>
-/// <typeparam name="TConsumer">The t consumer type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Configures consumer message.</summary>
+/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public interface IConsumerMessageConfigurator<TConsumer, TMessage> :
     IPipeConfigurator<ConsumerConsumeContext<TConsumer, TMessage>>
     where TConsumer : class
@@ -27,6 +23,6 @@ public interface IConsumerMessageConfigurator<TConsumer, TMessage> :
     /// Add middleware to the consumer pipeline, for the specified message type, which is
     /// invoked after the consumer factory.
     /// </summary>
-    /// <param name="configure">The callback to configure the message pipeline</param>
+    /// <param name="configure">The callback to configure the message pipeline.</param>
     void Message(Action<IConsumerMessageConfigurator<TMessage>> configure);
 }

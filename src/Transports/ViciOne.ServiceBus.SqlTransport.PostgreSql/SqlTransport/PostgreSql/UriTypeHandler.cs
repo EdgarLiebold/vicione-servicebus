@@ -4,26 +4,20 @@ using Dapper;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
-/// <summary>
-/// Maps database text values to non-null URI instances.
-/// </summary>
+/// <summary>Maps database text values to non-null URI instances.</summary>
 public class UriTypeHandler : SqlMapper.TypeHandler<Uri>
 {
-    /// <summary>
-    /// Sets value.
-    /// </summary>
-    /// <param name="parameter">The parameter value.</param>
-    /// <param name="value">The value.</param>
+    /// <summary>Writes a URI as its string representation to a database parameter.</summary>
+    /// <param name="parameter">The database parameter to update.</param>
+    /// <param name="value">The URI, or <see langword="null" /> for a database null.</param>
     public override void SetValue(IDbDataParameter parameter, Uri? value)
     {
         parameter.DbType = DbType.String;
         parameter.Value = value != null ? value.ToString() : DBNull.Value;
     }
 
-    /// <summary>
-    /// Parses the supplied representation.
-    /// </summary>
-    /// <param name="value">The value.</param>
+    /// <summary>Parses the supplied representation.</summary>
+    /// <param name="value">The database value expected to contain URI text.</param>
     /// <returns>A relative or absolute URI preserving the stored representation.</returns>
     /// <exception cref="ArgumentNullException">The database value is <see langword="null" />.</exception>
     /// <exception cref="InvalidCastException">The database value is not text.</exception>

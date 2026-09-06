@@ -2,28 +2,18 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>
-/// A subscription, as defined
-/// </summary>
+/// <summary>Describes an Azure Service Bus subscription declaration and its optional initial rule.</summary>
 public interface Subscription
 {
-    /// <summary>
-    /// Gets the create subscription options value.
-    /// </summary>
+    /// <summary>Gets the Azure subscription declaration options.</summary>
     CreateSubscriptionOptions CreateSubscriptionOptions { get; }
 
-    /// <summary>
-    /// Gets the topic value.
-    /// </summary>
+    /// <summary>Gets the handle of the subscribed topic.</summary>
     TopicHandle Topic { get; }
 
-    /// <summary>
-    /// Gets the rule value.
-    /// </summary>
+    /// <summary>Gets the optional initial subscription rule.</summary>
     CreateRuleOptions? Rule { get; }
 
-    /// <summary>
-    /// Gets the filter value.
-    /// </summary>
+    /// <summary>Gets the optional filter associated with the initial rule.</summary>
     RuleFilter? Filter { get; }
 }

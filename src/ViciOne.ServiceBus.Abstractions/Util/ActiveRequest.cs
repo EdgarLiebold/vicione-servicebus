@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Util;
 
-/// <summary>
-/// Provides an active request implementation.
-/// </summary>
+/// <summary>Carries the request for active.</summary>
 public sealed class ActiveRequest :
     IDisposable
 {
@@ -19,14 +17,12 @@ public sealed class ActiveRequest :
     bool _completed;
     int _disposed;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="algorithm">The algorithm value.</param>
-    /// <param name="resultLimit">The result limit value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="algorithm">The algorithm.</param>
+    /// <param name="resultLimit">The result limit.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="timeout">The timeout value.</param>
-    /// <param name="timeProvider">The time provider value.</param>
+    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
     public ActiveRequest(RequestRateAlgorithm algorithm, int resultLimit, CancellationToken cancellationToken, TimeSpan timeout,
         TimeProvider timeProvider)
     {
@@ -41,21 +37,15 @@ public sealed class ActiveRequest :
         _registration = cancellationToken.Register(static state => ((ActiveRequest)state!).ScheduleCancellation(), this);
     }
 
-    /// <summary>
-    /// Gets the cancellation token value.
-    /// </summary>
+    /// <summary>Gets the cancellation token.</summary>
     public CancellationToken CancellationToken { get; }
-    /// <summary>
-    /// Gets the result limit value.
-    /// </summary>
+    /// <summary>Gets the result limit.</summary>
     public int ResultLimit { get; }
 
-    /// <summary>
-    /// Performs the complete operation.
-    /// </summary>
-    /// <param name="count">The count value.</param>
+    /// <summary>Marks the current operation as complete.</summary>
+    /// <param name="count">The count.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CompleteAsync(int count, CancellationToken cancellationToken = default)
     {
         _completed = true;
@@ -63,9 +53,7 @@ public sealed class ActiveRequest :
         return _algorithm.EndRequestAsync(count, ResultLimit, cancellationToken);
     }
 
-    /// <summary>
-    /// Releases the resources owned by this instance.
-    /// </summary>
+    /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
         if (Interlocked.Exchange(ref _disposed, 1) != 0)

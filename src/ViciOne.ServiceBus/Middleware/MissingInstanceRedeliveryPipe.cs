@@ -4,11 +4,9 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>
-/// Provides a missing instance redelivery pipe implementation.
-/// </summary>
-/// <typeparam name="TSaga">The t saga type.</typeparam>
-/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <summary>Executes the pipeline for missing instance redelivery.</summary>
+/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
     IPipe<ConsumeContext<TMessage>>
     where TSaga : SagaStateMachineInstance
@@ -18,12 +16,10 @@ public class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
     readonly RedeliveryOptions _options;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="retryPolicy">The retry policy value.</param>
-    /// <param name="finalPipe">The final pipe value.</param>
-    /// <param name="options">The options value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="retryPolicy">The retry policy.</param>
+    /// <param name="finalPipe">The final pipe.</param>
+    /// <param name="options">The options that control the operation.</param>
     public MissingInstanceRedeliveryPipe(IRetryPolicy retryPolicy, IPipe<ConsumeContext<TMessage>> finalPipe, RedeliveryOptions options)
     {
         _retryPolicy = retryPolicy;
@@ -31,11 +27,9 @@ public class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
         _options = options;
     }
 
-    /// <summary>
-    /// Sends a message to the configured destination.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Sends a message to the configured destination.</summary>
+    /// <param name="context">The context associated with the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(ConsumeContext<TMessage> context)
     {
         using RetryPolicyContext<ConsumeContext<TMessage>> policyContext = _retryPolicy.CreatePolicyContext(context);
@@ -61,10 +55,8 @@ public class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
         return redeliveryContext.ScheduleRedeliveryAsync(delay);
     }
 
-    /// <summary>
-    /// Performs the probe operation.
-    /// </summary>
-    /// <param name="context">The operation context.</param>
+    /// <summary>Writes diagnostic information to the probe context.</summary>
+    /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
     }

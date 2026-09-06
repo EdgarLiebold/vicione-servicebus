@@ -2,42 +2,34 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
-/// <summary>
-/// Provides an in memory outbox publish endpoint provider implementation.
-/// </summary>
+/// <summary>Provides in memory outbox publish endpoint services.</summary>
 public class InMemoryOutboxPublishEndpointProvider :
     IPublishEndpointProvider
 {
     readonly OutboxContext _outboxContext;
     readonly IPublishEndpointProvider _publishEndpointProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the containing type.
-    /// </summary>
-    /// <param name="outboxContext">The outbox context value.</param>
-    /// <param name="publishEndpointProvider">The publish endpoint provider value.</param>
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="outboxContext">The outbox context.</param>
+    /// <param name="publishEndpointProvider">The publish endpoint provider.</param>
     public InMemoryOutboxPublishEndpointProvider(OutboxContext outboxContext, IPublishEndpointProvider publishEndpointProvider)
     {
         _outboxContext = outboxContext;
         _publishEndpointProvider = publishEndpointProvider;
     }
 
-    /// <summary>
-    /// Connects publish observer.
-    /// </summary>
-    /// <param name="observer">The observer value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <summary>Connects publish observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
         return _publishEndpointProvider.ConnectPublishObserver(observer);
     }
 
-    /// <summary>
-    /// Gets publish send endpoint.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
+    /// <summary>Gets publish send endpoint.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A task that produces the requested value.</returns>
     public async Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
