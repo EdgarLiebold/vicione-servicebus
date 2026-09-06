@@ -7,17 +7,17 @@ namespace ViciOne.ServiceBus;
 public interface IBusControl :
     IBus
 {
-    /// <summary>Starts the bus (assuming the battery isn't dead). Once the bus has been started it cannot be started again, even after it has been stopped.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Starts the bus and waits until its receive endpoints are ready.</summary>
+    /// <param name="cancellationToken">The token that cancels startup and its readiness wait.</param>
     /// <returns>A task that completes when the bus and all receive endpoints are ready.</returns>
     Task StartAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>Stops the bus if it has been started. If the bus hasn't been started, the method returns without any warning.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Stops the bus if it is running; otherwise, completes without changing state.</summary>
+    /// <param name="cancellationToken">The token that cancels the stop operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task StopAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>Returns the health of the bus, including all receive endpoints.</summary>
-    /// <returns>The bus health result produced by the operation.</returns>
+    /// <summary>Gets the current health of the bus and its receive endpoints.</summary>
+    /// <returns>The current aggregate bus health.</returns>
     BusHealthResult CheckHealth();
 }

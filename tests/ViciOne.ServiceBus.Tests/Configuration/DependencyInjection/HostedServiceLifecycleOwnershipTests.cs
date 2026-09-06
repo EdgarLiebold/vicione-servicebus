@@ -68,4 +68,43 @@ public sealed class HostedServiceLifecycleOwnershipTests
 
         Assert.Equal(1, driver.StopCount);
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-HOSTED-LIFECYCLE", "stop-before-start-is-terminal-without-depot")]
+    public async Task StopBeforeStart_IsIdempotentAndRejectsLaterStartupAsync()
+    {
+        await using var driver = new HostedServiceLifecycleTestDriver();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        await driver.StopAsync(cancellationToken);
+        await driver.StopAsync(cancellationToken);
+
+        Assert.Equal(0, driver.StartCount);
+        Assert.Equal(0, driver.StopCount);
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            driver.StartAsync(cancellationToken));
+        Assert.Contains("after stopping has begun", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-HOSTED-LIFECYCLE", "concurrent-stop-and-dispose-share-owner")]
+    public async Task ConcurrentStopAndDispose_InvokeTheDepotOnceAsync()
+    {
+        await using var driver = new HostedServiceLifecycleTestDriver(blockFirstStop: true);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        Task start = driver.StartAsync(cancellationToken);
+        driver.CompleteStart();
+        await start;
+
+        Task stop = driver.StopAsync(CancellationToken.None);
+        await driver.StopEntered.WaitAsync(cancellationToken);
+        Task disposal = driver.DisposeAsync().AsTask();
+
+        Assert.Equal(1, driver.StopCount);
+        Assert.False(disposal.IsCompleted);
+
+        driver.ReleaseStop();
+        await Task.WhenAll(stop, disposal);
+        Assert.Equal(1, driver.StopCount);
+    }
 }

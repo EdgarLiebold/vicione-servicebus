@@ -84,6 +84,38 @@ public sealed class InMemoryBusLifecycleTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "canceled-start-propagates-and-remains-retryable")]
+    public async Task CanceledStartup_PropagatesCancellationAndAllowsALaterStartAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken testCancellation = TestContext.Current.CancellationToken;
+        var dependency = new ControllableDependency();
+        IBusControl bus = Bus.Factory.CreateUsingInMemory(configuration =>
+            configuration.ReceiveEndpoint(
+                $"canceled-start-{NewId.NextGuid():N}",
+                endpoint => endpoint.AddDependency(dependency)));
+        using var startCancellation = new CancellationTokenSource();
+
+        try
+        {
+            Task firstStart = bus.StartAsync(startCancellation.Token);
+            await dependency.Waiting.WaitAsync(timeout, testCancellation);
+            startCancellation.Cancel();
+
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                firstStart.WaitAsync(timeout, testCancellation));
+
+            dependency.Complete();
+            await bus.StartAsync(testCancellation).WaitAsync(timeout, testCancellation);
+        }
+        finally
+        {
+            dependency.Complete();
+            await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "canceled-stop-retains-lifecycle-owner")]
     public async Task CanceledStop_RetainsTheHandleSoASecondStopCanCompleteAsync()
     {
@@ -127,6 +159,50 @@ public sealed class InMemoryBusLifecycleTests
 
         Assert.Equal(1, observer.PreStopCount);
         Assert.Equal(1, observer.PostStopCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "stop-fault-is-observed-once")]
+    public async Task StopFailure_NotifiesObserversExactlyOnceAndRemainsRetryableAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observer = new FaultingFirstPostStopObserver();
+        IBusControl bus = Bus.Factory.CreateUsingInMemory(configuration => configuration.ConnectBusObserver(observer));
+        await bus.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+
+        ExpectedStopException exception = await Assert.ThrowsAsync<ExpectedStopException>(() =>
+            bus.StopAsync(cancellationToken).WaitAsync(timeout, cancellationToken));
+
+        Assert.Same(observer.ExpectedFailure, exception);
+        Assert.Equal(1, observer.StopFaultedCount);
+        Assert.Same(exception, observer.ObservedFailure);
+
+        await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        Assert.Equal(2, observer.PostStopCount);
+        Assert.Equal(1, observer.StopFaultedCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "start-fault-is-observed-once-and-preserved")]
+    public async Task StartObserverFailure_PreservesTheOriginalFailureAndRemainsRetryableAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observer = new FaultingFirstPreStartObserver();
+        IBusControl bus = Bus.Factory.CreateUsingInMemory(configuration => configuration.ConnectBusObserver(observer));
+
+        ExpectedStartObserverException exception = await Assert.ThrowsAsync<ExpectedStartObserverException>(() =>
+            bus.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken));
+
+        Assert.Same(observer.ExpectedFailure, exception);
+        Assert.Equal(1, observer.StartFaultedCount);
+        Assert.Same(exception, observer.ObservedFailure);
+
+        await bus.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        Assert.Equal(2, observer.PreStartCount);
+        Assert.Equal(1, observer.StartFaultedCount);
     }
 
     [Fact]
@@ -272,6 +348,27 @@ public sealed class InMemoryBusLifecycleTests
         public Task Ready => _ready.Task;
 
         public void Fail(Exception exception) => _ready.TrySetException(exception);
+    }
+
+    private sealed class ControllableDependency : IReceiveEndpointDependency
+    {
+        private readonly TaskCompletionSource _ready =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _waiting =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task Ready
+        {
+            get
+            {
+                _waiting.TrySetResult();
+                return _ready.Task;
+            }
+        }
+
+        public Task Waiting => _waiting.Task;
+
+        public void Complete() => _ready.TrySetResult();
     }
 
     public sealed class BlockedConsumer : IConsumer<BlockedMessage>
@@ -498,7 +595,93 @@ public sealed class InMemoryBusLifecycleTests
         public void Release() => _release.TrySetResult();
     }
 
+    private sealed class FaultingFirstPostStopObserver : IBusObserver
+    {
+        private int _postStopCount;
+        private int _stopFaultedCount;
+
+        public ExpectedStopException ExpectedFailure { get; } = new();
+        public Exception? ObservedFailure { get; private set; }
+        public int PostStopCount => Volatile.Read(ref _postStopCount);
+        public int StopFaultedCount => Volatile.Read(ref _stopFaultedCount);
+
+        public void PostCreate(IBus bus)
+        {
+        }
+
+        public void CreateFaulted(Exception exception)
+        {
+        }
+
+        public Task PreStartAsync(IBus bus) => Task.CompletedTask;
+
+        public Task PostStartAsync(IBus bus, Task<BusReady> busReady) => Task.CompletedTask;
+
+        public Task StartFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
+
+        public Task PreStopAsync(IBus bus) => Task.CompletedTask;
+
+        public Task PostStopAsync(IBus bus)
+        {
+            return Interlocked.Increment(ref _postStopCount) == 1
+                ? Task.FromException(ExpectedFailure)
+                : Task.CompletedTask;
+        }
+
+        public Task StopFaultedAsync(IBus bus, Exception exception)
+        {
+            Interlocked.Increment(ref _stopFaultedCount);
+            ObservedFailure = exception;
+            return Task.FromException(new ExpectedStopFaultObserverException());
+        }
+    }
+
+    private sealed class FaultingFirstPreStartObserver : IBusObserver
+    {
+        private int _preStartCount;
+        private int _startFaultedCount;
+
+        public ExpectedStartObserverException ExpectedFailure { get; } = new();
+        public Exception? ObservedFailure { get; private set; }
+        public int PreStartCount => Volatile.Read(ref _preStartCount);
+        public int StartFaultedCount => Volatile.Read(ref _startFaultedCount);
+
+        public void PostCreate(IBus bus)
+        {
+        }
+
+        public void CreateFaulted(Exception exception)
+        {
+        }
+
+        public Task PreStartAsync(IBus bus)
+        {
+            return Interlocked.Increment(ref _preStartCount) == 1
+                ? Task.FromException(ExpectedFailure)
+                : Task.CompletedTask;
+        }
+
+        public Task PostStartAsync(IBus bus, Task<BusReady> busReady) => Task.CompletedTask;
+
+        public Task StartFaultedAsync(IBus bus, Exception exception)
+        {
+            Interlocked.Increment(ref _startFaultedCount);
+            ObservedFailure = exception;
+            return Task.FromException(new ExpectedStartFaultObserverException());
+        }
+
+        public Task PreStopAsync(IBus bus) => Task.CompletedTask;
+
+        public Task PostStopAsync(IBus bus) => Task.CompletedTask;
+
+        public Task StopFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
+    }
+
     private sealed class ExpectedStartupException : Exception;
+    private sealed class ExpectedStartObserverException : Exception;
+    private sealed class ExpectedStartFaultObserverException : Exception;
+    private sealed class ExpectedStopException : Exception;
+    private sealed class ExpectedStopFaultObserverException : Exception;
 
     public sealed record LifecycleRequest(Guid Id, int Run);
     public sealed record LifecycleResponse(Guid Id, int Run);

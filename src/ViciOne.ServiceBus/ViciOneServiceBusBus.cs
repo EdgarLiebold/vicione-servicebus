@@ -13,14 +13,13 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus;
 
-internal sealed class ViciOneServiceBusBus :
+internal sealed partial class ViciOneServiceBusBus :
     IBusControl,
     Advanced.IAdvancedPublishEndpoint,
     IMessageRouteProvider
 {
     /// <summary>
-    /// How long a consumer connection waits for the on-demand bus endpoint. Same value StartAsync
-    /// falls back to when the caller supplies no token, so both express one notion of "too long".
+    /// Defines the default bound for bus startup and for consumers waiting on the on-demand bus endpoint.
     /// </summary>
     static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(60);
 
@@ -32,9 +31,9 @@ internal sealed class ViciOneServiceBusBus :
     readonly IPublishEndpoint _publishEndpoint;
     readonly IReceiveEndpoint _receiveEndpoint;
     readonly TimeProvider _timeProvider;
-    Handle? _busHandle;
+    BusLifecycleHandle? _busHandle;
 
-    /// <summary>The bus endpoint's failure that waiting cannot resolve, once there is one.</summary>
+    /// <summary>The terminal bus-endpoint failure that no subsequent retry can resolve.</summary>
     TerminalFaultObserver? _terminalFault;
     ConnectHandle? _terminalFaultHandle;
 
@@ -63,188 +62,6 @@ internal sealed class ViciOneServiceBusBus :
         _logContext = LogContext.Current;
 
         _publishEndpoint = new PublishEndpoint(_receiveEndpoint);
-    }
-
-    /// <summary>
-    /// Waits for the on-demand bus endpoint to become ready and surfaces a terminal transport failure
-    /// instead of replacing it with the readiness timeout.
-    /// </summary>
-    void WaitUntilBusEndpointIsReady()
-    {
-        if (_busHandle == null || _receiveEndpoint.Started.IsCompletedSuccessfully())
-            return;
-
-        var terminal = _terminalFault;
-
-        using var timeout = new CancellationTokenSource(ReadyTimeout, _timeProvider);
-
-        terminal?.Attach(timeout);
-        try
-        {
-            TaskBlocking.Wait(_receiveEndpoint.Started, timeout.Token);
-        }
-        catch (OperationCanceledException) when (timeout.IsCancellationRequested || terminal?.Cause != null)
-        {
-            if (terminal?.Cause is { } cause)
-                throw cause;
-
-            throw new ConnectionException(
-                $"The bus endpoint did not become ready within {ReadyTimeout.TotalSeconds:0} s, so the consumer "
-                + $"could not be connected: {Address}");
-        }
-        finally
-        {
-            terminal?.Detach(timeout);
-        }
-    }
-
-
-    /// <summary>
-    /// Preserves the terminal bus-endpoint failure and cancels every registered readiness waiter.
-    /// <para>
-    /// Terminality is supplied by the receive transport's retry owner. Recoverable attempt faults leave
-    /// waiters attached; retry exhaustion or another definitive startup failure wakes them with the
-    /// original cause.
-    /// </para>
-    /// </summary>
-    internal sealed class TerminalFaultObserver :
-        IReceiveEndpointObserver
-    {
-        readonly object _lock = new();
-        readonly List<CancellationTokenSource> _waiting = new();
-
-        Exception? _cause;
-
-        /// <summary>
-        /// Gets the terminal failure under the same lock that publishes it before waiter cancellation,
-        /// ensuring a released waiter observes the original cause.
-        /// </summary>
-        public Exception? Cause
-        {
-            get
-            {
-                lock (_lock)
-                    return _cause;
-            }
-        }
-
-        /// <summary>Registers a waiter, and wakes it at once if the failure already happened.</summary>
-        /// <param name="waiter">The waiter.</param>
-        public void Attach(CancellationTokenSource waiter)
-        {
-            lock (_lock)
-            {
-                if (_cause == null)
-                {
-                    _waiting.Add(waiter);
-                    return;
-                }
-            }
-
-            CancelAttachedWaiter(waiter);
-        }
-        /// <summary>Removes a readiness waiter that no longer needs terminal-fault notification.</summary>
-        /// <param name="waiter">The readiness waiter.</param>
-        public void Detach(CancellationTokenSource waiter)
-        {
-            lock (_lock)
-                _waiting.Remove(waiter);
-        }
-
-        static void CancelAttachedWaiter(CancellationTokenSource waiter)
-        {
-            try
-            {
-                waiter.Cancel();
-            }
-            catch (ObjectDisposedException)
-            {
-                // The readiness waiter completed while the terminal fault was being published.
-            }
-            catch (Exception exception)
-            {
-                // Callback failures must not replace the terminal transport failure.
-                LogContext.Warning?.Log(exception, "Bus endpoint readiness cancellation callback faulted");
-            }
-        }
-
-        static async Task CancelWaitersAsync(CancellationTokenSource[] waiters)
-        {
-            foreach (var waiter in waiters)
-            {
-                try
-                {
-                    await waiter.CancelAsync().ConfigureAwait(false);
-                }
-                catch (ObjectDisposedException)
-                {
-                    // The readiness waiter completed while the terminal fault was being published.
-                }
-                catch (Exception exception)
-                {
-                    // Callback failures must not replace the terminal transport failure.
-                    LogContext.Warning?.Log(exception, "Bus endpoint readiness cancellation callback faulted");
-                }
-            }
-        }
-
-        async Task IReceiveEndpointObserver.FaultedAsync(ReceiveEndpointFaulted faulted)
-        {
-            CancellationTokenSource[] waiting;
-
-            lock (_lock)
-            {
-                if (_cause != null || !faulted.IsTerminal)
-                    return;
-
-                _cause = faulted.Exception;
-
-                waiting = _waiting.ToArray();
-                _waiting.Clear();
-            }
-
-            await CancelWaitersAsync(waiting).ConfigureAwait(false);
-        }
-
-        Task IReceiveEndpointObserver.ReadyAsync(ReceiveEndpointReady ready)
-        {
-            return Task.CompletedTask;
-        }
-
-        Task IReceiveEndpointObserver.StoppingAsync(ReceiveEndpointStopping stopping)
-        {
-            return Task.CompletedTask;
-        }
-
-        Task IReceiveEndpointObserver.CompletedAsync(ReceiveEndpointCompleted completed)
-        {
-            return Task.CompletedTask;
-        }
-    }
-
-
-    /// <summary>
-    /// Waits for the bus endpoint and returns the live connection handle.
-    /// <para>
-    /// If readiness fails, disconnects the handle before propagating the failure so no pipe registration
-    /// or request identifier remains attached to the bus.
-    /// </para>
-    /// </summary>
-    /// <param name="handle">The handle.</param>
-    /// <returns>The connect handle produced by the operation.</returns>
-    ConnectHandle WaitForBusEndpoint(ConnectHandle handle)
-    {
-        try
-        {
-            WaitUntilBusEndpointIsReady();
-        }
-        catch
-        {
-            handle.Disconnect();
-            throw;
-        }
-
-        return handle;
     }
 
     ConnectHandle IConsumePipeConnector.ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
@@ -356,142 +173,6 @@ internal sealed class ViciOneServiceBusBus :
         return _receiveEndpoint.GetSendEndpointAsync(address, cancellationToken: cancellationToken);
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
-    {
-        LogContext.SetCurrentIfNull(_logContext);
-
-        await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
-        try
-        {
-            await StartCoreAsync(cancellationToken).ConfigureAwait(false);
-        }
-        finally
-        {
-            _lifecycleGate.Release();
-        }
-    }
-
-    async Task StartCoreAsync(CancellationToken cancellationToken)
-    {
-
-        if (_busHandle != null)
-        {
-            LogContext.Warning?.Log("StartAsync called, but the bus was already started: {Address} ({Reason})", Address, "Already Started");
-            return;
-        }
-
-        await _busObservable.PreStartAsync(this).ConfigureAwait(false);
-
-        Handle? busHandle = null;
-
-        CancellationTokenSource? tokenSource = null;
-        try
-        {
-            if (cancellationToken == default)
-            {
-                tokenSource = new CancellationTokenSource(ReadyTimeout, _timeProvider);
-                cancellationToken = tokenSource.Token;
-            }
-
-            var hostHandle = _host.Start(cancellationToken);
-
-            busHandle = new Handle(_host, hostHandle, this, _busObservable, _logContext);
-
-            try
-            {
-                await busHandle.Ready.OrCanceledAsync(cancellationToken).ConfigureAwait(false);
-            }
-            catch (OperationCanceledException exception) when (exception.CancellationToken == cancellationToken)
-            {
-                LogContext.Warning?.Log(exception, "Bus start canceled: {HostAddress}", _host.Address);
-
-                try
-                {
-                    using var stopTimeoutTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30), _timeProvider);
-                    await busHandle.StopAsync(stopTimeoutTokenSource.Token).ConfigureAwait(false);
-                }
-                catch (Exception stopException)
-                {
-                    LogContext.Warning?.Log(stopException, "Bus start canceled, bus stop faulted: {HostAddress}", _host.Address);
-                }
-
-                await busHandle.Ready.ConfigureAwait(false);
-            }
-
-            await _busObservable.PostStartAsync(this, busHandle.Ready).ConfigureAwait(false);
-
-            _busHandle = busHandle;
-
-            _terminalFault = new TerminalFaultObserver();
-            _terminalFaultHandle = (_receiveEndpoint as ReceiveEndpoint)?.ConnectReceiveEndpointObserver(_terminalFault);
-
-            _busState = BusState.Started;
-            _healthMessage = "";
-
-            LogContext.Info?.Log("Bus started: {HostAddress}", _host.Address);
-
-            return;
-        }
-        catch (Exception ex)
-        {
-            try
-            {
-                if (busHandle != null)
-                {
-                    LogContext.Warning?.Log(ex, "Bus start faulted: {HostAddress}", _host.Address);
-
-                    using var stopTimeoutTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30), _timeProvider);
-                    await busHandle.StopAsync(stopTimeoutTokenSource.Token).ConfigureAwait(false);
-                }
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception stopException)
-            {
-                LogContext.Warning?.Log(stopException, "Bus start faulted, bus stop faulted: {HostAddress}", _host.Address);
-            }
-
-            _busState = BusState.Faulted;
-            _healthMessage = $"start faulted: {ex.Message}";
-
-            await _busObservable.StartFaultedAsync(this, ex).ConfigureAwait(false);
-
-            throw;
-        }
-        finally
-        {
-            tokenSource?.Dispose();
-        }
-    }
-
-    public async Task StopAsync(CancellationToken cancellationToken = default)
-    {
-        LogContext.SetCurrentIfNull(_logContext);
-
-        await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
-        try
-        {
-            if (_busHandle == null)
-            {
-                LogContext.Warning?.Log("Failed to stop bus: {Address} ({Reason})", Address, "Not Started");
-                return;
-            }
-
-            await _busHandle.StopAsync(cancellationToken).ConfigureAwait(false);
-
-            _terminalFaultHandle?.Disconnect();
-            _terminalFaultHandle = null;
-            _terminalFault = null;
-
-            _busHandle = null;
-        }
-        finally
-        {
-            _lifecycleGate.Release();
-        }
-    }
-
     public BusHealthResult CheckHealth()
     {
         return _host.CheckHealth(_busState, _healthMessage);
@@ -571,75 +252,5 @@ internal sealed class ViciOneServiceBusBus :
         scope.Add("address", Address);
 
         _host.Probe(scope);
-    }
-
-
-    sealed class Handle
-    {
-        readonly ViciOneServiceBusBus _bus;
-        readonly IBusObserver _busObserver;
-        readonly IHost _host = null!;
-        readonly HostHandle _hostHandle;
-        readonly ILogContext _logContext;
-        bool _stopped;
-
-        public Handle(IHost host, HostHandle hostHandle, ViciOneServiceBusBus bus, IBusObserver busObserver, ILogContext logContext)
-        {
-            _host = host;
-            _bus = bus;
-            _busObserver = busObserver;
-            _logContext = logContext;
-            _hostHandle = hostHandle;
-
-            Ready = ReadyOrNotAsync(hostHandle.Ready);
-        }
-
-        public Task<BusReady> Ready { get; }
-
-        public async Task StopAsync(CancellationToken cancellationToken)
-        {
-            LogContext.SetCurrentIfNull(_logContext);
-
-            if (_stopped)
-                return;
-
-            await _busObserver.PreStopAsync(_bus).ConfigureAwait(false);
-
-            try
-            {
-                await _hostHandle.StopAsync(cancellationToken).ConfigureAwait(false);
-
-                await _busObserver.PostStopAsync(_bus).ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-            {
-                throw;
-            }
-            catch (Exception exception)
-            {
-                await _busObserver.StopFaultedAsync(_bus, exception).ConfigureAwait(false);
-
-                LogContext.Warning?.Log(exception, "Bus stop faulted: {HostAddress}", _host.Address);
-
-                _bus._busState = BusState.Faulted;
-                _bus._healthMessage = $"stop faulted: {exception.Message}";
-
-                throw;
-            }
-
-            LogContext.Info?.Log("Bus stopped: {HostAddress}", _host.Address);
-
-            _stopped = true;
-
-            _bus._busState = BusState.Stopped;
-            _bus._healthMessage = "stopped";
-        }
-
-        async Task<BusReady> ReadyOrNotAsync(Task<HostReady> ready)
-        {
-            var hostReady = await ready.ConfigureAwait(false);
-
-            return new BusReadyEvent(hostReady, _bus);
-        }
     }
 }

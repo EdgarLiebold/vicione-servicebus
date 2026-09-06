@@ -136,7 +136,8 @@ public sealed class PipeContextHandleLifecycleTests
         Task send = pipe.SendAsync(expected);
 
         Assert.True(innerInvoked);
-        Assert.True(asyncAgent.Context.IsCompletedSuccessfully);
+        AgentContext observed = await asyncAgent.Context.WaitAsync(Xunit.TestContext.Current.CancellationToken);
+        Assert.Same(expected, observed);
         Assert.False(send.IsCompleted);
 
         await ((IAsyncDisposable)asyncAgent).DisposeAsync();

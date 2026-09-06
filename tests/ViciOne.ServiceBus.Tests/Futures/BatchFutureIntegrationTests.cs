@@ -19,6 +19,7 @@ public sealed class BatchFutureIntegrationTests
             new BatchRequestMessage(NewId.NextGuid(), null, jobs),
             cancellationToken: fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
 
+        await WaitForSentCountAsync<BatchCompleted>(fixture, 1);
         Assert.Equal(jobs, response.Message.ProcessedJobsNumbers);
         Assert.Single(fixture.Harness.Sent.Select<BatchCompleted>(SnapshotOnlyToken()));
         Assert.Empty(fixture.Harness.Sent.Select<BatchFaulted>(SnapshotOnlyToken()));
@@ -37,6 +38,7 @@ public sealed class BatchFutureIntegrationTests
 
         Assert.True(response.Is(out Response<BatchFaulted>? faulted));
         Assert.NotNull(faulted);
+        await WaitForSentCountAsync<BatchFaulted>(fixture, 1);
         Assert.Equal(["C12345", "C54321", "C33454"], faulted.Message.ProcessedJobsNumbers);
         Assert.Single(fixture.Harness.Sent.Select<BatchFaulted>(SnapshotOnlyToken()));
         Assert.Empty(fixture.Harness.Sent.Select<BatchCompleted>(SnapshotOnlyToken()));
@@ -58,6 +60,7 @@ public sealed class BatchFutureIntegrationTests
         observation.ReleaseDelayed.TrySetResult();
         Response<BatchCompleted> response = await pending.WaitAsync(fixture.Timeout, fixture.CancellationToken);
 
+        await WaitForSentCountAsync<BatchCompleted>(fixture, 1);
         Assert.Equal(jobs, response.Message.ProcessedJobsNumbers);
         Assert.Equal(1, observation.DelayedCount);
         Assert.Single(fixture.Harness.Sent.Select<BatchCompleted>(SnapshotOnlyToken()));
@@ -80,6 +83,7 @@ public sealed class BatchFutureIntegrationTests
             command,
             cancellationToken: fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
 
+        await WaitForSentCountAsync<BatchCompleted>(fixture, 2);
         Assert.Equal(jobs, first.Message.ProcessedJobsNumbers);
         Assert.Equal(jobs, replay.Message.ProcessedJobsNumbers);
         Assert.Equal(2, fixture.Harness.Sent.Select<BatchCompleted>(SnapshotOnlyToken()).Count());
@@ -108,6 +112,7 @@ public sealed class BatchFutureIntegrationTests
         Assert.True(replay.Is(out Response<BatchFaulted>? replayFault));
         Assert.NotNull(firstFault);
         Assert.NotNull(replayFault);
+        await WaitForSentCountAsync<BatchFaulted>(fixture, 2);
         Assert.Equal(["First", "Third"], firstFault.Message.ProcessedJobsNumbers);
         Assert.Equal(firstFault.Message.ProcessedJobsNumbers, replayFault.Message.ProcessedJobsNumbers);
         Assert.Equal(2, fixture.Harness.Sent.Select<BatchFaulted>(SnapshotOnlyToken()).Count());
@@ -116,6 +121,20 @@ public sealed class BatchFutureIntegrationTests
     }
 
     private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
+
+    private static async Task WaitForSentCountAsync<T>(BatchFutureFixture fixture, int expectedCount)
+        where T : class
+    {
+        var observedCount = 0;
+        await foreach (ISentMessage<T> _ in fixture.Harness.Sent.SelectAsync<T>(fixture.CancellationToken))
+        {
+            if (++observedCount == expectedCount)
+                return;
+        }
+
+        throw new Xunit.Sdk.XunitException(
+            $"Expected {expectedCount} sent {typeof(T).Name} message(s), but observed {observedCount}.");
+    }
 
     public interface BatchRequest : CorrelatedBy<Guid>
     {
