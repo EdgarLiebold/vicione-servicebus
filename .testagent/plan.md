@@ -214,3 +214,27 @@ public API inventory deterministically across independent package runs.
 - Restore a full DI-container dependency in a testing package: the exact dependency-boundary guard must fail.
 - Add a second direct ViciOne package to an isolated consumer: the package-isolation guard must fail.
 - Include NuGet archive hashes in the public API inventory: independent identical package runs must produce different output and expose the nondeterminism.
+
+## Iteration 10 outcome
+
+Turn the deterministic package API inventory into an enforced, versioned public contract for every
+delivered package. Pack the complete thirty-package catalog, restore all twenty-nine runtime
+packages through a dedicated package-only consumer, and reject any unreviewed difference from the
+committed packed API baseline.
+
+## Iteration 10 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-PACKED-PUBLIC-API` | The gate compares a freshly generated inventory with a committed baseline and has an explicit update operation | architecture and package gates | exact script contract, tracked non-empty baseline, and default mismatch failure |
+| `REQ-VSB-PACKAGE-CATALOG` | Every packable product project produces its exact documented package | architecture and package gates | evaluated project/package catalog equals all thirty expected package files |
+| `REQ-VSB-PACKED-PUBLIC-API` | Every runtime package participates in a package-only restore before reflection | architecture and package gates | dedicated consumer with twenty-nine direct locked package references and no source references |
+
+## Iteration 10 mutation obligations
+
+- Replace the baseline comparison with unconditional success: the architecture contract must fail.
+- Change one committed API line: the default fresh-package gate must fail and report the diff.
+- Remove one runtime package reference from the complete API consumer: the exact catalog and lock
+  assertions must fail.
+- Remove one expected package artifact from the gate catalog: the exact packable-project/package
+  comparison must fail.

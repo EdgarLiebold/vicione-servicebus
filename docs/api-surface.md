@@ -75,3 +75,9 @@ packed NuGet packages. Journeys 15–18 cover the message journal, explicit mess
 duplicate-safe inbox processing, and the minimal Suite package composition. The executable
 `samples/SuiteComposition` host validates limits, SQLite reliable messaging, a consumer, a request,
 a stored schedule, and the intended assembly closure.
+
+The package gate also restores every runtime delivery package into an isolated cache and reflects
+its complete public and protected surface. `docs/api/packed-public-api.txt` is the versioned
+contract for those package assemblies: additions, removals, visibility changes, signatures,
+parameter defaults, and inheritance changes fail the gate unless the contract is deliberately
+updated.

@@ -1,3 +1,4 @@
+#:sdk Microsoft.NET.Sdk.Web
 #:property TargetFramework=net10.0
 #:property PublishAot=false
 #:property NoWarn=IL2026;IL2070

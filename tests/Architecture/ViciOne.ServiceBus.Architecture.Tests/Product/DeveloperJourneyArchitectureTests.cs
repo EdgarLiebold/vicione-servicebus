@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Xml.Linq;
+using ViciOne.ServiceBus.Architecture.Tests.Build;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -26,6 +27,44 @@ public sealed class DeveloperJourneyArchitectureTests
         "ViciOne.ServiceBus.RabbitMq.Testing",
         "ViciOne.ServiceBus.Testing",
     ];
+
+    private static readonly string[] ExpectedDeliveredPackages =
+    [
+        "ViciOne.ServiceBus",
+        "ViciOne.ServiceBus.Abstractions",
+        "ViciOne.ServiceBus.ActiveMq",
+        "ViciOne.ServiceBus.AmazonS3",
+        "ViciOne.ServiceBus.AmazonSqs",
+        "ViciOne.ServiceBus.Analyzers",
+        "ViciOne.ServiceBus.Azure.Storage",
+        "ViciOne.ServiceBus.Azure.Table",
+        "ViciOne.ServiceBus.AzureServiceBus",
+        "ViciOne.ServiceBus.AzureServiceBus.Testing",
+        "ViciOne.ServiceBus.Courier",
+        "ViciOne.ServiceBus.DynamoDb",
+        "ViciOne.ServiceBus.EntityFrameworkCore",
+        "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+        "ViciOne.ServiceBus.EventHubs",
+        "ViciOne.ServiceBus.EventHubs.Testing",
+        "ViciOne.ServiceBus.Futures",
+        "ViciOne.ServiceBus.Initializers",
+        "ViciOne.ServiceBus.JobService",
+        "ViciOne.ServiceBus.Mediator",
+        "ViciOne.ServiceBus.MessagePack",
+        "ViciOne.ServiceBus.Quartz",
+        "ViciOne.ServiceBus.RabbitMq",
+        "ViciOne.ServiceBus.RabbitMq.Testing",
+        "ViciOne.ServiceBus.Sagas",
+        "ViciOne.ServiceBus.SignalR",
+        "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+        "ViciOne.ServiceBus.SqlTransport.SqlServer",
+        "ViciOne.ServiceBus.StateMachineVisualizer",
+        "ViciOne.ServiceBus.Testing",
+    ];
+
+    private static readonly string[] ExpectedRuntimePackages = ExpectedDeliveredPackages
+        .Where(static package => package != "ViciOne.ServiceBus.Analyzers")
+        .ToArray();
 
     private static readonly IReadOnlyDictionary<string, string> ExpectedIsolatedTestingConsumers =
         new Dictionary<string, string>(StringComparer.Ordinal)
@@ -82,18 +121,53 @@ public sealed class DeveloperJourneyArchitectureTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-PACKED-PUBLIC-API", "fresh-package-assemblies-generate-deterministic-baseline")]
-    public void PackageGate_GeneratesAHashedPublicApiBaselineFromRestoredPackageAssemblies()
+    [RequirementCoverage("REQ-VSB-PACKED-PUBLIC-API", "fresh-package-api-must-match-versioned-complete-baseline")]
+    public void PackageGate_EnforcesVersionedPublicApiBaselineForEveryRuntimePackage()
     {
         string verifier = Path.Combine(RepositoryLayout.Root, "tools", "ci", "verify_developer_journeys.sh");
         string generator = Path.Combine(RepositoryLayout.Root, "tools", "public-api-baseline", "PublicApiBaseline.cs");
+        string baseline = Path.Combine(RepositoryLayout.Root, "docs", "api", "packed-public-api.txt");
+        string consumer = Path.Combine(
+            RepositoryLayout.Root,
+            "samples",
+            "PackageConsumers",
+            "PublicApiBaseline",
+            "ViciOne.ServiceBus.Samples.PublicApiBaselinePackageConsumer.csproj");
 
         Assert.True(File.Exists(generator));
+        Assert.True(File.Exists(baseline));
+        Assert.True(new FileInfo(baseline).Length > 1_000);
+        Assert.True(File.Exists(consumer));
         string script = File.ReadAllText(verifier);
-        Assert.Contains("PUBLIC_API_BASELINE_OUTPUT", script, StringComparison.Ordinal);
+        Assert.Contains("PUBLIC_API_CONTRACT_OUTPUT", script, StringComparison.Ordinal);
         Assert.Contains("--file \"$repository_root/tools/public-api-baseline/PublicApiBaseline.cs\"", script, StringComparison.Ordinal);
         Assert.Contains("\"$global_packages\"", script, StringComparison.Ordinal);
         Assert.Contains("\"$package_feed\"", script, StringComparison.Ordinal);
+        Assert.Contains("docs/api/packed-public-api.txt", script, StringComparison.Ordinal);
+        Assert.Contains("cmp -s", script, StringComparison.Ordinal);
+        Assert.Contains("diff -u", script, StringComparison.Ordinal);
+        Assert.Contains("--update-public-api-contract", script, StringComparison.Ordinal);
+
+        XDocument consumerProject = XDocument.Load(consumer);
+        Assert.Empty(consumerProject.Descendants("ProjectReference"));
+        Assert.Equal("true", consumerProject.Descendants("ViciOnePackageConsumer").Single().Value);
+        XElement[] consumerPackages = consumerProject.Descendants("PackageReference")
+            .Where(static reference => reference.Attribute("Include")!.Value.StartsWith("ViciOne.", StringComparison.Ordinal))
+            .ToArray();
+        Assert.Equal(ExpectedRuntimePackages, consumerPackages
+            .Select(static reference => reference.Attribute("Include")!.Value)
+            .Order(StringComparer.Ordinal));
+        Assert.All(consumerPackages, static reference => Assert.Equal("1.0.0", reference.Attribute("Version")!.Value));
+
+        using JsonDocument lockFile = JsonDocument.Parse(File.ReadAllText(
+            Path.Combine(Path.GetDirectoryName(consumer)!, "packages.lock.json")));
+        JsonElement dependencies = lockFile.RootElement.GetProperty("dependencies").GetProperty("net10.0");
+        Assert.All(ExpectedRuntimePackages, package =>
+        {
+            JsonElement dependency = dependencies.GetProperty(package);
+            Assert.Equal("Direct", dependency.GetProperty("type").GetString());
+            Assert.Equal("1.0.0", dependency.GetProperty("resolved").GetString());
+        });
 
         string source = File.ReadAllText(generator);
         Assert.Contains("/lib/net10.0/", source, StringComparison.Ordinal);
@@ -113,11 +187,26 @@ public sealed class DeveloperJourneyArchitectureTests
         string verifier = Path.Combine(RepositoryLayout.Root, "tools", "ci", "verify_developer_journeys.sh");
         string script = File.ReadAllText(verifier);
 
-        Assert.All(ExpectedViciOnePackages, package =>
+        string[] packableProjectPackages = RepositoryLayout.ProductProjects
+            .Where(project => string.Equals(
+                MsBuildEvaluation.PropertyOf(project, "IsPackable"),
+                "true",
+                StringComparison.OrdinalIgnoreCase))
+            .Select(ReadPackageId)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        Assert.Equal(ExpectedDeliveredPackages, packableProjectPackages);
+
+        Assert.All(ExpectedDeliveredPackages, package =>
         {
-            Assert.Contains($"/{package}.csproj\"", script, StringComparison.Ordinal);
             Assert.Contains($"\"{package}.1.0.0.nupkg\"", script, StringComparison.Ordinal);
         });
+
+        Assert.Contains("$repository_root/ViciOne.ServiceBus.slnx", script, StringComparison.Ordinal);
+        Assert.Contains(
+            "$repository_root/src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+            script,
+            StringComparison.Ordinal);
 
         string consumerRoot = Path.Combine(RepositoryLayout.Root, "samples", "PackageConsumers");
         string[] actualConsumers = Directory.GetDirectories(consumerRoot)
@@ -125,7 +214,9 @@ public sealed class DeveloperJourneyArchitectureTests
                 ?? throw new InvalidOperationException($"Package consumer directory has no name: {path}"))
             .Order(StringComparer.Ordinal)
             .ToArray();
-        Assert.Equal(ExpectedIsolatedTestingConsumers.Keys.Order(StringComparer.Ordinal), actualConsumers);
+        Assert.Equal(
+            ExpectedIsolatedTestingConsumers.Keys.Append("PublicApiBaseline").Order(StringComparer.Ordinal),
+            actualConsumers);
 
         Assert.All(ExpectedIsolatedTestingConsumers, expected =>
         {
@@ -150,5 +241,13 @@ public sealed class DeveloperJourneyArchitectureTests
             "workflows",
             "native-tests.yml"));
         Assert.Contains("tools/ci/verify_developer_journeys.sh", workflow, StringComparison.Ordinal);
+    }
+
+    private static string ReadPackageId(string project)
+    {
+        string? packageId = XDocument.Load(project).Descendants("PackageId")
+            .Select(static element => element.Value)
+            .SingleOrDefault();
+        return packageId ?? Path.GetFileNameWithoutExtension(project);
     }
 }

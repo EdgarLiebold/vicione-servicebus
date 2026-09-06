@@ -3,6 +3,23 @@ set -euo pipefail
 
 # Compiles the documented journeys and isolated package consumers against freshly packed packages.
 
+update_lock=false
+update_public_api_contract=false
+for argument in "$@"; do
+  case "$argument" in
+    --update-lock)
+      update_lock=true
+      ;;
+    --update-public-api-contract)
+      update_public_api_contract=true
+      ;;
+    *)
+      printf 'Unknown argument: %s\n' "$argument" >&2
+      exit 2
+      ;;
+  esac
+done
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repository_root="$(cd "$script_dir/../.." && pwd)"
 dotnet_cli="${DOTNET_CLI:-dotnet}"
@@ -12,12 +29,14 @@ package_feed="$temporary_root/packages"
 global_packages="$temporary_root/global-packages"
 nuget_config="$temporary_root/NuGet.config"
 sample_project="$repository_root/samples/DeveloperJourneys/ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj"
+public_api_consumer_project="$repository_root/samples/PackageConsumers/PublicApiBaseline/ViciOne.ServiceBus.Samples.PublicApiBaselinePackageConsumer.csproj"
 isolated_consumer_projects=(
   "$repository_root/samples/PackageConsumers/AzureServiceBusTesting/ViciOne.ServiceBus.Samples.AzureServiceBusTestingPackageConsumer.csproj"
   "$repository_root/samples/PackageConsumers/EventHubsTesting/ViciOne.ServiceBus.Samples.EventHubsTestingPackageConsumer.csproj"
   "$repository_root/samples/PackageConsumers/RabbitMqTesting/ViciOne.ServiceBus.Samples.RabbitMqTestingPackageConsumer.csproj"
 )
-public_api_baseline="${PUBLIC_API_BASELINE_OUTPUT:-$repository_root/artifacts/verification/public-api-baseline.txt}"
+public_api_contract="${PUBLIC_API_CONTRACT_OUTPUT:-$repository_root/artifacts/verification/public-api-contract.txt}"
+committed_public_api_contract="$repository_root/docs/api/packed-public-api.txt"
 
 journey_count="$(find "$repository_root/samples/DeveloperJourneys" -maxdepth 1 -type f -name 'Journey*.cs' | wc -l | tr -d '[:space:]')"
 if [[ "$journey_count" != "18" ]]; then
@@ -51,30 +70,22 @@ export DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1
 export MSBUILDDISABLENODEREUSE=1
 export NUGET_PACKAGES="$global_packages"
 
-projects=(
-  "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj"
-  "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
-  "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj"
-  "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj"
-  "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj"
-  "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj"
-  "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj"
-  "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj"
-  "src/Transports/ViciOne.ServiceBus.RabbitMq/ViciOne.ServiceBus.RabbitMq.csproj"
-  "src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj"
-  "src/Transports/ViciOne.ServiceBus.EventHubs/ViciOne.ServiceBus.EventHubs.csproj"
-  "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj"
-  "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj"
-  "src/Scheduling/ViciOne.ServiceBus.Quartz/ViciOne.ServiceBus.Quartz.csproj"
-  "src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj"
-  "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj"
-  "src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj"
-  "src/Transports/ViciOne.ServiceBus.EventHubs.Testing/ViciOne.ServiceBus.EventHubs.Testing.csproj"
-  "src/Transports/ViciOne.ServiceBus.RabbitMq.Testing/ViciOne.ServiceBus.RabbitMq.Testing.csproj"
+testing_package_projects=(
+  "$repository_root/src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj"
+  "$repository_root/src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj"
+  "$repository_root/src/Transports/ViciOne.ServiceBus.EventHubs.Testing/ViciOne.ServiceBus.EventHubs.Testing.csproj"
+  "$repository_root/src/Transports/ViciOne.ServiceBus.RabbitMq.Testing/ViciOne.ServiceBus.RabbitMq.Testing.csproj"
 )
 
-for project in "${projects[@]}"; do
-  "$dotnet_cli" pack "$repository_root/$project" \
+"$dotnet_cli" pack "$repository_root/ViciOne.ServiceBus.slnx" \
+  --configuration Release \
+  --no-restore \
+  "${build_server_arguments[@]}" \
+  --output "$package_feed" \
+  -p:ContinuousIntegrationBuild=true
+
+for project in "${testing_package_projects[@]}"; do
+  "$dotnet_cli" pack "$project" \
     --configuration Release \
     --no-restore \
     "${build_server_arguments[@]}" \
@@ -85,35 +96,51 @@ done
 expected_packages=(
   "ViciOne.ServiceBus.Abstractions.1.0.0.nupkg"
   "ViciOne.ServiceBus.1.0.0.nupkg"
+  "ViciOne.ServiceBus.ActiveMq.1.0.0.nupkg"
+  "ViciOne.ServiceBus.AmazonS3.1.0.0.nupkg"
+  "ViciOne.ServiceBus.AmazonSqs.1.0.0.nupkg"
+  "ViciOne.ServiceBus.Analyzers.1.0.0.nupkg"
+  "ViciOne.ServiceBus.Azure.Storage.1.0.0.nupkg"
+  "ViciOne.ServiceBus.Azure.Table.1.0.0.nupkg"
+  "ViciOne.ServiceBus.AzureServiceBus.1.0.0.nupkg"
+  "ViciOne.ServiceBus.AzureServiceBus.Testing.1.0.0.nupkg"
   "ViciOne.ServiceBus.Sagas.1.0.0.nupkg"
   "ViciOne.ServiceBus.Courier.1.0.0.nupkg"
-  "ViciOne.ServiceBus.Futures.1.0.0.nupkg"
-  "ViciOne.ServiceBus.JobService.1.0.0.nupkg"
-  "ViciOne.ServiceBus.Mediator.1.0.0.nupkg"
-  "ViciOne.ServiceBus.Initializers.1.0.0.nupkg"
-  "ViciOne.ServiceBus.RabbitMq.1.0.0.nupkg"
-  "ViciOne.ServiceBus.AzureServiceBus.1.0.0.nupkg"
-  "ViciOne.ServiceBus.EventHubs.1.0.0.nupkg"
+  "ViciOne.ServiceBus.DynamoDb.1.0.0.nupkg"
   "ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg"
   "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg"
-  "ViciOne.ServiceBus.Quartz.1.0.0.nupkg"
-  "ViciOne.ServiceBus.MessagePack.1.0.0.nupkg"
-  "ViciOne.ServiceBus.Testing.1.0.0.nupkg"
-  "ViciOne.ServiceBus.AzureServiceBus.Testing.1.0.0.nupkg"
+  "ViciOne.ServiceBus.EventHubs.1.0.0.nupkg"
   "ViciOne.ServiceBus.EventHubs.Testing.1.0.0.nupkg"
+  "ViciOne.ServiceBus.Futures.1.0.0.nupkg"
+  "ViciOne.ServiceBus.Initializers.1.0.0.nupkg"
+  "ViciOne.ServiceBus.JobService.1.0.0.nupkg"
+  "ViciOne.ServiceBus.Mediator.1.0.0.nupkg"
+  "ViciOne.ServiceBus.MessagePack.1.0.0.nupkg"
+  "ViciOne.ServiceBus.Quartz.1.0.0.nupkg"
+  "ViciOne.ServiceBus.RabbitMq.1.0.0.nupkg"
   "ViciOne.ServiceBus.RabbitMq.Testing.1.0.0.nupkg"
+  "ViciOne.ServiceBus.SignalR.1.0.0.nupkg"
+  "ViciOne.ServiceBus.SqlTransport.PostgreSql.1.0.0.nupkg"
+  "ViciOne.ServiceBus.SqlTransport.SqlServer.1.0.0.nupkg"
+  "ViciOne.ServiceBus.StateMachineVisualizer.1.0.0.nupkg"
+  "ViciOne.ServiceBus.Testing.1.0.0.nupkg"
 )
 
 for package in "${expected_packages[@]}"; do
   test -f "$package_feed/$package"
 done
+actual_package_count="$(find "$package_feed" -maxdepth 1 -type f -name 'ViciOne.ServiceBus*.nupkg' | wc -l | tr -d '[:space:]')"
+if [[ "$actual_package_count" != "${#expected_packages[@]}" ]]; then
+  printf 'Expected exactly %s ViciOne packages, found %s.\n' "${#expected_packages[@]}" "$actual_package_count" >&2
+  exit 1
+fi
 
 restore_arguments=(
   restore "$sample_project"
   --configfile "$nuget_config"
   --force-evaluate
 )
-if [[ "${1:-}" == "--update-lock" ]]; then
+if $update_lock; then
   restore_arguments+=("-p:RestoreLockedMode=false")
 fi
 
@@ -138,7 +165,7 @@ for consumer_project in "${isolated_consumer_projects[@]}"; do
     --configfile "$nuget_config"
     --force-evaluate
   )
-  if [[ "${1:-}" == "--update-lock" ]]; then
+  if $update_lock; then
     restore_arguments+=("-p:RestoreLockedMode=false")
   fi
 
@@ -157,11 +184,42 @@ for consumer_project in "${isolated_consumer_projects[@]}"; do
     --no-restore
 done
 
+restore_arguments=(
+  restore "$public_api_consumer_project"
+  --configfile "$nuget_config"
+  --force-evaluate
+)
+if $update_lock; then
+  restore_arguments+=("-p:RestoreLockedMode=false")
+fi
+
+"$dotnet_cli" "${restore_arguments[@]}"
+"$dotnet_cli" build "$public_api_consumer_project" \
+  --configuration Release \
+  --no-restore \
+  --no-incremental \
+  "${build_server_arguments[@]}" \
+  -p:RestoreLockedMode=true \
+  -p:TreatWarningsAsErrors=true
+
 "$dotnet_cli" run \
   --file "$repository_root/tools/public-api-baseline/PublicApiBaseline.cs" \
   -- \
   "$global_packages" \
   "$package_feed" \
-  "$public_api_baseline"
+  "$public_api_contract"
 
-printf 'Developer journey package-consumer gate passed: 18 scenarios, 19 freshly packed ViciOne packages, 3 isolated provider testing consumers executed, packed public API baseline generated.\n'
+if $update_public_api_contract; then
+  mkdir -p "$(dirname "$committed_public_api_contract")"
+  cp "$public_api_contract" "$committed_public_api_contract"
+  printf 'Updated committed packed public API contract: %s\n' "$committed_public_api_contract"
+elif [[ ! -f "$committed_public_api_contract" ]]; then
+  printf 'Committed packed public API contract is missing: %s\n' "$committed_public_api_contract" >&2
+  exit 1
+elif ! cmp -s "$committed_public_api_contract" "$public_api_contract"; then
+  printf 'Packed public API differs from the committed contract. Review the diff and update explicitly when intended.\n' >&2
+  diff -u "$committed_public_api_contract" "$public_api_contract" || true
+  exit 1
+fi
+
+printf 'Developer journey package-consumer gate passed: 18 scenarios, 30 freshly packed ViciOne packages, 3 isolated provider testing consumers executed, and 29 runtime package APIs match the committed baseline.\n'

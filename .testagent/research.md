@@ -57,6 +57,22 @@ High-value findings from the scan and the semantic reviews:
 - SQL URI handlers expose incorrect nullability.
 - Test polling and fixed-delay negative assertions should become deterministic.
 
+## Confirmed iteration-10 defects
+
+1. The fresh-package API gate writes an inventory but never compares it with a committed baseline,
+   so an accidental public API change remains green.
+2. The gate packs only the nineteen packages needed by the developer journeys although the product
+   publishes thirty packages. Eleven delivery packages and twelve runtime assemblies are therefore
+   outside its package and API verification boundary.
+3. No package-only consumer restores the complete runtime package catalog. The API inventory can
+   consequently inspect only the subset that earlier samples happened to restore.
+
+The greenfield reference is the current .NET task-based asynchronous pattern, the .NET runtime
+framework-design-guideline digest, and NuGet package-authoring guidance. The resulting repository
+rule is stricter than compatibility-oriented library evolution: every intended API change must be
+an explicit reviewed baseline update, while an unreviewed addition, removal, rename, visibility
+change, default-value change, or signature change fails CI.
+
 ## Reference API direction
 
 The greenfield reference model is a small application surface, explicit capability packages, validated immutable options, provider contracts outside application IntelliSense, standard .NET naming and cancellation conventions, and no historical compatibility aliases. Feature preservation means retaining behavior through the correct layer; it does not require retaining accidental public exposure or silently ignored members.

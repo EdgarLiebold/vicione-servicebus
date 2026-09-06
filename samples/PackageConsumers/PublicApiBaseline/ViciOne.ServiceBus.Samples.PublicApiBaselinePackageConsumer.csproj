@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <ViciOnePackageConsumer>true</ViciOnePackageConsumer>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <!-- Restoring this project materializes every runtime delivery package in an isolated package
+       cache. The public API gate reflects those package assemblies rather than source outputs. -->
+  <ItemGroup>
+    <PackageReference Include="ViciOne.ServiceBus" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.Abstractions" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.ActiveMq" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.AmazonS3" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.AmazonSqs" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.Azure.Storage" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.Azure.Table" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.AzureServiceBus" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.AzureServiceBus.Testing" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.Courier" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.DynamoDb" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.EntityFrameworkCore" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.EntityFrameworkCore.Sagas" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.EventHubs" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.EventHubs.Testing" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.Futures" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.Initializers" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.JobService" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.Mediator" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.MessagePack" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.Quartz" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.RabbitMq" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.RabbitMq.Testing" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.Sagas" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.SignalR" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.SqlTransport.PostgreSql" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.SqlTransport.SqlServer" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.StateMachineVisualizer" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.Testing" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>

@@ -58,10 +58,19 @@ dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore
 tools/ci/verify_developer_journeys.sh
 ```
 
-The second command creates a temporary feed, packs nineteen product packages, restores the
-package-only samples, compiles all eighteen journeys and three isolated provider-testing consumers
-with warnings as errors, and generates a deterministic public API inventory under
-`artifacts/verification`.
+The second command creates a temporary feed, packs all thirty delivery packages, restores the
+package-only samples, and compiles all eighteen journeys plus three isolated provider-testing
+consumers with warnings as errors. A dedicated package-only API consumer restores all twenty-nine
+runtime packages. The gate reflects their complete public surface, writes the deterministic
+inventory under `artifacts/verification`, and compares it byte-for-byte with the committed
+`docs/api/packed-public-api.txt` contract.
+
+After an intentional API change, update the contract explicitly and inspect its diff:
+
+```bash
+tools/ci/verify_developer_journeys.sh --update-public-api-contract
+git diff -- docs/api/packed-public-api.txt
+```
 
 ### macOS `protoc` startup troubleshooting
 

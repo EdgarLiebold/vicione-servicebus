@@ -239,3 +239,33 @@ exclude nondeterministic archive/binary hashes; two independent complete runs pr
 - Shipping solution pack: 26 packable artifacts produced from 30 solution projects.
 - Current NuGet advisory inventory: 0 findings and 0 unresolved paths.
 - Engineering whitespace, warning-level style, architecture manifests, and Git whitespace: passed.
+
+## Iteration 10
+
+Iteration 10 expands the fresh-package gate from nineteen journey dependencies to the complete
+thirty-package delivery catalog and makes the packed API inventory enforceable. A dedicated
+package-only consumer directly restores all twenty-nine runtime packages, and the reflector now
+loads the ASP.NET Core shared framework needed by SignalR. The resulting 24,000-line contract is
+tracked at `docs/api/packed-public-api.txt`; normal runs compare it byte-for-byte, while deliberate
+API changes require the explicit `--update-public-api-contract` operation.
+
+### Red/green and mutation evidence
+
+- The initial architecture contract failed because the tracked contract and complete package
+  consumer were absent.
+- The first complete run exposed and then closed the SignalR shared-framework resolution gap.
+- Two independent complete package runs produced the identical SHA-256
+  `28e7a84a58a2cbdbac689f41e193c9f54cc827dcaef80d93701da341458fb0c6`.
+- Four isolated mutations were killed: disabled comparison, one missing runtime consumer package,
+  one missing expected package artifact, and a one-line tracked-contract drift.
+- Every mutation was restored before final validation.
+
+### Full validation
+
+- Release Unit/Architecture build with warnings as errors: passed, 0 warnings and 0 errors.
+- Complete Unit/Architecture profile: 3,818 passed, 0 failed, 0 skipped.
+- Complete Architecture profile: 215 passed, 0 failed, 0 skipped.
+- Release Engineering build with warnings as errors: passed, 0 warnings and 0 errors.
+- Fresh-package comparison gate: 18 journeys, 30 packages, 3 executable provider consumers, and
+  all 29 runtime package APIs passed.
+- Engineering whitespace, warning-level style, and Git whitespace: passed.
