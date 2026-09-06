@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Advanced;
 
@@ -19,13 +20,14 @@ internal static class EndpointConvention
             global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Endpoint Convention", "unknown", $"The send endpoint provider {provider.GetType().Name} does not expose its owning bus message routes.", "Correct the named configuration before starting the host"));
     }
 
-    internal static bool TryGetDestinationAddress<T>(ISendEndpointProvider provider, out Uri destinationAddress)
+    internal static bool TryGetDestinationAddress<T>(ISendEndpointProvider provider, [NotNullWhen(true)] out Uri? destinationAddress)
         where T : class
     {
         return GetMessageRoutes(provider).TryGetDestinationAddress<T>(out destinationAddress);
     }
 
-    internal static bool TryGetDestinationAddress(ISendEndpointProvider provider, Type messageType, out Uri destinationAddress)
+    internal static bool TryGetDestinationAddress(ISendEndpointProvider provider, Type messageType,
+        [NotNullWhen(true)] out Uri? destinationAddress)
     {
         ArgumentNullException.ThrowIfNull(messageType);
 
@@ -35,7 +37,7 @@ internal static class EndpointConvention
     internal static Uri GetDestinationAddress<T>(ISendEndpointProvider provider)
         where T : class
     {
-        return TryGetDestinationAddress<T>(provider, out Uri destinationAddress)
+        return TryGetDestinationAddress<T>(provider, out Uri? destinationAddress)
             ? destinationAddress
             : throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Endpoint Convention", "unknown", $"A message route for {TypeCache<T>.ShortName} is not configured on this bus.", "Correct the named configuration before starting the host"));
     }

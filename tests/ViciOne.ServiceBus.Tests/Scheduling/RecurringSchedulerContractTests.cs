@@ -67,6 +67,26 @@ public sealed class RecurringSchedulerContractTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "control-handle-extensions-validate-receiver-first")]
+    public async Task ControlHandleExtensions_RejectANullEndpointBeforeInspectingTheHandleAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        Assert.Equal("endpoint", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            PublishEndpointRecurringSchedulerExtensions.CancelScheduledRecurringSendAsync<ScheduledMessage>(null!, null!, cancellationToken))).ParamName);
+        Assert.Equal("endpoint", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            PublishEndpointRecurringSchedulerExtensions.PauseScheduledRecurringSendAsync<ScheduledMessage>(null!, null!, cancellationToken))).ParamName);
+        Assert.Equal("endpoint", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            PublishEndpointRecurringSchedulerExtensions.ResumeScheduledRecurringSendAsync<ScheduledMessage>(null!, null!, cancellationToken))).ParamName);
+        Assert.Equal("endpoint", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            SendEndpointRecurringSchedulerExtensions.CancelScheduledRecurringSendAsync<ScheduledMessage>(null!, null!, cancellationToken))).ParamName);
+        Assert.Equal("endpoint", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            SendEndpointRecurringSchedulerExtensions.PauseScheduledRecurringSendAsync<ScheduledMessage>(null!, null!, cancellationToken))).ParamName);
+        Assert.Equal("endpoint", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            SendEndpointRecurringSchedulerExtensions.ResumeScheduledRecurringSendAsync<ScheduledMessage>(null!, null!, cancellationToken))).ParamName);
+    }
+
     private sealed record ScheduledMessage;
 
     private class UnexpectedInvocationProxy : DispatchProxy

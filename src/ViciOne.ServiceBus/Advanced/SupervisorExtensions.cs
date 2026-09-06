@@ -104,12 +104,8 @@ public static class SupervisorExtensions
         return contextAgent;
     }
 
-    /// <summary>
-    /// Starts asynchronous agent creation for a caller that owns the supplied async context rather
-    /// than the mirror task returned by <see cref="CreateAgentAsync{T,TAgent}"/>. The mirror outcome is
-    /// observed here; creation cancellation and failure are transferred to <paramref name="asyncContext"/>.
-    /// </summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Starts agent creation and publishes its completion, cancellation or failure through the supplied async context.</summary>
+    /// <typeparam name="T">The supervisor context type.</typeparam>
     /// <typeparam name="TAgent">The agent type.</typeparam>
     /// <param name="supervisor">The supervisor used by the operation.</param>
     /// <param name="asyncContext">The async context used by the operation.</param>
@@ -134,8 +130,7 @@ public static class SupervisorExtensions
             }
             catch
             {
-                // The creation task transfers cancellation or failure to asyncContext. This observer exists
-                // solely so the mirror task cannot become an unobserved exception.
+                // The async context already carries the creation failure or cancellation.
             }
         });
     }
@@ -163,7 +158,7 @@ public static class SupervisorExtensions
 
         await Task.WhenAny(supervisorTask, asyncContext.Context).ConfigureAwait(false);
 
-        async Task HandleSupervisorTaskAsync()
+        async Task TransferSupervisorOutcomeAsync()
         {
             try
             {
@@ -182,13 +177,10 @@ public static class SupervisorExtensions
             }
         }
 
-        // The bridge catches every supervisor outcome and transfers it to asyncContext. It may
-        // outlive context creation because supervisor.Send remains active until the agent stops.
-        _ = HandleSupervisorTaskAsync();
+        _ = TransferSupervisorOutcomeAsync();
 
         return await asyncContext.Context.ConfigureAwait(false);
     }
-
 
     sealed class CreateAgentPipe<T, TAgent> :
         IPipe<T>

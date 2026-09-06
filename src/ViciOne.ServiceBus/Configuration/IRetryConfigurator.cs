@@ -1,13 +1,7 @@
-using ViciOne.ServiceBus.Configuration;
-
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures retry.</summary>
+/// <summary>Configures a retry pipeline, including its policy and observers.</summary>
 public interface IRetryConfigurator :
-    IExceptionConfigurator,
+    IRetryPolicyConfigurator,
     IRetryObserverConnector
-{
-    /// <summary>Sets retry policy.</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
-    void SetRetryPolicy(RetryPolicyFactory factory);
-}
+;

@@ -126,9 +126,9 @@ public static class MessageDataExtensions
     /// <summary>Serializes and stores an object according to the default message-data policy.</summary>
     /// <param name="repository">The repository used when external storage is required.</param>
     /// <param name="value">The value, or <see langword="null"/> for empty message data.</param>
-    /// <param name="objectType">The runtime object type used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the put object outcome.</returns>
+    /// <param name="objectType">The contract type used for serialization.</param>
+    /// <param name="cancellationToken">Cancels serialization or storage.</param>
+    /// <returns>The inline or repository-backed serialized message data.</returns>
     public static Task<IMessageData> PutObjectAsync(this IMessageDataRepository repository, object? value, Type objectType,
         CancellationToken cancellationToken =
             default)
@@ -139,10 +139,10 @@ public static class MessageDataExtensions
     /// <summary>Serializes and stores an object with an optional repository lifetime.</summary>
     /// <param name="repository">The repository used when external storage is required.</param>
     /// <param name="value">The value, or <see langword="null"/> for empty message data.</param>
-    /// <param name="objectType">The runtime object type used by the operation.</param>
-    /// <param name="timeToLive">The time to live.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the put object outcome.</returns>
+    /// <param name="objectType">The contract type used for serialization.</param>
+    /// <param name="timeToLive">The optional repository retention period.</param>
+    /// <param name="cancellationToken">Cancels serialization or storage.</param>
+    /// <returns>The inline or repository-backed serialized message data.</returns>
     public static Task<IMessageData> PutObjectAsync(this IMessageDataRepository repository, object? value, Type objectType, TimeSpan? timeToLive,
         CancellationToken cancellationToken = default)
     {
@@ -152,11 +152,11 @@ public static class MessageDataExtensions
     /// <summary>Serializes and stores an object according to an explicit message-data policy.</summary>
     /// <param name="repository">The repository used when external storage is required.</param>
     /// <param name="value">The value, or <see langword="null"/> for empty message data.</param>
-    /// <param name="objectType">The runtime object type used by the operation.</param>
-    /// <param name="timeToLive">The time to live.</param>
-    /// <param name="policy">The policy.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the put object outcome.</returns>
+    /// <param name="objectType">The contract type used for serialization.</param>
+    /// <param name="timeToLive">The optional repository retention period.</param>
+    /// <param name="policy">Controls inline and repository storage.</param>
+    /// <param name="cancellationToken">Cancels serialization or storage.</param>
+    /// <returns>The inline or repository-backed serialized message data.</returns>
     public static async Task<IMessageData> PutObjectAsync(this IMessageDataRepository repository, object? value, Type objectType, TimeSpan? timeToLive,
         MessageDataPolicy policy, CancellationToken cancellationToken = default)
     {
@@ -187,7 +187,7 @@ public static class MessageDataExtensions
     /// <param name="repository">The target repository.</param>
     /// <param name="stream">The stream, or <see langword="null"/> for empty message data.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the put stream outcome.</returns>
+    /// <returns>The repository-backed message data.</returns>
     public static Task<MessageData<Stream>> PutStreamAsync(this IMessageDataRepository repository, Stream? stream,
         CancellationToken cancellationToken = default)
     {

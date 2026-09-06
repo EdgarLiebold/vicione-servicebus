@@ -13,10 +13,10 @@ public static class RequestExtensions
     /// <param name="bus">A started bus instance.</param>
     /// <param name="destinationAddress">The service address.</param>
     /// <param name="message">The request message.</param>
-    /// <param name="timeout">An optional timeout for the request (defaults to 30 seconds).</param>
-    /// <param name="callback">A callback, which can modify the <see cref="SendContext" /> of the request.</param>
-    /// <param name="cancellationToken">An optional cancellationToken for this request.</param>
-    /// <returns>A task that produces the request outcome.</returns>
+    /// <param name="timeout">The request timeout, or the client default when unspecified.</param>
+    /// <param name="callback">Optionally configures the outgoing request context.</param>
+    /// <param name="cancellationToken">Cancels request sending or response waiting.</param>
+    /// <returns>A task that completes with the response.</returns>
     public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this IBus bus, Uri destinationAddress, TRequest message,
         RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null, CancellationToken cancellationToken = default)
         where TRequest : class
@@ -42,10 +42,10 @@ public static class RequestExtensions
     /// <param name="bus">A started bus instance.</param>
     /// <param name="destinationAddress">The service address.</param>
     /// <param name="values">The values used to initialize the request message.</param>
-    /// <param name="timeout">An optional timeout for the request (defaults to 30 seconds).</param>
-    /// <param name="callback">A callback, which can modify the <see cref="SendContext" /> of the request.</param>
-    /// <param name="cancellationToken">An optional cancellationToken for this request.</param>
-    /// <returns>A task that produces the request outcome.</returns>
+    /// <param name="timeout">The request timeout, or the client default when unspecified.</param>
+    /// <param name="callback">Optionally configures the outgoing request context.</param>
+    /// <param name="cancellationToken">Cancels request sending or response waiting.</param>
+    /// <returns>A task that completes with the response.</returns>
     public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this IBus bus, Uri destinationAddress, object values,
         RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null, CancellationToken cancellationToken = default)
         where TRequest : class
@@ -70,10 +70,10 @@ public static class RequestExtensions
     /// <typeparam name="TResponse">The response type.</typeparam>
     /// <param name="bus">A started bus instance.</param>
     /// <param name="message">The request message.</param>
-    /// <param name="timeout">An optional timeout for the request (defaults to 30 seconds).</param>
-    /// <param name="callback">A callback, which can modify the <see cref="SendContext" /> of the request.</param>
-    /// <param name="cancellationToken">An optional cancellationToken for this request.</param>
-    /// <returns>A task that produces the request outcome.</returns>
+    /// <param name="timeout">The request timeout, or the client default when unspecified.</param>
+    /// <param name="callback">Optionally configures the outgoing request context.</param>
+    /// <param name="cancellationToken">Cancels request sending or response waiting.</param>
+    /// <returns>A task that completes with the response.</returns>
     public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this IBus bus, TRequest message,
         RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null, CancellationToken cancellationToken = default)
         where TRequest : class
@@ -97,10 +97,10 @@ public static class RequestExtensions
     /// <typeparam name="TResponse">The response type.</typeparam>
     /// <param name="bus">A started bus instance.</param>
     /// <param name="values">The values used to initialize the request message.</param>
-    /// <param name="timeout">An optional timeout for the request (defaults to 30 seconds).</param>
-    /// <param name="callback">A callback, which can modify the <see cref="SendContext" /> of the request.</param>
-    /// <param name="cancellationToken">An optional cancellationToken for this request.</param>
-    /// <returns>A task that produces the request outcome.</returns>
+    /// <param name="timeout">The request timeout, or the client default when unspecified.</param>
+    /// <param name="callback">Optionally configures the outgoing request context.</param>
+    /// <param name="cancellationToken">Cancels request sending or response waiting.</param>
+    /// <returns>A task that completes with the response.</returns>
     public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this IBus bus, object values, RequestTimeout timeout = default,
         Action<SendContext<TRequest>>? callback = null, CancellationToken cancellationToken = default)
         where TRequest : class
@@ -126,10 +126,10 @@ public static class RequestExtensions
     /// <param name="bus">A started bus instance.</param>
     /// <param name="destinationAddress">The service address.</param>
     /// <param name="message">The request message.</param>
-    /// <param name="timeout">An optional timeout for the request (defaults to 30 seconds).</param>
-    /// <param name="callback">A callback, which can modify the <see cref="SendContext" /> of the request.</param>
-    /// <param name="cancellationToken">An optional cancellationToken for this request.</param>
-    /// <returns>A task that produces the request outcome.</returns>
+    /// <param name="timeout">The request timeout, or the client default when unspecified.</param>
+    /// <param name="callback">Optionally configures the outgoing request context.</param>
+    /// <param name="cancellationToken">Cancels request sending or response waiting.</param>
+    /// <returns>A task that completes with the response.</returns>
     public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this ConsumeContext consumeContext, IBus bus, Uri destinationAddress,
         TRequest message, RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null,
         CancellationToken cancellationToken = default)
@@ -158,10 +158,10 @@ public static class RequestExtensions
     /// <param name="bus">A started bus instance.</param>
     /// <param name="destinationAddress">The service address.</param>
     /// <param name="values">The values used to initialize the request message.</param>
-    /// <param name="timeout">An optional timeout for the request (defaults to 30 seconds).</param>
-    /// <param name="callback">A callback, which can modify the <see cref="SendContext" /> of the request.</param>
-    /// <param name="cancellationToken">An optional cancellationToken for this request.</param>
-    /// <returns>A task that produces the request outcome.</returns>
+    /// <param name="timeout">The request timeout, or the client default when unspecified.</param>
+    /// <param name="callback">Optionally configures the outgoing request context.</param>
+    /// <param name="cancellationToken">Cancels request sending or response waiting.</param>
+    /// <returns>A task that completes with the response.</returns>
     public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this ConsumeContext consumeContext, IBus bus, Uri destinationAddress,
         object values, RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null,
         CancellationToken cancellationToken = default)
@@ -189,10 +189,10 @@ public static class RequestExtensions
     /// <param name="consumeContext">The consume context.</param>
     /// <param name="bus">A started bus instance.</param>
     /// <param name="message">The request message.</param>
-    /// <param name="timeout">An optional timeout for the request (defaults to 30 seconds).</param>
-    /// <param name="callback">A callback, which can modify the <see cref="SendContext" /> of the request.</param>
-    /// <param name="cancellationToken">An optional cancellationToken for this request.</param>
-    /// <returns>A task that produces the request outcome.</returns>
+    /// <param name="timeout">The request timeout, or the client default when unspecified.</param>
+    /// <param name="callback">Optionally configures the outgoing request context.</param>
+    /// <param name="cancellationToken">Cancels request sending or response waiting.</param>
+    /// <returns>A task that completes with the response.</returns>
     public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this ConsumeContext consumeContext, IBus bus, TRequest message,
         RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null, CancellationToken cancellationToken = default)
         where TRequest : class
@@ -218,10 +218,10 @@ public static class RequestExtensions
     /// <param name="consumeContext">The consume context.</param>
     /// <param name="bus">A started bus instance.</param>
     /// <param name="values">The values used to initialize the request message.</param>
-    /// <param name="timeout">An optional timeout for the request (defaults to 30 seconds).</param>
-    /// <param name="callback">A callback, which can modify the <see cref="SendContext" /> of the request.</param>
-    /// <param name="cancellationToken">An optional cancellationToken for this request.</param>
-    /// <returns>A task that produces the request outcome.</returns>
+    /// <param name="timeout">The request timeout, or the client default when unspecified.</param>
+    /// <param name="callback">Optionally configures the outgoing request context.</param>
+    /// <param name="cancellationToken">Cancels request sending or response waiting.</param>
+    /// <returns>A task that completes with the response.</returns>
     public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this ConsumeContext consumeContext, IBus bus, object values,
         RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null, CancellationToken cancellationToken = default)
         where TRequest : class

@@ -8,6 +8,22 @@ namespace ViciOne.ServiceBus.Tests.Topology.Configuration;
 public sealed class EndpointConventionIntegrationTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-ENDPOINT-CONVENTION", "missing-route-has-explicit-null-result")]
+    public void EmptyRouteTable_ReturnsFalseAndNullAndRejectsANullContractType()
+    {
+        IMessageRouteTable routes = new MessageRouteTable();
+
+        bool foundGeneric = routes.TryGetDestinationAddress<UnmappedRouteMessage>(out Uri? genericAddress);
+        bool foundRuntime = routes.TryGetDestinationAddress(typeof(UnmappedRouteMessage), out Uri? runtimeAddress);
+
+        Assert.False(foundGeneric);
+        Assert.Null(genericAddress);
+        Assert.False(foundRuntime);
+        Assert.Null(runtimeAddress);
+        Assert.Throws<ArgumentNullException>(() => routes.TryGetDestinationAddress(null!, out _));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CONVENTION", "full-short-interface-base-and-concrete-override")]
     public async Task ConventionMatrix_RoutesEachRuntimeContractToItsExactMappedEndpointAsync()
     {
@@ -337,4 +353,6 @@ public sealed class EndpointConventionIntegrationTests
     private sealed record FrozenRouteMessage;
 
     private sealed record LateRouteMessage;
+
+    private sealed record UnmappedRouteMessage;
 }

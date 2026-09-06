@@ -12,14 +12,12 @@ public static class ForwardExtensions
     /// <typeparam name="T">The consumed message type.</typeparam>
     /// <param name="context">The message context to forward.</param>
     /// <param name="address">The destination address.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the destination transport accepts the forwarded message.</returns>
     public static async Task ForwardAsync<T>(this ConsumeContext<T> context, Uri address)
         where T : class
     {
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
-        if (address == null)
-            throw new ArgumentNullException(nameof(address));
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(address);
 
         var endpoint = await context.Advanced().GetSendEndpointAsync(address).ConfigureAwait(false);
 
@@ -31,14 +29,13 @@ public static class ForwardExtensions
     /// <param name="context">The message context to forward.</param>
     /// <param name="address">The destination address.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the destination transport accepts the forwarded message.</returns>
     public static async Task ForwardAsync<T>(this ConsumeContext<T> context, Uri address, IPipe<SendContext<T>> pipe)
         where T : class
     {
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
-        if (address == null)
-            throw new ArgumentNullException(nameof(address));
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(address);
+        ArgumentNullException.ThrowIfNull(pipe);
 
         var endpoint = await context.Advanced().GetSendEndpointAsync(address).ConfigureAwait(false);
 
@@ -49,14 +46,12 @@ public static class ForwardExtensions
     /// <typeparam name="T">The consumed message type.</typeparam>
     /// <param name="context">The message context to forward.</param>
     /// <param name="endpoint">The destination endpoint.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the destination transport accepts the forwarded message.</returns>
     public static Task ForwardAsync<T>(this ConsumeContext<T> context, ISendEndpoint endpoint)
         where T : class
     {
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
-        if (endpoint == null)
-            throw new ArgumentNullException(nameof(endpoint));
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(endpoint);
 
         var messagePipe = new ForwardMessagePipe<T>(context);
 
@@ -68,14 +63,13 @@ public static class ForwardExtensions
     /// <param name="context">The message context to forward.</param>
     /// <param name="endpoint">The destination endpoint.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the destination transport accepts the forwarded message.</returns>
     public static Task ForwardAsync<T>(this ConsumeContext<T> context, ISendEndpoint endpoint, IPipe<SendContext<T>> pipe)
         where T : class
     {
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
-        if (endpoint == null)
-            throw new ArgumentNullException(nameof(endpoint));
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(endpoint);
+        ArgumentNullException.ThrowIfNull(pipe);
 
         var messagePipe = new ForwardMessagePipe<T>(context, pipe);
 
@@ -87,7 +81,7 @@ public static class ForwardExtensions
     /// <param name="context">The source consume context.</param>
     /// <param name="address">The destination address.</param>
     /// <param name="message">The message to forward.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the destination transport accepts the forwarded message.</returns>
     public static async Task ForwardAsync<T>(this ConsumeContext context, Uri address, T message)
         where T : class
     {
@@ -100,12 +94,12 @@ public static class ForwardExtensions
         await ForwardAsync(context, endpoint, message).ConfigureAwait(false);
     }
 
-    /// <summary>Forward the message to another consumer.</summary>
+    /// <summary>Forwards the supplied message while preserving metadata from the source consume context.</summary>
     /// <typeparam name="T">The forwarded message type.</typeparam>
     /// <param name="context">The source consume context.</param>
     /// <param name="endpoint">The destination endpoint.</param>
     /// <param name="message">The message to forward.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the destination transport accepts the forwarded message.</returns>
     public static Task ForwardAsync<T>(this ConsumeContext context, ISendEndpoint endpoint, T message)
         where T : class
     {

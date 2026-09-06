@@ -185,7 +185,7 @@ public static class RetryConfigurationExtensions
     /// <summary>Configures the pipeline to make no retry attempts.</summary>
     /// <param name="configurator">The configurator to update.</param>
     /// <returns>The retry configurator produced by the operation.</returns>
-    public static IRetryConfigurator None(this IRetryConfigurator configurator)
+    public static IRetryPolicyConfigurator None(this IRetryPolicyConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
 
@@ -198,7 +198,7 @@ public static class RetryConfigurationExtensions
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="retryLimit">The number of retries to attempt.</param>
     /// <returns>The retry configurator produced by the operation.</returns>
-    public static IRetryConfigurator Immediate(this IRetryConfigurator configurator, int retryLimit)
+    public static IRetryPolicyConfigurator Immediate(this IRetryPolicyConfigurator configurator, int retryLimit)
     {
         ArgumentNullException.ThrowIfNull(configurator);
 
@@ -211,7 +211,7 @@ public static class RetryConfigurationExtensions
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="intervals">The delay before each retry attempt.</param>
     /// <returns>The retry configurator produced by the operation.</returns>
-    public static IRetryConfigurator Intervals(this IRetryConfigurator configurator, params TimeSpan[] intervals)
+    public static IRetryPolicyConfigurator Intervals(this IRetryPolicyConfigurator configurator, params TimeSpan[] intervals)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(intervals);
@@ -227,7 +227,7 @@ public static class RetryConfigurationExtensions
     /// <param name="retryCount">The number of retry attempts.</param>
     /// <param name="interval">The interval between each retry attempt.</param>
     /// <returns>The retry configurator produced by the operation.</returns>
-    public static IRetryConfigurator Interval(this IRetryConfigurator configurator, int retryCount, TimeSpan interval)
+    public static IRetryPolicyConfigurator Interval(this IRetryPolicyConfigurator configurator, int retryCount, TimeSpan interval)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(retryCount);
@@ -244,7 +244,7 @@ public static class RetryConfigurationExtensions
     /// <param name="maxInterval">The maximum retry delay.</param>
     /// <param name="intervalDelta">The base exponential delay increment.</param>
     /// <returns>The retry configurator produced by the operation.</returns>
-    public static IRetryConfigurator Exponential(this IRetryConfigurator configurator, int retryLimit, TimeSpan minInterval, TimeSpan maxInterval,
+    public static IRetryPolicyConfigurator Exponential(this IRetryPolicyConfigurator configurator, int retryLimit, TimeSpan minInterval, TimeSpan maxInterval,
         TimeSpan intervalDelta)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -260,7 +260,7 @@ public static class RetryConfigurationExtensions
     /// <param name="initialInterval">The initial retry interval.</param>
     /// <param name="intervalIncrement">The interval to add to the retry interval with each subsequent retry.</param>
     /// <returns>The retry configurator produced by the operation.</returns>
-    public static IRetryConfigurator Incremental(this IRetryConfigurator configurator, int retryLimit, TimeSpan initialInterval, TimeSpan intervalIncrement)
+    public static IRetryPolicyConfigurator Incremental(this IRetryPolicyConfigurator configurator, int retryLimit, TimeSpan initialInterval, TimeSpan intervalIncrement)
     {
         ArgumentNullException.ThrowIfNull(configurator);
 

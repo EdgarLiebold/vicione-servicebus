@@ -10,7 +10,10 @@ using ViciOne.ServiceBus.Transports;
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
 sealed class ConsumerKind :
-    IConsumerKind
+    IConsumerKind,
+    IConsumerKindRuntimeConfigurator,
+    IConsumerKindBulkConfigurator,
+    IConsumerKindDispatcherProvider
 {
     public bool IsFallback => true;
 

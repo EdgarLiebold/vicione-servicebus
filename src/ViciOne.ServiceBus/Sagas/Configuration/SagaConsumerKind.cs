@@ -9,8 +9,14 @@ using ViciOne.ServiceBus.Transports;
 namespace ViciOne.ServiceBus.Sagas;
 
 sealed class SagaConsumerKind :
-    IConsumerKind
+    IConsumerKind,
+    IConsumerKindRuntimeConfigurator,
+    IConsumerKindTypedConfigurator,
+    IConsumerKindBulkConfigurator,
+    IConsumerKindDispatcherProvider
 {
+    public bool IsFallback => false;
+
     public string Name => "Saga";
 
     public int Order => 10;

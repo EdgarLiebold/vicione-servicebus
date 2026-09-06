@@ -9,6 +9,28 @@ namespace ViciOne.ServiceBus.Tests.DependencyInjection;
 public sealed class ConsumerKindExtensionTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-CAPABILITY-PACKAGES", "consumer-kind-segregates-optional-capabilities")]
+    public void ConsumerKindContract_HasNoSilentOptionalOperations()
+    {
+        string[] commonOperations = typeof(IConsumerKind)
+            .GetMethods()
+            .Select(method => method.Name)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(
+            ["ConfigureTestHarness", "GetRegistrations", "get_IsFallback", "get_Name", "get_Order"],
+            commonOperations);
+        Assert.All(typeof(IConsumerKind).GetMethods(), method => Assert.True(method.IsAbstract));
+        Assert.False(typeof(IConsumerKindRuntimeConfigurator).IsAssignableFrom(typeof(IConsumerKind)));
+        Assert.False(typeof(IConsumerKindTypedConfigurator).IsAssignableFrom(typeof(IConsumerKind)));
+        Assert.False(typeof(IConsumerKindBulkConfigurator).IsAssignableFrom(typeof(IConsumerKind)));
+        Assert.False(typeof(IConsumerKindCompanionConfigurator).IsAssignableFrom(typeof(IConsumerKind)));
+        Assert.False(typeof(IConsumerKindDispatcherProvider).IsAssignableFrom(typeof(IConsumerKind)));
+        Assert.False(typeof(IConsumerKindServiceRequirement).IsAssignableFrom(typeof(IConsumerKind)));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CAPABILITY-PACKAGES", "custom-consumer-kind-rejects-unsupported-harness-shape")]
     public void CustomConsumerKind_RejectsAnUnsupportedHarnessObservationShape()
     {
@@ -126,6 +148,8 @@ public sealed class ConsumerKindExtensionTests
         }
 
         public string Name => "Probe";
+
+        public bool IsFallback => false;
 
         public int Order => -100;
 
@@ -257,6 +281,8 @@ public sealed class ConsumerKindExtensionTests
         IConsumerKind
     {
         public string Name => "UnsupportedProbe";
+
+        public bool IsFallback => false;
 
         public int Order => 0;
 

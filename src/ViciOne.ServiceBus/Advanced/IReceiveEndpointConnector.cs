@@ -9,17 +9,17 @@ public interface IReceiveEndpointConnector<out TEndpointConfigurator> :
     where TEndpointConfigurator : IReceiveEndpointConfigurator
 {
     /// <summary>Connects a receive endpoint to the bus.</summary>
-    /// <param name="definition">An endpoint definition, which abstracts specific endpoint behaviors from the transport.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <param name="definition">The transport-independent endpoint definition.</param>
+    /// <param name="endpointNameFormatter">Formats the endpoint name.</param>
+    /// <param name="configure">Optionally configures the connected endpoint.</param>
+    /// <returns>A handle that owns the connected endpoint.</returns>
     HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
         Action<IBusRegistrationContext, TEndpointConfigurator>? configure = null);
 
     /// <summary>Connects a receive endpoint to the bus.</summary>
-    /// <param name="queueName">The queue name for the receive endpoint.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <param name="queueName">The receive queue name.</param>
+    /// <param name="configure">Optionally configures the connected endpoint.</param>
+    /// <returns>A handle that owns the connected endpoint.</returns>
     HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IBusRegistrationContext, TEndpointConfigurator>? configure = null);
 }
 
@@ -27,16 +27,16 @@ public interface IReceiveEndpointConnector<out TEndpointConfigurator> :
 public interface IReceiveEndpointConnector
 {
     /// <summary>Connects a receive endpoint to the bus.</summary>
-    /// <param name="definition">An endpoint definition, which abstracts specific endpoint behaviors from the transport.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <param name="definition">The transport-independent endpoint definition.</param>
+    /// <param name="endpointNameFormatter">Formats the endpoint name.</param>
+    /// <param name="configure">Optionally configures the connected endpoint.</param>
+    /// <returns>A handle that owns the connected endpoint.</returns>
     HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
         Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null);
 
     /// <summary>Connects a receive endpoint to the bus.</summary>
-    /// <param name="queueName">The queue name for the receive endpoint.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <param name="queueName">The receive queue name.</param>
+    /// <param name="configure">Optionally configures the connected endpoint.</param>
+    /// <returns>A handle that owns the connected endpoint.</returns>
     HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null);
 }

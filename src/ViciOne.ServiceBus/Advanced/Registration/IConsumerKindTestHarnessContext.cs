@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Advanced.Registration;
 /// <summary>Provides the pre-container registration view used to attach test-harness observations to consumer kinds.</summary>
 public interface IConsumerKindTestHarnessContext
 {
-    /// <summary>Gets the kind name.</summary>
+    /// <summary>Gets the consumer-kind category name.</summary>
     string KindName { get; }
 
     /// <summary>Enumerates registrations owned by the active bus registration.</summary>
@@ -16,7 +16,7 @@ public interface IConsumerKindTestHarnessContext
         where TRegistration : class, IRegistration;
 
     /// <summary>Attaches test-harness observation for a registration and its supporting types.</summary>
-    /// <param name="registrationType">The runtime registration type used by the operation.</param>
+    /// <param name="registrationType">The registration type to observe.</param>
     /// <param name="supportingTypes">Capability-specific implementation types required by the observation.</param>
     void Observe(Type registrationType, params Type[] supportingTypes);
 }

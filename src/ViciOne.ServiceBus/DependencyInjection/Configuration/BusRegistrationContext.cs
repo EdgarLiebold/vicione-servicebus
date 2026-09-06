@@ -67,7 +67,9 @@ public class BusRegistrationContext :
         var registrations = consumerKinds
             .SelectMany(kind => kind.GetRegistrations(consumerKindContext)
                 .Select(registration => new PlannedRegistration(kind, registration,
-                    registration.RequiresServiceInstance || consumerKinds.Any(candidate => candidate.RequiresServiceInstance(registration.RegistrationType)))))
+                    registration.RequiresServiceInstance || consumerKinds.Any(candidate =>
+                        candidate is IConsumerKindServiceRequirement requirement
+                        && requirement.RequiresServiceInstance(registration.RegistrationType)))))
             .ToList();
         registrations = SelectRegistrationOwners(registrations);
         var registrationsByEndpoint = registrations

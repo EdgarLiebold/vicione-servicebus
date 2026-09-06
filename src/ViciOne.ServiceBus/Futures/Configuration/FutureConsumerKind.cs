@@ -8,8 +8,13 @@ using ViciOne.ServiceBus.Configuration;
 namespace ViciOne.ServiceBus.Futures;
 
 sealed class FutureConsumerKind :
-    IConsumerKind
+    IConsumerKind,
+    IConsumerKindRuntimeConfigurator,
+    IConsumerKindTypedConfigurator,
+    IConsumerKindBulkConfigurator
 {
+    public bool IsFallback => false;
+
     public string Name => "Future";
 
     public int Order => 40;

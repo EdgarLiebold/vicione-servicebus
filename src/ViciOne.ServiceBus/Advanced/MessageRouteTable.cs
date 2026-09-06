@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Advanced;
 
@@ -22,9 +23,9 @@ public sealed class MessageRouteTable :
 
     /// <summary>Resolves the destination configured for a message contract.</summary>
     /// <typeparam name="T">The message contract type.</typeparam>
-    /// <param name="destinationAddress">Receives the configured destination when a route exists.</param>
+    /// <param name="destinationAddress">Receives the configured destination when a route resolves successfully; otherwise, <see langword="null"/>.</param>
     /// <returns><see langword="true"/> when a route resolves to a destination; otherwise <see langword="false"/>.</returns>
-    public bool TryGetDestinationAddress<T>(out Uri destinationAddress)
+    public bool TryGetDestinationAddress<T>([NotNullWhen(true)] out Uri? destinationAddress)
         where T : class
     {
         return TryGetDestinationAddress(typeof(T), out destinationAddress);
@@ -32,9 +33,9 @@ public sealed class MessageRouteTable :
 
     /// <summary>Resolves the destination configured for a runtime message contract.</summary>
     /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="destinationAddress">Receives the configured destination when a route exists.</param>
+    /// <param name="destinationAddress">Receives the configured destination when a route resolves successfully; otherwise, <see langword="null"/>.</param>
     /// <returns><see langword="true"/> when a route resolves to a destination; otherwise <see langword="false"/>.</returns>
-    public bool TryGetDestinationAddress(Type messageType, out Uri destinationAddress)
+    public bool TryGetDestinationAddress(Type messageType, [NotNullWhen(true)] out Uri? destinationAddress)
     {
         ArgumentNullException.ThrowIfNull(messageType);
 
@@ -48,7 +49,7 @@ public sealed class MessageRouteTable :
         Uri? address = route?.Resolve();
         if (address is null)
         {
-            destinationAddress = default!;
+            destinationAddress = null;
             return false;
         }
 
@@ -101,8 +102,7 @@ public sealed class MessageRouteTable :
             return exact;
 
         IReadOnlyList<Type> implementedTypes = MessageTypeCache.GetMessageTypes(messageType);
-        Route? candidate = null;
-        Type? candidateType = null;
+        RouteMatch? candidate = null;
 
         for (var i = 0; i < implementedTypes.Count; i++)
         {
@@ -110,32 +110,35 @@ public sealed class MessageRouteTable :
             if (type == messageType || !_routes.TryGetValue(type, out Route? route))
                 continue;
 
-            if (candidate is not null)
+            if (candidate is { } existing)
             {
                 throw new ConfigurationException(
                     global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Route Table", "unknown", $"Message route for {TypeCache.GetShortName(messageType)} is ambiguous between "
-                    + $"{TypeCache.GetShortName(candidateType!)} and {TypeCache.GetShortName(type)}.", "Correct the named configuration before starting the host"));
+                    + $"{TypeCache.GetShortName(existing.MessageType)} and {TypeCache.GetShortName(type)}.", "Correct the named configuration before starting the host"));
             }
 
-            candidate = route;
-            candidateType = type;
+            candidate = new RouteMatch(type, route);
         }
 
-        return candidate;
+        return candidate?.Route;
     }
+
+    readonly record struct RouteMatch(Type MessageType, Route Route);
+
     sealed class Route
     {
-        readonly Uri? _address;
-        readonly Func<Uri?>? _provider;
+        readonly Uri? _fixedAddress;
+        readonly Func<Uri?> _resolve;
 
         Route(Uri address)
         {
-            _address = address;
+            _fixedAddress = address;
+            _resolve = () => address;
         }
 
         Route(Func<Uri?> provider)
         {
-            _provider = provider;
+            _resolve = provider;
         }
 
         internal static Route ForAddress(Uri address)
@@ -150,12 +153,12 @@ public sealed class MessageRouteTable :
 
         internal Uri? Resolve()
         {
-            return _address ?? _provider!();
+            return _resolve();
         }
 
         internal bool HasSameFixedAddress(Route other)
         {
-            return _provider is null && other._provider is null && _address == other._address;
+            return _fixedAddress is not null && other._fixedAddress is not null && _fixedAddress == other._fixedAddress;
         }
     }
 }

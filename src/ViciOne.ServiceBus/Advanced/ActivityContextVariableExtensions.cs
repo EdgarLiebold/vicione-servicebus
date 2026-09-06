@@ -8,10 +8,10 @@ public static class ActivityContextVariableExtensions
 {
     /// <summary>Gets a reference-type activity variable, or the supplied default when the variable is absent.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <param name="context">The activity context containing the variables.</param>
+    /// <param name="key">The variable name.</param>
     /// <param name="defaultValue">The value returned when the variable is absent.</param>
-    /// <returns>The variable.</returns>
+    /// <returns>The converted variable value or <paramref name="defaultValue"/>.</returns>
     public static T? GetVariable<T>(this ActivityContext context, string key, T? defaultValue = null)
         where T : class
     {
@@ -20,11 +20,11 @@ public static class ActivityContextVariableExtensions
     }
 
     /// <summary>Gets a value-type activity variable, or the supplied default when the variable is absent.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
+    /// <typeparam name="T">The requested value type.</typeparam>
+    /// <param name="context">The activity context containing the variables.</param>
+    /// <param name="key">The variable name.</param>
     /// <param name="defaultValue">The value returned when the variable is absent.</param>
-    /// <returns>The variable.</returns>
+    /// <returns>The converted variable value or <paramref name="defaultValue"/>.</returns>
     public static T? GetVariable<T>(this ActivityContext context, string key, T? defaultValue = null)
         where T : struct
     {

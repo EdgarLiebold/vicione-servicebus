@@ -79,7 +79,7 @@ public class SystemTextJsonConverterFactory :
     public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
         if (JsonMessageTypeMappingRegistry.TryCreateConverter(typeToConvert, out JsonConverter? mappedConverter))
-            return mappedConverter!;
+            return mappedConverter;
 
         if (typeToConvert.IsGenericType)
         {

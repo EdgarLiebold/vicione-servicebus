@@ -60,7 +60,7 @@ sealed class ConsumeContextOutgoingMessages(ConsumeContext context) :
 
         ISendEndpointProvider provider = context.ReceiveContext.SendEndpointProvider;
         if (provider is not IMessageRouteProvider routeProvider ||
-            !routeProvider.MessageRoutes.TryGetDestinationAddress<T>(out Uri destination))
+            !routeProvider.MessageRoutes.TryGetDestinationAddress<T>(out Uri? destination))
         {
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Consume Context Outgoing Messages", "unknown", $"A message route for {typeof(T).FullName} is not configured on this bus.", "Correct the named configuration before starting the host"));
         }

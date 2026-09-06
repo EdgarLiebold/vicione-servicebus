@@ -16,7 +16,6 @@ public interface IPartitioner :
         where T : class, PipeContext;
 }
 
-
 /// <summary>Serializes pipeline execution within partitions selected for a context type.</summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public interface IPartitioner<TContext> :
@@ -27,6 +26,6 @@ public interface IPartitioner<TContext> :
     /// <param name="context">The context to schedule.</param>
     /// <param name="next">The pipeline stage to invoke within the selected partition.</param>
     /// <param name="cancellationToken">Cancels admission to the partition.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after the downstream stage finishes within the selected partition.</returns>
     Task SendAsync(TContext context, IPipe<TContext> next, CancellationToken cancellationToken = default);
 }

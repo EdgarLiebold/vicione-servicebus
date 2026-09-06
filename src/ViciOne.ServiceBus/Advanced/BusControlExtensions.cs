@@ -11,7 +11,7 @@ public static class BusControlExtensions
     /// <param name="bus">The bus to start.</param>
     /// <param name="startTimeout">The positive maximum startup duration.</param>
     /// <param name="cancellationToken">Cancels startup independently of the timeout.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the bus has started.</returns>
     public static async Task StartAsync(this IBusControl bus, TimeSpan startTimeout, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(bus);
@@ -31,7 +31,7 @@ public static class BusControlExtensions
     /// <param name="bus">The bus to stop.</param>
     /// <param name="stopTimeout">The positive maximum shutdown duration.</param>
     /// <param name="cancellationToken">Cancels shutdown independently of the timeout.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the bus has stopped.</returns>
     public static async Task StopAsync(this IBusControl bus, TimeSpan stopTimeout, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(bus);
@@ -50,7 +50,7 @@ public static class BusControlExtensions
     /// <summary>Starts and stops a bus to deploy its topology without running a message-consumption lifetime.</summary>
     /// <param name="bus">The bus whose topology is deployed.</param>
     /// <param name="cancellationToken">Cancels startup.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after topology deployment and shutdown.</returns>
     /// <exception cref="ArgumentNullException">Thrown when a required argument is <see langword="null" />.</exception>
     public static async Task DeployAsync(this IBusControl bus, CancellationToken cancellationToken = default)
     {

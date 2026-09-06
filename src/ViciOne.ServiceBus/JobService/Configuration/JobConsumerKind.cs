@@ -9,8 +9,14 @@ using ViciOne.ServiceBus.Transports;
 namespace ViciOne.ServiceBus.JobService;
 
 sealed class JobConsumerKind :
-    IConsumerKind
+    IConsumerKind,
+    IConsumerKindServiceRequirement,
+    IConsumerKindRuntimeConfigurator,
+    IConsumerKindBulkConfigurator,
+    IConsumerKindDispatcherProvider
 {
+    public bool IsFallback => false;
+
     public string Name => "Job";
 
     public int Order => 50;

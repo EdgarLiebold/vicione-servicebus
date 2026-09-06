@@ -51,7 +51,8 @@ public class ReceiveEndpointDispatcherFactory :
                      .ThenBy(candidate => candidate.Order)
                      .ThenBy(candidate => candidate.Name, StringComparer.Ordinal))
         {
-            if (kind.TryCreateDispatcher(registrationType, this, formatter, out IReceiveEndpointDispatcher? dispatcher))
+            if (kind is IConsumerKindDispatcherProvider dispatcherProvider
+                && dispatcherProvider.TryCreateDispatcher(registrationType, this, formatter, out IReceiveEndpointDispatcher? dispatcher))
                 return dispatcher ?? throw new ConfigurationException(
                     global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
                         "Consumer kind",

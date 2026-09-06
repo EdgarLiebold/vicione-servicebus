@@ -3,7 +3,7 @@ using System;
 namespace ViciOne.ServiceBus.Scheduling;
 
 /// <summary>Identifies a scheduled recurring message and its original payload.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <typeparam name="T">The scheduled message type.</typeparam>
 public sealed class ScheduledRecurringMessageHandle<T> :
     ScheduledRecurringMessage<T>
     where T : class
@@ -19,10 +19,10 @@ public sealed class ScheduledRecurringMessageHandle<T> :
         Payload = payload ?? throw new ArgumentNullException(nameof(payload));
     }
 
-    /// <summary>Gets or sets the schedule.</summary>
+    /// <summary>Gets the recurring schedule.</summary>
     public RecurringSchedule Schedule { get; private set; }
-    /// <summary>Gets or sets the destination.</summary>
+    /// <summary>Gets the delivery destination.</summary>
     public Uri Destination { get; private set; }
-    /// <summary>Gets or sets the payload.</summary>
+    /// <summary>Gets the original message payload.</summary>
     public T Payload { get; private set; }
 }

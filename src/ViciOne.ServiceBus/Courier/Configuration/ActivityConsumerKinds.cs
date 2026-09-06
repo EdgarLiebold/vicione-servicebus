@@ -8,8 +8,12 @@ using ViciOne.ServiceBus.Transports;
 namespace ViciOne.ServiceBus.Courier;
 
 sealed class ActivityConsumerKind :
-    IConsumerKind
+    IConsumerKind,
+    IConsumerKindCompanionConfigurator,
+    IConsumerKindDispatcherProvider
 {
+    public bool IsFallback => false;
+
     public string Name => "Activity";
 
     public int Order => 20;
@@ -118,8 +122,12 @@ sealed class ActivityConsumerKind :
 
 
 sealed class ExecuteActivityConsumerKind :
-    IConsumerKind
+    IConsumerKind,
+    IConsumerKindRuntimeConfigurator,
+    IConsumerKindDispatcherProvider
 {
+    public bool IsFallback => false;
+
     public string Name => "ExecuteActivity";
 
     public int Order => 30;

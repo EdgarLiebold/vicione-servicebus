@@ -90,23 +90,24 @@ public static class LogContext
         LogContextInstrumentationExtensions.TryConfigure(provider);
     }
 
-    /// <summary>Sets the current context only when the asynchronous flow has none.</summary>
-    /// <param name="context">The context to install.</param>
+    /// <summary>Sets an available context only when the asynchronous flow has none.</summary>
+    /// <param name="context">The context to install, or <see langword="null"/> when no context is available.</param>
     public static void SetCurrentIfNull(ILogContext? context)
     {
-        Current ??= context ?? throw new ArgumentNullException(nameof(context));
+        if (context is not null)
+            Current ??= context;
     }
 
     /// <summary>Defines a one-parameter message written through the current category logger.</summary>
     /// <typeparam name="T1">The first template-value type.</typeparam>
     /// <param name="logLevel">The message severity.</param>
-    /// <param name="formatString">The structured logging template.</param>
+    /// <param name="messageTemplate">The structured logging template.</param>
     /// <returns>The compiled logging delegate.</returns>
-    public static LogMessage<T1> Define<T1>(LogLevel logLevel, string formatString)
+    public static LogMessage<T1> Define<T1>(LogLevel logLevel, string messageTemplate)
     {
-        ArgumentNullException.ThrowIfNull(formatString);
+        ArgumentNullException.ThrowIfNull(messageTemplate);
 
-        Action<ILogger, T1, Exception?> logAction = LoggerMessage.Define<T1>(logLevel, default, formatString);
+        Action<ILogger, T1, Exception?> logAction = LoggerMessage.Define<T1>(logLevel, default, messageTemplate);
 
         void Log(T1 arg1, Exception? exception)
         {
@@ -121,14 +122,14 @@ public static class LogContext
     /// <summary>Defines a two-parameter message written through the current category logger.</summary>
     /// <typeparam name="T1">The first template-value type.</typeparam>
     /// <typeparam name="T2">The second template-value type.</typeparam>
-    /// <param name="logLevel">The log level.</param>
-    /// <param name="formatString">The format string.</param>
-    /// <returns>The log message produced by the operation.</returns>
-    public static LogMessage<T1, T2> Define<T1, T2>(LogLevel logLevel, string formatString)
+    /// <param name="logLevel">The message severity.</param>
+    /// <param name="messageTemplate">The structured logging template.</param>
+    /// <returns>The compiled logging delegate.</returns>
+    public static LogMessage<T1, T2> Define<T1, T2>(LogLevel logLevel, string messageTemplate)
     {
-        ArgumentNullException.ThrowIfNull(formatString);
+        ArgumentNullException.ThrowIfNull(messageTemplate);
 
-        Action<ILogger, T1, T2, Exception?> logAction = LoggerMessage.Define<T1, T2>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, Exception?> logAction = LoggerMessage.Define<T1, T2>(logLevel, default, messageTemplate);
 
         void Log(T1 arg1, T2 arg2, Exception? exception)
         {
@@ -143,14 +144,14 @@ public static class LogContext
     /// <summary>Defines a two-parameter message written through the dedicated message logger.</summary>
     /// <typeparam name="T1">The first template-value type.</typeparam>
     /// <typeparam name="T2">The second template-value type.</typeparam>
-    /// <param name="logLevel">The log level.</param>
-    /// <param name="formatString">The format string.</param>
-    /// <returns>The log message produced by the operation.</returns>
-    public static LogMessage<T1, T2> DefineMessage<T1, T2>(LogLevel logLevel, string formatString)
+    /// <param name="logLevel">The message severity.</param>
+    /// <param name="messageTemplate">The structured logging template.</param>
+    /// <returns>The compiled logging delegate.</returns>
+    public static LogMessage<T1, T2> DefineMessage<T1, T2>(LogLevel logLevel, string messageTemplate)
     {
-        ArgumentNullException.ThrowIfNull(formatString);
+        ArgumentNullException.ThrowIfNull(messageTemplate);
 
-        Action<ILogger, T1, T2, Exception?> logAction = LoggerMessage.Define<T1, T2>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, Exception?> logAction = LoggerMessage.Define<T1, T2>(logLevel, default, messageTemplate);
 
         void Log(T1 arg1, T2 arg2, Exception? exception)
         {
@@ -166,20 +167,20 @@ public static class LogContext
     /// <typeparam name="T1">The first template-value type.</typeparam>
     /// <typeparam name="T2">The second template-value type.</typeparam>
     /// <typeparam name="T3">The third template-value type.</typeparam>
-    /// <param name="logLevel">The log level.</param>
-    /// <param name="formatString">The format string.</param>
-    /// <returns>The log message produced by the operation.</returns>
-    public static LogMessage<T1, T2, T3> Define<T1, T2, T3>(LogLevel logLevel, string formatString)
+    /// <param name="logLevel">The message severity.</param>
+    /// <param name="messageTemplate">The structured logging template.</param>
+    /// <returns>The compiled logging delegate.</returns>
+    public static LogMessage<T1, T2, T3> Define<T1, T2, T3>(LogLevel logLevel, string messageTemplate)
     {
-        ArgumentNullException.ThrowIfNull(formatString);
+        ArgumentNullException.ThrowIfNull(messageTemplate);
 
-        Action<ILogger, T1, T2, T3, Exception?> logAction = LoggerMessage.Define<T1, T2, T3>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, T3, Exception?> logAction = LoggerMessage.Define<T1, T2, T3>(logLevel, default, messageTemplate);
 
-        void Log(T1? arg1, T2 arg2, T3? arg3, Exception? exception)
+        void Log(T1 arg1, T2 arg2, T3 arg3, Exception? exception)
         {
             var logContext = Current;
             if (logContext != null)
-                logAction(logContext.Logger, arg1!, arg2, arg3!, exception);
+                logAction(logContext.Logger, arg1, arg2, arg3, exception);
         }
 
         return Log;
@@ -189,20 +190,20 @@ public static class LogContext
     /// <typeparam name="T1">The first template-value type.</typeparam>
     /// <typeparam name="T2">The second template-value type.</typeparam>
     /// <typeparam name="T3">The third template-value type.</typeparam>
-    /// <param name="logLevel">The log level.</param>
-    /// <param name="formatString">The format string.</param>
-    /// <returns>The log message produced by the operation.</returns>
-    public static LogMessage<T1, T2, T3> DefineMessage<T1, T2, T3>(LogLevel logLevel, string formatString)
+    /// <param name="logLevel">The message severity.</param>
+    /// <param name="messageTemplate">The structured logging template.</param>
+    /// <returns>The compiled logging delegate.</returns>
+    public static LogMessage<T1, T2, T3> DefineMessage<T1, T2, T3>(LogLevel logLevel, string messageTemplate)
     {
-        ArgumentNullException.ThrowIfNull(formatString);
+        ArgumentNullException.ThrowIfNull(messageTemplate);
 
-        Action<ILogger, T1, T2, T3, Exception?> logAction = LoggerMessage.Define<T1, T2, T3>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, T3, Exception?> logAction = LoggerMessage.Define<T1, T2, T3>(logLevel, default, messageTemplate);
 
-        void Log(T1? arg1, T2 arg2, T3? arg3, Exception? exception)
+        void Log(T1 arg1, T2 arg2, T3 arg3, Exception? exception)
         {
             var logContext = Current;
             if (logContext != null)
-                logAction(logContext.Messages.Logger, arg1!, arg2, arg3!, exception);
+                logAction(logContext.Messages.Logger, arg1, arg2, arg3, exception);
         }
 
         return Log;
@@ -213,14 +214,14 @@ public static class LogContext
     /// <typeparam name="T2">The second template-value type.</typeparam>
     /// <typeparam name="T3">The third template-value type.</typeparam>
     /// <typeparam name="T4">The fourth template-value type.</typeparam>
-    /// <param name="logLevel">The log level.</param>
-    /// <param name="formatString">The format string.</param>
-    /// <returns>The log message produced by the operation.</returns>
-    public static LogMessage<T1, T2, T3, T4> Define<T1, T2, T3, T4>(LogLevel logLevel, string formatString)
+    /// <param name="logLevel">The message severity.</param>
+    /// <param name="messageTemplate">The structured logging template.</param>
+    /// <returns>The compiled logging delegate.</returns>
+    public static LogMessage<T1, T2, T3, T4> Define<T1, T2, T3, T4>(LogLevel logLevel, string messageTemplate)
     {
-        ArgumentNullException.ThrowIfNull(formatString);
+        ArgumentNullException.ThrowIfNull(messageTemplate);
 
-        Action<ILogger, T1, T2, T3, T4, Exception?> logAction = LoggerMessage.Define<T1, T2, T3, T4>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, T3, T4, Exception?> logAction = LoggerMessage.Define<T1, T2, T3, T4>(logLevel, default, messageTemplate);
 
         void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, Exception? exception)
         {
@@ -237,14 +238,14 @@ public static class LogContext
     /// <typeparam name="T2">The second template-value type.</typeparam>
     /// <typeparam name="T3">The third template-value type.</typeparam>
     /// <typeparam name="T4">The fourth template-value type.</typeparam>
-    /// <param name="logLevel">The log level.</param>
-    /// <param name="formatString">The format string.</param>
-    /// <returns>The log message produced by the operation.</returns>
-    public static LogMessage<T1, T2, T3, T4> DefineMessage<T1, T2, T3, T4>(LogLevel logLevel, string formatString)
+    /// <param name="logLevel">The message severity.</param>
+    /// <param name="messageTemplate">The structured logging template.</param>
+    /// <returns>The compiled logging delegate.</returns>
+    public static LogMessage<T1, T2, T3, T4> DefineMessage<T1, T2, T3, T4>(LogLevel logLevel, string messageTemplate)
     {
-        ArgumentNullException.ThrowIfNull(formatString);
+        ArgumentNullException.ThrowIfNull(messageTemplate);
 
-        Action<ILogger, T1, T2, T3, T4, Exception?> logAction = LoggerMessage.Define<T1, T2, T3, T4>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, T3, T4, Exception?> logAction = LoggerMessage.Define<T1, T2, T3, T4>(logLevel, default, messageTemplate);
 
         void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, Exception? exception)
         {
@@ -262,20 +263,20 @@ public static class LogContext
     /// <typeparam name="T3">The third template-value type.</typeparam>
     /// <typeparam name="T4">The fourth template-value type.</typeparam>
     /// <typeparam name="T5">The fifth template-value type.</typeparam>
-    /// <param name="logLevel">The log level.</param>
-    /// <param name="formatString">The format string.</param>
-    /// <returns>The log message produced by the operation.</returns>
-    public static LogMessage<T1, T2, T3, T4, T5> Define<T1, T2, T3, T4, T5>(LogLevel logLevel, string formatString)
+    /// <param name="logLevel">The message severity.</param>
+    /// <param name="messageTemplate">The structured logging template.</param>
+    /// <returns>The compiled logging delegate.</returns>
+    public static LogMessage<T1, T2, T3, T4, T5> Define<T1, T2, T3, T4, T5>(LogLevel logLevel, string messageTemplate)
     {
-        ArgumentNullException.ThrowIfNull(formatString);
+        ArgumentNullException.ThrowIfNull(messageTemplate);
 
-        Action<ILogger, T1, T2, T3, T4, T5, Exception?> logAction = LoggerMessage.Define<T1, T2, T3, T4, T5>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, T3, T4, T5, Exception?> logAction = LoggerMessage.Define<T1, T2, T3, T4, T5>(logLevel, default, messageTemplate);
 
-        void Log(T1? arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Exception? exception)
+        void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Exception? exception)
         {
             var logContext = Current;
             if (logContext != null)
-                logAction(logContext.Logger, arg1!, arg2, arg3, arg4, arg5, exception);
+                logAction(logContext.Logger, arg1, arg2, arg3, arg4, arg5, exception);
         }
 
         return Log;
@@ -287,20 +288,20 @@ public static class LogContext
     /// <typeparam name="T3">The third template-value type.</typeparam>
     /// <typeparam name="T4">The fourth template-value type.</typeparam>
     /// <typeparam name="T5">The fifth template-value type.</typeparam>
-    /// <param name="logLevel">The log level.</param>
-    /// <param name="formatString">The format string.</param>
-    /// <returns>The log message produced by the operation.</returns>
-    public static LogMessage<T1, T2, T3, T4, T5> DefineMessage<T1, T2, T3, T4, T5>(LogLevel logLevel, string formatString)
+    /// <param name="logLevel">The message severity.</param>
+    /// <param name="messageTemplate">The structured logging template.</param>
+    /// <returns>The compiled logging delegate.</returns>
+    public static LogMessage<T1, T2, T3, T4, T5> DefineMessage<T1, T2, T3, T4, T5>(LogLevel logLevel, string messageTemplate)
     {
-        ArgumentNullException.ThrowIfNull(formatString);
+        ArgumentNullException.ThrowIfNull(messageTemplate);
 
-        Action<ILogger, T1, T2, T3, T4, T5, Exception?> logAction = LoggerMessage.Define<T1, T2, T3, T4, T5>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, T3, T4, T5, Exception?> logAction = LoggerMessage.Define<T1, T2, T3, T4, T5>(logLevel, default, messageTemplate);
 
-        void Log(T1? arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Exception? exception)
+        void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Exception? exception)
         {
             var logContext = Current;
             if (logContext != null)
-                logAction(logContext.Messages.Logger, arg1!, arg2, arg3, arg4, arg5, exception);
+                logAction(logContext.Messages.Logger, arg1, arg2, arg3, arg4, arg5, exception);
         }
 
         return Log;

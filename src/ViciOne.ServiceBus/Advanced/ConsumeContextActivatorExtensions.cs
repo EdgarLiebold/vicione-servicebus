@@ -45,11 +45,13 @@ public static class ConsumeContextActivatorExtensions
         if (context.TryGetPayload(out IServiceProvider? serviceProvider))
             return ActivatorUtilities.CreateInstance<T>(serviceProvider, arguments);
 
-        return ActivatorUtilities.CreateInstance<T>(Provider.Empty);
+        return ActivatorUtilities.CreateInstance<T>(Provider.Empty, arguments);
     }
+
     static class Provider
     {
         internal static readonly IServiceProvider Empty = new EmptyServiceProvider();
+
         sealed class EmptyServiceProvider :
             IServiceProvider
         {

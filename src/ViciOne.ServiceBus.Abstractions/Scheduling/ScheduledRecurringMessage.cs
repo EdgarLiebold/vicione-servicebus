@@ -3,22 +3,21 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>Defines the operations required by scheduled recurring message.</summary>
+/// <summary>Identifies a recurring schedule and its delivery destination.</summary>
 public interface ScheduledRecurringMessage
 {
-    /// <summary>Gets the schedule.</summary>
+    /// <summary>Gets the recurring schedule.</summary>
     RecurringSchedule Schedule { get; }
-    /// <summary>Gets the destination.</summary>
+    /// <summary>Gets the delivery destination.</summary>
     Uri Destination { get; }
 }
 
-
-/// <summary>Defines the operations required by scheduled recurring message.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Identifies a recurring schedule and its original message payload.</summary>
+/// <typeparam name="T">The scheduled message type.</typeparam>
 public interface ScheduledRecurringMessage<out T> :
     ScheduledRecurringMessage
     where T : class
 {
-    /// <summary>Gets the payload.</summary>
+    /// <summary>Gets the original message payload.</summary>
     T Payload { get; }
 }

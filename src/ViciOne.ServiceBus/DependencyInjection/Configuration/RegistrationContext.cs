@@ -84,7 +84,10 @@ public class RegistrationContext :
                      .ThenBy(candidate => candidate.Order)
                      .ThenBy(candidate => candidate.Name, StringComparer.Ordinal))
         {
-            foreach (Type configuredType in kind.ConfigureAll(configurator, this, _configuredTypes))
+            if (kind is not IConsumerKindBulkConfigurator bulkConfigurator)
+                continue;
+
+            foreach (Type configuredType in bulkConfigurator.ConfigureAll(configurator, this, _configuredTypes))
                 _configuredTypes.Add(configuredType);
         }
     }
@@ -94,7 +97,7 @@ public class RegistrationContext :
     /// <param name="configurator">The configurator to update.</param>
     public void ConfigureSaga(Type sagaType, IReceiveEndpointConfigurator configurator)
     {
-        IConsumerKind sagaKind = GetConsumerKind("Saga");
+        IConsumerKindRuntimeConfigurator sagaKind = GetConsumerKindCapability<IConsumerKindRuntimeConfigurator>("Saga");
         if (!sagaKind.TryConfigure(sagaType, configurator, this))
             throw new ArgumentException($"The saga type was not found: {TypeCache.GetShortName(sagaType)}", nameof(sagaType));
 
@@ -108,7 +111,7 @@ public class RegistrationContext :
     public void ConfigureSaga<T>(IReceiveEndpointConfigurator configurator, Action<ISagaConfigurator<T>>? configure = null)
         where T : class
     {
-        IConsumerKind sagaKind = GetConsumerKind("Saga");
+        IConsumerKindTypedConfigurator sagaKind = GetConsumerKindCapability<IConsumerKindTypedConfigurator>("Saga");
         if (!sagaKind.TryConfigure<T>(configurator, this, configure))
             throw new ArgumentException($"The saga type was not found: {TypeCache.GetShortName(typeof(T))}", nameof(T));
 
@@ -119,7 +122,7 @@ public class RegistrationContext :
     /// <param name="configurator">The configurator to update.</param>
     public void ConfigureSagas(IReceiveEndpointConfigurator configurator)
     {
-        IConsumerKind sagaKind = GetConsumerKind("Saga");
+        IConsumerKindBulkConfigurator sagaKind = GetConsumerKindCapability<IConsumerKindBulkConfigurator>("Saga");
         foreach (Type configuredType in sagaKind.ConfigureAll(configurator, this, _configuredTypes))
             _configuredTypes.Add(configuredType);
     }
@@ -129,7 +132,7 @@ public class RegistrationContext :
     /// <param name="configurator">The configurator to update.</param>
     public void ConfigureExecuteActivity(Type activityType, IReceiveEndpointConfigurator configurator)
     {
-        IConsumerKind activityKind = GetConsumerKind("ExecuteActivity");
+        IConsumerKindRuntimeConfigurator activityKind = GetConsumerKindCapability<IConsumerKindRuntimeConfigurator>("ExecuteActivity");
         if (!activityKind.TryConfigure(activityType, configurator, this))
             throw new ArgumentException($"The activity type was not found: {TypeCache.GetShortName(activityType)}", nameof(activityType));
 
@@ -143,7 +146,7 @@ public class RegistrationContext :
     public void ConfigureActivity(Type activityType, IReceiveEndpointConfigurator executeEndpointConfigurator,
         IReceiveEndpointConfigurator compensateEndpointConfigurator)
     {
-        IConsumerKind activityKind = GetConsumerKind("Activity");
+        IConsumerKindCompanionConfigurator activityKind = GetConsumerKindCapability<IConsumerKindCompanionConfigurator>("Activity");
         if (!activityKind.TryConfigurePair(activityType, executeEndpointConfigurator, compensateEndpointConfigurator, this))
             throw new ArgumentException($"The activity type was not found: {TypeCache.GetShortName(activityType)}", nameof(activityType));
 
@@ -156,7 +159,7 @@ public class RegistrationContext :
     /// <param name="compensateAddress">The compensate address.</param>
     public void ConfigureActivityExecute(Type activityType, IReceiveEndpointConfigurator executeEndpointConfigurator, Uri compensateAddress)
     {
-        IConsumerKind activityKind = GetConsumerKind("Activity");
+        IConsumerKindCompanionConfigurator activityKind = GetConsumerKindCapability<IConsumerKindCompanionConfigurator>("Activity");
         if (!activityKind.TryConfigurePrimary(activityType, executeEndpointConfigurator, compensateAddress, this))
             throw new ArgumentException($"The activity type was not found: {TypeCache.GetShortName(activityType)}", nameof(activityType));
 
@@ -168,7 +171,7 @@ public class RegistrationContext :
     /// <param name="compensateEndpointConfigurator">The compensate endpoint configurator.</param>
     public void ConfigureActivityCompensate(Type activityType, IReceiveEndpointConfigurator compensateEndpointConfigurator)
     {
-        IConsumerKind activityKind = GetConsumerKind("Activity");
+        IConsumerKindCompanionConfigurator activityKind = GetConsumerKindCapability<IConsumerKindCompanionConfigurator>("Activity");
         if (!activityKind.TryConfigureCompanion(activityType, compensateEndpointConfigurator, this))
             throw new ArgumentException($"The activity type was not found: {TypeCache.GetShortName(activityType)}", nameof(activityType));
 
@@ -180,7 +183,7 @@ public class RegistrationContext :
     /// <param name="configurator">The configurator to update.</param>
     public void ConfigureFuture(Type futureType, IReceiveEndpointConfigurator configurator)
     {
-        IConsumerKind futureKind = GetConsumerKind("Future");
+        IConsumerKindRuntimeConfigurator futureKind = GetConsumerKindCapability<IConsumerKindRuntimeConfigurator>("Future");
         if (!futureKind.TryConfigure(futureType, configurator, this))
             throw new ArgumentException($"The future type was not found: {TypeCache.GetShortName(futureType)}", nameof(futureType));
 
@@ -193,7 +196,7 @@ public class RegistrationContext :
     public void ConfigureFuture<T>(IReceiveEndpointConfigurator configurator)
         where T : class
     {
-        IConsumerKind futureKind = GetConsumerKind("Future");
+        IConsumerKindTypedConfigurator futureKind = GetConsumerKindCapability<IConsumerKindTypedConfigurator>("Future");
         if (!futureKind.TryConfigure<T>(configurator, this))
             throw new ArgumentException($"The future type was not found: {TypeCache.GetShortName(typeof(T))}", nameof(T));
 
@@ -246,5 +249,16 @@ public class RegistrationContext :
                 Providers.Configuration.ConfigurationMessages.Create("Consumer kind", name,
                     $"The {name} capability is not registered",
                     $"Reference and register the ViciOne.ServiceBus.{name}s package before configuring {name.ToLowerInvariant()} handlers"));
+    }
+
+    TCapability GetConsumerKindCapability<TCapability>(string name)
+        where TCapability : class
+    {
+        IConsumerKind kind = GetConsumerKind(name);
+        return kind as TCapability
+            ?? throw new ConfigurationException(
+                Providers.Configuration.ConfigurationMessages.Create("Consumer kind", name,
+                    $"The {name} capability does not support {TypeCache.GetShortName(typeof(TCapability))}",
+                    "Register a consumer kind that implements the required capability contract"));
     }
 }

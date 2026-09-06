@@ -16,7 +16,7 @@ public static class RedeliverExtensions
     /// <param name="delay">The delay before the message is delivered. It may take longer to receive the message if the queue is not empty.</param>
     /// <param name="callback">An optional callback that configures the scheduled send.</param>
     /// <param name="cancellationToken">Cancels scheduling.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the scheduler accepts the redelivery.</returns>
     public static Task RedeliverAsync<T>(this ConsumeContext<T> context, TimeSpan delay, Action<ConsumeContext, SendContext>? callback = null, CancellationToken cancellationToken = default)
         where T : class
     {
