@@ -390,7 +390,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
 
             SendRequests<CalculationItem, CalculatePart>(command => command.Items, request =>
                 {
-                    request.UsingRequestInitializer(context => new
+                    request.SetRequestInitializer(context => new
                     {
                         context.Message.ItemId,
                         context.Message.Value,
@@ -401,7 +401,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
                 .OnResponseReceived<PartCalculated>(response =>
                     response.CompletePendingRequest(message => message.ItemId));
 
-            WhenAllCompleted(result => result.SetCompletedUsingInitializer(context => new
+            WhenAllCompleted(result => result.SetResultInitializer(context => new
             {
                 CorrelationId = context.Saga.CorrelationId,
                 Total = context.SelectResults<PartCalculated>().Sum(item => item.Value),
@@ -423,7 +423,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
 
             SendRequest<CalculateValue>(request =>
                 {
-                    request.UsingRequestInitializer(context => new
+                    request.SetRequestInitializer(context => new
                     {
                         CorrelationId = context.Message.CalculationId,
                         Value = context.Message.CalculationValue,
@@ -441,7 +441,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
 
             SendRequest<AggregateValues>(request =>
                 {
-                    request.UsingRequestInitializer(context => new
+                    request.SetRequestInitializer(context => new
                     {
                         CorrelationId = context.Message.AggregationId,
                         context.Message.Items,
@@ -451,7 +451,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
                 .OnResponseReceived<ValuesAggregated>(response =>
                     response.CompletePendingRequest(message => message.CorrelationId));
 
-            WhenAllCompleted(result => result.SetCompletedUsingInitializer(context =>
+            WhenAllCompleted(result => result.SetResultInitializer(context =>
             {
                 if (!context.TryGetVariable(CalculationVariableName, out CalculationVariable? calculation) || calculation is null)
                     throw new InvalidOperationException("The persisted calculation variable is missing.");

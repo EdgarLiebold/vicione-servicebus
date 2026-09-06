@@ -38,7 +38,7 @@ public sealed class TimeSourceArchitectureTests
     {
         string[] roots =
         [
-            Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Futures"),
+            Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.Futures"),
             Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "JobService"),
         ];
         string schedulingPolicy = Path.GetFullPath(Path.Combine(

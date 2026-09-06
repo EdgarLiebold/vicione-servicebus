@@ -180,7 +180,7 @@ public sealed class BatchFutureIntegrationTests
                 configuration.CorrelateById(context => context.Message.CorrelationId));
             SendRequests<string, ProcessBatchItem>(request => request.JobNumbers, configuration =>
                 {
-                    configuration.UsingRequestInitializer(context => new
+                    configuration.SetRequestInitializer(context => new
                     {
                         CorrelationId = NewId.NextGuid(),
                         JobNumber = context.Message,
@@ -189,8 +189,8 @@ public sealed class BatchFutureIntegrationTests
                 })
                 .OnResponseReceived<ProcessBatchItemCompleted>(configuration =>
                     configuration.CompletePendingRequest(message => message.CorrelationId));
-            WhenAllCompleted(response => response.SetCompletedUsingInitializer(MapResponse));
-            WhenAllCompletedOrFaulted(response => response.SetFaultedUsingInitializer(MapResponse));
+            WhenAllCompleted(response => response.SetResultInitializer(MapResponse));
+            WhenAllCompletedOrFaulted(response => response.SetFaultInitializer(MapResponse));
         }
 
         private static object MapResponse(BehaviorContext<FutureState> context)

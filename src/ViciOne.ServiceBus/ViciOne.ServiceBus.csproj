@@ -33,7 +33,6 @@
     <Compile Remove="**/*Saga*.cs" />
     <Compile Remove="Configuration/IRequestStateMachineMissingInstanceConfigurator.cs" />
     <Compile Remove="Courier/**/*.cs" />
-    <Compile Remove="Futures/**/*.cs" />
     <Compile Remove="JobService/**/*.cs" />
     <Compile Remove="Advanced/JobServiceEventExtensions.cs" />
     <Compile Remove="Middleware/JobConsumerMessageFilter.cs" />
@@ -45,7 +44,6 @@
     <Compile Remove="Configuration/DependencyInjection/IJobServiceRegistrationConfigurator.cs" />
     <Compile Remove="Configuration/DependencyInjection/InMemorySagaRepositoryRegistrationExtensions.cs" />
     <Compile Remove="Configuration/DependencyInjection/JobSagaBusConfigurationExtensions.cs" />
-    <Compile Remove="Configuration/DependencyInjection/IFutureRegistrationConfigurator.cs" />
     <Compile Remove="Configuration/CourierHostConfiguratorExtensions.cs" />
     <Compile Remove="Configuration/RoutingSlipConfigurator.cs" />
     <Compile Remove="Configuration/MediatorConfigurationExtensions.cs" />
@@ -83,8 +81,6 @@
     <Compile Remove="DependencyInjection/Configuration/DefaultExecuteActivityDefinition.cs" />
     <Compile Remove="DependencyInjection/Configuration/IActivityRegistration.cs" />
     <Compile Remove="DependencyInjection/Configuration/IExecuteActivityRegistration.cs" />
-    <Compile Remove="DependencyInjection/Configuration/DependencyInjectionFutureRegistrationExtensions.cs" />
-    <Compile Remove="DependencyInjection/Configuration/IFutureRegistration.cs" />
     <Compile Remove="DependencyInjection/Configuration/DependencyInjectionJobServiceRegistrationExtensions.cs" />
     <Compile Remove="DependencyInjection/Configuration/DependencyInjectionSagaRegistrationExtensions.cs" />
     <Compile Remove="DependencyInjection/Configuration/DependencyInjectionSagaStateMachineRegistrationExtensions.cs" />
@@ -127,7 +123,6 @@
     <Compile Remove="DependencyInjection/Registration/Activities/JobServiceRegistration.cs" />
     <Compile Remove="DependencyInjection/Registration/Consumers/JobSagaRegistrationConfigurator.cs" />
     <Compile Remove="DependencyInjection/Registration/Consumers/JobServiceRegistrationConfigurator.cs" />
-    <Compile Remove="DependencyInjection/Registration/Futures/**/*.cs" />
     <Compile Remove="DependencyInjection/Registration/Sagas/**/*.cs" />
     <Compile Remove="Middleware/MissingSagaPipe.cs" />
     <Compile Remove="Middleware/MissingInstanceRedeliveryPipe.cs" />

@@ -110,7 +110,7 @@ public sealed class AzureTableRoutingSlipFuturePersistenceTests
                     return Task.CompletedTask;
                 });
                 routingSlip.OnRoutingSlipCompleted(result =>
-                    result.SetCompletedUsingInitializer(context => new
+                    result.SetResultInitializer(context => new
                     {
                         CorrelationId = context.Saga.CorrelationId,
                         Value = context.GetVariable<int>(ResultVariable),

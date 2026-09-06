@@ -96,10 +96,10 @@ public static class ConsumeContextEndpointExtensions
     }
 
     internal static Task<ISendEndpoint> GetPublishEndpointAsync<T>(this IPublishEndpointProvider publishEndpointProvider, ConsumeContext? consumeContext,
-        Guid? requestId, bool inheritRequestTimeToLive = false)
+        Guid? requestId, bool inheritRequestTimeToLive = false, CancellationToken cancellationToken = default)
         where T : class
     {
-        Task<ISendEndpoint> publishSendEndpointTask = publishEndpointProvider.GetPublishSendEndpointAsync<T>();
+        Task<ISendEndpoint> publishSendEndpointTask = publishEndpointProvider.GetPublishSendEndpointAsync<T>(cancellationToken);
         if (publishSendEndpointTask.Status == TaskStatus.RanToCompletion)
         {
             return consumeContext != null
