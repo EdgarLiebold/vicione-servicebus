@@ -10,7 +10,7 @@ public sealed class ResourceCacheContractTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-TTL-CONFIGURATION", "invalid-inputs")]
-    public void Options_RejectInvalidCapacityAndTimeBounds()
+    public void Options_RejectInvalidCapacityTimeBoundsAndExpirationModes()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new ResourceCacheOptions(capacity: 0));
         Assert.Throws<ArgumentOutOfRangeException>(() => new ResourceCacheOptions(minAge: TimeSpan.FromTicks(-1)));
@@ -19,6 +19,90 @@ public sealed class ResourceCacheContractTests
             minAge: TimeSpan.FromSeconds(2),
             maxAge: TimeSpan.FromSeconds(1)));
         Assert.Throws<ArgumentOutOfRangeException>(() => new ResourceCacheOptions(cleanupInterval: TimeSpan.Zero));
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new ResourceCacheOptions(expirationMode: (ResourceCacheExpirationMode)int.MaxValue));
+        Assert.Equal("expirationMode", exception.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-METRICS", "overflow-safe-hit-ratio")]
+    public void Statistics_CalculatesHitRatioWithoutOverflow()
+    {
+        var statistics = new ResourceCacheStatistics(
+            Count: 0,
+            PendingCreations: 0,
+            TotalCreated: 0,
+            Hits: long.MaxValue,
+            Misses: long.MaxValue,
+            CreationFaults: 0,
+            Evictions: 0);
+
+        Assert.Equal(0.5, statistics.HitRatio, precision: 12);
+    }
+
+    [Fact]
+    public async Task KeyedFacade_RejectsANullFactoryBeforeStartingCacheWorkAsync()
+    {
+        await using var cache = new KeyedResourceCache<string, CacheValue>(
+            value => value.Id,
+            new ResourceCacheOptions(cleanupInterval: TimeSpan.FromHours(1)));
+
+        ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() =>
+            cache.GetOrAddAsync("one", null!, TestContext.Current.CancellationToken));
+
+        Assert.Equal("factory", exception.ParamName);
+        Assert.Equal(default, cache.Statistics);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-DIRECT-ADD", "pre-canceled-mutations-are-rejected")]
+    public async Task PreCanceledAddAndClear_DoNotMutateCommittedStateAsync()
+    {
+        await using var cache = CreateCache();
+        var retained = new CacheValue("retained", "original");
+        await cache.AddAsync(retained, TestContext.Current.CancellationToken);
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
+            await cache.AddAsync(new CacheValue("rejected", "new"), cancellation.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
+            await cache.ClearAsync(cancellation.Token));
+
+        Assert.Same(retained, Assert.Single(cache.GetValues(TestContext.Current.CancellationToken)));
+        Assert.Equal(1, cache.Statistics.TotalCreated);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-INDEX-FACTORY", "pre-canceled-index-operations-are-rejected")]
+    public async Task PreCanceledIndexOperations_DoNotReadMutateOrStartAFactoryAsync()
+    {
+        await using var cache = CreateCache();
+        IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
+        var retained = new CacheValue("retained", "original");
+        await cache.AddAsync(retained, TestContext.Current.CancellationToken);
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        var factoryCalls = 0;
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
+            await index.GetAsync("retained", cancellation.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
+            await index.GetOrAddAsync(
+                "missing",
+                (_, _) =>
+                {
+                    Interlocked.Increment(ref factoryCalls);
+                    return ValueTask.FromResult(new CacheValue("missing", "new"));
+                },
+                cancellation.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
+            await index.RemoveAsync("retained", cancellation.Token));
+
+        Assert.Equal(0, factoryCalls);
+        Assert.Same(retained, await index.GetAsync("retained", TestContext.Current.CancellationToken));
+        Assert.Equal(1, cache.Statistics.Hits);
+        Assert.Equal(0, cache.Statistics.Misses);
     }
 
     [Fact]

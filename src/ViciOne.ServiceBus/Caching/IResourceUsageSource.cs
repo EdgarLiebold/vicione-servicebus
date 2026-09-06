@@ -8,6 +8,6 @@ namespace ViciOne.ServiceBus.Caching;
 /// </summary>
 public interface IResourceUsageSource
 {
-    /// <summary>Occurs when used.</summary>
+    /// <summary>Occurs when the resource is used outside a cache lookup.</summary>
     event Action? Used;
 }

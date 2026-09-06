@@ -6,14 +6,14 @@ namespace ViciOne.ServiceBus.Caching;
 /// <summary>Immutable runtime policy used by <see cref="ResourceCache{TValue}"/>.</summary>
 public sealed class ResourceCacheOptions
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="capacity">The capacity.</param>
-    /// <param name="minAge">The min age.</param>
-    /// <param name="maxAge">The max age.</param>
-    /// <param name="expirationMode">The expiration mode.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
-    /// <param name="lifetimeCancellationToken">The lifetime cancellation token.</param>
-    /// <param name="cleanupInterval">The cleanup interval.</param>
+    /// <summary>Initializes the immutable policy for a resource cache.</summary>
+    /// <param name="capacity">The maximum number of committed and in-flight resources.</param>
+    /// <param name="minAge">The minimum retention period before time-based expiration is allowed.</param>
+    /// <param name="maxAge">The maximum absolute or sliding resource age.</param>
+    /// <param name="expirationMode">The timestamp policy used to measure <paramref name="maxAge"/>.</param>
+    /// <param name="timeProvider">The time source used for expiration and periodic cleanup.</param>
+    /// <param name="lifetimeCancellationToken">The token that cancels cache-owned resource factories.</param>
+    /// <param name="cleanupInterval">The interval between periodic expiration passes.</param>
     public ResourceCacheOptions(int capacity = 1000, TimeSpan? minAge = null, TimeSpan? maxAge = null,
         ResourceCacheExpirationMode expirationMode = ResourceCacheExpirationMode.Sliding, TimeProvider? timeProvider = null,
         CancellationToken lifetimeCancellationToken = default, TimeSpan? cleanupInterval = null)
@@ -30,6 +30,8 @@ public sealed class ResourceCacheOptions
             throw new ArgumentOutOfRangeException(nameof(maxAge), "Maximum age must be greater than zero.");
         if (minimumAge > maximumAge)
             throw new ArgumentOutOfRangeException(nameof(minAge), "Minimum age must not exceed maximum age.");
+        if (!Enum.IsDefined(expirationMode))
+            throw new ArgumentOutOfRangeException(nameof(expirationMode), expirationMode, "Expiration mode is not defined.");
 
         var interval = cleanupInterval ?? CalculateCleanupInterval(maximumAge);
         if (interval <= TimeSpan.Zero)
@@ -44,19 +46,25 @@ public sealed class ResourceCacheOptions
         LifetimeCancellationToken = lifetimeCancellationToken;
     }
 
-    /// <summary>Gets the capacity.</summary>
+    /// <summary>Gets the maximum number of committed and in-flight resources.</summary>
     public int Capacity { get; }
-    /// <summary>Gets the min age.</summary>
+
+    /// <summary>Gets the minimum retention period before time-based expiration is allowed.</summary>
     public TimeSpan MinAge { get; }
-    /// <summary>Gets the max age.</summary>
+
+    /// <summary>Gets the maximum absolute or sliding resource age.</summary>
     public TimeSpan MaxAge { get; }
-    /// <summary>Gets the cleanup interval.</summary>
+
+    /// <summary>Gets the interval between periodic expiration passes.</summary>
     public TimeSpan CleanupInterval { get; }
-    /// <summary>Gets the expiration mode.</summary>
+
+    /// <summary>Gets the timestamp policy used to measure maximum age.</summary>
     public ResourceCacheExpirationMode ExpirationMode { get; }
-    /// <summary>Gets the time provider.</summary>
+
+    /// <summary>Gets the time source used for expiration and periodic cleanup.</summary>
     public TimeProvider TimeProvider { get; }
-    /// <summary>Gets the lifetime cancellation token.</summary>
+
+    /// <summary>Gets the token that cancels cache-owned resource factories.</summary>
     public CancellationToken LifetimeCancellationToken { get; }
 
     static TimeSpan CalculateCleanupInterval(TimeSpan maxAge)

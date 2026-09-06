@@ -292,8 +292,8 @@
       "type": "ResourceCacheOptions",
       "source": "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
       "boundary": "construction",
-      "invariantCount": 5,
-      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs", "method": "Options_RejectInvalidCapacityAndTimeBounds" },
+      "invariantCount": 6,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs", "method": "Options_RejectInvalidCapacityTimeBoundsAndExpirationModes" },
       "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs", "method": "AddAsync_PublishesTheExactInstanceAndBypassesTheFallbackFactoryAsync" }
     },
     {

@@ -251,6 +251,42 @@ public sealed class ResourceCacheGenerationAndLockingTests
         Assert.Equal(1, cache.Statistics.Count);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-INDEX-FACTORY", "lifetime-canceled-factory-result-is-not-committed")]
+    public async Task FactoryIgnoringLifetimeCancellation_CannotCommitItsResultAsync()
+    {
+        using var lifetime = new CancellationTokenSource();
+        await using var cache = new ResourceCache<Resource>(new ResourceCacheOptions(
+            capacity: 8,
+            minAge: TimeSpan.Zero,
+            maxAge: TimeSpan.FromMinutes(30),
+            lifetimeCancellationToken: lifetime.Token,
+            cleanupInterval: TimeSpan.FromHours(1)));
+        IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
+        var started = NewSignal();
+        var release = NewSignal<Resource>();
+        var produced = new Resource("one");
+
+        Task<Resource> creation = index.GetOrAddAsync(
+            "one",
+            async (_, _) =>
+            {
+                started.TrySetResult();
+                return await release.Task;
+            },
+            TestContext.Current.CancellationToken).AsTask();
+        await started.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+
+        lifetime.Cancel();
+        release.TrySetResult(produced);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => creation);
+        Assert.Empty(cache.GetValues(TestContext.Current.CancellationToken));
+        Assert.Equal(1, produced.DisposeCount);
+        Assert.Equal(0, cache.Statistics.PendingCreations);
+        Assert.Equal(0, cache.Statistics.TotalCreated);
+    }
+
     private static void CompleteConcurrentRead<T>(ResourceCache<T> cache)
         where T : class
     {

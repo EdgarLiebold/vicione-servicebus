@@ -20,6 +20,5 @@ internal sealed class PendingResourceCreation<TValue>
     public TaskCompletionSource<TValue> Completion { get; }
     public TaskCompletionSource OwnershipReleased { get; }
     public CancellationTokenSource CreationCancellationSource { get; }
-    public Task? Runner { get; set; }
     public bool Invalidated { get; set; }
 }

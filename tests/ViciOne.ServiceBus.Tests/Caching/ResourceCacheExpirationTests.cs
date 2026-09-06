@@ -459,6 +459,31 @@ public sealed class ResourceCacheExpirationTests
         await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one", TestContext.Current.CancellationToken));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-EXPIRATION", "pre-canceled-cleanup-preserves-expired-values")]
+    public async Task PreCanceledCleanup_DoesNotRemoveAnExpiredResourceAsync()
+    {
+        FakeTimeProvider time = NewClock();
+        await using var cache = CreateCache(
+            capacity: 2,
+            timeProvider: time,
+            maxAge: TimeSpan.FromMinutes(1),
+            expirationMode: ResourceCacheExpirationMode.Absolute);
+        IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
+        var retained = new Resource("retained");
+        await cache.AddAsync(retained, TestContext.Current.CancellationToken);
+        time.Advance(TimeSpan.FromMinutes(1) + TimeSpan.FromTicks(1));
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
+            await cache.CleanupExpiredAsync(cancellation.Token));
+
+        Assert.Same(retained, Assert.Single(cache.GetValues(TestContext.Current.CancellationToken)));
+        Assert.Equal(0, retained.DisposeCount);
+        Assert.Equal(1, cache.Statistics.Count);
+    }
+
     private static FakeTimeProvider NewClock() => new(DateTimeOffset.UnixEpoch);
 
     private static ResourceCache<Resource> CreateCache(

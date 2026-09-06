@@ -171,8 +171,64 @@ public sealed class ResourceCacheObserverAndDisposalTests
         await cache.AddAsync(new Resource("original"), TestContext.Current.CancellationToken);
 
         Assert.NotNull(observed);
-        Assert.Contains("must not re-enter", observed.Message, StringComparison.Ordinal);
+        Assert.Contains("must not mutate", observed.Message, StringComparison.Ordinal);
         Assert.Equal(["original"], cache.GetValues(TestContext.Current.CancellationToken).Select(x => x.Id).ToArray());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-OBSERVER", "all-mutating-reentry-is-rejected")]
+    public async Task ObserverReentry_RejectsIndexRegistrationObserverRegistrationAndDisposalAsync()
+    {
+        await using var cache = CreateCache();
+        Exception? addIndexFailure = null;
+        Exception? connectFailure = null;
+        Exception? disposeFailure = null;
+        using ConnectHandle connection = cache.Connect(new DelegateObserver(onAdded: (_, _) =>
+        {
+            addIndexFailure = Record.Exception(() => cache.AddIndex("late", value => value.Id));
+            connectFailure = Record.Exception(() => cache.Connect(new RecordingObserver()));
+            disposeFailure = Record.Exception(() => cache.DisposeAsync());
+            return default;
+        }));
+
+        await cache.AddAsync(new Resource("original"), TestContext.Current.CancellationToken);
+
+        Assert.IsType<InvalidOperationException>(addIndexFailure);
+        Assert.IsType<InvalidOperationException>(connectFailure);
+        Assert.IsType<InvalidOperationException>(disposeFailure);
+        Assert.Throws<KeyNotFoundException>(() => cache.GetIndex<string>("late"));
+        Assert.Equal(1, cache.Statistics.Count);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-OBSERVER", "completed-scope-does-not-poison-child-context")]
+    public async Task CompletedObserverScope_DoesNotRejectLaterWorkFromACapturedExecutionContextAsync()
+    {
+        await using var cache = CreateCache();
+        var releaseDeferredMutation = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task? deferredMutation = null;
+        CancellationToken testCancellation = TestContext.Current.CancellationToken;
+        using ConnectHandle connection = cache.Connect(new DelegateObserver(onAdded: (value, _) =>
+        {
+            if (value.Id == "original")
+            {
+                deferredMutation = Task.Run(async () =>
+                {
+                    await releaseDeferredMutation.Task.WaitAsync(OperationTimeout, testCancellation);
+                    await cache.AddAsync(new Resource("deferred"), testCancellation);
+                }, testCancellation);
+            }
+
+            return default;
+        }));
+
+        await cache.AddAsync(new Resource("original"), testCancellation);
+        releaseDeferredMutation.TrySetResult();
+        Assert.NotNull(deferredMutation);
+        await deferredMutation.WaitAsync(OperationTimeout, testCancellation);
+
+        Assert.Equal(["deferred", "original"],
+            cache.GetValues(testCancellation).Select(x => x.Id).Order().ToArray());
     }
 
     [Fact]
@@ -239,6 +295,24 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
         Assert.Equal(1, faulting.DisposeCount);
         Assert.Equal(1, healthy.DisposeCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-DISPOSAL", "timer-disposal-failure-does-not-strand-resources")]
+    public async Task CleanupTimerDisposalFailure_DoesNotPreventResourceReleaseAsync()
+    {
+        var timeProvider = new FaultingTimerTimeProvider();
+        var cache = new ResourceCache<Resource>(new ResourceCacheOptions(
+            maxAge: TimeSpan.FromMinutes(30),
+            timeProvider: timeProvider,
+            cleanupInterval: TimeSpan.FromHours(1)));
+        var resource = new Resource("one");
+        await cache.AddAsync(resource, TestContext.Current.CancellationToken);
+
+        await cache.DisposeAsync();
+
+        Assert.Equal(1, timeProvider.Timer.DisposeCount);
+        Assert.Equal(1, resource.DisposeCount);
     }
 
     private static ResourceCache<T> CreateCache<T>(int capacity = 32)
@@ -383,6 +457,34 @@ public sealed class ResourceCacheObserverAndDisposalTests
                     return;
             }
             while (Interlocked.CompareExchange(ref _maximumConcurrency, candidate, observed) != observed);
+        }
+    }
+
+    private sealed class FaultingTimerTimeProvider : TimeProvider
+    {
+        public FaultingTimer Timer { get; } = new();
+
+        public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period) => Timer;
+
+        public sealed class FaultingTimer : ITimer
+        {
+            private int _disposeCount;
+
+            public int DisposeCount => Volatile.Read(ref _disposeCount);
+
+            public bool Change(TimeSpan dueTime, TimeSpan period) => true;
+
+            public void Dispose()
+            {
+                Interlocked.Increment(ref _disposeCount);
+                throw new DisposalException("timer dispose failed");
+            }
+
+            public ValueTask DisposeAsync()
+            {
+                Dispose();
+                return default;
+            }
         }
     }
 
