@@ -10,6 +10,7 @@ public sealed class MessageTypeCacheImmutabilityTests
     [RequirementCoverage("REQ-VSB-METADATA-IMMUTABILITY", "read-only-public-contract")]
     public void PublicMetadataCollections_ExposeReadOnlyListContracts()
     {
+        Assert.True(typeof(MessageTypeCache<CacheMessage>).IsSealed);
         Assert.Equal(
             typeof(IReadOnlyList<Type>),
             typeof(MessageTypeCache<CacheMessage>).GetProperty(nameof(MessageTypeCache<CacheMessage>.MessageTypes))!.PropertyType);
@@ -29,6 +30,24 @@ public sealed class MessageTypeCacheImmutabilityTests
         Assert.Equal(
             typeof(IReadOnlyList<PropertyInfo>),
             typeof(MessageTypeCache).GetMethod(nameof(MessageTypeCache.GetProperties))!.ReturnType);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-METADATA-IMMUTABILITY", "runtime-type-is-required")]
+    public void RuntimeTypeApis_RejectAMissingTypeConsistently()
+    {
+        Action[] calls =
+        [
+            () => MessageTypeCache.GetProperties(null!),
+            () => MessageTypeCache.IsValidMessageType(null!),
+            () => MessageTypeCache.InvalidMessageTypeReason(null!),
+            () => MessageTypeCache.IsTemporaryMessageType(null!),
+            () => MessageTypeCache.GetMessageTypes(null!),
+            () => MessageTypeCache.GetMessageTypeNames(null!),
+        ];
+
+        foreach (Action call in calls)
+            Assert.Equal("type", Assert.Throws<ArgumentNullException>(call).ParamName);
     }
 
     [Fact]

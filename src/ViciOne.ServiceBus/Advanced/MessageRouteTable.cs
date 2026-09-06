@@ -64,11 +64,11 @@ public sealed class MessageRouteTable :
         Map(typeof(T), Route.ForAddress(destinationAddress));
     }
 
-    internal void Map<T>(EndpointAddressProvider<T> endpointAddressProvider)
+    internal void Map<T>(EndpointAddressProvider endpointAddressProvider)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(endpointAddressProvider);
-        Map(typeof(T), Route.ForProvider(() => endpointAddressProvider(out Uri address) ? address : null));
+        Map(typeof(T), Route.ForProvider(() => endpointAddressProvider()));
     }
 
     internal void Freeze()

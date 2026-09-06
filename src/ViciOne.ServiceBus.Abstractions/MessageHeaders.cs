@@ -1,136 +1,131 @@
-using ViciOne.ServiceBus.Serialization;
-
 namespace ViciOne.ServiceBus;
 
-/// <summary>Defines headers for message.</summary>
+/// <summary>Defines the canonical wire names of Service Bus message headers.</summary>
 public static class MessageHeaders
 {
-    /// <summary>
-    /// The one place the active wire prefix is written. Every ViciOne header constant is built from it,
-    /// so the wire identity has a single owner and cannot drift into a second literal.
-    /// </summary>
+    /// <summary>The prefix applied to Service Bus-owned transport headers.</summary>
     public const string Prefix = "VSB-";
 
-    /// <summary>The group a transport adapter filters on when it moves fault detail across a boundary.</summary>
+    /// <summary>The prefix shared by fault-detail headers.</summary>
     public const string FaultPrefix = Prefix + "Fault-";
 
-    /// <summary>The reason for a message action being taken.</summary>
+    /// <summary>The reason associated with a message action.</summary>
     public const string Reason = Prefix + "Reason";
 
-    /// <summary>The type of exception from a Fault.</summary>
+    /// <summary>The assembly-qualified type of the reported fault exception.</summary>
     public const string FaultExceptionType = Prefix + "Fault-ExceptionType";
 
-    /// <summary>The input address of the endpoint on which the fault occurred.</summary>
+    /// <summary>The input address of the endpoint where the fault occurred.</summary>
     public const string FaultInputAddress = Prefix + "Fault-InputAddress";
 
-    /// <summary>The exception message from a Fault.</summary>
+    /// <summary>The message of the reported fault exception.</summary>
     public const string FaultMessage = Prefix + "Fault-Message";
 
-    /// <summary>The message type from a Fault.</summary>
+    /// <summary>The message contract type associated with the fault.</summary>
     public const string FaultMessageType = Prefix + "Fault-MessageType";
 
-    /// <summary>The consumer type which faulted.</summary>
+    /// <summary>The consumer type that reported the fault.</summary>
     public const string FaultConsumerType = Prefix + "Fault-ConsumerType";
 
-    /// <summary>The timestamp when the fault occurred.</summary>
+    /// <summary>The timestamp at which the fault occurred.</summary>
     public const string FaultTimestamp = Prefix + "Fault-Timestamp";
 
-    /// <summary>The stack trace from a Fault.</summary>
+    /// <summary>The stack trace of the reported fault exception.</summary>
     public const string FaultStackTrace = Prefix + "Fault-StackTrace";
 
-    /// <summary>The number of times the message was retried.</summary>
+    /// <summary>The number of retry attempts performed before the fault.</summary>
     public const string FaultRetryCount = Prefix + "Fault-RetryCount";
 
-    /// <summary>The number of times the message was redelivered.</summary>
+    /// <summary>The number of redeliveries performed before the fault.</summary>
     public const string FaultRedeliveryCount = Prefix + "Fault-RedeliveryCount";
 
-    /// <summary>The endpoint that forwarded the message to the new destination.</summary>
+    /// <summary>The address of the endpoint that forwarded the message.</summary>
     public const string ForwarderAddress = Prefix + "Forwarder-Address";
 
-    /// <summary>The tokenId for the message that was registered with the scheduler.</summary>
+    /// <summary>The scheduler token that identifies a scheduled message.</summary>
     public const string SchedulingTokenId = Prefix + "Scheduling-TokenId";
 
-    /// <summary>The number of times the message has been redelivered (zero if never).</summary>
+    /// <summary>The number of completed message redeliveries.</summary>
     public const string RedeliveryCount = Prefix + "Redelivery-Count";
 
-    /// <summary>The trigger key that was used when the scheduled message was trigger.</summary>
+    /// <summary>The Quartz trigger key that delivered the scheduled message.</summary>
     public const string QuartzTriggerKey = Prefix + "Quartz-TriggerKey";
 
-    /// <summary>Identifies the client from which the request is being sent.</summary>
+    /// <summary>The identifier of the client that sent a request.</summary>
     public const string ClientId = Prefix + "Request-ClientId";
 
-    /// <summary>Identifies the endpoint that handled the request.</summary>
+    /// <summary>The identifier of the endpoint that handled a request.</summary>
     public const string EndpointId = Prefix + "Request-EndpointId";
 
-    /// <summary>The initiating conversation id if a new conversation was started by this message.</summary>
+    /// <summary>The identifier assigned when this message started a conversation.</summary>
     public const string InitiatingConversationId = Prefix + "InitiatingConversationId";
 
-    /// <summary>MessageId - <see cref="MessageEnvelope" />.</summary>
+    /// <summary>The envelope message identifier.</summary>
     public const string MessageId = "MessageId";
 
-    /// <summary>CorrelationId - <see cref="MessageEnvelope" />.</summary>
+    /// <summary>The envelope correlation identifier.</summary>
     public const string CorrelationId = "CorrelationId";
 
-    /// <summary>ConversationId - <see cref="MessageEnvelope" />.</summary>
+    /// <summary>The envelope conversation identifier.</summary>
     public const string ConversationId = "ConversationId";
 
-    /// <summary>RequestId - <see cref="MessageEnvelope" />.</summary>
+    /// <summary>The envelope request identifier.</summary>
     public const string RequestId = "RequestId";
 
-    /// <summary>InitiatorId - <see cref="MessageEnvelope" />.</summary>
+    /// <summary>The identifier of the message that initiated the current conversation.</summary>
     public const string InitiatorId = Prefix + "InitiatorId";
 
-    /// <summary>SourceAddress - <see cref="MessageEnvelope" />.</summary>
+    /// <summary>The address from which the message was sent.</summary>
     public const string SourceAddress = Prefix + "Source-Address";
 
-    /// <summary>ResponseAddress - <see cref="MessageEnvelope" />.</summary>
+    /// <summary>The destination to which a response should be sent.</summary>
     public const string ResponseAddress = Prefix + "Response-Address";
 
-    /// <summary>FaultAddress - <see cref="MessageEnvelope" />.</summary>
+    /// <summary>The destination to which a fault should be sent.</summary>
     public const string FaultAddress = Prefix + "Fault-Address";
 
-    /// <summary>MessageType - <see cref="MessageEnvelope" />.</summary>
+    /// <summary>The message contract identifiers carried by the envelope.</summary>
     public const string MessageType = Prefix + "MessageType";
 
-    /// <summary>The Transport message ID, which is a string, because we can't assume anything.</summary>
+    /// <summary>The transport-native message identifier represented as text.</summary>
     public const string TransportMessageId = "TransportMessageId";
 
-    /// <summary>The Transport sent time (not supported by all, but hopefully enough).</summary>
+    /// <summary>The send timestamp supplied by the transport, when available.</summary>
     public const string TransportSentTime = "TransportSentTime";
 
-    /// <summary>When the message is redelivered or scheduled, and a new MessageId was generated, the original messageId.</summary>
+    /// <summary>The message identifier that preceded a redelivery or scheduled delivery.</summary>
     public const string OriginalMessageId = Prefix + "OriginalMessageId";
 
-    /// <summary>When a transport header is used, this is the name.</summary>
+    /// <summary>The MIME content type of the transport body.</summary>
     public const string ContentType = "Content-Type";
 
-    /// <summary>Used in routing slip variables to store the correlationId of a future.</summary>
+    /// <summary>The future identifier stored in routing-slip variables.</summary>
     public const string FutureId = "FutureId";
 
 
     /// <summary>Defines message header names that describe the producing host.</summary>
     public static class Host
     {
-        /// <summary>The group a transport adapter filters on when it moves host detail across a boundary.</summary>
+        /// <summary>The prefix shared by producing-host headers.</summary>
         public const string Prefix = MessageHeaders.Prefix + "Host-";
 
-        /// <summary>Exposes the info used by the containing type.</summary>
+        /// <summary>The serialized producing-host information.</summary>
         public const string Info = MessageHeaders.Prefix + "Host-Info";
-        /// <summary>Exposes the machine name used by the containing type.</summary>
+        /// <summary>The producing machine name.</summary>
         public const string MachineName = MessageHeaders.Prefix + "Host-MachineName";
-        /// <summary>Exposes the process name used by the containing type.</summary>
+        /// <summary>The producing process name.</summary>
         public const string ProcessName = MessageHeaders.Prefix + "Host-ProcessName";
-        /// <summary>Exposes the process id used by the containing type.</summary>
+        /// <summary>The producing process identifier.</summary>
         public const string ProcessId = MessageHeaders.Prefix + "Host-ProcessId";
-        /// <summary>Exposes the assembly used by the containing type.</summary>
+        /// <summary>The producing assembly name.</summary>
         public const string Assembly = MessageHeaders.Prefix + "Host-Assembly";
-        /// <summary>Exposes the assembly version used by the containing type.</summary>
+        /// <summary>The producing assembly version.</summary>
         public const string AssemblyVersion = MessageHeaders.Prefix + "Host-AssemblyVersion";
-        /// <summary>Exposes the vici one service bus version used by the containing type.</summary>
+        /// <summary>The Service Bus version used by the producer.</summary>
         public const string ViciOneServiceBusVersion = MessageHeaders.Prefix + "Host-ViciOneServiceBusVersion";
-        /// <summary>Exposes the framework version used by the containing type.</summary>
+        /// <summary>The .NET runtime version used by the producer.</summary>
         public const string FrameworkVersion = MessageHeaders.Prefix + "Host-FrameworkVersion";
-        /// <summary>Exposes the operating system version used by the containing type.</summary>
+        /// <summary>The operating-system version of the producing host.</summary>
         public const string OperatingSystemVersion = MessageHeaders.Prefix + "Host-OperatingSystemVersion";
     }
 
@@ -138,10 +133,10 @@ public static class MessageHeaders
     /// <summary>Defines message header names used by request-response conversations.</summary>
     public static class Request
     {
-        /// <summary>Exposes the accept used by the containing type.</summary>
+        /// <summary>The response contract identifiers accepted by a request client.</summary>
         public const string Accept = MessageHeaders.Prefix + "Request-AcceptType";
 
-        /// <summary>Tracks routing slip retries when using the RoutingSlipRequestProxy.</summary>
+        /// <summary>The retry count maintained by a routing-slip request proxy.</summary>
         public const string RoutingSlipRetryCount = MessageHeaders.Prefix + "RoutingSlip-RetryCount";
     }
 
@@ -149,22 +144,22 @@ public static class MessageHeaders
     /// <summary>Defines message header names used by Quartz scheduling.</summary>
     public static class Quartz
     {
-        /// <summary>The time when the message was scheduled.</summary>
+        /// <summary>The timestamp at which Quartz scheduled the message.</summary>
         public const string Scheduled = MessageHeaders.Prefix + "Quartz-Scheduled";
 
-        /// <summary>When the event for this message was fired by Quartz.</summary>
+        /// <summary>The timestamp at which Quartz fired the message trigger.</summary>
         public const string Sent = MessageHeaders.Prefix + "Quartz-Sent";
 
-        /// <summary>When the next message is scheduled to be sent.</summary>
+        /// <summary>The next scheduled delivery timestamp.</summary>
         public const string NextScheduled = MessageHeaders.Prefix + "Quartz-NextScheduled";
 
-        /// <summary>When the previous message was sent.</summary>
+        /// <summary>The previous delivery timestamp.</summary>
         public const string PreviousSent = MessageHeaders.Prefix + "Quartz-PreviousSent";
 
-        /// <summary>Schedule identifier.</summary>
+        /// <summary>The Quartz schedule identifier.</summary>
         public const string ScheduleId = MessageHeaders.Prefix + "Quartz-ScheduleId";
 
-        /// <summary>Schedule group.</summary>
+        /// <summary>The Quartz schedule group.</summary>
         public const string ScheduleGroup = MessageHeaders.Prefix + "Quartz-ScheduleGroup";
     }
 }

@@ -6,24 +6,24 @@ namespace ViciOne.ServiceBus;
 /// <summary>Configures application-level metadata for a sent message.</summary>
 public sealed record SendOptions
 {
-    /// <summary>Gets or sets the headers.</summary>
+    /// <summary>Gets the application headers to add to the sent message.</summary>
     public IReadOnlyDictionary<string, object?> Headers { get; init; } = FrozenDictionary<string, object?>.Empty;
 
-    /// <summary>Gets or sets the time to live.</summary>
+    /// <summary>Gets the duration for which the sent message remains eligible for delivery.</summary>
     public TimeSpan? TimeToLive { get; init; }
 
-    /// <summary>Gets or sets the correlation id.</summary>
+    /// <summary>Gets the identifier that correlates the message with related work.</summary>
     public Guid? CorrelationId { get; init; }
 
-    /// <summary>Gets or sets the conversation id.</summary>
+    /// <summary>Gets the identifier shared by messages in the same conversation.</summary>
     public Guid? ConversationId { get; init; }
 
-    /// <summary>Gets or sets the message id.</summary>
+    /// <summary>Gets the unique identifier assigned to the sent message.</summary>
     public Guid? MessageId { get; init; }
 
-    /// <summary>Gets or sets the request id.</summary>
+    /// <summary>Gets the request identifier propagated by the send operation.</summary>
     public Guid? RequestId { get; init; }
 
-    /// <summary>Gets or sets the partition key.</summary>
+    /// <summary>Gets the transport partition key, when the destination supports partitioning.</summary>
     public string? PartitionKey { get; init; }
 }

@@ -62,6 +62,7 @@
     <Compile Remove="Configuration/DependencyInjection/FutureDefinition.cs" />
     <Compile Remove="Configuration/DependencyInjection/IFutureDefinition.cs" />
     <Compile Include="Advanced/Initializers/INamedInitializerValue.cs" />
+    <Compile Include="Advanced/Initializers/InitializedMessage.cs" />
     <Compile Include="Courier/IItineraryBuilder.cs" Link="Advanced/IItineraryBuilder.cs" />
     <Compile Include="Courier/Contracts/RoutingSlipEvents.cs" Link="Advanced/RoutingSlipEvents.cs" />
     <Compile Include="Courier/Contracts/RoutingSlipEventContents.cs" Link="Advanced/RoutingSlipEventContents.cs" />

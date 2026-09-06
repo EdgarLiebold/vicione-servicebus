@@ -17,6 +17,33 @@ namespace ViciOne.ServiceBus.Tests.Transports;
 public sealed class ReceiveLifecycleTerminalityTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-ENDPOINT-LIFETIME", "required-constructor-dependencies")]
+    public void Constructor_RejectsEachMissingRequiredDependency()
+    {
+        Assert.Equal(
+            "transport",
+            Assert.Throws<ArgumentNullException>(() => new ReceiveEndpoint(null!, new TestReceiveEndpointContext())).ParamName);
+        Assert.Equal(
+            "context",
+            Assert.Throws<ArgumentNullException>(() => new ReceiveEndpoint(new ScriptedReceiveTransport(), null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-ENDPOINT-LIFETIME", "coherent-initial-health")]
+    public void Constructor_ExposesACompleteUnhealthyObservationBeforeStartup()
+    {
+        var endpoint = new ReceiveEndpoint(new ScriptedReceiveTransport(), new TestReceiveEndpointContext());
+
+        Assert.Equal(ReceiveEndpoint.State.Initial, endpoint.CurrentState);
+        Assert.Equal("not ready", endpoint.Message);
+        Assert.Equal(BusHealthStatus.Unhealthy, endpoint.HealthResult.Status);
+        Assert.Equal("not ready", endpoint.HealthResult.Description);
+        Assert.Same(endpoint, endpoint.HealthResult.ReceiveEndpoint);
+        Assert.Equal(InputAddress, endpoint.HealthResult.InputAddress);
+        Assert.Null(endpoint.HealthResult.Exception);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-ENDPOINT-LIFETIME", "stop-awaits-context-reset")]
     public async Task Stop_AwaitsOwnedProviderReleaseBeforeCompletingAsync()
     {

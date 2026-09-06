@@ -2,7 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>A bus is a logical element that includes a local endpoint and zero or more receive endpoints.</summary>
+/// <summary>Provides message publishing, endpoint resolution, dynamic receiving, observation, and topology for one bus instance.</summary>
 public interface IBus :
     IPublishEndpoint,
     IPublishEndpointProvider,
@@ -16,9 +16,9 @@ public interface IBus :
     IReceiveConnector,
     IProbeSite
 {
-    /// <summary>The InputAddress of the default bus endpoint.</summary>
+    /// <summary>Gets the input address of the bus endpoint.</summary>
     Uri Address { get; }
 
-    /// <summary>The bus topology.</summary>
+    /// <summary>Gets the transport topology used by the bus.</summary>
     IBusTopology Topology { get; }
 }

@@ -5,8 +5,8 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures bus factory.</summary>
-/// <typeparam name="TEndpointConfigurator">The endpoint configurator type.</typeparam>
+/// <summary>Configures a bus and exposes transport-specific receive-endpoint settings.</summary>
+/// <typeparam name="TEndpointConfigurator">The transport-specific receive-endpoint configurator.</typeparam>
 public interface IBusFactoryConfigurator<out TEndpointConfigurator> :
     IBusFactoryConfigurator,
     IReceiveConfigurator<TEndpointConfigurator>
@@ -15,7 +15,7 @@ public interface IBusFactoryConfigurator<out TEndpointConfigurator> :
 }
 
 
-/// <summary>Configures bus factory.</summary>
+/// <summary>Defines the transport-independent configuration of a bus instance and its message pipelines.</summary>
 public interface IBusFactoryConfigurator :
     IReceiveConfigurator,
     IConsumePipeConfigurator,
@@ -27,78 +27,77 @@ public interface IBusFactoryConfigurator :
     ISendObserverConnector,
     IPublishObserverConnector
 {
-    /// <summary>Gets the message topology.</summary>
+    /// <summary>Gets the conventions that describe message contracts.</summary>
     IMessageTopologyConfigurator MessageTopology { get; }
-    /// <summary>Gets the consume topology.</summary>
+    /// <summary>Gets the topology applied when messages are consumed.</summary>
     IConsumeTopologyConfigurator ConsumeTopology { get; }
-    /// <summary>Gets the send topology.</summary>
+    /// <summary>Gets the topology applied when messages are sent.</summary>
     ISendTopologyConfigurator SendTopology { get; }
-    /// <summary>Gets the publish topology.</summary>
+    /// <summary>Gets the topology applied when messages are published.</summary>
     IPublishTopologyConfigurator PublishTopology { get; }
 
-    /// <summary>Set to true if the topology should be deployed only.</summary>
+    /// <summary>Sets whether startup deploys topology without starting message delivery.</summary>
     bool DeployTopologyOnly { set; }
 
-    /// <summary>Deploys defined Publish message types to the broker at startup.</summary>
+    /// <summary>Sets whether startup deploys publish topology for configured message contracts.</summary>
     bool DeployPublishTopology { set; }
 
-    /// <summary>Specify the number of messages to prefetch from the message broker.</summary>
-    /// <value>The limit</value>
+    /// <summary>Sets the maximum number of messages prefetched from the broker.</summary>
     int PrefetchCount { set; }
 
-    /// <summary>Specify the number of concurrent messages that can be consumed (separate from prefetch count).</summary>
+    /// <summary>Sets the maximum number of messages processed concurrently, independently of prefetching.</summary>
     int? ConcurrentMessageLimit { set; }
 
-    /// <summary>When deserializing a message, if no ContentType is present on the receive context, use this as the default.</summary>
+    /// <summary>Sets the content type used to deserialize messages that do not declare one.</summary>
     ContentType DefaultContentType { set; }
 
-    /// <summary>When serializing a message, use the content type specified for serialization.</summary>
+    /// <summary>Sets the content type used to serialize outgoing messages.</summary>
     ContentType SerializerContentType { set; }
 
-    /// <summary>Configure the message topology for the message type on this bus configuration.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="configureTopology">The configure topology.</param>
+    /// <summary>Configures message-topology conventions for a contract.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <param name="configureTopology">The callback that configures the contract topology.</param>
     void Message<T>(Action<IMessageTopologyConfigurator<T>> configureTopology)
         where T : class;
 
-    /// <summary>Configure the send topology of the message type.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="configureTopology">The configure topology.</param>
+    /// <summary>Configures send topology for a message contract.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <param name="configureTopology">The callback that configures send topology.</param>
     void Send<T>(Action<IMessageSendTopologyConfigurator<T>> configureTopology)
         where T : class;
 
-    /// <summary>Configure the send topology of the message type.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="configureTopology">The configure topology.</param>
+    /// <summary>Configures publish topology for a message contract.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <param name="configureTopology">The callback that configures publish topology.</param>
     void Publish<T>(Action<IMessagePublishTopologyConfigurator<T>> configureTopology)
         where T : class;
 
-    /// <summary>Maps a message type to a destination for this bus only. Routes are frozen when the bus is built.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
+    /// <summary>Maps a message contract to a fixed destination on this bus.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <param name="destinationAddress">The destination to use for the contract.</param>
     void Route<T>(Uri destinationAddress)
         where T : class;
 
-    /// <summary>Maps a message type to a lazily resolved destination for this bus only.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="endpointAddressProvider">The endpoint address provider.</param>
-    void Route<T>(EndpointAddressProvider<T> endpointAddressProvider)
+    /// <summary>Maps a message contract to a destination resolved for each send on this bus.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <param name="endpointAddressProvider">The function that resolves the current destination, or <see langword="null" /> when none is available.</param>
+    void Route<T>(EndpointAddressProvider endpointAddressProvider)
         where T : class;
 
-    /// <summary>Add a message serializer using the specified factory (can be shared by serializer/deserializer).</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
-    /// <param name="isSerializer">If true, set the current serializer to the specified factory.</param>
+    /// <summary>Adds a message serializer to the bus.</summary>
+    /// <param name="factory">The factory that creates serializer contexts.</param>
+    /// <param name="isSerializer">Whether this serializer becomes the active serializer.</param>
     void AddSerializer(ISerializerFactory factory, bool isSerializer = true);
 
-    /// <summary>Add a message deserializer using the specified factory (can be shared by serializer/deserializer).</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
-    /// <param name="isDefault">If true, set the default content type to the content type of the deserializer.</param>
+    /// <summary>Adds a message deserializer to the bus.</summary>
+    /// <param name="factory">The factory that creates deserializer contexts.</param>
+    /// <param name="isDefault">Whether the deserializer's content type becomes the default.</param>
     void AddDeserializer(ISerializerFactory factory, bool isDefault = false);
 
-    /// <summary>Configures the System.Text.Json payload policy for this bus. The configuration is materialized into an immutable runtime snapshot.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Configures the immutable <see cref="JsonSerializerOptions" /> snapshot used by this bus.</summary>
+    /// <param name="configure">The function that transforms the serializer options.</param>
     void ConfigureSystemTextJsonSerializerOptions(Func<JsonSerializerOptions, JsonSerializerOptions> configure);
 
-    /// <summary>Clears all message serialization configuration.</summary>
+    /// <summary>Removes every configured serializer and deserializer from the bus.</summary>
     void ClearSerialization();
 }

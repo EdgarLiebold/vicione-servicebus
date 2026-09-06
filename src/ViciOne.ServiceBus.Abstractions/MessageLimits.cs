@@ -11,19 +11,19 @@ public sealed record MessageLimits
         MaxJsonDepth = 32,
     };
 
-    /// <summary>Gets or sets the max body bytes.</summary>
+    /// <summary>Gets the maximum serialized message-body length in bytes.</summary>
     public required int MaxBodyBytes { get; init; }
 
-    /// <summary>Gets or sets the max envelope bytes.</summary>
+    /// <summary>Gets the maximum complete transport-envelope length in bytes.</summary>
     public required int MaxEnvelopeBytes { get; init; }
 
-    /// <summary>Gets or sets the max json depth.</summary>
+    /// <summary>Gets the maximum JSON nesting depth accepted by serializers.</summary>
     public required int MaxJsonDepth { get; init; }
 
-    /// <summary>Gets or sets the warn above bytes.</summary>
+    /// <summary>Gets the optional body length above which a size warning is emitted.</summary>
     public int? WarnAboveBytes { get; init; }
 
-    /// <summary>Gets or sets the offload to message data above bytes.</summary>
+    /// <summary>Gets the optional body length above which payload data is offloaded to message storage.</summary>
     public int? OffloadToMessageDataAboveBytes { get; init; }
 
     internal MessageLimits Validate(string busName)

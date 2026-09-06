@@ -243,19 +243,14 @@ public sealed class EndpointConventionIntegrationTests
         var received = NewSignal<ConsumeContext<DynamicRouteMessage>>();
         harness.OnConfigureInMemoryBus += bus =>
         {
-            bus.Route<DynamicRouteMessage>((out Uri address) =>
+            bus.Route<DynamicRouteMessage>(() =>
             {
                 Interlocked.Increment(ref providerCalls);
-                address = harness.InputQueueAddress;
-                return true;
+                return harness.InputQueueAddress;
             });
 
             Assert.Throws<ConfigurationException>(() =>
-                bus.Route<DynamicRouteMessage>((out Uri address) =>
-                {
-                    address = harness.InputQueueAddress;
-                    return true;
-                }));
+                bus.Route<DynamicRouteMessage>(() => harness.InputQueueAddress));
         };
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
             endpoint.Handler<DynamicRouteMessage>(context => CompleteAsync(received, context));

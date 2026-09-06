@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Defines the operations required by bus control.</summary>
+/// <summary>Controls the lifecycle and exposes the aggregate health of a bus.</summary>
 public interface IBusControl :
     IBus
 {
@@ -14,7 +14,7 @@ public interface IBusControl :
 
     /// <summary>Stops the bus if it is running; otherwise, completes without changing state.</summary>
     /// <param name="cancellationToken">The token that cancels the stop operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after the running bus has stopped.</returns>
     Task StopAsync(CancellationToken cancellationToken = default);
 
     /// <summary>Gets the current health of the bus and its receive endpoints.</summary>

@@ -1295,6 +1295,125 @@
       "variantKey" : "system-time-convenience"
    },
    {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-RESULT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "BusHealthResult_CapturesAnImmutableEndpointSnapshot",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.HealthResultContractTests",
+      "variantKey" : "immutable-endpoint-snapshot"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-RESULT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "BusHealthResultFactories_RejectEachMissingRequiredInput",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.HealthResultContractTests",
+      "variantKey" : "required-bus-result-inputs"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-RESULT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EndpointHealthResultFactories_PreserveTheCompleteEndpointObservation",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.HealthResultContractTests",
+      "variantKey" : "complete-endpoint-result"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-RESULT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "EndpointHealthResultFactories_RejectAMissingEndpoint",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.HealthResultContractTests",
+      "variantKey" : "required-endpoint"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-HEALTH-RESULT",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "HealthResultTypes_ExposeStateThroughPropertiesInsteadOfPublicFields",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.HealthResultContractTests",
+      "variantKey" : "property-based-api"
+   },
+   {
+      "requirementId" : "REQ-VSB-HOST-ENDPOINT-CONNECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ConnectResponseEndpoint_ForwardsTheDefinitionFormatterAndCallback",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.HostConnectReceiveEndpointExtensionsTests",
+      "variantKey" : "response-endpoint-forwarding"
+   },
+   {
+      "requirementId" : "REQ-VSB-HOST-ENDPOINT-CONNECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ConnectReceiveEndpoint_ForwardsATemporaryDefinitionAndCallback",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.HostConnectReceiveEndpointExtensionsTests",
+      "variantKey" : "temporary-endpoint-forwarding"
+   },
+   {
+      "requirementId" : "REQ-VSB-HOST-ENDPOINT-CONNECTION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ConvenienceEndpoints_RejectAMissingConnector",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.HostConnectReceiveEndpointExtensionsTests",
+      "variantKey" : "required-connector"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-TOO-LARGE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Constructor_PreservesEveryDiagnosticValue",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.MessageTooLargeExceptionTests",
+      "variantKey" : "complete-diagnostics"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-TOO-LARGE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Constructor_RejectsInvalidSizeRelationships",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.MessageTooLargeExceptionTests",
+      "variantKey" : "size-invariants"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-TOO-LARGE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Constructor_RejectsAMissingInputAddress",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.MessageTooLargeExceptionTests",
+      "variantKey" : "required-input-address"
+   },
+   {
+      "requirementId" : "REQ-VSB-INITIALIZED-MESSAGE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ConstructorAndDeconstruction_PreserveTheMessageAndNonEmptyPipe",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Initializers.InitializedMessageTests",
+      "variantKey" : "complete-deconstruction"
+   },
+   {
+      "requirementId" : "REQ-VSB-INITIALIZED-MESSAGE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "MissingOrEmptyPipe_UsesTheCanonicalEmptyPipe",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Initializers.InitializedMessageTests",
+      "variantKey" : "empty-pipe-normalization"
+   },
+   {
+      "requirementId" : "REQ-VSB-INITIALIZED-MESSAGE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Constructors_RejectAMissingMessage",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Initializers.InitializedMessageTests",
+      "variantKey" : "required-message"
+   },
+   {
+      "requirementId" : "REQ-VSB-INITIALIZED-MESSAGE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PublicShape_UsesPropertiesAndRejectsDefaultValues",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Initializers.InitializedMessageTests",
+      "variantKey" : "property-based-valid-state"
+   },
+   {
+      "requirementId" : "REQ-VSB-ENDPOINT-ADDRESS-PROVIDER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ProviderResult_IsExplicitlyNullable",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.EndpointAddressProviderTests",
+      "variantKey" : "nullable-result-contract"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-INSTANCE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Constructor_RejectsAMissingBusControl",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.BusInstanceTests",
+      "variantKey" : "required-bus-control"
+   },
+   {
       "requirementId" : "REQ-VSB-HOST-METADATA",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "CachedHost_DescribesTheCurrentProcessAndRuntime",
@@ -1678,4 +1797,5 @@
   ,{ "requirementId": "REQ-VSB-NEWID-SPAN-API", "variantKey": "constructor-input-validation", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdApiShapeTests", "testMethod": "CustomAlphabetConstructors_RejectNull" }
   ,{ "requirementId": "REQ-VSB-METADATA-IMMUTABILITY", "variantKey": "read-only-public-contract", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Metadata.MessageTypeCacheImmutabilityTests", "testMethod": "PublicMetadataCollections_ExposeReadOnlyListContracts" }
   ,{ "requirementId": "REQ-VSB-METADATA-IMMUTABILITY", "variantKey": "cached-state-cannot-be-mutated", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Metadata.MessageTypeCacheImmutabilityTests", "testMethod": "CachedCollections_RejectMutationAndRemainStableAcrossReaders" }
+  ,{ "requirementId": "REQ-VSB-METADATA-IMMUTABILITY", "variantKey": "runtime-type-is-required", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Metadata.MessageTypeCacheImmutabilityTests", "testMethod": "RuntimeTypeApis_RejectAMissingTypeConsistently" }
 ]

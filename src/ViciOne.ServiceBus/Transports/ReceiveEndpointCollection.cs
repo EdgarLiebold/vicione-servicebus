@@ -8,15 +8,15 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>Stores a collection of receive endpoint values.</summary>
-public class ReceiveEndpointCollection :
+/// <summary>Owns the host's named receive endpoints and coordinates their lifecycle and observation.</summary>
+public sealed class ReceiveEndpointCollection :
     IReceiveEndpointCollection
 {
     readonly SingleThreadedDictionary<string, ReceiveEndpoint> _endpoints;
     readonly ReceiveEndpointObservable _receiveEndpointObservers;
     bool _started;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Initializes an empty receive-endpoint collection.</summary>
     public ReceiveEndpointCollection()
     {
         _receiveEndpointObservers = new ReceiveEndpointObservable();
@@ -24,9 +24,9 @@ public class ReceiveEndpointCollection :
         _endpoints = new SingleThreadedDictionary<string, ReceiveEndpoint>(StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="endpointName">The endpoint name.</param>
-    /// <param name="endpoint">The endpoint.</param>
+    /// <summary>Adds a named endpoint and connects it to collection-wide lifecycle and health observation.</summary>
+    /// <param name="endpointName">The name that uniquely identifies the endpoint, ignoring case.</param>
+    /// <param name="endpoint">The receive endpoint to add.</param>
     public void Add(string endpointName, ReceiveEndpoint endpoint)
     {
         if (endpoint == null)
@@ -50,9 +50,9 @@ public class ReceiveEndpointCollection :
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive endpoint", "unknown", $"A receive endpoint with the same key was already added: {endpointName}", "Correct the named configuration before starting the host"));
     }
 
-    /// <summary>Starts endpoints.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The host receive endpoint handle array produced by the operation.</returns>
+    /// <summary>Starts every endpoint that is not already running.</summary>
+    /// <param name="cancellationToken">The token that cancels endpoint startup.</param>
+    /// <returns>Handles for the endpoints started by this call.</returns>
     public HostReceiveEndpointHandle[] StartEndpoints(CancellationToken cancellationToken)
     {
         _started = true;
@@ -62,10 +62,10 @@ public class ReceiveEndpointCollection :
         return endpointsToStart.Select(x => StartEndpoint(x.Key, x.Value, cancellationToken)).ToArray();
     }
 
-    /// <summary>Starts the configured component.</summary>
-    /// <param name="endpointName">The endpoint name.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The host receive endpoint handle produced by the operation.</returns>
+    /// <summary>Starts a named receive endpoint.</summary>
+    /// <param name="endpointName">The registered endpoint name.</param>
+    /// <param name="cancellationToken">The token that cancels endpoint startup.</param>
+    /// <returns>A handle that exposes readiness and controls the endpoint.</returns>
     public HostReceiveEndpointHandle Start(string endpointName, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(endpointName))
@@ -80,8 +80,8 @@ public class ReceiveEndpointCollection :
         return StartEndpoint(endpointName, endpoint, cancellationToken);
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Adds diagnostics for every registered endpoint to a probe.</summary>
+    /// <param name="context">The probe context that receives endpoint diagnostics.</param>
     public void Probe(ProbeContext context)
     {
         foreach (KeyValuePair<string, ReceiveEndpoint> endpoint in _endpoints)
@@ -95,17 +95,17 @@ public class ReceiveEndpointCollection :
         }
     }
 
-    /// <summary>Connects receive endpoint observer.</summary>
-    /// <param name="observer">The observer to connect.</param>
+    /// <summary>Subscribes an observer to lifecycle notifications from every registered endpoint.</summary>
+    /// <param name="observer">The observer that receives endpoint lifecycle notifications.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
     {
         return _receiveEndpointObservers.Connect(observer);
     }
 
-    /// <summary>Connects consume message observer.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="observer">The observer to connect.</param>
+    /// <summary>Subscribes a typed observer to consume notifications from every registered endpoint.</summary>
+    /// <typeparam name="T">The observed message contract.</typeparam>
+    /// <param name="observer">The observer that receives typed consume notifications.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumeMessageObserver<T>(IConsumeMessageObserver<T> observer)
         where T : class
@@ -113,16 +113,16 @@ public class ReceiveEndpointCollection :
         return new MultipleConnectHandle(_endpoints.Values.Select(x => x.ConnectConsumeMessageObserver(observer)));
     }
 
-    /// <summary>Checks endpoint health.</summary>
-    /// <returns>The enumerable produced by the operation.</returns>
+    /// <summary>Creates a snapshot of the latest health observation for every endpoint.</summary>
+    /// <returns>The endpoint health observations in collection order.</returns>
     public IEnumerable<EndpointHealthResult> CheckEndpointHealth()
     {
         return _endpoints.Values.Select(x => x.HealthResult).ToList();
     }
 
-    /// <summary>Stops endpoints.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Stops application endpoints before stopping the bus endpoint.</summary>
+    /// <param name="cancellationToken">The token that cancels endpoint shutdown.</param>
+    /// <returns>A task that completes when all running or paused endpoints have stopped.</returns>
     public async Task StopEndpointsAsync(CancellationToken cancellationToken)
     {
         ReceiveEndpoint[] endpoints = _endpoints.Values.Where(x => (x.IsStarted() || x.IsPaused) && !x.IsBusEndpoint).ToArray();
@@ -142,7 +142,9 @@ public class ReceiveEndpointCollection :
         {
             void RemoveEndpoint()
             {
-                endpoint.ObserverHandle.Disconnect();
+                (endpoint.ObserverHandle
+                    ?? throw new InvalidOperationException("The receive endpoint observer is not connected."))
+                    .Disconnect();
                 Remove(endpointName);
             }
 
@@ -169,13 +171,13 @@ public class ReceiveEndpointCollection :
     }
 
 
-    class Handle :
+    sealed class Handle :
         HostReceiveEndpointHandle
     {
         readonly ReceiveEndpoint _endpoint;
         readonly Action _remove;
 
-        ReceiveEndpointHandle _endpointHandle = null!;
+        ReceiveEndpointHandle? _endpointHandle;
 
         public Handle(ReceiveEndpoint endpoint, Action remove)
         {
@@ -185,7 +187,9 @@ public class ReceiveEndpointCollection :
 
         public IReceiveEndpoint ReceiveEndpoint => _endpoint;
 
-        public Task<ReceiveEndpointReady> Ready => _endpointHandle.Ready;
+        public Task<ReceiveEndpointReady> Ready => (_endpointHandle
+            ?? throw new InvalidOperationException("The receive endpoint has not been started."))
+            .Ready;
 
         public Task StopAsync(CancellationToken cancellationToken)
         {

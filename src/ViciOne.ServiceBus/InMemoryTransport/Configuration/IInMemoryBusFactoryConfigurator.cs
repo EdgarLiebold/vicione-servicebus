@@ -2,35 +2,35 @@ using System;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>Configures in memory bus factory.</summary>
+/// <summary>Configures an in-memory bus, its host identity, and transport topology.</summary>
 public interface IInMemoryBusFactoryConfigurator :
     IBusFactoryConfigurator<IInMemoryReceiveEndpointConfigurator>
 {
-    /// <summary>Gets the publish topology.</summary>
+    /// <summary>Gets the in-memory publish topology.</summary>
     new IInMemoryPublishTopologyConfigurator PublishTopology { get; }
 
-    /// <summary>Configure the send topology of the message type.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="configureTopology">The configure topology.</param>
+    /// <summary>Configures in-memory publish topology for a message contract.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <param name="configureTopology">An optional callback that configures publish topology.</param>
     void Publish<T>(Action<IInMemoryMessagePublishTopologyConfigurator<T>>? configureTopology = null)
         where T : class;
 
-    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <summary>Configures in-memory publish topology for a runtime message contract.</summary>
     /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="configure">An optional callback that configures publish topology.</param>
     void Publish(Type messageType, Action<IInMemoryMessagePublishTopologyConfigurator>? configure = null);
 
-    /// <summary>Configure the base address for the host.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Configures the current in-memory host.</summary>
+    /// <param name="configure">An optional callback that configures the host.</param>
     void Host(Action<IInMemoryHostConfigurator>? configure = null);
 
-    /// <summary>Configure the base address for the host.</summary>
+    /// <summary>Sets and configures the in-memory host base address.</summary>
     /// <param name="baseAddress">The base address for the in-memory host.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="configure">An optional callback that configures the host.</param>
     void Host(Uri baseAddress, Action<IInMemoryHostConfigurator>? configure = null);
 
-    /// <summary>Configure the virtual host, to differentiate in-memory bus instances.</summary>
-    /// <param name="virtualHost">The virtual host path.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Sets a virtual-host path that distinguishes in-memory bus instances.</summary>
+    /// <param name="virtualHost">The virtual-host path.</param>
+    /// <param name="configure">An optional callback that configures the host.</param>
     void Host(string virtualHost, Action<IInMemoryHostConfigurator>? configure = null);
 }
