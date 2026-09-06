@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Courier;
 using ViciOne.ServiceBus.Courier.Contracts;
@@ -8,7 +9,6 @@ using ViciOne.ServiceBus.Events;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Util;
 
-#nullable enable annotations
 namespace ViciOne.ServiceBus.Courier;
 
 /// <summary>
@@ -19,10 +19,8 @@ public class RoutingSlipBuilder :
     IRoutingSlipBuilder,
     IRoutingSlipSendEndpointTarget
 {
-    /// <summary>
-    /// Defines the no arguments value.
-    /// </summary>
-    public static readonly IDictionary<string, object> NoArguments = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+    static readonly IDictionary<string, object> _noArguments =
+        new ReadOnlyDictionary<string, object>(new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase));
 
     readonly List<ActivityException> _activityExceptions;
     readonly List<ActivityLog> _activityLogs;
@@ -132,7 +130,7 @@ public class RoutingSlipBuilder :
         if (executeAddress == null)
             throw new ArgumentNullException(nameof(executeAddress));
 
-        Activity activity = new RoutingSlipActivity(name, executeAddress, NoArguments);
+        Activity activity = new RoutingSlipActivity(name, executeAddress, _noArguments);
         _itinerary.Add(activity);
     }
 

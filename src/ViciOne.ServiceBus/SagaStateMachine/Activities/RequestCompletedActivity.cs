@@ -45,7 +45,7 @@ public class RequestCompletedActivity<TSaga, TMessage> :
         {
             context.Saga.CorrelationId,
             Timestamp = TimeProvider.System.GetUtcNow(),
-            PayloadType = MessageTypeCache<TMessage>.MessageTypeNames,
+            PayloadType = MessageTypeCache<TMessage>.MessageTypeNames.ToArray(),
             Payload = context.Message
         }, context.CancellationToken).ConfigureAwait(false);
 
@@ -121,7 +121,7 @@ public class RequestCompletedActivity<TSaga, TMessage, TResponse> :
         {
             context.Saga.CorrelationId,
             Timestamp = TimeProvider.System.GetUtcNow(),
-            PayloadType = MessageTypeCache<TResponse>.MessageTypeNames,
+            PayloadType = MessageTypeCache<TResponse>.MessageTypeNames.ToArray(),
             Payload = _messageFactory(context)
         }, context.CancellationToken).ConfigureAwait(false);
 

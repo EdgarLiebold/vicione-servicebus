@@ -177,7 +177,7 @@ public class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput> :
         {
             FaultId = context.MessageId ?? NewId.NextGuid(),
             FaultedMessageId = context.Message.TrackingNumber,
-            FaultMessageTypes = MessageTypeCache<TCommand>.MessageTypeNames,
+            FaultMessageTypes = MessageTypeCache<TCommand>.MessageTypeNames.ToArray(),
             Host = context.Message.ActivityExceptions.Select(x => x.Host).FirstOrDefault() ?? context.Host,
             context.Message.Timestamp,
             exceptions,

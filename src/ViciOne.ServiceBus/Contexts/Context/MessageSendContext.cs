@@ -43,7 +43,7 @@ public class MessageSendContext<TMessage> :
         MessageId = messageId.ToGuid();
         SentTime = messageId.Timestamp;
 
-        SupportedMessageTypes = MessageTypeCache<TMessage>.MessageTypeNames;
+        SupportedMessageTypes = MessageTypeCache<TMessage>.MessageTypeNames.ToArray();
 
         _body = new Lazy<MessageBody>(() => GetMessageBody());
     }

@@ -1,53 +1,188 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Net;
+using System.Net.Sockets;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
 /// <summary>
-/// Represents a cluster node value.
+/// Identifies a RabbitMQ cluster node by host name and optional TCP port.
 /// </summary>
-public readonly struct ClusterNode
+public readonly record struct ClusterNode :
+    IParsable<ClusterNode>,
+    ISpanParsable<ClusterNode>
 {
     /// <summary>
-    /// Defines the host name value.
+    /// Gets the unbracketed DNS name or IP address.
     /// </summary>
-    public readonly string HostName;
-    /// <summary>
-    /// Defines the port value.
-    /// </summary>
-    public readonly int? Port;
+    public string HostName { get; }
 
-    ClusterNode(string hostName, int? port = default)
+    /// <summary>
+    /// Gets the explicit TCP port, or <see langword="null" /> when the connection default applies.
+    /// </summary>
+    public int? Port { get; }
+
+    private ClusterNode(string hostName, int? port)
     {
         HostName = hostName;
         Port = port;
     }
 
     /// <summary>
-    /// Returns the string representation of this instance.
+    /// Returns the canonical node representation, using brackets for IPv6 hosts.
     /// </summary>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>The canonical host and optional port.</returns>
     public override string ToString()
     {
-        return Port == -1 ? HostName : $"{HostName}:{Port}";
+        if (string.IsNullOrEmpty(HostName))
+            return string.Empty;
+
+        string host = HostName.Contains(':', StringComparison.Ordinal)
+            ? $"[{HostName}]"
+            : HostName;
+        return Port is { } port
+            ? string.Concat(host, ":", port.ToString(CultureInfo.InvariantCulture))
+            : host;
     }
 
     /// <summary>
-    /// Parses the supplied representation.
+    /// Parses a RabbitMQ cluster-node representation.
     /// </summary>
-    /// <param name="address">The address value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="address">A DNS name, IPv4 address, or bracketed/unbracketed IPv6 address with an optional port.</param>
+    /// <returns>The parsed node.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="address" /> is null.</exception>
+    /// <exception cref="ArgumentException"><paramref name="address" /> is not a valid node.</exception>
     public static ClusterNode Parse(string address)
     {
-        if (string.IsNullOrWhiteSpace(address))
-            throw new ArgumentNullException(nameof(address), "Address must not be null or empty");
+        ArgumentNullException.ThrowIfNull(address);
+        return Parse(address.AsSpan(), CultureInfo.InvariantCulture);
+    }
 
-        var elements = address.Split(':');
+    /// <inheritdoc />
+    public static ClusterNode Parse(string address, IFormatProvider? provider)
+    {
+        ArgumentNullException.ThrowIfNull(address);
+        return Parse(address.AsSpan(), provider);
+    }
 
-        return elements.Length switch
+    /// <summary>
+    /// Parses a RabbitMQ cluster-node representation from a character span.
+    /// </summary>
+    /// <param name="address">The node representation.</param>
+    /// <param name="provider">Ignored because node syntax is culture-independent.</param>
+    /// <returns>The parsed node.</returns>
+    /// <exception cref="ArgumentException"><paramref name="address" /> is not a valid node.</exception>
+    public static ClusterNode Parse(ReadOnlySpan<char> address, IFormatProvider? provider = null)
+    {
+        if (TryParse(address, provider, out ClusterNode result))
+            return result;
+
+        throw new ArgumentException($"Invalid RabbitMQ cluster node: '{address.ToString()}'.", nameof(address));
+    }
+
+    /// <summary>
+    /// Attempts to parse a RabbitMQ cluster-node representation.
+    /// </summary>
+    /// <param name="address">The node representation.</param>
+    /// <param name="result">The parsed node when successful; otherwise, the default value.</param>
+    /// <returns><see langword="true" /> when parsing succeeds; otherwise, <see langword="false" />.</returns>
+    public static bool TryParse([NotNullWhen(true)] string? address, out ClusterNode result) =>
+        TryParse(address, CultureInfo.InvariantCulture, out result);
+
+    /// <inheritdoc />
+    public static bool TryParse([NotNullWhen(true)] string? address, IFormatProvider? provider, out ClusterNode result)
+    {
+        if (address is null)
         {
-            1 => new ClusterNode(elements[0]),
-            2 when int.TryParse(elements[1], out var port) => new ClusterNode(elements[0], port),
-            _ => throw new ArgumentException($"Invalid node address: {address}", nameof(address))
-        };
+            result = default;
+            return false;
+        }
+
+        return TryParse(address.AsSpan(), provider, out result);
+    }
+
+    /// <inheritdoc />
+    public static bool TryParse(ReadOnlySpan<char> address, IFormatProvider? provider, out ClusterNode result)
+    {
+        result = default;
+        if (address.IsEmpty || ContainsWhitespace(address))
+            return false;
+
+        ReadOnlySpan<char> host;
+        int? port = null;
+        if (address[0] == '[')
+        {
+            int closeBracket = address.IndexOf(']');
+            if (closeBracket <= 1)
+                return false;
+
+            host = address[1..closeBracket];
+            if (!IsIpv6(host))
+                return false;
+
+            ReadOnlySpan<char> suffix = address[(closeBracket + 1)..];
+            if (!suffix.IsEmpty)
+            {
+                if (suffix[0] != ':' || !TryParsePort(suffix[1..], out int parsedPort))
+                    return false;
+
+                port = parsedPort;
+            }
+        }
+        else
+        {
+            int firstColon = address.IndexOf(':');
+            if (firstColon < 0)
+                host = address;
+            else if (firstColon == address.LastIndexOf(':'))
+            {
+                host = address[..firstColon];
+                if (!TryParsePort(address[(firstColon + 1)..], out int parsedPort))
+                    return false;
+
+                port = parsedPort;
+            }
+            else
+            {
+                host = address;
+                if (!IsIpv6(host))
+                    return false;
+            }
+        }
+
+        if (!IsValidHost(host))
+            return false;
+
+        result = new ClusterNode(host.ToString(), port);
+        return true;
+    }
+
+    private static bool IsValidHost(ReadOnlySpan<char> host)
+    {
+        if (host.IsEmpty || host.Contains('[') || host.Contains(']'))
+            return false;
+
+        if (host.Contains(':'))
+            return IsIpv6(host);
+
+        return Uri.CheckHostName(host.ToString()) != UriHostNameType.Unknown;
+    }
+
+    private static bool IsIpv6(ReadOnlySpan<char> host) =>
+        IPAddress.TryParse(host, out IPAddress? address) && address.AddressFamily == AddressFamily.InterNetworkV6;
+
+    private static bool TryParsePort(ReadOnlySpan<char> value, out int port) =>
+        int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out port) && port is >= 1 and <= 65535;
+
+    private static bool ContainsWhitespace(ReadOnlySpan<char> value)
+    {
+        foreach (char character in value)
+        {
+            if (char.IsWhiteSpace(character))
+                return true;
+        }
+
+        return false;
     }
 }

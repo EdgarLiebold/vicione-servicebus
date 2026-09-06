@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
@@ -70,7 +71,7 @@ public sealed class MediatorReceiveContext<TMessage> :
         var messageContext = new MediatorSendMessageContext<TMessage>(sendContext);
 
         var serializationContext = new MediatorSerializationContext<TMessage>(objectDeserializer, messageContext, sendContext.Message,
-            MessageTypeCache<TMessage>.MessageTypeNames);
+            MessageTypeCache<TMessage>.MessageTypeNames.ToArray());
 
         _consumeContext = new MediatorConsumeContext<TMessage>(this, serializationContext, sendContext.Message);
 

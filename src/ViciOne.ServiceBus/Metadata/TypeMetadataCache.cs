@@ -39,7 +39,7 @@ public static class TypeMetadataCache
     /// </summary>
     /// <param name="type">The type value.</param>
     /// <returns>The result of the operation.</returns>
-    public static IEnumerable<PropertyInfo> GetProperties(Type type)
+    public static IReadOnlyList<PropertyInfo> GetProperties(Type type)
     {
         return MessageTypeCache.GetProperties(type);
     }
@@ -69,7 +69,7 @@ public static class TypeMetadataCache
     /// </summary>
     /// <param name="type">The type value.</param>
     /// <returns>The result of the operation.</returns>
-    public static Type[] GetMessageTypes(Type type)
+    public static IReadOnlyList<Type> GetMessageTypes(Type type)
     {
         return MessageTypeCache.GetMessageTypes(type);
     }
@@ -79,7 +79,7 @@ public static class TypeMetadataCache
     /// </summary>
     /// <param name="type">The type value.</param>
     /// <returns>The result of the operation.</returns>
-    public static string[] GetMessageTypeNames(Type type)
+    public static IReadOnlyList<string> GetMessageTypeNames(Type type)
     {
         return MessageTypeCache.GetMessageTypeNames(type);
     }
@@ -132,7 +132,7 @@ public class TypeMetadataCache<T> :
     /// <summary>
     /// Gets the properties value.
     /// </summary>
-    public static IEnumerable<PropertyInfo> Properties => MessageTypeCache<T>.Properties;
+    public static IReadOnlyList<PropertyInfo> Properties => MessageTypeCache<T>.Properties;
     /// <summary>
     /// Gets the is valid message type value.
     /// </summary>
@@ -148,11 +148,11 @@ public class TypeMetadataCache<T> :
     /// <summary>
     /// Gets the message types value.
     /// </summary>
-    public static Type[] MessageTypes => MessageTypeCache<T>.MessageTypes;
+    public static IReadOnlyList<Type> MessageTypes => MessageTypeCache<T>.MessageTypes;
     /// <summary>
     /// Gets the message type names value.
     /// </summary>
-    public static string[] MessageTypeNames => MessageTypeCache<T>.MessageTypeNames;
+    public static IReadOnlyList<string> MessageTypeNames => MessageTypeCache<T>.MessageTypeNames;
 
     Type ITypeMetadataCache<T>.ImplementationType => _implementationType.Value;
 

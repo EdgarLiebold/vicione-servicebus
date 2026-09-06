@@ -136,3 +136,27 @@ Five isolated mutations were killed and restored byte-for-byte: accepting a 17-b
 - Release engineering-solution build with warnings as errors: passed, 0 warnings and 0 errors.
 - Engineering whitespace and warning-level style verification: passed.
 - One unrelated nested-request integration timeout from the first complete run passed 10/10 isolated repetitions and the repeated complete profile; it remains recorded for later load-sensitivity hardening.
+
+## Iteration 6
+
+Iteration 6 closes the mutable-global-state and RabbitMQ cluster-node parsing findings. Message, type, property, and consumer metadata now expose stable read-only collections; array-dependent internal boundaries receive defensive copies. No-argument routing-slip activities use a private read-only sentinel. `ClusterNode` now follows the standard string/span parsing pattern, canonicalizes IPv6 with brackets, treats a missing port distinctly, and rejects malformed hosts and ports outside `1..65535`.
+
+### Red/green evidence
+
+| Contract | Baseline result | Corrected result |
+|---|---:|---:|
+| Message metadata cache immutability | 2 failed, 348 passed | 350 passed |
+| Consumer cache and routing-slip isolation | 3 failed, 4 passed | 7 passed |
+| Core metadata facade | added as a direct regression guard | 1 passed |
+| RabbitMQ cluster-node standard parsing | test project failed to compile on the missing API | 19 focused cases and all 184 RabbitMQ tests passed |
+
+Five isolated regressions were killed and restored byte-for-byte: direct cached-array exposure, a mutable shared Courier dictionary, a public `NoArguments` field, reversed nullable-port formatting, and acceptance of TCP port zero.
+
+### Full validation
+
+- Release unit/architecture solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Complete Unit/Architecture profile: 3,802 passed, 0 failed, 0 skipped.
+- Release engineering-solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Engineering whitespace verification: passed.
+- Engineering style verification at warning severity: passed.
+- Requirement manifests and Git whitespace: passed.

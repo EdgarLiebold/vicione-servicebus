@@ -49,7 +49,7 @@ public class RequestFaultedActivity<TSaga, TMessage, TRequest> :
         await context.PublishAsync<RequestFaulted>(new
         {
             context.Saga.CorrelationId,
-            PayloadType = MessageTypeCache<Fault<TRequest>>.MessageTypeNames,
+            PayloadType = MessageTypeCache<Fault<TRequest>>.MessageTypeNames.ToArray(),
             Payload = new
             {
                 payload.FaultId,

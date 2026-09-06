@@ -108,11 +108,11 @@ public sealed class MessageRouteTable :
         if (_routes.TryGetValue(messageType, out Route? exact))
             return exact;
 
-        Type[] implementedTypes = MessageTypeCache.GetMessageTypes(messageType);
+        IReadOnlyList<Type> implementedTypes = MessageTypeCache.GetMessageTypes(messageType);
         Route? candidate = null;
         Type? candidateType = null;
 
-        for (var i = 0; i < implementedTypes.Length; i++)
+        for (var i = 0; i < implementedTypes.Count; i++)
         {
             Type type = implementedTypes[i];
             if (type == messageType || !_routes.TryGetValue(type, out Route? route))

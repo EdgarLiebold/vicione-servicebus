@@ -23,7 +23,7 @@ public static class MessageTypeCache
     /// </summary>
     /// <param name="type">The type value.</param>
     /// <returns>The result of the operation.</returns>
-    public static IEnumerable<PropertyInfo> GetProperties(Type type)
+    public static IReadOnlyList<PropertyInfo> GetProperties(Type type)
     {
         return GetOrAdd(type).Properties;
     }
@@ -63,7 +63,7 @@ public static class MessageTypeCache
     /// </summary>
     /// <param name="type">The type value.</param>
     /// <returns>The result of the operation.</returns>
-    public static Type[] GetMessageTypes(Type type)
+    public static IReadOnlyList<Type> GetMessageTypes(Type type)
     {
         return GetOrAdd(type).MessageTypes;
     }
@@ -73,7 +73,7 @@ public static class MessageTypeCache
     /// </summary>
     /// <param name="type">The type value.</param>
     /// <returns>The result of the operation.</returns>
-    public static string[] GetMessageTypeNames(Type type)
+    public static IReadOnlyList<string> GetMessageTypeNames(Type type)
     {
         return GetOrAdd(type).MessageTypeNames;
     }
@@ -101,9 +101,9 @@ public static class MessageTypeCache
         bool IsTemporaryMessageType { get; }
         bool IsValidMessageType { get; }
         string? InvalidMessageTypeReason { get; }
-        Type[] MessageTypes { get; }
-        string[] MessageTypeNames { get; }
-        IEnumerable<PropertyInfo> Properties { get; }
+        IReadOnlyList<Type> MessageTypes { get; }
+        IReadOnlyList<string> MessageTypeNames { get; }
+        IReadOnlyList<PropertyInfo> Properties { get; }
     }
 
 
@@ -113,10 +113,10 @@ public static class MessageTypeCache
         bool CachedType.IsTemporaryMessageType => MessageTypeCache<T>.IsTemporaryMessageType;
         bool CachedType.IsValidMessageType => MessageTypeCache<T>.IsValidMessageType;
         string? CachedType.InvalidMessageTypeReason => MessageTypeCache<T>.InvalidMessageTypeReason;
-        public Type[] MessageTypes => MessageTypeCache<T>.MessageTypes;
-        public string[] MessageTypeNames => MessageTypeCache<T>.MessageTypeNames;
+        public IReadOnlyList<Type> MessageTypes => MessageTypeCache<T>.MessageTypes;
+        public IReadOnlyList<string> MessageTypeNames => MessageTypeCache<T>.MessageTypeNames;
 
-        public IEnumerable<PropertyInfo> Properties => MessageTypeCache<T>.Properties;
+        public IReadOnlyList<PropertyInfo> Properties => MessageTypeCache<T>.Properties;
     }
 }
 
@@ -131,16 +131,17 @@ public class MessageTypeCache<T> :
     readonly Lazy<string> _diagnosticAddress;
     readonly Lazy<bool> _isTemporaryMessageType;
     readonly Lazy<bool> _isValidMessageType;
-    readonly Lazy<string[]> _messageTypeNames;
+    readonly Lazy<IReadOnlyList<string>> _messageTypeNames;
     string? _invalidMessageTypeReason;
-    Type[]? _messageTypes;
-    List<PropertyInfo>? _properties;
+    IReadOnlyList<Type>? _messageTypes;
+    IReadOnlyList<PropertyInfo>? _properties;
 
     MessageTypeCache()
     {
         _isValidMessageType = new Lazy<bool>(CheckIfValidMessageType);
         _isTemporaryMessageType = new Lazy<bool>(() => CheckIfTemporaryMessageType(typeof(T)));
-        _messageTypeNames = new Lazy<string[]>(() => GetMessageTypeNames().ToArray());
+        _messageTypeNames = new Lazy<IReadOnlyList<string>>(
+            () => Array.AsReadOnly(GetMessageTypeNames().ToArray()));
         _diagnosticAddress = new Lazy<string>(GetDiagnosticAddress);
     }
 
@@ -151,7 +152,7 @@ public class MessageTypeCache<T> :
     /// <summary>
     /// Gets the properties value.
     /// </summary>
-    public static IEnumerable<PropertyInfo> Properties => Cached.Metadata.Value.Properties;
+    public static IReadOnlyList<PropertyInfo> Properties => Cached.Metadata.Value.Properties;
     /// <summary>
     /// Gets the is valid message type value.
     /// </summary>
@@ -167,28 +168,31 @@ public class MessageTypeCache<T> :
     /// <summary>
     /// Gets the message types value.
     /// </summary>
-    public static Type[] MessageTypes => Cached.Metadata.Value.MessageTypes;
+    public static IReadOnlyList<Type> MessageTypes => Cached.Metadata.Value.MessageTypes;
     /// <summary>
     /// Gets the message type names value.
     /// </summary>
-    public static string[] MessageTypeNames => Cached.Metadata.Value.MessageTypeNames;
+    public static IReadOnlyList<string> MessageTypeNames => Cached.Metadata.Value.MessageTypeNames;
 
     bool IMessageTypeCache.IsTemporaryMessageType => _isTemporaryMessageType.Value;
 
-    string[] IMessageTypeCache.MessageTypeNames => _messageTypeNames.Value;
+    IReadOnlyList<string> IMessageTypeCache.MessageTypeNames => _messageTypeNames.Value;
     string IMessageTypeCache.DiagnosticAddress => _diagnosticAddress.Value;
-    IEnumerable<PropertyInfo> IMessageTypeCache.Properties => _properties ??= PropertyListFactory();
+    IReadOnlyList<PropertyInfo> IMessageTypeCache.Properties => _properties ??= PropertyListFactory();
     bool IMessageTypeCache.IsValidMessageType => _isValidMessageType.Value;
     string? IMessageTypeCache.InvalidMessageTypeReason => _invalidMessageTypeReason;
 
-    Type[] IMessageTypeCache.MessageTypes => _messageTypes ??= GetMessageTypes().ToArray();
+    IReadOnlyList<Type> IMessageTypeCache.MessageTypes =>
+        _messageTypes ??= Array.AsReadOnly(GetMessageTypes().ToArray());
 
-    static List<PropertyInfo> PropertyListFactory()
+    static IReadOnlyList<PropertyInfo> PropertyListFactory()
     {
-        return typeof(T).GetReadableInstanceProperties()
+        PropertyInfo[] properties = typeof(T).GetReadableInstanceProperties()
             .GroupBy(x => x.Name)
             .Select(x => x.Last())
-            .ToList();
+            .ToArray();
+
+        return Array.AsReadOnly(properties);
     }
 
     static bool CheckIfTemporaryMessageType(Type messageTypeInfo)

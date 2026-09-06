@@ -148,7 +148,8 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse> :
     {
         IEnumerable<ExceptionInfo> exceptions = context.Message.ActivityExceptions.Select(x => x.ExceptionInfo);
 
-        Fault<TRequest> response = new FaultEvent<TRequest>(request, requestId, context.Host, exceptions, MessageTypeCache<TRequest>.MessageTypeNames,
+        Fault<TRequest> response = new FaultEvent<TRequest>(request, requestId, context.Host, exceptions,
+            MessageTypeCache<TRequest>.MessageTypeNames.ToArray(),
             context.GetTimeProvider());
 
         return Task.FromResult(response);

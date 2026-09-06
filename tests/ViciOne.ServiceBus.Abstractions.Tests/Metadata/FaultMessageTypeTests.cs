@@ -29,8 +29,8 @@ public sealed class FaultMessageTypeTests
     private static void AssertFaultTypeSet<TFault>(params Type[] expectedTypes)
         where TFault : class
     {
-        Type[] actualTypes = MessageTypeCache<TFault>.MessageTypes;
-        string[] actualTypeNames = MessageTypeCache<TFault>.MessageTypeNames;
+        IReadOnlyList<Type> actualTypes = MessageTypeCache<TFault>.MessageTypes;
+        IReadOnlyList<string> actualTypeNames = MessageTypeCache<TFault>.MessageTypeNames;
         Type[] sortedExpectedTypes = expectedTypes
             .OrderBy(GetStableTypeName, StringComparer.Ordinal)
             .ToArray();
@@ -46,9 +46,9 @@ public sealed class FaultMessageTypeTests
             .ToArray();
 
         Assert.Equal(sortedExpectedTypes, sortedActualTypes);
-        Assert.Equal(actualTypes.Length, actualTypes.Distinct().Count());
+        Assert.Equal(actualTypes.Count, actualTypes.Distinct().Count());
         Assert.Equal(sortedExpectedNames, sortedActualNames);
-        Assert.Equal(actualTypeNames.Length, actualTypeNames.Distinct(StringComparer.Ordinal).Count());
+        Assert.Equal(actualTypeNames.Count, actualTypeNames.Distinct(StringComparer.Ordinal).Count());
     }
 
     private static string GetStableTypeName(Type type) =>

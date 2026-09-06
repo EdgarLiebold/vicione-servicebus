@@ -133,3 +133,23 @@ Remove compatibility-era public metadata and identifier contracts that a .NET 10
 - Reintroduce a by-reference `string` or `byte[]` parameter into the public `NewId` surface: the API-shape test must fail.
 - Bypass the exact 16-byte formatter boundary independently for short and long input: boundary tests must fail.
 - Reintroduce the custom unsupported-capability exception, a `[Serializable]` product declaration, or the former state-machine brand: the corresponding whole-product architecture test must fail.
+
+## Iteration 6 outcome
+
+Eliminate externally mutable process-global metadata and shared routing-slip state, and replace the RabbitMQ cluster-node parser with a canonical .NET parsing contract that round-trips DNS, IPv4, and IPv6 nodes while rejecting invalid ports before connection work.
+
+## Iteration 6 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-METADATA-IMMUTABILITY` | message types, contract names, and reflected properties cannot mutate cached process state | abstractions tests | read-only public shape, mutation rejection, and stable repeated/parallel observations |
+| `REQ-VSB-METADATA-IMMUTABILITY` | the core metadata facade cannot weaken the abstraction-level immutability contract | core metadata tests | exact public return types, stable collection identity, and mutation rejection |
+| `REQ-VSB-CONSUMER-METADATA-IMMUTABILITY` | consumer convention metadata cannot be externally mutated | core consumer tests | read-only public shape and stable repeated observation |
+| `REQ-VSB-COURIER-BUILDER-ISOLATION` | no-argument activities cannot share a publicly mutable dictionary | core courier tests | no public mutable sentinel, immutable activity arguments, and independent builders |
+| `REQ-VSB-RABBITMQ-CLUSTER-NODE` | node text follows standard string/span parsing and canonical formatting | RabbitMQ tests | DNS, IPv4, bracketed/raw IPv6, absent/edge ports, invalid input, and culture independence |
+
+## Iteration 6 mutation obligations
+
+- Return a cached array directly from one metadata surface: the immutability shape or mutation test must fail.
+- Restore the public mutable `NoArguments` dictionary: the API-shape test must fail; make the private empty dictionary mutable: the behavior test must fail.
+- Restore the nullable-port formatting defect or accept a port outside `1..65535`: the cluster-node round-trip or boundary test must fail.

@@ -29,12 +29,12 @@ interface IMessageTypeCache
     /// <summary>
     /// Returns all valid message types that are contained within the s
     /// </summary>
-    Type[] MessageTypes { get; }
+    IReadOnlyList<Type> MessageTypes { get; }
 
     /// <summary>
     /// The names of all the message types supported by the message type
     /// </summary>
-    string[] MessageTypeNames { get; }
+    IReadOnlyList<string> MessageTypeNames { get; }
 
-    IEnumerable<PropertyInfo> Properties { get; }
+    IReadOnlyList<PropertyInfo> Properties { get; }
 }

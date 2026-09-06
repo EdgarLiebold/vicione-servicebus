@@ -33,7 +33,7 @@ public class ScheduleMessageCommand<T> :
         Destination = destination;
         Payload = payload;
 
-        PayloadType = MessageTypeCache<T>.MessageTypeNames;
+        PayloadType = MessageTypeCache<T>.MessageTypeNames.ToArray();
     }
 
     /// <summary>

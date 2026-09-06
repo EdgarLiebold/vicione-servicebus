@@ -48,7 +48,7 @@ public class RequestStartedActivity<TSaga, TMessage> :
             context.ResponseAddress,
             context.FaultAddress,
             context.ExpirationTime,
-            PayloadType = MessageTypeCache<TMessage>.MessageTypeNames,
+            PayloadType = MessageTypeCache<TMessage>.MessageTypeNames.ToArray(),
             Payload = context.Message
         }, context.CancellationToken).ConfigureAwait(false);
 

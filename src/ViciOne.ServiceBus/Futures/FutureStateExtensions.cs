@@ -51,7 +51,7 @@ public static class FutureStateExtensions
     {
         IDictionary<string, object> dictionary = context.SerializerContext.ToDictionary(message);
 
-        return new FutureMessage(dictionary, MessageTypeCache<T>.MessageTypeNames);
+        return new FutureMessage(dictionary, MessageTypeCache<T>.MessageTypeNames.ToArray());
     }
 
     /// <summary>

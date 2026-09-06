@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ViciOne.ServiceBus.Configuration;
@@ -11,23 +12,24 @@ public class ConsumerMetadataCache<T> :
     IConsumerMetadataCache<T>
     where T : class
 {
-    readonly IMessageInterfaceType[] _consumerTypes;
+    readonly IReadOnlyList<IMessageInterfaceType> _consumerTypes;
 
     ConsumerMetadataCache()
     {
-        _consumerTypes = ConsumerConventionCache.GetConventions<T>()
+        IMessageInterfaceType[] consumerTypes = ConsumerConventionCache.GetConventions<T>()
             .SelectMany(x => x.GetMessageTypes())
             .GroupBy(x => x.MessageType)
             .Select(x => x.Last())
             .ToArray();
+        _consumerTypes = Array.AsReadOnly(consumerTypes);
     }
 
     /// <summary>
     /// Gets the consumer types value.
     /// </summary>
-    public static IMessageInterfaceType[] ConsumerTypes => Cached.Metadata.Value.ConsumerTypes;
+    public static IReadOnlyList<IMessageInterfaceType> ConsumerTypes => Cached.Metadata.Value.ConsumerTypes;
 
-    IMessageInterfaceType[] IConsumerMetadataCache<T>.ConsumerTypes => _consumerTypes;
+    IReadOnlyList<IMessageInterfaceType> IConsumerMetadataCache<T>.ConsumerTypes => _consumerTypes;
 
 
     static class Cached

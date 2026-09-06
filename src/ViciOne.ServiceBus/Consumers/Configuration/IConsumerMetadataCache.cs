@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
@@ -9,5 +11,5 @@ public interface IConsumerMetadataCache<T>
     /// <summary>
     /// Gets the consumer types value.
     /// </summary>
-    IMessageInterfaceType[] ConsumerTypes { get; }
+    IReadOnlyList<IMessageInterfaceType> ConsumerTypes { get; }
 }
