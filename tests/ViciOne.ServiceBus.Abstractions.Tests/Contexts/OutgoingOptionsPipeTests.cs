@@ -47,6 +47,92 @@ public sealed class OutgoingOptionsPipeTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-APPLICATION-OPTIONS-IMMUTABILITY", "all-options-use-immutable-default-headers")]
+    public void ApplicationOptions_UseImmutableDefaultHeaders()
+    {
+        IReadOnlyDictionary<string, object?>[] defaults =
+        [
+            new SendOptions().Headers,
+            new PublishOptions().Headers,
+            new ScheduleOptions().Headers,
+            new RequestOptions().Headers,
+        ];
+
+        Assert.All(defaults, headers =>
+        {
+            Assert.Empty(headers);
+            ICollection<KeyValuePair<string, object?>> collection = Assert.IsAssignableFrom<ICollection<KeyValuePair<string, object?>>>(headers);
+            Assert.True(collection.IsReadOnly);
+            Assert.Throws<NotSupportedException>(() => collection.Add(new KeyValuePair<string, object?>("late", 1)));
+        });
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-APPLICATION-OPTIONS-IMMUTABILITY", "send-pipe-snapshots-caller-headers")]
+    public async Task SendOptionsPipe_SnapshotsCallerOwnedHeadersAtConstructionAsync()
+    {
+        var headers = Headers();
+        var pipe = new SendOptionsPipe<TestMessage>(new SendOptions { Headers = headers });
+        MutateHeadersAfterEntry(headers);
+        SendContext<TestMessage> context = CreateContext<SendContext<TestMessage>>(supportsPartitionKey: false, out RecordingSendContextProxy recording);
+
+        await pipe.SendAsync(context);
+
+        AssertOriginalHeaders(recording);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-APPLICATION-OPTIONS-IMMUTABILITY", "publish-pipe-snapshots-caller-headers")]
+    public async Task PublishOptionsPipe_SnapshotsCallerOwnedHeadersAtConstructionAsync()
+    {
+        var headers = Headers();
+        var pipe = new PublishOptionsPipe<TestMessage>(new PublishOptions { Headers = headers });
+        MutateHeadersAfterEntry(headers);
+        PublishContext<TestMessage> context = CreateContext<PublishContext<TestMessage>>(supportsPartitionKey: false, out RecordingSendContextProxy recording);
+
+        await pipe.SendAsync(context);
+
+        AssertOriginalHeaders(recording);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-APPLICATION-OPTIONS-IMMUTABILITY", "schedule-pipe-snapshots-caller-headers")]
+    public async Task ScheduleOptionsPipe_SnapshotsCallerOwnedHeadersAtConstructionAsync()
+    {
+        var headers = Headers();
+        var pipe = new ScheduleOptionsPipe<TestMessage>(new ScheduleOptions { Headers = headers });
+        MutateHeadersAfterEntry(headers);
+        SendContext<TestMessage> context = CreateContext<SendContext<TestMessage>>(supportsPartitionKey: false, out RecordingSendContextProxy recording);
+
+        await pipe.SendAsync(context);
+
+        AssertOriginalHeaders(recording);
+    }
+
+    [Theory]
+    [InlineData(0L)]
+    [InlineData(-1L)]
+    [RequirementCoverage("REQ-VSB-APPLICATION-OPTIONS-LIFETIME", "non-positive-lifetimes-are-rejected-at-entry")]
+    public void OptionsPipes_RejectNonPositiveTimeToLiveAtConstruction(long ticks)
+    {
+        TimeSpan timeToLive = TimeSpan.FromTicks(ticks);
+
+        ArgumentOutOfRangeException send = Assert.Throws<ArgumentOutOfRangeException>(
+            () => new SendOptionsPipe<TestMessage>(new SendOptions { TimeToLive = timeToLive }));
+        ArgumentOutOfRangeException publish = Assert.Throws<ArgumentOutOfRangeException>(
+            () => new PublishOptionsPipe<TestMessage>(new PublishOptions { TimeToLive = timeToLive }));
+        ArgumentOutOfRangeException schedule = Assert.Throws<ArgumentOutOfRangeException>(
+            () => new ScheduleOptionsPipe<TestMessage>(new ScheduleOptions { TimeToLive = timeToLive }));
+
+        Assert.Equal("options", send.ParamName);
+        Assert.Equal("options", publish.ParamName);
+        Assert.Equal("options", schedule.ParamName);
+        Assert.Equal(timeToLive, send.ActualValue);
+        Assert.Equal(timeToLive, publish.ActualValue);
+        Assert.Equal(timeToLive, schedule.ActualValue);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-APPLICATION-OPTIONS-CAPABILITY", "unset-fields-preserve-existing-context")]
     public async Task EmptyOptions_PreserveExistingMetadataAndPartitionKeyAsync()
     {
@@ -91,7 +177,7 @@ public sealed class OutgoingOptionsPipeTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-APPLICATION-OPTIONS-CAPABILITY", "null-header-collection-fails-explicitly")]
-    public async Task NullHeaderCollection_ThrowsBeforeMutatingTheContextAsync()
+    public void NullHeaderCollection_ThrowsAtPipeConstruction()
     {
         SendContext<TestMessage> context = CreateContext<SendContext<TestMessage>>(supportsPartitionKey: true, out RecordingSendContextProxy recording);
         var options = new SendOptions
@@ -100,9 +186,9 @@ public sealed class OutgoingOptionsPipeTests
             CorrelationId = CorrelationId,
         };
 
-        await Assert.ThrowsAsync<ArgumentNullException>(
-            () => new SendOptionsPipe<TestMessage>(options).SendAsync(context));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => new SendOptionsPipe<TestMessage>(options));
 
+        Assert.Equal("options", exception.ParamName);
         Assert.Empty(recording.Headers.Values);
         Assert.Null(recording.Get<Guid?>(nameof(SendContext.CorrelationId)));
     }
@@ -146,6 +232,22 @@ public sealed class OutgoingOptionsPipeTests
         ["attempt"] = 3,
         ["optional"] = null,
     };
+
+    private static void MutateHeadersAfterEntry(Dictionary<string, object?> headers)
+    {
+        headers["tenant"] = "south";
+        headers.Remove("attempt");
+        headers["late"] = 99;
+    }
+
+    private static void AssertOriginalHeaders(RecordingSendContextProxy recording)
+    {
+        Assert.Equal("north", recording.Headers.Values["tenant"]);
+        Assert.Equal(3, recording.Headers.Values["attempt"]);
+        Assert.Null(recording.Headers.Values["optional"]);
+        Assert.False(recording.Headers.Values.ContainsKey("late"));
+        Assert.Equal(3, recording.Headers.Values.Count);
+    }
 
     private static void AssertAllConfiguredFields(RecordingSendContextProxy recording)
     {

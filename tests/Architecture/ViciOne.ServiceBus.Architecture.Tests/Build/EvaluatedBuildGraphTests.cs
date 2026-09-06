@@ -269,6 +269,60 @@ public sealed class EvaluatedBuildGraphTests
     }
 
     [Fact]
+    [RequirementCoverage(
+        "REQ-VSB-SOURCE-OWNERSHIP",
+        "every-product-source-has-exactly-one-evaluated-compile-owner")]
+    public void EveryProductSourceFile_HasExactlyOneEvaluatedCompileOwner()
+    {
+        string sourceRoot = Path.Combine(RepositoryLayout.Root, "src");
+        string sourcePrefix = sourceRoot + Path.DirectorySeparatorChar;
+        var owners = new Dictionary<string, HashSet<string>>(RepositoryLayout.PathComparer);
+
+        foreach (string project in RepositoryLayout.ProductProjects)
+        {
+            string projectName = RepositoryLayout.RelativeToRoot(project);
+
+            foreach (string compileItem in MsBuildEvaluation.ItemMetadata(project, "Compile", "FullPath"))
+            {
+                string sourcePath = Path.GetFullPath(compileItem);
+                if (!sourcePath.StartsWith(sourcePrefix, RepositoryLayout.PathComparison)
+                    || !File.Exists(sourcePath))
+                {
+                    continue;
+                }
+
+                if (!owners.TryGetValue(sourcePath, out HashSet<string>? sourceOwners))
+                {
+                    sourceOwners = new HashSet<string>(StringComparer.Ordinal);
+                    owners.Add(sourcePath, sourceOwners);
+                }
+
+                sourceOwners.Add(projectName);
+            }
+        }
+
+        string[] violations = Directory.GetFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
+            .OrderBy(path => path, RepositoryLayout.PathComparer)
+            .Select(path =>
+            {
+                int ownerCount = owners.TryGetValue(path, out HashSet<string>? sourceOwners)
+                    ? sourceOwners.Count
+                    : 0;
+                string ownerList = sourceOwners is null
+                    ? "none"
+                    : string.Join(", ", sourceOwners.OrderBy(owner => owner, StringComparer.Ordinal));
+
+                return (Path: path, OwnerCount: ownerCount, Owners: ownerList);
+            })
+            .Where(result => result.OwnerCount != 1)
+            .Select(result =>
+                $"{RepositoryLayout.RelativeToRoot(result.Path)} has {result.OwnerCount} compile owners: {result.Owners}")
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void RetiredTestFrameworkProject_IsAbsentFromTheProductTree()
     {
         Assert.False(Directory.Exists(RepositoryLayout.RetiredTestFrameworkDirectory));

@@ -169,3 +169,22 @@ Make every application-interface capability a compile-time contract. Root interf
 
 - Restore a runtime-probing default body on any application interface: the reflection guard must fail.
 - Drop an options pipe or cancellation token from an Advanced adapter: the existing independent metadata and token assertions must fail.
+
+## Iteration 8 outcome
+
+Make application-level outgoing options stable at the asynchronous boundary, reject invalid lifetimes before provider work, and ensure every physical product source file belongs to exactly one evaluated product compilation.
+
+## Iteration 8 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-APPLICATION-OPTIONS-IMMUTABILITY` | Default header collections cannot be mutated and caller-owned headers are snapshotted before asynchronous work | abstractions and core client tests | mutation rejection plus send, publish, schedule, and request boundary observations |
+| `REQ-VSB-APPLICATION-OPTIONS-VALIDATION` | Zero and negative message lifetimes fail synchronously before endpoint or provider use | abstractions and core client tests | both adjacent invalid partitions across option pipes and request entry point |
+| `REQ-VSB-SOURCE-OWNERSHIP` | Every physical `src/**/*.cs` file has exactly one owner in the evaluated product graph | architecture tests | complete file-to-`@(Compile)` ownership comparison across all product projects |
+
+## Iteration 8 mutation obligations
+
+- Retain a caller-owned header dictionary instead of copying it: all three outgoing pipe snapshot tests must fail.
+- Permit a zero lifetime by changing the boundary from `<=` to `<`: the zero-boundary test must fail while the negative partition remains valid.
+- Replace one immutable default header collection with a mutable dictionary: the default-shape test must fail.
+- Add a product source path excluded from every project: the compile-ownership test must fail with the exact path and zero owners.

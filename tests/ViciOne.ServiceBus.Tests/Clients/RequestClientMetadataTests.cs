@@ -1,9 +1,11 @@
 using System.Reflection;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Util;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Clients;
@@ -75,6 +77,68 @@ public sealed class RequestClientMetadataTests
         {
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-APPLICATION-OPTIONS-IMMUTABILITY", "request-entry-snapshots-caller-headers")]
+    public async Task ApplicationRequestOptions_SnapshotCallerOwnedHeadersBeforeAsynchronousSendAsync()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var endpoint = new GatedRequestSendEndpoint();
+        var client = new RequestClient<MetadataRequest>(
+            new SnapshotClientFactoryContext(),
+            endpoint,
+            RequestTimeout.After(m: 1));
+        var headers = new Dictionary<string, object?>
+        {
+            ["tenant"] = "north",
+            ["attempt"] = 7,
+        };
+        var options = new RequestOptions { Headers = headers };
+
+        Task<Response<MetadataResponse>> responseTask = client.GetResponseAsync<MetadataResponse>(
+            new MetadataRequest(Guid.NewGuid(), false),
+            options,
+            cancellation.Token);
+        await endpoint.Entered.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+        headers["tenant"] = "south";
+        headers.Remove("attempt");
+        headers["late"] = 99;
+        endpoint.Release();
+        await endpoint.Applied.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+
+        Assert.Equal("north", endpoint.Headers.Get<string>("tenant"));
+        Assert.Equal(7, endpoint.Headers.Get<int>("attempt"));
+        Assert.False(endpoint.Headers.TryGetHeader("late", out _));
+
+        cancellation.Cancel();
+        await Assert.ThrowsAsync<TaskCanceledException>(() => responseTask);
+    }
+
+    [Theory]
+    [InlineData(0L)]
+    [InlineData(-1L)]
+    [RequirementCoverage("REQ-VSB-APPLICATION-OPTIONS-LIFETIME", "request-rejects-non-positive-lifetime-before-send")]
+    public void ApplicationRequestOptions_RejectNonPositiveTimeToLiveBeforeEndpointUse(long ticks)
+    {
+        var endpoint = new GatedRequestSendEndpoint();
+        var client = new RequestClient<MetadataRequest>(
+            new SnapshotClientFactoryContext(),
+            endpoint,
+            RequestTimeout.After(m: 1));
+        TimeSpan timeToLive = TimeSpan.FromTicks(ticks);
+
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            _ = client.GetResponseAsync<MetadataResponse>(
+                new MetadataRequest(Guid.NewGuid(), false),
+                new RequestOptions { TimeToLive = timeToLive },
+                TestContext.Current.CancellationToken);
+        });
+
+        Assert.Equal("options", exception.ParamName);
+        Assert.Equal(timeToLive, exception.ActualValue);
+        Assert.False(endpoint.WasEntered);
     }
 
     [Fact]
@@ -313,6 +377,95 @@ public sealed class RequestClientMetadataTests
     private sealed record SentSideEffect(Guid CorrelationId) : CorrelatedBy<Guid>;
 
     private sealed class ExpectedRequestFailure(string message) : Exception(message);
+
+    private sealed class GatedRequestSendEndpoint : IRequestSendEndpoint<MetadataRequest>
+    {
+        private readonly TaskCompletionSource _applied = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _entered = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _release = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task Applied => _applied.Task;
+
+        public Task Entered => _entered.Task;
+
+        public SendHeaders Headers { get; private set; } = new DictionarySendHeaders();
+
+        public bool WasEntered => _entered.Task.IsCompleted;
+
+        public void Release() => _release.TrySetResult();
+
+        public Task<MetadataRequest> SendAsync(
+            Guid requestId,
+            object values,
+            IPipe<SendContext<MetadataRequest>> pipe,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException("The test exercises the typed request entry point.");
+
+        public async Task SendAsync(
+            Guid requestId,
+            MetadataRequest message,
+            IPipe<SendContext<MetadataRequest>> pipe,
+            CancellationToken cancellationToken)
+        {
+            _entered.TrySetResult();
+            await _release.Task.WaitAsync(cancellationToken);
+            SendContext<MetadataRequest> context = DispatchProxy.Create<SendContext<MetadataRequest>, RecordingRequestSendContextProxy>();
+            var recording = (RecordingRequestSendContextProxy)(object)context;
+            await pipe.SendAsync(context);
+            Headers = recording.Headers;
+            _applied.TrySetResult();
+        }
+    }
+
+    private sealed class SnapshotClientFactoryContext : ClientFactoryContext
+    {
+        public RequestTimeout DefaultTimeout => RequestTimeout.After(m: 1);
+
+        public TimeProvider TimeProvider => TimeProvider.System;
+
+        public IMessageRouteTable MessageRoutes { get; } = new MessageRouteTable();
+
+        public Uri ResponseAddress { get; } = new("loopback://localhost/response");
+
+        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
+            where T : class => new EmptyConnectHandle();
+
+        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
+            where T : class => new EmptyConnectHandle();
+
+        public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
+            where T : class => new EmptyConnectHandle();
+
+        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
+            where T : class => throw new NotSupportedException();
+
+        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
+            where T : class => throw new NotSupportedException();
+    }
+
+    private class RecordingRequestSendContextProxy : DispatchProxy
+    {
+        private readonly Dictionary<string, object?> _properties = [];
+
+        public SendHeaders Headers { get; } = new DictionarySendHeaders();
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+
+            if (targetMethod.Name == "get_Headers")
+                return Headers;
+            if (targetMethod.Name.StartsWith("set_", StringComparison.Ordinal))
+            {
+                _properties[targetMethod.Name[4..]] = args![0];
+                return null;
+            }
+            if (targetMethod.Name.StartsWith("get_", StringComparison.Ordinal))
+                return _properties.GetValueOrDefault(targetMethod.Name[4..]);
+
+            throw new NotSupportedException(targetMethod.Name);
+        }
+    }
 
     private class RequestClientContextProxy : DispatchProxy
     {

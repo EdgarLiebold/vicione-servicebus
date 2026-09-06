@@ -61,6 +61,7 @@ public class RequestClient<TRequest> :
     {
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(options);
+        OutgoingOptionsSnapshot optionsSnapshot = OutgoingOptionsSnapshot.Create(options);
 
         RequestTimeout timeout = default;
         if (options.Deadline is { } deadline)
@@ -84,20 +85,12 @@ public class RequestClient<TRequest> :
             timeout,
             configurator =>
             {
-                if (options.TimeToLive is { } timeToLive)
+                if (optionsSnapshot.TimeToLive is { } timeToLive)
                     configurator.TimeToLive = timeToLive;
 
-                configurator.UseExecute(context => OutgoingOptionsPipe.Apply(
-                    context,
-                    options.Headers,
-                    options.TimeToLive,
-                    options.CorrelationId,
-                    options.ConversationId,
-                    options.MessageId,
-                    options.RequestId,
-                    options.PartitionKey));
+                configurator.UseExecute(context => OutgoingOptionsPipe.Apply(context, optionsSnapshot));
             },
-            options.RequestId);
+            optionsSnapshot.RequestId);
     }
 
     /// <summary>

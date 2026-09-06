@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus;
@@ -8,7 +9,7 @@ namespace ViciOne.ServiceBus;
 public sealed record PublishOptions
 {
     /// <summary>Gets the application-defined message headers.</summary>
-    public IReadOnlyDictionary<string, object?> Headers { get; init; } = new Dictionary<string, object?>();
+    public IReadOnlyDictionary<string, object?> Headers { get; init; } = FrozenDictionary<string, object?>.Empty;
 
     /// <summary>Gets the maximum lifetime of the message.</summary>
     public TimeSpan? TimeToLive { get; init; }

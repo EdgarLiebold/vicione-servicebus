@@ -182,3 +182,27 @@ The compiler identified every affected production implementation. Completing the
 - Release engineering-solution build with warnings as errors: passed, 0 warnings and 0 errors.
 - Engineering whitespace and warning-level style verification: passed.
 - Requirement manifests and Git whitespace: passed.
+
+## Iteration 8
+
+Iteration 8 makes application outgoing options stable before asynchronous work. The four public options records use immutable empty header defaults; send, publish, schedule, request, and nested durable-schedule paths copy caller-owned headers into a frozen snapshot before awaiting an endpoint. A message lifetime must now be greater than zero and fails at options-pipe construction or request entry before provider I/O.
+
+The only product C# file absent from every evaluated compile graph was an unused, unimplemented, and semantically stale `IJobSagaOptionsConfigurator` source artifact. It was not part of any current assembly and provided no runtime feature; it was removed rather than reintroduced as a misleading compatibility-only contract. A complete architecture guard now requires every physical product source file to have exactly one evaluated compile owner, preventing both silent source loss and duplicate type ownership.
+
+### Red/green and mutation evidence
+
+- Before implementation, the outgoing-options class had 6 failures among 12 cases and the request-options partition had 3 failures among 4 cases.
+- After implementation, all focused cases and the complete profile passed.
+- Retaining caller-owned headers was killed by all three send/publish/schedule snapshot tests.
+- Allowing a zero lifetime was killed by the exact zero-boundary test.
+- Replacing one immutable default with a mutable dictionary was killed by the default-shape test.
+- Adding a temporarily unowned product source was killed by the compile-ownership guard, which reported the exact path and zero owners.
+- Every mutation was removed before final validation.
+
+### Full validation
+
+- Release unit/architecture solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Complete Unit/Architecture profile: 3,813 passed, 0 failed, 0 skipped.
+- Release engineering-solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Engineering whitespace and warning-level style verification: passed.
+- Requirement manifests, exact compile ownership, and Git whitespace: passed.
