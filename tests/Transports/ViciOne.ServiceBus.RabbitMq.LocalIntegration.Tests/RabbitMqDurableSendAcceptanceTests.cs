@@ -124,7 +124,44 @@ public sealed class RabbitMqDurableSendAcceptanceTests
         }
     }
 
-    private static ServiceProvider CreateProvider(RabbitMqBroker fixture)
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-DURABLE-SEND", "disabled-confirmations-refuse-transport-acceptance")]
+    public async Task DisabledPublisherConfirmations_RefuseTransportAcceptanceBeforePublishAsync()
+    {
+        using RabbitMqBroker fixture = RabbitMqBroker.Create("durablenoconfirm");
+        string queue = fixture.Name("not-accepted");
+        DurableSendId durableSendId = new(NewId.NextGuid());
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await fixture.DeclareEndpointTopologyAsync(queue, cancellationToken);
+        await using ServiceProvider provider = CreateProvider(fixture, publisherConfirmation: false);
+        IBusControl bus = provider.GetRequiredService<IBusControl>();
+        bool started = false;
+
+        try
+        {
+            await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            started = true;
+            IDurableSendDispatcher<IBus> dispatcher = provider.GetRequiredService<IDurableSendDispatcher<IBus>>();
+
+            ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() => dispatcher.DispatchAsync(
+                    CreateContext(durableSendId, new Uri($"queue:{queue}"), new byte[] { 73 }),
+                    cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken));
+
+            Assert.Contains("publisher confirmations are disabled", exception.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Equal(0U, await fixture.QueueMessageCountAsync(queue, cancellationToken));
+        }
+        finally
+        {
+            if (started)
+                await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            await fixture.CleanupAsync();
+        }
+    }
+
+    private static ServiceProvider CreateProvider(
+        RabbitMqBroker fixture,
+        bool publisherConfirmation = true)
     {
         var services = new ServiceCollection();
         services.AddLogging();
@@ -144,7 +181,7 @@ public sealed class RabbitMqDurableSendAcceptanceTests
                 reliable.Delivery(_ => { });
                 reliable.Retention(TimeSpan.FromDays(1));
             });
-            configurator.UsingRabbitMq((_, rabbit) => fixture.ConfigureHost(rabbit));
+            configurator.UsingRabbitMq((_, rabbit) => fixture.ConfigureHost(rabbit, publisherConfirmation));
         });
         return services.BuildServiceProvider(new ServiceProviderOptions
         {

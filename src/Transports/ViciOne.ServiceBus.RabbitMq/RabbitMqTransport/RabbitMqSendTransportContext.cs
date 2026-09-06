@@ -145,10 +145,22 @@ public class RabbitMqSendTransportContext :
     public async Task SendAsync<T>(ChannelContext transportContext, SendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class
     {
-        cancellationToken.ThrowIfCancellationRequested(); RabbitMqMessageSendContext<T> context = sendContext as RabbitMqMessageSendContext<T>
-                    ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
+        cancellationToken.ThrowIfCancellationRequested();
+        RabbitMqMessageSendContext<T> context = sendContext as RabbitMqMessageSendContext<T>
+            ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
+
+        if (context.TryGetPayload<RabbitMqTransportAcceptanceRequirement>(out _)
+            && !transportContext.ConnectionContext.PublisherConfirmation)
+        {
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "RabbitMQ durable transport acceptance",
+                    context.DestinationAddress?.ToString() ?? _exchange,
+                    "RabbitMQ publisher confirmations are disabled, so broker acceptance cannot be proven",
+                    "Enable publisher confirmations on the RabbitMQ host"));
+        }
 
         OneTimeContext<ConfigureTopologyContext<SendSettings>> oneTimeContext =
             await _configureTopologyFilter.ConfigureAsync(transportContext, sendContext.CancellationToken).ConfigureAwait(false);

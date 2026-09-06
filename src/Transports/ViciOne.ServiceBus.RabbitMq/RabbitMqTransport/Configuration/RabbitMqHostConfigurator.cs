@@ -47,7 +47,9 @@ public class RabbitMqHostConfigurator :
     /// <summary>Gets the mutable settings configured by this instance.</summary>
     public RabbitMqHostSettings Settings => _settings;
 
-    /// <summary>Sets whether RabbitMQ publisher confirmations are enabled.</summary>
+    /// <summary>
+    /// Sets whether RabbitMQ publisher confirmations are enabled. Durable Sender dispatches require confirmations.
+    /// </summary>
     public bool PublisherConfirmation
     {
         set => _settings.PublisherConfirmation = value;

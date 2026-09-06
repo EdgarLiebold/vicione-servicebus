@@ -8,7 +8,8 @@ public interface IRabbitMqHostConfigurator
 {
     /// <summary>
     /// Sets whether RabbitMQ publisher confirmations are enabled. When enabled, a send configured to await
-    /// acknowledgement completes only after the broker confirms the publish.
+    /// acknowledgement completes only after the broker confirms the publish. Durable Sender dispatches require
+    /// confirmations and fail before publishing when this setting is disabled.
     /// </summary>
     bool PublisherConfirmation { set; }
 

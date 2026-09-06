@@ -71,13 +71,19 @@ internal sealed class RabbitMqBroker : IDisposable
         return $"{Prefix}-{suffix}";
     }
 
-    public void ConfigureHost(IRabbitMqBusFactoryConfigurator configurator)
+    public void ConfigureHost(IRabbitMqBusFactoryConfigurator configurator) =>
+        ConfigureHost(configurator, publisherConfirmation: true);
+
+    public void ConfigureHost(
+        IRabbitMqBusFactoryConfigurator configurator,
+        bool publisherConfirmation)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         configurator.Host(Address, host =>
         {
             host.Username(_userName);
             host.Password(_password);
+            host.PublisherConfirmation = publisherConfirmation;
         });
     }
 

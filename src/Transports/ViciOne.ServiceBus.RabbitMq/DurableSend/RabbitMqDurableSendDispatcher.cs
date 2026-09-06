@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Serialization;
 
-
 namespace ViciOne.ServiceBus.RabbitMq;
-/// <summary>Replays the exact retained envelope through RabbitMQ and reports acceptance after the configured client publish task completes.</summary>
+
+/// <summary>Replays the exact retained envelope through RabbitMQ and reports acceptance only after broker confirmation.</summary>
 /// <typeparam name="TBus">The bus type.</typeparam>
 internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatcher<TBus>
     where TBus : class, IBus
@@ -52,8 +52,8 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
                 cancellationToken)
             .ConfigureAwait(false);
 
-        // RabbitMqDurableSendPipe marks the message persistent, requests mandatory routing, and awaits the RabbitMQ client publish task.
-        // That task includes publisher confirmation when confirmations are enabled; returns and nacks surface as errors.
+        // The transport validates that publisher confirmations are enabled before publishing and
+        // completes the send only after RabbitMQ has confirmed the persistent, mandatory publish.
         return DurableSendDispatchResult.TransportAccepted;
     }
 
@@ -83,6 +83,7 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
             context.MessageId = _message.MessageId;
             context.CorrelationId = _message.CorrelationId;
             context.Durable = true;
+            context.GetOrAddPayload(() => RabbitMqTransportAcceptanceRequirement.Instance);
             if (!context.TryGetPayload(out RabbitMqSendContext? rabbitMqContext))
             {
                 throw new ConfigurationException(

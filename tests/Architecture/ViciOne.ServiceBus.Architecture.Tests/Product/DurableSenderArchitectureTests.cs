@@ -189,6 +189,18 @@ public sealed class DurableSenderArchitectureTests
         Assert.Contains("context.Durable = true;", dispatcher, StringComparison.Ordinal);
         Assert.Contains("rabbitMqContext.Mandatory = true;", dispatcher, StringComparison.Ordinal);
         Assert.Contains("rabbitMqContext.AwaitAck = true;", dispatcher, StringComparison.Ordinal);
+        Assert.Contains("RabbitMqTransportAcceptanceRequirement", dispatcher, StringComparison.Ordinal);
+
+        string transport = Source(
+            "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqSendTransportContext.cs");
+        int confirmationPreflight = transport.IndexOf(
+            "transportContext.ConnectionContext.PublisherConfirmation",
+            StringComparison.Ordinal);
+        int topology = transport.IndexOf("_configureTopologyFilter.ConfigureAsync", StringComparison.Ordinal);
+        int publish = transport.IndexOf("transportContext.BasicPublishAsync", StringComparison.Ordinal);
+        Assert.True(confirmationPreflight >= 0);
+        Assert.True(topology > confirmationPreflight);
+        Assert.True(publish > topology);
 
         int send = dispatcher.IndexOf("await endpoint.SendAsync(", StringComparison.Ordinal);
         int accepted = dispatcher.IndexOf(
