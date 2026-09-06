@@ -14,7 +14,6 @@
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Courier/**/*.cs"
              Exclude="../ViciOne.ServiceBus.Abstractions/Courier/IItineraryBuilder.cs;../ViciOne.ServiceBus.Abstractions/Courier/Contracts/RoutingSlipEvents.cs;../ViciOne.ServiceBus.Abstractions/Courier/Contracts/RoutingSlipEventContents.cs"
              Link="Courier/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/IRoutingSlipExecutor.cs" Link="Advanced/IRoutingSlipExecutor.cs" />
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Exceptions/RoutingSlip*.cs" Link="Exceptions/%(Filename)%(Extension)" />
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/Consumers/ICompensateActivityConfigurator.cs" Link="Configuration/Consumers/ICompensateActivityConfigurator.cs" />
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/Consumers/ICompensateActivityLogConfigurator.cs" Link="Configuration/Consumers/ICompensateActivityLogConfigurator.cs" />

@@ -12,16 +12,11 @@
 
   <ItemGroup>
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Advanced/Initializers/**/*.cs"
-             Exclude="../ViciOne.ServiceBus.Abstractions/Advanced/Initializers/INamedInitializerValue.cs"
+             Exclude="../ViciOne.ServiceBus.Abstractions/Advanced/Initializers/INamedInitializerValue.cs;../ViciOne.ServiceBus.Abstractions/Advanced/Initializers/InitializedMessage.cs"
              Link="Advanced/Initializers/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/InVar.cs" Link="Advanced/InVar.cs" />
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Initializers/Variables/IdVariable.cs"
              Link="Initializers/Variables/IdVariable.cs" />
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Initializers/Variables/TimestampVariable.cs"
              Link="Initializers/Variables/TimestampVariable.cs" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/PublishEndpointExtensions.cs"
-             Link="Advanced/Initializers/PublishEndpointExtensions.cs" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/SendEndpointExtensions.cs"
-             Link="Advanced/Initializers/SendEndpointExtensions.cs" />
   </ItemGroup>
 </Project>

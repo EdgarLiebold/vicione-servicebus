@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Compile Include="../ViciOne.ServiceBus.Abstractions/JobService/**/*.cs" Link="JobService/Abstractions/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/IJobConsumer.cs" Link="Advanced/IJobConsumer.cs" />
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Contexts/INotifyJobContext.cs" Link="Contexts/INotifyJobContext.cs" />
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Contexts/JobContext.cs" Link="Contexts/JobContext.cs" />
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Exceptions/JobAlreadyExistsException.cs" Link="Exceptions/JobAlreadyExistsException.cs" />

@@ -19,9 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/CorrelatedBy.cs" Link="Advanced/CorrelatedBy.cs" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/ILoadSagaRepository.cs" Link="Advanced/ILoadSagaRepository.cs" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/ISaga.cs" Link="Advanced/ISaga.cs" />
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Saga/**/*.cs" Link="Saga/%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="../ViciOne.ServiceBus.Abstractions/SagaStateMachine/**/*.cs" Link="SagaStateMachine/%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/Configuration/SagaEndpointDefinition.cs" Link="Configuration/DependencyInjection/Configuration/SagaEndpointDefinition.cs" />

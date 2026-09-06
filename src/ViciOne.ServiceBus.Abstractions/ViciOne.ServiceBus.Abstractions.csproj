@@ -19,14 +19,8 @@
 
   <ItemGroup>
     <Compile Remove="Advanced/Initializers/**/*.cs" />
-    <Compile Remove="InVar.cs" />
     <Compile Remove="Initializers/Variables/IdVariable.cs" />
     <Compile Remove="Initializers/Variables/TimestampVariable.cs" />
-    <Compile Remove="PublishEndpointExtensions.cs" />
-    <Compile Remove="SendEndpointExtensions.cs" />
-    <Compile Remove="CorrelatedBy.cs" />
-    <Compile Remove="ILoadSagaRepository.cs" />
-    <Compile Remove="ISaga.cs" />
     <Compile Remove="Saga/**/*.cs" />
     <Compile Remove="SagaStateMachine/**/*.cs" />
     <Compile Remove="Configuration/DependencyInjection/Configuration/SagaEndpointDefinition.cs" />
@@ -34,16 +28,13 @@
     <Compile Remove="Configuration/DependencyInjection/SagaDefinition.cs" />
     <Compile Remove="Futures/**/*.cs" />
     <Compile Remove="Mediator/**/*.cs" />
-    <Compile Remove="MediatorRequestExtensions.cs" />
     <Compile Remove="JobService/**/*.cs" />
-    <Compile Remove="IJobConsumer.cs" />
     <Compile Remove="Contexts/INotifyJobContext.cs" />
     <Compile Remove="Contexts/JobContext.cs" />
     <Compile Remove="Exceptions/JobAlreadyExistsException.cs" />
     <Compile Remove="Exceptions/JobNotFoundException.cs" />
     <Compile Remove="Exceptions/JobServiceStoppingException.cs" />
     <Compile Remove="Courier/**/*.cs" />
-    <Compile Remove="IRoutingSlipExecutor.cs" />
     <Compile Remove="Exceptions/RoutingSlip*.cs" />
     <Compile Remove="Configuration/Consumers/ICompensateActivityConfigurator.cs" />
     <Compile Remove="Configuration/Consumers/ICompensateActivityLogConfigurator.cs" />

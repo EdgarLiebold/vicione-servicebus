@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Mediator/**/*.cs" Link="Mediator/Abstractions/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/MediatorRequestExtensions.cs" Link="Advanced/MediatorRequestExtensions.cs" />
     <Compile Include="../ViciOne.ServiceBus/Mediator/**/*.cs" Link="Mediator/%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="../ViciOne.ServiceBus/Configuration/IMediatorConfigurator.cs" Link="Configuration/IMediatorConfigurator.cs" />
     <Compile Include="../ViciOne.ServiceBus/Configuration/MediatorConfiguration.cs" Link="Configuration/MediatorConfiguration.cs" />
