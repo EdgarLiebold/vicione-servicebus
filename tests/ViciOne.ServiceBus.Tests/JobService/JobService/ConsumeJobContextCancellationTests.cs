@@ -173,6 +173,13 @@ public sealed class ConsumeJobContextCancellationTests
             return Task.CompletedTask;
         }
 
+        public Task SendAsync<T>(T message, SendOptions options, CancellationToken cancellationToken = default)
+            where T : class
+        {
+            ArgumentNullException.ThrowIfNull(options);
+            return SendAsync(message, cancellationToken);
+        }
+
         public ConnectHandle ConnectSendObserver(ISendObserver observer) =>
             throw new NotSupportedException();
     }

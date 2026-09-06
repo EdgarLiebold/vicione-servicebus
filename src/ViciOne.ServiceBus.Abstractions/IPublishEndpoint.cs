@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus;
 
@@ -21,12 +20,5 @@ public interface IPublishEndpoint :
     /// <param name="options">The options used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     Task PublishAsync<T>(T message, PublishOptions options, CancellationToken cancellationToken = default)
-        where T : class
-    {
-        ArgumentNullException.ThrowIfNull(options);
-
-        return this is Advanced.IAdvancedPublishEndpoint advanced
-            ? advanced.PublishAsync(message, new PublishOptionsPipe<T>(options), cancellationToken)
-            : throw new NotSupportedException($"The publish endpoint '{GetType().FullName}' does not support publish options.");
-    }
+        where T : class;
 }

@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Advanced;
 
@@ -7,8 +8,15 @@ namespace ViciOne.ServiceBus.Advanced;
 /// Exposes low-level send forms for middleware, serializers, initializers, and transport integrations.
 /// Application code should prefer <see cref="ISendEndpoint"/>.
 /// </summary>
-public interface IAdvancedSendEndpoint
+public interface IAdvancedSendEndpoint :
+    ISendEndpoint
 {
+    Task ISendEndpoint.SendAsync<T>(T message, SendOptions options, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        return SendAsync(message, new SendOptionsPipe<T>(options), cancellationToken);
+    }
+
     /// <summary>Sends a typed message through a typed send-context pipe.</summary>
     /// <param name="message">The message processed by the operation.</param>
     /// <param name="pipe">The pipe used by the operation.</param>

@@ -153,3 +153,19 @@ Eliminate externally mutable process-global metadata and shared routing-slip sta
 - Return a cached array directly from one metadata surface: the immutability shape or mutation test must fail.
 - Restore the public mutable `NoArguments` dictionary: the API-shape test must fail; make the private empty dictionary mutable: the behavior test must fail.
 - Restore the nullable-port formatting defect or accept a port outside `1..65535`: the cluster-node round-trip or boundary test must fail.
+
+## Iteration 7 outcome
+
+Make every application-interface capability a compile-time contract. Root interfaces must not use default implementations that probe for an Advanced interface at runtime and fail only after deployment; Advanced adapters may implement the required application member only when they provide the complete underlying capability.
+
+## Iteration 7 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-GREENFIELD-APPLICATION-CONTRACTS` | application interfaces have no runtime-probing default members | architecture tests | reflection over every member declared by send, publish, scheduler, and typed consume contracts |
+| `REQ-VSB-GREENFIELD-APPLICATION-CONTRACTS` | advanced implementations bridge options and scheduled cancellation without capability casts | abstraction/core behavior tests | exact option/cancellation propagation plus compile-time implementation closure |
+
+## Iteration 7 mutation obligations
+
+- Restore a runtime-probing default body on any application interface: the reflection guard must fail.
+- Drop an options pipe or cancellation token from an Advanced adapter: the existing independent metadata and token assertions must fail.

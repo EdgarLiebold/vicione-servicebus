@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus;
 
@@ -24,14 +23,7 @@ public interface IMessageScheduler
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, T message, ScheduleOptions options,
         CancellationToken cancellationToken = default)
-        where T : class
-    {
-        ArgumentNullException.ThrowIfNull(options);
-
-        return this is Advanced.IAdvancedMessageScheduler advanced
-            ? advanced.ScheduleSendAsync(destination, dueAt, message, new ScheduleOptionsPipe<T>(options), cancellationToken)
-            : throw new NotSupportedException($"The message scheduler '{GetType().FullName}' does not support schedule options.");
-    }
+        where T : class;
 
     /// <summary>Schedules a message for publication.</summary>
     /// <param name="dueAt">The due at used by the operation.</param>
@@ -44,12 +36,5 @@ public interface IMessageScheduler
     /// <summary>Cancels a previously scheduled send.</summary>
     /// <param name="scheduled">The scheduled used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    Task CancelScheduledSendAsync(ScheduledMessage scheduled, CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(scheduled);
-
-        return this is Advanced.IAdvancedMessageScheduler advanced
-            ? advanced.CancelScheduledSendAsync(scheduled.Destination, scheduled.TokenId, cancellationToken)
-            : throw new NotSupportedException($"The message scheduler '{GetType().FullName}' does not support cancellation.");
-    }
+    Task CancelScheduledSendAsync(ScheduledMessage scheduled, CancellationToken cancellationToken = default);
 }

@@ -309,6 +309,9 @@ public class MissingConsumeContext :
     /// </summary>
     public Task ConsumeCompleted => throw new ConsumeContextNotAvailableException();
 
+    /// <summary>Gets the unavailable outgoing-message operations.</summary>
+    public IOutgoingMessages Outgoing => throw new ConsumeContextNotAvailableException();
+
     /// <summary>
     /// Gets the supported message types value.
     /// </summary>
@@ -352,6 +355,17 @@ public class MissingConsumeContext :
     /// <param name="message">The message value.</param>
     /// <returns>The result of the operation.</returns>
     public Task RespondAsync<T>(T message)
+        where T : class
+    {
+        throw new ConsumeContextNotAvailableException();
+    }
+
+    /// <summary>Reports that application-level response options cannot be used without a consume context.</summary>
+    /// <typeparam name="T">The response message type.</typeparam>
+    /// <param name="message">The response message.</param>
+    /// <param name="options">The application-level send options.</param>
+    /// <returns>This member always throws.</returns>
+    public Task RespondAsync<T>(T message, SendOptions options)
         where T : class
     {
         throw new ConsumeContextNotAvailableException();

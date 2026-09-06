@@ -160,3 +160,25 @@ Five isolated regressions were killed and restored byte-for-byte: direct cached-
 - Engineering whitespace verification: passed.
 - Engineering style verification at warning severity: passed.
 - Requirement manifests and Git whitespace: passed.
+
+## Iteration 7
+
+Iteration 7 removes runtime capability probing from the application-facing interfaces. `ISendEndpoint`, `IPublishEndpoint`, `IMessageScheduler`, and `ConsumeContext<T>` now declare their application operations as compile-time requirements. Advanced interfaces provide exact options and scheduled-cancellation adapters only where their lower-level capabilities implement the full contract.
+
+The compiler identified every affected production implementation. Completing the shared untyped consume-context and base-context contracts closed 18 typed forwarding-context errors coherently; the complete unit-solution build then identified the only two minimal test doubles requiring explicit application-option behavior.
+
+### Red/green and mutation evidence
+
+- The baseline architecture test reported nine runtime-default members across send, publish, scheduling, and typed consume contracts.
+- After remediation, the focused architecture rule and all existing direct options tests passed.
+- Reintroducing an `ISendEndpoint` default body was killed by the exact reflection guard.
+- Dropping the advanced send options pipe was killed by the in-memory envelope assertion.
+- Both controlled mutations were restored before final validation.
+
+### Full validation
+
+- Release unit/architecture solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Complete Unit/Architecture profile: 3,803 passed, 0 failed, 0 skipped.
+- Release engineering-solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Engineering whitespace and warning-level style verification: passed.
+- Requirement manifests and Git whitespace: passed.

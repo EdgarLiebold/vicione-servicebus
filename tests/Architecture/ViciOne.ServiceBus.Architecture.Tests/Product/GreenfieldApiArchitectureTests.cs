@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ViciOne.ServiceBus.Architecture.Tests.Build;
@@ -10,6 +11,29 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Product;
 /// <summary>Rejects compatibility-only identities that have no place in the greenfield product.</summary>
 public sealed class GreenfieldApiArchitectureTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-GREENFIELD-APPLICATION-CONTRACTS", "application-interfaces-declare-required-capabilities")]
+    public void ApplicationInterfaces_DeclareRequiredCapabilitiesWithoutRuntimeProbingDefaults()
+    {
+        Type[] applicationContracts =
+        [
+            typeof(ISendEndpoint),
+            typeof(IPublishEndpoint),
+            typeof(IMessageScheduler),
+            typeof(ConsumeContext<>),
+        ];
+        string[] runtimeDefaults = applicationContracts
+            .SelectMany(static type => type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+            .Where(static method => !method.IsAbstract)
+            .Select(static method => $"{method.DeclaringType!.FullName}.{method.Name}")
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.True(
+            runtimeDefaults.Length == 0,
+            $"Application capabilities must be compile-time requirements, not runtime-probing defaults:{Environment.NewLine}{string.Join(Environment.NewLine, runtimeDefaults)}");
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-GREENFIELD-CAPABILITIES", "standard-unsupported-capability-exceptions")]
     public void UnsupportedCapabilities_UseTheStandardBclContract()

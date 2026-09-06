@@ -82,6 +82,9 @@ public abstract class BaseConsumeContext :
     /// </summary>
     public abstract Task ConsumeCompleted { get; }
 
+    /// <summary>Gets the application-facing outgoing-message operations bound to this consume scope.</summary>
+    public IOutgoingMessages Outgoing => new ConsumeContextOutgoingMessages(this);
+
     /// <summary>
     /// Gets the message id value.
     /// </summary>
@@ -167,6 +170,20 @@ public abstract class BaseConsumeContext :
             throw new ArgumentNullException(nameof(message));
 
         return ConsumeTaskAsync(RespondInternalAsync(message));
+    }
+
+    /// <summary>Responds to the consumed message with application-level send options.</summary>
+    /// <typeparam name="T">The response message type.</typeparam>
+    /// <param name="message">The response message.</param>
+    /// <param name="options">The application-level send options.</param>
+    /// <returns>A task that represents the response operation.</returns>
+    public virtual Task RespondAsync<T>(T message, SendOptions options)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(options);
+
+        return RespondAsync(message, new SendOptionsPipe<T>(options));
     }
 
     /// <summary>

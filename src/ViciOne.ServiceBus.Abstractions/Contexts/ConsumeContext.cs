@@ -30,6 +30,9 @@ public interface ConsumeContext :
     /// </summary>
     Task ConsumeCompleted { get; }
 
+    /// <summary>Gets the application-facing outgoing-message operations bound to this consume scope.</summary>
+    IOutgoingMessages Outgoing { get; }
+
     /// <summary>
     /// Returns the supported message types from the message
     /// </summary>
@@ -65,6 +68,13 @@ public interface ConsumeContext :
     /// <typeparam name="T">The type of the message to respond with.</typeparam>
     /// <param name="message">The message to send in response</param>
     Task RespondAsync<T>(T message)
+        where T : class;
+
+    /// <summary>Responds to the current message with application-level send options.</summary>
+    /// <typeparam name="T">The response message type.</typeparam>
+    /// <param name="message">The response message.</param>
+    /// <param name="options">The application-level send options.</param>
+    Task RespondAsync<T>(T message, SendOptions options)
         where T : class;
 
     /// <summary>
@@ -202,51 +212,21 @@ public interface ConsumeContext<out T> :
     T Message { get; }
 
     /// <summary>Gets the application-facing outgoing-message operations bound to this consume scope.</summary>
-    IOutgoingMessages Outgoing
-    {
-        get
-        {
-            return new ConsumeContextOutgoingMessages(
-                this as ConsumeContext
-                    ?? throw new NotSupportedException($"The consume context '{GetType().FullName}' does not expose advanced operations."));
-        }
-    }
+    IOutgoingMessages Outgoing { get; }
 
     /// <summary>Responds to the consumed message.</summary>
     Task RespondAsync<TResponse>(TResponse response)
-        where TResponse : class
-    {
-        return (this as ConsumeContext
-                ?? throw new NotSupportedException($"The consume context '{GetType().FullName}' does not expose response operations."))
-            .RespondAsync(response);
-    }
+        where TResponse : class;
 
     /// <summary>Responds to the consumed message with application-level send options.</summary>
     Task RespondAsync<TResponse>(TResponse response, SendOptions options)
-        where TResponse : class
-    {
-        ArgumentNullException.ThrowIfNull(options);
-
-        return (this as ConsumeContext
-                ?? throw new NotSupportedException($"The consume context '{GetType().FullName}' does not expose response operations."))
-            .RespondAsync(response, new Context.SendOptionsPipe<TResponse>(options));
-    }
+        where TResponse : class;
 
     /// <summary>Defers a response until the consumer has completed successfully.</summary>
     void DeferResponse<TResponse>(TResponse response)
-        where TResponse : class
-    {
-        (this as ConsumeContext
-             ?? throw new NotSupportedException($"The consume context '{GetType().FullName}' does not expose deferred response operations."))
-            .DeferResponse(response);
-    }
+        where TResponse : class;
 
     /// <summary>Tries to expose another supported message type from the same envelope.</summary>
     bool TryGetMessage<TOther>([NotNullWhen(true)] out ConsumeContext<TOther>? context)
-        where TOther : class
-    {
-        return (this as ConsumeContext
-                ?? throw new NotSupportedException($"The consume context '{GetType().FullName}' does not expose message conversion operations."))
-            .TryGetMessage(out context);
-    }
+        where TOther : class;
 }

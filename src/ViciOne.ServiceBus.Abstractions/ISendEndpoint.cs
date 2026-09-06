@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus;
 
@@ -21,12 +20,5 @@ public interface ISendEndpoint :
     /// <param name="options">The options used by the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     Task SendAsync<T>(T message, SendOptions options, CancellationToken cancellationToken = default)
-        where T : class
-    {
-        ArgumentNullException.ThrowIfNull(options);
-
-        return this is Advanced.IAdvancedSendEndpoint advanced
-            ? advanced.SendAsync(message, new SendOptionsPipe<T>(options), cancellationToken)
-            : throw new NotSupportedException($"The send endpoint '{GetType().FullName}' does not support send options.");
-    }
+        where T : class;
 }

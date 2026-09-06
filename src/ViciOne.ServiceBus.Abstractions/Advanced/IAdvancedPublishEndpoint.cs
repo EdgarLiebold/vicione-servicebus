@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Advanced;
 
@@ -7,8 +8,15 @@ namespace ViciOne.ServiceBus.Advanced;
 /// Exposes low-level publish forms for middleware, serializers, initializers, and transport integrations.
 /// Application code should prefer <see cref="IPublishEndpoint"/>.
 /// </summary>
-public interface IAdvancedPublishEndpoint
+public interface IAdvancedPublishEndpoint :
+    IPublishEndpoint
 {
+    Task IPublishEndpoint.PublishAsync<T>(T message, PublishOptions options, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        return PublishAsync(message, new PublishOptionsPipe<T>(options), cancellationToken);
+    }
+
     /// <summary>Publishes a typed message through a typed publish-context pipe.</summary>
     /// <param name="message">The message processed by the operation.</param>
     /// <param name="publishPipe">The publish pipe used by the operation.</param>

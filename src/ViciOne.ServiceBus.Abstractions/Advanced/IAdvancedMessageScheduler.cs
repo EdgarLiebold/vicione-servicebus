@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Advanced;
 
@@ -7,6 +8,19 @@ namespace ViciOne.ServiceBus.Advanced;
 public interface IAdvancedMessageScheduler :
     IMessageScheduler
 {
+    Task<ScheduledMessage<T>> IMessageScheduler.ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, T message, ScheduleOptions options,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        return ScheduleSendAsync(destination, dueAt, message, new ScheduleOptionsPipe<T>(options), cancellationToken);
+    }
+
+    Task IMessageScheduler.CancelScheduledSendAsync(ScheduledMessage scheduled, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(scheduled);
+        return CancelScheduledSendAsync(scheduled.Destination, scheduled.TokenId, cancellationToken);
+    }
+
     /// <inheritdoc />
     /// <param name="destination">The destination used by the operation.</param>
     /// <param name="dueAt">The due at used by the operation.</param>

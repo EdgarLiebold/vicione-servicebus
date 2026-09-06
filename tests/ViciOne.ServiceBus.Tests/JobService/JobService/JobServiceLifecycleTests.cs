@@ -481,6 +481,13 @@ public sealed class JobServiceLifecycleTests
             }
         }
 
+        public Task PublishAsync<T>(T message, PublishOptions options, CancellationToken cancellationToken = default)
+            where T : class
+        {
+            ArgumentNullException.ThrowIfNull(options);
+            return PublishAsync(message, cancellationToken);
+        }
+
         public Task PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
             where T : class => PublishAsync(message, cancellationToken);
 

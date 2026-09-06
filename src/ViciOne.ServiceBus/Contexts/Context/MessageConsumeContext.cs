@@ -34,6 +34,9 @@ public class MessageConsumeContext<TMessage> :
     /// </summary>
     public TMessage Message { get; }
 
+    /// <summary>Gets the application-facing outgoing-message operations bound to this consume scope.</summary>
+    public IOutgoingMessages Outgoing => _context.Outgoing;
+
     /// <summary>
     /// Performs the notify consumed operation.
     /// </summary>
@@ -409,6 +412,17 @@ public class MessageConsumeContext<TMessage> :
         where T : class
     {
         return _context.RespondAsync(message);
+    }
+
+    /// <summary>Responds to the consumed message with application-level send options.</summary>
+    /// <typeparam name="T">The response message type.</typeparam>
+    /// <param name="message">The response message.</param>
+    /// <param name="options">The application-level send options.</param>
+    /// <returns>A task that represents the response operation.</returns>
+    public Task RespondAsync<T>(T message, SendOptions options)
+        where T : class
+    {
+        return _context.RespondAsync(message, options);
     }
 
     /// <summary>
