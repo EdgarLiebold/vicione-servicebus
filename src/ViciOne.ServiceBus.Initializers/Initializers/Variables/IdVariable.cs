@@ -4,20 +4,23 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Initializers.Variables;
 
-/// <summary>Provides the variable value for id.</summary>
-public class IdVariable :
+/// <summary>
+/// Supplies one identifier to every matching property within an initialization context.
+/// A variable can therefore initialize related identifier properties with the same value.
+/// </summary>
+public sealed class IdVariable :
     IInitializerVariable<Guid>
 {
     readonly Guid _id;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a variable with a newly generated sequential identifier.</summary>
     public IdVariable()
     {
         _id = NewId.NextGuid();
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="id">The id.</param>
+    /// <summary>Creates a variable that supplies the specified identifier.</summary>
+    /// <param name="id">The identifier supplied during initialization.</param>
     public IdVariable(Guid id)
     {
         _id = id;
@@ -31,9 +34,9 @@ public class IdVariable :
         return Task.FromResult(timestampContext.Id);
     }
 
-    /// <summary>Converts a value to <see cref="Guid" />.</summary>
-    /// <param name="variable">The variable.</param>
-    /// <returns>The value produced by the operation.</returns>
+    /// <summary>Returns the identifier captured by the variable.</summary>
+    /// <param name="variable">The identifier variable.</param>
+    /// <returns>The captured identifier.</returns>
     public static implicit operator Guid(IdVariable variable)
     {
         return variable._id;
@@ -46,7 +49,7 @@ public class IdVariable :
     }
 
 
-    class Context :
+    sealed class Context :
         IdContext
     {
         public Context(Guid id)

@@ -5,22 +5,22 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Initializers.Variables;
 
 /// <summary>
-/// Used to set timestamp(s) in a message, which is the same regardless of how many times it is
-/// used within the same initialize message context.
+/// Supplies one timestamp to every matching property within an initialization context.
+/// A variable can therefore initialize related timestamp properties with the same instant.
 /// </summary>
-public class TimestampVariable :
+public sealed class TimestampVariable :
     IInitializerVariable<DateTimeOffset>
 {
     readonly DateTimeOffset _timestamp;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a variable that captures the current UTC time.</summary>
     public TimestampVariable()
     {
         _timestamp = TimeProvider.System.GetUtcNow();
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="timestamp">The timestamp.</param>
+    /// <summary>Creates a variable that supplies the specified timestamp.</summary>
+    /// <param name="timestamp">The timestamp supplied during initialization.</param>
     public TimestampVariable(DateTimeOffset timestamp)
     {
         _timestamp = timestamp;
@@ -35,9 +35,9 @@ public class TimestampVariable :
         return Task.FromResult(timestampContext.Timestamp);
     }
 
-    /// <summary>Converts a value to <see cref="DateTimeOffset" />.</summary>
-    /// <param name="variable">The variable.</param>
-    /// <returns>The value produced by the operation.</returns>
+    /// <summary>Returns the timestamp captured by the variable.</summary>
+    /// <param name="variable">The timestamp variable.</param>
+    /// <returns>The captured timestamp.</returns>
     public static implicit operator DateTimeOffset(TimestampVariable variable)
     {
         return variable._timestamp;
@@ -50,7 +50,7 @@ public class TimestampVariable :
     }
 
 
-    class Context :
+    sealed class Context :
         TimestampContext
     {
         public Context(DateTimeOffset timestamp)

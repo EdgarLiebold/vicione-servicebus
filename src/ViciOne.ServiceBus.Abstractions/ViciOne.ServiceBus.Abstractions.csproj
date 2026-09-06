@@ -18,9 +18,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Advanced/Initializers/**/*.cs" />
-    <Compile Remove="Initializers/Variables/IdVariable.cs" />
-    <Compile Remove="Initializers/Variables/TimestampVariable.cs" />
     <Compile Remove="Saga/**/*.cs" />
     <Compile Remove="SagaStateMachine/**/*.cs" />
     <Compile Remove="Configuration/DependencyInjection/Configuration/SagaEndpointDefinition.cs" />
@@ -52,8 +49,6 @@
     <Compile Remove="Contexts/CourierContext.cs" />
     <Compile Remove="Configuration/DependencyInjection/FutureDefinition.cs" />
     <Compile Remove="Configuration/DependencyInjection/IFutureDefinition.cs" />
-    <Compile Include="Advanced/Initializers/INamedInitializerValue.cs" />
-    <Compile Include="Advanced/Initializers/InitializedMessage.cs" />
     <Compile Include="Courier/IItineraryBuilder.cs" Link="Advanced/IItineraryBuilder.cs" />
     <Compile Include="Courier/Contracts/RoutingSlipEvents.cs" Link="Advanced/RoutingSlipEvents.cs" />
     <Compile Include="Courier/Contracts/RoutingSlipEventContents.cs" Link="Advanced/RoutingSlipEventContents.cs" />
