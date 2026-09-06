@@ -3301,6 +3301,48 @@
       "variantKey" : "new-state-has-non-null-persisted-collections"
    },
    {
+      "requirementId" : "REQ-VSB-FUTURE-STATE-PERSISTENCE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "NullPersistedCollections_AreRehydratedWithTheirRequiredSemantics",
+      "testType" : "ViciOne.ServiceBus.Tests.Futures.FutureStateTests",
+      "variantKey" : "null-persisted-collections-rehydrate"
+   },
+   {
+      "requirementId" : "REQ-VSB-FUTURE-STATE-PERSISTENCE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DefaultConstruction_ProducesUsableEmptyStorage",
+      "testType" : "ViciOne.ServiceBus.Tests.Futures.FutureMessageTests",
+      "variantKey" : "stored-message-defaults-are-usable"
+   },
+   {
+      "requirementId" : "REQ-VSB-FUTURE-STATE-PERSISTENCE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ContractMatching_IsOrdinalCaseInsensitiveAndRejectsUnknownContracts",
+      "testType" : "ViciOne.ServiceBus.Tests.Futures.FutureMessageTests",
+      "variantKey" : "stored-message-contract-matching"
+   },
+   {
+      "requirementId" : "REQ-VSB-FUTURE-STATE-PERSISTENCE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RequiredStorageInputs_RejectNullAtEveryPublicBoundary",
+      "testType" : "ViciOne.ServiceBus.Tests.Futures.FutureMessageTests",
+      "variantKey" : "stored-message-required-inputs"
+   },
+   {
+      "requirementId" : "REQ-VSB-FUTURE-STATE-PERSISTENCE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Equality_UsesBothEndpointAndRequestIdentity",
+      "testType" : "ViciOne.ServiceBus.Tests.Futures.FutureSubscriptionTests",
+      "variantKey" : "subscription-value-semantics"
+   },
+   {
+      "requirementId" : "REQ-VSB-FUTURE-STATE-PERSISTENCE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConstructorAndComparer_RejectMissingRequiredValues",
+      "testType" : "ViciOne.ServiceBus.Tests.Futures.FutureSubscriptionTests",
+      "variantKey" : "subscription-required-address"
+   },
+   {
       "requirementId" : "REQ-VSB-JOB-SAGA-PERSISTENCE",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "NewJobSaga_InitializesRequiredPersistedDictionaries",

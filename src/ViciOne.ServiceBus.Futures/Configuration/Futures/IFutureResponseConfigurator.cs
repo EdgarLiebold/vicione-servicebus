@@ -2,9 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures future response.</summary>
-/// <typeparam name="TResult">The result produced by the operation.</typeparam>
-/// <typeparam name="TResponse">The response type.</typeparam>
+/// <summary>Configures how a request response contributes to a future.</summary>
+/// <typeparam name="TResult">The successful future result contract.</typeparam>
+/// <typeparam name="TResponse">The response message contract.</typeparam>
 public interface IFutureResponseConfigurator<TResult, TResponse> :
     IFutureResultConfigurator<TResult, TResponse>
     where TResult : class
@@ -14,10 +14,10 @@ public interface IFutureResponseConfigurator<TResult, TResponse> :
     /// If specified, the identifier is used to complete a pending result and the result will be stored
     /// in the future.
     /// </summary>
-    /// <param name="provider">Provides the identifier from the request.</param>
+    /// <param name="provider">The provider that extracts the completed operation identifier from the response.</param>
     void CompletePendingRequest(PendingFutureIdProvider<TResponse> provider);
 
-    /// <summary>Add activities to the state machine that are executed when the response is received.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Adds state-machine activities executed when the response is received.</summary>
+    /// <param name="configure">The callback that adds activities to the response event.</param>
     void WhenReceived(Func<EventActivityBinder<FutureState, TResponse>, EventActivityBinder<FutureState, TResponse>> configure);
 }

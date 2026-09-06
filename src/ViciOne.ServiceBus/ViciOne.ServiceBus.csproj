@@ -45,7 +45,6 @@
     <Compile Remove="Configuration/DependencyInjection/IJobServiceRegistrationConfigurator.cs" />
     <Compile Remove="Configuration/DependencyInjection/InMemorySagaRepositoryRegistrationExtensions.cs" />
     <Compile Remove="Configuration/DependencyInjection/JobSagaBusConfigurationExtensions.cs" />
-    <Compile Remove="Configuration/Futures/**/*.cs" />
     <Compile Remove="Configuration/DependencyInjection/IFutureRegistrationConfigurator.cs" />
     <Compile Remove="Configuration/CourierHostConfiguratorExtensions.cs" />
     <Compile Remove="Configuration/RoutingSlipConfigurator.cs" />

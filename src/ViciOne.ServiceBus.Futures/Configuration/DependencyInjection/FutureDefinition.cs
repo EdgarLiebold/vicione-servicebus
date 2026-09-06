@@ -1,43 +1,34 @@
 using System;
-using ViciOne.ServiceBus.Configuration;
-
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
-/// A future definition defines the configuration for a future, which can be used by the automatic registration code to
-/// configure the consumer on a receive endpoint.
+/// Defines reusable endpoint and concurrency configuration for a future state machine.
 /// </summary>
-/// <typeparam name="TFuture">The future type.</typeparam>
-public class FutureDefinition<TFuture> :
+/// <typeparam name="TFuture">The future state-machine type.</typeparam>
+public abstract class FutureDefinition<TFuture> :
     IFutureDefinition<TFuture>
     where TFuture : class, SagaStateMachine<FutureState>
 {
     int? _concurrentMessageLimit;
     string? _endpointName;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Initializes a future definition with convention-based endpoint settings.</summary>
     protected FutureDefinition()
     {
     }
 
-    /// <summary>
-    /// Specify the endpoint name (which may be a queue, or a subscription, depending upon the transport) on which the saga
-    /// should be configured.
-    /// </summary>
+    /// <summary>Sets the transport entity name of the endpoint that hosts the future.</summary>
     protected string EndpointName
     {
         set => _endpointName = value;
     }
 
-    /// <summary>Gets or sets the endpoint definition.</summary>
+    /// <summary>Gets or sets the endpoint definition used to host the future.</summary>
     public IEndpointDefinition<TFuture>? EndpointDefinition { get; set; }
 
     IEndpointDefinition? IFutureDefinition.EndpointDefinition => EndpointDefinition;
 
-    /// <summary>
-    /// Set the concurrent message limit for the saga, which limits how many saga instances are able to concurrently
-    /// consume messages.
-    /// </summary>
+    /// <summary>Gets or sets the maximum number of future messages processed concurrently by the endpoint.</summary>
     public int? ConcurrentMessageLimit
     {
         get => _concurrentMessageLimit;
@@ -61,20 +52,17 @@ public class FutureDefinition<TFuture> :
             : _endpointName!;
     }
 
-    /// <summary>
-    /// Called when configuring the saga on the endpoint. Configuration only applies to this saga, and does not apply to
-    /// the endpoint.
-    /// </summary>
-    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer.</param>
-    /// <param name="sagaConfigurator">The saga configurator.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Applies future-specific saga configuration after the endpoint has been created.</summary>
+    /// <param name="endpointConfigurator">The configurator for the hosting receive endpoint.</param>
+    /// <param name="sagaConfigurator">The configurator for persisted future state.</param>
+    /// <param name="context">The registration context that resolves configuration dependencies.</param>
     protected virtual void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<FutureState> sagaConfigurator,
         IRegistrationContext context)
     {
     }
 
-    /// <summary>Configure the saga endpoint.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Defines endpoint settings for the future.</summary>
+    /// <param name="configure">The optional callback that customizes endpoint settings.</param>
     protected void Endpoint(Action<IEndpointRegistrationConfigurator>? configure = null)
     {
         var configurator = new EndpointRegistrationConfigurator<TFuture>();

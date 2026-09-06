@@ -3,35 +3,36 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Futures;
 
-/// <summary>Carries state for future.</summary>
-public class FutureState :
+/// <summary>Persists the lifecycle, messages, variables, and subscribers of one future instance.</summary>
+public sealed class FutureState :
     SagaStateMachineInstance,
     IConsumerKindOwnedState,
     ISagaVersion
 {
+    readonly object _syncRoot = new();
     Dictionary<Guid, FutureMessage>? _faults = [];
     HashSet<Guid>? _pending = [];
     Dictionary<Guid, FutureMessage>? _results = [];
     HashSet<FutureSubscription>? _subscriptions = new(FutureSubscription.Comparer);
     Dictionary<string, object>? _variables = new(StringComparer.OrdinalIgnoreCase);
 
-    /// <summary>Gets or sets the current state.</summary>
+    /// <summary>Gets or sets the state-machine state identifier.</summary>
     public int CurrentState { get; set; }
 
-    /// <summary>Gets or sets the created.</summary>
+    /// <summary>Gets or sets when the future was created.</summary>
     public DateTimeOffset Created { get; set; }
-    /// <summary>Gets or sets the completed.</summary>
+    /// <summary>Gets or sets when the future completed successfully.</summary>
     public DateTimeOffset? Completed { get; set; }
-    /// <summary>Gets or sets the faulted.</summary>
+    /// <summary>Gets or sets when the future faulted.</summary>
     public DateTimeOffset? Faulted { get; set; }
 
-    /// <summary>Gets or sets the location.</summary>
+    /// <summary>Gets or sets the endpoint address that owns the future instance.</summary>
     public Uri Location { get; set; } = null!;
 
-    /// <summary>Gets or sets the command.</summary>
+    /// <summary>Gets or sets the command that created the future.</summary>
     public FutureMessage Command { get; set; } = null!;
 
-    /// <summary>Gets or sets the pending.</summary>
+    /// <summary>Gets or sets the identifiers of operations that must finish before the future can terminate.</summary>
     public HashSet<Guid> Pending
     {
         get
@@ -39,7 +40,7 @@ public class FutureState :
             if (_pending != null)
                 return _pending;
 
-            lock (this)
+            lock (_syncRoot)
                 _pending ??= new HashSet<Guid>();
 
             return _pending;
@@ -47,7 +48,7 @@ public class FutureState :
         set => _pending = value;
     }
 
-    /// <summary>Gets or sets the subscriptions.</summary>
+    /// <summary>Gets or sets the endpoints subscribed to the future result.</summary>
     public HashSet<FutureSubscription> Subscriptions
     {
         get
@@ -55,7 +56,7 @@ public class FutureState :
             if (_subscriptions != null)
                 return _subscriptions;
 
-            lock (this)
+            lock (_syncRoot)
                 _subscriptions ??= new HashSet<FutureSubscription>(FutureSubscription.Comparer);
 
             return _subscriptions;
@@ -63,7 +64,7 @@ public class FutureState :
         set => _subscriptions = value;
     }
 
-    /// <summary>Gets or sets the variables.</summary>
+    /// <summary>Gets or sets named values shared by future activities.</summary>
     public Dictionary<string, object> Variables
     {
         get
@@ -71,7 +72,7 @@ public class FutureState :
             if (_variables != null)
                 return _variables;
 
-            lock (this)
+            lock (_syncRoot)
                 _variables ??= new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
             return _variables;
@@ -79,7 +80,7 @@ public class FutureState :
         set => _variables = value != null ? new Dictionary<string, object>(value, StringComparer.OrdinalIgnoreCase) : null;
     }
 
-    /// <summary>Gets or sets the results.</summary>
+    /// <summary>Gets or sets successful operation results by operation identifier.</summary>
     public Dictionary<Guid, FutureMessage> Results
     {
         get
@@ -87,7 +88,7 @@ public class FutureState :
             if (_results != null)
                 return _results;
 
-            lock (this)
+            lock (_syncRoot)
                 _results ??= new Dictionary<Guid, FutureMessage>();
 
             return _results;
@@ -95,7 +96,7 @@ public class FutureState :
         set => _results = value;
     }
 
-    /// <summary>Gets or sets the faults.</summary>
+    /// <summary>Gets or sets operation faults by operation identifier.</summary>
     public Dictionary<Guid, FutureMessage> Faults
     {
         get
@@ -103,7 +104,7 @@ public class FutureState :
             if (_faults != null)
                 return _faults;
 
-            lock (this)
+            lock (_syncRoot)
                 _faults ??= new Dictionary<Guid, FutureMessage>();
 
             return _faults;
@@ -111,44 +112,44 @@ public class FutureState :
         set => _faults = value;
     }
 
-    /// <summary>Gets or sets the row version.</summary>
-    public byte[] RowVersion { get; set; } = null!;
-    /// <summary>Gets or sets the version.</summary>
+    /// <summary>Gets or sets the provider-specific optimistic-concurrency token.</summary>
+    public byte[] RowVersion { get; set; } = [];
+    /// <summary>Gets or sets the numeric optimistic-concurrency version.</summary>
     public int Version { get; set; }
 
-    /// <summary>Gets or sets the correlation id.</summary>
+    /// <summary>Gets or sets the identifier of the future instance.</summary>
     public Guid CorrelationId { get; set; }
 
-    /// <summary>Determines whether the current value has subscriptions.</summary>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether at least one endpoint is subscribed to the result.</summary>
+    /// <returns><see langword="true" /> when subscriptions exist; otherwise, <see langword="false" />.</returns>
     public bool HasSubscriptions()
     {
         return _subscriptions != null && _subscriptions.Count > 0;
     }
 
-    /// <summary>Determines whether the current value has variables.</summary>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether the future contains named variables.</summary>
+    /// <returns><see langword="true" /> when variables exist; otherwise, <see langword="false" />.</returns>
     public bool HasVariables()
     {
         return _variables != null && _variables.Count > 0;
     }
 
-    /// <summary>Determines whether the current value has results.</summary>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether at least one operation completed successfully.</summary>
+    /// <returns><see langword="true" /> when results exist; otherwise, <see langword="false" />.</returns>
     public bool HasResults()
     {
         return _results != null && _results.Count > 0;
     }
 
-    /// <summary>Determines whether the current value has faults.</summary>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether at least one operation faulted.</summary>
+    /// <returns><see langword="true" /> when faults exist; otherwise, <see langword="false" />.</returns>
     public bool HasFaults()
     {
         return _faults != null && _faults.Count > 0;
     }
 
-    /// <summary>Determines whether the current value has pending.</summary>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether the future is waiting for an operation.</summary>
+    /// <returns><see langword="true" /> when pending operations exist; otherwise, <see langword="false" />.</returns>
     public bool HasPending()
     {
         return _pending != null && _pending.Count > 0;

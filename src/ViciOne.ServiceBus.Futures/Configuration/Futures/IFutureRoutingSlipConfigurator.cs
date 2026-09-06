@@ -3,10 +3,10 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures future routing slip.</summary>
-/// <typeparam name="TResult">The result produced by the operation.</typeparam>
-/// <typeparam name="TFault">The fault type.</typeparam>
-/// <typeparam name="TInput">The input type.</typeparam>
+/// <summary>Configures a routing slip executed by a future for an input message.</summary>
+/// <typeparam name="TResult">The successful future result contract.</typeparam>
+/// <typeparam name="TFault">The future fault contract.</typeparam>
+/// <typeparam name="TInput">The input message contract.</typeparam>
 public interface IFutureRoutingSlipConfigurator<TResult, TFault, out TInput>
     where TResult : class
     where TFault : class
@@ -23,7 +23,7 @@ public interface IFutureRoutingSlipConfigurator<TResult, TFault, out TInput>
     /// is passed, along with the <see cref="BehaviorContext{FutureState,TInput}" />. The tracking numbers,
     /// subscriptions, and FutureId variables are already initialized.
     /// </summary>
-    /// <param name="buildItinerary">The build itinerary.</param>
+    /// <param name="buildItinerary">The callback that populates the routing-slip itinerary.</param>
     void BuildItinerary(BuildItineraryCallback<TInput> buildItinerary);
 
     /// <summary>
@@ -32,20 +32,20 @@ public interface IFutureRoutingSlipConfigurator<TResult, TFault, out TInput>
     /// </summary>
     void BuildUsingItineraryPlanner();
 
-    /// <summary>Configure the behavior when the routing slip completes.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Configures how routing-slip completion produces the successful future result.</summary>
+    /// <param name="configure">The callback that configures the future result message.</param>
     void OnRoutingSlipCompleted(Action<IFutureResultConfigurator<TResult, RoutingSlipCompleted>> configure);
 
-    /// <summary>Configure what happens when the routing slip faults.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Configures how a routing-slip fault produces the terminal future fault.</summary>
+    /// <param name="configure">The callback that configures the future fault message.</param>
     void OnRoutingSlipFaulted(Action<IFutureFaultConfigurator<TFault, RoutingSlipFaulted>> configure);
 
-    /// <summary>Add activities to the state machine that are executed when the routing slip is completed.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Adds state-machine activities executed when the routing slip completes.</summary>
+    /// <param name="configure">The callback that adds activities to the completion event.</param>
     void WhenRoutingSlipCompleted(
         Func<EventActivityBinder<FutureState, RoutingSlipCompleted>, EventActivityBinder<FutureState, RoutingSlipCompleted>> configure);
 
-    /// <summary>Add activities to the state machine that are executed when the routing slip is faulted.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Adds state-machine activities executed when the routing slip faults.</summary>
+    /// <param name="configure">The callback that adds activities to the fault event.</param>
     void WhenRoutingSlipFaulted(Func<EventActivityBinder<FutureState, RoutingSlipFaulted>, EventActivityBinder<FutureState, RoutingSlipFaulted>> configure);
 }

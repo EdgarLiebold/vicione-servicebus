@@ -23,7 +23,6 @@
     <Compile Remove="Configuration/DependencyInjection/Configuration/SagaEndpointDefinition.cs" />
     <Compile Remove="Configuration/DependencyInjection/ISagaDefinition.cs" />
     <Compile Remove="Configuration/DependencyInjection/SagaDefinition.cs" />
-    <Compile Remove="Futures/**/*.cs" />
     <Compile Remove="Mediator/**/*.cs" />
     <Compile Remove="JobService/**/*.cs" />
     <Compile Remove="Contexts/INotifyJobContext.cs" />
@@ -47,8 +46,6 @@
     <Compile Remove="Configuration/DependencyInjection/IExecuteActivityDefinition.cs" />
     <Compile Remove="Configuration/DependencyInjection/IExecuteActivityRegistrationConfigurator.cs" />
     <Compile Remove="Contexts/CourierContext.cs" />
-    <Compile Remove="Configuration/DependencyInjection/FutureDefinition.cs" />
-    <Compile Remove="Configuration/DependencyInjection/IFutureDefinition.cs" />
     <Compile Include="Courier/IItineraryBuilder.cs" Link="Advanced/IItineraryBuilder.cs" />
     <Compile Include="Courier/Contracts/RoutingSlipEvents.cs" Link="Advanced/RoutingSlipEvents.cs" />
     <Compile Include="Courier/Contracts/RoutingSlipEventContents.cs" Link="Advanced/RoutingSlipEventContents.cs" />

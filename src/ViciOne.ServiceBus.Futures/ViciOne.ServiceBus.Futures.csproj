@@ -13,11 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/Futures/**/*.cs" Link="Futures/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/FutureDefinition.cs" Link="Configuration/DependencyInjection/FutureDefinition.cs" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/IFutureDefinition.cs" Link="Configuration/DependencyInjection/IFutureDefinition.cs" />
     <Compile Include="../ViciOne.ServiceBus/Futures/**/*.cs" Link="Futures/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus/Configuration/Futures/**/*.cs" Link="Configuration/Futures/%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="../ViciOne.ServiceBus/Configuration/DependencyInjection/IFutureRegistrationConfigurator.cs" Link="Configuration/DependencyInjection/IFutureRegistrationConfigurator.cs" />
     <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/DependencyInjectionFutureRegistrationExtensions.cs" Link="DependencyInjection/Configuration/DependencyInjectionFutureRegistrationExtensions.cs" />
     <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/IFutureRegistration.cs" Link="DependencyInjection/Configuration/IFutureRegistration.cs" />
