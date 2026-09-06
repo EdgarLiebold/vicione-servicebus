@@ -7,7 +7,7 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>Maintains a cached context, which is created upon first use, and recreated whenever a fault is propagated to the usage.</summary>
+/// <summary>Creates a pipe context on demand, caches it while valid, and replaces it after invalidation.</summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class PipeContextSupervisor<TContext> :
     Supervisor,
@@ -19,11 +19,11 @@ public class PipeContextSupervisor<TContext> :
     readonly object _contextLock = new object();
     PipeContextHandle<TContext>? _context;
 
-    /// <summary>Create the cache.</summary>
+    /// <summary>Initializes a new instance.</summary>
     /// <param name="contextFactory">Factory used to create the underlying and active contexts.</param>
     public PipeContextSupervisor(IPipeContextFactory<TContext> contextFactory)
     {
-        _contextFactory = contextFactory;
+        _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
 
         _activeSupervisor = new Supervisor();
     }
@@ -38,19 +38,24 @@ public class PipeContextSupervisor<TContext> :
         }
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Executes a pipe using an active handle for the cached context.</summary>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(IPipe<TContext> pipe, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(pipe);
+        cancellationToken.ThrowIfCancellationRequested();
+
         IActivePipeContextAgent<TContext> activeContext = CreateActiveContext(cancellationToken);
 
         try
         {
-            var context = activeContext.Context.Status == TaskStatus.RanToCompletion
+            TContext context = activeContext.Context.Status == TaskStatus.RanToCompletion
                 ? activeContext.Context.Result
                 : await activeContext.Context.ConfigureAwait(false);
+            if (context is null)
+                throw new InvalidOperationException($"The active context handle completed without a {TypeCache<TContext>.ShortName} context.");
 
             await pipe.SendAsync(context).ConfigureAwait(false);
         }
@@ -60,7 +65,7 @@ public class PipeContextSupervisor<TContext> :
             // that determines whether the caller may safely retry.
             try
             {
-                await activeContext.FaultedAsync(exception, cancellationToken: cancellationToken).ConfigureAwait(false);
+                await activeContext.FaultedAsync(exception).ConfigureAwait(false);
             }
             catch (Exception faultException)
             {
@@ -95,11 +100,12 @@ public class PipeContextSupervisor<TContext> :
         }
     }
 
-
     /// <summary>Writes diagnostic information to the probe context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var scope = context.CreateScope("source");
         scope.Set(new
         {
@@ -133,7 +139,8 @@ public class PipeContextSupervisor<TContext> :
     {
         PipeContextHandle<TContext> pipeContextHandle = GetContext();
 
-        return _contextFactory.CreateActiveContext(_activeSupervisor, pipeContextHandle, cancellationToken);
+        return _contextFactory.CreateActiveContext(_activeSupervisor, pipeContextHandle, cancellationToken)
+            ?? throw new InvalidOperationException($"The context factory returned no active {TypeCache<TContext>.ShortName} context.");
     }
 
     PipeContextHandle<TContext> GetContext()
@@ -143,14 +150,16 @@ public class PipeContextSupervisor<TContext> :
             if (_context is { IsDisposed: false })
                 return _context;
 
-            PipeContextHandle<TContext> context = _context = _contextFactory.CreateContext(this);
+            PipeContextHandle<TContext> context = _contextFactory.CreateContext(this)
+                ?? throw new InvalidOperationException($"The context factory returned no {TypeCache<TContext>.ShortName} context.");
+            _context = context;
 
-            void ClearContext(Task task)
+            void ClearContext()
             {
                 Interlocked.CompareExchange(ref _context, null, context);
             }
 
-            context.Context.ContinueWith(ClearContext, CancellationToken.None, TaskContinuationOptions.NotOnRanToCompletion, TaskScheduler.Default);
+            context.Context.ContinueWith(_ => ClearContext(), CancellationToken.None, TaskContinuationOptions.NotOnRanToCompletion, TaskScheduler.Default);
 
             SetReady(context.Context);
 

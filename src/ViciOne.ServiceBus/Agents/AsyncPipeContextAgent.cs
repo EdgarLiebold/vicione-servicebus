@@ -5,9 +5,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>A PipeContext, which as an agent can be Stopped, which disposes of the context making it unavailable.</summary>
+/// <summary>Publishes an asynchronously created pipe context through a supervised lifecycle.</summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class AsyncPipeContextAgent<TContext> :
+public sealed class AsyncPipeContextAgent<TContext> :
     IAsyncPipeContextAgent<TContext>
     where TContext : class, PipeContext
 {
@@ -28,6 +28,8 @@ public class AsyncPipeContextAgent<TContext> :
 
     ValueTask IAsyncDisposable.DisposeAsync()
     {
+        _context.TrySetCanceled();
+
         return _agent.DisposeAsync();
     }
 
@@ -39,32 +41,45 @@ public class AsyncPipeContextAgent<TContext> :
 
     Task IAgent.StopAsync(StopContext context, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
+        _context.TrySetCanceled(context.CancellationToken);
+
         return _agent.StopAsync(context, cancellationToken: cancellationToken);
     }
 
-    Task IAsyncPipeContextHandle<TContext>.CreatedAsync(TContext context, CancellationToken cancellationToken)
+    Task IAsyncPipeContextHandle<TContext>.CreatedAsync(TContext context)
     {
-        _context.SetResult(context);
+        ArgumentNullException.ThrowIfNull(context);
 
-        return Task.CompletedTask;
+        if (!_context.TrySetResult(context))
+            return Task.CompletedTask;
+
+        return _agent.Context;
     }
 
     Task IAsyncPipeContextHandle<TContext>.CreateCanceledAsync(CancellationToken cancellationToken)
     {
-        _context.SetCanceled();
+        if (!_context.TrySetCanceled(cancellationToken))
+            return Task.CompletedTask;
 
         return _agent.StopAsync("Create Canceled", CancellationToken.None);
     }
 
-    Task IAsyncPipeContextHandle<TContext>.CreateFaultedAsync(Exception exception, CancellationToken cancellationToken)
+    Task IAsyncPipeContextHandle<TContext>.CreateFaultedAsync(Exception exception)
     {
-        _context.SetException(exception);
+        ArgumentNullException.ThrowIfNull(exception);
+
+        if (!_context.TrySetException(exception))
+            return Task.CompletedTask;
 
         return _agent.StopAsync($"Create Faulted: {exception.GetBaseException().Message}", CancellationToken.None);
     }
 
-    Task IAsyncPipeContextHandle<TContext>.FaultedAsync(Exception exception, CancellationToken cancellationToken)
+    Task IAsyncPipeContextHandle<TContext>.FaultedAsync(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+
         return _agent.StopAsync($"Faulted: {exception.GetBaseException().Message}", CancellationToken.None);
     }
 

@@ -2,9 +2,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>Completes the AsyncPipeContextAgent when the context is sent to the pipe, and doesn't return until the agent completes.</summary>
+/// <summary>Invokes a pipe, publishes its context, and waits for the owning agent to complete.</summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class AsyncPipeContextPipe<TContext> :
+public sealed class AsyncPipeContextPipe<TContext> :
     IPipe<TContext>
     where TContext : class, PipeContext
 {
@@ -16,15 +16,17 @@ public class AsyncPipeContextPipe<TContext> :
     /// <param name="pipe">The pipeline stages to apply.</param>
     public AsyncPipeContextPipe(IAsyncPipeContextAgent<TContext> agent, IPipe<TContext> pipe)
     {
-        _agent = agent;
-        _pipe = pipe;
+        _agent = agent ?? throw new ArgumentNullException(nameof(agent));
+        _pipe = pipe ?? throw new ArgumentNullException(nameof(pipe));
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Invokes the configured pipe, publishes the context, and awaits agent completion.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(TContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         await _pipe.SendAsync(context).ConfigureAwait(false);
 
         await _agent.CreatedAsync(context).ConfigureAwait(false);
@@ -36,6 +38,8 @@ public class AsyncPipeContextPipe<TContext> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         _pipe.Probe(context);
     }
 }

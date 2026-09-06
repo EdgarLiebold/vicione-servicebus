@@ -1,54 +1,77 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>A PipeContext, which as an agent can be Stopped, which disposes of the context making it unavailable.</summary>
+/// <summary>Owns a pipe context and disposes it when the supervised agent stops.</summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class PipeContextAgent<TContext> :
+public sealed class PipeContextAgent<TContext> :
     Agent,
     IPipeContextAgent<TContext>
     where TContext : class, PipeContext
 {
     readonly Task<TContext> _context;
-    readonly TaskCompletionSource<DateTime> _inactive;
-    readonly TimeProvider _timeProvider;
+    readonly TaskCompletionSource _disposeCompleted;
+    int _disposeStarted;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="context">The context associated with the operation.</param>
     public PipeContextAgent(TContext context)
-        : this(Task.FromResult(context), context.GetTimeProvider())
+        : this(Task.FromResult(context ?? throw new ArgumentNullException(nameof(context))))
     {
     }
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="context">The context associated with the operation.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
-    public PipeContextAgent(Task<TContext> context, TimeProvider? timeProvider = null)
+    public PipeContextAgent(Task<TContext> context)
     {
-        _context = context;
-        _inactive = TaskCompletionSources.Create<DateTime>();
-        _timeProvider = timeProvider ?? TimeProvider.System;
+        _context = RequireContextAsync(context ?? throw new ArgumentNullException(nameof(context)));
+        _disposeCompleted = TaskCompletionSources.Create();
 
         SetReady(_context);
     }
 
-    bool PipeContextHandle<TContext>.IsDisposed => _inactive.Task.IsCompleted;
+    bool PipeContextHandle<TContext>.IsDisposed => Volatile.Read(ref _disposeStarted) != 0;
 
     Task<TContext> PipeContextHandle<TContext>.Context => _context;
 
     /// <inheritdoc />
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
-        // The first caller owns disposal; later calls observe the completed inactive signal.
-        if (!_inactive.TrySetResult(_timeProvider.GetUtcNow().UtcDateTime))
-            return;
+        if (Interlocked.CompareExchange(ref _disposeStarted, 1, 0) == 0)
+            _ = DisposeContextAsync();
 
-        if (_context.Status == TaskStatus.RanToCompletion)
+        return new ValueTask(_disposeCompleted.Task);
+    }
+
+    /// <inheritdoc />
+    protected override async Task StopAgentAsync(StopContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        await DisposeAsync().ConfigureAwait(false);
+    }
+
+    async Task DisposeContextAsync()
+    {
+        try
         {
-            switch (_context.Result)
+            TContext context;
+            try
+            {
+                context = await _context.ConfigureAwait(false);
+            }
+            catch
+            {
+                // A canceled or faulted creation task never transferred a context to this owner.
+                _disposeCompleted.TrySetResult();
+                return;
+            }
+
+            switch (context)
             {
                 case IAsyncDisposable asyncDisposable:
                     await asyncDisposable.DisposeAsync().ConfigureAwait(false);
@@ -57,14 +80,23 @@ public class PipeContextAgent<TContext> :
                     disposable.Dispose();
                     break;
             }
-        }
 
-        SetCompleted(_inactive.Task);
+            _disposeCompleted.TrySetResult();
+        }
+        catch (Exception exception)
+        {
+            _disposeCompleted.TrySetException(exception);
+        }
+        finally
+        {
+            // Completion describes lifecycle termination; disposal failures remain on DisposeAsync.
+            SetCompleted(Task.CompletedTask);
+        }
     }
 
-    /// <inheritdoc />
-    protected override async Task StopAgentAsync(StopContext context)
+    static async Task<TContext> RequireContextAsync(Task<TContext> context)
     {
-        await DisposeAsync().ConfigureAwait(false);
+        return await context.ConfigureAwait(false)
+            ?? throw new InvalidOperationException("The context task completed without a context.");
     }
 }

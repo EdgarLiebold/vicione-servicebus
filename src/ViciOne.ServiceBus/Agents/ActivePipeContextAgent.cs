@@ -5,9 +5,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>An Agent Provocateur that uses a context handle for the activate state of the agent.</summary>
+/// <summary>Tracks one active use of a pipe context as a supervised agent.</summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class ActivePipeContextAgent<TContext> :
+public sealed class ActivePipeContextAgent<TContext> :
     Agent,
     IActivePipeContextAgent<TContext>
     where TContext : class, PipeContext
@@ -17,10 +17,10 @@ public class ActivePipeContextAgent<TContext> :
     readonly ActivePipeContextHandle<TContext> _contextHandle;
 
     /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="context">The active context handle tracked by the agent.</param>
     public ActivePipeContextAgent(ActivePipeContextHandle<TContext> context)
     {
-        _contextHandle = context;
+        _contextHandle = context ?? throw new ArgumentNullException(nameof(context));
 
         context.Context.ContinueWith(SetReady, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
         context.Context.ContinueWith(SetFaulted, CancellationToken.None, TaskContinuationOptions.NotOnRanToCompletion, TaskScheduler.Default);
@@ -30,9 +30,11 @@ public class ActivePipeContextAgent<TContext> :
 
     Task<TContext> PipeContextHandle<TContext>.Context => _contextHandle.Context;
 
-    Task ActivePipeContextHandle<TContext>.FaultedAsync(Exception exception, CancellationToken cancellationToken)
+    Task ActivePipeContextHandle<TContext>.FaultedAsync(Exception exception)
     {
-        return _contextHandle.FaultedAsync(exception, cancellationToken: cancellationToken);
+        ArgumentNullException.ThrowIfNull(exception);
+
+        return _contextHandle.FaultedAsync(exception);
     }
 
     ValueTask IAsyncDisposable.DisposeAsync()
@@ -43,6 +45,8 @@ public class ActivePipeContextAgent<TContext> :
     /// <inheritdoc />
     protected override async Task StopAgentAsync(StopContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         if (_contextHandle.Context.Status == TaskStatus.RanToCompletion)
             await _contextHandle.DisposeAsync().ConfigureAwait(false);
 

@@ -1,46 +1,62 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>Controls the lifetime of constant pipe context.</summary>
+/// <summary>Owns the lifetime of an already available pipe context.</summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class ConstantPipeContextHandle<TContext> :
+public sealed class ConstantPipeContextHandle<TContext> :
     PipeContextHandle<TContext>
     where TContext : class, PipeContext
 {
     readonly TContext _context;
-    bool _disposed;
+    readonly TaskCompletionSource _disposeCompleted;
+    int _disposeStarted;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="context">The context associated with the operation.</param>
     public ConstantPipeContextHandle(TContext context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _disposeCompleted = TaskCompletionSources.Create();
 
         Context = Task.FromResult(context);
     }
 
-    async ValueTask IAsyncDisposable.DisposeAsync()
+    ValueTask IAsyncDisposable.DisposeAsync()
     {
-        if (_disposed)
-            return;
+        if (Interlocked.CompareExchange(ref _disposeStarted, 1, 0) == 0)
+            _ = DisposeContextAsync();
 
-        switch (_context)
-        {
-            case IAsyncDisposable asyncDisposable:
-                await asyncDisposable.DisposeAsync().ConfigureAwait(false);
-                break;
-            case IDisposable disposable:
-                disposable.Dispose();
-                break;
-        }
-
-        _disposed = true;
+        return new ValueTask(_disposeCompleted.Task);
     }
 
-    bool PipeContextHandle<TContext>.IsDisposed => _disposed;
+    bool PipeContextHandle<TContext>.IsDisposed => Volatile.Read(ref _disposeStarted) != 0;
 
     /// <summary>Gets the context.</summary>
     public Task<TContext> Context { get; }
+
+    async Task DisposeContextAsync()
+    {
+        try
+        {
+            switch (_context)
+            {
+                case IAsyncDisposable asyncDisposable:
+                    await asyncDisposable.DisposeAsync().ConfigureAwait(false);
+                    break;
+                case IDisposable disposable:
+                    disposable.Dispose();
+                    break;
+            }
+
+            _disposeCompleted.TrySetResult();
+        }
+        catch (Exception exception)
+        {
+            _disposeCompleted.TrySetException(exception);
+        }
+    }
 }

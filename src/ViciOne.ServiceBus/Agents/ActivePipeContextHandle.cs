@@ -9,9 +9,8 @@ public interface ActivePipeContextHandle<TContext> :
     PipeContextHandle<TContext>
     where TContext : class, PipeContext
 {
-    /// <summary>If the use of this context results in a fault which should cause the context to be disposed, this method signals that behavior to occur.</summary>
-    /// <param name="exception">The bad thing that happened.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Signals that the active use failed and the underlying context must be invalidated.</summary>
+    /// <param name="exception">The failure that invalidated the context.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default);
+    Task FaultedAsync(Exception exception);
 }

@@ -99,6 +99,33 @@ public sealed class SupervisorAgentCreationTests
         Assert.True(asyncContext.Completed.IsCompletedSuccessfully);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "factory-cancellation-token-identity")]
+    public async Task StartAgent_PreservesTheFactoryCancellationTokenAsync()
+    {
+        var supervisor = new TestSupervisor();
+        IAsyncPipeContextAgent<ChildContext> asyncContext = supervisor.AddAsyncContext<ChildContext>();
+        using var factoryCancellation = new CancellationTokenSource();
+        factoryCancellation.Cancel();
+
+        try
+        {
+            supervisor.StartAgent(
+                asyncContext,
+                (_, _) => Task.FromCanceled<ChildContext>(factoryCancellation.Token),
+                TestContext.Current.CancellationToken);
+
+            OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => asyncContext.Context);
+
+            Assert.Equal(factoryCancellation.Token, actual.CancellationToken);
+            await asyncContext.Completed;
+        }
+        finally
+        {
+            await supervisor.StopAsync(CancellationToken.None);
+        }
+    }
+
     private sealed class TestSupervisor : Supervisor, ISupervisor<OwnerContext>
     {
         private readonly OwnerContext _context = new();

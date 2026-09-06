@@ -2,9 +2,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Agents;
 
-/// <summary>Completes the AsyncPipeContextAgent when the context is sent to the pipe, and doesn't return until the agent completes.</summary>
+/// <summary>Publishes a context before invoking the next stage and waits for the owning agent to complete.</summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public class AsyncPipeContextFilter<TContext> :
+public sealed class AsyncPipeContextFilter<TContext> :
     IFilter<TContext>
     where TContext : class, PipeContext
 {
@@ -14,15 +14,18 @@ public class AsyncPipeContextFilter<TContext> :
     /// <param name="agent">The agent.</param>
     public AsyncPipeContextFilter(IAsyncPipeContextAgent<TContext> agent)
     {
-        _agent = agent;
+        _agent = agent ?? throw new ArgumentNullException(nameof(agent));
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Publishes the context, invokes the next pipeline stage, and awaits agent completion.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         await _agent.CreatedAsync(context).ConfigureAwait(false);
 
         await next.SendAsync(context).ConfigureAwait(false);
@@ -34,5 +37,8 @@ public class AsyncPipeContextFilter<TContext> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
+        context.CreateFilterScope("asyncPipeContext");
     }
 }

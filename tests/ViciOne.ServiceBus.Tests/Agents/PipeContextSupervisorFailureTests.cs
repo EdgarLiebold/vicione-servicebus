@@ -184,9 +184,9 @@ public sealed class PipeContextSupervisorFailureTests
 
         public CancellationToken StopCancellationToken { get; private set; }
 
-        public Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
+        public Task FaultedAsync(Exception exception)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); events.Add("fault");
+            events.Add("fault");
             ObservedFailure = exception;
 
             return faultThrows

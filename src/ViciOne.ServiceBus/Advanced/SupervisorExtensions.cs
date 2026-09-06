@@ -169,13 +169,16 @@ public static class SupervisorExtensions
             {
                 await supervisorTask.ConfigureAwait(false);
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException exception)
             {
-                await asyncContext.CreateCanceledAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+                CancellationToken canceledToken = exception.CancellationToken.CanBeCanceled
+                    ? exception.CancellationToken
+                    : cancellationToken;
+                await asyncContext.CreateCanceledAsync(canceledToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
-                await asyncContext.CreateFaultedAsync(exception, cancellationToken: cancellationToken).ConfigureAwait(false);
+                await asyncContext.CreateFaultedAsync(exception).ConfigureAwait(false);
             }
         }
 
@@ -216,9 +219,12 @@ public static class SupervisorExtensions
 
                 await _asyncContext.Completed.ConfigureAwait(false);
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException exception)
             {
-                await _asyncContext.CreateCanceledAsync().ConfigureAwait(false);
+                CancellationToken canceledToken = exception.CancellationToken.CanBeCanceled
+                    ? exception.CancellationToken
+                    : _cancellationToken;
+                await _asyncContext.CreateCanceledAsync(canceledToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
