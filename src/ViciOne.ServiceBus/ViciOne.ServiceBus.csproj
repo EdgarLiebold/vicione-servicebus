@@ -35,7 +35,7 @@
     <Compile Remove="Courier/**/*.cs" />
     <Compile Remove="Futures/**/*.cs" />
     <Compile Remove="JobService/**/*.cs" />
-    <Compile Remove="JobServiceEventExtensions.cs" />
+    <Compile Remove="Advanced/JobServiceEventExtensions.cs" />
     <Compile Remove="Middleware/JobConsumerMessageFilter.cs" />
     <Compile Remove="Serialization/JobPropertyCollection.cs" />
     <Compile Remove="Initializers/PropertyConverters/StatePropertyConverter.cs" />
@@ -136,8 +136,6 @@
     <Compile Remove="Middleware/SendSagaPipe.cs" />
     <Compile Remove="Middleware/StateMachineSagaMessageFilter.cs" />
     <Compile Remove="Topology/CorrelatedByMessageCorrelationId.cs" />
-    <Compile Remove="RoutingSlipBuilder.cs" />
-    <Compile Remove="RoutingSlipEventExtensions.cs" />
     <Compile Remove="Transports/ExecuteActivityReceiveEndpointDispatcher.cs" />
   </ItemGroup>
 

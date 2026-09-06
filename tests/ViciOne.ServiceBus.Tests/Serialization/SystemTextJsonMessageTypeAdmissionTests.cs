@@ -8,6 +8,20 @@ namespace ViciOne.ServiceBus.Tests.Serialization;
 public sealed class SystemTextJsonMessageTypeAdmissionTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-JSON-TYPE-ADMISSION", "raw-options-have-named-zero-and-exact-composites")]
+    public void RawSerializerOptions_ExposeNamedZeroAndExactCompositeValues()
+    {
+        Assert.Equal(0, (int)RawSerializerOptions.None);
+        Assert.Equal(
+            RawSerializerOptions.AddTransportHeaders | RawSerializerOptions.CopyHeaders,
+            RawSerializerOptions.Default);
+        Assert.Equal(
+            RawSerializerOptions.AnyMessageType | RawSerializerOptions.AddTransportHeaders | RawSerializerOptions.CopyHeaders,
+            RawSerializerOptions.All);
+        Assert.Equal(nameof(RawSerializerOptions.None), RawSerializerOptions.None.ToString());
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-JSON-TYPE-ADMISSION", "raw-empty-type-list-denies-by-default")]
     public void RawEnvelopeWithoutTypeHeaders_DeniesEveryMessageTypeByDefault()
     {

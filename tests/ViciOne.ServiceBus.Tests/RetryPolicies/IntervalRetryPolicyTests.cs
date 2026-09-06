@@ -13,11 +13,8 @@ public sealed class IntervalRetryPolicyTests
     {
         Assert.Throws<ArgumentNullException>(() => new IntervalRetryPolicy(null!, TimeSpan.Zero));
         Assert.Throws<ArgumentNullException>(() => new IntervalRetryPolicy(Retry.All(), (TimeSpan[])null!));
-        Assert.Throws<ArgumentNullException>(() => new IntervalRetryPolicy(Retry.All(), (int[])null!));
         Assert.Throws<ArgumentOutOfRangeException>(() => new IntervalRetryPolicy(Retry.All(), Array.Empty<TimeSpan>()));
-        Assert.Throws<ArgumentOutOfRangeException>(() => new IntervalRetryPolicy(Retry.All(), Array.Empty<int>()));
         Assert.Throws<ArgumentOutOfRangeException>(() => new IntervalRetryPolicy(Retry.All(), TimeSpan.FromTicks(-1)));
-        Assert.Throws<ArgumentOutOfRangeException>(() => new IntervalRetryPolicy(Retry.All(), -1));
     }
 
     [Fact]
@@ -36,17 +33,22 @@ public sealed class IntervalRetryPolicyTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-RETRY-POLICY", "integer-intervals-use-milliseconds")]
-    public void IntegerSchedule_UsesMillisecondsAndPreservesOrder()
+    [RequirementCoverage("REQ-VSB-RETRY-POLICY", "interval-api-requires-explicit-time-spans")]
+    public void PublicApi_RequiresExplicitTimeSpanSchedules()
     {
-        var policy = new IntervalRetryPolicy(Retry.All(), 5, 25, 100);
+        Assert.DoesNotContain(
+            typeof(IntervalRetryPolicy).GetConstructors(),
+            constructor => constructor.GetParameters().Any(parameter => parameter.ParameterType == typeof(int[])));
+        Assert.DoesNotContain(
+            typeof(Retry).GetMethods(),
+            method => method.Name == nameof(Retry.Intervals)
+                && method.GetParameters().Any(parameter => parameter.ParameterType == typeof(int[])));
 
-        Assert.Equal(
-        [
-            TimeSpan.FromMilliseconds(5),
-            TimeSpan.FromMilliseconds(25),
-            TimeSpan.FromMilliseconds(100)
-        ], policy.Intervals);
+        Assert.DoesNotContain(
+            typeof(Retry).GetMethods(),
+            method => method.Name == nameof(Retry.Interval)
+                && method.GetParameters() is [_, { ParameterType: var intervalType }]
+                && intervalType == typeof(int));
     }
 
     [Fact]

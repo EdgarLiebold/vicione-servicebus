@@ -2,20 +2,23 @@ using System;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>Carries the command for schedule recurring message.</summary>
+/// <summary>Requests recurring delivery of a typed message.</summary>
 /// <typeparam name="T">The value type.</typeparam>
 public class ScheduleRecurringMessageCommand<T> :
     ScheduleRecurringMessage
     where T : class
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="destination">The destination.</param>
-    /// <param name="payload">The payload.</param>
+    /// <summary>Creates a recurring-delivery command.</summary>
+    /// <param name="schedule">The recurring schedule.</param>
+    /// <param name="destination">The delivery destination.</param>
+    /// <param name="payload">The message payload.</param>
     public ScheduleRecurringMessageCommand(RecurringSchedule schedule, Uri destination, T payload)
     {
-        Schedule = schedule;
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(destination);
+        ArgumentNullException.ThrowIfNull(payload);
 
+        Schedule = schedule;
         Destination = destination;
         Payload = payload;
 
@@ -40,7 +43,7 @@ public class ScheduleRecurringMessageCommand<T> :
 }
 
 
-/// <summary>Carries the command for schedule recurring message.</summary>
+/// <summary>Requests recurring delivery of a runtime-typed message.</summary>
 public class ScheduleRecurringMessageCommand :
     ScheduleRecurringMessage
 {

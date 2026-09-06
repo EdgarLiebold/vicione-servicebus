@@ -2,15 +2,15 @@ using System;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Defines policy for immediate retry.</summary>
-public class ImmediateRetryPolicy :
+/// <summary>Retries handled failures without a delay.</summary>
+public sealed class ImmediateRetryPolicy :
     IRetryPolicy
 {
     readonly IExceptionFilter _filter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="filter">The filter to add to the pipeline.</param>
-    /// <param name="retryLimit">The retry limit.</param>
+    /// <summary>Creates an immediate retry policy.</summary>
+    /// <param name="filter">Determines which exceptions are retried.</param>
+    /// <param name="retryLimit">The maximum number of retry attempts.</param>
     public ImmediateRetryPolicy(IExceptionFilter filter, int retryLimit)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(retryLimit);
@@ -24,6 +24,8 @@ public class ImmediateRetryPolicy :
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         context.Set(new
         {
             Policy = "Immediate",
@@ -35,6 +37,8 @@ public class ImmediateRetryPolicy :
 
     RetryPolicyContext<T> IRetryPolicy.CreatePolicyContext<T>(T context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         return new ImmediateRetryPolicyContext<T>(this, context);
     }
 
@@ -43,6 +47,8 @@ public class ImmediateRetryPolicy :
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+
         return _filter.Match(exception);
     }
 }

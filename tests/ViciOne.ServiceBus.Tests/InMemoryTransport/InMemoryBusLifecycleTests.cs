@@ -12,6 +12,124 @@ namespace ViciOne.ServiceBus.Tests.InMemoryTransport;
 public sealed class InMemoryBusLifecycleTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-CONTROL-LIFECYCLE", "bounded-async-only-api")]
+    public async Task BoundedLifecycleExtensions_AreAsyncOnlyAndRejectInvalidBoundariesAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        IBusControl bus = Bus.Factory.CreateUsingInMemory(_ => { });
+        MethodInfo[] publicMethods = typeof(BusControlExtensions).GetMethods(BindingFlags.Public | BindingFlags.Static);
+
+        Assert.DoesNotContain(publicMethods, method =>
+            (method.Name == "Start" || method.Name == "Stop") && method.ReturnType == typeof(void));
+        Assert.Equal("bus", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            BusControlExtensions.StartAsync(null!, TimeSpan.FromSeconds(1), cancellationToken))).ParamName);
+        Assert.Equal("startTimeout", (await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            bus.StartAsync(TimeSpan.Zero, cancellationToken))).ParamName);
+        Assert.Equal("stopTimeout", (await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            bus.StopAsync(TimeSpan.FromMilliseconds(-1), cancellationToken))).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-CONTROL-LIFECYCLE", "deploy-stop-has-independent-cleanup-token")]
+    public async Task DeployTopology_StopsAfterTheStartupCallerTokenIsCanceledAsync()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var observer = new CancelAfterStartObserver(cancellation);
+        IBusControl bus = Bus.Factory.CreateUsingInMemory(configuration => configuration.ConnectBusObserver(observer));
+
+        await bus.DeployAsync(cancellation.Token);
+
+        Assert.True(cancellation.IsCancellationRequested);
+        Assert.Equal(1, observer.PreStopCount);
+        Assert.Equal(1, observer.PostStopCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "concurrent-start-has-one-owner")]
+    public async Task ConcurrentStartCalls_ShareOneLifecycleTransitionAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observer = new GatedBusStartObserver();
+        IBusControl bus = Bus.Factory.CreateUsingInMemory(configuration => configuration.ConnectBusObserver(observer));
+
+        Task firstStart = bus.StartAsync(cancellationToken);
+        await observer.Entered.WaitAsync(timeout, cancellationToken);
+        Task secondStart = bus.StartAsync(cancellationToken);
+
+        try
+        {
+            Assert.Equal(1, observer.PreStartCount);
+
+            observer.Release();
+            await Task.WhenAll(firstStart, secondStart).WaitAsync(timeout, cancellationToken);
+        }
+        finally
+        {
+            observer.Release();
+
+            try
+            {
+                await Task.WhenAll(firstStart, secondStart).WaitAsync(timeout, CancellationToken.None);
+            }
+            catch
+            {
+                // The assertion result remains authoritative; stopping below owns any started host.
+            }
+
+            await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+
+        Assert.Equal(1, observer.PreStartCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "canceled-stop-retains-lifecycle-owner")]
+    public async Task CanceledStop_RetainsTheHandleSoASecondStopCanCompleteAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observer = new GatedFirstBusStopObserver();
+        IBusControl bus = Bus.Factory.CreateUsingInMemory(configuration => configuration.ConnectBusObserver(observer));
+        await bus.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+        using var stopCancellation = new CancellationTokenSource();
+
+        Task firstStop = bus.StopAsync(stopCancellation.Token);
+        await observer.Entered.WaitAsync(timeout, cancellationToken);
+        stopCancellation.Cancel();
+        observer.Release();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => firstStop);
+        await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+
+        Assert.Equal(2, observer.PreStopCount);
+        Assert.Equal(1, observer.PostStopCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "concurrent-stop-has-one-owner")]
+    public async Task ConcurrentStopCalls_ShareOneLifecycleTransitionAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observer = new GatedFirstBusStopObserver();
+        IBusControl bus = Bus.Factory.CreateUsingInMemory(configuration => configuration.ConnectBusObserver(observer));
+        await bus.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+
+        Task firstStop = bus.StopAsync(CancellationToken.None);
+        await observer.Entered.WaitAsync(timeout, cancellationToken);
+        Task secondStop = bus.StopAsync(CancellationToken.None);
+
+        Assert.Equal(1, observer.PreStopCount);
+
+        observer.Release();
+        await Task.WhenAll(firstStop, secondStop).WaitAsync(timeout, CancellationToken.None);
+
+        Assert.Equal(1, observer.PreStopCount);
+        Assert.Equal(1, observer.PostStopCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "stop-awaits-owned-startup-observation")]
     public async Task Stop_WaitsForTheOwnedStartupObservationBeforeCompletingAsync()
     {
@@ -251,6 +369,133 @@ public sealed class InMemoryBusLifecycleTests
             return segments.Length > 0
                 && string.Equals(Uri.UnescapeDataString(segments[^1]), endpointName, StringComparison.Ordinal);
         }
+    }
+
+    private sealed class GatedBusStartObserver : IBusObserver
+    {
+        private readonly TaskCompletionSource _entered =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _release =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _preStartCount;
+
+        public Task Entered => _entered.Task;
+        public int PreStartCount => Volatile.Read(ref _preStartCount);
+
+        public void PostCreate(IBus bus)
+        {
+        }
+
+        public void CreateFaulted(Exception exception)
+        {
+        }
+
+        public Task PreStartAsync(IBus bus)
+        {
+            Interlocked.Increment(ref _preStartCount);
+            _entered.TrySetResult();
+            return _release.Task;
+        }
+
+        public Task PostStartAsync(IBus bus, Task<BusReady> busReady) => Task.CompletedTask;
+
+        public Task StartFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
+
+        public Task PreStopAsync(IBus bus) => Task.CompletedTask;
+
+        public Task PostStopAsync(IBus bus) => Task.CompletedTask;
+
+        public Task StopFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
+
+        public void Release() => _release.TrySetResult();
+    }
+
+    private sealed class CancelAfterStartObserver(CancellationTokenSource cancellation) : IBusObserver
+    {
+        private int _postStopCount;
+        private int _preStopCount;
+
+        public int PostStopCount => Volatile.Read(ref _postStopCount);
+        public int PreStopCount => Volatile.Read(ref _preStopCount);
+
+        public void PostCreate(IBus bus)
+        {
+        }
+
+        public void CreateFaulted(Exception exception)
+        {
+        }
+
+        public Task PreStartAsync(IBus bus) => Task.CompletedTask;
+
+        public Task PostStartAsync(IBus bus, Task<BusReady> busReady)
+        {
+            cancellation.Cancel();
+            return Task.CompletedTask;
+        }
+
+        public Task StartFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
+
+        public Task PreStopAsync(IBus bus)
+        {
+            Interlocked.Increment(ref _preStopCount);
+            return Task.CompletedTask;
+        }
+
+        public Task PostStopAsync(IBus bus)
+        {
+            Interlocked.Increment(ref _postStopCount);
+            return Task.CompletedTask;
+        }
+
+        public Task StopFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
+    }
+
+    private sealed class GatedFirstBusStopObserver : IBusObserver
+    {
+        private readonly TaskCompletionSource _entered =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _release =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _postStopCount;
+        private int _preStopCount;
+
+        public Task Entered => _entered.Task;
+        public int PostStopCount => Volatile.Read(ref _postStopCount);
+        public int PreStopCount => Volatile.Read(ref _preStopCount);
+
+        public void PostCreate(IBus bus)
+        {
+        }
+
+        public void CreateFaulted(Exception exception)
+        {
+        }
+
+        public Task PreStartAsync(IBus bus) => Task.CompletedTask;
+
+        public Task PostStartAsync(IBus bus, Task<BusReady> busReady) => Task.CompletedTask;
+
+        public Task StartFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
+
+        public Task PreStopAsync(IBus bus)
+        {
+            if (Interlocked.Increment(ref _preStopCount) != 1)
+                return Task.CompletedTask;
+
+            _entered.TrySetResult();
+            return _release.Task;
+        }
+
+        public Task PostStopAsync(IBus bus)
+        {
+            Interlocked.Increment(ref _postStopCount);
+            return Task.CompletedTask;
+        }
+
+        public Task StopFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
+
+        public void Release() => _release.TrySetResult();
     }
 
     private sealed class ExpectedStartupException : Exception;

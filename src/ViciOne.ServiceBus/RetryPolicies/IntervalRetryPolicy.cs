@@ -4,15 +4,15 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Defines policy for interval retry.</summary>
-public class IntervalRetryPolicy :
+/// <summary>Retries handled failures according to an explicit delay schedule.</summary>
+public sealed class IntervalRetryPolicy :
     IRetryPolicy
 {
     readonly IExceptionFilter _filter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="filter">The filter to add to the pipeline.</param>
-    /// <param name="intervals">The intervals.</param>
+    /// <summary>Creates an interval retry policy.</summary>
+    /// <param name="filter">Determines which exceptions are retried.</param>
+    /// <param name="intervals">The delay before each retry attempt.</param>
     public IntervalRetryPolicy(IExceptionFilter filter, params TimeSpan[] intervals)
     {
         ArgumentNullException.ThrowIfNull(filter);
@@ -26,27 +26,13 @@ public class IntervalRetryPolicy :
         Intervals = Array.AsReadOnly([.. intervals]);
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="filter">The filter to add to the pipeline.</param>
-    /// <param name="intervals">The intervals.</param>
-    public IntervalRetryPolicy(IExceptionFilter filter, params int[] intervals)
-    {
-        ArgumentNullException.ThrowIfNull(filter);
-        ArgumentNullException.ThrowIfNull(intervals);
-        if (intervals.Length == 0)
-            throw new ArgumentOutOfRangeException(nameof(intervals), "At least one interval must be specified");
-        if (intervals.Any(interval => interval < 0))
-            throw new ArgumentOutOfRangeException(nameof(intervals), "Retry intervals must be non-negative.");
-
-        _filter = filter;
-        Intervals = Array.AsReadOnly(intervals.Select(x => TimeSpan.FromMilliseconds(x)).ToArray());
-    }
-
-    /// <summary>Gets the intervals.</summary>
+    /// <summary>Gets the immutable retry-delay schedule.</summary>
     public IReadOnlyList<TimeSpan> Intervals { get; }
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         context.Set(new
         {
             Policy = "Interval",
@@ -59,6 +45,8 @@ public class IntervalRetryPolicy :
 
     RetryPolicyContext<T> IRetryPolicy.CreatePolicyContext<T>(T context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         return new IntervalRetryPolicyContext<T>(this, context);
     }
 
@@ -67,6 +55,8 @@ public class IntervalRetryPolicy :
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+
         return _filter.Match(exception);
     }
 

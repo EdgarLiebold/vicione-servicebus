@@ -12,6 +12,77 @@ namespace ViciOne.ServiceBus.Tests.MessageData;
 public sealed class MessageDataRepositoryTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-POLICY", "null-values-produce-empty-data")]
+    public async Task NullValues_ProduceEmptyMessageDataWithoutRepositoryAccessAsync()
+    {
+        var repository = new RecordingRepository();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        MessageData<string> text = await repository.PutStringAsync(null, cancellationToken);
+        MessageData<byte[]> bytes = await repository.PutBytesAsync(null, cancellationToken);
+        IMessageData value = await repository.PutObjectAsync(null, typeof(object), cancellationToken);
+        MessageData<Stream> stream = await repository.PutStreamAsync(null, cancellationToken);
+
+        Assert.False(text.HasValue);
+        Assert.False(bytes.HasValue);
+        Assert.False(value.HasValue);
+        Assert.False(stream.HasValue);
+        Assert.Equal(0, repository.PutCalls);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-POLICY", "inline-and-empty-paths-own-cancellation")]
+    public async Task InlineAndEmptyPaths_ObservePreCanceledOperationsAsync()
+    {
+        var repository = new RecordingRepository();
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => repository.PutStringAsync("inline", cancellation.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => repository.PutBytesAsync([1], cancellation.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => repository.PutObjectAsync(new object(), typeof(object), cancellation.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => repository.PutStreamAsync(null, cancellation.Token));
+
+        Assert.Equal(0, repository.PutCalls);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-POLICY", "byte-input-is-snapshotted")]
+    public async Task ByteStorage_SnapshotsCallerOwnedArraysForInlineAndStoredResultsAsync()
+    {
+        var repository = new RecordingRepository();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        byte[] inlineInput = [1, 2, 3];
+        byte[] storedInput = [4, 5, 6];
+        var inlinePolicy = new MessageDataPolicy(alwaysWriteToRepository: false, threshold: 16);
+        var storedPolicy = new MessageDataPolicy(alwaysWriteToRepository: true, threshold: 1);
+
+        MessageData<byte[]> inline = await repository.PutBytesAsync(inlineInput, null, inlinePolicy, cancellationToken);
+        MessageData<byte[]> stored = await repository.PutBytesAsync(storedInput, null, storedPolicy, cancellationToken);
+        inlineInput[0] = 99;
+        storedInput[0] = 99;
+
+        Assert.Equal([1, 2, 3], await inline.Value);
+        Assert.Equal([4, 5, 6], await stored.Value);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-POLICY", "object-type-and-read-address-boundaries")]
+    public async Task ObjectAndReadOperations_RejectNullContractTypesAndAddressesAsync()
+    {
+        var repository = new RecordingRepository();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        Assert.Equal("objectType", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            repository.PutObjectAsync(new object(), null!, cancellationToken))).ParamName);
+        Assert.Equal("address", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            repository.GetStringAsync(null!, cancellationToken))).ParamName);
+        Assert.Equal("address", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            repository.GetBytesAsync(null!, cancellationToken))).ParamName);
+        Assert.Equal(0, repository.PutCalls);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-POLICY", "explicit-policy-null-boundary")]
     public async Task ExplicitPolicyOverloads_RejectANullPolicyBeforeUsingTheValueAsync()
     {

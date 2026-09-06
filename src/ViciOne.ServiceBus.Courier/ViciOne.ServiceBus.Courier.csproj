@@ -69,8 +69,6 @@
     <Compile Include="../ViciOne.ServiceBus/Middleware/ExecuteActivityFilter.cs" Link="Middleware/ExecuteActivityFilter.cs" />
     <Compile Include="../ViciOne.ServiceBus/Middleware/InMemoryOutbox/InMemoryOutboxCourierContextProxy.cs" Link="Middleware/InMemoryOutbox/InMemoryOutboxCourierContextProxy.cs" />
     <Compile Include="../ViciOne.ServiceBus/Middleware/Timeout/TimeoutCourierContextProxy.cs" Link="Middleware/Timeout/TimeoutCourierContextProxy.cs" />
-    <Compile Include="../ViciOne.ServiceBus/RoutingSlipBuilder.cs" Link="RoutingSlipBuilder.cs" />
-    <Compile Include="../ViciOne.ServiceBus/RoutingSlipEventExtensions.cs" Link="RoutingSlipEventExtensions.cs" />
     <Compile Include="../ViciOne.ServiceBus/Transports/ExecuteActivityReceiveEndpointDispatcher.cs" Link="Transports/ExecuteActivityReceiveEndpointDispatcher.cs" />
   </ItemGroup>
 </Project>

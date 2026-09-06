@@ -211,7 +211,7 @@ public sealed class StateMachineRecoveryTests
             {
                 EventActivityBinder<RetryInstance, RetryData> binder = When(Data)
                     .Retry(
-                        configurator => configurator.Intervals(0, 0, 0),
+                        configurator => configurator.Intervals(TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero),
                         retry => retry
                             .Then(context => Attempt(context.Saga, context.Message))
                             .Then(context => context.Saga.AfterFailureCount++));
@@ -225,7 +225,7 @@ public sealed class StateMachineRecoveryTests
             {
                 EventActivityBinder<RetryInstance> binder = When(Trigger)
                     .Retry(
-                        configurator => configurator.Intervals(0, 0, 0),
+                        configurator => configurator.Intervals(TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero),
                         retry => retry
                             .Then(context => Attempt(context.Saga))
                             .Then(context => context.Saga.AfterFailureCount++));

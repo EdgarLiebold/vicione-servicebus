@@ -12,58 +12,109 @@ internal sealed class ViciOneServiceBusHostedService :
     IHostedService,
     IAsyncDisposable
 {
-    readonly IServiceProvider _provider;
+    readonly SemaphoreSlim _lifecycleGate = new(1, 1);
+    readonly object _stateLock = new();
     readonly IOptions<ViciOneServiceBusHostOptions> _options;
+    readonly IServiceProvider _provider;
     IBusDepot? _depot;
-    Task _startTask = null!;
+    Task? _startTask;
+    bool _stopping;
     bool _stopped;
 
     public ViciOneServiceBusHostedService(IServiceProvider provider, IOptions<ViciOneServiceBusHostOptions> options)
     {
-        _provider = provider;
-        _options = options;
+        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        _options = options ?? throw new ArgumentNullException(nameof(options));
     }
 
     public async ValueTask DisposeAsync()
     {
-        if (_stopped)
-            return;
-
-        if (_options.Value.StopTimeout.HasValue)
+        await _lifecycleGate.WaitAsync(CancellationToken.None).ConfigureAwait(false);
+        try
         {
-            using var tokenSource = new CancellationTokenSource(_options.Value.StopTimeout.Value);
+            IBusDepot? depot;
+            lock (_stateLock)
+            {
+                if (_stopped)
+                    return;
 
-            if (_depot is not null)
-                await _depot.StopAsync(tokenSource.Token).ConfigureAwait(false);
+                _stopping = true;
+                depot = _depot;
+            }
+
+            if (depot is not null)
+            {
+                if (_options.Value.StopTimeout is { } stopTimeout)
+                {
+                    using var tokenSource = new CancellationTokenSource(stopTimeout);
+                    await depot.StopAsync(tokenSource.Token).ConfigureAwait(false);
+                }
+                else
+                    await depot.StopAsync(CancellationToken.None).ConfigureAwait(false);
+            }
+
+            lock (_stateLock)
+                _stopped = true;
         }
-        else if (_depot is not null)
-            await _depot.StopAsync(CancellationToken.None).ConfigureAwait(false);
+        finally
+        {
+            lock (_stateLock)
+                _stopping = false;
 
-        _stopped = true;
+            _lifecycleGate.Release();
+        }
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _depot = _provider.GetRequiredService<IBusDepot>();
-        _startTask = _options.Value.StartTimeout.HasValue
-            ? _depot.StartAsync(_options.Value.StartTimeout.Value, cancellationToken)
-            : _depot.StartAsync(cancellationToken);
+        lock (_stateLock)
+        {
+            if (_stopped || _stopping)
+                throw new InvalidOperationException("The hosted service cannot be started after stopping has begun.");
 
-        return _startTask.IsCompleted || _options.Value.WaitUntilStarted
-            ? _startTask
-            : Task.CompletedTask;
+            if (_startTask is null)
+            {
+                _depot = _provider.GetRequiredService<IBusDepot>();
+                _startTask = _options.Value.StartTimeout.HasValue
+                    ? _depot.StartAsync(_options.Value.StartTimeout.Value, cancellationToken)
+                    : _depot.StartAsync(cancellationToken);
+            }
+
+            return _startTask.IsCompleted || _options.Value.WaitUntilStarted
+                ? _startTask
+                : Task.CompletedTask;
+        }
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
-        if (!_stopped)
+        await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
         {
-            _stopped = true;
+            IBusDepot? depot;
+            lock (_stateLock)
+            {
+                if (_stopped)
+                    return;
 
-            if (_depot is not null)
+                _stopping = true;
+                depot = _depot;
+            }
+
+            if (depot is not null)
                 await (_options.Value.StopTimeout.HasValue
-                ? _depot.StopAsync(_options.Value.StopTimeout.Value, cancellationToken)
-                : _depot.StopAsync(cancellationToken)).ConfigureAwait(false);
+                    ? depot.StopAsync(_options.Value.StopTimeout.Value, cancellationToken)
+                    : depot.StopAsync(cancellationToken)).ConfigureAwait(false);
+
+            lock (_stateLock)
+                _stopped = true;
+        }
+        finally
+        {
+            lock (_stateLock)
+                _stopping = false;
+
+            _lifecycleGate.Release();
         }
     }
 }

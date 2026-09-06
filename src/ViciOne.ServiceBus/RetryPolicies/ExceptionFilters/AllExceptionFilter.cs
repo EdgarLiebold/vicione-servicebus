@@ -2,17 +2,21 @@ using System;
 
 namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
 
-/// <summary>Processes all exception pipeline stages.</summary>
-public class AllExceptionFilter :
+/// <summary>Matches every exception.</summary>
+public sealed class AllExceptionFilter :
     IExceptionFilter
 {
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         context.CreateScope("all");
     }
 
     bool IExceptionFilter.Match(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+
         return true;
     }
 }

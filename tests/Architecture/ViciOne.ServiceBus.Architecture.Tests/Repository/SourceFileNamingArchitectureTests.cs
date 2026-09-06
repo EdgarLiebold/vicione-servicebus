@@ -167,6 +167,29 @@ public sealed class SourceFileNamingArchitectureTests
             $"Stale source-file naming exceptions:{Environment.NewLine}{string.Join(Environment.NewLine, staleExceptions)}");
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "core-project-root-types-use-root-namespace")]
+    public void CoreProjectRoot_TypesUseCoreRootNamespace()
+    {
+        string coreRoot = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus");
+        string[] violations = Directory.EnumerateFiles(coreRoot, "*.cs", SearchOption.TopDirectoryOnly)
+            .SelectMany(path => CSharpSyntaxTree.ParseText(File.ReadAllText(path))
+                .GetCompilationUnitRoot()
+                .DescendantNodes()
+                .OfType<BaseNamespaceDeclarationSyntax>()
+                .Select(declaration => new
+                {
+                    Path = RepositoryLayout.RelativeToRoot(path),
+                    Namespace = declaration.Name.ToString(),
+                }))
+            .Where(static declaration => declaration.Namespace != "ViciOne.ServiceBus")
+            .Select(static declaration => $"{declaration.Path}: {declaration.Namespace}")
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
     private static SourceFileInspection Inspect(string source)
     {
         string path = RepositoryLayout.RelativeToRoot(source);

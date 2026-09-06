@@ -2,17 +2,17 @@ using System;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Defines policy for incremental retry.</summary>
-public class IncrementalRetryPolicy :
+/// <summary>Retries handled failures with a linearly increasing delay.</summary>
+public sealed class IncrementalRetryPolicy :
     IRetryPolicy
 {
     readonly IExceptionFilter _filter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="filter">The filter to add to the pipeline.</param>
-    /// <param name="retryLimit">The retry limit.</param>
-    /// <param name="initialInterval">The initial interval.</param>
-    /// <param name="intervalIncrement">The interval increment.</param>
+    /// <summary>Creates an incremental retry policy.</summary>
+    /// <param name="filter">Determines which exceptions are retried.</param>
+    /// <param name="retryLimit">The maximum number of retry attempts.</param>
+    /// <param name="initialInterval">The delay before the first retry.</param>
+    /// <param name="intervalIncrement">The delay added for each subsequent retry.</param>
     public IncrementalRetryPolicy(IExceptionFilter filter, int retryLimit, TimeSpan initialInterval,
         TimeSpan intervalIncrement)
     {
@@ -55,6 +55,8 @@ public class IncrementalRetryPolicy :
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         context.Set(new
         {
             Policy = "Incremental",
@@ -68,6 +70,8 @@ public class IncrementalRetryPolicy :
 
     RetryPolicyContext<T> IRetryPolicy.CreatePolicyContext<T>(T context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         return new IncrementalRetryPolicyContext<T>(this, context);
     }
 
@@ -76,6 +80,8 @@ public class IncrementalRetryPolicy :
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+
         return _filter.Match(exception);
     }
 }

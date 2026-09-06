@@ -77,7 +77,7 @@ public sealed class QuartzMissingSagaRedeliveryIntegrationTests
                 configuration.CorrelateBy(instance => instance.ServiceName, context => context.Message.ServiceName);
                 configuration.OnMissingInstance(missing => missing.Redeliver(redelivery =>
                 {
-                    redelivery.Interval(3, 1000);
+                    redelivery.Interval(3, TimeSpan.FromSeconds(1));
                     redelivery.OnRedeliveryLimitReached(limit => limit.ExecuteAsync(context =>
                         context.RespondAsync(new ServiceInstanceNotFound(context.Message.ServiceName))));
                 }));

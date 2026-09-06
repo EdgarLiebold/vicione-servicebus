@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.Advanced.Serialization;
 public static class SerializerContextExtensions
 {
     /// <summary>Gets value.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The requested reference type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="dictionary">The dictionary.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
@@ -20,6 +20,10 @@ public static class SerializerContextExtensions
     public static T? GetValue<T>(this IObjectDeserializer context, IReadOnlyDictionary<string, object> dictionary, string key, T? defaultValue = null)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(dictionary);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (!dictionary.TryGetValue(key, out var value) && !dictionary.TryGetValueCamelCase(key, out value))
             return defaultValue;
 
@@ -36,6 +40,10 @@ public static class SerializerContextExtensions
     public static T? GetValue<T>(this IObjectDeserializer context, IReadOnlyDictionary<string, object> dictionary, string key, T? defaultValue = null)
         where T : struct
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(dictionary);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (!dictionary.TryGetValue(key, out var value) && !dictionary.TryGetValueCamelCase(key, out value))
             return defaultValue;
 
@@ -43,7 +51,7 @@ public static class SerializerContextExtensions
     }
 
     /// <summary>Gets value.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The requested reference type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="dictionary">The dictionary.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
@@ -52,6 +60,10 @@ public static class SerializerContextExtensions
     public static T? GetValue<T>(this IObjectDeserializer context, IDictionary<string, object> dictionary, string key, T? defaultValue = null)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(dictionary);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (!dictionary.TryGetValue(key, out var value) && !dictionary.TryGetValueCamelCase(key, out value))
             return defaultValue;
 
@@ -68,6 +80,10 @@ public static class SerializerContextExtensions
     public static T? GetValue<T>(this IObjectDeserializer context, IDictionary<string, object> dictionary, string key, T? defaultValue = null)
         where T : struct
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(dictionary);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (!dictionary.TryGetValue(key, out var value) && !dictionary.TryGetValueCamelCase(key, out value))
             return defaultValue;
 
@@ -75,7 +91,7 @@ public static class SerializerContextExtensions
     }
 
     /// <summary>Gets value.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The requested reference type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="dictionary">The dictionary.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
@@ -84,6 +100,10 @@ public static class SerializerContextExtensions
     public static T? GetValue<T>(this IObjectDeserializer context, IHeaderProvider dictionary, string key, T? defaultValue = null)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(dictionary);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         return dictionary.TryGetHeader(key, out var value) ? context.DeserializeObject(value, defaultValue) : defaultValue;
     }
 
@@ -97,11 +117,15 @@ public static class SerializerContextExtensions
     public static T? GetValue<T>(this IObjectDeserializer context, IHeaderProvider dictionary, string key, T? defaultValue = null)
         where T : struct
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(dictionary);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         return dictionary.TryGetHeader(key, out var value) ? context.DeserializeObject(value, defaultValue) : defaultValue;
     }
 
     /// <summary>Attempts to get value.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The requested reference type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="dictionary">The dictionary.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
@@ -111,6 +135,10 @@ public static class SerializerContextExtensions
         [NotNullWhen(true)] out T? value)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(dictionary);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (!dictionary.TryGetValue(key, out var obj) && !dictionary.TryGetValueCamelCase(key, out obj))
         {
             value = null;
@@ -127,6 +155,9 @@ public static class SerializerContextExtensions
     /// <returns>The serialized dictionary.</returns>
     public static string? SerializeDictionary(this IObjectDeserializer deserializer, IEnumerable<KeyValuePair<string, object>> values)
     {
+        ArgumentNullException.ThrowIfNull(deserializer);
+        ArgumentNullException.ThrowIfNull(values);
+
         var dictionary = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
         foreach (KeyValuePair<string, object> pair in values)
@@ -147,6 +178,8 @@ public static class SerializerContextExtensions
     /// <returns>The deserialized dictionary.</returns>
     public static Dictionary<string, TValue>? DeserializeDictionary<TValue>(this IObjectDeserializer deserializer, string? text)
     {
+        ArgumentNullException.ThrowIfNull(deserializer);
+
         if (!string.IsNullOrWhiteSpace(text))
         {
             List<KeyValuePair<string, TValue>>? headers = deserializer.DeserializeObject<IEnumerable<KeyValuePair<string, TValue>>>(text)?.ToList();
@@ -174,6 +207,10 @@ public static class SerializerContextExtensions
         [NotNullWhen(true)] out T? value)
         where T : struct
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(dictionary);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (!dictionary.TryGetValue(key, out var obj) && !dictionary.TryGetValueCamelCase(key, out obj))
         {
             value = null;
@@ -185,7 +222,7 @@ public static class SerializerContextExtensions
     }
 
     /// <summary>Attempts to get header.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The requested reference type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="value">Receives the value produced by the operation.</param>
@@ -193,6 +230,9 @@ public static class SerializerContextExtensions
     public static bool TryGetHeader<T>(this ConsumeContext context, string key, [NotNullWhen(true)] out T? value)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (!context.Headers.TryGetHeader(key, out var headerValue))
         {
             value = null;
@@ -212,6 +252,9 @@ public static class SerializerContextExtensions
     public static bool TryGetHeader<T>(this ConsumeContext context, string key, [NotNullWhen(true)] out T? value)
         where T : struct
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (!context.Headers.TryGetHeader(key, out var headerValue))
         {
             value = null;
@@ -223,7 +266,7 @@ public static class SerializerContextExtensions
     }
 
     /// <summary>Attempts to get header.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The requested reference type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="value">Receives the value produced by the operation.</param>
@@ -231,6 +274,9 @@ public static class SerializerContextExtensions
     public static bool TryGetHeader<T>(this SendContext context, string key, [NotNullWhen(true)] out T? value)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (context.Headers.TryGetHeader(key, out var headerValue))
         {
             value = headerValue as T;
@@ -250,6 +296,9 @@ public static class SerializerContextExtensions
     public static bool TryGetHeader<T>(this SendContext context, string key, [NotNullWhen(true)] out T? value)
         where T : struct
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (context.Headers.TryGetHeader(key, out var headerValue))
         {
             value = headerValue as T?;
@@ -267,6 +316,9 @@ public static class SerializerContextExtensions
     /// <returns>The header.</returns>
     public static string? GetHeader(this ConsumeContext context, string key, string? defaultValue = null)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (!context.Headers.TryGetHeader(key, out var headerValue))
             return defaultValue;
 
@@ -277,7 +329,7 @@ public static class SerializerContextExtensions
     }
 
     /// <summary>Gets header.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The requested reference type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the requested item is absent.</param>
@@ -285,6 +337,9 @@ public static class SerializerContextExtensions
     public static T? GetHeader<T>(this ConsumeContext context, string key, T? defaultValue = null)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (!context.Headers.TryGetHeader(key, out var headerValue))
             return defaultValue;
 
@@ -300,20 +355,26 @@ public static class SerializerContextExtensions
     public static T? GetHeader<T>(this ConsumeContext context, string key, T? defaultValue = null)
         where T : struct
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         if (!context.Headers.TryGetHeader(key, out var headerValue))
             return defaultValue;
 
         return context.SerializerContext.DeserializeObject<T>(headerValue) ?? defaultValue;
     }
 
-    /// <summary>Converts this value to dictionary.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Converts an object to the serializer's property dictionary.</summary>
+    /// <typeparam name="T">The source object type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="value">The value to process.</param>
     /// <returns>The converted dictionary.</returns>
     public static Dictionary<string, object> ToDictionary<T>(this ConsumeContext context, T value)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(value);
+
         return context.SerializerContext.ToDictionary(value);
     }
 }

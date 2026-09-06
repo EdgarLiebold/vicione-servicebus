@@ -12,6 +12,80 @@ namespace ViciOne.ServiceBus.Tests.Courier;
 public sealed class RoutingSlipBuilderContractTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-BUILDER", "constructor-boundaries")]
+    public void Constructors_RejectInvalidIdentityAndNullStateInputs()
+    {
+        RoutingSlip routingSlip = new RoutingSlipBuilder(NewId.NextGuid()).Build();
+
+        Assert.Throws<ArgumentException>(() => new RoutingSlipBuilder(Guid.Empty));
+        Assert.Throws<ArgumentNullException>(() => new RoutingSlipBuilder(null!, activities => activities));
+        Assert.Throws<ArgumentNullException>(() => new RoutingSlipBuilder(routingSlip, (Func<IEnumerable<Activity>, IEnumerable<Activity>>)null!));
+        Assert.Throws<InvalidOperationException>(() => new RoutingSlipBuilder(routingSlip, _ => null!));
+        Assert.Throws<ArgumentNullException>(() => new RoutingSlipBuilder(routingSlip, null!, []));
+        Assert.Throws<ArgumentNullException>(() => new RoutingSlipBuilder(routingSlip, [], null!));
+        Assert.Throws<ArgumentNullException>(() => new RoutingSlipBuilder(routingSlip, (IEnumerable<CompensateLog>)null!));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-BUILDER", "mutation-boundaries")]
+    public void MutationMethods_RejectInvalidRequiredInputs()
+    {
+        var builder = new RoutingSlipBuilder(NewId.NextGuid());
+        var address = new Uri("loopback://localhost/courier-boundary");
+
+        Assert.Throws<ArgumentException>(() => builder.AddActivity(" ", address));
+        Assert.Throws<ArgumentNullException>(() => builder.AddActivity("Activity", null!));
+        Assert.Throws<ArgumentNullException>(() => builder.AddActivity("Activity", address, (object)null!));
+        Assert.Throws<ArgumentNullException>(() => builder.AddActivity("Activity", address, (IDictionary<string, object>)null!));
+        Assert.Throws<ArgumentException>(() => builder.AddVariable("", "value"));
+        Assert.Throws<ArgumentException>(() => builder.AddVariable(" ", new object()));
+        Assert.Throws<ArgumentNullException>(() => builder.SetVariables((object)null!));
+        Assert.Throws<ArgumentNullException>(() => builder.SetVariables((IEnumerable<KeyValuePair<string, object>>)null!));
+        Assert.Throws<ArgumentNullException>(() => builder.AddSubscription(null!, RoutingSlipEvents.All));
+        Assert.Throws<ArgumentNullException>(() => builder.AddSubscription(null!, RoutingSlipEvents.All, RoutingSlipEventContents.All));
+        Assert.Throws<ArgumentException>(() => builder.AddSubscription(address, RoutingSlipEvents.All, RoutingSlipEventContents.All, " "));
+        Assert.Throws<ArgumentNullException>(() => builder.AddActivityLog(null!, "Activity", NewId.NextGuid(), DateTimeOffset.UtcNow, TimeSpan.Zero));
+        Assert.Throws<ArgumentNullException>(() => builder.AddCompensateLog(NewId.NextGuid(), null!, new Dictionary<string, object>()));
+        Assert.Throws<ArgumentNullException>(() => builder.AddCompensateLog(NewId.NextGuid(), address, null!));
+        Assert.Throws<ArgumentNullException>(() => builder.AddActivityException((ActivityException)null!));
+        Assert.Throws<ArgumentNullException>(() => RoutingSlipBuilder.GetObjectAsDictionary(null!));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-BUILDER", "async-subscription-boundaries")]
+    public async Task AsyncSubscriptions_ValidateInputsOwnCancellationAndRejectNullTasksAsync()
+    {
+        var builder = new RoutingSlipBuilder(NewId.NextGuid());
+        var address = new Uri("loopback://localhost/courier-subscription");
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        var callbackCalled = false;
+
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            builder.AddSubscriptionAsync(
+                null!, RoutingSlipEvents.All, _ => Task.CompletedTask, TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            builder.AddSubscriptionAsync(
+                address, RoutingSlipEvents.All, null!, TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            builder.AddSubscriptionAsync(
+                address, RoutingSlipEvents.All, _ => null!, TestContext.Current.CancellationToken));
+
+        Task canceled = builder.AddSubscriptionAsync(
+            address,
+            RoutingSlipEvents.All,
+            _ =>
+            {
+                callbackCalled = true;
+                return Task.CompletedTask;
+            },
+            cancellation.Token);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => canceled);
+        Assert.False(callbackCalled);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-BUILDER-ISOLATION", "no-public-mutable-empty-sentinel")]
     public void Builder_ExposesNoPublicMutableEmptyArgumentSentinel()
     {

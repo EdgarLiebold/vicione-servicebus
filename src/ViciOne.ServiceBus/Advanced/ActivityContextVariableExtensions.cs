@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Advanced;
 public static class ActivityContextVariableExtensions
 {
     /// <summary>Gets a reference-type activity variable, or the supplied default when the variable is absent.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The requested reference type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <param name="defaultValue">The value returned when the variable is absent.</param>

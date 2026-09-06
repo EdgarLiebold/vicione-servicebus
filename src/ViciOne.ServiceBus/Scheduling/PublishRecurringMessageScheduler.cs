@@ -6,25 +6,25 @@ using ViciOne.ServiceBus.Initializers;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>Schedules publish recurring message operations.</summary>
-public class PublishRecurringMessageScheduler :
+/// <summary>Publishes recurring-schedule commands through a publish endpoint.</summary>
+public sealed class PublishRecurringMessageScheduler :
     IRecurringMessageScheduler
 {
     readonly IBusTopology? _busTopology;
     readonly IPublishEndpoint _publishEndpoint;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="publishEndpoint">The publish endpoint.</param>
-    /// <param name="busTopology">The bus topology.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <summary>Creates a scheduler that publishes its commands through an existing endpoint.</summary>
+    /// <param name="publishEndpoint">Publishes scheduler commands.</param>
+    /// <param name="busTopology">The topology used to resolve recurring-publish destinations.</param>
+    /// <param name="timeProvider">The clock used to timestamp control commands.</param>
     public PublishRecurringMessageScheduler(IPublishEndpoint publishEndpoint, IBusTopology? busTopology = null, TimeProvider? timeProvider = null)
     {
-        _publishEndpoint = publishEndpoint;
+        _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
         _busTopology = busTopology;
         TimeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    /// <summary>Gets the time provider.</summary>
+    /// <summary>Gets the clock used to timestamp control commands.</summary>
     public TimeProvider TimeProvider { get; }
 
     /// <summary>Schedules recurring send.</summary>
@@ -466,13 +466,16 @@ public class PublishRecurringMessageScheduler :
         return await ScheduleAsync(destinationAddress, schedule, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Determines whether the current value can cel scheduled recurring send.</summary>
+    /// <summary>Cancels a recurring schedule.</summary>
     /// <param name="scheduleId">The schedule id.</param>
     /// <param name="scheduleGroup">The schedule group.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CancelScheduledRecurringSendAsync(string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(scheduleId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(scheduleGroup);
+
         var command = new CancelScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
         return _publishEndpoint.PublishAsync<CancelScheduledRecurringMessage>(command, cancellationToken: cancellationToken);
@@ -485,6 +488,9 @@ public class PublishRecurringMessageScheduler :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task PauseScheduledRecurringSendAsync(string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(scheduleId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(scheduleGroup);
+
         var command = new PauseScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
         return _publishEndpoint.PublishAsync<PauseScheduledRecurringMessage>(command, cancellationToken: cancellationToken);
@@ -497,6 +503,9 @@ public class PublishRecurringMessageScheduler :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ResumeScheduledRecurringSendAsync(string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(scheduleId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(scheduleGroup);
+
         var command = new ResumeScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
         return _publishEndpoint.PublishAsync<ResumeScheduledRecurringMessage>(command, cancellationToken: cancellationToken);
@@ -539,6 +548,10 @@ public class PublishRecurringMessageScheduler :
     static ScheduleRecurringMessage CreateCommand<T>(Uri destinationAddress, RecurringSchedule schedule, T message)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(schedule);
+        ArgumentNullException.ThrowIfNull(message);
+
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 

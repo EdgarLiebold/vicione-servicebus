@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
-/// <summary>Defines policy for exponential retry.</summary>
-public class ExponentialRetryPolicy :
+/// <summary>Retries handled failures with bounded exponentially increasing jittered delays.</summary>
+public sealed class ExponentialRetryPolicy :
     IRetryPolicy
 {
     readonly IExceptionFilter _filter;
@@ -15,12 +15,12 @@ public class ExponentialRetryPolicy :
     readonly int _maxInterval;
     readonly int _minInterval;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="filter">The filter to add to the pipeline.</param>
-    /// <param name="retryLimit">The retry limit.</param>
-    /// <param name="minInterval">The min interval.</param>
-    /// <param name="maxInterval">The max interval.</param>
-    /// <param name="intervalDelta">The interval delta.</param>
+    /// <summary>Creates a bounded exponential retry policy.</summary>
+    /// <param name="filter">Determines which exceptions are retried.</param>
+    /// <param name="retryLimit">The maximum number of retry attempts.</param>
+    /// <param name="minInterval">The minimum retry delay.</param>
+    /// <param name="maxInterval">The maximum retry delay.</param>
+    /// <param name="intervalDelta">The base exponential delay increment.</param>
     public ExponentialRetryPolicy(IExceptionFilter filter, int retryLimit, TimeSpan minInterval, TimeSpan maxInterval, TimeSpan intervalDelta)
     {
         ArgumentNullException.ThrowIfNull(filter);
@@ -52,6 +52,8 @@ public class ExponentialRetryPolicy :
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         context.Set(new
         {
             Policy = "Exponential",
@@ -67,6 +69,8 @@ public class ExponentialRetryPolicy :
 
     RetryPolicyContext<T> IRetryPolicy.CreatePolicyContext<T>(T context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         return new ExponentialRetryPolicyContext<T>(this, context);
     }
 
@@ -75,12 +79,14 @@ public class ExponentialRetryPolicy :
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+
         return _filter.Match(exception);
     }
 
-    /// <summary>Gets retry interval.</summary>
-    /// <param name="retryCount">The retry count.</param>
-    /// <returns>The retry interval.</returns>
+    /// <summary>Gets a bounded jittered delay for a zero-based retry count.</summary>
+    /// <param name="retryCount">The zero-based retry count.</param>
+    /// <returns>The retry delay.</returns>
     public TimeSpan GetRetryInterval(int retryCount)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(retryCount);

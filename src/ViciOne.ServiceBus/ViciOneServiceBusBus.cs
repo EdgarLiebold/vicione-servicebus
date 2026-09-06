@@ -28,6 +28,7 @@ internal sealed class ViciOneServiceBusBus :
     readonly IConsumePipe _consumePipe;
     readonly IHost _host;
     readonly ILogContext _logContext;
+    readonly SemaphoreSlim _lifecycleGate = new(1, 1);
     readonly IPublishEndpoint _publishEndpoint;
     readonly IReceiveEndpoint _receiveEndpoint;
     readonly TimeProvider _timeProvider;
@@ -43,16 +44,18 @@ internal sealed class ViciOneServiceBusBus :
     public ViciOneServiceBusBus(IHost host, IBusObserver busObservable, IReceiveEndpointConfiguration endpointConfiguration,
         TimeProvider? timeProvider = null)
     {
+        ArgumentNullException.ThrowIfNull(endpointConfiguration);
+
+        _host = host ?? throw new ArgumentNullException(nameof(host));
+        _busObservable = busObservable ?? throw new ArgumentNullException(nameof(busObservable));
         Address = endpointConfiguration.InputAddress;
         _consumePipe = endpointConfiguration.ConsumePipe;
-        _host = host ?? throw new ArgumentNullException(nameof(host));
-        _busObservable = busObservable;
         _receiveEndpoint = endpointConfiguration.ReceiveEndpoint;
         _timeProvider = timeProvider ?? TimeProvider.System;
 
         _busState = BusState.Created;
 
-        Topology = host.Topology;
+        Topology = _host.Topology;
 
         if (LogContext.Current == null)
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Vici One Service Bus Bus", "unknown", "The LogContext was not set.", "Correct the named configuration before starting the host"));
@@ -63,35 +66,8 @@ internal sealed class ViciOneServiceBusBus :
     }
 
     /// <summary>
-    /// Waits for the bus endpoint to be ready after a consumer has been connected to a running bus,
-    /// and stops waiting when there is nothing left to wait for.
-    /// <para>
-    /// The bus endpoint is materialised on demand: it declares its queue when something first
-    /// consumes on the bus, not when the bus starts. Connecting a consumer is therefore what brings
-    /// it up, and waiting here is deliberate — handing back a subscription that is not live yet
-    /// would silently drop messages.
-    /// </para>
-    /// <para>
-    /// The wait is bounded and cancellable. An endpoint that can never start, for instance because
-    /// another connection already holds its exclusive queue, would otherwise block the caller on its
-    /// thread for good: no exception, no timeout, nothing naming a cause. The bound is the same
-    /// sixty seconds this class applies in <see cref="StartAsync" /> when a caller supplies no token
-    /// of its own, so there is no second notion of "too long".
-    /// </para>
-    /// <para>
-    /// A fault the transport recovers from leaves the wait exactly as it is: the retry runs and the
-    /// endpoint still becomes ready, which is the behaviour every recoverable hiccup during startup
-    /// depends on. A fault it cannot recover from ends the wait with the transport's own exception,
-    /// because the endpoint will not become ready by itself and holding the caller for the full
-    /// readiness limit replaces the broker's answer with a timeout that says nothing.
-    /// </para>
-    /// <para>
-    /// The observer is connected here rather than in the receive endpoint, and that is deliberate.
-    /// Completing the endpoint's own Started task on an unrecoverable fault reaches every endpoint
-    /// in the process and not only the one being waited for, including the specs that deliberately
-    /// provoke a refused credential. The wait is the only place that needs to know, so it is the
-    /// only place that is told.
-    /// </para>
+    /// Waits for the on-demand bus endpoint to become ready and surfaces a terminal transport failure
+    /// instead of replacing it with the readiness timeout.
     /// </summary>
     void WaitUntilBusEndpointIsReady()
     {
@@ -107,10 +83,8 @@ internal sealed class ViciOneServiceBusBus :
         {
             TaskBlocking.Wait(_receiveEndpoint.Started, timeout.Token);
         }
-        // The linked source distinguishes readiness timeout or terminal failure from unrelated cancellation.
         catch (OperationCanceledException) when (timeout.IsCancellationRequested || terminal?.Cause != null)
         {
-            // The broker's own answer first; the safety limit only when there is none to give.
             if (terminal?.Cause is { } cause)
                 throw cause;
 
@@ -133,7 +107,7 @@ internal sealed class ViciOneServiceBusBus :
     /// original cause.
     /// </para>
     /// </summary>
-    internal class TerminalFaultObserver :
+    internal sealed class TerminalFaultObserver :
         IReceiveEndpointObserver
     {
         readonly object _lock = new();
@@ -169,9 +143,8 @@ internal sealed class ViciOneServiceBusBus :
 
             CancelAttachedWaiter(waiter);
         }
-
-
-
+        /// <summary>Removes a readiness waiter that no longer needs terminal-fault notification.</summary>
+        /// <param name="waiter">The readiness waiter.</param>
         public void Detach(CancellationTokenSource waiter)
         {
             lock (_lock)
@@ -186,12 +159,11 @@ internal sealed class ViciOneServiceBusBus :
             }
             catch (ObjectDisposedException)
             {
-                // The waiter completed between observing the terminal cause and this cancellation.
+                // The readiness waiter completed while the terminal fault was being published.
             }
             catch (Exception exception)
             {
-                // The terminal cause remains authoritative. A cancellation callback is observation
-                // attached to the internal wait and must not replace the transport failure.
+                // Callback failures must not replace the terminal transport failure.
                 LogContext.Warning?.Log(exception, "Bus endpoint readiness cancellation callback faulted");
             }
         }
@@ -206,12 +178,11 @@ internal sealed class ViciOneServiceBusBus :
                 }
                 catch (ObjectDisposedException)
                 {
-                    // The waiter completed independently while the terminal fault was being published.
+                    // The readiness waiter completed while the terminal fault was being published.
                 }
                 catch (Exception exception)
                 {
-                    // Cancellation wakes an internal readiness wait. Callback failures must be owned and
-                    // observable, but must never replace the receive transport's terminal failure.
+                    // Callback failures must not replace the terminal transport failure.
                     LogContext.Warning?.Log(exception, "Bus endpoint readiness cancellation callback faulted");
                 }
             }
@@ -389,6 +360,20 @@ internal sealed class ViciOneServiceBusBus :
     {
         LogContext.SetCurrentIfNull(_logContext);
 
+        await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            await StartCoreAsync(cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            _lifecycleGate.Release();
+        }
+    }
+
+    async Task StartCoreAsync(CancellationToken cancellationToken)
+    {
+
         if (_busHandle != null)
         {
             LogContext.Warning?.Log("StartAsync called, but the bus was already started: {Address} ({Reason})", Address, "Already Started");
@@ -423,9 +408,7 @@ internal sealed class ViciOneServiceBusBus :
                 try
                 {
                     using var stopTimeoutTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30), _timeProvider);
-                    using var stopTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, stopTimeoutTokenSource.Token);
-
-                    await busHandle.StopAsync(stopTokenSource.Token).ConfigureAwait(false);
+                    await busHandle.StopAsync(stopTimeoutTokenSource.Token).ConfigureAwait(false);
                 }
                 catch (Exception stopException)
                 {
@@ -457,7 +440,8 @@ internal sealed class ViciOneServiceBusBus :
                 {
                     LogContext.Warning?.Log(ex, "Bus start faulted: {HostAddress}", _host.Address);
 
-                    await busHandle.StopAsync(cancellationToken).ConfigureAwait(false);
+                    using var stopTimeoutTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30), _timeProvider);
+                    await busHandle.StopAsync(stopTimeoutTokenSource.Token).ConfigureAwait(false);
                 }
             }
             catch (OperationCanceledException)
@@ -481,28 +465,30 @@ internal sealed class ViciOneServiceBusBus :
         }
     }
 
-    public async Task StopAsync(CancellationToken cancellationToken = new CancellationToken())
+    public async Task StopAsync(CancellationToken cancellationToken = default)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        if (_busHandle == null)
-        {
-            LogContext.Warning?.Log("Failed to stop bus: {Address} ({Reason})", Address, "Not Started");
-            return;
-        }
-
-        // Terminal-fault observation belongs to the current handle and must end even when stopping fails.
+        await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
+            if (_busHandle == null)
+            {
+                LogContext.Warning?.Log("Failed to stop bus: {Address} ({Reason})", Address, "Not Started");
+                return;
+            }
+
             await _busHandle.StopAsync(cancellationToken).ConfigureAwait(false);
-        }
-        finally
-        {
+
             _terminalFaultHandle?.Disconnect();
             _terminalFaultHandle = null;
             _terminalFault = null;
 
             _busHandle = null;
+        }
+        finally
+        {
+            _lifecycleGate.Release();
         }
     }
 
@@ -627,6 +613,7 @@ internal sealed class ViciOneServiceBusBus :
             }
             catch (OperationCanceledException)
             {
+                throw;
             }
             catch (Exception exception)
             {

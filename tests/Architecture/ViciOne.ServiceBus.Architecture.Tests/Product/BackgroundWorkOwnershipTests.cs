@@ -33,7 +33,7 @@ public sealed class BackgroundWorkOwnershipTests
 
         Assert.Empty(offenders);
 
-        string bridge = Source("src/ViciOne.ServiceBus/SupervisorExtensions.cs");
+        string bridge = Source("src/ViciOne.ServiceBus/Advanced/SupervisorExtensions.cs");
         int bridgeStart = bridge.IndexOf("public static void StartAgent", StringComparison.Ordinal);
         int bridgeEnd = bridge.IndexOf("public static async Task<TAgent> CreateAgent", bridgeStart, StringComparison.Ordinal);
         Assert.True(bridgeStart >= 0);

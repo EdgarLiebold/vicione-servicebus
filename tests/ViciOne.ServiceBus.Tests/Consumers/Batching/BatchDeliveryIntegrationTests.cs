@@ -419,14 +419,14 @@ public sealed class BatchDeliveryIntegrationTests
             case FailureMode.DelayedRedelivery:
                 configuration.AddConfigureEndpointsCallback((_, endpoint) =>
                 {
-                    endpoint.UseDelayedRedelivery(redelivery => redelivery.Intervals(10));
+                    endpoint.UseDelayedRedelivery(redelivery => redelivery.Intervals(TimeSpan.FromMilliseconds(10)));
                     endpoint.UseMessageRetry(retry => retry.Immediate(1));
                 });
                 break;
             case FailureMode.ScheduledRedelivery:
                 configuration.AddConfigureEndpointsCallback((_, endpoint) =>
                 {
-                    endpoint.UseScheduledRedelivery(redelivery => redelivery.Intervals(10));
+                    endpoint.UseScheduledRedelivery(redelivery => redelivery.Intervals(TimeSpan.FromMilliseconds(10)));
                     endpoint.UseMessageRetry(retry => retry.Immediate(1));
                 });
                 configuration.UsingInMemory((context, bus) =>

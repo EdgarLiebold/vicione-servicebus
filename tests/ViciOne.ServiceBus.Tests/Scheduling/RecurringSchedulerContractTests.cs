@@ -1,0 +1,77 @@
+using System.Reflection;
+using ViciOne.ServiceBus.Scheduling;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using Xunit;
+
+namespace ViciOne.ServiceBus.Tests.Scheduling;
+
+public sealed class RecurringSchedulerContractTests
+{
+    private static readonly Uri DestinationAddress = new("loopback://localhost/recurring-boundary");
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "constructors-and-command-values-reject-null")]
+    public void ConstructorsAndCommandValues_RejectNullCollaborators()
+    {
+        ISendEndpoint endpoint = DispatchProxy.Create<ISendEndpoint, UnexpectedInvocationProxy>();
+        ISendEndpointProvider endpointProvider = DispatchProxy.Create<ISendEndpointProvider, UnexpectedInvocationProxy>();
+        RecurringSchedule schedule = DispatchProxy.Create<RecurringSchedule, UnexpectedInvocationProxy>();
+        var message = new ScheduledMessage();
+
+        Assert.Equal("sendEndpointProvider", Assert.Throws<ArgumentNullException>(() =>
+            new EndpointRecurringMessageScheduler(null!, DestinationAddress)).ParamName);
+        Assert.Equal("schedulerAddress", Assert.Throws<ArgumentNullException>(() =>
+            new EndpointRecurringMessageScheduler(endpointProvider, null!)).ParamName);
+        Assert.Equal("sendEndpoint", Assert.Throws<ArgumentNullException>(() =>
+            new EndpointRecurringMessageScheduler((ISendEndpoint)null!)).ParamName);
+        Assert.Equal("publishEndpoint", Assert.Throws<ArgumentNullException>(() =>
+            new PublishRecurringMessageScheduler(null!)).ParamName);
+
+        Assert.Equal("schedule", Assert.Throws<ArgumentNullException>(() =>
+            new ScheduleRecurringMessageCommand<ScheduledMessage>(null!, DestinationAddress, message)).ParamName);
+        Assert.Equal("destination", Assert.Throws<ArgumentNullException>(() =>
+            new ScheduleRecurringMessageCommand<ScheduledMessage>(schedule, null!, message)).ParamName);
+        Assert.Equal("payload", Assert.Throws<ArgumentNullException>(() =>
+            new ScheduleRecurringMessageCommand<ScheduledMessage>(schedule, DestinationAddress, null!)).ParamName);
+        Assert.Equal("schedule", Assert.Throws<ArgumentNullException>(() =>
+            new ScheduledRecurringMessageHandle<ScheduledMessage>(null!, DestinationAddress, message)).ParamName);
+        Assert.Equal("destination", Assert.Throws<ArgumentNullException>(() =>
+            new ScheduledRecurringMessageHandle<ScheduledMessage>(schedule, null!, message)).ParamName);
+        Assert.Equal("payload", Assert.Throws<ArgumentNullException>(() =>
+            new ScheduledRecurringMessageHandle<ScheduledMessage>(schedule, DestinationAddress, null!)).ParamName);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "control-identities-reject-null-or-whitespace")]
+    public async Task ControlOperations_RejectMissingScheduleIdentifiersAsync(string? missingValue)
+    {
+        ISendEndpoint endpoint = DispatchProxy.Create<ISendEndpoint, UnexpectedInvocationProxy>();
+        IPublishEndpoint publishEndpoint = DispatchProxy.Create<IPublishEndpoint, UnexpectedInvocationProxy>();
+        IRecurringMessageScheduler[] schedulers =
+        [
+            new EndpointRecurringMessageScheduler(endpoint),
+            new PublishRecurringMessageScheduler(publishEndpoint)
+        ];
+
+        foreach (IRecurringMessageScheduler scheduler in schedulers)
+        {
+            await Assert.ThrowsAnyAsync<ArgumentException>(() =>
+                scheduler.CancelScheduledRecurringSendAsync(missingValue!, "group", TestContext.Current.CancellationToken));
+            await Assert.ThrowsAnyAsync<ArgumentException>(() =>
+                scheduler.PauseScheduledRecurringSendAsync("schedule", missingValue!, TestContext.Current.CancellationToken));
+            await Assert.ThrowsAnyAsync<ArgumentException>(() =>
+                scheduler.ResumeScheduledRecurringSendAsync(missingValue!, "group", TestContext.Current.CancellationToken));
+        }
+    }
+
+    private sealed record ScheduledMessage;
+
+    private class UnexpectedInvocationProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            throw new InvalidOperationException($"The invalid boundary invoked {targetMethod?.Name}.");
+    }
+}

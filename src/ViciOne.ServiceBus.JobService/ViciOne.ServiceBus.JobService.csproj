@@ -20,7 +20,7 @@
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Exceptions/JobNotFoundException.cs" Link="Exceptions/JobNotFoundException.cs" />
     <Compile Include="../ViciOne.ServiceBus.Abstractions/Exceptions/JobServiceStoppingException.cs" Link="Exceptions/JobServiceStoppingException.cs" />
     <Compile Include="../ViciOne.ServiceBus/JobService/**/*.cs" Link="JobService/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus/JobServiceEventExtensions.cs" Link="Advanced/JobServiceEventExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Advanced/JobServiceEventExtensions.cs" Link="Advanced/JobServiceEventExtensions.cs" />
     <Compile Include="../ViciOne.ServiceBus/Middleware/JobConsumerMessageFilter.cs" Link="Middleware/JobConsumerMessageFilter.cs" />
     <Compile Include="../ViciOne.ServiceBus/Serialization/JobPropertyCollection.cs" Link="Serialization/JobPropertyCollection.cs" />
     <Compile Include="../ViciOne.ServiceBus/Configuration/DependencyInjection/IJobSagaRegistrationConfigurator.cs" Link="Configuration/DependencyInjection/IJobSagaRegistrationConfigurator.cs" />

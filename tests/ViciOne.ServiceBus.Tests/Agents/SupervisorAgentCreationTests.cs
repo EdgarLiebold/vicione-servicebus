@@ -8,6 +8,39 @@ namespace ViciOne.ServiceBus.Tests.Agents;
 public sealed class SupervisorAgentCreationTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "supervisor-extension-boundaries")]
+    public async Task PublicExtensions_RejectNullSupervisorsHandlesContextsAndFactoriesAsync()
+    {
+        var supervisor = new TestSupervisor();
+        IAsyncPipeContextAgent<ChildContext> asyncContext = supervisor.AddAsyncContext<ChildContext>();
+        var child = new ChildContext();
+
+        try
+        {
+            Assert.Equal("supervisor", Assert.Throws<ArgumentNullException>(() =>
+                SupervisorExtensions.AddContext<ChildContext>(null!, child)).ParamName);
+            Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+                supervisor.AddContext((ChildContext)null!)).ParamName);
+            Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+                supervisor.AddContext((Task<ChildContext>)null!)).ParamName);
+            Assert.Equal("contextHandle", Assert.Throws<ArgumentNullException>(() =>
+                supervisor.AddActiveContext(null!, child)).ParamName);
+            Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
+                supervisor.AddActiveContext(asyncContext, (ChildContext)null!)).ParamName);
+            Assert.Equal("agentFactory", Assert.Throws<ArgumentNullException>(() =>
+                supervisor.StartAgent(asyncContext, null!, CancellationToken.None)).ParamName);
+
+            ArgumentNullException createException = await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                supervisor.CreateAgentAsync(asyncContext, null!, CancellationToken.None));
+            Assert.Equal("agentFactory", createException.ParamName);
+        }
+        finally
+        {
+            await supervisor.StopAsync(CancellationToken.None);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "start-bridge-publishes-factory-fault")]
     public async Task StartAgent_TransfersTheExactFactoryFailureToTheOwnedAsyncContextAsync()
     {
