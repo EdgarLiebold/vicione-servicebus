@@ -272,7 +272,7 @@ public sealed class KillSwitchTests
         (KillSwitchTestDriver driver, _) = CreateDriver(activationThreshold: 1, tripThresholdRatio: 0);
         await driver.StopEndpointAsync();
 
-        await driver.RearmAsync();
+        driver.Rearm();
         await driver.ObserveFailureAsync(new InvalidOperationException("trip after external restart"));
         await WaitForPauseAsync(driver, 1);
 
@@ -283,11 +283,11 @@ public sealed class KillSwitchTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-KILL-SWITCH-RECOVERY", "endpoint-identity-boundary")]
-    public async Task OneSwitchInstance_RejectsASecondEndpointIdentityAsync()
+    public void OneSwitchInstance_RejectsASecondEndpointIdentity()
     {
         (KillSwitchTestDriver driver, ObservableTimeProvider time) = CreateDriver();
 
-        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(driver.AttachDifferentEndpointAsync);
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(driver.AttachDifferentEndpoint);
 
         Assert.Contains("cannot observe more than one", exception.Message, StringComparison.Ordinal);
         Assert.Equal(0, time.TimerCount);

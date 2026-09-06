@@ -7,10 +7,9 @@ public sealed class AmbientTransactionNotificationTestDriver
 {
     private readonly AmbientTransactionNotification _notification = new();
 
-    public Task EnqueueAsync(Func<CancellationToken, Task> action)
+    public void Enqueue(Func<CancellationToken, Task> action)
     {
         _notification.Add(action);
-        return Task.CompletedTask;
     }
 
     public void CompleteInDoubtThroughARealEnlistment()

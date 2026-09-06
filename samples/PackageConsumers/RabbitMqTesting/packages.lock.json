@@ -15,7 +15,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "/FKuvFIwa7wr+XAOOLw0/vx1lbYvCiVi+LeLKdw+vmE2yu7yIkAEs7y7v9Iz7luAIv4ymX5PnpOZbTVSVz+iDQ==",
+        "contentHash": "fmosDw8deWlG1b06Enz5YBGJpRvDCGFC1DgoUGNxJMJi/7UyFSg+dgBZekkTCypNrA+DLQxTFrqqYF1Ry4k5dw==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Diagnostics": "10.0.11",
@@ -164,7 +164,7 @@
       "ViciOne.ServiceBus": {
         "type": "Transitive",
         "resolved": "1.0.0",
-        "contentHash": "BFl3Odvn83D39KiJq/W5IZYSUFjRm+uIMVu4xuDREyVEwSSpafEa6WvT2BcoyxUdQkFG0R1N6abEbOTtrvbC/Q==",
+        "contentHash": "yJgMpDMRgcPWYXX2Ie1ICcpq0TgtCAqM4uYQVb1UFZsIM+nvK2t3xR4Fkpu9brKrv7lWo1PBUfb0FNyIf+Kh5A==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Diagnostics": "10.0.11",
@@ -178,12 +178,12 @@
       "ViciOne.ServiceBus.Abstractions": {
         "type": "Transitive",
         "resolved": "1.0.0",
-        "contentHash": "3QosI8bblEXgSFmCWbw6e2WpfChvPOd6GZx5PcSk4dfzXua/Yopd49WzFRxzzpqCgbfrQk63EVZtfXqx87YO4Q=="
+        "contentHash": "qiLwdufRCYC2qmcQP1cex/0WYxfsEirJEUvZkY2j3JaPdbk4yt/DkAEjHsR+awXf0KAVcjsaFUSY3fN4EUVZ5w=="
       },
       "ViciOne.ServiceBus.Courier": {
         "type": "Transitive",
         "resolved": "1.0.0",
-        "contentHash": "NnKGbaGE5xIiiLjXRIJ/B8THrHkVvNUlbF9Gy6foTZ3vilekTQ/FE1V+g0f+UCQdS92pIXBBbTBcVXgrgp+E/A==",
+        "contentHash": "MY18ButChK0gMEOz4AyIgVnx4gT/YsgKuPQWQeEF4ty7pIFICTpMsNQSPE759UxYKaYVF2zXY9BcncfthXb8aw==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Diagnostics": "10.0.11",
@@ -197,7 +197,7 @@
       "ViciOne.ServiceBus.Futures": {
         "type": "Transitive",
         "resolved": "1.0.0",
-        "contentHash": "+yX9tiFNtalfbelg36suC9UhuN6xxr43Y0KjxmFgnHTxzXG/llgIMXm/2ZuGxNElQS4zNCS9Kw4fCugjQuQJYg==",
+        "contentHash": "epZe+Tnl7I2Pyoh1gTlKQt84RJgaFcvePKMAeUtt9luBm6dHkRTedxk7gZCrK/t1zkYINScUVHLmBt6Mz5qhOw==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Diagnostics": "10.0.11",
@@ -213,7 +213,7 @@
       "ViciOne.ServiceBus.Mediator": {
         "type": "Transitive",
         "resolved": "1.0.0",
-        "contentHash": "JfEpPFGO/mjdJ6pw+zYzX1+UQSBsq9opb6vVvPLFyWYIHXKvGL5rPaq8BpzSgrYVVj3JkZTk5U12drVuHtKUsA==",
+        "contentHash": "13UTbmP/iibCQgy5jSrbpNTUIPrz8HWSbopos4yF/6GyIyYpOY0uAL2sfFO17+mPolWxUgty5dIP5X5RC/JHOg==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Diagnostics": "10.0.11",
@@ -227,7 +227,7 @@
       "ViciOne.ServiceBus.RabbitMq": {
         "type": "Transitive",
         "resolved": "1.0.0",
-        "contentHash": "i/vTb997RpxNCgjgnj+LT2hFyy0xSKW5eCFQ5VWj4Nfv+wxmoDKppXsxl9QfhXWlFgKSoWB9X/j2JAIDY7mNbg==",
+        "contentHash": "ph/SgNMvh1v65KDTeq+gxwITS8kNaqkKL8i0MDq3guj6lRURwDLQa9vmI0TqGk5RJmnWxSIvO8FLxFFf9dSB9A==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Diagnostics": "10.0.11",
@@ -242,7 +242,7 @@
       "ViciOne.ServiceBus.Sagas": {
         "type": "Transitive",
         "resolved": "1.0.0",
-        "contentHash": "AEgZEAMAdmQYtzI6EnuVcoRtz183eULTuwLwkqkQ/knprGPV7qAmRMz7gHVDdJh9lgpHl8ybISVk7jE/qgDLxQ==",
+        "contentHash": "PUjK4Tmk46oGRkSmeZXAm3uFVBSXGcM5t3Pwn7HpWkDvvde9sD5g6R56dEcM9QkHW6Liy7t/Z1UDYuaPkN3a1w==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Diagnostics": "10.0.11",
@@ -256,7 +256,7 @@
       "ViciOne.ServiceBus.Testing": {
         "type": "Transitive",
         "resolved": "1.0.0",
-        "contentHash": "YXGD9djNM3PoMJ5ww9WxG4zbGtcLkxmBH1p1CfXy+0Zd3mDI727d8Ftsryx0y3SCCltkLB8ovRWwssoQfHBqUg==",
+        "contentHash": "c8ecUzuyKgBNZQnPv10Ycn8JzOTa+rMibx8jsES2peNarYVIaCU3Lp7EBANt7Mjqmu9rLgjnhnYANP42iOSVhw==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Diagnostics": "10.0.11",

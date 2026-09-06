@@ -1951,7 +1951,7 @@
    {
       "requirementId" : "REQ-VSB-KILL-SWITCH-RECOVERY",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "OneSwitchInstance_RejectsASecondEndpointIdentityAsync",
+      "testMethod" : "OneSwitchInstance_RejectsASecondEndpointIdentity",
       "testType" : "ViciOne.ServiceBus.Tests.Transports.Components.KillSwitch.KillSwitchTests",
       "variantKey" : "endpoint-identity-boundary"
    },
@@ -3008,7 +3008,7 @@
    {
       "requirementId" : "REQ-VSB-AMBIENT-TRANSACTION-BUS",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "InDoubt_DiscardsPendingActionsAndClosesTheEnlistmentAsync",
+      "testMethod" : "InDoubt_DiscardsPendingActionsAndClosesTheEnlistment",
       "testType" : "ViciOne.ServiceBus.Tests.Transactions.AmbientTransactionBusTests",
       "variantKey" : "in-doubt-discards-and-closes"
    },
@@ -4059,4 +4059,6 @@
   ,{ "requirementId": "REQ-VSB-COURIER-BUILDER-ISOLATION", "variantKey": "no-public-mutable-empty-sentinel", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Courier.RoutingSlipBuilderContractTests", "testMethod": "Builder_ExposesNoPublicMutableEmptyArgumentSentinel" }
   ,{ "requirementId": "REQ-VSB-COURIER-BUILDER-ISOLATION", "variantKey": "no-argument-activities-are-immutable", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Courier.RoutingSlipBuilderContractTests", "testMethod": "NoArgumentActivities_CannotContaminateAnotherBuilder" }
   ,{ "requirementId": "REQ-VSB-METADATA-IMMUTABILITY", "variantKey": "core-facade-preserves-read-only-contract", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Metadata.TypeMetadataCacheImmutabilityTests", "testMethod": "PublicFacade_PreservesTheReadOnlyStableMetadataContract" }
+  ,{ "requirementId": "REQ-VSB-REQUEST-FACTORY-FORWARDING", "variantKey": "typed-message-timeout-and-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.GenericRequestClientTests", "testMethod": "TypedCreate_ForwardsMessageTimeoutAndCancellationTokenInContractOrder" }
+  ,{ "requirementId": "REQ-VSB-REQUEST-FACTORY-FORWARDING", "variantKey": "initializer-values-timeout-and-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.GenericRequestClientTests", "testMethod": "InitializerCreate_ForwardsValuesTimeoutAndCancellationTokenInContractOrder" }
 ]

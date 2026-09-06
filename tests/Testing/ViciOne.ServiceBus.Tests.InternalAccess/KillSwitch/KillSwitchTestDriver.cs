@@ -80,16 +80,14 @@ public sealed class KillSwitchTestDriver
 
     public Task StopEndpointAsync() => _killSwitch.StoppingAsync(null!);
 
-    public Task RearmAsync()
+    public void Rearm()
     {
         _killSwitch.Attach(_endpoint);
-        return Task.CompletedTask;
     }
 
-    public Task AttachDifferentEndpointAsync()
+    public void AttachDifferentEndpoint()
     {
         _killSwitch.Attach(new FakeEndpoint(_endpoint.LogContext));
-        return Task.CompletedTask;
     }
 
     public void EnqueuePauseFailure(Exception exception) => _endpoint.EnqueuePauseFailure(exception);

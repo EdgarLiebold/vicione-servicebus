@@ -410,13 +410,13 @@ public class ViciOneServiceBusMediator :
     /// </summary>
     /// <typeparam name="T">The t type.</typeparam>
     /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The result of the operation.</returns>
-    public RequestHandle<T> CreateRequest<T>(T message, CancellationToken cancellationToken, RequestTimeout timeout)
+    public RequestHandle<T> CreateRequest<T>(T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
-        return _clientFactory.CreateRequest(message, cancellationToken, timeout);
+        return _clientFactory.CreateRequest(message, timeout, cancellationToken);
     }
 
     /// <summary>
@@ -425,13 +425,13 @@ public class ViciOneServiceBusMediator :
     /// <typeparam name="T">The t type.</typeparam>
     /// <param name="destinationAddress">The destination address value.</param>
     /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The result of the operation.</returns>
-    public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, T message, CancellationToken cancellationToken, RequestTimeout timeout)
+    public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
-        return _clientFactory.CreateRequest(destinationAddress, message, cancellationToken, timeout);
+        return _clientFactory.CreateRequest(destinationAddress, message, timeout, cancellationToken);
     }
 
     /// <summary>
@@ -440,13 +440,13 @@ public class ViciOneServiceBusMediator :
     /// <typeparam name="T">The t type.</typeparam>
     /// <param name="consumeContext">The consume context value.</param>
     /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The result of the operation.</returns>
-    public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, T message, CancellationToken cancellationToken, RequestTimeout timeout)
+    public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
-        return _clientFactory.CreateRequest(consumeContext, message, cancellationToken, timeout);
+        return _clientFactory.CreateRequest(consumeContext, message, timeout, cancellationToken);
     }
 
     /// <summary>
@@ -456,14 +456,13 @@ public class ViciOneServiceBusMediator :
     /// <param name="consumeContext">The consume context value.</param>
     /// <param name="destinationAddress">The destination address value.</param>
     /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The result of the operation.</returns>
-    public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, Uri destinationAddress, T message, CancellationToken cancellationToken,
-        RequestTimeout timeout)
+    public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, Uri destinationAddress, T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
-        return _clientFactory.CreateRequest(consumeContext, destinationAddress, message, cancellationToken, timeout);
+        return _clientFactory.CreateRequest(consumeContext, destinationAddress, message, timeout, cancellationToken);
     }
 
     /// <summary>
@@ -471,13 +470,13 @@ public class ViciOneServiceBusMediator :
     /// </summary>
     /// <typeparam name="T">The t type.</typeparam>
     /// <param name="values">The values value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The result of the operation.</returns>
-    public RequestHandle<T> CreateRequest<T>(object values, CancellationToken cancellationToken = default, RequestTimeout timeout = default)
+    public RequestHandle<T> CreateRequest<T>(object values, RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _clientFactory.CreateRequest<T>(values, cancellationToken, timeout);
+        return _clientFactory.CreateRequest<T>(values, timeout, cancellationToken);
     }
 
     /// <summary>
@@ -486,14 +485,13 @@ public class ViciOneServiceBusMediator :
     /// <typeparam name="T">The t type.</typeparam>
     /// <param name="destinationAddress">The destination address value.</param>
     /// <param name="values">The values value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The result of the operation.</returns>
-    public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, object values, CancellationToken cancellationToken = default,
-        RequestTimeout timeout = default)
+    public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, object values, RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _clientFactory.CreateRequest<T>(destinationAddress, values, cancellationToken, timeout);
+        return _clientFactory.CreateRequest<T>(destinationAddress, values, timeout, cancellationToken);
     }
 
     /// <summary>
@@ -502,14 +500,13 @@ public class ViciOneServiceBusMediator :
     /// <typeparam name="T">The t type.</typeparam>
     /// <param name="consumeContext">The consume context value.</param>
     /// <param name="values">The values value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The result of the operation.</returns>
-    public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, object values, CancellationToken cancellationToken = default,
-        RequestTimeout timeout = default)
+    public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, object values, RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _clientFactory.CreateRequest<T>(consumeContext, values, cancellationToken, timeout);
+        return _clientFactory.CreateRequest<T>(consumeContext, values, timeout, cancellationToken);
     }
 
     /// <summary>
@@ -519,15 +516,14 @@ public class ViciOneServiceBusMediator :
     /// <param name="consumeContext">The consume context value.</param>
     /// <param name="destinationAddress">The destination address value.</param>
     /// <param name="values">The values value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The result of the operation.</returns>
     public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, Uri destinationAddress, object values,
-        CancellationToken cancellationToken = default,
-        RequestTimeout timeout = default)
+        RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _clientFactory.CreateRequest<T>(consumeContext, destinationAddress, values, cancellationToken, timeout);
+        return _clientFactory.CreateRequest<T>(consumeContext, destinationAddress, values, timeout, cancellationToken);
     }
 
     /// <summary>

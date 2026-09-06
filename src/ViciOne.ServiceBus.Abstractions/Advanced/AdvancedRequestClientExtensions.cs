@@ -13,13 +13,13 @@ public static class AdvancedRequestClientExtensions
     /// <summary>Creates a request handle for a typed request.</summary>
     /// <param name="client">The client used by the operation.</param>
     /// <param name="request">The request used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The maximum time allowed for the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static RequestHandle<TRequest> Create<TRequest>(this IRequestClient<TRequest> client, TRequest request,
-        CancellationToken cancellationToken = default, RequestTimeout timeout = default)
-        where TRequest : class => RequireAdvanced(client).Create(request, cancellationToken, timeout);
+        RequestTimeout timeout = default, CancellationToken cancellationToken = default)
+        where TRequest : class => RequireAdvanced(client).Create(request, timeout, cancellationToken);
 
-    /// <summary>Gets one response using a legacy relative timeout.</summary>
+    /// <summary>Gets one response using a relative timeout.</summary>
     /// <param name="client">The client used by the operation.</param>
     /// <param name="request">The request used by the operation.</param>
     /// <param name="timeout">The maximum time allowed for the operation.</param>

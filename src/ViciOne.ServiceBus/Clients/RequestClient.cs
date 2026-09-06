@@ -81,8 +81,8 @@ public class RequestClient<TRequest> :
 
         return GetResponseInternalAsync<TResponse>(
             RequestAsync,
-            cancellationToken,
             timeout,
+            cancellationToken,
             configurator =>
             {
                 if (optionsSnapshot.TimeToLive is { } timeToLive)
@@ -97,10 +97,10 @@ public class RequestClient<TRequest> :
     /// Performs the create operation.
     /// </summary>
     /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The result of the operation.</returns>
-    public RequestHandle<TRequest> Create(TRequest message, CancellationToken cancellationToken, RequestTimeout timeout)
+    public RequestHandle<TRequest> Create(TRequest message, RequestTimeout timeout, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(message);
 
@@ -118,10 +118,10 @@ public class RequestClient<TRequest> :
     /// Performs the create operation.
     /// </summary>
     /// <param name="values">The values value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The result of the operation.</returns>
-    public RequestHandle<TRequest> Create(object values, CancellationToken cancellationToken = default, RequestTimeout timeout = default)
+    public RequestHandle<TRequest> Create(object values, RequestTimeout timeout = default, CancellationToken cancellationToken = default)
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
@@ -171,7 +171,7 @@ public class RequestClient<TRequest> :
             return message;
         }
 
-        return GetResponseInternalAsync<T>(RequestAsync, cancellationToken, timeout, callback);
+        return GetResponseInternalAsync<T>(RequestAsync, timeout, cancellationToken, callback);
     }
 
     /// <summary>
@@ -210,7 +210,7 @@ public class RequestClient<TRequest> :
             return await _requestSendEndpoint.SendAsync(requestId, values, pipe, token).ConfigureAwait(false);
         }
 
-        return GetResponseInternalAsync<T>(RequestAsync, cancellationToken, timeout, callback);
+        return GetResponseInternalAsync<T>(RequestAsync, timeout, cancellationToken, callback);
     }
 
     /// <summary>
@@ -254,7 +254,7 @@ public class RequestClient<TRequest> :
             return message;
         }
 
-        return GetResponseInternalAsync<T1, T2>(RequestAsync, cancellationToken, timeout, callback);
+        return GetResponseInternalAsync<T1, T2>(RequestAsync, timeout, cancellationToken, callback);
     }
 
     /// <summary>
@@ -297,7 +297,7 @@ public class RequestClient<TRequest> :
             return await _requestSendEndpoint.SendAsync(requestId, values, pipe, token).ConfigureAwait(false);
         }
 
-        return GetResponseInternalAsync<T1, T2>(RequestAsync, cancellationToken, timeout, callback);
+        return GetResponseInternalAsync<T1, T2>(RequestAsync, timeout, cancellationToken, callback);
     }
 
     /// <summary>
@@ -345,7 +345,7 @@ public class RequestClient<TRequest> :
             return message;
         }
 
-        return GetResponseInternalAsync<T1, T2, T3>(RequestAsync, cancellationToken, timeout, callback);
+        return GetResponseInternalAsync<T1, T2, T3>(RequestAsync, timeout, cancellationToken, callback);
     }
 
     /// <summary>
@@ -392,11 +392,11 @@ public class RequestClient<TRequest> :
             return await _requestSendEndpoint.SendAsync(requestId, values, pipe, token).ConfigureAwait(false);
         }
 
-        return GetResponseInternalAsync<T1, T2, T3>(RequestAsync, cancellationToken, timeout, callback);
+        return GetResponseInternalAsync<T1, T2, T3>(RequestAsync, timeout, cancellationToken, callback);
     }
 
     async Task<Response<T>> GetResponseInternalAsync<T>(ClientRequestHandle<TRequest>.SendRequestCallback request,
-        CancellationToken cancellationToken, RequestTimeout timeout, RequestPipeConfiguratorCallback<TRequest>? callback = null,
+        RequestTimeout timeout, CancellationToken cancellationToken, RequestPipeConfiguratorCallback<TRequest>? callback = null,
         Guid? requestId = null)
         where T : class
     {
@@ -412,8 +412,7 @@ public class RequestClient<TRequest> :
         return await handle.GetResponseAsync<T>(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    async Task<Response<T1, T2>> GetResponseInternalAsync<T1, T2>(ClientRequestHandle<TRequest>.SendRequestCallback request, CancellationToken cancellationToken,
-        RequestTimeout timeout, RequestPipeConfiguratorCallback<TRequest>? callback = null)
+    async Task<Response<T1, T2>> GetResponseInternalAsync<T1, T2>(ClientRequestHandle<TRequest>.SendRequestCallback request, RequestTimeout timeout, CancellationToken cancellationToken, RequestPipeConfiguratorCallback<TRequest>? callback = null)
         where T1 : class
         where T2 : class
     {
@@ -431,8 +430,8 @@ public class RequestClient<TRequest> :
         return new Response<T1, T2>(result1, result2);
     }
 
-    async Task<Response<T1, T2, T3>> GetResponseInternalAsync<T1, T2, T3>(ClientRequestHandle<TRequest>.SendRequestCallback request, CancellationToken
-        cancellationToken, RequestTimeout timeout, RequestPipeConfiguratorCallback<TRequest>? callback = null)
+    async Task<Response<T1, T2, T3>> GetResponseInternalAsync<T1, T2, T3>(ClientRequestHandle<TRequest>.SendRequestCallback request,
+        RequestTimeout timeout, CancellationToken cancellationToken, RequestPipeConfiguratorCallback<TRequest>? callback = null)
         where T1 : class
         where T2 : class
         where T3 : class

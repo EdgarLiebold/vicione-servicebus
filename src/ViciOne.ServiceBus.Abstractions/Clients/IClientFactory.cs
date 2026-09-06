@@ -17,11 +17,11 @@ public interface IClientFactory
     /// Create a request, using the message specified. If a destinationAddress for the message cannot be found, the message will be published.
     /// </summary>
     /// <param name="message"></param>
-    /// <param name="cancellationToken"></param>
     /// <param name="timeout"></param>
+    /// <param name="cancellationToken"></param>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    RequestHandle<T> CreateRequest<T>(T message, CancellationToken cancellationToken = default, RequestTimeout timeout = default)
+    RequestHandle<T> CreateRequest<T>(T message, RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -29,11 +29,11 @@ public interface IClientFactory
     /// </summary>
     /// <param name="destinationAddress">The destination service address</param>
     /// <param name="message"></param>
-    /// <param name="cancellationToken"></param>
     /// <param name="timeout"></param>
+    /// <param name="cancellationToken"></param>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    RequestHandle<T> CreateRequest<T>(Uri destinationAddress, T message, CancellationToken cancellationToken = default, RequestTimeout timeout = default)
+    RequestHandle<T> CreateRequest<T>(Uri destinationAddress, T message, RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -41,12 +41,11 @@ public interface IClientFactory
     /// </summary>
     /// <param name="consumeContext">The consumeContext currently being processed</param>
     /// <param name="message"></param>
-    /// <param name="cancellationToken"></param>
     /// <param name="timeout"></param>
+    /// <param name="cancellationToken"></param>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, T message, CancellationToken cancellationToken = default,
-        RequestTimeout timeout = default)
+    RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, T message, RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -55,23 +54,22 @@ public interface IClientFactory
     /// <param name="consumeContext">The consumeContext currently being processed</param>
     /// <param name="destinationAddress">The destination service address</param>
     /// <param name="message"></param>
-    /// <param name="cancellationToken"></param>
     /// <param name="timeout"></param>
+    /// <param name="cancellationToken"></param>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, Uri destinationAddress, T message, CancellationToken cancellationToken = default,
-        RequestTimeout timeout = default)
+    RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, Uri destinationAddress, T message, RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
     /// Create a request, using the message specified. If a destinationAddress for the message cannot be found, the message will be published.
     /// </summary>
     /// <param name="values">The values to initialize the message</param>
-    /// <param name="cancellationToken"></param>
     /// <param name="timeout"></param>
+    /// <param name="cancellationToken"></param>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    RequestHandle<T> CreateRequest<T>(object values, CancellationToken cancellationToken = default, RequestTimeout timeout = default)
+    RequestHandle<T> CreateRequest<T>(object values, RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -79,12 +77,11 @@ public interface IClientFactory
     /// </summary>
     /// <param name="destinationAddress">The destination service address</param>
     /// <param name="values">The values to initialize the message</param>
-    /// <param name="cancellationToken"></param>
     /// <param name="timeout"></param>
+    /// <param name="cancellationToken"></param>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    RequestHandle<T> CreateRequest<T>(Uri destinationAddress, object values, CancellationToken cancellationToken = default,
-        RequestTimeout timeout = default)
+    RequestHandle<T> CreateRequest<T>(Uri destinationAddress, object values, RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -92,12 +89,11 @@ public interface IClientFactory
     /// </summary>
     /// <param name="consumeContext">The consumeContext currently being processed</param>
     /// <param name="values">The values to initialize the message</param>
-    /// <param name="cancellationToken"></param>
     /// <param name="timeout"></param>
+    /// <param name="cancellationToken"></param>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, object values, CancellationToken cancellationToken = default,
-        RequestTimeout timeout = default)
+    RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, object values, RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -106,12 +102,11 @@ public interface IClientFactory
     /// <param name="consumeContext">The consumeContext currently being processed</param>
     /// <param name="destinationAddress">The destination service address</param>
     /// <param name="values">The values to initialize the message</param>
-    /// <param name="cancellationToken"></param>
     /// <param name="timeout"></param>
+    /// <param name="cancellationToken"></param>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, Uri destinationAddress, object values, CancellationToken cancellationToken = default,
-        RequestTimeout timeout = default)
+    RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, Uri destinationAddress, object values, RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>

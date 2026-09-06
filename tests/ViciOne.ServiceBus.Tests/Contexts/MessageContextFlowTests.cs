@@ -216,7 +216,7 @@ public sealed class MessageContextFlowTests
                 "unanswered");
             using RequestHandle<RequestMessage> request = client.Advanced().Create(
                 requestMessage,
-                cancellationToken);
+                cancellationToken: cancellationToken);
             var concreteRequest = Assert.IsType<ClientRequestHandle<RequestMessage>>(request);
             Task<Response<AcceptedResponse>> response = request.GetResponseAsync<AcceptedResponse>(cancellationToken: TestContext.Current.CancellationToken);
 

@@ -14,7 +14,7 @@ public sealed class ProviderFixtureRunnerTests
     [RequirementCoverage("REQ-TEST-203", "provider-runner-preserves-native-mtp-exit-code-and-cleans-fixture")]
     public async Task CommandMode_PreservesChildExitCodeAndCleansTheFixtureAsync(int childExitCode)
     {
-        await using RunnerFixture fixture = await RunnerFixture.CreateAsync();
+        await using RunnerFixture fixture = RunnerFixture.Create();
 
         ProcessResult result = await fixture.RunAsync(
             childExitCode,
@@ -34,7 +34,7 @@ public sealed class ProviderFixtureRunnerTests
     [RequirementCoverage("REQ-TEST-203", "provider-runner-refuses-non-loopback-publication-before-child")]
     public async Task CommandMode_RefusesANonLoopbackProviderEndpointBeforeRunningTheChildAsync()
     {
-        await using RunnerFixture fixture = await RunnerFixture.CreateAsync();
+        await using RunnerFixture fixture = RunnerFixture.Create();
 
         ProcessResult result = await fixture.RunAsync(
             0,
@@ -52,7 +52,7 @@ public sealed class ProviderFixtureRunnerTests
     [RequirementCoverage("REQ-TEST-203", "provider-runner-makes-cleanup-failure-terminal")]
     public async Task CommandMode_MakesCleanupFailureRedWhenTheChildPassedAsync()
     {
-        await using RunnerFixture fixture = await RunnerFixture.CreateAsync();
+        await using RunnerFixture fixture = RunnerFixture.Create();
 
         ProcessResult result = await fixture.RunAsync(
             0,
@@ -68,7 +68,7 @@ public sealed class ProviderFixtureRunnerTests
     [RequirementCoverage("REQ-TEST-203", "provider-runner-refuses-output-root-outside-owned-area")]
     public async Task CommandMode_RefusesAHandedRunRootOutsideTheRepositoryOwnedAreaAsync()
     {
-        await using RunnerFixture fixture = await RunnerFixture.CreateAsync(runRootOutsideOwnedArea: true);
+        await using RunnerFixture fixture = RunnerFixture.Create(runRootOutsideOwnedArea: true);
 
         ProcessResult result = await fixture.RunAsync(
             0,
@@ -109,7 +109,7 @@ public sealed class ProviderFixtureRunnerTests
             ? File.ReadAllLines(_dockerLog)
             : [];
 
-        internal static Task<RunnerFixture> CreateAsync(bool runRootOutsideOwnedArea = false)
+        internal static RunnerFixture Create(bool runRootOutsideOwnedArea = false)
         {
             if (OperatingSystem.IsWindows())
             {
@@ -140,12 +140,12 @@ public sealed class ProviderFixtureRunnerTests
                 docker,
                 UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
 
-            return Task.FromResult(new RunnerFixture(
+            return new RunnerFixture(
                 temporaryDirectory,
                 runRoot,
                 token,
                 Path.Combine(temporaryDirectory, "docker-calls.log"),
-                Path.Combine(temporaryDirectory, "down-state")));
+                Path.Combine(temporaryDirectory, "down-state"));
         }
 
         internal async Task<ProcessResult> RunAsync(

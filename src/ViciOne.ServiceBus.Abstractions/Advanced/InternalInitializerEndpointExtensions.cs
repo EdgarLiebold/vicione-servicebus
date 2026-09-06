@@ -6,8 +6,8 @@ namespace ViciOne.ServiceBus.Advanced.Initializers;
 internal static class InternalInitializerEndpointExtensions
 {
     internal static RequestHandle<TRequest> Create<TRequest>(this IRequestClient<TRequest> client, object values,
-        CancellationToken cancellationToken = default, RequestTimeout timeout = default)
-        where TRequest : class => AdvancedRequestClientExtensions.RequireAdvanced(client).Create(values, cancellationToken, timeout);
+        RequestTimeout timeout = default, CancellationToken cancellationToken = default)
+        where TRequest : class => AdvancedRequestClientExtensions.RequireAdvanced(client).Create(values, timeout, cancellationToken);
 
     internal static Task SendAsync<T>(this ISendEndpoint endpoint, object values,
         CancellationToken cancellationToken = default)

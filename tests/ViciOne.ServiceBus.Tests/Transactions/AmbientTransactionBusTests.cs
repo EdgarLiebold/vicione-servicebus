@@ -312,11 +312,11 @@ public sealed class AmbientTransactionBusTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AMBIENT-TRANSACTION-BUS", "in-doubt-discards-and-closes")]
-    public async Task InDoubt_DiscardsPendingActionsAndClosesTheEnlistmentAsync()
+    public void InDoubt_DiscardsPendingActionsAndClosesTheEnlistment()
     {
         var driver = new AmbientTransactionNotificationTestDriver();
         var dispatchCount = 0;
-        await driver.EnqueueAsync(_ =>
+        driver.Enqueue(_ =>
         {
             Interlocked.Increment(ref dispatchCount);
             return Task.CompletedTask;
@@ -324,8 +324,8 @@ public sealed class AmbientTransactionBusTests
 
         driver.CompleteInDoubtThroughARealEnlistment();
 
-        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            driver.EnqueueAsync(_ =>
+        InvalidOperationException actual = Assert.Throws<InvalidOperationException>(() =>
+            driver.Enqueue(_ =>
             {
                 Interlocked.Increment(ref dispatchCount);
                 return Task.CompletedTask;

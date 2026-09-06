@@ -28,7 +28,7 @@ public static class RequestExtensions
     {
         using RequestHandle<TRequest> requestHandle = bus
             .CreateRequestClient<TRequest>(destinationAddress, timeout)
-            .Create(message, cancellationToken);
+            .Create(message, cancellationToken: cancellationToken);
 
         if (callback != null)
             requestHandle.UseExecute(callback);
@@ -55,7 +55,7 @@ public static class RequestExtensions
     {
         using RequestHandle<TRequest> requestHandle = bus
             .CreateRequestClient<TRequest>(destinationAddress, timeout)
-            .Create(values, cancellationToken);
+            .Create(values, cancellationToken: cancellationToken);
 
         if (callback != null)
             requestHandle.UseExecute(callback);
@@ -81,7 +81,7 @@ public static class RequestExtensions
     {
         using RequestHandle<TRequest> requestHandle = bus
             .CreateRequestClient<TRequest>(timeout)
-            .Create(message, cancellationToken);
+            .Create(message, cancellationToken: cancellationToken);
 
         if (callback != null)
             requestHandle.UseExecute(callback);
@@ -107,7 +107,7 @@ public static class RequestExtensions
     {
         using RequestHandle<TRequest> requestHandle = bus
             .CreateRequestClient<TRequest>(timeout)
-            .Create(values, cancellationToken);
+            .Create(values, cancellationToken: cancellationToken);
 
         if (callback != null)
             requestHandle.UseExecute(callback);
@@ -136,7 +136,7 @@ public static class RequestExtensions
     {
         using RequestHandle<TRequest> requestHandle = consumeContext
             .CreateRequestClient<TRequest>(bus, destinationAddress, timeout)
-            .Create(message, cancellationToken);
+            .Create(message, cancellationToken: cancellationToken);
 
         if (callback != null)
             requestHandle.UseExecute(callback);
@@ -165,7 +165,7 @@ public static class RequestExtensions
     {
         using RequestHandle<TRequest> requestHandle = consumeContext
             .CreateRequestClient<TRequest>(bus, destinationAddress, timeout)
-            .Create(values, cancellationToken);
+            .Create(values, cancellationToken: cancellationToken);
 
         if (callback != null)
             requestHandle.UseExecute(callback);
@@ -192,7 +192,7 @@ public static class RequestExtensions
     {
         using RequestHandle<TRequest> requestHandle = consumeContext
             .CreateRequestClient<TRequest>(bus, timeout)
-            .Create(message, cancellationToken);
+            .Create(message, cancellationToken: cancellationToken);
 
         if (callback != null)
             requestHandle.UseExecute(callback);
@@ -219,7 +219,7 @@ public static class RequestExtensions
     {
         using RequestHandle<TRequest> requestHandle = consumeContext
             .CreateRequestClient<TRequest>(bus, timeout)
-            .Create(values, cancellationToken);
+            .Create(values, cancellationToken: cancellationToken);
 
         if (callback != null)
             requestHandle.UseExecute(callback);

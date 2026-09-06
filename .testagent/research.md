@@ -94,3 +94,19 @@ The greenfield reference model is a small application surface, explicit capabili
 The iteration uses deterministic cancellation sources and virtual time. It distinguishes caller
 cancellation from a genuine timeout and from the job-owned cancellation that represents normal job
 shutdown.
+
+## Confirmed iteration-12 defects
+
+1. Two synchronous SignalR group-membership methods carry an `Async` marker even though they return
+   `void`; four synchronous test infrastructure helpers carry the same misleading marker.
+2. Request-handle factory contracts place `CancellationToken` before `RequestTimeout` across the
+   abstractions, client implementations, dependency-injection adapters, and mediator. This conflicts
+   with the standard .NET cancellation shape and makes positional calls inconsistent.
+3. The existing cancellation architecture check verifies only that a token identifier appears in a
+   public method body. It does not enforce the API parameter shape, and asynchronous naming has no
+   executable repository-wide contract.
+
+The bidirectional gate inspects every evaluated product and test source method, including local
+functions. An `Async` name marker must correspond to `async`, `Task`, `ValueTask`,
+`IAsyncEnumerable`, or `IAsyncEnumerator`, and every such asynchronous contract must expose the
+marker. The public product API separately requires `CancellationToken` to be its final parameter.

@@ -92,7 +92,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         {
             // Removes connection from all groups locally
             foreach (var groupName in groups.ToArray())
-                RemoveGroupAsyncCore(connection, groupName);
+                RemoveGroupCore(connection, groupName);
         }
 
         return Task.CompletedTask;
@@ -341,7 +341,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         if (connection != null)
         {
             // short circuit if connection is on this server
-            AddGroupAsyncCore(connection, groupName);
+            AddGroupCore(connection, groupName);
 
             return;
         }
@@ -358,7 +358,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
                 ServerName,
                 Action = GroupAction.Add
             },
-                cancellationToken);
+                cancellationToken: cancellationToken);
 
             Response<Ack<THub>> ack = await request.GetResponseAsync<Ack<THub>>(cancellationToken: cancellationToken);
             LogContext.Info?.Log($"Request Received for add GroupManagement<THub> from {ack.Message.ServerName}.");
@@ -389,7 +389,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         if (connection != null)
         {
             // short circuit if connection is on this server
-            RemoveGroupAsyncCore(connection, groupName);
+            RemoveGroupCore(connection, groupName);
 
             return;
         }
@@ -406,7 +406,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
                 ServerName,
                 Action = GroupAction.Remove
             },
-                cancellationToken);
+                cancellationToken: cancellationToken);
 
             Response<Ack<THub>> ack = await request.GetResponseAsync<Ack<THub>>(cancellationToken: cancellationToken);
             LogContext.Info?.Log($"Request Received for remove GroupManagement<THub> from {ack.Message.ServerName}.");
@@ -419,11 +419,11 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
     }
 
     /// <summary>
-    /// Adds group async core to the configuration.
+    /// Adds the connection to the named group in local connection state.
     /// </summary>
     /// <param name="connection">The connection value.</param>
     /// <param name="groupName">The group name value.</param>
-    public void AddGroupAsyncCore(HubConnectionContext connection, string groupName)
+    public void AddGroupCore(HubConnectionContext connection, string groupName)
     {
         var feature = connection.Features.Get<IViciOneServiceBusFeature>()
             ?? throw new InvalidOperationException("The ViciOne ServiceBus connection feature was not initialized.");
@@ -433,11 +433,11 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
     }
 
     /// <summary>
-    /// Performs the remove group async core operation.
+    /// Removes the connection from the named group in local connection state.
     /// </summary>
     /// <param name="connection">The connection value.</param>
     /// <param name="groupName">The group name value.</param>
-    public void RemoveGroupAsyncCore(HubConnectionContext connection, string groupName)
+    public void RemoveGroupCore(HubConnectionContext connection, string groupName)
     {
         Groups.RemoveSubscription(groupName, connection);
 

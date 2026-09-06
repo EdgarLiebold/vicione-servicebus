@@ -263,3 +263,27 @@ job-owned cancellation remains a successful shutdown condition.
 - Restore `CancellationToken.None` for either ActiveMQ deletion: the corresponding saturated-queue
   test must fail.
 - Restore the non-cancelable state-machine polling delay: its in-flight cancellation test must fail.
+
+## Iteration 12 outcome
+
+Make asynchronous intent mechanically unambiguous in both directions and normalize every public
+product cancellation signature to the standard final-parameter shape. Update all implementations,
+forwarders, call sites, documentation, and the intentionally versioned package API contract as one
+atomic change.
+
+## Iteration 12 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-API-ASYNC-NAMING` | every evaluated product and test method, including local functions | architecture tests | no async contract without `Async`; no `Async` marker without async contract |
+| `REQ-VSB-API-CANCELLATION-SHAPE` | every externally visible product method with a token | architecture tests | token is the final declared parameter |
+| existing request behavior requirements | reordered request factory signatures | core and abstraction tests | unchanged exact timeout, token, destination, context, and message forwarding |
+
+## Iteration 12 mutation obligations
+
+- Add `Async` to a synchronous helper or remove it from an asynchronous local function: the exact
+  bidirectional architecture branch must fail.
+- Move one public request-factory token before its timeout again: the cancellation-shape gate must
+  report the exact member and following parameter.
+- Swap or omit timeout/token forwarding at an implementation boundary: the existing request
+  metadata and dependency-injection forwarding tests must fail.

@@ -296,3 +296,38 @@ non-cancelable polling delay.
 - Fresh-package comparison gate: 18 journeys, 30 packages, 3 executable isolated consumers, and
   all 29 runtime package APIs passed against the unchanged 24,000-line contract.
 - Engineering warning-level format verification and Git whitespace validation: passed.
+
+## Iteration 12
+
+Iteration 12 makes asynchronous naming and public cancellation shape executable repository-wide
+contracts. The Roslyn gate scans evaluated product and native-test sources, including local
+functions, while preserving externally imposed interface names and explicit asynchronous delegate
+configuration. Two misleading synchronous SignalR `AsyncCore` methods and four completed-task test
+helpers now expose synchronous names and signatures.
+
+The complete request-handle factory family now follows the .NET final-token convention:
+`RequestTimeout` precedes `CancellationToken`. Interfaces, implementations, mediator and DI
+adapters, call sites, XML parameter order, package consumers, and the packed public API contract
+were updated together. Two argument-recording tests prove exact typed-message and initializer-value
+forwarding through the generic DI wrapper.
+
+### Red/green and mutation evidence
+
+- The cancellation scan separated forty-eight genuine request declarations from four intrinsic
+  extension-receiver or dual-token shapes and passed only after every genuine signature changed.
+- The bidirectional naming scan rejected both synchronous SignalR `AsyncCore` methods; the
+  adversarial inventory also removed four synchronous helpers that manufactured completed tasks.
+- Three isolated mutations were killed: a restored `AsyncCore` name, a token moved before timeout,
+  and a silently dropped timeout in the generic request wrapper.
+- Every mutation was restored before final validation.
+
+### Full validation
+
+- Release Engineering build with warnings as errors: passed, 0 warnings and 0 errors.
+- Complete Unit/Architecture profile: 3,830 passed, 0 failed, 0 skipped.
+- Fresh-package comparison gate: 18 journeys, 30 packages, 3 executable isolated consumers, and
+  all 29 runtime package APIs passed.
+- Packed public API contract: 24,000 lines, SHA-256
+  `36a9b02c2417bfe12abf7be4858236cc23604afffa0fadb7fe38972217f510ec`.
+- Requirement projections, architecture manifests, warning-level repository format verification,
+  and Git whitespace validation: passed.

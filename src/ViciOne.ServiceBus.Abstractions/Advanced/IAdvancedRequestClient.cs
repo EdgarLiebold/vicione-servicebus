@@ -9,17 +9,17 @@ public interface IAdvancedRequestClient<TRequest>
 {
     /// <summary>Creates a request handle for a typed request.</summary>
     /// <param name="message">The message processed by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The maximum time allowed for the operation.</param>
-    RequestHandle<TRequest> Create(TRequest message, CancellationToken cancellationToken = default, RequestTimeout timeout = default);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    RequestHandle<TRequest> Create(TRequest message, RequestTimeout timeout = default, CancellationToken cancellationToken = default);
 
     /// <summary>Creates a request handle from initializer values.</summary>
     /// <param name="values">The values used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The maximum time allowed for the operation.</param>
-    RequestHandle<TRequest> Create(object values, CancellationToken cancellationToken = default, RequestTimeout timeout = default);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    RequestHandle<TRequest> Create(object values, RequestTimeout timeout = default, CancellationToken cancellationToken = default);
 
-    /// <summary>Gets one response using a legacy relative timeout.</summary>
+    /// <summary>Gets one response using a relative timeout.</summary>
     /// <param name="message">The message processed by the operation.</param>
     /// <param name="timeout">The maximum time allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -36,7 +36,7 @@ public interface IAdvancedRequestClient<TRequest>
         RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where TResponse : class;
 
-    /// <summary>Gets one initialized response using a legacy relative timeout.</summary>
+    /// <summary>Gets one initialized response using a relative timeout.</summary>
     /// <param name="values">The values used by the operation.</param>
     /// <param name="timeout">The maximum time allowed for the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>

@@ -75,7 +75,7 @@ public sealed class MediatorRequestTests
         var message = new PendingRequest("no-response");
         using RequestHandle<PendingRequest> request = client.Create(
             message,
-            TestContext.Current.CancellationToken);
+            cancellationToken: TestContext.Current.CancellationToken);
         var concreteRequest = Assert.IsType<ViciOne.ServiceBus.Clients.ClientRequestHandle<PendingRequest>>(request);
         Task<Response<PendingResponse>> response = request.GetResponseAsync<PendingResponse>(cancellationToken: TestContext.Current.CancellationToken);
 
@@ -120,7 +120,7 @@ public sealed class MediatorRequestTests
         var message = new PendingRequest("di-time-provider");
         using RequestHandle<PendingRequest> request = client.Create(
             message,
-            TestContext.Current.CancellationToken);
+            cancellationToken: TestContext.Current.CancellationToken);
         Task<Response<PendingResponse>> response = request.GetResponseAsync<PendingResponse>(cancellationToken: TestContext.Current.CancellationToken);
 
         await timeProvider.WaitForTimerCountAsync(1).WaitAsync(
@@ -151,7 +151,7 @@ public sealed class MediatorRequestTests
         IRequestClient<PendingRequest> client = mediator.CreateRequestClient<PendingRequest>(OperationTimeout());
         using RequestHandle<PendingRequest> request = client.Create(
             new PendingRequest("missing-handler"),
-            TestContext.Current.CancellationToken);
+            cancellationToken: TestContext.Current.CancellationToken);
         Task<Response<PendingResponse>> response = request.GetResponseAsync<PendingResponse>(cancellationToken: TestContext.Current.CancellationToken);
 
         RequestException responseException =

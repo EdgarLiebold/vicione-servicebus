@@ -56,24 +56,24 @@ public class GenericRequestClient<TRequest> :
     /// Performs the create operation.
     /// </summary>
     /// <param name="message">The message value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The result of the operation.</returns>
-    public RequestHandle<TRequest> Create(TRequest message, CancellationToken cancellationToken, RequestTimeout timeout)
+    public RequestHandle<TRequest> Create(TRequest message, RequestTimeout timeout, CancellationToken cancellationToken)
     {
-        return _client.Advanced().Create(message, cancellationToken, timeout);
+        return _client.Advanced().Create(message, timeout, cancellationToken);
     }
 
     /// <summary>
     /// Performs the create operation.
     /// </summary>
     /// <param name="values">The values value.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The result of the operation.</returns>
-    public RequestHandle<TRequest> Create(object values, CancellationToken cancellationToken, RequestTimeout timeout)
+    public RequestHandle<TRequest> Create(object values, RequestTimeout timeout, CancellationToken cancellationToken)
     {
-        return _client.Advanced().Create(values, cancellationToken, timeout);
+        return _client.Advanced().Create(values, timeout, cancellationToken);
     }
 
     /// <summary>
