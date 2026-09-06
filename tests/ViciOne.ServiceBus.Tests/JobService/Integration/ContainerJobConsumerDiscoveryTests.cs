@@ -24,7 +24,7 @@ public sealed class ContainerJobConsumerDiscoveryTests
             {
                 configuration.SetTestTimeouts(timeout, timeout);
                 configuration.SetKebabCaseEndpointNameFormatter();
-                configuration.SetJobConsumerOptions();
+                configuration.AddJobService();
                 configuration.AddJobSagaStateMachines();
                 configuration.AddConsumersFromNamespaceContaining<ContainerJobDiscovery.DiscoveryMarker>();
                 configuration.AddRequestClient<ContainerJobDiscovery.CrunchNumbers>();

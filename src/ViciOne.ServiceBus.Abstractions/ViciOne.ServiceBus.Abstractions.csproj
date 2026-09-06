@@ -24,12 +24,6 @@
     <Compile Remove="Configuration/DependencyInjection/ISagaDefinition.cs" />
     <Compile Remove="Configuration/DependencyInjection/SagaDefinition.cs" />
     <Compile Remove="Mediator/**/*.cs" />
-    <Compile Remove="JobService/**/*.cs" />
-    <Compile Remove="Contexts/INotifyJobContext.cs" />
-    <Compile Remove="Contexts/JobContext.cs" />
-    <Compile Remove="Exceptions/JobAlreadyExistsException.cs" />
-    <Compile Remove="Exceptions/JobNotFoundException.cs" />
-    <Compile Remove="Exceptions/JobServiceStoppingException.cs" />
     <Compile Remove="Courier/**/*.cs" />
     <Compile Remove="Exceptions/RoutingSlip*.cs" />
     <Compile Remove="Configuration/Consumers/ICompensateActivityConfigurator.cs" />

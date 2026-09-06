@@ -18,7 +18,7 @@ public sealed class ConsumeJobContextCancellationTests
     [InlineData(JobOperation.NotifyCompleted)]
     [InlineData(JobOperation.NotifyProgress)]
     [InlineData(JobOperation.NotifyFaulted)]
-    [InlineData(JobOperation.SaveState)]
+    [InlineData(JobOperation.SaveCheckpoint)]
     [RequirementCoverage("REQ-VSB-JOB-CANCELLATION", "every-notification-forwards-the-operation-token")]
     public async Task NotificationOperation_ForwardsTheExactCancellationTokenAsync(JobOperation operation)
     {
@@ -37,7 +37,7 @@ public sealed class ConsumeJobContextCancellationTests
             JobOperation.NotifyCanceled => context.NotifyCanceledAsync(source.Token),
             JobOperation.NotifyStarted => context.NotifyStartedAsync(source.Token),
             JobOperation.NotifyCompleted => context.NotifyCompletedAsync(source.Token),
-            JobOperation.NotifyProgress => context.NotifyJobProgressAsync(
+            JobOperation.NotifyProgress => context.NotifyProgressAsync(
                 new SetJobProgressCommand
                 {
                     JobId = context.JobId,
@@ -48,7 +48,7 @@ public sealed class ConsumeJobContextCancellationTests
                 },
                 source.Token),
             JobOperation.NotifyFaulted => context.NotifyFaultedAsync(new InvalidOperationException("expected"), null, source.Token),
-            JobOperation.SaveState => context.SaveJobStateAsync<object>(null, source.Token),
+            JobOperation.SaveCheckpoint => context.SaveCheckpointAsync<object>(null, source.Token),
             _ => throw new ArgumentOutOfRangeException(nameof(operation), operation, null),
         });
 
@@ -60,7 +60,7 @@ public sealed class ConsumeJobContextCancellationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-CANCELLATION", "progress-enqueue-observes-the-operation-token")]
-    public async Task SetJobProgress_ObservesAnAlreadyCanceledOperationTokenAsync()
+    public async Task ReportProgress_ObservesAnAlreadyCanceledOperationTokenAsync()
     {
         var provider = new RecordingPublishEndpointProvider(new RecordingSendEndpoint());
         ConsumeContext<StartJob> consumeContext = CreateContext(provider);
@@ -75,7 +75,7 @@ public sealed class ConsumeJobContextCancellationTests
         source.Cancel();
 
         OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(
-            () => context.SetJobProgressAsync(42, 100, source.Token));
+            () => context.ReportProgressAsync(42, 100, source.Token));
 
         Assert.Equal(source.Token, exception.CancellationToken);
     }
@@ -106,10 +106,99 @@ public sealed class ConsumeJobContextCancellationTests
         Assert.True(context.CancellationToken.IsCancellationRequested);
     }
 
-    private static ConsumeContext<StartJob> CreateContext(IPublishEndpointProvider publishEndpointProvider, TimeProvider? timeProvider = null)
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-CANCELLATION", "job-handle-releases-ownership-at-cancellation-deadline")]
+    public async Task CancelJobHandle_ReleasesLocalOwnershipWhenExecutionIgnoresCancellationAsync()
+    {
+        var clock = new FakeTimeProvider();
+        var provider = new RecordingPublishEndpointProvider(new RecordingSendEndpoint());
+        ConsumeContext<StartJob> consumeContext = CreateContext(provider, clock);
+        await using var context = new ConsumeJobContext<TestJob>(
+            consumeContext,
+            new Uri("loopback://localhost/job-instance"),
+            new TestJob(),
+            new JobOptions<TestJob>());
+        var execution = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var handle = new ConsumerJobHandle<TestJob>(context, execution.Task, TimeSpan.FromMinutes(1));
+
+        Task cancellation = handle.CancelAsync("shutdown", TestContext.Current.CancellationToken);
+        Assert.False(cancellation.IsCompleted);
+
+        clock.Advance(TimeSpan.FromMinutes(1));
+
+        await cancellation;
+        await handle.Completion;
+        Assert.False(execution.Task.IsCompleted);
+        Assert.True(context.CancellationToken.IsCancellationRequested);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-METADATA", "missing-job-properties-produce-empty-collection")]
+    public async Task Constructor_AcceptsAStartCommandWithoutJobPropertiesAsync()
+    {
+        var provider = new RecordingPublishEndpointProvider(new RecordingSendEndpoint());
+        ConsumeContext<StartJob> consumeContext = CreateContext(
+            provider,
+            message: new StartJobMessage { JobProperties = null });
+
+        await using var context = new ConsumeJobContext<TestJob>(
+            consumeContext,
+            new Uri("loopback://localhost/job-instance"),
+            new TestJob(),
+            new JobOptions<TestJob>());
+
+        Assert.Empty(context.JobProperties);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-NOTIFICATIONS", "typed-start-event-includes-job-payload")]
+    public async Task NotifyStartedAsync_PublishesTheTypedJobPayloadAsync()
+    {
+        var endpoint = new RecordingSendEndpoint();
+        var provider = new RecordingPublishEndpointProvider(endpoint);
+        var job = new TestJob();
+        await using var context = new ConsumeJobContext<TestJob>(
+            CreateContext(provider),
+            new Uri("loopback://localhost/job-instance"),
+            job,
+            new JobOptions<TestJob>());
+
+        await context.NotifyStartedAsync(TestContext.Current.CancellationToken);
+
+        JobStarted<TestJob> started = Assert.IsAssignableFrom<JobStarted<TestJob>>(endpoint.Messages[^1]);
+        Assert.Same(job, started.Job);
+        Assert.Equal(context.JobId, started.JobId);
+        Assert.Equal(context.AttemptId, started.AttemptId);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-NOTIFICATIONS", "required-notification-values-are-rejected")]
+    public async Task NotificationMethods_RejectMissingRequiredValuesAsync()
+    {
+        var provider = new RecordingPublishEndpointProvider(new RecordingSendEndpoint());
+        await using var context = new ConsumeJobContext<TestJob>(
+            CreateContext(provider),
+            new Uri("loopback://localhost/job-instance"),
+            new TestJob(),
+            new JobOptions<TestJob>());
+
+        Assert.Equal(
+            "progress",
+            (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                context.NotifyProgressAsync(null!, TestContext.Current.CancellationToken))).ParamName);
+        Assert.Equal(
+            "exception",
+            (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                context.NotifyFaultedAsync(null!, null, TestContext.Current.CancellationToken))).ParamName);
+    }
+
+    private static ConsumeContext<StartJob> CreateContext(
+        IPublishEndpointProvider publishEndpointProvider,
+        TimeProvider? timeProvider = null,
+        StartJob? message = null)
     {
         TestConsumeContext<StartJob> context = DispatchProxy.Create<TestConsumeContext<StartJob>, ConsumeContextProxy>();
-        ((ConsumeContextProxy)(object)context).Configure(new StartJobMessage(), publishEndpointProvider, timeProvider);
+        ((ConsumeContextProxy)(object)context).Configure(message ?? new StartJobMessage(), publishEndpointProvider, timeProvider);
         return context;
     }
 
@@ -200,11 +289,13 @@ public sealed class ConsumeJobContextCancellationTests
     private sealed class RecordingSendEndpoint : ISendEndpoint
     {
         public List<CancellationToken> CancellationTokens { get; } = [];
+        public List<object> Messages { get; } = [];
 
         public Task SendAsync<T>(T message, CancellationToken cancellationToken = default)
             where T : class
         {
             CancellationTokens.Add(cancellationToken);
+            Messages.Add(message);
             return Task.CompletedTask;
         }
 
@@ -224,12 +315,12 @@ public sealed class ConsumeJobContextCancellationTests
         public Guid JobId { get; } = Guid.NewGuid();
         public Guid AttemptId { get; } = Guid.NewGuid();
         public int RetryAttempt => 0;
-        public Dictionary<string, object> Job { get; } = [];
+        public IReadOnlyDictionary<string, object> Job { get; } = new Dictionary<string, object>();
         public Guid JobTypeId { get; } = Guid.NewGuid();
         public long? LastProgressValue => null;
         public long? LastProgressLimit => null;
-        public Dictionary<string, object>? JobState => null;
-        public Dictionary<string, object>? JobProperties { get; } = [];
+        public IReadOnlyDictionary<string, object>? Checkpoint => null;
+        public IReadOnlyDictionary<string, object>? JobProperties { get; init; } = new Dictionary<string, object>();
     }
 
     private sealed record TestJob;
@@ -241,6 +332,6 @@ public sealed class ConsumeJobContextCancellationTests
         NotifyCompleted,
         NotifyProgress,
         NotifyFaulted,
-        SaveState,
+        SaveCheckpoint,
     }
 }

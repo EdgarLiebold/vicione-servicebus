@@ -20,7 +20,7 @@ public sealed class JobServiceLifecycleTests
 
         Assert.Empty(saga.ActiveJobs);
         Assert.Empty(saga.Instances);
-        Assert.Empty(saga.Properties);
+        Assert.Empty(saga.JobTypeProperties);
     }
 
     [Fact]
@@ -41,7 +41,7 @@ public sealed class JobServiceLifecycleTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         var stopFirstEndpoint = new ControlledPublishEndpoint();
-        PublicationGate stopped = stopFirstEndpoint.BlockNext(ConcurrentLimitKind.Stopped);
+        PublicationGate stopped = stopFirstEndpoint.BlockNext(JobConcurrencyUpdateKind.InstanceStopped);
         RuntimeJobService stopFirstService = NewService(TimeSpan.FromDays(1));
 
         Task stopping = stopFirstService.StopAsync(stopFirstEndpoint, TestContext.Current.CancellationToken);
@@ -49,14 +49,14 @@ public sealed class JobServiceLifecycleTests
         Task starting = stopFirstService.BusStartedAsync(stopFirstEndpoint, TestContext.Current.CancellationToken);
 
         Assert.False(starting.IsCompleted);
-        Assert.Equal(0, stopFirstEndpoint.Count(ConcurrentLimitKind.Configured));
+        Assert.Equal(0, stopFirstEndpoint.Count(JobConcurrencyUpdateKind.Configuration));
 
         stopped.Release();
         await Task.WhenAll(stopping, starting).WaitAsync(timeout, cancellationToken);
         await stopFirstService.StopAsync(stopFirstEndpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         var startFirstEndpoint = new ControlledPublishEndpoint();
-        PublicationGate configured = startFirstEndpoint.BlockNext(ConcurrentLimitKind.Configured);
+        PublicationGate configured = startFirstEndpoint.BlockNext(JobConcurrencyUpdateKind.Configuration);
         RuntimeJobService startFirstService = NewService(TimeSpan.FromDays(1));
 
         starting = startFirstService.BusStartedAsync(startFirstEndpoint, TestContext.Current.CancellationToken);
@@ -64,7 +64,7 @@ public sealed class JobServiceLifecycleTests
         stopping = startFirstService.StopAsync(startFirstEndpoint, TestContext.Current.CancellationToken);
 
         Assert.False(stopping.IsCompleted);
-        Assert.Equal(0, startFirstEndpoint.Count(ConcurrentLimitKind.Stopped));
+        Assert.Equal(0, startFirstEndpoint.Count(JobConcurrencyUpdateKind.InstanceStopped));
 
         configured.Release();
         await Task.WhenAll(starting, stopping).WaitAsync(timeout, cancellationToken);
@@ -77,7 +77,7 @@ public sealed class JobServiceLifecycleTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var endpoint = new ControlledPublishEndpoint();
-        PublicationGate heartbeat = endpoint.BlockNext(ConcurrentLimitKind.Heartbeat);
+        PublicationGate heartbeat = endpoint.BlockNext(JobConcurrencyUpdateKind.Heartbeat);
         RuntimeJobService service = NewService(TimeSpan.Zero);
 
         await service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
@@ -86,13 +86,13 @@ public sealed class JobServiceLifecycleTests
         Task stopping = service.StopAsync(endpoint, TestContext.Current.CancellationToken);
 
         Assert.False(stopping.IsCompleted);
-        Assert.Equal(0, endpoint.Count(ConcurrentLimitKind.Stopped));
+        Assert.Equal(0, endpoint.Count(JobConcurrencyUpdateKind.InstanceStopped));
 
         heartbeat.Release();
         await stopping.WaitAsync(timeout, cancellationToken);
 
-        Assert.Equal(1, endpoint.Count(ConcurrentLimitKind.Heartbeat));
-        Assert.Equal(1, endpoint.Count(ConcurrentLimitKind.Stopped));
+        Assert.Equal(1, endpoint.Count(JobConcurrencyUpdateKind.Heartbeat));
+        Assert.Equal(1, endpoint.Count(JobConcurrencyUpdateKind.InstanceStopped));
         Assert.Equal(0, endpoint.ActiveHeartbeatPublications);
         Assert.Equal(1, endpoint.MaximumConcurrentHeartbeatPublications);
     }
@@ -106,18 +106,18 @@ public sealed class JobServiceLifecycleTests
         var endpoint = new ControlledPublishEndpoint();
         RuntimeJobService service = NewService(TimeSpan.Zero);
 
-        PublicationGate first = endpoint.BlockNext(ConcurrentLimitKind.Heartbeat);
+        PublicationGate first = endpoint.BlockNext(JobConcurrencyUpdateKind.Heartbeat);
         await service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         await first.Entered.WaitAsync(timeout, cancellationToken);
 
-        PublicationGate second = endpoint.BlockNext(ConcurrentLimitKind.Heartbeat);
+        PublicationGate second = endpoint.BlockNext(JobConcurrencyUpdateKind.Heartbeat);
         Task secondStart = service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken);
         Assert.False(secondStart.IsCompleted);
         first.Release();
         await secondStart.WaitAsync(timeout, cancellationToken);
         await second.Entered.WaitAsync(timeout, cancellationToken);
 
-        PublicationGate third = endpoint.BlockNext(ConcurrentLimitKind.Heartbeat);
+        PublicationGate third = endpoint.BlockNext(JobConcurrencyUpdateKind.Heartbeat);
         Task thirdStart = service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken);
         Assert.False(thirdStart.IsCompleted);
         second.Release();
@@ -129,9 +129,9 @@ public sealed class JobServiceLifecycleTests
         third.Release();
         await stopping.WaitAsync(timeout, cancellationToken);
 
-        Assert.Equal(3, endpoint.Count(ConcurrentLimitKind.Configured));
-        Assert.Equal(3, endpoint.Count(ConcurrentLimitKind.Heartbeat));
-        Assert.Equal(1, endpoint.Count(ConcurrentLimitKind.Stopped));
+        Assert.Equal(3, endpoint.Count(JobConcurrencyUpdateKind.Configuration));
+        Assert.Equal(3, endpoint.Count(JobConcurrencyUpdateKind.Heartbeat));
+        Assert.Equal(1, endpoint.Count(JobConcurrencyUpdateKind.InstanceStopped));
         Assert.Equal(1, endpoint.MaximumConcurrentHeartbeatPublications);
         Assert.Equal(0, endpoint.ActiveHeartbeatPublications);
     }
@@ -145,23 +145,23 @@ public sealed class JobServiceLifecycleTests
         var endpoint = new ControlledPublishEndpoint();
         RuntimeJobService service = NewService(TimeSpan.Zero);
         var expected = new InvalidOperationException("configured announcement refused");
-        endpoint.FailNext(ConcurrentLimitKind.Configured, expected);
+        endpoint.FailNext(JobConcurrencyUpdateKind.Configuration, expected);
 
         Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(() => service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken));
 
         Assert.Same(expected, actual);
-        Assert.Equal(0, endpoint.Count(ConcurrentLimitKind.Heartbeat));
+        Assert.Equal(0, endpoint.Count(JobConcurrencyUpdateKind.Heartbeat));
 
-        PublicationGate heartbeat = endpoint.BlockNext(ConcurrentLimitKind.Heartbeat);
+        PublicationGate heartbeat = endpoint.BlockNext(JobConcurrencyUpdateKind.Heartbeat);
         await service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         await heartbeat.Entered.WaitAsync(timeout, cancellationToken);
         Task stopping = service.StopAsync(endpoint, TestContext.Current.CancellationToken);
         heartbeat.Release();
         await stopping.WaitAsync(timeout, cancellationToken);
 
-        Assert.Equal(2, endpoint.Count(ConcurrentLimitKind.Configured));
-        Assert.Equal(1, endpoint.Count(ConcurrentLimitKind.Heartbeat));
-        Assert.Equal(1, endpoint.Count(ConcurrentLimitKind.Stopped));
+        Assert.Equal(2, endpoint.Count(JobConcurrencyUpdateKind.Configuration));
+        Assert.Equal(1, endpoint.Count(JobConcurrencyUpdateKind.Heartbeat));
+        Assert.Equal(1, endpoint.Count(JobConcurrencyUpdateKind.InstanceStopped));
     }
 
     [Fact]
@@ -175,7 +175,7 @@ public sealed class JobServiceLifecycleTests
 
         await fixture.Service.StopAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         var failedStart = new InvalidOperationException("first start refused");
-        endpoint.FailNext(ConcurrentLimitKind.Configured, failedStart);
+        endpoint.FailNext(JobConcurrencyUpdateKind.Configuration, failedStart);
         Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(() => fixture.Service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken));
         Assert.Same(failedStart, actual);
         Assert.False(await fixture.SubmitAsync(cancellationToken));
@@ -183,7 +183,7 @@ public sealed class JobServiceLifecycleTests
         await fixture.Service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         Assert.True(await fixture.SubmitAsync(cancellationToken));
 
-        PublicationGate stopped = endpoint.BlockNext(ConcurrentLimitKind.Stopped);
+        PublicationGate stopped = endpoint.BlockNext(JobConcurrencyUpdateKind.InstanceStopped);
         Task stopping = fixture.Service.StopAsync(endpoint, TestContext.Current.CancellationToken);
         await stopped.Entered.WaitAsync(timeout, cancellationToken);
         Assert.False(await fixture.SubmitAsync(cancellationToken));
@@ -194,7 +194,7 @@ public sealed class JobServiceLifecycleTests
         await fixture.Service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         Assert.True(await fixture.SubmitAsync(cancellationToken));
         var failedRestart = new InvalidOperationException("restart refused");
-        endpoint.FailNext(ConcurrentLimitKind.Configured, failedRestart);
+        endpoint.FailNext(JobConcurrencyUpdateKind.Configuration, failedRestart);
         actual = await Assert.ThrowsAsync<InvalidOperationException>(() => fixture.Service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken));
         Assert.Same(failedRestart, actual);
         Assert.False(await fixture.SubmitAsync(cancellationToken));
@@ -228,7 +228,7 @@ public sealed class JobServiceLifecycleTests
     private static RuntimeJobService NewService(TimeSpan heartbeatInterval)
     {
         var service = new RuntimeJobService(new StubJobServiceSettings(heartbeatInterval));
-        service.RegisterJobType<LifecycleJob>(null!, new JobOptions<LifecycleJob>(), NewId.NextGuid(), "lifecycle-job");
+        service.RegisterJobType(new JobOptions<LifecycleJob>(), NewId.NextGuid(), "lifecycle-job");
         return service;
     }
 
@@ -238,12 +238,12 @@ public sealed class JobServiceLifecycleTests
 
     private sealed class StubJobServiceSettings(TimeSpan heartbeatInterval) : JobServiceSettings
     {
-        public IJobService JobService => throw new NotSupportedException("The lifecycle tests drive the service directly.");
+        public IJobService Runtime => throw new NotSupportedException("The lifecycle tests drive the service directly.");
         public TimeSpan HeartbeatInterval { get; } = heartbeatInterval;
         public TimeSpan RejectedJobDelay { get; } = TimeSpan.Zero;
         public TimeProvider TimeProvider => System.TimeProvider.System;
         public Uri InstanceAddress { get; } = new("loopback://localhost/job-instance");
-        public IReceiveEndpointConfigurator InstanceEndpointConfigurator => null!;
+        public IReceiveEndpointConfigurator InstanceEndpoint => null!;
 
         public IEnumerable<ValidationResult> Validate()
         {
@@ -410,8 +410,8 @@ public sealed class JobServiceLifecycleTests
 
     private sealed class ControlledPublishEndpoint : IPublishEndpoint
     {
-        private readonly Dictionary<ConcurrentLimitKind, Queue<PublicationControl>> _controls = [];
-        private readonly Dictionary<ConcurrentLimitKind, int> _counts = [];
+        private readonly Dictionary<JobConcurrencyUpdateKind, Queue<PublicationControl>> _controls = [];
+        private readonly Dictionary<JobConcurrencyUpdateKind, int> _counts = [];
         private readonly object _lock = new();
         private int _activeHeartbeatPublications;
         private int _maximumConcurrentHeartbeatPublications;
@@ -419,20 +419,20 @@ public sealed class JobServiceLifecycleTests
         public int ActiveHeartbeatPublications => Volatile.Read(ref _activeHeartbeatPublications);
         public int MaximumConcurrentHeartbeatPublications => Volatile.Read(ref _maximumConcurrentHeartbeatPublications);
 
-        public PublicationGate BlockNext(ConcurrentLimitKind kind)
+        public PublicationGate BlockNext(JobConcurrencyUpdateKind updateKind)
         {
             var gate = new PublicationGate();
-            Enqueue(kind, new PublicationControl(gate, null));
+            Enqueue(updateKind, new PublicationControl(gate, null));
             return gate;
         }
 
-        public void FailNext(ConcurrentLimitKind kind, Exception exception) =>
-            Enqueue(kind, new PublicationControl(null, exception));
+        public void FailNext(JobConcurrencyUpdateKind updateKind, Exception exception) =>
+            Enqueue(updateKind, new PublicationControl(null, exception));
 
-        public int Count(ConcurrentLimitKind kind)
+        public int Count(JobConcurrencyUpdateKind updateKind)
         {
             lock (_lock)
-                return _counts.GetValueOrDefault(kind);
+                return _counts.GetValueOrDefault(updateKind);
         }
 
         public async Task PublishAsync<T>(T message, CancellationToken cancellationToken = default)
@@ -444,8 +444,8 @@ public sealed class JobServiceLifecycleTests
             PublicationControl? control;
             lock (_lock)
             {
-                _counts[limit.Kind] = _counts.GetValueOrDefault(limit.Kind) + 1;
-                control = _controls.TryGetValue(limit.Kind, out Queue<PublicationControl>? queue) && queue.Count > 0
+                _counts[limit.UpdateKind] = _counts.GetValueOrDefault(limit.UpdateKind) + 1;
+                control = _controls.TryGetValue(limit.UpdateKind, out Queue<PublicationControl>? queue) && queue.Count > 0
                     ? queue.Dequeue()
                     : null;
             }
@@ -453,7 +453,7 @@ public sealed class JobServiceLifecycleTests
             if (control?.Failure is not null)
                 throw control.Failure;
 
-            bool heartbeat = limit.Kind == ConcurrentLimitKind.Heartbeat;
+            bool heartbeat = limit.UpdateKind == JobConcurrencyUpdateKind.Heartbeat;
             if (heartbeat)
             {
                 int active = Interlocked.Increment(ref _activeHeartbeatPublications);
@@ -518,12 +518,12 @@ public sealed class JobServiceLifecycleTests
         public ConnectHandle ConnectPublishObserver(IPublishObserver observer) =>
             throw new NotSupportedException("The test endpoint records publications directly.");
 
-        private void Enqueue(ConcurrentLimitKind kind, PublicationControl control)
+        private void Enqueue(JobConcurrencyUpdateKind updateKind, PublicationControl control)
         {
             lock (_lock)
             {
-                if (!_controls.TryGetValue(kind, out Queue<PublicationControl>? queue))
-                    _controls.Add(kind, queue = new Queue<PublicationControl>());
+                if (!_controls.TryGetValue(updateKind, out Queue<PublicationControl>? queue))
+                    _controls.Add(updateKind, queue = new Queue<PublicationControl>());
                 queue.Enqueue(control);
             }
         }

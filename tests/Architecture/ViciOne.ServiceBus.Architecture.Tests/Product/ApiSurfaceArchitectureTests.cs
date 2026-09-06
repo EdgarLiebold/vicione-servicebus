@@ -280,7 +280,7 @@ public sealed class ApiSurfaceArchitectureTests
         JsonElement[] optionEntries = root.GetProperty("options").EnumerateArray().ToArray();
         int declaredModelCount = root.GetProperty("reviewBaseline").GetProperty("currentConcreteOptionsModels").GetInt32();
         Assert.Equal(declaredModelCount, optionEntries.Length);
-        Assert.Equal(40, declaredModelCount);
+        Assert.Equal(41, declaredModelCount);
 
         Regex optionDeclaration = new(
             @"public\s+(?<modifiers>(?:(?:sealed|abstract)\s+)*)class\s+(?<name>[A-Za-z0-9_]+Options)(?<generic><[^>{\r\n]+>)?(?=\s|:)",

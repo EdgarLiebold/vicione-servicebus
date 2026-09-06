@@ -151,6 +151,12 @@ public sealed class CronExpressionParsingTests
 
     public static TheoryData<string, string> InvalidIncrementCases => new()
     {
+        { "0/0 0 8 ? * 2-6", "Increment must be greater than zero: 0" },
+        { "0 0/0 8 ? * 2-6", "Increment must be greater than zero: 0" },
+        { "0 0 8/0 ? * 2-6", "Increment must be greater than zero: 0" },
+        { "0 0 8 ? 1/0 2-6", "Increment must be greater than zero: 0" },
+        { "0 0 8 ? * 2/0", "Increment must be greater than zero: 0" },
+        { "0 0 8 ? * 2-6 2026/0", "Increment must be greater than zero: 0" },
         { "/120 0 8-18 ? * 2-6", "Increment > 59 : 120" },
         { "0/120 0 8-18 ? * 2-6", "Increment > 59 : 120" },
         { "/ 0 8-18 ? * 2-6", "'/' must be followed by an integer." },
@@ -187,6 +193,15 @@ public sealed class CronExpressionParsingTests
         Assert.Equal(expectedMessage, exception.Message);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CRON-VALIDATION", "extra-fields-rejected")]
+    public void FieldAfterOptionalYear_IsRejected()
+    {
+        var exception = Assert.Throws<FormatException>(() => new CronExpression("0 0 8 ? * MON 2026 unexpected"));
+
+        Assert.Equal("Cron expressions contain six required fields and at most one optional year field.", exception.Message);
+    }
+
     [Theory]
     [InlineData("* * * ? * *A&/5:", false)]
     [InlineData("* * * ? *14 ", false)]
@@ -194,6 +209,9 @@ public sealed class CronExpressionParsingTests
     [InlineData("* * ? */5 *", false)]
     [InlineData("* * ? */52 *", false)]
     [InlineData("0 0 15 ? * FRI*", false)]
+    [InlineData("0 0 15 5C * ?", false)]
+    [InlineData("0 0 15 ? * 5C", false)]
+    [InlineData("0 0 15 ? * 5X", false)]
     [InlineData("0 0/30 * * * ?", true)]
     [InlineData("0 0/1 * * * ?", true)]
     [InlineData("0 0/30 * * */2 ?", true)]

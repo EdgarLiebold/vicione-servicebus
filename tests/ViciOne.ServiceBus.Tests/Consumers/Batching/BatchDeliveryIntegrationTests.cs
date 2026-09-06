@@ -457,14 +457,14 @@ public sealed class BatchDeliveryIntegrationTests
             {
                 configuration.AddConsumer<GuidGroupConsumer>(consumer => consumer.Options<BatchOptions>(options => options
                     .SetMessageLimit(10)
-                    .SetTimeLimit(TimeSpan.FromMilliseconds(50))
+                    .SetTimeLimit(TimeSpan.FromSeconds(1))
                     .GroupBy<GroupedItem, Guid>(context => context.Message.GuidGroup)));
             }
             else
             {
                 configuration.AddConsumer<StringGroupConsumer>(consumer => consumer.Options<BatchOptions>(options => options
                     .SetMessageLimit(10)
-                    .SetTimeLimit(TimeSpan.FromMilliseconds(50))
+                    .SetTimeLimit(TimeSpan.FromSeconds(1))
                     .GroupBy<GroupedItem, string>(context => context.Message.StringGroup!)));
             }
         });

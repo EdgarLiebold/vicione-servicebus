@@ -11,10 +11,10 @@ public sealed class TechnicalRetryArchitectureTests
         {
             ["src/ViciOne.ServiceBus.Futures/DependencyInjection/DefaultFutureDefinition.cs"] = (1, 1),
             ["src/ViciOne.ServiceBus.Futures/Configuration/RequestConsumerFutureDefinition.cs"] = (1, 0),
-            ["src/ViciOne.ServiceBus/JobService/Configuration/JobAttemptSagaDefinition.cs"] = (1, 0),
-            ["src/ViciOne.ServiceBus/JobService/Configuration/JobSagaDefinition.cs"] = (1, 0),
-            ["src/ViciOne.ServiceBus/JobService/Configuration/JobServiceConfigurator.cs"] = (3, 0),
-            ["src/ViciOne.ServiceBus/JobService/Configuration/JobTypeSagaDefinition.cs"] = (1, 0),
+            ["src/ViciOne.ServiceBus.JobService/Configuration/JobAttemptSagaDefinition.cs"] = (1, 0),
+            ["src/ViciOne.ServiceBus.JobService/Configuration/JobSagaDefinition.cs"] = (1, 0),
+            ["src/ViciOne.ServiceBus.JobService/Configuration/JobServiceConfigurator.cs"] = (3, 0),
+            ["src/ViciOne.ServiceBus.JobService/Configuration/JobTypeSagaDefinition.cs"] = (1, 0),
             ["src/Scheduling/ViciOne.ServiceBus.Quartz/Configuration/ScheduleMessageConsumerDefinition.cs"] = (1, 0),
         };
 

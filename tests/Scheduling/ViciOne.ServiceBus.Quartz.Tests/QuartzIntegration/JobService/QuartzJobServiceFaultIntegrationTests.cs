@@ -23,7 +23,7 @@ public sealed class QuartzJobServiceFaultIntegrationTests
         await using QuartzTestBus fixture = await QuartzJobServiceTestBus.StartAsync<FaultingJob, PermanentlyFaultingJobConsumer>(
             timeout,
             consumer,
-            static options => options.SetJobTimeout(TimeSpan.FromMinutes(1)),
+            static options => options.JobTimeout = TimeSpan.FromMinutes(1),
             events.Configure);
         IRequestClient<SubmitJob<FaultingJob>> submitClient = fixture.Bus.CreateRequestClient<SubmitJob<FaultingJob>>();
 
@@ -47,7 +47,7 @@ public sealed class QuartzJobServiceFaultIntegrationTests
         Assert.Contains("permanent failure", faulted.Reason, StringComparison.Ordinal);
         Assert.Equal(1, events.FaultedCount);
         Assert.Single(events.StartedAttempts);
-        Assert.Equal("Faulted", state.CurrentState);
+        Assert.Equal(JobLifecycleStatus.Faulted, state.Status);
         Assert.NotNull(state.Faulted);
         Assert.Null(state.Completed);
         Assert.Contains("permanent failure", state.Reason, StringComparison.Ordinal);
@@ -65,9 +65,11 @@ public sealed class QuartzJobServiceFaultIntegrationTests
         await using QuartzTestBus fixture = await QuartzJobServiceTestBus.StartAsync<FaultingJob, TransientlyFaultingJobConsumer>(
             timeout,
             consumer,
-            options => options
-                .SetJobTimeout(TimeSpan.FromMinutes(1))
-                .SetRetry(retry => retry.Interval(1, TimeSpan.FromMinutes(1))),
+            options =>
+            {
+                options.JobTimeout = TimeSpan.FromMinutes(1);
+                options.ConfigureRetry(retry => retry.Interval(1, TimeSpan.FromMinutes(1)));
+            },
             events.Configure);
         var retrySchedule = new ScheduledMessageCapture(nameof(JobRetryDelayElapsed));
         using ConnectHandle scheduleObserver = fixture.Bus.ConnectConsumeObserver(retrySchedule);

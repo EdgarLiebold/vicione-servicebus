@@ -26,7 +26,7 @@ public static class AzureTableJobServiceConfigurationExtensions
         ArgumentNullException.ThrowIfNull(jobKeyFormatter);
         ArgumentNullException.ThrowIfNull(jobAttemptKeyFormatter);
 
-        configurator.Repository = AzureTableSagaRepository<JobTypeSaga>.Create(contextFactory, jobTypeKeyFormatter);
+        configurator.JobTypeRepository = AzureTableSagaRepository<JobTypeSaga>.Create(contextFactory, jobTypeKeyFormatter);
 
         configurator.JobRepository = AzureTableSagaRepository<JobSaga>.Create(contextFactory, jobKeyFormatter);
 

@@ -87,6 +87,23 @@ public sealed class HostedServiceLifecycleOwnershipTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-HOSTED-LIFECYCLE", "completed-stop-is-idempotent-with-canceled-caller")]
+    public async Task CompletedStop_RemainsIdempotentForAnAlreadyCanceledCallerAsync()
+    {
+        await using var driver = new HostedServiceLifecycleTestDriver();
+        Task start = driver.StartAsync(TestContext.Current.CancellationToken);
+        driver.CompleteStart();
+        await start;
+        await driver.StopAsync(CancellationToken.None);
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        await driver.StopAsync(cancellation.Token);
+
+        Assert.Equal(1, driver.StopCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-HOSTED-LIFECYCLE", "concurrent-stop-and-dispose-share-owner")]
     public async Task ConcurrentStopAndDispose_InvokeTheDepotOnceAsync()
     {

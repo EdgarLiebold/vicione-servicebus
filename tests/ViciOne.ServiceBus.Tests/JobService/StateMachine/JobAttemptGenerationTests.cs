@@ -13,8 +13,6 @@ namespace ViciOne.ServiceBus.Tests.JobService.StateMachine;
 public sealed class JobAttemptGenerationTests
 {
     [Theory]
-    [InlineData(JobSagaState.Submitted)]
-    [InlineData(JobSagaState.WaitingToStart)]
     [InlineData(JobSagaState.WaitingToRetry)]
     [InlineData(JobSagaState.WaitingForSlot)]
     [InlineData(JobSagaState.StartingJobAttempt)]
@@ -42,7 +40,7 @@ public sealed class JobAttemptGenerationTests
             LastProgressValue = 41,
             LastProgressLimit = 100,
             LastProgressSequenceNumber = 7,
-            JobState = new Dictionary<string, object> { ["checkpoint"] = "retained" },
+            Checkpoint = new Dictionary<string, object> { ["checkpoint"] = "retained" },
             JobProperties = new Dictionary<string, object> { ["owner"] = "native" },
         };
         State expectedState = GetState(machine, sagaState);
@@ -80,11 +78,98 @@ public sealed class JobAttemptGenerationTests
             Timestamp = new DateTime(2026, 8, 15, 7, 0, 0, DateTimeKind.Utc),
             InstanceAddress = new Uri("loopback://localhost/current-instance"),
         };
-        await SetStateAsync(machine, saga, machine.Submitted);
+        await SetStateAsync(machine, saga, machine.WaitingToRetry);
 
         await Assert.ThrowsAsync<UnhandledEventException>(() =>
             RaiseAsync(machine, saga, machine.AttemptStarted, message));
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-PROGRESS", "newer-sequence-replaces-progress")]
+    public async Task NewerProgressSequence_ReplacesTheStoredProgressAndSequenceAsync()
+    {
+        var machine = new JobStateMachine();
+        var saga = CreateStartedSaga(lastProgressSequenceNumber: 7);
+        await SetStateAsync(machine, saga, machine.Started);
+
+        await RaiseAsync(machine, saga, machine.SetJobProgress, new SetJobProgressCommand
+        {
+            JobId = saga.CorrelationId,
+            AttemptId = saga.AttemptId,
+            SequenceNumber = 8,
+            Value = 80,
+            Limit = 100,
+        });
+
+        Assert.Equal(80, saga.LastProgressValue);
+        Assert.Equal(100, saga.LastProgressLimit);
+        Assert.Equal(8, saga.LastProgressSequenceNumber);
+    }
+
+    [Theory]
+    [InlineData(6)]
+    [InlineData(7)]
+    [RequirementCoverage("REQ-VSB-JOB-PROGRESS", "stale-sequence-preserves-progress")]
+    public async Task NonIncreasingProgressSequence_PreservesStoredProgressAsync(long sequenceNumber)
+    {
+        var machine = new JobStateMachine();
+        var saga = CreateStartedSaga(lastProgressSequenceNumber: 7);
+        await SetStateAsync(machine, saga, machine.Started);
+
+        await RaiseAsync(machine, saga, machine.SetJobProgress, new SetJobProgressCommand
+        {
+            JobId = saga.CorrelationId,
+            AttemptId = saga.AttemptId,
+            SequenceNumber = sequenceNumber,
+            Value = 1,
+            Limit = 2,
+        });
+
+        Assert.Equal(41, saga.LastProgressValue);
+        Assert.Equal(100, saga.LastProgressLimit);
+        Assert.Equal(7, saga.LastProgressSequenceNumber);
+    }
+
+    [Theory]
+    [InlineData(JobSagaState.WaitingToRetry, JobLifecycleStatus.WaitingToRetry)]
+    [InlineData(JobSagaState.WaitingForSlot, JobLifecycleStatus.WaitingForSlot)]
+    [InlineData(JobSagaState.StartingJobAttempt, JobLifecycleStatus.Starting)]
+    [InlineData(JobSagaState.Started, JobLifecycleStatus.Running)]
+    [InlineData(JobSagaState.Completed, JobLifecycleStatus.Completed)]
+    [InlineData(JobSagaState.Faulted, JobLifecycleStatus.Faulted)]
+    [InlineData(JobSagaState.Canceled, JobLifecycleStatus.Canceled)]
+    [InlineData(JobSagaState.AllocatingJobSlot, JobLifecycleStatus.AllocatingSlot)]
+    [InlineData(JobSagaState.CancellationPending, JobLifecycleStatus.CancellationPending)]
+    [RequirementCoverage("REQ-VSB-JOB-STATE", "internal-states-map-to-strongly-typed-lifecycle-status")]
+    public void LifecycleStatus_MapsEveryReachablePersistedState(JobSagaState state, JobLifecycleStatus expected)
+    {
+        var machine = new JobStateMachine();
+
+        Assert.Equal(expected, machine.GetLifecycleStatus(GetState(machine, state)));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-STATE", "initial-and-missing-state-mappings-are-explicit")]
+    public void LifecycleStatus_MapsInitialAndMissingStatesExplicitly()
+    {
+        var machine = new JobStateMachine();
+
+        Assert.Equal(JobLifecycleStatus.Submitted, machine.GetLifecycleStatus(machine.Initial));
+        Assert.Equal(JobLifecycleStatus.Unknown, machine.GetLifecycleStatus(null));
+    }
+
+    private static JobSaga CreateStartedSaga(long lastProgressSequenceNumber) =>
+        new()
+        {
+            CorrelationId = NewId.NextGuid(),
+            AttemptId = NewId.NextGuid(),
+            ServiceAddress = new Uri("loopback://localhost/job-service"),
+            Job = new Dictionary<string, object>(),
+            JobTypeId = NewId.NextGuid(),
+            LastProgressValue = 41,
+            LastProgressLimit = 100,
+            LastProgressSequenceNumber = lastProgressSequenceNumber,
+        };
 
     private static IEnumerable<(StaleAttemptEvent Kind, object Message)> CreateStaleEvents(JobSaga saga)
     {
@@ -180,8 +265,6 @@ public sealed class JobAttemptGenerationTests
     private static State GetState(JobStateMachine machine, JobSagaState state) =>
         state switch
         {
-            JobSagaState.Submitted => machine.Submitted,
-            JobSagaState.WaitingToStart => machine.WaitingToStart,
             JobSagaState.WaitingToRetry => machine.WaitingToRetry,
             JobSagaState.WaitingForSlot => machine.WaitingForSlot,
             JobSagaState.StartingJobAttempt => machine.StartingJobAttempt,
@@ -212,13 +295,11 @@ public sealed class JobAttemptGenerationTests
             saga.LastProgressValue,
             saga.LastProgressLimit,
             saga.LastProgressSequenceNumber,
-            saga.JobState,
+            saga.Checkpoint,
             saga.JobProperties);
 
     public enum JobSagaState
     {
-        Submitted,
-        WaitingToStart,
         WaitingToRetry,
         WaitingForSlot,
         StartingJobAttempt,
@@ -258,6 +339,6 @@ public sealed class JobAttemptGenerationTests
         long? LastProgressValue,
         long? LastProgressLimit,
         long? LastProgressSequenceNumber,
-        Dictionary<string, object>? JobState,
+        Dictionary<string, object>? Checkpoint,
         Dictionary<string, object> JobProperties);
 }

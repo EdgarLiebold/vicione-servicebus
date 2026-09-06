@@ -51,14 +51,14 @@ public sealed class SqlServerJobServiceTests
         await fixture.PublishedAsync<JobCanceled>(message => message.JobId == jobId);
         JobState canceled = await fixture.GetStateAsync(jobId);
 
-        Assert.Equal("Started", started.CurrentState);
+        Assert.Equal(JobLifecycleStatus.Running, started.Status);
         Assert.Equal(0, started.LastRetryAttempt);
         Assert.NotNull(started.Submitted);
         Assert.NotNull(started.Started);
         Assert.Null(started.Completed);
         Assert.Null(started.Faulted);
         Assert.Equal(jobId, attempt.JobId);
-        Assert.Equal("Canceled", canceled.CurrentState);
+        Assert.Equal(JobLifecycleStatus.Canceled, canceled.Status);
         Assert.Equal("status-canceled", canceled.Reason);
         Assert.NotNull(canceled.Faulted);
         Assert.Null(canceled.Completed);
@@ -100,7 +100,7 @@ public sealed class SqlServerJobServiceTests
         await using JobServiceFixture fixture = await JobServiceFixture.StartAsync(
             "job-waiting",
             consumer,
-            options => options.SetConcurrentJobLimit(1),
+            options => options.ConcurrentJobLimit = 1,
             options => options.SlotWaitTime = TimeSpan.FromMinutes(2));
         Guid runningJobId = NewId.NextGuid();
         Guid waitingJobId = NewId.NextGuid();
@@ -110,7 +110,7 @@ public sealed class SqlServerJobServiceTests
         await fixture.SubmitAsync(waitingJobId, new SqlServerJob("waiting"));
         JobSlotWaitElapsed waited = await fixture.SentAsync<JobSlotWaitElapsed>(message => message.JobId == waitingJobId);
         JobState waitingBeforeCancel = await fixture.GetStateAsync(waitingJobId);
-        Assert.Equal("WaitingForSlot", waitingBeforeCancel.CurrentState);
+        Assert.Equal(JobLifecycleStatus.WaitingForSlot, waitingBeforeCancel.Status);
         Assert.Null(waitingBeforeCancel.Started);
 
         await fixture.Harness.Bus.CancelJobAsync(waitingJobId, "waiting-canceled", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
@@ -121,7 +121,7 @@ public sealed class SqlServerJobServiceTests
         Assert.Equal(waitingJobId, waited.JobId);
         Assert.Equal(waitingJobId, waitingCanceled.JobId);
         Assert.Equal("waiting-canceled", waitingCanceled.Reason);
-        Assert.Equal("Canceled", waitingState.CurrentState);
+        Assert.Equal(JobLifecycleStatus.Canceled, waitingState.Status);
         Assert.Null(waitingState.Started);
 
         await fixture.Harness.Bus.CancelJobAsync(runningJobId, "fixture-cleanup", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
@@ -149,7 +149,7 @@ public sealed class SqlServerJobServiceTests
         Assert.NotEqual(Guid.Empty, submitted.JobTypeId);
         Assert.Equal(new JobExecutionSnapshot(jobId, started.AttemptId, 0, "complete"), execution);
         Assert.Equal(jobId, completed.JobId);
-        Assert.Equal("Completed", state.CurrentState);
+        Assert.Equal(JobLifecycleStatus.Completed, state.Status);
         Assert.NotNull(state.Completed);
         Assert.Null(state.Faulted);
         Assert.True(submitted.Timestamp <= started.Timestamp);
@@ -189,7 +189,7 @@ public sealed class SqlServerJobServiceTests
         JobState state = await fixture.GetStateAsync(missingJobId);
 
         Assert.Equal(missingJobId, state.JobId);
-        Assert.Equal("NotFound", state.CurrentState);
+        Assert.Equal(JobLifecycleStatus.NotFound, state.Status);
         Assert.Null(state.Submitted);
         Assert.Null(state.Started);
         Assert.Null(state.Completed);
@@ -305,14 +305,14 @@ public sealed class SqlServerJobServiceTests
                         options.FinalizeCompleted = false;
                         configureSaga?.Invoke(options);
                     })
-                        .SetPartitionedReceiveMode()
+                        .UsePartitionedReceiveMode()
                         .EntityFrameworkRepository(repository =>
                         {
                             repository.ExistingDbContext<JobServiceSagaDbContext>();
                             repository.UseSqlServer();
                         });
-                    configuration.SetJobConsumerOptions(options => options.HeartbeatInterval = TimeSpan.FromSeconds(10))
-                        .Endpoint(endpoint => endpoint.PrefetchCount = 100);
+                    configuration.AddJobService(options => options.HeartbeatInterval = TimeSpan.FromSeconds(10))
+                        .ConfigureEndpoint(endpoint => endpoint.PrefetchCount = 100);
                     configuration.UsingSqlServer((context, bus) =>
                     {
                         bus.UseSqlServer(database.ConnectionString, host => host.Schema = database.Schema);

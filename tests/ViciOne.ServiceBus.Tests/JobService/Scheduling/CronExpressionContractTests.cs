@@ -56,8 +56,6 @@ public sealed class CronExpressionContractTests
             nearestWeekday: False
             NthDayOfWeek: 0
             lastdayOfMonth: False
-            calendardayOfWeek: False
-            calendardayOfMonth: False
             years: *
 
             """,

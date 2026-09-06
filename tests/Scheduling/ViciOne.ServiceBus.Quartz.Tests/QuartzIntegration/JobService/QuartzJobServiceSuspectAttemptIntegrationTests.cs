@@ -40,7 +40,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
         Assert.Equal(2, fixture.StatusChecks.ObservedCount);
         Assert.Equal(fixture.JobId, faulted.JobId);
         Assert.Contains("status check timed out", faulted.Reason, StringComparison.OrdinalIgnoreCase);
-        Assert.Equal("Faulted", state.CurrentState);
+        Assert.Equal(JobLifecycleStatus.Faulted, state.Status);
         Assert.Equal(0, state.LastRetryAttempt);
         Assert.NotNull(state.Faulted);
         Assert.Null(state.Completed);
@@ -77,7 +77,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
         Assert.Equal(0, firstAttempt.RetryAttempt);
         Assert.Equal(1, retryAttempt.RetryAttempt);
         Assert.NotEqual(firstAttempt.AttemptId, retryAttempt.AttemptId);
-        Assert.Equal("Started", stateWhileRetryRuns.CurrentState);
+        Assert.Equal(JobLifecycleStatus.Running, stateWhileRetryRuns.Status);
         Assert.Equal(1, stateWhileRetryRuns.LastRetryAttempt);
         Assert.Null(stateWhileRetryRuns.Completed);
         Assert.Equal(0, fixture.Events.CompletedCount);
@@ -156,7 +156,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
             QuartzTestBus bus = await QuartzJobServiceTestBus.StartAsync<SuspectJob, SilentAttemptConsumer>(
                 timeout,
                 consumer,
-                static options => options.SetJobTimeout(TimeSpan.FromMinutes(1)),
+                static options => options.JobTimeout = TimeSpan.FromMinutes(1),
                 configurator =>
                 {
                     configurator.UseFilter(suppression);

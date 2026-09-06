@@ -20,12 +20,12 @@ public sealed class JobProgressBufferTests
         TimeSpan flushWindow = TimeSpan.FromMinutes(1);
         var timeProvider = new ObservableTimeProvider(StartTime);
         var notifications = new RecordingJobContext();
-        var settings = new ProgressBufferSettings
+        var options = new JobProgressBufferOptions
         {
             UpdateLimit = 2,
             TimeLimit = flushWindow,
         };
-        var buffer = new JobProgressBuffer(notifications, timeProvider, settings);
+        var buffer = new JobProgressBuffer(notifications, timeProvider, options);
         Guid jobId = NewId.NextGuid();
         Guid attemptId = NewId.NextGuid();
 
@@ -77,14 +77,60 @@ public sealed class JobProgressBufferTests
                 new JobProgressBuffer(notifications, null!)).ParamName);
     }
 
+    [Theory]
+    [InlineData(0, 1)]
+    [InlineData(1, 0)]
+    [RequirementCoverage("REQ-VSB-JOB-PROGRESS-TIME", "invalid-buffer-options-are-rejected")]
+    public void Constructor_RejectsNonPositiveBufferLimits(int updateLimit, int timeLimitTicks)
+    {
+        var options = new JobProgressBufferOptions
+        {
+            UpdateLimit = updateLimit,
+            TimeLimit = TimeSpan.FromTicks(timeLimitTicks),
+        };
+
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new JobProgressBuffer(new RecordingJobContext(), TimeProvider.System, options));
+
+        Assert.Equal("options", exception.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-PROGRESS-TIME", "publication-failure-propagates-from-flush")]
+    public async Task FlushAsync_PropagatesProgressPublicationFailure()
+    {
+        var expected = new InvalidOperationException("progress publication refused");
+        var notifications = new RecordingJobContext(expected);
+        var buffer = new JobProgressBuffer(notifications, TimeProvider.System, new JobProgressBufferOptions
+        {
+            UpdateLimit = 1,
+            TimeLimit = TimeSpan.FromDays(1),
+        });
+
+        await buffer.UpdateAsync(
+            new JobProgressBuffer.ProgressUpdate(NewId.NextGuid(), NewId.NextGuid(), 1, 10),
+            TestContext.Current.CancellationToken);
+
+        Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => buffer.FlushAsync(TestContext.Current.CancellationToken));
+
+        Assert.Same(expected, actual);
+    }
+
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
     private sealed class RecordingJobContext : INotifyJobContext
     {
+        private readonly Exception? _failure;
         private readonly TaskCompletionSource<SetJobProgress> _progress =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public RecordingJobContext(Exception? failure = null)
+        {
+            _failure = failure;
+        }
 
         public Task<SetJobProgress> Progress => _progress.Task;
 
@@ -92,9 +138,14 @@ public sealed class JobProgressBufferTests
         public Task NotifyStartedAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public Task NotifyCompletedAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public Task NotifyFaultedAsync(Exception exception, TimeSpan? delay = null, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
-        public Task NotifyJobProgressAsync(SetJobProgress progress, CancellationToken cancellationToken = default)
+        public Task NotifyProgressAsync(SetJobProgress progress, CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _progress.TrySetResult(progress);
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled(cancellationToken);
+            if (_failure is not null)
+                return Task.FromException(_failure);
+
+            _progress.TrySetResult(progress);
             return Task.CompletedTask;
         }
     }

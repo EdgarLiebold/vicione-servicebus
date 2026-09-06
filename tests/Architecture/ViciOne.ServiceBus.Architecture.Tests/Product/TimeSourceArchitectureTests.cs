@@ -39,20 +39,11 @@ public sealed class TimeSourceArchitectureTests
         string[] roots =
         [
             Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.Futures"),
-            Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "JobService"),
+            Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.JobService"),
         ];
-        string schedulingPolicy = Path.GetFullPath(Path.Combine(
-            RepositoryLayout.Root,
-            "src",
-            "ViciOne.ServiceBus",
-            "JobService",
-            "JobService",
-            "Scheduling",
-            "Defaults.cs"));
 
         string[] violations = roots
             .SelectMany(root => Directory.EnumerateFiles(root, "*.cs", SearchOption.AllDirectories))
-            .Where(path => !RepositoryLayout.PathComparer.Equals(Path.GetFullPath(path), schedulingPolicy))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => (line, index))
                 .Where(candidate => DirectProcessClock.IsMatch(candidate.line))

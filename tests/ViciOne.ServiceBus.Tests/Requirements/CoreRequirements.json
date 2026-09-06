@@ -19,6 +19,7 @@
   { "requirementId": "REQ-VSB-CRON-VALIDATION", "variantKey": "last-weekday-combination", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.CronExpressionParsingTests", "testMethod": "LastWeekdayToken_CannotBeCombinedAsAList" },
   { "requirementId": "REQ-VSB-CRON-PARSING", "variantKey": "wraparound-ranges", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.CronExpressionParsingTests", "testMethod": "WraparoundRange_ContainsExactlyTheExpectedValues" },
   { "requirementId": "REQ-VSB-CRON-VALIDATION", "variantKey": "increment-range-and-syntax", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.CronExpressionParsingTests", "testMethod": "InvalidIncrement_IsRejectedWithItsFieldSpecificReason" },
+  { "requirementId": "REQ-VSB-CRON-VALIDATION", "variantKey": "extra-fields-rejected", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.CronExpressionParsingTests", "testMethod": "FieldAfterOptionalYear_IsRejected" },
   { "requirementId": "REQ-VSB-CRON-VALIDATION", "variantKey": "general-syntax", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.CronExpressionParsingTests", "testMethod": "ValidationApi_RejectsGarbageAndAcceptsValidSteps" },
   { "requirementId": "REQ-VSB-CRON-PARSING", "variantKey": "extra-whitespace", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.CronExpressionParsingTests", "testMethod": "ExtraWhitespace_DoesNotChangeTheSchedule" },
   { "requirementId": "REQ-VSB-CRON-VALIDATION", "variantKey": "day-of-week-range", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.CronExpressionParsingTests", "testMethod": "DayOfWeekOutsideItsRange_IsRejectedWithTheExactReason" },
@@ -2727,6 +2728,13 @@
       "variantKey" : "required-collaborators"
    },
    {
+      "requirementId" : "REQ-VSB-JOB-PROGRESS-TIME",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FlushAsync_PropagatesProgressPublicationFailure",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobProgressBufferTests",
+      "variantKey" : "publication-failure-propagates-from-flush"
+   },
+   {
       "requirementId" : "REQ-VSB-BUS-OUTBOX-NOTIFICATION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "Delivered_WakesTheWaiterWithoutAdvancingTheConfiguredClockAsync",
@@ -3441,6 +3449,55 @@
       "variantKey" : "published-jobs-receive-distinct-nonempty-identities"
    },
    {
+      "requirementId" : "REQ-VSB-JOB-IDENTITY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DeterministicIdentity_MatchesTheSha256GoldenVector",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobIdentityTests",
+      "variantKey" : "sha256-golden-vector-is-platform-independent"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-IDENTITY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DeterministicIdentity_IsStableAndNameSensitive",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobIdentityTests",
+      "variantKey" : "same-name-is-stable-and-different-name-is-distinct"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-IDENTITY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "IdentityFactories_RejectMissingNames",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobIdentityTests",
+      "variantKey" : "required-identity-inputs-are-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-DISTRIBUTION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SelectInstanceAsync_SelectsTheLeastLoadedEligibleInstance",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobDistributionStrategyTests",
+      "variantKey" : "least-loaded-eligible-instance-is-selected"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-DISTRIBUTION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SelectInstanceAsync_PrefersTheLeastRecentlyUsedInstanceWhenLoadsMatch",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobDistributionStrategyTests",
+      "variantKey" : "least-recently-used-breaks-equal-load"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-DISTRIBUTION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SelectInstanceAsync_ReturnsNullWhenEveryInstanceIsAtItsLimit",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobDistributionStrategyTests",
+      "variantKey" : "fully-allocated-instances-are-ineligible"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-DISTRIBUTION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SelectInstanceAsync_RejectsMissingInputsAndCancellation",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobDistributionStrategyTests",
+      "variantKey" : "required-inputs-and-cancellation-are-honored"
+   },
+   {
       "requirementId" : "REQ-VSB-JOB-STATE",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "UnknownJobIdentity_ReturnsTheCompleteNotFoundStateAsync",
@@ -3495,13 +3552,6 @@
       "testMethod" : "OneShotJob_RunsAtTheProviderOwnedScheduledInstantAndThenCompletesAsync",
       "testType" : "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests",
       "variantKey" : "provider-timed-one-shot-execution"
-   },
-   {
-      "requirementId" : "REQ-VSB-RECURRING-JOB-SCHEDULE",
-      "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "Every_ProducesTheExactCronExpression",
-      "testType" : "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests",
-      "variantKey" : "every-produces-exact-cron-expression"
    },
    {
       "requirementId" : "REQ-VSB-SERVICE-INSTANCE-ENDPOINTS",
@@ -3899,7 +3949,7 @@
   ,{ "requirementId": "REQ-VSB-BATCH-CLOCK", "variantKey": "from-last-resets-fake-timer", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchTimeProviderTests", "testMethod": "FromLastBatch_RestartsItsTimerFromTheLatestMessageAsync" }
   ,{ "requirementId": "REQ-VSB-MESSAGE-DATA-TTL-CLOCK", "variantKey": "filesystem-expiration-path", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.MessageData.MessageDataRepositoryTests", "testMethod": "FileSystemExpirationPath_UsesTheInjectedClockAndExactTimeToLiveAsync" }
   ,{ "requirementId": "REQ-VSB-COURIER-BUILDER-CLOCK", "variantKey": "create-timestamp-from-injected-clock", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Courier.RoutingSlipBuilderContractTests", "testMethod": "Builder_UsesTheInjectedClockForTheExactCreateTimestamp" }
-  ,{ "requirementId": "REQ-VSB-JOB-CLOCK", "variantKey": "options-clock-owner-and-null-boundary", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.JobConsumerTimeProviderTests", "testMethod": "Options_DefaultInjectAndNullPathsHaveOneExplicitClockOwner" }
+  ,{ "requirementId": "REQ-VSB-JOB-CLOCK", "variantKey": "options-clock-owner", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.JobConsumerTimeProviderTests", "testMethod": "Options_DefaultAndAssignedPathsHaveOneExplicitClockOwner" }
   ,{ "requirementId": "REQ-VSB-TECHNICAL-FAILURE", "variantKey": "explicit-transient-and-terminal-taxonomy", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.RetryPolicies.DefaultTechnicalFailureClassifierTests", "testMethod": "BuiltInTaxonomy_ClassifiesEveryOwnedFailureWithoutUsingMessageText" }
   ,{ "requirementId": "REQ-VSB-TECHNICAL-FAILURE", "variantKey": "custom-inner-and-invalid-classification", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.RetryPolicies.DefaultTechnicalFailureClassifierTests", "testMethod": "CustomAndNestedClassification_PreservesOwnedValuesAndFailsClosedForInvalidValues" }
   ,{ "requirementId": "REQ-VSB-TECHNICAL-FAILURE", "variantKey": "aggregate-precedence-is-order-independent", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.RetryPolicies.DefaultTechnicalFailureClassifierTests", "testMethod": "AggregateClassification_IsOrderIndependentAndTerminalEvidenceAlwaysDominates" }
@@ -3945,9 +3995,9 @@
   ,{ "requirementId": "REQ-VSB-INITIALIZER-CONVENTIONS", "variantKey": "idempotent-bootstrap-and-freeze-on-first-read", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Initializers.InitializerConventionRegistryTests", "testMethod": "Registry_IsIdempotentDuringBootstrapAndImmutableAfterItsFirstSnapshot" }
   ,{ "requirementId": "REQ-VSB-MULTIBUS-OUTBOX", "variantKey": "stable-owner-and-endpoint-qualified-consumer-id", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.OutboxConsumerIdentityTests", "testMethod": "ConsumerIdentity_IsStableAndQualifiedByBusOwnerAndEndpoint" }
   ,{ "requirementId": "REQ-VSB-REQUEST-STATE-MACHINE", "variantKey": "missing-instance-policy-is-instance-owned", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.SagaStateMachine.RequestStateMachineOwnershipTests", "testMethod": "TwoMachines_ConfigureTheirOwnMissingInstancePoliciesWithoutCrossTalk" }
-  ,{ "requirementId": "REQ-VSB-TIME-ZONE-RESOLUTION", "variantKey": "caller-owned-resolvers-do-not-cross-talk", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.TimeZoneUtilTests", "testMethod": "SameUnknownIdentifier_CanBeResolvedDifferentlyByIndependentOwners" }
-  ,{ "requirementId": "REQ-VSB-TIME-ZONE-RESOLUTION", "variantKey": "system-zone-bypasses-custom-resolver", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.TimeZoneUtilTests", "testMethod": "SystemIdentifier_DoesNotInvokeTheOwnerResolver" }
-  ,{ "requirementId": "REQ-VSB-TIME-ZONE-RESOLUTION", "variantKey": "unresolved-zone-preserves-domain-failure", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.TimeZoneUtilTests", "testMethod": "UnknownIdentifierWithoutMatchingResolver_ThrowsTheDocumentedFailure" }
+  ,{ "requirementId": "REQ-VSB-TIME-ZONE-RESOLUTION", "variantKey": "caller-owned-resolvers-do-not-cross-talk", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.TimeZoneResolverTests", "testMethod": "SameUnknownIdentifier_CanBeResolvedDifferentlyByIndependentOwners" }
+  ,{ "requirementId": "REQ-VSB-TIME-ZONE-RESOLUTION", "variantKey": "system-zone-bypasses-custom-resolver", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.TimeZoneResolverTests", "testMethod": "SystemIdentifier_DoesNotInvokeTheOwnerResolver" }
+  ,{ "requirementId": "REQ-VSB-TIME-ZONE-RESOLUTION", "variantKey": "unresolved-zone-preserves-domain-failure", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.TimeZoneResolverTests", "testMethod": "UnknownIdentifierWithoutMatchingResolver_ThrowsTheDocumentedFailure" }
   ,{ "requirementId": "REQ-VSB-V5-CONTRACT-CATALOG", "variantKey": "explicit-and-attribute-bidirectional-lookup", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Contracts.MessageContractCatalogTests", "testMethod": "Build_ProducesAnImmutableBidirectionalCatalog" }
   ,{ "requirementId": "REQ-VSB-V5-CONTRACT-CATALOG", "variantKey": "idempotent-registration-and-conflict-rejection", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Contracts.MessageContractCatalogTests", "testMethod": "Registration_IsIdempotentOnlyForTheExactTypeIdentityPair" }
   ,{ "requirementId": "REQ-VSB-V5-CONTRACT-CATALOG", "variantKey": "invalid-contract-types-rejected", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Contracts.MessageContractCatalogTests", "testMethod": "Registration_RejectsValueOpenGenericAndUnattributedTypesBeforeMutation" }
@@ -4091,7 +4141,7 @@
   ,{ "requirementId": "REQ-VSB-ENDPOINT-REGISTRATION", "variantKey": "configure-endpoints-inclusion-is-owned-by-the-registration", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.EndpointRegistrationTests", "testMethod": "IncludeInConfigureEndpoints_UpdatesTheAuthoritativeRegistration" }
   ,{ "requirementId": "REQ-VSB-COMPOSITE-FILTER", "variantKey": "get-only-predicate-owners-and-complete-truth-table", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.Configuration.CompositeFilterTests", "testMethod": "Filter_ExposesGetOnlyPredicatesAndAppliesIncludesBeforeExcludes" }
   ,{ "requirementId": "REQ-VSB-JOB-CANCELLATION", "variantKey": "every-notification-forwards-the-operation-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.JobService.ConsumeJobContextCancellationTests", "testMethod": "NotificationOperation_ForwardsTheExactCancellationTokenAsync" }
-  ,{ "requirementId": "REQ-VSB-JOB-CANCELLATION", "variantKey": "progress-enqueue-observes-the-operation-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.JobService.ConsumeJobContextCancellationTests", "testMethod": "SetJobProgress_ObservesAnAlreadyCanceledOperationTokenAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-CANCELLATION", "variantKey": "progress-enqueue-observes-the-operation-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.JobService.ConsumeJobContextCancellationTests", "testMethod": "ReportProgress_ObservesAnAlreadyCanceledOperationTokenAsync" }
   ,{ "requirementId": "REQ-VSB-JOB-CANCELLATION", "variantKey": "job-handle-wait-observes-caller-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.JobService.ConsumeJobContextCancellationTests", "testMethod": "CancelJobHandle_ObservesCallerCancellationWhileWaitingForTheJobAsync" }
   ,{ "requirementId": "REQ-VSB-TOPOLOGY-NAME", "variantKey": "bounded-temporary-name-has-readable-prefix-and-65-bit-suffix", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Topology.TopologyEntityNameTests", "testMethod": "TemporaryQueueName_UsesTheCompleteLengthBudgetAndCollisionResistantSuffix" }
   ,{ "requirementId": "REQ-VSB-TOPOLOGY-NAME", "variantKey": "maximum-length-retains-readable-prefix", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Topology.TopologyEntityNameTests", "testMethod": "Construction_RejectsABudgetWithoutRoomForPrefixSeparatorAndHash" }
@@ -4121,6 +4171,7 @@
   ,{ "requirementId": "REQ-VSB-HOSTED-LIFECYCLE", "variantKey": "canceled-stop-can-be-retried", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests", "testMethod": "CanceledStop_RemainsRetryableAsync" }
   ,{ "requirementId": "REQ-VSB-HOSTED-LIFECYCLE", "variantKey": "concurrent-stop-has-one-depot-owner", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests", "testMethod": "ConcurrentStopCalls_InvokeTheDepotOnceAsync" }
   ,{ "requirementId": "REQ-VSB-HOSTED-LIFECYCLE", "variantKey": "stop-before-start-is-terminal-without-depot", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests", "testMethod": "StopBeforeStart_IsIdempotentAndRejectsLaterStartupAsync" }
+  ,{ "requirementId": "REQ-VSB-HOSTED-LIFECYCLE", "variantKey": "completed-stop-is-idempotent-with-canceled-caller", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests", "testMethod": "CompletedStop_RemainsIdempotentForAnAlreadyCanceledCallerAsync" }
   ,{ "requirementId": "REQ-VSB-HOSTED-LIFECYCLE", "variantKey": "concurrent-stop-and-dispose-share-owner", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests", "testMethod": "ConcurrentStopAndDispose_InvokeTheDepotOnceAsync" }
   ,{ "requirementId": "REQ-VSB-CONSUME-CONTEXT-ACTIVATION", "variantKey": "no-payload-preserves-explicit-arguments", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeContextActivatorExtensionsTests", "testMethod": "NoPayload_CreateInstancePreservesExplicitConstructorArguments" }
   ,{ "requirementId": "REQ-VSB-CONSUME-CONTEXT-ACTIVATION", "variantKey": "provider-resolves-and-constructs", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeContextActivatorExtensionsTests", "testMethod": "ProviderPayload_ResolvesExistingServiceAndCombinesServicesWithExplicitArguments" }
@@ -4180,4 +4231,74 @@
   ,{ "requirementId": "REQ-VSB-FUTURE-API", "variantKey": "greenfield-result-request-fault-method-names", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Futures.FutureConfigurationContractTests", "testMethod": "ConfigurationInterfaces_ExposeOnlyTheGreenfieldFactoryAndInitializerNames" }
   ,{ "requirementId": "REQ-VSB-FUTURE-DEFINITION", "variantKey": "positive-concurrency-limit", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Futures.FutureConfigurationContractTests", "testMethod": "Definition_RejectsNonPositiveConcurrencyLimits" }
   ,{ "requirementId": "REQ-VSB-FUTURE-DEFINITION", "variantKey": "nonempty-endpoint-name", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Futures.FutureConfigurationContractTests", "testMethod": "Definition_RejectsMissingEndpointNames" }
+  ,{ "requirementId": "REQ-VSB-JOB-SUBMISSION-API", "variantKey": "typed-publish-preserves-id-job-properties-and-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.JobServiceExtensionsTests", "testMethod": "SubmitJobAsync_TypedPublishPreservesTheCompleteCommandAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-SUBMISSION-API", "variantKey": "values-request-initializes-contract-and-preserves-id-properties-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.JobServiceExtensionsTests", "testMethod": "SubmitJobFromValuesAsync_RequestInitializesTheTypedContractAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-SUBMISSION-API", "variantKey": "generated-identities-are-nonempty-and-distinct", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.JobServiceExtensionsTests", "testMethod": "SubmitJobAsync_GeneratedIdentifiersAreNonEmptyAndDistinctAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-SUBMISSION-API", "variantKey": "null-job-and-values-boundaries", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.JobServiceExtensionsTests", "testMethod": "SubmissionApis_RejectNullJobsAndInitializerValuesAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-SUBMISSION-API", "variantKey": "empty-explicit-identities-are-rejected", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.JobServiceExtensionsTests", "testMethod": "SubmissionApis_RejectEmptyExplicitIdentifiersAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-COMMAND-API", "variantKey": "empty-identities-and-null-endpoints-are-rejected", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.JobServiceExtensionsTests", "testMethod": "LifecycleCommandApis_RejectInvalidRequiredArgumentsAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-COMMAND-API", "variantKey": "missing-cancellation-reason-uses-domain-default", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.JobServiceExtensionsTests", "testMethod": "CancelJobAsync_MissingReasonUsesTheDomainDefaultAsync" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-API", "variantKey": "request-cron-preserves-deterministic-id-job-and-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.RecurringJobExtensionsTests", "testMethod": "AddOrUpdateRecurringJobAsync_RequestCronPreservesTheCompleteCommandAsync" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-API", "variantKey": "publish-configurator-preserves-schedule-properties-and-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.RecurringJobExtensionsTests", "testMethod": "AddOrUpdateRecurringJobAsync_PublishConfiguratorPreservesScheduleAndPropertiesAsync" }
+  ,{ "requirementId": "REQ-VSB-SCHEDULED-JOB-API", "variantKey": "typed-publish-preserves-explicit-id-utc-start-job-and-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.RecurringJobExtensionsTests", "testMethod": "ScheduleJobAsync_TypedPublishPreservesTheCompleteCommandAsync" }
+  ,{ "requirementId": "REQ-VSB-SCHEDULED-JOB-API", "variantKey": "values-request-initializes-contract-and-preserves-explicit-id", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.RecurringJobExtensionsTests", "testMethod": "ScheduleJobFromValuesAsync_RequestInitializesTheTypedContractAsync" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-API", "variantKey": "schedule-callback-must-define-recurrence", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.RecurringJobExtensionsTests", "testMethod": "AddOrUpdateRecurringJobAsync_RejectsAConfigurationWithoutRecurrenceAsync" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-API", "variantKey": "null-endpoint-job-configurator-and-cron-are-rejected", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.RecurringJobExtensionsTests", "testMethod": "AddOrUpdateRecurringJobAsync_RejectsMissingRequiredArgumentsAsync" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-API", "variantKey": "missing-stable-name-is-rejected", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.RecurringJobExtensionsTests", "testMethod": "RecurringJobApis_RejectMissingNamesAsync" }
+  ,{ "requirementId": "REQ-VSB-SCHEDULED-JOB-API", "variantKey": "empty-ids-null-jobs-and-null-values-are-rejected", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.RecurringJobExtensionsTests", "testMethod": "ScheduledJobApis_RejectInvalidRequiredArgumentsAsync" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-COMMANDS", "variantKey": "cancel-run-finalize-use-one-deterministic-identity-and-default-reason", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.RecurringJobExtensionsTests", "testMethod": "RecurringCommands_UseTheSameDeterministicIdentityAsync" }
+  ,{ "requirementId": "REQ-VSB-TIME-ZONE-RESOLUTION", "variantKey": "missing-identifiers-are-rejected", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Scheduling.TimeZoneResolverTests", "testMethod": "MissingIdentifier_IsRejected" }
+  ,{ "requirementId": "REQ-VSB-JOB-SAGA-OPTIONS", "variantKey": "each-invariant-rejected-before-endpoint-build", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.SpecificationOptionsValidationTests", "testMethod": "JobSagaOptions_RejectEveryInvalidInvariant" }
+  ,{ "requirementId": "REQ-VSB-JOB-SAGA-OPTIONS", "variantKey": "defaults-are-coherent", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.SpecificationOptionsValidationTests", "testMethod": "JobSagaOptions_DefaultsAreCoherent" }
+  ,{ "requirementId": "REQ-VSB-JOB-METADATA", "variantKey": "case-insensitive-overwrite-preserve-and-remove", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Serialization.JobPropertyCollectionTests", "testMethod": "Set_UsesCaseInsensitiveKeysAndExplicitMutationSemantics" }
+  ,{ "requirementId": "REQ-VSB-JOB-METADATA", "variantKey": "typed-values-and-defaults", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Serialization.JobPropertyCollectionTests", "testMethod": "Get_ReturnsTypedValuesAndDefaults" }
+  ,{ "requirementId": "REQ-VSB-JOB-METADATA", "variantKey": "bulk-update-is-validated-before-mutation", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Serialization.JobPropertyCollectionTests", "testMethod": "SetMany_RejectsInvalidKeysBeforeMutatingTheCollection" }
+  ,{ "requirementId": "REQ-VSB-JOB-METADATA", "variantKey": "missing-keys-are-rejected", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Serialization.JobPropertyCollectionTests", "testMethod": "KeyedOperations_RejectMissingKeys" }
+  ,{ "requirementId": "REQ-VSB-JOB-METADATA", "variantKey": "public-options-expose-only-the-metadata-contract", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Serialization.JobPropertyCollectionTests", "testMethod": "JobOptions_ExposeTheMetadataContractWithoutTheStorageType" }
+  ,{ "requirementId": "REQ-VSB-JOB-OPTIONS", "variantKey": "retry-configuration-requires-callback-and-policy", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.SpecificationOptionsValidationTests", "testMethod": "JobOptions_RetryConfigurationRejectsMissingInputs" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "yearly-calendar-date", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "YearlyOn_RejectsADayThatDoesNotExistInTheSelectedMonth" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "leap-day-is-valid", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "YearlyOn_AcceptsLeapDay" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "empty-time-zone-identifier", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "ScheduleValidation_RejectsAnEmptyTimeZoneIdentifier" }
+  ,{ "requirementId": "REQ-VSB-JOB-CONTRACT-BOUNDARY", "variantKey": "contracts-do-not-expose-mutable-dictionaries", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.JobServiceContractArchitectureTests", "testMethod": "PublicContracts_DoNotExposeMutableDictionaryTypes" }
+  ,{ "requirementId": "REQ-VSB-JOB-CONTRACT-BOUNDARY", "variantKey": "serializer-representations-are-internal", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.JobServiceContractArchitectureTests", "testMethod": "SerializerRepresentations_AreNotPartOfThePublicApi" }
+  ,{ "requirementId": "REQ-VSB-JOB-PROGRESS-TIME", "variantKey": "invalid-buffer-options-are-rejected", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.JobService.JobProgressBufferTests", "testMethod": "Constructor_RejectsNonPositiveBufferLimits" }
+  ,{ "requirementId": "REQ-VSB-JOB-CANCELLATION", "variantKey": "job-handle-releases-ownership-at-cancellation-deadline", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.JobService.ConsumeJobContextCancellationTests", "testMethod": "CancelJobHandle_ReleasesLocalOwnershipWhenExecutionIgnoresCancellationAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-METADATA", "variantKey": "missing-job-properties-produce-empty-collection", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.JobService.ConsumeJobContextCancellationTests", "testMethod": "Constructor_AcceptsAStartCommandWithoutJobPropertiesAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-NOTIFICATIONS", "variantKey": "typed-start-event-includes-job-payload", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.JobService.ConsumeJobContextCancellationTests", "testMethod": "NotifyStartedAsync_PublishesTheTypedJobPayloadAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-NOTIFICATIONS", "variantKey": "required-notification-values-are-rejected", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.JobService.ConsumeJobContextCancellationTests", "testMethod": "NotificationMethods_RejectMissingRequiredValuesAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-EXCEPTIONS", "variantKey": "duplicate-job-preserves-identifier", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.JobServiceExceptionTests", "testMethod": "JobAlreadyExistsException_PreservesTheConflictingIdentifier" }
+  ,{ "requirementId": "REQ-VSB-JOB-EXCEPTIONS", "variantKey": "shutdown-rejection-preserves-identifier", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Api.JobServiceExceptionTests", "testMethod": "JobServiceStoppingException_PreservesTheRejectedIdentifier" }
+  ,{ "requirementId": "REQ-VSB-JOB-SUPERVISION", "variantKey": "stale-attempt-cannot-cancel-current-execution", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.JobService.SuperviseJobConsumerTests", "testMethod": "CancelJobAttempt_IgnoresARequestForAnEarlierAttemptAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-SUPERVISION", "variantKey": "matching-attempt-receives-cancellation-reason-and-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.JobService.SuperviseJobConsumerTests", "testMethod": "CancelJobAttempt_CancelsOnlyTheMatchingAttemptAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-CLOCK", "variantKey": "direct-options-propagate-all-local-runtime-settings", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.JobConsumerTimeProviderTests", "testMethod": "DirectJobServiceOptions_PropagateAllLocalRuntimeSettings" }
+  ,{ "requirementId": "REQ-VSB-JOB-CLOCK", "variantKey": "direct-options-are-required", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.JobConsumerTimeProviderTests", "testMethod": "DirectJobServiceOptions_RejectNull" }
+  ,{ "requirementId": "REQ-VSB-JOB-CAPACITY", "variantKey": "expired-leases-deadlines-and-orphans-are-reconciled", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.StateMachine.JobTypeCapacityTests", "testMethod": "RemoveExpiredAllocations_PreservesOnlyLiveAllocationsOnKnownInstances" }
+  ,{ "requirementId": "REQ-VSB-JOB-CAPACITY", "variantKey": "reconciliation-inputs-are-validated", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.StateMachine.JobTypeCapacityTests", "testMethod": "RemoveExpiredAllocations_RejectsMissingStateAndNonPositiveTimeouts" }
+  ,{ "requirementId": "REQ-VSB-JOB-METADATA", "variantKey": "coordinator-snapshots-replace-and-isolate-metadata", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.StateMachine.JobTypeCapacityTests", "testMethod": "CopyProperties_CreatesAnIndependentCaseInsensitiveSnapshot" }
+  ,{ "requirementId": "REQ-VSB-JOB-DISTRIBUTION", "variantKey": "custom-strategy-view-cannot-mutate-persisted-state", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.StateMachine.JobTypeCapacityTests", "testMethod": "JobTypeInfoSnapshot_IsolatesPersistedStateFromStrategyMutation" }
+  ,{ "requirementId": "REQ-VSB-JOB-CAPACITY", "variantKey": "invalid-concurrency-updates-are-rejected-before-mutation", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.StateMachine.JobTypeCapacityTests", "testMethod": "ValidateConcurrencyUpdate_RejectsEveryInvalidInvariant" }
+  ,{ "requirementId": "REQ-VSB-JOB-CAPACITY", "variantKey": "all-defined-concurrency-update-kinds-accept-valid-values", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.StateMachine.JobTypeCapacityTests", "testMethod": "ValidateConcurrencyUpdate_AcceptsEveryDefinedUpdateKind" }
+  ,{ "requirementId": "REQ-VSB-JOB-STATE", "variantKey": "internal-states-map-to-strongly-typed-lifecycle-status", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.StateMachine.JobAttemptGenerationTests", "testMethod": "LifecycleStatus_MapsEveryReachablePersistedState" }
+  ,{ "requirementId": "REQ-VSB-JOB-STATE", "variantKey": "initial-and-missing-state-mappings-are-explicit", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.StateMachine.JobAttemptGenerationTests", "testMethod": "LifecycleStatus_MapsInitialAndMissingStatesExplicitly" }
+  ,{ "requirementId": "REQ-VSB-JOB-CANCELLATION", "variantKey": "cancel-during-allocation-preserves-reason-and-publishes-terminal-event", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests", "testMethod": "CancelDuringSlotAllocation_PublishesCancellationAfterTheOutstandingResponseAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-FINALIZATION", "variantKey": "explicit-finalization-removes-completed-state", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests", "testMethod": "ExplicitFinalization_RemovesACompletedJobWhenAutomaticFinalizationIsDisabledAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-CHECKPOINT", "variantKey": "saved-checkpoint-is-restored-to-the-next-attempt-and-query", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Integration.InMemoryJobServiceTests", "testMethod": "SavedCheckpoint_IsRestoredToTheNextAttemptAndTypedStateQueryAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-PROGRESS", "variantKey": "newer-sequence-replaces-progress", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.StateMachine.JobAttemptGenerationTests", "testMethod": "NewerProgressSequence_ReplacesTheStoredProgressAndSequenceAsync" }
+  ,{ "requirementId": "REQ-VSB-JOB-PROGRESS", "variantKey": "stale-sequence-preserves-progress", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.StateMachine.JobAttemptGenerationTests", "testMethod": "NonIncreasingProgressSequence_PreservesStoredProgressAsync" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "calendar-periods-preserve-seconds", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "CalendarPeriodSchedules_PreserveEverySuppliedComponent" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "clock-range", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "ClockComponentOutsideItsRange_IsRejected" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "daily-schedule-preserves-every-time-component", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "DailyAt_PreservesEveryTimeComponent" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "day-of-month-range", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "DayOfMonthOutsideItsRange_IsRejected" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "days-required", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "OnDaysAt_RequiresAtLeastOneDay" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "defined-day-of-week", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "UndefinedDayOfWeek_IsRejected" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "hourly-interval-all-parameters", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "EveryHours_UsesTheIntervalAnchorTimeAndSelectedDays" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "interval-defaults", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "IntervalSchedule_DefaultsLeaveCalendarFieldsUnrestricted" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "interval-range", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "IntervalOutsideCronRange_IsRejected" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "minute-interval-all-parameters", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "EveryMinutes_UsesTheIntervalAnchorTimeAndSelectedDays" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "month-range", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "MonthOutsideItsRange_IsRejected" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "null-receiver", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "EveryExtension_RejectsANullConfigurator" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "null-time-zone", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "InTimeZone_RejectsANullTimeZone" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "second-interval-all-parameters", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "EverySeconds_UsesTheIntervalAnchorTimeAndSelectedDays" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "selected-days-and-time", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "OnDaysAt_UsesEveryDistinctSelectedDayAndTimeComponent" }
+  ,{ "requirementId": "REQ-VSB-RECURRING-JOB-SCHEDULE", "variantKey": "time-zone", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.Configuration.RecurringJobScheduleConfiguratorTests", "testMethod": "InTimeZone_StoresThePlatformTimeZoneIdentifier" }
 ]

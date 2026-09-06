@@ -18,7 +18,7 @@ public static class EntityFrameworkCoreJobServiceConfigurationExtensions
 
         lockStatementProvider ??= new SqlServerLockStatementProvider();
 
-        configurator.Repository = EntityFrameworkSagaRepository<JobTypeSaga>.CreatePessimistic(contextFactory, lockStatementProvider);
+        configurator.JobTypeRepository = EntityFrameworkSagaRepository<JobTypeSaga>.CreatePessimistic(contextFactory, lockStatementProvider);
 
         configurator.JobRepository = EntityFrameworkSagaRepository<JobSaga>.CreatePessimistic(contextFactory, lockStatementProvider);
 

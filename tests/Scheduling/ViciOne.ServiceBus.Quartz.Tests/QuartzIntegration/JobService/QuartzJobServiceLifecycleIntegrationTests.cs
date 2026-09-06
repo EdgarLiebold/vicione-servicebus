@@ -40,7 +40,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
         await using QuartzTestBus fixture = await QuartzJobServiceTestBus.StartAsync<CalculationJob, CancellationAwareJobConsumer>(
             timeout,
             consumer,
-            static options => options.SetJobTimeout(TimeSpan.FromMinutes(1)),
+            static options => options.JobTimeout = TimeSpan.FromMinutes(1),
             lifecycle.Configure);
         IRequestClient<SubmitJob<CalculationJob>> client = fixture.Bus.CreateRequestClient<SubmitJob<CalculationJob>>();
 
@@ -87,9 +87,11 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
         await using QuartzTestBus fixture = await QuartzJobServiceTestBus.StartAsync<CalculationJob, ConcurrencyTrackingJobConsumer>(
             timeout,
             consumer,
-            options => options
-                .SetJobTimeout(TimeSpan.FromMinutes(1))
-                .SetConcurrentJobLimit(ConcurrentJobLimit),
+            options =>
+            {
+                options.JobTimeout = TimeSpan.FromMinutes(1);
+                options.ConcurrentJobLimit = ConcurrentJobLimit;
+            },
             lifecycle.Configure,
             configureJobService: static service => service.SlotWaitTime = TimeSpan.FromSeconds(1));
         IRequestClient<SubmitJob<CalculationJob>> client = fixture.Bus.CreateRequestClient<SubmitJob<CalculationJob>>();
@@ -135,7 +137,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
         await using QuartzTestBus fixture = await QuartzJobServiceTestBus.StartAsync<CalculationJob, ReleasableJobConsumer>(
             timeout,
             consumer,
-            static options => options.SetJobTimeout(TimeSpan.FromMinutes(1)),
+            static options => options.JobTimeout = TimeSpan.FromMinutes(1),
             lifecycle.Configure,
             configureJobService: static service => service.StatusCheckInterval = TimeSpan.FromSeconds(30));
         var scheduledStatusCheck = new ScheduledMessageCapture(nameof(JobStatusCheckRequested));
@@ -165,7 +167,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
         Assert.Equal(jobId, acceptedJobId);
         Assert.Equal(jobId, execution.JobId);
         Assert.Equal(jobId, state.JobId);
-        Assert.Equal("Started", state.CurrentState);
+        Assert.Equal(JobLifecycleStatus.Running, state.Status);
         Assert.Equal(0, state.LastRetryAttempt);
         Assert.NotNull(state.Submitted);
         Assert.NotNull(state.Started);
@@ -193,7 +195,7 @@ public sealed class QuartzJobServiceLifecycleIntegrationTests
         await using QuartzTestBus fixture = await QuartzJobServiceTestBus.StartAsync<CalculationJob, CompletingJobConsumer>(
             timeout,
             consumer,
-            static options => options.SetJobTimeout(TimeSpan.FromMinutes(1)),
+            static options => options.JobTimeout = TimeSpan.FromMinutes(1),
             lifecycle.Configure,
             address => serviceAddress = address);
         IRequestClient<SubmitJob<CalculationJob>> client = useExplicitServiceAddress

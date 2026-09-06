@@ -88,6 +88,12 @@ internal sealed class ViciOneServiceBusHostedService :
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
+        lock (_stateLock)
+        {
+            if (_stopped)
+                return;
+        }
+
         await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {

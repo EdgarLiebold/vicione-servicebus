@@ -49,7 +49,7 @@ public class JobTypeSagaMap :
         entity.Property(x => x.Instances)
             .HasJsonConversion();
 
-        entity.Property(x => x.Properties)
+        entity.Property(x => x.JobTypeProperties)
             .HasJsonConversion();
     }
 }

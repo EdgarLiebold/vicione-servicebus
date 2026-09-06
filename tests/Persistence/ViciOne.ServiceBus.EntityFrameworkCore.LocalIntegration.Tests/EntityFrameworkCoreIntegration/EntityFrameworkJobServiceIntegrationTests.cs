@@ -255,7 +255,7 @@ public sealed class EntityFrameworkJobServiceIntegrationTests
                     configuration.SetKebabCaseEndpointNameFormatter();
                     configuration.AddConsumer<TConsumer>()
                         .Endpoint(endpoint => endpoint.Name = $"persistent-job-{NewId.NextGuid():N}");
-                    configuration.SetJobConsumerOptions(options => options.HeartbeatInterval = TimeSpan.FromSeconds(10));
+                    configuration.AddJobService(options => options.HeartbeatInterval = TimeSpan.FromSeconds(10));
                     configuration.AddJobSagaStateMachines(options => options.FinalizeCompleted = false)
                         .EntityFrameworkRepository(repository =>
                         {

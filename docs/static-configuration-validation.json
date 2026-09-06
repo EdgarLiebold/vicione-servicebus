@@ -5,8 +5,8 @@
   "reviewBaseline": {
     "measuredPublicOptionsClasses": 44,
     "measurement": "The external review used a lexical class-name grep on its pre-program snapshot.",
-    "currentConcreteOptionsModels": 40,
-    "explanation": "The source inventory is authoritative. The current lexical grep finds 42 concrete class declarations: two suffix matches are validators/configurers rather than option models, while one additional declaration is an abstract inheritance base. Application-operation records are immutable invocation values rather than startup configuration."
+    "currentConcreteOptionsModels": 41,
+    "explanation": "The source inventory is authoritative. The current lexical scan finds 44 Options-suffixed class declarations; two are validators or configurers rather than option models, and one is an abstract inheritance base. Application-operation records are immutable invocation values rather than startup configuration."
   },
   "excludedDeclarations": [
     {
@@ -154,33 +154,41 @@
     },
     {
       "type": "JobConsumerOptions",
-      "source": "src/ViciOne.ServiceBus/Configuration/JobConsumerOptions.cs",
+      "source": "src/ViciOne.ServiceBus.JobService/Configuration/JobConsumerOptions.cs",
       "boundary": "host-start",
-      "registrationSource": "src/ViciOne.ServiceBus/DependencyInjection/Configuration/DependencyInjectionJobServiceRegistrationExtensions.cs",
+      "registrationSource": "src/ViciOne.ServiceBus.JobService/DependencyInjection/DependencyInjectionJobServiceRegistrationExtensions.cs",
       "invariantCount": 3,
       "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "InvalidStaticFeatureOption_FailsTheStartupValidatorWithItsOwnCause" },
       "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "PositiveCoherentFeatureOptions_PassTheSameStartupBoundary" }
     },
     {
       "type": "JobOptions<TJob>",
-      "source": "src/ViciOne.ServiceBus/Configuration/JobOptions.cs",
+      "source": "src/ViciOne.ServiceBus.JobService/Configuration/JobOptions.cs",
       "boundary": "configuration-materialization",
       "invariantCount": 7,
       "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SpecificationOptionsValidationTests.cs", "method": "JobOptions_RejectEveryInvalidInvariant" },
       "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SpecificationOptionsValidationTests.cs", "method": "JobOptions_DefaultsAreCoherent" }
     },
     {
+      "type": "JobProgressBufferOptions",
+      "source": "src/ViciOne.ServiceBus.JobService/Configuration/JobProgressBufferOptions.cs",
+      "boundary": "configuration-materialization",
+      "invariantCount": 2,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SpecificationOptionsValidationTests.cs", "method": "JobOptions_RejectEveryInvalidInvariant" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SpecificationOptionsValidationTests.cs", "method": "JobOptions_DefaultsAreCoherent" }
+    },
+    {
       "type": "JobSagaOptions",
-      "source": "src/ViciOne.ServiceBus/Configuration/JobSagaOptions.cs",
+      "source": "src/ViciOne.ServiceBus.JobService/Configuration/JobSagaOptions.cs",
       "boundary": "host-start",
-      "registrationSource": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/JobSagaRegistrationConfigurator.cs",
+      "registrationSource": "src/ViciOne.ServiceBus.JobService/DependencyInjection/JobSagaRegistrationConfigurator.cs",
       "invariantCount": 6,
       "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "InvalidStaticFeatureOption_FailsTheStartupValidatorWithItsOwnCause" },
       "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "PositiveCoherentFeatureOptions_PassTheSameStartupBoundary" }
     },
     {
       "type": "JobServiceOptions",
-      "source": "src/ViciOne.ServiceBus/Configuration/JobServiceOptions.cs",
+      "source": "src/ViciOne.ServiceBus.JobService/Configuration/JobServiceOptions.cs",
       "boundary": "configuration-materialization",
       "invariantCount": 10,
       "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SpecificationOptionsValidationTests.cs", "method": "JobServiceOptions_RejectEveryInvalidInvariant" },

@@ -64,7 +64,7 @@ public class JobSagaMap :
         entity.Property(x => x.LastProgressLimit);
         entity.Property(x => x.LastProgressSequenceNumber);
 
-        entity.Property(x => x.JobState)
+        entity.Property(x => x.Checkpoint)
             .HasJsonConversion();
 
         entity.Property(x => x.JobProperties)

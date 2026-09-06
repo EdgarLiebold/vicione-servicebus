@@ -65,17 +65,30 @@ public sealed class SpecificationOptionsValidationTests
     public void JobOptions_DefaultsAreCoherent() =>
         Assert.Empty(((ISpecification)new JobOptions<TestJob>()).Validate());
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-OPTIONS", "retry-configuration-requires-callback-and-policy")]
+    public void JobOptions_RetryConfigurationRejectsMissingInputs()
+    {
+        var options = new JobOptions<TestJob>();
+
+        Assert.Throws<ArgumentNullException>(() => options.ConfigureRetry(null!));
+        Assert.Throws<ConfigurationException>(() => options.ConfigureRetry(_ => { }));
+        Assert.Same(Retry.None, options.RetryPolicy);
+    }
+
     [Theory]
     [InlineData(InvalidJobServiceOption.SlotWait, "SlotWaitTime")]
     [InlineData(InvalidJobServiceOption.StatusCheck, "StatusCheckInterval")]
     [InlineData(InvalidJobServiceOption.HeartbeatInterval, "HeartbeatInterval")]
     [InlineData(InvalidJobServiceOption.HeartbeatTimeout, "HeartbeatTimeout")]
-    [InlineData(InvalidJobServiceOption.Partitions, "SagaPartitionCount")]
+    [InlineData(InvalidJobServiceOption.RejectedJobDelay, "RejectedJobDelay")]
+    [InlineData(InvalidJobServiceOption.TimeProvider, "TimeProvider")]
+    [InlineData(InvalidJobServiceOption.Concurrency, "ConcurrentMessageLimit")]
     [InlineData(InvalidJobServiceOption.RetryCount, "SuspectJobRetryCount")]
     [InlineData(InvalidJobServiceOption.RetryDelay, "SuspectJobRetryDelay")]
-    [InlineData(InvalidJobServiceOption.TypeEndpoint, "JobTypeSagaEndpointName")]
-    [InlineData(InvalidJobServiceOption.StateEndpoint, "JobStateSagaEndpointName")]
-    [InlineData(InvalidJobServiceOption.AttemptEndpoint, "JobAttemptSagaEndpointName")]
+    [InlineData(InvalidJobServiceOption.TypeEndpoint, "JobTypeEndpointName")]
+    [InlineData(InvalidJobServiceOption.StateEndpoint, "JobEndpointName")]
+    [InlineData(InvalidJobServiceOption.AttemptEndpoint, "JobAttemptEndpointName")]
     [RequirementCoverage("REQ-VSB-JOB-SERVICE-OPTIONS", "each-invariant-rejected-before-endpoint-build")]
     public void JobServiceOptions_RejectEveryInvalidInvariant(InvalidJobServiceOption invalid, string property)
     {
@@ -90,7 +103,9 @@ public sealed class SpecificationOptionsValidationTests
             case InvalidJobServiceOption.StatusCheck: options.StatusCheckInterval = TimeSpan.FromSeconds(29); break;
             case InvalidJobServiceOption.HeartbeatInterval: options.HeartbeatInterval = TimeSpan.Zero; break;
             case InvalidJobServiceOption.HeartbeatTimeout: options.HeartbeatTimeout = TimeSpan.Zero; break;
-            case InvalidJobServiceOption.Partitions: options.SagaPartitionCount = 0; break;
+            case InvalidJobServiceOption.RejectedJobDelay: options.RejectedJobDelay = TimeSpan.Zero; break;
+            case InvalidJobServiceOption.TimeProvider: options.TimeProvider = null!; break;
+            case InvalidJobServiceOption.Concurrency: options.ConcurrentMessageLimit = 0; break;
             case InvalidJobServiceOption.RetryCount: options.SuspectJobRetryCount = -1; break;
             case InvalidJobServiceOption.RetryDelay: options.SuspectJobRetryDelay = TimeSpan.Zero; break;
             case InvalidJobServiceOption.TypeEndpoint:
@@ -106,14 +121,61 @@ public sealed class SpecificationOptionsValidationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-SERVICE-OPTIONS", "coherent-materialized-values-pass")]
-    public void JobServiceOptions_CoherentMaterializedValuesPass() =>
-        Assert.Empty(((ISpecification)ValidJobServiceOptions()).Validate());
+    public void JobServiceOptions_CoherentMaterializedValuesPass()
+    {
+        JobServiceOptions options = ValidJobServiceOptions();
+
+        Assert.Empty(((ISpecification)options).Validate());
+        Assert.True(options.FinalizeCompleted);
+        Assert.Equal(16, options.ConcurrentMessageLimit);
+        Assert.Equal(TimeSpan.FromMinutes(1), options.HeartbeatInterval);
+        Assert.Equal(TimeSpan.FromSeconds(3), options.RejectedJobDelay);
+        Assert.Same(TimeProvider.System, options.TimeProvider);
+    }
+
+    [Theory]
+    [InlineData(InvalidJobSagaOption.SlotWait, "SlotWaitTime")]
+    [InlineData(InvalidJobSagaOption.StatusCheck, "StatusCheckInterval")]
+    [InlineData(InvalidJobSagaOption.HeartbeatTimeout, "HeartbeatTimeout")]
+    [InlineData(InvalidJobSagaOption.Concurrency, "ConcurrentMessageLimit")]
+    [InlineData(InvalidJobSagaOption.RetryCount, "SuspectJobRetryCount")]
+    [InlineData(InvalidJobSagaOption.RetryDelay, "SuspectJobRetryDelay")]
+    [RequirementCoverage("REQ-VSB-JOB-SAGA-OPTIONS", "each-invariant-rejected-before-endpoint-build")]
+    public void JobSagaOptions_RejectEveryInvalidInvariant(InvalidJobSagaOption invalid, string property)
+    {
+        var options = new JobSagaOptions();
+        switch (invalid)
+        {
+            case InvalidJobSagaOption.SlotWait: options.SlotWaitTime = TimeSpan.Zero; break;
+            case InvalidJobSagaOption.StatusCheck: options.StatusCheckInterval = TimeSpan.FromSeconds(29); break;
+            case InvalidJobSagaOption.HeartbeatTimeout: options.HeartbeatTimeout = TimeSpan.Zero; break;
+            case InvalidJobSagaOption.Concurrency: options.ConcurrentMessageLimit = 0; break;
+            case InvalidJobSagaOption.RetryCount: options.SuspectJobRetryCount = -1; break;
+            case InvalidJobSagaOption.RetryDelay: options.SuspectJobRetryDelay = TimeSpan.Zero; break;
+        }
+
+        ValidationResult[] failures = ((ISpecification)options).Validate().ToArray();
+
+        Assert.Contains(failures, failure => Identifies(failure, property));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-SAGA-OPTIONS", "defaults-are-coherent")]
+    public void JobSagaOptions_DefaultsAreCoherent()
+    {
+        var options = new JobSagaOptions();
+
+        Assert.Empty(((ISpecification)options).Validate());
+        Assert.True(options.FinalizeCompleted);
+        Assert.Equal(16, options.ConcurrentMessageLimit);
+        Assert.Equal(TimeSpan.FromMinutes(5), options.HeartbeatTimeout);
+    }
 
     static JobServiceOptions ValidJobServiceOptions() => new()
     {
-        JobTypeSagaEndpointName = "job-type",
-        JobStateSagaEndpointName = "job-state",
-        JobAttemptSagaEndpointName = "job-attempt",
+        JobTypeEndpointName = "job-type",
+        JobEndpointName = "job-state",
+        JobAttemptEndpointName = "job-attempt",
     };
 
     static bool Identifies(ValidationResult failure, string property) =>
@@ -133,11 +195,15 @@ public sealed class SpecificationOptionsValidationTests
         StatusCheck,
         HeartbeatInterval,
         HeartbeatTimeout,
-        Partitions,
+        RejectedJobDelay,
+        TimeProvider,
+        Concurrency,
         RetryCount,
         RetryDelay,
         TypeEndpoint,
         StateEndpoint,
         AttemptEndpoint,
     }
+
+    public enum InvalidJobSagaOption { SlotWait, StatusCheck, HeartbeatTimeout, Concurrency, RetryCount, RetryDelay }
 }

@@ -53,7 +53,6 @@ ViciOne.ServiceBus.ISendEndpointProvider
 ViciOne.ServiceBus.IndexedAttribute
 ViciOne.ServiceBus.InvalidCompensationAddressException
 ViciOne.ServiceBus.JobAlreadyExistsException
-ViciOne.ServiceBus.JobNotFoundException
 ViciOne.ServiceBus.JobServiceStoppingException
 ViciOne.ServiceBus.MessageContractAttribute
 ViciOne.ServiceBus.MessageContractException

@@ -86,7 +86,7 @@ public sealed class AzureTableConfigurationContractTests
             jobFormatter,
             attemptFormatter);
 
-        Assert.NotNull(configurator.Repository);
+        Assert.NotNull(configurator.JobTypeRepository);
         Assert.NotNull(configurator.JobRepository);
         Assert.NotNull(configurator.JobAttemptRepository);
     }
@@ -217,19 +217,23 @@ public sealed class AzureTableConfigurationContractTests
 
     private sealed class RecordingJobServiceConfigurator : IJobServiceConfigurator
     {
-        public ISagaRepository<JobTypeSaga>? Repository { get; set; }
+        public ISagaRepository<JobTypeSaga>? JobTypeRepository { get; set; }
         public ISagaRepository<JobSaga>? JobRepository { get; set; }
         public ISagaRepository<JobAttemptSaga>? JobAttemptRepository { get; set; }
-        public string JobServiceStateEndpointName { set { } }
-        public string JobServiceJobStateEndpointName { set { } }
-        public string JobServiceJobAttemptStateEndpointName { set { } }
+        public string JobTypeEndpointName { set { } }
+        public string JobEndpointName { set { } }
+        public string JobAttemptEndpointName { set { } }
+        public TimeSpan HeartbeatInterval { set { } }
+        public TimeSpan HeartbeatTimeout { set { } }
+        public TimeSpan RejectedJobDelay { set { } }
+        public TimeProvider TimeProvider { set { } }
         public TimeSpan SlotWaitTime { set { } }
         public TimeSpan StatusCheckInterval { set { } }
         public int SuspectJobRetryCount { set { } }
-        public TimeSpan SuspectJobRetryDelay { set { } }
-        public int? SagaPartitionCount { set { } }
+        public TimeSpan? SuspectJobRetryDelay { set { } }
+        public int? ConcurrentMessageLimit { set { } }
         public bool FinalizeCompleted { set { } }
-        public Func<string, TimeZoneInfo> TimeZoneResolver { set { } }
+        public Func<string, TimeZoneInfo?>? TimeZoneResolver { set { } }
     }
 
     private sealed class RecordingJournalConfigurator : IMessageJournalConfigurator
