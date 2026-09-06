@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Xml.Linq;
 using ViciOne.ServiceBus.Architecture.Tests.Build;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -157,5 +159,61 @@ public sealed class ResolvedPackageGraphTests
             .ToArray();
 
         Assert.Empty(violations);
+    }
+
+    [Fact]
+    [RequirementCoverage(
+        "REQ-VSB-DEPENDENCY-VERSION-OWNERSHIP",
+        "central-transitive-lock-entries-resolve-declared-minimum")]
+    public void CentralTransitiveLockEntries_ResolveTheirDeclaredMinimum()
+    {
+        string[] mismatches = RepositoryLayout.GovernedProjects
+            .SelectMany(project => ResolvedPackageGraph.CentralTransitiveVersionMismatchesOf(project)
+                .Select(mismatch => $"{RepositoryLayout.RelativeToRoot(project)}: {mismatch}"))
+            .OrderBy(mismatch => mismatch, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(mismatches);
+    }
+
+    [Fact]
+    [RequirementCoverage(
+        "REQ-VSB-DEPENDENCY-CATALOG",
+        "every-central-package-version-is-declared-or-resolved")]
+    public void CentralPackageCatalog_HasNoUnusedEntries()
+    {
+        string centralCatalog = Path.Combine(RepositoryLayout.Root, "Directory.Packages.props");
+        string[] declared = XDocument.Load(centralCatalog)
+            .Descendants("PackageVersion")
+            .Select(element => element.Attribute("Include")?.Value)
+            .OfType<string>()
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        HashSet<string> used = RepositoryLayout.GovernedProjects
+            .SelectMany(project => MsBuildEvaluation.ItemIdentities(project, "PackageReference")
+                .Concat(ResolvedPackageGraph.PackagesOf(project)))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        IEnumerable<string> fileBasedToolPackages = Directory.EnumerateFiles(
+                Path.Combine(RepositoryLayout.Root, "tools"),
+                "*packages.lock.json",
+                SearchOption.AllDirectories)
+            .SelectMany(lockFile =>
+            {
+                using var document = JsonDocument.Parse(File.ReadAllBytes(lockFile));
+                return document.RootElement.GetProperty("dependencies")
+                    .EnumerateObject()
+                    .SelectMany(framework => framework.Value.EnumerateObject())
+                    .Select(package => package.Name)
+                    .ToArray();
+            });
+        used.UnionWith(fileBasedToolPackages);
+
+        string[] unused = declared
+            .Where(package => !used.Contains(package))
+            .OrderBy(package => package, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        Assert.Empty(unused);
     }
 }

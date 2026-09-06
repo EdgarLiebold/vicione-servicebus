@@ -323,6 +323,26 @@ public sealed class EvaluatedBuildGraphTests
     }
 
     [Fact]
+    [RequirementCoverage(
+        "REQ-VSB-DEPENDENCY-VERSION-OWNERSHIP",
+        "every-centrally-managed-project-enforces-transitive-versions")]
+    public void EveryCentrallyManagedProject_EnforcesDeclaredTransitiveVersions()
+    {
+        string[] centrallyManagedProjects = RepositoryLayout.GovernedProjects
+            .Where(project => string.Equals(
+                MsBuildEvaluation.PropertyOf(project, "ManagePackageVersionsCentrally"),
+                "true",
+                StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+
+        Assert.NotEmpty(centrallyManagedProjects);
+        Assert.All(centrallyManagedProjects, project =>
+            Assert.Equal(
+                "true",
+                MsBuildEvaluation.PropertyOf(project, "CentralPackageTransitivePinningEnabled")));
+    }
+
+    [Fact]
     public void RetiredTestFrameworkProject_IsAbsentFromTheProductTree()
     {
         Assert.False(Directory.Exists(RepositoryLayout.RetiredTestFrameworkDirectory));

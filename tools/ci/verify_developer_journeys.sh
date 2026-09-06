@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Retained engineering gate: compile the documented journeys only against freshly packed packages.
+# Compiles the documented journeys and isolated package consumers against freshly packed packages.
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repository_root="$(cd "$script_dir/../.." && pwd)"
@@ -12,6 +12,11 @@ package_feed="$temporary_root/packages"
 global_packages="$temporary_root/global-packages"
 nuget_config="$temporary_root/NuGet.config"
 sample_project="$repository_root/samples/DeveloperJourneys/ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj"
+isolated_consumer_projects=(
+  "$repository_root/samples/PackageConsumers/AzureServiceBusTesting/ViciOne.ServiceBus.Samples.AzureServiceBusTestingPackageConsumer.csproj"
+  "$repository_root/samples/PackageConsumers/EventHubsTesting/ViciOne.ServiceBus.Samples.EventHubsTestingPackageConsumer.csproj"
+  "$repository_root/samples/PackageConsumers/RabbitMqTesting/ViciOne.ServiceBus.Samples.RabbitMqTestingPackageConsumer.csproj"
+)
 public_api_baseline="${PUBLIC_API_BASELINE_OUTPUT:-$repository_root/artifacts/verification/public-api-baseline.txt}"
 
 journey_count="$(find "$repository_root/samples/DeveloperJourneys" -maxdepth 1 -type f -name 'Journey*.cs' | wc -l | tr -d '[:space:]')"
@@ -57,11 +62,15 @@ projects=(
   "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj"
   "src/Transports/ViciOne.ServiceBus.RabbitMq/ViciOne.ServiceBus.RabbitMq.csproj"
   "src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj"
+  "src/Transports/ViciOne.ServiceBus.EventHubs/ViciOne.ServiceBus.EventHubs.csproj"
   "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj"
   "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj"
   "src/Scheduling/ViciOne.ServiceBus.Quartz/ViciOne.ServiceBus.Quartz.csproj"
   "src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj"
   "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj"
+  "src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj"
+  "src/Transports/ViciOne.ServiceBus.EventHubs.Testing/ViciOne.ServiceBus.EventHubs.Testing.csproj"
+  "src/Transports/ViciOne.ServiceBus.RabbitMq.Testing/ViciOne.ServiceBus.RabbitMq.Testing.csproj"
 )
 
 for project in "${projects[@]}"; do
@@ -84,11 +93,15 @@ expected_packages=(
   "ViciOne.ServiceBus.Initializers.1.0.0.nupkg"
   "ViciOne.ServiceBus.RabbitMq.1.0.0.nupkg"
   "ViciOne.ServiceBus.AzureServiceBus.1.0.0.nupkg"
+  "ViciOne.ServiceBus.EventHubs.1.0.0.nupkg"
   "ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg"
   "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg"
   "ViciOne.ServiceBus.Quartz.1.0.0.nupkg"
   "ViciOne.ServiceBus.MessagePack.1.0.0.nupkg"
   "ViciOne.ServiceBus.Testing.1.0.0.nupkg"
+  "ViciOne.ServiceBus.AzureServiceBus.Testing.1.0.0.nupkg"
+  "ViciOne.ServiceBus.EventHubs.Testing.1.0.0.nupkg"
+  "ViciOne.ServiceBus.RabbitMq.Testing.1.0.0.nupkg"
 )
 
 for package in "${expected_packages[@]}"; do
@@ -114,10 +127,41 @@ fi
   -p:TreatWarningsAsErrors=true
 
 "$dotnet_cli" run \
+  --project "$sample_project" \
+  --configuration Release \
+  --no-build \
+  --no-restore
+
+for consumer_project in "${isolated_consumer_projects[@]}"; do
+  restore_arguments=(
+    restore "$consumer_project"
+    --configfile "$nuget_config"
+    --force-evaluate
+  )
+  if [[ "${1:-}" == "--update-lock" ]]; then
+    restore_arguments+=("-p:RestoreLockedMode=false")
+  fi
+
+  "$dotnet_cli" "${restore_arguments[@]}"
+  "$dotnet_cli" build "$consumer_project" \
+    --configuration Release \
+    --no-restore \
+    --no-incremental \
+    "${build_server_arguments[@]}" \
+    -p:RestoreLockedMode=true \
+    -p:TreatWarningsAsErrors=true
+  "$dotnet_cli" run \
+    --project "$consumer_project" \
+    --configuration Release \
+    --no-build \
+    --no-restore
+done
+
+"$dotnet_cli" run \
   --file "$repository_root/tools/public-api-baseline/PublicApiBaseline.cs" \
   -- \
   "$global_packages" \
   "$package_feed" \
   "$public_api_baseline"
 
-printf 'Developer journey package-consumer gate passed: 18 scenarios, 15 freshly packed ViciOne packages, packed public API baseline generated.\n'
+printf 'Developer journey package-consumer gate passed: 18 scenarios, 19 freshly packed ViciOne packages, 3 isolated provider testing consumers executed, packed public API baseline generated.\n'

@@ -1,4 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.AzureServiceBus.Testing;
+using ViciOne.ServiceBus.EventHubs.Testing;
+using ViciOne.ServiceBus.RabbitMq.Testing;
 using ViciOne.ServiceBus.Testing;
 
 namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
@@ -16,4 +19,23 @@ public static class Journey13UnitTestHarness
         IServiceProvider provider,
         CancellationToken cancellationToken = default) =>
         provider.StartTestHarnessAsync(cancellationToken: cancellationToken);
+
+    public static IServiceCollection ConfigureProviderHarnesses(IServiceCollection services)
+    {
+        services.ConfigureServiceBusTestOptions(options => options.CleanNamespace = false);
+        services.ConfigureRabbitMqTestOptions(options =>
+        {
+            options.CleanVirtualHost = false;
+            options.CreateVirtualHostIfNotExists = false;
+        });
+
+        return services;
+    }
+
+    public static IReadOnlyList<string> ProviderTestingAssemblies() =>
+    [
+        typeof(AzureServiceBusTestHarnessOptions).Assembly.GetName().Name!,
+        typeof(EventHubTestHarnessExtensions).Assembly.GetName().Name!,
+        typeof(RabbitMqTestHarnessOptions).Assembly.GetName().Name!,
+    ];
 }

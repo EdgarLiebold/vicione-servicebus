@@ -30,7 +30,7 @@ internal static class MsBuildEvaluation
     private static readonly TimeSpan Budget = TimeSpan.FromMinutes(3);
 
     private const string Properties =
-        "Configuration;TargetPath;AssemblyName;TargetFramework;RootNamespace;IsTestProject;IsPackable;IsTestingPlatformApplication;UseMicrosoftTestingPlatformRunner;OutputType;InvariantGlobalization;DebugType;_DebugSymbolsProduced;LangVersion;DefineConstants;ArtifactsPath;ArtifactsProjectName;MSBuildProjectExtensionsPath;ViciOneProjectIdentity;ViciOneNativeTestTree;ViciOnePackageConsumer;UserSecretsId";
+        "Configuration;TargetPath;AssemblyName;TargetFramework;RootNamespace;IsTestProject;IsPackable;IsTestingPlatformApplication;UseMicrosoftTestingPlatformRunner;OutputType;InvariantGlobalization;DebugType;_DebugSymbolsProduced;LangVersion;DefineConstants;ArtifactsPath;ArtifactsProjectName;MSBuildProjectExtensionsPath;ViciOneProjectIdentity;ViciOneNativeTestTree;ViciOnePackageConsumer;UserSecretsId;ManagePackageVersionsCentrally;CentralPackageTransitivePinningEnabled";
 
     private const string Items =
         "Compile;Using;PackageReference;ProjectReference;Content;ViciOneForbiddenNativeTestPackage";

@@ -57,7 +57,7 @@ jobs:
       - name: Build release test binaries
         run: dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
       - name: Run the complete profile without filters
-        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 3709 --max-parallel-test-modules 1
+        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 3818 --max-parallel-test-modules 1
 
   local-integration:
     name: "Required: Native Local Integration"
@@ -192,6 +192,10 @@ jobs:
         run: dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore
       - name: Pack without another restore or build
         run: dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore -o artifacts/packages
+      - name: Restore the complete package-gate source graph
+        run: dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode
+      - name: Verify package-only developer journeys and testing harnesses
+        run: tools/ci/verify_developer_journeys.sh
       - name: Bind package bytes
         run: sha256sum artifacts/packages/*.nupkg > artifacts/packages/SHA256SUMS
       - name: Inventory vulnerable dependency paths

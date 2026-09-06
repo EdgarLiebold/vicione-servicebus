@@ -47,6 +47,37 @@ internal static class ResolvedPackageGraph
             .ToArray();
     }
 
+    /// <summary>Central transitive entries whose resolved version differs from the declared minimum.</summary>
+    internal static IReadOnlyList<string> CentralTransitiveVersionMismatchesOf(string projectPath)
+    {
+        string lockFile = LockFileOf(projectPath);
+        using var document = JsonDocument.Parse(File.ReadAllBytes(lockFile));
+
+        if (!document.RootElement.TryGetProperty("dependencies", out JsonElement dependencies))
+            return [];
+
+        return dependencies.EnumerateObject()
+            .SelectMany(framework => framework.Value.EnumerateObject()
+                .Select(dependency => (Framework: framework.Name, Package: dependency)))
+            .Where(entry => entry.Package.Value.TryGetProperty("type", out JsonElement type)
+                && string.Equals(type.GetString(), "CentralTransitive", StringComparison.OrdinalIgnoreCase))
+            .Select(entry =>
+            {
+                string requested = entry.Package.Value.GetProperty("requested").GetString() ?? string.Empty;
+                string resolved = entry.Package.Value.GetProperty("resolved").GetString() ?? string.Empty;
+                int separator = requested.IndexOf(',', StringComparison.Ordinal);
+                string minimum = requested.StartsWith("[", StringComparison.Ordinal) && separator > 1
+                    ? requested[1..separator].Trim()
+                    : requested;
+
+                return (entry.Framework, entry.Package.Name, Minimum: minimum, Resolved: resolved);
+            })
+            .Where(entry => !string.Equals(entry.Minimum, entry.Resolved, StringComparison.OrdinalIgnoreCase))
+            .Select(entry => $"{entry.Framework}:{entry.Name} requested {entry.Minimum}, resolved {entry.Resolved}")
+            .OrderBy(entry => entry, StringComparer.Ordinal)
+            .ToArray();
+    }
+
     /// <summary>Reads the one effective MSBuild package-policy source for the repository test tree.</summary>
     internal static IReadOnlyList<string> ForbiddenIdentitiesOf(string projectPath) =>
         MsBuildEvaluation.ItemIdentities(projectPath, "ViciOneForbiddenNativeTestPackage")
@@ -67,4 +98,16 @@ internal static class ResolvedPackageGraph
         packageIdentity.StartsWith("Microsoft.TestPlatform", StringComparison.OrdinalIgnoreCase) ||
         packageIdentity.StartsWith("TngTech.ArchUnitNET", StringComparison.OrdinalIgnoreCase) ||
         packageIdentity.Equals("GitHubActionsTestLogger", StringComparison.OrdinalIgnoreCase);
+
+    private static string LockFileOf(string projectPath)
+    {
+        string lockFile = Path.Combine(
+            Path.GetDirectoryName(projectPath) ?? throw new InvalidOperationException($"No directory for {projectPath}."),
+            "packages.lock.json");
+
+        if (!File.Exists(lockFile))
+            throw new InvalidOperationException($"No packages.lock.json beside {projectPath}.");
+
+        return lockFile;
+    }
 }

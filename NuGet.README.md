@@ -33,11 +33,21 @@ are deliberately absent here rather than listed as if they still shipped.
 
 * [ViciOne.ServiceBus.EventHubs](https://nuget.org/packages/ViciOne.ServiceBus.EventHubs/)
 
+### Capabilities
+
+* [ViciOne.ServiceBus.Courier](https://nuget.org/packages/ViciOne.ServiceBus.Courier/)
+* [ViciOne.ServiceBus.Futures](https://nuget.org/packages/ViciOne.ServiceBus.Futures/)
+* [ViciOne.ServiceBus.Initializers](https://nuget.org/packages/ViciOne.ServiceBus.Initializers/)
+* [ViciOne.ServiceBus.JobService](https://nuget.org/packages/ViciOne.ServiceBus.JobService/)
+* [ViciOne.ServiceBus.Mediator](https://nuget.org/packages/ViciOne.ServiceBus.Mediator/)
+* [ViciOne.ServiceBus.Sagas](https://nuget.org/packages/ViciOne.ServiceBus.Sagas/)
+
 ### Saga persistence
 
 * [ViciOne.ServiceBus.Azure.Table](https://nuget.org/packages/ViciOne.ServiceBus.Azure.Table/)
 * [ViciOne.ServiceBus.DynamoDb](https://nuget.org/packages/ViciOne.ServiceBus.DynamoDb/)
 * [ViciOne.ServiceBus.EntityFrameworkCore](https://nuget.org/packages/ViciOne.ServiceBus.EntityFrameworkCore/)
+* [ViciOne.ServiceBus.EntityFrameworkCore.Sagas](https://nuget.org/packages/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/)
 
 ### Message data
 
@@ -57,6 +67,13 @@ are deliberately absent here rather than listed as if they still shipped.
 * [ViciOne.ServiceBus.Analyzers](https://nuget.org/packages/ViciOne.ServiceBus.Analyzers/)
 * [ViciOne.ServiceBus.SignalR](https://nuget.org/packages/ViciOne.ServiceBus.SignalR/)
 * [ViciOne.ServiceBus.StateMachineVisualizer](https://nuget.org/packages/ViciOne.ServiceBus.StateMachineVisualizer/)
+
+### Testing
+
+* [ViciOne.ServiceBus.Testing](https://nuget.org/packages/ViciOne.ServiceBus.Testing/)
+* [ViciOne.ServiceBus.AzureServiceBus.Testing](https://nuget.org/packages/ViciOne.ServiceBus.AzureServiceBus.Testing/)
+* [ViciOne.ServiceBus.EventHubs.Testing](https://nuget.org/packages/ViciOne.ServiceBus.EventHubs.Testing/)
+* [ViciOne.ServiceBus.RabbitMq.Testing](https://nuget.org/packages/ViciOne.ServiceBus.RabbitMq.Testing/)
 
 The inherited `ViciOne.ServiceBus.TestFramework` source has been retired after its useful behavior
 material moved into the native test estate; it is not a public package.

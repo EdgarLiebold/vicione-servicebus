@@ -49,7 +49,7 @@ internal static class PublicApiBaseline
             $"PACKAGES {packageFiles.Length}",
         };
         foreach (string package in packageFiles)
-            lines.Add($"PACKAGE {Path.GetFileName(package)} SHA256={Sha256(package)}");
+            lines.Add($"PACKAGE {Path.GetFileName(package)}");
 
         lines.Add($"ASSEMBLIES {assemblyFiles.Length}");
         var context = new PackageAssemblyLoadContext(globalPackages);
@@ -57,7 +57,7 @@ internal static class PublicApiBaseline
         {
             Assembly assembly = context.LoadFromAssemblyPath(assemblyFile);
             lines.Add(string.Empty);
-            lines.Add($"ASSEMBLY {assembly.GetName().Name} VERSION={assembly.GetName().Version} SHA256={Sha256(assemblyFile)}");
+            lines.Add($"ASSEMBLY {assembly.GetName().Name} VERSION={assembly.GetName().Version}");
 
             foreach (Type type in assembly.GetTypes().Where(IsExternallyVisible).OrderBy(FormatType, StringComparer.Ordinal))
             {

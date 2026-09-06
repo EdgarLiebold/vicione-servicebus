@@ -188,3 +188,29 @@ Make application-level outgoing options stable at the asynchronous boundary, rej
 - Permit a zero lifetime by changing the boundary from `<=` to `<`: the zero-boundary test must fail while the negative partition remains valid.
 - Replace one immutable default header collection with a mutable dictionary: the default-shape test must fail.
 - Add a product source path excluded from every project: the compile-ownership test must fail with the exact path and zero owners.
+
+## Iteration 9 outcome
+
+Make dependency resolution centrally owned and exact, remove accidental layer edges, and prove the
+provider-testing delivery packages through isolated package-only consumers. Generate the packed
+public API inventory deterministically across independent package runs.
+
+## Iteration 9 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-DEPENDENCY-PINNING` | Every centrally managed project enables central transitive pinning | architecture tests | evaluated property across the complete governed project graph |
+| `REQ-VSB-DEPENDENCY-VERSION-OWNERSHIP` | Every central-transitive lock entry equals its central minimum | architecture tests | all frameworks and governed lock files |
+| `REQ-VSB-DEPENDENCY-CATALOG` | The central catalog contains no unused identity | architecture tests | direct and resolved package closure plus file-based tool locks |
+| `REQ-VSB-TESTING-DI-BOUNDARY` | Testing packages depend on DI abstractions without the full container | architecture tests | exact direct package references for all testing packages |
+| `REQ-VSB-CAPABILITY-DEPENDENCY-BOUNDARIES` | Capability packages contain only their intentional direct edges | architecture tests | exact visualizer and EF Core dependency sets |
+| `REQ-VSB-TESTING-PACKAGE-CONSUMERS` | Each provider-testing package restores, builds, and executes without another direct ViciOne package | package consumer and architecture gates | three isolated consumers against a fresh package feed |
+| `REQ-VSB-PACKED-PUBLIC-API` | Repeated package-only API inventories are byte-identical | package gate and architecture tests | stable structural inventory and identical SHA-256 values |
+
+## Iteration 9 mutation obligations
+
+- Disable central transitive pinning: the evaluated-property guard must fail for every centrally managed project.
+- Change one central-transitive resolved version: the lock-version guard must report the exact project and package.
+- Restore a full DI-container dependency in a testing package: the exact dependency-boundary guard must fail.
+- Add a second direct ViciOne package to an isolated consumer: the package-isolation guard must fail.
+- Include NuGet archive hashes in the public API inventory: independent identical package runs must produce different output and expose the nondeterminism.

@@ -30,7 +30,7 @@ under `artifacts/test-results`.
 
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 3709 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 3818 \
   --max-parallel-test-modules 1
 ```
 
@@ -46,8 +46,9 @@ dotnet format --verify-no-changes ViciOne.ServiceBus.Tests.Unit.slnx
 tools/ci/verify_developer_journeys.sh
 ```
 
-The journey gate packs the current product, restores the sample from those packages, and compiles
-all eighteen examples without a source-project reference.
+The journey gate packs the current product, restores the samples from those packages, and compiles
+all eighteen examples plus three isolated provider-testing consumers without a source-project
+reference. macOS `protoc` startup troubleshooting is documented in [docs/build.md](docs/build.md).
 
 ## Dependency updates
 

@@ -16,12 +16,24 @@ public sealed class DeveloperJourneyArchitectureTests
     [
         "ViciOne.ServiceBus",
         "ViciOne.ServiceBus.AzureServiceBus",
+        "ViciOne.ServiceBus.AzureServiceBus.Testing",
         "ViciOne.ServiceBus.EntityFrameworkCore",
+        "ViciOne.ServiceBus.EventHubs",
+        "ViciOne.ServiceBus.EventHubs.Testing",
         "ViciOne.ServiceBus.MessagePack",
         "ViciOne.ServiceBus.Quartz",
         "ViciOne.ServiceBus.RabbitMq",
+        "ViciOne.ServiceBus.RabbitMq.Testing",
         "ViciOne.ServiceBus.Testing",
     ];
+
+    private static readonly IReadOnlyDictionary<string, string> ExpectedIsolatedTestingConsumers =
+        new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["AzureServiceBusTesting"] = "ViciOne.ServiceBus.AzureServiceBus.Testing",
+            ["EventHubsTesting"] = "ViciOne.ServiceBus.EventHubs.Testing",
+            ["RabbitMqTesting"] = "ViciOne.ServiceBus.RabbitMq.Testing",
+        };
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DEVELOPER-JOURNEYS", "eighteen-locked-package-only-consumer-scenarios")]
@@ -87,6 +99,56 @@ public sealed class DeveloperJourneyArchitectureTests
         Assert.Contains("/lib/net10.0/", source, StringComparison.Ordinal);
         Assert.Contains("GetTypes().Where(IsExternallyVisible)", source, StringComparison.Ordinal);
         Assert.Contains("SHA256.HashData", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Sha256(package)", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Sha256(assemblyFile)", source, StringComparison.Ordinal);
         Assert.DoesNotContain("ProjectReference", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage(
+        "REQ-VSB-TESTING-PACKAGE-CONSUMERS",
+        "all-testing-packages-are-packed-consumed-and-ci-required")]
+    public void PackageConsumerGate_PacksEveryReferencedViciOnePackageAndRunsInCi()
+    {
+        string verifier = Path.Combine(RepositoryLayout.Root, "tools", "ci", "verify_developer_journeys.sh");
+        string script = File.ReadAllText(verifier);
+
+        Assert.All(ExpectedViciOnePackages, package =>
+        {
+            Assert.Contains($"/{package}.csproj\"", script, StringComparison.Ordinal);
+            Assert.Contains($"\"{package}.1.0.0.nupkg\"", script, StringComparison.Ordinal);
+        });
+
+        string consumerRoot = Path.Combine(RepositoryLayout.Root, "samples", "PackageConsumers");
+        string[] actualConsumers = Directory.GetDirectories(consumerRoot)
+            .Select(static path => Path.GetFileName(path)
+                ?? throw new InvalidOperationException($"Package consumer directory has no name: {path}"))
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        Assert.Equal(ExpectedIsolatedTestingConsumers.Keys.Order(StringComparer.Ordinal), actualConsumers);
+
+        Assert.All(ExpectedIsolatedTestingConsumers, expected =>
+        {
+            string directory = Path.Combine(consumerRoot, expected.Key);
+            string projectPath = Assert.Single(Directory.GetFiles(directory, "*.csproj"));
+            XDocument project = XDocument.Load(projectPath);
+            XElement package = Assert.Single(
+                project.Descendants("PackageReference"),
+                static reference => reference.Attribute("Include")!.Value.StartsWith("ViciOne.", StringComparison.Ordinal));
+
+            Assert.Equal(expected.Value, package.Attribute("Include")!.Value);
+            Assert.Equal("1.0.0", package.Attribute("Version")!.Value);
+            Assert.Empty(project.Descendants("ProjectReference"));
+            Assert.Equal("true", project.Descendants("ViciOnePackageConsumer").Single().Value);
+            string relativePath = RepositoryLayout.RelativeToRoot(projectPath);
+            Assert.Contains($"$repository_root/{relativePath}", script, StringComparison.Ordinal);
+        });
+
+        string workflow = File.ReadAllText(Path.Combine(
+            RepositoryLayout.Root,
+            ".github",
+            "workflows",
+            "native-tests.yml"));
+        Assert.Contains("tools/ci/verify_developer_journeys.sh", workflow, StringComparison.Ordinal);
     }
 }

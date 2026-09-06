@@ -206,3 +206,36 @@ The only product C# file absent from every evaluated compile graph was an unused
 - Release engineering-solution build with warnings as errors: passed, 0 warnings and 0 errors.
 - Engineering whitespace and warning-level style verification: passed.
 - Requirement manifests, exact compile ownership, and Git whitespace: passed.
+
+## Iteration 9
+
+Iteration 9 enables central transitive pinning for all 76 centrally managed projects and refreshes
+the affected lock graphs. All 599 `CentralTransitive` entries now resolve the exact centrally
+declared minimum, and the central catalog rejects unused declarations. Provider-testing projects
+depend on DI abstractions, while the only test project requiring the concrete container declares it
+directly. The EF Core and state-machine visualizer capability graphs no longer contain their
+unnecessary direct edges.
+
+The package gate now packs all 19 journey dependencies and executes three isolated provider-testing
+consumers. Each consumer has exactly one direct ViciOne package reference, so another package cannot
+mask a missing delivery dependency. The package-only public API inventory was also corrected to
+exclude nondeterministic archive/binary hashes; two independent complete runs produced byte-identical
+21,456-line inventories for 17 assemblies at SHA-256
+`9ab6338dc80bde415609ac282c141f4c006168d6a9e10b964aea7c2137f44c27`.
+
+### Red/green and mutation evidence
+
+- The initial 215-test architecture profile had seven failing dependency, package, and documentation contracts; the corrected profile passed 215/215.
+- Four isolated mutations were killed: disabled transitive pinning, a mismatched central-transitive lock version, a full-container testing dependency, and an extra direct ViciOne consumer dependency.
+- A pre-correction double pack proved NuGet archive hashes differed; the corrected structural API inventories were byte-identical across two complete fresh-package runs.
+- Every mutation was removed before final validation.
+
+### Full validation
+
+- Engineering locked restore: passed for the complete 76-project solution graph.
+- Release Engineering build with warnings as errors: passed, 0 warnings and 0 errors.
+- Complete Unit/Architecture profile: 3,818 passed, 0 failed, 0 skipped.
+- Package-consumer gate: 18 journeys, 19 packages, and 3 isolated consumers passed.
+- Shipping solution pack: 26 packable artifacts produced from 30 solution projects.
+- Current NuGet advisory inventory: 0 findings and 0 unresolved paths.
+- Engineering whitespace, warning-level style, architecture manifests, and Git whitespace: passed.

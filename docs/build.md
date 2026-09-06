@@ -47,7 +47,7 @@ tests fail.
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 3709 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 3818 \
   --max-parallel-test-modules 1
 ```
 
@@ -58,9 +58,29 @@ dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore
 tools/ci/verify_developer_journeys.sh
 ```
 
-The second command creates a temporary feed, packs fifteen product packages, restores the
-package-only sample, compiles all eighteen journeys with warnings as errors, and generates a public
-API inventory under `artifacts/verification`.
+The second command creates a temporary feed, packs nineteen product packages, restores the
+package-only samples, compiles all eighteen journeys and three isolated provider-testing consumers
+with warnings as errors, and generates a deterministic public API inventory under
+`artifacts/verification`.
+
+### macOS `protoc` startup troubleshooting
+
+If a macOS x64 build remains in `ProtoCompile` and the `Grpc.Tools` `protoc` process remains in
+uninterruptible state, copy the resolved compiler from the NuGet cache to a temporary executable,
+ad-hoc sign that copy, and select it explicitly:
+
+```bash
+mkdir -p /private/tmp/vicione-servicebus-protoc
+cp ~/.nuget/packages/grpc.tools/2.83.0/tools/macosx_x64/protoc \
+  /private/tmp/vicione-servicebus-protoc/protoc
+chmod 755 /private/tmp/vicione-servicebus-protoc/protoc
+codesign --force --sign - /private/tmp/vicione-servicebus-protoc/protoc
+PROTOBUF_PROTOC=/private/tmp/vicione-servicebus-protoc/protoc \
+  dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore -warnaserror
+```
+
+This workaround changes neither the tracked dependency nor the repository. Replace `2.83.0` when
+the centrally managed `Grpc.Tools` version changes.
 
 ## Provider-backed profiles
 

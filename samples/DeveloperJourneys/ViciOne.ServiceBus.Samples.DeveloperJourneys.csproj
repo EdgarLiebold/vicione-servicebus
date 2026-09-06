@@ -5,6 +5,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
     <ViciOnePackageConsumer>true</ViciOnePackageConsumer>
     <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
@@ -17,10 +18,14 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.11" />
     <PackageReference Include="ViciOne.ServiceBus" Version="1.0.0" />
     <PackageReference Include="ViciOne.ServiceBus.AzureServiceBus" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.AzureServiceBus.Testing" Version="1.0.0" />
     <PackageReference Include="ViciOne.ServiceBus.EntityFrameworkCore" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.EventHubs" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.EventHubs.Testing" Version="1.0.0" />
     <PackageReference Include="ViciOne.ServiceBus.MessagePack" Version="1.0.0" />
     <PackageReference Include="ViciOne.ServiceBus.Quartz" Version="1.0.0" />
     <PackageReference Include="ViciOne.ServiceBus.RabbitMq" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.RabbitMq.Testing" Version="1.0.0" />
     <PackageReference Include="ViciOne.ServiceBus.Testing" Version="1.0.0" />
   </ItemGroup>
 

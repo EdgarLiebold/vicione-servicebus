@@ -95,6 +95,14 @@ public sealed class CapabilityPackageArchitectureTests
             "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
             "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
             "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj");
+        AssertProductReferences(
+            "src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj",
+            "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+            "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj");
+
+        AssertDirectPackages(
+            "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj",
+            "Microsoft.EntityFrameworkCore.Relational");
 
         AssertAssembly("ViciOne.ServiceBus.EntityFrameworkCore.Sagas", typeof(SagaDbContext));
         Assert.DoesNotContain(ProductAssemblyFacts.ReferencedAssemblyNames(
@@ -127,6 +135,19 @@ public sealed class CapabilityPackageArchitectureTests
             .Select(static reference => reference.Replace('\\', Path.DirectorySeparatorChar))
             .Select(reference => Path.GetFullPath(Path.Combine(projectDirectory, reference)))
             .Select(RepositoryLayout.RelativeToRoot)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(expected.Order(StringComparer.Ordinal), actual);
+    }
+
+    private static void AssertDirectPackages(string project, params string[] expected)
+    {
+        string projectPath = Path.Combine(RepositoryLayout.Root, project);
+        string[] actual = XDocument.Load(projectPath)
+            .Descendants("PackageReference")
+            .Select(static reference => reference.Attribute("Include")?.Value)
+            .OfType<string>()
             .Order(StringComparer.Ordinal)
             .ToArray();
 

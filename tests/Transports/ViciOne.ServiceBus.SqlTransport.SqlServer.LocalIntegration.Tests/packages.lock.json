@@ -431,7 +431,6 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
-          "Microsoft.Extensions.Caching.Memory": "[10.0.11, )",
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
@@ -491,7 +490,7 @@
       "vicione.servicebus.testing": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection": "[10.0.11, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Hosting.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Options": "[10.0.11, )",
           "ViciOne.ServiceBus": "[1.0.0, )",

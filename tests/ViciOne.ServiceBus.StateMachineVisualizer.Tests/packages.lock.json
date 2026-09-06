@@ -221,7 +221,7 @@
         "dependencies": {
           "QuikGraph": "[2.5.0, )",
           "QuikGraph.Graphviz": "[2.5.0, )",
-          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Abstractions": "[1.0.0, )",
           "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
         }
       },

@@ -345,6 +345,32 @@ public sealed class RepositoryGraphTests
     }
 
     [Fact]
+    [RequirementCoverage(
+        "REQ-VSB-TESTING-DEPENDENCY-BOUNDARY",
+        "testing-packages-use-di-contracts-without-container-implementation")]
+    public void TestingPackages_UseDependencyInjectionAbstractionsWithoutTheContainerImplementation()
+    {
+        string[] testingProjects = RepositoryLayout.ProductProjects
+            .Where(project => Path.GetFileNameWithoutExtension(project)
+                .EndsWith(".Testing", StringComparison.Ordinal))
+            .ToArray();
+
+        Assert.Equal(4, testingProjects.Length);
+
+        foreach (string project in testingProjects)
+        {
+            string[] packages = XDocument.Load(project)
+                .Descendants("PackageReference")
+                .Select(reference => reference.Attribute("Include")?.Value)
+                .OfType<string>()
+                .ToArray();
+
+            Assert.Contains("Microsoft.Extensions.DependencyInjection.Abstractions", packages);
+            Assert.DoesNotContain("Microsoft.Extensions.DependencyInjection", packages);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SOURCE-LAYOUT", "product-paths-have-no-adjacent-repeated-directory")]
     public void ProductSourcePaths_HaveNoAdjacentRepeatedDirectorySegment()
     {
