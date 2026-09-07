@@ -50,6 +50,40 @@ public sealed class MessageTypeCacheImmutabilityTests
             Assert.Equal("type", Assert.Throws<ArgumentNullException>(call).ParamName);
     }
 
+    [Theory]
+    [InlineData(typeof(int), "reference types")]
+    [InlineData(typeof(Action), "Delegates")]
+    [InlineData(typeof(OpenGenericMessage<>), "open generic")]
+    [RequirementCoverage("REQ-VSB-METADATA-VALIDATION", "invalid-runtime-contract-shapes")]
+    public void RuntimeTypeApis_ReturnConsistentMetadataForInvalidContractShapes(Type invalidType, string reasonFragment)
+    {
+        Assert.False(MessageTypeCache.IsValidMessageType(invalidType));
+        Assert.False(MessageTypeCache.IsTemporaryMessageType(invalidType));
+        Assert.Contains(reasonFragment, MessageTypeCache.InvalidMessageTypeReason(invalidType), StringComparison.Ordinal);
+        Assert.Empty(MessageTypeCache.GetProperties(invalidType));
+        Assert.Empty(MessageTypeCache.GetMessageTypes(invalidType));
+        Assert.Empty(MessageTypeCache.GetMessageTypeNames(invalidType));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-METADATA-VALIDATION", "invalid-generic-contract-shapes")]
+    public void GenericCache_ReturnsConsistentMetadataForInvalidContractShapes()
+    {
+        Assert.False(MessageTypeCache<int>.IsValidMessageType);
+        Assert.False(MessageTypeCache<int>.IsTemporaryMessageType);
+        Assert.Contains("reference types", MessageTypeCache<int>.InvalidMessageTypeReason, StringComparison.Ordinal);
+        Assert.Empty(MessageTypeCache<int>.Properties);
+        Assert.Empty(MessageTypeCache<int>.MessageTypes);
+        Assert.Empty(MessageTypeCache<int>.MessageTypeNames);
+
+        Assert.False(MessageTypeCache<Action>.IsValidMessageType);
+        Assert.False(MessageTypeCache<Action>.IsTemporaryMessageType);
+        Assert.Contains("Delegates", MessageTypeCache<Action>.InvalidMessageTypeReason, StringComparison.Ordinal);
+        Assert.Empty(MessageTypeCache<Action>.Properties);
+        Assert.Empty(MessageTypeCache<Action>.MessageTypes);
+        Assert.Empty(MessageTypeCache<Action>.MessageTypeNames);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-METADATA-IMMUTABILITY", "cached-state-cannot-be-mutated")]
     public void CachedCollections_RejectMutationAndRemainStableAcrossReaders()
@@ -83,4 +117,6 @@ public sealed class MessageTypeCacheImmutabilityTests
     private interface CacheContract;
 
     private sealed record CacheMessage(string Value) : CacheContract;
+
+    private sealed class OpenGenericMessage<T>;
 }

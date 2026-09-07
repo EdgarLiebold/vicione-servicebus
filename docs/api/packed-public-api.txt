@@ -2799,10 +2799,6 @@ TYPE class public ViciOne.ServiceBus.MessageTooLargeException [sealed,base=Syste
 TYPE class public ViciOne.ServiceBus.MessageUrnAttribute [sealed,base=System.Attribute]
   CTOR public ViciOne.ServiceBus.MessageUrnAttribute(System.String urn, System.Boolean useDefaultPrefix = true)
   PROPERTY System.Uri Urn { public-get;  }
-TYPE class public ViciOne.ServiceBus.Metadata.Activation [static]
-  METHOD public static TResult Activate<TResult,T1,T2>(System.Type type, ViciOne.ServiceBus.Metadata.IActivationType<TResult,T1,T2> activationType, T1 arg1, T2 arg2)
-  METHOD public static TResult Activate<TResult,T1>(System.Type type, ViciOne.ServiceBus.Metadata.IActivationType<TResult,T1> activationType, T1 arg1)
-  METHOD public static TResult Activate<TResult>(System.Type type, ViciOne.ServiceBus.Metadata.IActivationType<TResult> activationType)
 TYPE class public ViciOne.ServiceBus.Metadata.BusHostInfo [sealed]
   CTOR public ViciOne.ServiceBus.Metadata.BusHostInfo()
   PROPERTY System.Int32 ProcessId { public-get; public-set; }
@@ -2820,12 +2816,6 @@ TYPE class public ViciOne.ServiceBus.Metadata.HostMetadataCache [static]
   PROPERTY System.Boolean IsRunningInContainer { public-get;  }
   PROPERTY ViciOne.ServiceBus.HostInfo Empty { public-get;  }
   PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Metadata.IActivationType<TResult,T1,T2>
-  METHOD public abstract TResult ActivateType<T>(T1 arg1, T2 arg2)
-TYPE interface public ViciOne.ServiceBus.Metadata.IActivationType<TResult,T1>
-  METHOD public abstract TResult ActivateType<T>(T1 arg1)
-TYPE interface public ViciOne.ServiceBus.Metadata.IActivationType<TResult>
-  METHOD public abstract TResult ActivateType<T>()
 TYPE interface public ViciOne.ServiceBus.Metadata.IImplementedMessageType
   METHOD public abstract System.Void ImplementsMessageType<T>(System.Boolean direct)
 TYPE interface public ViciOne.ServiceBus.Metadata.IImplementedMessageTypeCache<TMessage>

@@ -92,6 +92,29 @@ public sealed class MessageUrnTests
     }
 
     [Theory]
+    [InlineData(typeof(int))]
+    [InlineData(typeof(Action))]
+    [RequirementCoverage("REQ-VSB-MESSAGE-URN-DERIVATION", "invalid-runtime-contract-shapes")]
+    public void RuntimeTypeOverloads_RejectTypesThatCannotBeMessageContracts(Type invalidType)
+    {
+        var urnException = Assert.Throws<ArgumentException>(() => MessageUrn.ForType(invalidType));
+        var stringException = Assert.Throws<ArgumentException>(() => MessageUrn.ForTypeString(invalidType));
+
+        Assert.Equal("type", urnException.ParamName);
+        Assert.Equal("type", stringException.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-URN-DERIVATION", "invalid-generic-contract-shapes")]
+    public void GenericOverloads_RejectTypesThatCannotBeMessageContracts()
+    {
+        Assert.Equal("type", Assert.Throws<ArgumentException>(MessageUrn.ForType<int>).ParamName);
+        Assert.Equal("type", Assert.Throws<ArgumentException>(MessageUrn.ForTypeString<int>).ParamName);
+        Assert.Equal("type", Assert.Throws<ArgumentException>(MessageUrn.ForType<Action>).ParamName);
+        Assert.Equal("type", Assert.Throws<ArgumentException>(MessageUrn.ForTypeString<Action>).ParamName);
+    }
+
+    [Theory]
     [InlineData(DeconstructionShape.NameOnly, "MyCustomName", null, null)]
     [InlineData(DeconstructionShape.NamespaceAndName, "OrderSubmitted", "Contracts", null)]
     [InlineData(DeconstructionShape.AssemblyQualified, "OrderSubmitted", "Contracts", "ContractAssembly")]

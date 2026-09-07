@@ -222,7 +222,7 @@ public sealed class TypeRelationshipExtensionsTests
         AssemblyBuilder assembly = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
         ModuleBuilder module = assembly.DefineDynamicModule(assemblyName.Name!);
         TypeBuilder builder = module.DefineType(
-            "CollectibleMarker",
+            "ViciOne.ServiceBus.Tests.Dynamic.CollectibleMarker",
             TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Sealed);
         builder.AddInterfaceImplementation(typeof(ICollectibleMarker<int>));
         builder.DefineDefaultConstructor(MethodAttributes.Public);
@@ -231,6 +231,12 @@ public sealed class TypeRelationshipExtensionsTests
         Assert.True(implementation.ClosesGenericType(typeof(ICollectibleMarker<>)));
         Assert.Equal([typeof(ICollectibleMarker<int>)], implementation.GetClosedGenericTypes(typeof(ICollectibleMarker<>)));
         Assert.Contains("CollectibleMarker", TypeCache.GetShortName(implementation), StringComparison.Ordinal);
+        Assert.Contains("CollectibleMarker", MessageUrn.ForTypeString(implementation), StringComparison.Ordinal);
+        Assert.True(MessageTypeCache.IsValidMessageType(implementation));
+        Assert.Contains(implementation, MessageTypeCache.GetMessageTypes(implementation));
+        Assert.Contains(
+            MessageTypeCache.GetMessageTypeNames(implementation),
+            urn => urn.Contains("CollectibleMarker", StringComparison.Ordinal));
 
         return new WeakReference(implementation);
     }

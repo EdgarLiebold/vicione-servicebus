@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Concurrent;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using ViciOne.ServiceBus.Metadata;
 
@@ -13,7 +13,7 @@ public sealed class MessageUrn :
     /// <summary>Identifies canonical message-contract URNs.</summary>
     public const string Prefix = "urn:message:";
 
-    static readonly ConcurrentDictionary<Type, Cached> _cache = new();
+    static readonly ConditionalWeakTable<Type, Cached> _cache = new();
 
     MessageUrn(string uriString)
         : base(uriString)
@@ -25,6 +25,7 @@ public sealed class MessageUrn :
     /// <returns>The canonical message URN.</returns>
     public static MessageUrn ForType<T>()
     {
+        ValidateType(typeof(T));
         return MessageUrnCache<T>.Urn;
     }
 
@@ -33,6 +34,7 @@ public sealed class MessageUrn :
     /// <returns>The canonical message URN text.</returns>
     public static string ForTypeString<T>()
     {
+        ValidateType(typeof(T));
         return MessageUrnCache<T>.UrnString;
     }
 
@@ -43,7 +45,7 @@ public sealed class MessageUrn :
     {
         ValidateType(type);
 
-        return _cache.GetOrAdd(type, ValueFactory).Urn;
+        return _cache.GetValue(type, ValueFactory).Urn;
     }
 
     /// <summary>Gets the cached canonical URN text for a runtime message contract.</summary>
@@ -53,7 +55,7 @@ public sealed class MessageUrn :
     {
         ValidateType(type);
 
-        return _cache.GetOrAdd(type, ValueFactory).UrnString;
+        return _cache.GetValue(type, ValueFactory).UrnString;
     }
 
     static void ValidateType(Type type)
@@ -61,7 +63,13 @@ public sealed class MessageUrn :
         ArgumentNullException.ThrowIfNull(type);
 
         if (type.ContainsGenericParameters)
-            throw new ArgumentException("A message type may not contain generic parameters", nameof(type));
+            throw new ArgumentException("A message contract cannot contain unbound generic parameters.", nameof(type));
+
+        if (!type.IsClass && !type.IsInterface)
+            throw new ArgumentException("A message contract must be a reference type.", nameof(type));
+
+        if (typeof(Delegate).IsAssignableFrom(type))
+            throw new ArgumentException("A delegate cannot be used as a message contract.", nameof(type));
     }
 
     static Cached ValueFactory(Type type)

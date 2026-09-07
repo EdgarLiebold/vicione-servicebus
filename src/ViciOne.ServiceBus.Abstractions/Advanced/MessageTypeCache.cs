@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Metadata;
 
@@ -14,7 +14,21 @@ public static class MessageTypeCache
     static CachedType GetOrAdd(Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
-        return Cached.Instance.GetOrAdd(type, _ => Activation.Activate(type, new Factory()));
+        return Cached.Instance.GetValue(type, CreateCachedType);
+    }
+
+    static CachedType CreateCachedType(Type type)
+    {
+        if (type.ContainsGenericParameters)
+            return new InvalidCachedType($"Message types must not be open generic types: {type.GetTypeName()}");
+
+        if (!type.IsClass && !type.IsInterface)
+            return new InvalidCachedType($"Message types must be reference types: {type.GetTypeName()}");
+
+        if (typeof(Delegate).IsAssignableFrom(type))
+            return new InvalidCachedType($"Delegates are not valid message types: {type.GetTypeName()}");
+
+        return Activation.Activate(type, new Factory());
     }
 
     /// <summary>Gets the readable instance properties exposed by a message contract.</summary>
@@ -79,7 +93,7 @@ public static class MessageTypeCache
 
     static class Cached
     {
-        internal static readonly ConcurrentDictionary<Type, CachedType> Instance = new();
+        internal static readonly ConditionalWeakTable<Type, CachedType> Instance = new();
     }
 
 
@@ -104,6 +118,28 @@ public static class MessageTypeCache
         public IReadOnlyList<string> MessageTypeNames => MessageTypeCache<T>.MessageTypeNames;
 
         public IReadOnlyList<PropertyInfo> Properties => MessageTypeCache<T>.Properties;
+    }
+
+
+    sealed class InvalidCachedType :
+        CachedType
+    {
+        static readonly IReadOnlyList<Type> _messageTypes = Array.AsReadOnly(Array.Empty<Type>());
+        static readonly IReadOnlyList<string> _messageTypeNames = Array.AsReadOnly(Array.Empty<string>());
+        static readonly IReadOnlyList<PropertyInfo> _properties = Array.AsReadOnly(Array.Empty<PropertyInfo>());
+        readonly string _reason;
+
+        public InvalidCachedType(string reason)
+        {
+            _reason = reason;
+        }
+
+        public bool IsTemporaryMessageType => false;
+        public bool IsValidMessageType => false;
+        public string InvalidMessageTypeReason => _reason;
+        public IReadOnlyList<Type> MessageTypes => _messageTypes;
+        public IReadOnlyList<string> MessageTypeNames => _messageTypeNames;
+        public IReadOnlyList<PropertyInfo> Properties => _properties;
     }
 }
 
@@ -158,7 +194,11 @@ public sealed class MessageTypeCache<T> :
 
     static IReadOnlyList<PropertyInfo> PropertyListFactory()
     {
-        PropertyInfo[] properties = typeof(T).GetReadableInstanceProperties()
+        Type type = typeof(T);
+        if (type.ContainsGenericParameters || (!type.IsClass && !type.IsInterface) || typeof(Delegate).IsAssignableFrom(type))
+            return Array.AsReadOnly(Array.Empty<PropertyInfo>());
+
+        PropertyInfo[] properties = type.GetReadableInstanceProperties()
             .GroupBy(x => x.Name)
             .Select(x => x.Last())
             .ToArray();
@@ -210,6 +250,18 @@ public sealed class MessageTypeCache<T> :
     bool CheckIfValidMessageType()
     {
         var type = typeof(T);
+
+        if (!type.IsClass && !type.IsInterface)
+        {
+            _invalidMessageTypeReason = $"Message types must be reference types: {TypeCache<T>.ShortName}";
+            return false;
+        }
+
+        if (typeof(Delegate).IsAssignableFrom(type))
+        {
+            _invalidMessageTypeReason = $"Delegates are not valid message types: {TypeCache<T>.ShortName}";
+            return false;
+        }
 
         var ns = type.Namespace;
         if (ns == null)
@@ -274,6 +326,9 @@ public sealed class MessageTypeCache<T> :
     static string GetDiagnosticAddress()
     {
         const string activity = "Activity";
+
+        if (!IsValidMessageType)
+            return TypeCache<T>.ShortName;
 
         if (typeof(T).GetInterfaces().Any(static type =>
                 type.IsDefined(typeof(ActivityContractAttribute), inherit: false)))
