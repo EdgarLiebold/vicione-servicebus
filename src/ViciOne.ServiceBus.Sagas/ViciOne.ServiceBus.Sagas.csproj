@@ -18,23 +18,4 @@
     <InternalsVisibleTo Include="ViciOne.ServiceBus.Futures" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/Saga/**/*.cs" Link="Saga/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/SagaStateMachine/**/*.cs" Link="SagaStateMachine/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/Configuration/SagaEndpointDefinition.cs" Link="Configuration/DependencyInjection/Configuration/SagaEndpointDefinition.cs" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/ISagaDefinition.cs" Link="Configuration/DependencyInjection/ISagaDefinition.cs" />
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/SagaDefinition.cs" Link="Configuration/DependencyInjection/SagaDefinition.cs" />
-    <Compile Include="../ViciOne.ServiceBus/Sagas/**/*.cs" Link="Sagas/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus/SagaStateMachine/**/*.cs" Link="SagaStateMachine/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus/**/*Saga*.cs"
-             Exclude="../ViciOne.ServiceBus/Sagas/**/*.cs;../ViciOne.ServiceBus/SagaStateMachine/**/*.cs;../ViciOne.ServiceBus/JobService/**/*.cs;../ViciOne.ServiceBus/Futures/**/*.cs;../ViciOne.ServiceBus/Courier/**/*.cs;../ViciOne.ServiceBus/**/*JobSaga*.cs"
-             Link="CoreIntegration/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus/Configuration/IRequestStateMachineMissingInstanceConfigurator.cs"
-             Link="Configuration/IRequestStateMachineMissingInstanceConfigurator.cs" />
-    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/RegistrationServiceCollectionExtensions.cs" Link="DependencyInjection/Configuration/RegistrationServiceCollectionExtensions.cs" />
-    <Compile Include="../ViciOne.ServiceBus/Topology/CorrelatedByMessageCorrelationId.cs" Link="Topology/CorrelatedByMessageCorrelationId.cs" />
-    <Compile Include="../ViciOne.ServiceBus/Middleware/MissingInstanceRedeliveryPipe.cs" Link="Middleware/MissingInstanceRedeliveryPipe.cs" />
-    <Compile Include="../ViciOne.ServiceBus/Initializers/PropertyConverters/StatePropertyConverter.cs" Link="Initializers/PropertyConverters/StatePropertyConverter.cs" />
-    <Compile Include="../ViciOne.ServiceBus/Initializers/TypeConverters/StateTypeConverter.cs" Link="Initializers/TypeConverters/StateTypeConverter.cs" />
-  </ItemGroup>
 </Project>

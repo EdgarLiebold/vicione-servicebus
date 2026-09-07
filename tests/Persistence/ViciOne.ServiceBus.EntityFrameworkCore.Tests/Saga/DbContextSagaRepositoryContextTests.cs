@@ -128,6 +128,48 @@ public sealed class DbContextSagaRepositoryContextTests
         Assert.Same(expected, actual);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-CANCELLATION", "explicit-operation-token-overrides-ambient-token")]
+    public async Task Load_UsesTheExplicitOperationTokenAheadOfTheAmbientTokenAsync()
+    {
+        using var ambientCancellation = new CancellationTokenSource();
+        ambientCancellation.Cancel();
+        await using var dbContext = new SagaDbContext(
+            new DbContextOptionsBuilder<SagaDbContext>().UseSqlite("Data Source=:memory:").Options);
+        var lockStrategy = new RecordingLockStrategy();
+        using var repository = CreateRepositoryContext(dbContext, lockStrategy, ambientCancellation.Token);
+
+        SagaConsumeContext<TestSaga, TestMessage>? result = await repository.LoadAsync(
+            Guid.Parse("b0c0115c-42f1-49c8-a5bf-bd08f16120ad"),
+            TestContext.Current.CancellationToken);
+
+        Assert.Null(result);
+        Assert.Equal(1, lockStrategy.LoadCount);
+        Assert.Equal(TestContext.Current.CancellationToken, lockStrategy.LastCancellationToken);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-CANCELLATION", "default-operation-token-inherits-ambient-cancellation")]
+    public async Task Load_InheritsAmbientCancellationWhenNoOperationTokenIsSuppliedAsync()
+    {
+        using var ambientCancellation = new CancellationTokenSource();
+        ambientCancellation.Cancel();
+        await using var dbContext = new SagaDbContext(
+            new DbContextOptionsBuilder<SagaDbContext>().UseSqlite("Data Source=:memory:").Options);
+        var lockStrategy = new RecordingLockStrategy();
+        using var repository = CreateRepositoryContext(dbContext, lockStrategy, ambientCancellation.Token);
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            LoadWithoutOperationTokenAsync(repository, Guid.Parse("f5bb594b-c5dd-469e-8e86-f46470458708")));
+
+        Assert.Equal(ambientCancellation.Token, exception.CancellationToken);
+        Assert.Equal(0, lockStrategy.LoadCount);
+    }
+
+    private static Task<SagaConsumeContext<TestSaga, TestMessage>?> LoadWithoutOperationTokenAsync(
+        DbContextSagaRepositoryContext<TestSaga, TestMessage> repository,
+        Guid correlationId) => repository.LoadAsync(correlationId);
+
     private static Task ExecuteWriteAsync(
         DbContextSagaRepositoryContext<TestSaga, TestMessage> repository,
         SagaConsumeContext<TestSaga, TestMessage> sagaContext,
@@ -144,19 +186,20 @@ public sealed class DbContextSagaRepositoryContextTests
 
     private static DbContextSagaRepositoryContext<TestSaga, TestMessage> CreateRepositoryContext(
         DbContext dbContext,
-        ISagaRepositoryLockStrategy<TestSaga> lockStrategy)
+        ISagaRepositoryLockStrategy<TestSaga> lockStrategy,
+        CancellationToken? consumeCancellationToken = null)
     {
         return new DbContextSagaRepositoryContext<TestSaga, TestMessage>(
             dbContext,
-            CreateConsumeContext(),
+            CreateConsumeContext(consumeCancellationToken ?? TestContext.Current.CancellationToken),
             new SagaConsumeContextFactory<DbContext, TestSaga>(),
             lockStrategy);
     }
 
-    private static ConsumeContext<TestMessage> CreateConsumeContext()
+    private static ConsumeContext<TestMessage> CreateConsumeContext(CancellationToken cancellationToken)
     {
         TestConsumeContext context = DispatchProxy.Create<TestConsumeContext, ConsumeContextProxy>();
-        ((ConsumeContextProxy)(object)context).Configure(TestContext.Current.CancellationToken);
+        ((ConsumeContextProxy)(object)context).Configure(cancellationToken);
         return context;
     }
 
@@ -238,6 +281,19 @@ public sealed class DbContextSagaRepositoryContextTests
     private sealed class ExistingLockStrategy : BaseLockStrategy
     {
         public override Task<TestSaga?> LoadAsync(DbContext context, Guid correlationId, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga.DbContextSagaRepositoryContextTests.TestSaga?>(cancellationToken); return Task.FromResult<TestSaga?>(new TestSaga { CorrelationId = correlationId, Value = "existing" }); }
+    }
+
+    private sealed class RecordingLockStrategy : BaseLockStrategy
+    {
+        public int LoadCount { get; private set; }
+        public CancellationToken LastCancellationToken { get; private set; }
+
+        public override Task<TestSaga?> LoadAsync(DbContext context, Guid correlationId, CancellationToken cancellationToken = default)
+        {
+            LoadCount++;
+            LastCancellationToken = cancellationToken;
+            return Task.FromResult<TestSaga?>(null);
+        }
     }
 
     private abstract class BaseLockStrategy : ISagaRepositoryLockStrategy<TestSaga>

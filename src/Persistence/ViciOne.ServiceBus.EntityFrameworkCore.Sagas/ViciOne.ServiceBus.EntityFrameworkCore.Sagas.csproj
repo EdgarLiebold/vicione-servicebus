@@ -22,32 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkCoreJobServiceConfigurationExtensions.cs" Link="Configuration/EntityFrameworkCoreJobServiceConfigurationExtensions.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkCoreSagaRepositoryRegistrationExtensions.cs" Link="Configuration/EntityFrameworkCoreSagaRepositoryRegistrationExtensions.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkSagaRepositoryConfigurator.cs" Link="Configuration/EntityFrameworkSagaRepositoryConfigurator.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkSagaRepositoryRegistrationProvider.cs" Link="Configuration/EntityFrameworkSagaRepositoryRegistrationProvider.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/Configuration/IEntityFrameworkSagaRepository.cs" Link="Configuration/IEntityFrameworkSagaRepository.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/Configuration/IEntityFrameworkSagaRepositoryConfigurator.cs" Link="Configuration/IEntityFrameworkSagaRepositoryConfigurator.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/Configuration/EntityFrameworkSagaRepository.cs" Link="EntityFrameworkCoreIntegration/Configuration/EntityFrameworkSagaRepository.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/EntityFrameworkSagaRepository.cs" Link="EntityFrameworkCoreIntegration/EntityFrameworkSagaRepository.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/FutureSagaDbContext.cs" Link="EntityFrameworkCoreIntegration/FutureSagaDbContext.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/FutureStateMap.cs" Link="EntityFrameworkCoreIntegration/FutureStateMap.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/ILoadQueryExecutor.cs" Link="EntityFrameworkCoreIntegration/ILoadQueryExecutor.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/ISagaClassMap.cs" Link="EntityFrameworkCoreIntegration/ISagaClassMap.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/ISagaDbContextFactory.cs" Link="EntityFrameworkCoreIntegration/ISagaDbContextFactory.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/ISagaRepositoryLockStrategy.cs" Link="EntityFrameworkCoreIntegration/ISagaRepositoryLockStrategy.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/JobAttemptSagaMap.cs" Link="EntityFrameworkCoreIntegration/JobAttemptSagaMap.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/JobSagaMap.cs" Link="EntityFrameworkCoreIntegration/JobSagaMap.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/JobServiceSagaDbContext.cs" Link="EntityFrameworkCoreIntegration/JobServiceSagaDbContext.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/JobTypeSagaMap.cs" Link="EntityFrameworkCoreIntegration/JobTypeSagaMap.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/OptimisticFutureSagaDbContext.cs" Link="EntityFrameworkCoreIntegration/OptimisticFutureSagaDbContext.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/OptimisticJobServiceSagaDbContext.cs" Link="EntityFrameworkCoreIntegration/OptimisticJobServiceSagaDbContext.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/Saga/**/*.cs" Link="EntityFrameworkCoreIntegration/Saga/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkCoreIntegration/SagaDbContext.cs" Link="EntityFrameworkCoreIntegration/SagaDbContext.cs" />
-    <Compile Include="../ViciOne.ServiceBus.EntityFrameworkCore/SagaClassMap.cs" Link="SagaClassMap.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <InternalsVisibleTo Include="ViciOne.ServiceBus.EntityFrameworkCore.Tests" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
     <InternalsVisibleTo Include="ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
   </ItemGroup>

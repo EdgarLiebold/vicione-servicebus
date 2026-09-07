@@ -28,35 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Sagas/**/*.cs" />
-    <Compile Remove="SagaStateMachine/**/*.cs" />
-    <Compile Remove="**/*Saga*.cs" />
-    <Compile Remove="Configuration/IRequestStateMachineMissingInstanceConfigurator.cs" />
-    <Compile Remove="Initializers/PropertyConverters/StatePropertyConverter.cs" />
-    <Compile Remove="Initializers/TypeConverters/StateTypeConverter.cs" />
-    <Compile Remove="Configuration/DependencyInjection/InMemorySagaRepositoryRegistrationExtensions.cs" />
-    <Compile Remove="Configuration/SagaExtensions.cs" />
-    <Compile Remove="Configuration/SagaStateMachineReceiveEndpointExtensions.cs" />
-    <Compile Remove="DependencyInjection/Configuration/DefaultSagaDefinition.cs" />
-    <Compile Remove="DependencyInjection/Configuration/DependencyInjectionSagaRegistrationExtensions.cs" />
-    <Compile Remove="DependencyInjection/Configuration/DependencyInjectionSagaStateMachineRegistrationExtensions.cs" />
-    <Compile Remove="DependencyInjection/Configuration/InMemorySagaRepositoryRegistrationProvider.cs" />
-    <Compile Remove="DependencyInjection/Configuration/RegistrationServiceCollectionExtensions.cs" />
-    <Compile Remove="DependencyInjection/Configuration/SagaRepositoryRegistrationProvider.cs" />
-    <Compile Remove="DependencyInjection/DependencyInjectionLoadSagaRepository.cs" />
-    <Compile Remove="DependencyInjection/DependencyInjectionQuerySagaRepository.cs" />
-    <Compile Remove="DependencyInjection/DependencyInjectionSagaRepository.cs" />
-    <Compile Remove="DependencyInjection/DependencyInjectionSagaRepositoryContextFactory.cs" />
-    <Compile Remove="DependencyInjection/Registration/Sagas/**/*.cs" />
-    <Compile Remove="Middleware/MissingSagaPipe.cs" />
-    <Compile Remove="Middleware/MissingInstanceRedeliveryPipe.cs" />
-    <Compile Remove="Middleware/SendQuerySagaPipe.cs" />
-    <Compile Remove="Middleware/SendSagaPipe.cs" />
-    <Compile Remove="Middleware/StateMachineSagaMessageFilter.cs" />
-    <Compile Remove="Topology/CorrelatedByMessageCorrelationId.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <InternalsVisibleTo Include="ViciOne.ServiceBus.Tests.InternalAccess" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
     <InternalsVisibleTo Include="ViciOne.ServiceBus.Testing" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
     <InternalsVisibleTo Include="ViciOne.ServiceBus.ActiveMq" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />

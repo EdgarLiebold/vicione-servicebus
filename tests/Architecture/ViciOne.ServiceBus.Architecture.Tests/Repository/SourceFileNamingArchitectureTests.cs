@@ -17,39 +17,6 @@ public sealed class SourceFileNamingArchitectureTests
             ["src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/Filters/SplitFilterPipeSpecification.cs"] = Types("public class PipeConfigurator`1"),
             ["src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/PipeBuilder.cs"] = Types("public class PipeConfigurator`1"),
             ["src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/SpecificationPipeBuilder.cs"] = Types("public class PipeConfigurator`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Accessors/DefaultInstanceStateAccessor.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Accessors/InitialIfNullStateAccessor.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Accessors/IntStateAccessor.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Accessors/RawStateAccessor.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Accessors/StateAccessorIndex.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Accessors/StringStateAccessor.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/BehaviorContextProxy.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/BehaviorExceptionContextProxy.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Configuration/StateMachineConnector.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Configuration/StateMachineSagaConfigurator.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Configuration/StateMachineSagaSpecification.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Correlation/UncorrelatedEventCorrelation.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/EventObservable.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/NonTransitionEventObserver.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/SelectedEventObserver.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/StateMachineEvent.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/StateMachineRequest.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/StateMachineSchedule.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/StateMachineState.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/StateObservable.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/UnhandledEventBehaviorContext.cs"] = Types("public class ViciOneServiceBusStateMachine`1"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Configuration/MessageCorrelationIdEventCorrelationBuilder.cs"] = Types("public class StateMachineInterfaceType`2"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Configuration/MessageCorrelationIdFaultEventCorrelationBuilder.cs"] = Types("public class StateMachineInterfaceType`2"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Configuration/StateMachineEventConnectorFactory.cs"] = Types("public class StateMachineInterfaceType`2"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Configuration/StateMachineSagaMessageConnector.cs"] = Types("public class StateMachineInterfaceType`2"),
-            ["src/ViciOne.ServiceBus/SagaStateMachine/Configuration/ViciOneServiceBusEventCorrelationConfigurator.cs"] = Types("public class StateMachineInterfaceType`2"),
-            ["src/ViciOne.ServiceBus/Sagas/Configuration/CorrelatedSagaMessageConnector.cs"] = Types("public class SagaConnector`2"),
-            ["src/ViciOne.ServiceBus/Sagas/Configuration/QuerySagaMessageConnector.cs"] = Types("public class SagaConnector`2"),
-            ["src/ViciOne.ServiceBus/Sagas/Configuration/SagaMessageConnector.cs"] = Types("public class SagaConnector`2"),
-            ["src/ViciOne.ServiceBus/Sagas/Configuration/SagaMessageSpecification.cs"] = Types("public class SagaConnector`2"),
-            ["src/ViciOne.ServiceBus/Sagas/Configuration/SagaMessageSplitFilterSpecification.cs"] = Types("public class SagaConnector`2"),
-            ["src/ViciOne.ServiceBus/Sagas/Configuration/SagaPipeSpecificationProxy.cs"] = Types("public class SagaConnector`2"),
-            ["src/ViciOne.ServiceBus/Sagas/Configuration/SagaSplitFilterSpecification.cs"] = Types("public class SagaConnector`2"),
         };
 
     private static readonly IReadOnlyDictionary<string, IReadOnlySet<string>> ReviewedCohesiveMultiTypeFiles =
@@ -180,6 +147,55 @@ public sealed class SourceFileNamingArchitectureTests
                 }))
             .Where(static declaration => declaration.Namespace != "ViciOne.ServiceBus")
             .Select(static declaration => $"{declaration.Path}: {declaration.Namespace}")
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "saga-project-folders-mirror-top-level-namespaces")]
+    public void SagaProjectSourceFolders_MirrorTheirTopLevelNamespace()
+    {
+        const string namespaceRoot = "ViciOne.ServiceBus";
+        string projectRoot = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.Sagas");
+        string[] violations = Directory.EnumerateFiles(projectRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(path => !path.Contains(
+                $"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}",
+                RepositoryLayout.PathComparison))
+            .Where(path => Path.GetFileName(path) != "GlobalUsings.cs")
+            .Select(path =>
+            {
+                string relativePath = Path.GetRelativePath(projectRoot, path);
+                string? actualFolder = Path.GetDirectoryName(relativePath)?
+                    .Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries)
+                    .FirstOrDefault();
+                string[] namespaces = CSharpSyntaxTree.ParseText(File.ReadAllText(path))
+                    .GetCompilationUnitRoot()
+                    .DescendantNodes()
+                    .OfType<BaseNamespaceDeclarationSyntax>()
+                    .Select(declaration => declaration.Name.ToString())
+                    .Distinct(StringComparer.Ordinal)
+                    .ToArray();
+
+                if (namespaces.Length != 1)
+                    return $"{RepositoryLayout.RelativeToRoot(path)}: expected one namespace, found {namespaces.Length}";
+
+                string namespaceName = namespaces[0];
+                if (namespaceName != namespaceRoot
+                    && !namespaceName.StartsWith(namespaceRoot + ".", StringComparison.Ordinal))
+                {
+                    return $"{RepositoryLayout.RelativeToRoot(path)}: namespace {namespaceName} is outside {namespaceRoot}";
+                }
+
+                string? expectedFolder = namespaceName == namespaceRoot
+                    ? null
+                    : namespaceName[(namespaceRoot.Length + 1)..].Split('.')[0];
+                return StringComparer.Ordinal.Equals(actualFolder, expectedFolder)
+                    ? null
+                    : $"{RepositoryLayout.RelativeToRoot(path)}: expected top-level folder {expectedFolder ?? "<root>"} for {namespaceName}";
+            })
+            .OfType<string>()
             .Order(StringComparer.Ordinal)
             .ToArray();
 

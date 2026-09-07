@@ -18,14 +18,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Saga/**/*.cs" />
-    <Compile Remove="SagaStateMachine/**/*.cs" />
-    <Compile Remove="Configuration/DependencyInjection/Configuration/SagaEndpointDefinition.cs" />
-    <Compile Remove="Configuration/DependencyInjection/ISagaDefinition.cs" />
-    <Compile Remove="Configuration/DependencyInjection/SagaDefinition.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <!-- Envelope metadata is one serializer-independent product rule. The projection remains
          internal so adding a wire format does not enlarge the public API, while the two retained
          serializer assemblies consume the same implementation. -->

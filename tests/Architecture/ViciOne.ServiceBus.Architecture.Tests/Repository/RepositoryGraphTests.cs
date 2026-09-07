@@ -394,6 +394,33 @@ public sealed class RepositoryGraphTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-LAYOUT", "every-product-compile-source-is-physically-project-owned")]
+    public void EveryProductCompileSource_IsPhysicallyOwnedByItsProject()
+    {
+        string[] externalSources = RepositoryLayout.ProductProjects
+            .SelectMany(project =>
+            {
+                string projectDirectory = Path.GetDirectoryName(project)
+                    ?? throw new InvalidOperationException($"No directory for {project}.");
+
+                return MsBuildEvaluation.ItemMetadata(project, "Compile", "FullPath")
+                    .Select(source => (Project: project, ProjectDirectory: projectDirectory, Source: Path.GetFullPath(source)));
+            })
+            .Where(entry =>
+            {
+                string relativePath = Path.GetRelativePath(entry.ProjectDirectory, entry.Source);
+                return relativePath == ".."
+                    || relativePath.StartsWith($"..{Path.DirectorySeparatorChar}", StringComparison.Ordinal);
+            })
+            .Select(entry =>
+                $"{RepositoryLayout.RelativeToRoot(entry.Project)} -> {RepositoryLayout.RelativeToRoot(entry.Source)}")
+            .OrderBy(edge => edge, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(externalSources);
+    }
+
+    [Fact]
     public void EngineeringSolution_ContainsEverySampleProject()
     {
         Assert.NotEmpty(RepositoryLayout.SampleProjects);
