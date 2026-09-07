@@ -40,7 +40,7 @@ public sealed class ActiveMqErrorTransportTests
         });
         using ConnectHandle publishObserver = bus.ConnectPublishObserver(transportObserver);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        HostReceiveEndpointHandle? faultEndpoint = null;
+        IHostReceiveEndpointHandle? faultEndpoint = null;
         bool started = false;
 
         try
@@ -123,7 +123,7 @@ public sealed class ActiveMqErrorTransportTests
         });
         using ConnectHandle publishObserver = bus.ConnectPublishObserver(transportObserver);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        HostReceiveEndpointHandle? faultEndpoint = null;
+        IHostReceiveEndpointHandle? faultEndpoint = null;
         bool started = false;
 
         try
@@ -307,7 +307,7 @@ public sealed class ActiveMqErrorTransportTests
         });
         using ConnectHandle publishObserver = bus.ConnectPublishObserver(transportObserver);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        HostReceiveEndpointHandle? faultEndpoint = null;
+        IHostReceiveEndpointHandle? faultEndpoint = null;
         bool started = false;
 
         try

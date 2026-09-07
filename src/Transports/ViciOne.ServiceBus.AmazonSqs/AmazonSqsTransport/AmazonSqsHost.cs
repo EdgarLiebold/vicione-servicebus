@@ -12,8 +12,8 @@ public class AmazonSqsHost :
     readonly IAmazonSqsHostConfiguration _hostConfiguration;
 
     /// <summary>Creates an Amazon SQS host from its transport configuration and bus topology.</summary>
-    /// <param name="hostConfiguration">The Amazon SQS host configuration.</param>
-    /// <param name="busTopology">The Amazon SQS bus topology.</param>
+    /// <param name="hostConfiguration">The configuration used to create endpoints and access shared AWS clients.</param>
+    /// <param name="busTopology">The Amazon SQS topology exposed by the host.</param>
     public AmazonSqsHost(IAmazonSqsHostConfiguration hostConfiguration, IAmazonSqsBusTopology busTopology)
         : base(hostConfiguration, busTopology)
     {
@@ -21,15 +21,15 @@ public class AmazonSqsHost :
         Topology = busTopology;
     }
 
-    /// <summary>Gets the Amazon SQS bus topology.</summary>
+    /// <summary>Gets the Amazon SQS topology associated with this host.</summary>
     public new IAmazonSqsBusTopology Topology { get; }
 
     /// <summary>Connects a receive endpoint described by an endpoint definition.</summary>
-    /// <param name="definition">The endpoint definition.</param>
-    /// <param name="endpointNameFormatter">The formatter used to derive the queue name.</param>
+    /// <param name="definition">The endpoint definition that supplies the name and common settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null" /> to use the default formatter.</param>
     /// <param name="configureEndpoint">An optional callback that configures transport-independent endpoint settings.</param>
     /// <returns>A handle for the connected receive endpoint.</returns>
-    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+    public override IHostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         Action<IAmazonSqsReceiveEndpointConfigurator>? configure = configureEndpoint == null
@@ -40,10 +40,10 @@ public class AmazonSqsHost :
     }
 
     /// <summary>Connects a receive endpoint for an Amazon SQS queue.</summary>
-    /// <param name="queueName">The queue name.</param>
+    /// <param name="queueName">The Amazon SQS queue name.</param>
     /// <param name="configureEndpoint">An optional callback that configures transport-independent endpoint settings.</param>
     /// <returns>A handle for the connected receive endpoint.</returns>
-    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
+    public override IHostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         Action<IAmazonSqsReceiveEndpointConfigurator>? configure = configureEndpoint == null
             ? null
@@ -53,11 +53,11 @@ public class AmazonSqsHost :
     }
 
     /// <summary>Connects an Amazon SQS receive endpoint described by an endpoint definition.</summary>
-    /// <param name="definition">The endpoint definition.</param>
-    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or the default formatter.</param>
+    /// <param name="definition">The endpoint definition that supplies the name and common settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null" /> to use the default formatter.</param>
     /// <param name="configureEndpoint">An optional callback that configures Amazon SQS-specific endpoint settings.</param>
     /// <returns>A handle for the connected receive endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
+    public IHostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
         Action<IAmazonSqsReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
@@ -70,10 +70,10 @@ public class AmazonSqsHost :
     }
 
     /// <summary>Connects and starts an Amazon SQS receive endpoint for a queue.</summary>
-    /// <param name="queueName">The queue name.</param>
+    /// <param name="queueName">The Amazon SQS queue name.</param>
     /// <param name="configure">An optional callback that configures the Amazon SQS endpoint.</param>
     /// <returns>A handle for the connected receive endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IAmazonSqsReceiveEndpointConfigurator>? configure = null)
+    public IHostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IAmazonSqsReceiveEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
@@ -88,8 +88,8 @@ public class AmazonSqsHost :
         return ReceiveEndpoints.Start(queueName);
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The probe context to populate.</param>
+    /// <summary>Adds the AWS region and connection-supervisor state to a probe.</summary>
+    /// <param name="context">The probe context that receives the diagnostic values.</param>
     protected override void Probe(ProbeContext context)
     {
         context.Set(new

@@ -29,7 +29,7 @@ public sealed class ConsumeContextEndpointExtensionsTests
             await harness.StartAsync(cancellationToken);
             var receivedBaseFault = new TaskCompletionSource<ConsumeContext<Fault<MemberUpdateCommand>>>(
                 TaskCreationOptions.RunContinuationsAsynchronously);
-            HostReceiveEndpointHandle faultEndpoint = harness.Bus.ConnectReceiveEndpoint(configurator =>
+            IHostReceiveEndpointHandle faultEndpoint = harness.Bus.ConnectReceiveEndpoint(configurator =>
                 configurator.Handler<Fault<MemberUpdateCommand>>(context =>
                 {
                     receivedBaseFault.TrySetResult(context);
@@ -110,7 +110,7 @@ public sealed class ConsumeContextEndpointExtensionsTests
             });
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         bool started = false;
-        HostReceiveEndpointHandle? faultEndpoint = null;
+        IHostReceiveEndpointHandle? faultEndpoint = null;
 
         try
         {

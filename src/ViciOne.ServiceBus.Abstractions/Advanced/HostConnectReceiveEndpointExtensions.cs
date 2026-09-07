@@ -10,7 +10,7 @@ public static class HostConnectReceiveEndpointExtensions
     /// <param name="endpointNameFormatter">The formatter used to derive the endpoint name, or <see langword="null" /> for the configured default.</param>
     /// <param name="configureEndpoint">An optional callback that configures the receive endpoint.</param>
     /// <returns>A handle that exposes readiness and controls the connected endpoint.</returns>
-    public static HostReceiveEndpointHandle ConnectResponseEndpoint(this IReceiveConnector connector,
+    public static IHostReceiveEndpointHandle ConnectResponseEndpoint(this IReceiveConnector connector,
         IEndpointNameFormatter? endpointNameFormatter = null,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
@@ -23,7 +23,7 @@ public static class HostConnectReceiveEndpointExtensions
     /// <param name="connector">The host connector that owns the endpoint.</param>
     /// <param name="configureEndpoint">An optional callback that configures the receive endpoint.</param>
     /// <returns>A handle that exposes readiness and controls the connected endpoint.</returns>
-    public static HostReceiveEndpointHandle ConnectReceiveEndpoint(this IReceiveConnector connector,
+    public static IHostReceiveEndpointHandle ConnectReceiveEndpoint(this IReceiveConnector connector,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         ArgumentNullException.ThrowIfNull(connector);

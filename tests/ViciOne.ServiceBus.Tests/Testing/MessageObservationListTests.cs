@@ -304,7 +304,7 @@ public sealed class MessageObservationListTests
                 harness.TimeProvider);
             using ConnectHandle observerHandle = harness.Bus.ConnectReceiveEndpointObserver(
                 new TestReceiveEndpointObserver(published));
-            HostReceiveEndpointHandle endpoint = harness.Bus.ConnectReceiveEndpoint(
+            IHostReceiveEndpointHandle endpoint = harness.Bus.ConnectReceiveEndpoint(
                 $"observed-endpoint-{NewId.NextGuid():N}",
                 configurator => configurator.Handler<EndpointRequest>(async context =>
                 {

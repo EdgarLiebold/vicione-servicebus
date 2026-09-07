@@ -248,7 +248,7 @@ public abstract class BusInstance<TBus> :
     /// <param name="endpointNameFormatter">The formatter used to derive the endpoint name, or <see langword="null" /> to use the bus default.</param>
     /// <param name="configureEndpoint">An optional callback that augments endpoint configuration.</param>
     /// <returns>A handle that exposes readiness and controls the endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+    public IHostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return _busControl.ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
@@ -258,7 +258,7 @@ public abstract class BusInstance<TBus> :
     /// <param name="queueName">The transport queue name.</param>
     /// <param name="configureEndpoint">An optional callback that configures the endpoint.</param>
     /// <returns>A handle that exposes readiness and controls the endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint)
+    public IHostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint)
     {
         return _busControl.ConnectReceiveEndpoint(queueName, configureEndpoint);
     }

@@ -10,6 +10,6 @@ public interface IEventHubEndpointConnector
     /// <param name="consumerGroup">The consumer group used to coordinate partition ownership.</param>
     /// <param name="configure">Configures the connected receive endpoint.</param>
     /// <returns>A handle for observing readiness and stopping the connected endpoint.</returns>
-    HostReceiveEndpointHandle ConnectEventHubEndpoint(string eventHubName, string consumerGroup,
+    IHostReceiveEndpointHandle ConnectEventHubEndpoint(string eventHubName, string consumerGroup,
         Action<IRiderRegistrationContext, IEventHubReceiveEndpointConfigurator> configure);
 }

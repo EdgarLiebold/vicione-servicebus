@@ -50,7 +50,7 @@ public class EventHubRider :
     /// <param name="consumerGroup">The consumer group used to coordinate partition ownership.</param>
     /// <param name="configure">Configures the connected receive endpoint.</param>
     /// <returns>A handle for observing readiness and stopping the endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectEventHubEndpoint(string eventHubName, string consumerGroup,
+    public IHostReceiveEndpointHandle ConnectEventHubEndpoint(string eventHubName, string consumerGroup,
         Action<IRiderRegistrationContext, IEventHubReceiveEndpointConfigurator> configure)
     {
         var specification = _hostConfiguration.CreateSpecification(eventHubName, consumerGroup, configurator =>
@@ -68,7 +68,7 @@ public class EventHubRider :
     /// <returns>A handle that reports readiness and stops the rider.</returns>
     public RiderHandle Start(CancellationToken cancellationToken = default)
     {
-        HostReceiveEndpointHandle[] endpointsHandle = _endpoints.StartEndpoints(cancellationToken);
+        IHostReceiveEndpointHandle[] endpointsHandle = _endpoints.StartEndpoints(cancellationToken);
 
         var ready = endpointsHandle.Length == 0 ? Task.CompletedTask : _hostConfiguration.ConnectionContextSupervisor.Ready;
 
@@ -130,9 +130,9 @@ public class EventHubRider :
         RiderHandle
     {
         readonly IAgent _agent;
-        readonly HostReceiveEndpointHandle[] _endpoints;
+        readonly IHostReceiveEndpointHandle[] _endpoints;
 
-        public Handle(HostReceiveEndpointHandle[] endpoints, IAgent agent)
+        public Handle(IHostReceiveEndpointHandle[] endpoints, IAgent agent)
         {
             _endpoints = endpoints;
             _agent = agent;

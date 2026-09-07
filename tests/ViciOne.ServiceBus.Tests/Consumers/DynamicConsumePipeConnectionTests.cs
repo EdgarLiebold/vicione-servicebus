@@ -20,7 +20,7 @@ public sealed class DynamicConsumePipeConnectionTests
         var consumer = new SingleMessageConsumer();
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
-        HostReceiveEndpointHandle endpoint = await ConnectEndpointAsync(harness, timeout, cancellationToken);
+        IHostReceiveEndpointHandle endpoint = await ConnectEndpointAsync(harness, timeout, cancellationToken);
         try
         {
             using ConnectHandle handle = endpoint.ReceiveEndpoint.ConnectConsumer(
@@ -51,7 +51,7 @@ public sealed class DynamicConsumePipeConnectionTests
         var consumer = new MultipleMessageConsumer();
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
-        HostReceiveEndpointHandle endpoint = await ConnectEndpointAsync(harness, timeout, cancellationToken);
+        IHostReceiveEndpointHandle endpoint = await ConnectEndpointAsync(harness, timeout, cancellationToken);
         try
         {
             using ConnectHandle handle = endpoint.ReceiveEndpoint.ConnectInstance((object)consumer);
@@ -86,7 +86,7 @@ public sealed class DynamicConsumePipeConnectionTests
         var received = NewSignal<ConsumeContext<FirstMessage>>();
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
-        HostReceiveEndpointHandle endpoint = await ConnectEndpointAsync(harness, timeout, cancellationToken);
+        IHostReceiveEndpointHandle endpoint = await ConnectEndpointAsync(harness, timeout, cancellationToken);
         try
         {
             using ConnectHandle handle = endpoint.ReceiveEndpoint.ConnectHandler<FirstMessage>(context =>
@@ -121,7 +121,7 @@ public sealed class DynamicConsumePipeConnectionTests
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         using ConnectHandle observerHandle = harness.Bus.ConnectReceiveObserver(receiveBarrier);
-        HostReceiveEndpointHandle endpoint = await ConnectEndpointAsync(harness, timeout, cancellationToken);
+        IHostReceiveEndpointHandle endpoint = await ConnectEndpointAsync(harness, timeout, cancellationToken);
         try
         {
             using ConnectHandle consumerHandle = endpoint.ReceiveEndpoint.ConnectConsumer(
@@ -186,12 +186,12 @@ public sealed class DynamicConsumePipeConnectionTests
             TestInactivityTimeout = timeout,
         };
 
-    private static async Task<HostReceiveEndpointHandle> ConnectEndpointAsync(
+    private static async Task<IHostReceiveEndpointHandle> ConnectEndpointAsync(
         InMemoryTestHarness harness,
         TimeSpan timeout,
         CancellationToken cancellationToken)
     {
-        HostReceiveEndpointHandle endpoint = harness.Bus.ConnectReceiveEndpoint(
+        IHostReceiveEndpointHandle endpoint = harness.Bus.ConnectReceiveEndpoint(
             $"dynamic-{NewId.NextGuid():N}",
             _ => { });
         await endpoint.Ready.WaitAsync(timeout, cancellationToken);

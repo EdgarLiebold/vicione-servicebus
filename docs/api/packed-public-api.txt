@@ -200,8 +200,8 @@ TYPE class public ViciOne.ServiceBus.Advanced.BusInstance<TBus> [abstract]
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectReceiveObserver(ViciOne.ServiceBus.Advanced.Observers.IReceiveObserver observer)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectRequestPipe<T>(System.Guid requestId, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver observer)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
   PROPERTY System.Uri Address { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Topology.IBusTopology Topology { public-get;  }
 TYPE class public ViciOne.ServiceBus.Advanced.CancelScheduledSendExtensions [static]
@@ -396,12 +396,8 @@ TYPE interface public ViciOne.ServiceBus.Advanced.Headers
   METHOD public abstract System.Nullable<T> Get<T>(System.String key, System.Nullable<T> defaultValue = null)
   METHOD public abstract T Get<T>(System.String key, T defaultValue = null)
 TYPE class public ViciOne.ServiceBus.Advanced.HostConnectReceiveEndpointExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IReceiveConnector connector, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public static ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectResponseEndpoint(ViciOne.ServiceBus.Configuration.IReceiveConnector connector, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-TYPE interface public ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle
-  METHOD public abstract System.Threading.Tasks.Task StopAsync(System.Threading.CancellationToken cancellationToken = null)
-  PROPERTY System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointReady> Ready { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.IReceiveEndpoint ReceiveEndpoint { public-get;  }
+  METHOD public static ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IReceiveConnector connector, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public static ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectResponseEndpoint(ViciOne.ServiceBus.Configuration.IReceiveConnector connector, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
 TYPE interface public ViciOne.ServiceBus.Advanced.IAdvancedMessageScheduler
   METHOD public abstract System.Threading.Tasks.Task CancelScheduledPublishAsync(System.Type messageType, System.Guid tokenId, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task CancelScheduledPublishAsync<T>(System.Guid tokenId, System.Threading.CancellationToken cancellationToken = null)
@@ -487,6 +483,10 @@ TYPE interface public ViciOne.ServiceBus.Advanced.IEndpointNameFormatter
   METHOD public abstract System.String SanitizeName(System.String name)
   METHOD public abstract System.String TemporaryEndpoint(System.String tag)
   PROPERTY System.String Separator { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle
+  METHOD public abstract System.Threading.Tasks.Task StopAsync(System.Threading.CancellationToken cancellationToken = null)
+  PROPERTY System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointReady> Ready { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Advanced.IReceiveEndpoint ReceiveEndpoint { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Advanced.IItineraryBuilder
   METHOD public abstract System.Int32 AddActivitiesFromSourceItinerary()
   METHOD public abstract System.Threading.Tasks.Task AddSubscriptionAsync(System.Uri address, ViciOne.ServiceBus.Advanced.RoutingSlipEvents events, System.Func<ViciOne.ServiceBus.ISendEndpoint,System.Threading.Tasks.Task> callback, System.Threading.CancellationToken cancellationToken = null)
@@ -1958,11 +1958,11 @@ TYPE interface public ViciOne.ServiceBus.Configuration.IReceiveConfigurator<TEnd
   METHOD public abstract System.Void ReceiveEndpoint(System.String queueName, System.Action<TEndpointConfigurator> configureEndpoint)
   METHOD public abstract System.Void ReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<TEndpointConfigurator> configureEndpoint = null)
 TYPE interface public ViciOne.ServiceBus.Configuration.IReceiveConnector
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
 TYPE interface public ViciOne.ServiceBus.Configuration.IReceiveConnector<TEndpointConfigurator>
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<TEndpointConfigurator> configureEndpoint = null)
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<TEndpointConfigurator> configureEndpoint = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<TEndpointConfigurator> configureEndpoint = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<TEndpointConfigurator> configureEndpoint = null)
 TYPE interface public ViciOne.ServiceBus.Configuration.IReceiveEndpointBuilder
 TYPE interface public ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator
   METHOD public abstract System.Void AddDeserializer(ViciOne.ServiceBus.Advanced.Serialization.ISerializerFactory factory, System.Boolean isDefault = false)
@@ -4167,10 +4167,10 @@ TYPE class public ViciOne.ServiceBus.ActiveMq.ActiveMqHost [base=ViciOne.Service
   CTOR public ViciOne.ServiceBus.ActiveMq.ActiveMqHost(ViciOne.ServiceBus.ActiveMq.Configuration.IActiveMqHostConfiguration hostConfiguration, ViciOne.ServiceBus.ActiveMq.IActiveMqBusTopology busTopology)
   METHOD protected System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   METHOD protected ViciOne.ServiceBus.Advanced.Middleware.IAgent[] GetAgentHandles()
-  METHOD public ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.ActiveMq.IActiveMqReceiveEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.ActiveMq.IActiveMqReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.ActiveMq.IActiveMqReceiveEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.ActiveMq.IActiveMqReceiveEndpointConfigurator> configureEndpoint = null)
   PROPERTY ViciOne.ServiceBus.ActiveMq.IActiveMqBusTopology Topology { public-get;  }
 TYPE struct public ViciOne.ServiceBus.ActiveMq.ActiveMqHostAddress
   CTOR public ViciOne.ServiceBus.ActiveMq.ActiveMqHostAddress(System.Uri address)
@@ -5048,10 +5048,10 @@ TYPE class public ViciOne.ServiceBus.AmazonSqs.AmazonSqsHost [base=ViciOne.Servi
   CTOR public ViciOne.ServiceBus.AmazonSqs.AmazonSqsHost(ViciOne.ServiceBus.AmazonSqs.Configuration.IAmazonSqsHostConfiguration hostConfiguration, ViciOne.ServiceBus.AmazonSqs.IAmazonSqsBusTopology busTopology)
   METHOD protected System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   METHOD protected ViciOne.ServiceBus.Advanced.Middleware.IAgent[] GetAgentHandles()
-  METHOD public ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.AmazonSqs.IAmazonSqsReceiveEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.AmazonSqs.IAmazonSqsReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.AmazonSqs.IAmazonSqsReceiveEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.AmazonSqs.IAmazonSqsReceiveEndpointConfigurator> configureEndpoint = null)
   PROPERTY ViciOne.ServiceBus.AmazonSqs.IAmazonSqsBusTopology Topology { public-get;  }
 TYPE struct public ViciOne.ServiceBus.AmazonSqs.AmazonSqsHostAddress
   CTOR public ViciOne.ServiceBus.AmazonSqs.AmazonSqsHostAddress(System.String host, System.String scope)
@@ -6361,8 +6361,8 @@ TYPE interface public ViciOne.ServiceBus.AzureServiceBus.IServiceBusEntityConfig
   PROPERTY System.Nullable<System.TimeSpan> DefaultMessageTimeToLive {  public-set; }
   PROPERTY System.String UserMetadata {  public-set; }
 TYPE interface public ViciOne.ServiceBus.AzureServiceBus.IServiceBusHost
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectSubscriptionEndpoint(System.String subscriptionName, System.String topicName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint(System.String subscriptionName, System.String topicName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
 TYPE interface public ViciOne.ServiceBus.AzureServiceBus.IServiceBusHostConfigurator
   PROPERTY Azure.AzureNamedKeyCredential NamedKeyCredential {  public-set; }
   PROPERTY Azure.AzureSasCredential SasCredential {  public-set; }
@@ -6453,10 +6453,10 @@ TYPE interface public ViciOne.ServiceBus.AzureServiceBus.ISessionIdFormatter
 TYPE interface public ViciOne.ServiceBus.AzureServiceBus.ISharedAccessSignatureTokenProviderConfigurator
   PROPERTY Azure.AzureSasCredential SasCredential {  public-set; }
 TYPE interface public ViciOne.ServiceBus.AzureServiceBus.ISubscriptionEndpointConnector
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectSubscriptionEndpoint(System.String subscriptionName, System.String topicName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectSubscriptionEndpoint(System.String subscriptionName, System.String topicName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint(System.String subscriptionName, System.String topicName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint(System.String subscriptionName, System.String topicName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
 TYPE interface public ViciOne.ServiceBus.AzureServiceBus.MessageLockContext
   METHOD public abstract System.Threading.Tasks.Task AbandonAsync(System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task CompleteAsync(System.Threading.CancellationToken cancellationToken = null)
@@ -6663,12 +6663,12 @@ TYPE class public ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost [base=ViciOn
   CTOR public ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost(ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusHostConfiguration hostConfiguration, ViciOne.ServiceBus.AzureServiceBus.IServiceBusBusTopology busTopology)
   METHOD protected System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   METHOD protected ViciOne.ServiceBus.Advanced.Middleware.IAgent[] GetAgentHandles()
-  METHOD public ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectSubscriptionEndpoint(System.String subscriptionName, System.String topicName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
+  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint(System.String subscriptionName, System.String topicName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
   PROPERTY ViciOne.ServiceBus.AzureServiceBus.IServiceBusBusTopology Topology { public-get;  }
 TYPE struct public ViciOne.ServiceBus.AzureServiceBus.ServiceBusHostAddress
   CTOR public ViciOne.ServiceBus.AzureServiceBus.ServiceBusHostAddress(System.Uri address)
@@ -6690,10 +6690,10 @@ TYPE interface public ViciOne.ServiceBus.AzureServiceBus.ServiceBusHostSettings
   PROPERTY System.Uri ServiceUri { public-get;  }
 TYPE class public ViciOne.ServiceBus.AzureServiceBus.ServiceBusInstance [base=ViciOne.ServiceBus.Transports.TransportBusInstance<ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator>]
   CTOR public ViciOne.ServiceBus.AzureServiceBus.ServiceBusInstance(ViciOne.ServiceBus.IBusControl busControl, ViciOne.ServiceBus.Transports.IHost<ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator> host, ViciOne.ServiceBus.Configuration.IHostConfiguration hostConfiguration, ViciOne.ServiceBus.Configuration.IBusRegistrationContext busRegistrationContext)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectSubscriptionEndpoint(System.String subscriptionName, System.String topicName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectSubscriptionEndpoint(System.String subscriptionName, System.String topicName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint(System.String subscriptionName, System.String topicName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint(System.String subscriptionName, System.String topicName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(System.String subscriptionName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator> configure = null)
 TYPE class public ViciOne.ServiceBus.AzureServiceBus.ServiceBusMessageBody
   CTOR public ViciOne.ServiceBus.AzureServiceBus.ServiceBusMessageBody(System.BinaryData data)
   METHOD public virtual System.Byte[] GetBytes()
@@ -8151,7 +8151,7 @@ TYPE struct public ViciOne.ServiceBus.EventHubs.EventHubEndpointAddress
   FIELD public readonly System.String Scheme
   METHOD public static System.Uri op_Implicit(in ViciOne.ServiceBus.EventHubs.EventHubEndpointAddress address)
 TYPE class public ViciOne.ServiceBus.EventHubs.EventHubEndpointConnectorExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectEventHubEndpoint(ViciOne.ServiceBus.EventHubs.IEventHubEndpointConnector connector, System.String eventHubName, System.Action<ViciOne.ServiceBus.Configuration.IRiderRegistrationContext,ViciOne.ServiceBus.EventHubs.IEventHubReceiveEndpointConfigurator> configure)
+  METHOD public static ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectEventHubEndpoint(ViciOne.ServiceBus.EventHubs.IEventHubEndpointConnector connector, System.String eventHubName, System.Action<ViciOne.ServiceBus.Configuration.IRiderRegistrationContext,ViciOne.ServiceBus.EventHubs.IEventHubReceiveEndpointConfigurator> configure)
 TYPE class public ViciOne.ServiceBus.EventHubs.EventHubFactoryConfiguratorExtensions [static]
   METHOD public static System.Void ReceiveEndpoint(ViciOne.ServiceBus.EventHubs.IEventHubFactoryConfigurator configurator, System.String eventHubName, System.Action<ViciOne.ServiceBus.EventHubs.IEventHubReceiveEndpointConfigurator> configure)
 TYPE class public ViciOne.ServiceBus.EventHubs.EventHubHeaderProvider
@@ -8249,7 +8249,7 @@ TYPE class public ViciOne.ServiceBus.EventHubs.EventHubReceiveLockContext
 TYPE class public ViciOne.ServiceBus.EventHubs.EventHubRider
   CTOR public ViciOne.ServiceBus.EventHubs.EventHubRider(ViciOne.ServiceBus.EventHubs.Configuration.IEventHubHostConfiguration hostConfiguration, ViciOne.ServiceBus.Transports.IBusInstance busInstance, ViciOne.ServiceBus.Transports.IReceiveEndpointCollection endpoints, ViciOne.ServiceBus.Configuration.IRiderRegistrationContext context)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Advanced.EndpointHealthResult> CheckEndpointHealth()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectEventHubEndpoint(System.String eventHubName, System.String consumerGroup, System.Action<ViciOne.ServiceBus.Configuration.IRiderRegistrationContext,ViciOne.ServiceBus.EventHubs.IEventHubReceiveEndpointConfigurator> configure)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectEventHubEndpoint(System.String eventHubName, System.String consumerGroup, System.Action<ViciOne.ServiceBus.Configuration.IRiderRegistrationContext,ViciOne.ServiceBus.EventHubs.IEventHubReceiveEndpointConfigurator> configure)
   METHOD public virtual ViciOne.ServiceBus.EventHubs.IEventHubProducerProvider GetProducerProvider(ViciOne.ServiceBus.ConsumeContext consumeContext = null)
   METHOD public virtual ViciOne.ServiceBus.Transports.RiderHandle Start(System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.EventHubs.EventHubSendContext
@@ -8277,7 +8277,7 @@ TYPE delegate public ViciOne.ServiceBus.EventHubs.ExceptionEventHubNameProvider<
 TYPE interface public ViciOne.ServiceBus.EventHubs.IConnectionContextSupervisor
 TYPE interface public ViciOne.ServiceBus.EventHubs.IEventHubDataReceiver
 TYPE interface public ViciOne.ServiceBus.EventHubs.IEventHubEndpointConnector
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectEventHubEndpoint(System.String eventHubName, System.String consumerGroup, System.Action<ViciOne.ServiceBus.Configuration.IRiderRegistrationContext,ViciOne.ServiceBus.EventHubs.IEventHubReceiveEndpointConfigurator> configure)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectEventHubEndpoint(System.String eventHubName, System.String consumerGroup, System.Action<ViciOne.ServiceBus.Configuration.IRiderRegistrationContext,ViciOne.ServiceBus.EventHubs.IEventHubReceiveEndpointConfigurator> configure)
 TYPE interface public ViciOne.ServiceBus.EventHubs.IEventHubFactoryConfigurator
   METHOD public abstract System.Void AddSerializer(ViciOne.ServiceBus.Advanced.Serialization.ISerializerFactory factory, System.Boolean isSerializer = true)
   METHOD public abstract System.Void ConfigureProducerOptions(System.Action<Azure.Messaging.EventHubs.Producer.EventHubProducerClientOptions> configure)
@@ -10196,10 +10196,10 @@ TYPE class public ViciOne.ServiceBus.RabbitMq.RabbitMqHost [base=ViciOne.Service
   CTOR public ViciOne.ServiceBus.RabbitMq.RabbitMqHost(ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqHostConfiguration hostConfiguration, ViciOne.ServiceBus.RabbitMq.IRabbitMqBusTopology busTopology)
   METHOD protected System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   METHOD protected ViciOne.ServiceBus.Advanced.Middleware.IAgent[] GetAgentHandles()
-  METHOD public ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.RabbitMq.IRabbitMqReceiveEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.RabbitMq.IRabbitMqReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.RabbitMq.IRabbitMqReceiveEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.RabbitMq.IRabbitMqReceiveEndpointConfigurator> configureEndpoint = null)
   PROPERTY ViciOne.ServiceBus.RabbitMq.IRabbitMqBusTopology Topology { public-get;  }
 TYPE struct public ViciOne.ServiceBus.RabbitMq.RabbitMqHostAddress
   CTOR public ViciOne.ServiceBus.RabbitMq.RabbitMqHostAddress(System.String host, System.Nullable<System.Int32> port, System.String virtualHost, System.Boolean useTls = false)
@@ -14067,8 +14067,8 @@ TYPE class public ViciOne.ServiceBus.Testing.Implementations.InMemoryTestHarness
   CTOR public ViciOne.ServiceBus.Testing.Implementations.InMemoryTestHarnessBusInstance(ViciOne.ServiceBus.Testing.InMemoryTestHarness testHarness, ViciOne.ServiceBus.Configuration.IBusRegistrationContext busRegistrationContext)
   METHOD public virtual System.Void Connect<TRider>(ViciOne.ServiceBus.Transports.IRiderControl riderControl)
   METHOD public virtual TRider GetRider<TRider>()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
   PROPERTY System.String Name { public-get;  }
   PROPERTY System.Type InstanceType { public-get;  }
   PROPERTY ViciOne.ServiceBus.Configuration.IHostConfiguration HostConfiguration { public-get;  }
@@ -14428,7 +14428,7 @@ TYPE class public ViciOne.ServiceBus.Advanced.BusControlExtensions [static]
   METHOD public static System.Threading.Tasks.Task StopAsync(ViciOne.ServiceBus.IBusControl bus, System.TimeSpan stopTimeout, System.TimeProvider timeProvider = null, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Advanced.ClientFactoryExtensions [static]
   METHOD public static ViciOne.ServiceBus.Advanced.IClientFactory ConnectClientFactory(ViciOne.ServiceBus.Configuration.IReceiveConnector connector, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null)
-  METHOD public static ViciOne.ServiceBus.Advanced.IClientFactory CreateClientFactory(ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle receiveEndpointHandle, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null)
+  METHOD public static ViciOne.ServiceBus.Advanced.IClientFactory CreateClientFactory(ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle receiveEndpointHandle, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null)
   METHOD public static ViciOne.ServiceBus.Advanced.IClientFactory CreateClientFactory(ViciOne.ServiceBus.Configuration.IReceiveConnector connector, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null)
   METHOD public static ViciOne.ServiceBus.Advanced.IClientFactory CreateClientFactory(ViciOne.ServiceBus.IBus bus, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null)
   METHOD public static ViciOne.ServiceBus.IRequestClient<TRequest> CreateRequestClient<TRequest>(ViciOne.ServiceBus.ConsumeContext consumeContext, ViciOne.ServiceBus.IBus bus, System.Uri destinationAddress, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null)
@@ -14487,11 +14487,11 @@ TYPE interface public ViciOne.ServiceBus.Advanced.IPipeContextHandle<TContext>
   PROPERTY System.Boolean IsDisposed { public-get;  }
   PROPERTY System.Threading.Tasks.Task<TContext> Context { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Advanced.IReceiveEndpointConnector
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
 TYPE interface public ViciOne.ServiceBus.Advanced.IReceiveEndpointConnector<TEndpointConfigurator>
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,TEndpointConfigurator> configure = null)
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,TEndpointConfigurator> configure = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,TEndpointConfigurator> configure = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,TEndpointConfigurator> configure = null)
 TYPE interface public ViciOne.ServiceBus.Advanced.IScopedClientFactory
   METHOD public abstract ViciOne.ServiceBus.Advanced.RequestHandle<T> CreateRequest<T>(System.Object values, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract ViciOne.ServiceBus.Advanced.RequestHandle<T> CreateRequest<T>(System.Uri destinationAddress, System.Object values, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
@@ -17754,10 +17754,10 @@ TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryHost [base=ViciOn
   CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryHost(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryHostConfiguration hostConfiguration, ViciOne.ServiceBus.Providers.Transports.IInMemoryBusTopology busTopology)
   METHOD protected System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   METHOD protected ViciOne.ServiceBus.Advanced.Middleware.IAgent[] GetAgentHandles()
-  METHOD public ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configureEndpoint = null)
   PROPERTY ViciOne.ServiceBus.InMemoryTransport.IInMemoryDelayProvider DelayProvider { public-get;  }
 TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryMessageConsumeTopology<TMessage> [base=ViciOne.ServiceBus.Advanced.Topology.MessageConsumeTopology<TMessage>]
   CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryMessageConsumeTopology<TMessage>(ViciOne.ServiceBus.Advanced.Topology.IMessageTopology<TMessage> messageTopology, ViciOne.ServiceBus.Providers.Transports.IInMemoryPublishTopologyConfigurator publishTopology)
@@ -20613,10 +20613,10 @@ TYPE class public ViciOne.ServiceBus.SqlTransport.SqlHost [base=ViciOne.ServiceB
   CTOR public ViciOne.ServiceBus.SqlTransport.SqlHost(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration hostConfiguration, ViciOne.ServiceBus.Providers.Transports.ISqlBusTopology busTopology)
   METHOD protected System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   METHOD protected ViciOne.ServiceBus.Advanced.Middleware.IAgent[] GetAgentHandles()
-  METHOD public ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlReceiveEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlReceiveEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlReceiveEndpointConfigurator> configureEndpoint = null)
   PROPERTY ViciOne.ServiceBus.Providers.Transports.ISqlBusTopology Topology { public-get;  }
 TYPE class public ViciOne.ServiceBus.SqlTransport.SqlLogMessages [static]
   FIELD public static readonly ViciOne.ServiceBus.Logging.LogMessage<ViciOne.ServiceBus.SqlTransport.Topology.Queue> CreateQueue
@@ -20919,8 +20919,8 @@ TYPE class public ViciOne.ServiceBus.Transports.BaseHost [abstract]
   METHOD protected abstract System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   METHOD protected virtual ViciOne.ServiceBus.Advanced.Middleware.IAgent[] GetAgentHandles()
   METHOD public System.Threading.Tasks.Task StopAsync(System.Threading.CancellationToken cancellationToken)
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
   METHOD public virtual System.Void AddReceiveEndpoint(System.String endpointName, ViciOne.ServiceBus.Transports.ReceiveEndpoint receiveEndpoint)
   METHOD public virtual System.Void AddRider(System.String name, ViciOne.ServiceBus.Transports.IRiderControl riderControl)
   METHOD public virtual ViciOne.ServiceBus.Advanced.BusHealthResult CheckHealth(ViciOne.ServiceBus.Transports.BusState busState, System.String healthMessage)
@@ -21284,8 +21284,8 @@ TYPE interface public ViciOne.ServiceBus.Transports.IReceiveEndpointCollection
   METHOD public abstract System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Advanced.EndpointHealthResult> CheckEndpointHealth()
   METHOD public abstract System.Threading.Tasks.Task StopEndpointsAsync(System.Threading.CancellationToken cancellationToken)
   METHOD public abstract System.Void Add(System.String endpointName, ViciOne.ServiceBus.Transports.ReceiveEndpoint endpoint)
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle Start(System.String endpointName, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle[] StartEndpoints(System.Threading.CancellationToken cancellationToken)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle Start(System.String endpointName, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle[] StartEndpoints(System.Threading.CancellationToken cancellationToken)
 TYPE interface public ViciOne.ServiceBus.Transports.IReceiveEndpointDispatcher
   METHOD public abstract System.Threading.Tasks.Task DispatchAsync(System.Byte[] body, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> headers, System.Object[] payloads, System.Threading.CancellationToken cancellationToken = null)
   PROPERTY System.Uri InputAddress { public-get;  }
@@ -21329,8 +21329,8 @@ TYPE class public ViciOne.ServiceBus.Transports.MultiBusInstance<TBus>
   CTOR public ViciOne.ServiceBus.Transports.MultiBusInstance<TBus>(TBus bus, ViciOne.ServiceBus.Transports.IBusInstance instance)
   METHOD public virtual System.Void Connect<TRider>(ViciOne.ServiceBus.Transports.IRiderControl riderControl)
   METHOD public virtual TRider GetRider<TRider>()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
   PROPERTY System.String Name { public-get;  }
   PROPERTY System.Type InstanceType { public-get;  }
   PROPERTY ViciOne.ServiceBus.Configuration.IHostConfiguration HostConfiguration { public-get;  }
@@ -21388,8 +21388,8 @@ TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpointCollection [seale
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumeMessageObserver<T>(ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserver<T> observer)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectReceiveEndpointObserver(ViciOne.ServiceBus.Advanced.Observers.IReceiveEndpointObserver observer)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle Start(System.String endpointName, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle[] StartEndpoints(System.Threading.CancellationToken cancellationToken)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle Start(System.String endpointName, System.Threading.CancellationToken cancellationToken)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle[] StartEndpoints(System.Threading.CancellationToken cancellationToken)
 TYPE interface public ViciOne.ServiceBus.Transports.ReceiveEndpointContext
   METHOD public abstract System.Exception ConvertException(System.Exception exception, System.String message)
   METHOD public abstract System.Threading.Tasks.ValueTask ResetAsync(System.Threading.CancellationToken cancellationToken = null)
@@ -21588,10 +21588,10 @@ TYPE class public ViciOne.ServiceBus.Transports.TransportBusInstance<TEndpointCo
   CTOR public ViciOne.ServiceBus.Transports.TransportBusInstance<TEndpointConfigurator>(ViciOne.ServiceBus.IBusControl busControl, ViciOne.ServiceBus.Transports.IHost<TEndpointConfigurator> host, ViciOne.ServiceBus.Configuration.IHostConfiguration hostConfiguration, ViciOne.ServiceBus.Configuration.IBusRegistrationContext busRegistrationContext)
   METHOD public virtual System.Void Connect<TRider>(ViciOne.ServiceBus.Transports.IRiderControl riderControl)
   METHOD public virtual TRider GetRider<TRider>()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,TEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,TEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,TEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,TEndpointConfigurator> configure = null)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
   PROPERTY System.String Name { public-get;  }
   PROPERTY System.Type InstanceType { public-get;  }
   PROPERTY ViciOne.ServiceBus.Configuration.IBusRegistrationContext RegistrationContext { protected-get;  }

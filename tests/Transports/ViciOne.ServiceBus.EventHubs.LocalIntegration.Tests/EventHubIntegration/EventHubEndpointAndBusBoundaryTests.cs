@@ -35,7 +35,7 @@ public sealed class EventHubEndpointAndBusBoundaryTests
             .BuildServiceProvider(true);
         IBusControl bus = provider.GetRequiredService<IBusControl>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        HostReceiveEndpointHandle? connected = null;
+        IHostReceiveEndpointHandle? connected = null;
         bool started = false;
         Guid messageId = NewId.NextGuid();
         Guid correlationId = NewId.NextGuid();

@@ -21,7 +21,7 @@ public sealed class DynamicReceiveEndpointConnectorTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        HostReceiveEndpointHandle? first = null;
+        IHostReceiveEndpointHandle? first = null;
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -31,7 +31,7 @@ public sealed class DynamicReceiveEndpointConnectorTests
 
             ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(async () =>
             {
-                HostReceiveEndpointHandle duplicate = harness.Bus.ConnectReceiveEndpoint(endpointName, _ => { });
+                IHostReceiveEndpointHandle duplicate = harness.Bus.ConnectReceiveEndpoint(endpointName, _ => { });
                 await duplicate.Ready.WaitAsync(timeout, cancellationToken);
             });
 
@@ -77,8 +77,8 @@ public sealed class DynamicReceiveEndpointConnectorTests
         TaskCompletionSource<ConsumeContext<DefinedEndpointMessage>> definedConsumed = harness.GetTask<ConsumeContext<DefinedEndpointMessage>>();
         IBusRegistrationContext? namedRegistration = null;
         IBusRegistrationContext? definedRegistration = null;
-        HostReceiveEndpointHandle? namedEndpoint = null;
-        HostReceiveEndpointHandle? definedEndpoint = null;
+        IHostReceiveEndpointHandle? namedEndpoint = null;
+        IHostReceiveEndpointHandle? definedEndpoint = null;
 
         try
         {

@@ -5,24 +5,24 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
-/// <summary>Creates registration bus instances.</summary>
+/// <summary>Creates the default dependency-injection bus instance from a registration callback.</summary>
 public class RegistrationBusFactory :
     IRegistrationBusFactory
 {
     readonly Func<IBusRegistrationContext, IBusControl> _configure;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Creates a factory that obtains a bus control from a registration context.</summary>
+    /// <param name="configure">The callback that creates the bus control.</param>
     public RegistrationBusFactory(Func<IBusRegistrationContext, IBusControl> configure)
     {
         _configure = configure ?? throw new ArgumentNullException(nameof(configure));
     }
 
-    /// <summary>Creates bus.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="specifications">The specifications.</param>
-    /// <param name="busName">The bus name.</param>
-    /// <returns>The created bus.</returns>
+    /// <summary>Creates the default bus instance for a registration context.</summary>
+    /// <param name="context">The context that supplies registered services and endpoint configuration.</param>
+    /// <param name="specifications">The bus-instance specifications supplied by the registration pipeline.</param>
+    /// <param name="busName">The registered bus name.</param>
+    /// <returns>The created bus instance.</returns>
     public IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
     {
         LogContext.ConfigureCurrentLogContextIfNull(context);
@@ -67,7 +67,7 @@ public class RegistrationBusFactory :
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Default Bus Instance", "unknown", RiderExceptionMessage, "Correct the named configuration before starting the host"));
         }
 
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
+        public IHostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
             Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
         {
             return BusControl.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
@@ -79,7 +79,7 @@ public class RegistrationBusFactory :
             });
         }
 
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
+        public IHostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
             Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
         {
             return BusControl.ConnectReceiveEndpoint(queueName, configurator =>

@@ -3,25 +3,25 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>Provides an endpoint for receive endpoint publish request send.</summary>
-/// <typeparam name="TRequest">The request type.</typeparam>
+/// <summary>Resolves the publish destination for requests after a connected response endpoint becomes ready.</summary>
+/// <typeparam name="TRequest">The request message contract.</typeparam>
 internal sealed class ReceiveEndpointPublishRequestSendEndpoint<TRequest> :
     RequestSendEndpoint<TRequest>
     where TRequest : class
 {
-    readonly HostReceiveEndpointHandle _handle;
+    readonly IHostReceiveEndpointHandle _handle;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="handle">The handle.</param>
-    /// <param name="consumeContext">The consume context.</param>
-    public ReceiveEndpointPublishRequestSendEndpoint(HostReceiveEndpointHandle handle, ConsumeContext? consumeContext)
+    /// <summary>Creates a request endpoint backed by a connected response endpoint.</summary>
+    /// <param name="handle">The response endpoint handle whose readiness gates destination resolution.</param>
+    /// <param name="consumeContext">The consume context whose request metadata is propagated, or <see langword="null" />.</param>
+    public ReceiveEndpointPublishRequestSendEndpoint(IHostReceiveEndpointHandle handle, ConsumeContext? consumeContext)
         : base(consumeContext)
     {
         _handle = handle ?? throw new ArgumentNullException(nameof(handle));
     }
 
-    /// <summary>Gets send endpoint.</summary>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <summary>Waits for the response endpoint and resolves the publish destination for the request contract.</summary>
+    /// <returns>A task that produces the publish send endpoint.</returns>
     protected override async Task<ISendEndpoint> GetSendEndpointAsync()
     {
         var ready = await _handle.Ready.ConfigureAwait(false);

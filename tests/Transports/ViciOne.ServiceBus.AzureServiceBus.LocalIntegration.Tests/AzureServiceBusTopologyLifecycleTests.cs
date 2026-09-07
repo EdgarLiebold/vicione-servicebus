@@ -90,7 +90,7 @@ public sealed class AzureServiceBusTopologyLifecycleTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            HostReceiveEndpointHandle initial = Connect(first);
+            IHostReceiveEndpointHandle initial = Connect(first);
             await initial.Ready.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             ConfigurationException conflict = Assert.Throws<ConfigurationException>(
@@ -104,7 +104,7 @@ public sealed class AzureServiceBusTopologyLifecycleTests
             await initial.StopAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.False(await admin.SubscriptionExistsAsync(topic, subscription, cancellationToken));
 
-            HostReceiveEndpointHandle reconnected = Connect(second);
+            IHostReceiveEndpointHandle reconnected = Connect(second);
             await reconnected.Ready.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await bus.PublishAsync(new DynamicEndpointMessage(secondId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -123,7 +123,7 @@ public sealed class AzureServiceBusTopologyLifecycleTests
             await fixture.CleanupAsync(admin);
         }
 
-        HostReceiveEndpointHandle Connect(TaskCompletionSource<ConsumeContext<DynamicEndpointMessage>> observation) =>
+        IHostReceiveEndpointHandle Connect(TaskCompletionSource<ConsumeContext<DynamicEndpointMessage>> observation) =>
             bus.ConnectReceiveEndpoint(queue, endpoint =>
             {
                 var serviceBusEndpoint = (IServiceBusReceiveEndpointConfigurator)endpoint;

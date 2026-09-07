@@ -145,13 +145,13 @@ internal abstract class DeferredBus :
         return _bus.ConnectEndpointConfigurationObserver(observer);
     }
 
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+    public IHostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return _bus.ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint)
+    public IHostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint)
     {
         return _bus.ConnectReceiveEndpoint(queueName, configureEndpoint);
     }

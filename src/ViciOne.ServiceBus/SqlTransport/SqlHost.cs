@@ -29,7 +29,7 @@ public class SqlHost :
     /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null"/> to use the default formatter.</param>
     /// <param name="configureEndpoint">An optional provider-neutral callback applied to the SQL endpoint configuration.</param>
     /// <returns>A handle that controls the connected receive endpoint.</returns>
-    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+    public override IHostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         Action<ISqlReceiveEndpointConfigurator>? configure = configureEndpoint == null
@@ -43,7 +43,7 @@ public class SqlHost :
     /// <param name="queueName">The logical SQL queue name.</param>
     /// <param name="configureEndpoint">An optional provider-neutral callback applied to the SQL endpoint configuration.</param>
     /// <returns>A handle that controls the connected receive endpoint.</returns>
-    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
+    public override IHostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         Action<ISqlReceiveEndpointConfigurator>? configure = configureEndpoint == null
             ? null
@@ -57,7 +57,7 @@ public class SqlHost :
     /// <param name="endpointNameFormatter">The formatter used to derive the queue name, or <see langword="null"/> to use the default formatter.</param>
     /// <param name="configureEndpoint">An optional callback that applies SQL-transport-specific endpoint settings.</param>
     /// <returns>A handle that controls the connected receive endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
+    public IHostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
         Action<ISqlReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
@@ -73,7 +73,7 @@ public class SqlHost :
     /// <param name="queueName">The logical SQL queue name.</param>
     /// <param name="configure">An optional callback that applies SQL-transport-specific endpoint settings before validation.</param>
     /// <returns>A handle that controls the started receive endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<ISqlReceiveEndpointConfigurator>? configure = null)
+    public IHostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<ISqlReceiveEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 

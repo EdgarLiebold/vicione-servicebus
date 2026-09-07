@@ -41,14 +41,14 @@ public abstract class BaseHost :
     /// <param name="endpointNameFormatter">The formatter used to derive the endpoint name, or <see langword="null" /> to use the configured default.</param>
     /// <param name="configureEndpoint">An optional callback that further configures the endpoint.</param>
     /// <returns>A handle that controls the endpoint registration and exposes its readiness.</returns>
-    public abstract HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+    public abstract IHostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null);
 
     /// <summary>Connects a receive endpoint for a transport queue.</summary>
     /// <param name="queueName">The transport queue name.</param>
     /// <param name="configureEndpoint">An optional callback that further configures the endpoint.</param>
     /// <returns>A handle that controls the endpoint registration and exposes its readiness.</returns>
-    public abstract HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null);
+    public abstract IHostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null);
 
     ConnectHandle IConsumeMessageObserverConnector.ConnectConsumeMessageObserver<T>(IConsumeMessageObserver<T> observer)
     {
@@ -105,7 +105,7 @@ public abstract class BaseHost :
 
         LogContext.Debug?.Log("Starting bus: {HostAddress}", _hostConfiguration.HostAddress);
 
-        HostReceiveEndpointHandle[] handles = ReceiveEndpoints.StartEndpoints(cancellationToken);
+        IHostReceiveEndpointHandle[] handles = ReceiveEndpoints.StartEndpoints(cancellationToken);
 
         HostRiderHandle[] riders = Riders.StartRiders(cancellationToken);
 

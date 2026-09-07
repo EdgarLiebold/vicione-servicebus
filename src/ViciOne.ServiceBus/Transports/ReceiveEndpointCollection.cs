@@ -53,7 +53,7 @@ public sealed class ReceiveEndpointCollection :
     /// <summary>Starts every endpoint that is not already running.</summary>
     /// <param name="cancellationToken">The token that cancels endpoint startup.</param>
     /// <returns>Handles for the endpoints started by this call.</returns>
-    public HostReceiveEndpointHandle[] StartEndpoints(CancellationToken cancellationToken)
+    public IHostReceiveEndpointHandle[] StartEndpoints(CancellationToken cancellationToken)
     {
         _started = true;
 
@@ -66,7 +66,7 @@ public sealed class ReceiveEndpointCollection :
     /// <param name="endpointName">The registered endpoint name.</param>
     /// <param name="cancellationToken">The token that cancels endpoint startup.</param>
     /// <returns>A handle that exposes readiness and controls the endpoint.</returns>
-    public HostReceiveEndpointHandle Start(string endpointName, CancellationToken cancellationToken)
+    public IHostReceiveEndpointHandle Start(string endpointName, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(endpointName))
             throw new ArgumentException($"The {nameof(endpointName)} must not be null or empty", nameof(endpointName));
@@ -136,7 +136,7 @@ public sealed class ReceiveEndpointCollection :
         _started = false;
     }
 
-    HostReceiveEndpointHandle StartEndpoint(string endpointName, ReceiveEndpoint endpoint, CancellationToken cancellationToken)
+    IHostReceiveEndpointHandle StartEndpoint(string endpointName, ReceiveEndpoint endpoint, CancellationToken cancellationToken)
     {
         try
         {
@@ -172,7 +172,7 @@ public sealed class ReceiveEndpointCollection :
 
 
     sealed class Handle :
-        HostReceiveEndpointHandle
+        IHostReceiveEndpointHandle
     {
         readonly ReceiveEndpoint _endpoint;
         readonly Action _remove;

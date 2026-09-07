@@ -3,23 +3,23 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
-/// <summary>An Azure ServiceBus Host, which caches the messaging factory and namespace manager.</summary>
+/// <summary>Hosts Azure Service Bus receive endpoints and their shared namespace connection resources.</summary>
 public interface IServiceBusHost :
     IHost<IServiceBusReceiveEndpointConfigurator>
 {
-    /// <summary>Create a subscription endpoint on the host, which can be stopped independently from the bus.</summary>
-    /// <typeparam name="T">The topic message type.</typeparam>
-    /// <param name="subscriptionName">The subscription name for this endpoint.</param>
-    /// <param name="configure">Configuration callback for the endpoint.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
-    HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName, Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
+    /// <summary>Connects a subscription endpoint to the publish topic for a message contract.</summary>
+    /// <typeparam name="T">The subscribed message contract.</typeparam>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="configure">An optional callback that configures the subscription endpoint.</param>
+    /// <returns>A handle that exposes readiness and controls the connected endpoint.</returns>
+    IHostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName, Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
         where T : class;
 
-    /// <summary>Create a subscription endpoint on the host, which can be stopped independently from the bus.</summary>
-    /// <param name="subscriptionName">The subscription name for this endpoint.</param>
-    /// <param name="topicName">The topic name to subscribe for this endpoint.</param>
-    /// <param name="configure">Configuration callback for the endpoint.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
-    HostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
+    /// <summary>Connects a subscription endpoint to a named topic.</summary>
+    /// <param name="subscriptionName">The subscription name.</param>
+    /// <param name="topicName">The namespace-relative topic name.</param>
+    /// <param name="configure">An optional callback that configures the subscription endpoint.</param>
+    /// <returns>A handle that exposes readiness and controls the connected endpoint.</returns>
+    IHostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
         Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null);
 }

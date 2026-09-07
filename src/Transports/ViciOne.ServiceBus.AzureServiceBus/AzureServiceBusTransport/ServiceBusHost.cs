@@ -29,7 +29,7 @@ public class ServiceBusHost :
     /// <param name="endpointNameFormatter">The optional formatter used to derive the queue name.</param>
     /// <param name="configureEndpoint">Optionally configures provider-neutral endpoint settings.</param>
     /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
-    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+    public override IHostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return ConnectReceiveEndpoint(definition, endpointNameFormatter,
@@ -40,7 +40,7 @@ public class ServiceBusHost :
     /// <param name="queueName">The namespace-relative queue name.</param>
     /// <param name="configureEndpoint">Optionally configures provider-neutral endpoint settings.</param>
     /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
-    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
+    public override IHostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return ConnectReceiveEndpoint(queueName,
             configureEndpoint == null ? null : endpoint => configureEndpoint(endpoint));
@@ -51,7 +51,7 @@ public class ServiceBusHost :
     /// <param name="endpointNameFormatter">The optional formatter used to derive the queue name.</param>
     /// <param name="configureEndpoint">Optionally configures Azure Service Bus-specific settings.</param>
     /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
+    public IHostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
         Action<IServiceBusReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
@@ -67,7 +67,7 @@ public class ServiceBusHost :
     /// <param name="queueName">The namespace-relative queue name.</param>
     /// <param name="configure">Optionally configures Azure Service Bus-specific settings.</param>
     /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IServiceBusReceiveEndpointConfigurator>? configure = null)
+    public IHostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IServiceBusReceiveEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
@@ -87,7 +87,7 @@ public class ServiceBusHost :
     /// <param name="subscriptionName">The subscription name.</param>
     /// <param name="configure">Optionally configures Azure Service Bus-specific settings.</param>
     /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
+    public IHostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
         Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
         where T : class
     {
@@ -103,7 +103,7 @@ public class ServiceBusHost :
     /// <param name="topicName">The namespace-relative topic name.</param>
     /// <param name="configure">Optionally configures Azure Service Bus-specific settings.</param>
     /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
+    public IHostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
         Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
@@ -126,7 +126,7 @@ public class ServiceBusHost :
         _hostConfiguration.ConnectionContextSupervisor.Probe(context);
     }
 
-    HostReceiveEndpointHandle ConnectSubscriptionEndpoint(IServiceBusSubscriptionEndpointConfiguration configuration)
+    IHostReceiveEndpointHandle ConnectSubscriptionEndpoint(IServiceBusSubscriptionEndpointConfiguration configuration)
     {
         LogContext.Debug?.Log("Connect subscription endpoint: {Topic}/{SubscriptionName}", configuration.Settings.Path, configuration.Settings.Name);
 

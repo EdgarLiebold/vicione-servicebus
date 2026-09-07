@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>Exposes a host-connected receive endpoint and controls its lifetime.</summary>
-public interface HostReceiveEndpointHandle
+public interface IHostReceiveEndpointHandle
 {
-    /// <summary>Gets the receive endpoint.</summary>
+    /// <summary>Gets the connected endpoint used for message operations and observation.</summary>
     IReceiveEndpoint ReceiveEndpoint { get; }
 
     /// <summary>Gets a task that completes when the endpoint is ready to consume messages.</summary>

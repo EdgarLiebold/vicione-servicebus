@@ -22,7 +22,7 @@ public sealed class AmazonSqsDynamicEndpointTests
         var received = new TaskCompletionSource<ObservedMessage>(TaskCreationOptions.RunContinuationsAsynchronously);
         IBusControl bus = Bus.Factory.CreateUsingAmazonSqs(fixture.ConfigureHost);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        HostReceiveEndpointHandle? endpointHandle = null;
+        IHostReceiveEndpointHandle? endpointHandle = null;
         bool busStarted = false;
         bool endpointStopped = false;
 

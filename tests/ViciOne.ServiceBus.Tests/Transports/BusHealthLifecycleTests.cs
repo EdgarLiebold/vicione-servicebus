@@ -48,7 +48,7 @@ public sealed class BusHealthLifecycleTests
 
         try
         {
-            HostReceiveEndpointHandle handle = bus.ConnectReceiveEndpoint("health-dependent", _ => { });
+            IHostReceiveEndpointHandle handle = bus.ConnectReceiveEndpoint("health-dependent", _ => { });
             await handle.Ready.WaitAsync(timeout, cancellationToken);
             Assert.Equal(BusHealthStatus.Healthy,
                 (await bus.WaitForHealthStatusAsync(BusHealthStatus.Healthy, timeout, cancellationToken)).Status);

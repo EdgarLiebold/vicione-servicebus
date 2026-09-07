@@ -249,7 +249,7 @@ public sealed class TransformPipelineTests
         };
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
-        HostReceiveEndpointHandle? controlEndpoint = null;
+        IHostReceiveEndpointHandle? controlEndpoint = null;
         try
         {
             controlEndpoint = harness.Bus.ConnectReceiveEndpoint(

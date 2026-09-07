@@ -119,7 +119,7 @@ public sealed class TestingServiceProviderExtensionsTests
 
     private sealed record PublishedMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
 
-    private sealed class PendingEndpointHandle : HostReceiveEndpointHandle
+    private sealed class PendingEndpointHandle : IHostReceiveEndpointHandle
     {
         private readonly TaskCompletionSource<ReceiveEndpointReady> _ready =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -133,12 +133,12 @@ public sealed class TestingServiceProviderExtensionsTests
 
     private class PendingBusProxy : DispatchProxy
     {
-        public HostReceiveEndpointHandle? EndpointHandle { get; set; }
+        public IHostReceiveEndpointHandle? EndpointHandle { get; set; }
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
             if (targetMethod?.Name == nameof(IReceiveConnector.ConnectReceiveEndpoint)
-                && targetMethod.ReturnType == typeof(HostReceiveEndpointHandle))
+                && targetMethod.ReturnType == typeof(IHostReceiveEndpointHandle))
                 return EndpointHandle ?? throw new InvalidOperationException("The endpoint handle was not configured.");
 
             throw new NotSupportedException(targetMethod?.Name);

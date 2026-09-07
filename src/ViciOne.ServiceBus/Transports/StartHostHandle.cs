@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Transports;
 internal sealed class StartHostHandle :
     IHostHandle
 {
-    readonly HostReceiveEndpointHandle[] _handles;
+    readonly IHostReceiveEndpointHandle[] _handles;
     readonly BaseHost _host;
     readonly HostRiderHandle[] _riderHandles;
 
@@ -17,7 +17,7 @@ internal sealed class StartHostHandle :
     /// <param name="host">The host controlled by this handle.</param>
     /// <param name="handles">The receive-endpoint handles whose readiness is aggregated.</param>
     /// <param name="riderHandles">The rider handles whose readiness is aggregated.</param>
-    internal StartHostHandle(BaseHost host, HostReceiveEndpointHandle[] handles, HostRiderHandle[] riderHandles)
+    internal StartHostHandle(BaseHost host, IHostReceiveEndpointHandle[] handles, HostRiderHandle[] riderHandles)
     {
         _host = host;
         _handles = handles;

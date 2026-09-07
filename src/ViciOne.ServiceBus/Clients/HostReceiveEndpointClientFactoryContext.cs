@@ -8,14 +8,14 @@ internal sealed class HostReceiveEndpointClientFactoryContext :
     ReceiveEndpointClientFactoryContext,
     IAsyncDisposable
 {
-    readonly HostReceiveEndpointHandle _handle;
+    readonly IHostReceiveEndpointHandle _handle;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="handle">The handle.</param>
-    /// <param name="defaultTimeout">The default timeout.</param>
+    /// <summary>Creates a client-factory context that owns a connected response endpoint.</summary>
+    /// <param name="handle">The connected endpoint that receives responses and is stopped on disposal.</param>
+    /// <param name="defaultTimeout">The default request timeout.</param>
     /// <param name="timeProvider">The time source used by the operation.</param>
     public HostReceiveEndpointClientFactoryContext(
-        HostReceiveEndpointHandle handle,
+        IHostReceiveEndpointHandle handle,
         RequestTimeout defaultTimeout = default,
         TimeProvider? timeProvider = null)
         : base(handle, defaultTimeout, timeProvider)
@@ -23,8 +23,8 @@ internal sealed class HostReceiveEndpointClientFactoryContext :
         _handle = handle ?? throw new ArgumentNullException(nameof(handle));
     }
 
-    /// <summary>Releases the resources owned by this instance.</summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Stops and removes the response endpoint owned by this context.</summary>
+    /// <returns>A task that completes after the endpoint has stopped.</returns>
     public async ValueTask DisposeAsync()
     {
         await _handle.StopAsync().ConfigureAwait(false);

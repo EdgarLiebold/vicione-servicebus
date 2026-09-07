@@ -235,13 +235,13 @@ internal sealed partial class ServiceBusRuntime :
         return _host.ConnectEndpointConfigurationObserver(observer);
     }
 
-    HostReceiveEndpointHandle IReceiveConnector.ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+    IHostReceiveEndpointHandle IReceiveConnector.ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint)
     {
         return _host.ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
-    HostReceiveEndpointHandle IReceiveConnector.ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint)
+    IHostReceiveEndpointHandle IReceiveConnector.ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint)
     {
         return _host.ConnectReceiveEndpoint(queueName, configureEndpoint);
     }

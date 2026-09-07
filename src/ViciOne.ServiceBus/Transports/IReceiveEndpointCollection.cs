@@ -4,37 +4,34 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>Defines the operations required by receive endpoint collection.</summary>
+/// <summary>Owns receive-endpoint registration, lifecycle, health, observation, and diagnostics for a host or rider.</summary>
 public interface IReceiveEndpointCollection :
     IReceiveEndpointObserverConnector,
     IConsumeMessageObserverConnector,
     IProbeSite
 {
-    /// <summary>Add an endpoint to the collection.</summary>
-    /// <param name="endpointName">The endpoint name.</param>
-    /// <param name="endpoint">The endpoint.</param>
+    /// <summary>Adds a configured endpoint under its host-unique name.</summary>
+    /// <param name="endpointName">The name that identifies the endpoint within the collection.</param>
+    /// <param name="endpoint">The endpoint owned by the collection.</param>
     void Add(string endpointName, ReceiveEndpoint endpoint);
 
-    /// <summary>
-    /// Start all endpoints in the collection which have not been started, and return the handles
-    /// for those endpoints.
-    /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The host receive endpoint handle array produced by the operation.</returns>
-    HostReceiveEndpointHandle[] StartEndpoints(CancellationToken cancellationToken);
+    /// <summary>Starts every endpoint that is not already running.</summary>
+    /// <param name="cancellationToken">The token that cancels endpoint startup.</param>
+    /// <returns>The handles for the endpoint generations started by this call.</returns>
+    IHostReceiveEndpointHandle[] StartEndpoints(CancellationToken cancellationToken);
 
-    /// <summary>Start a new receive endpoint.</summary>
-    /// <param name="endpointName">The endpoint name.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The host receive endpoint handle produced by the operation.</returns>
-    HostReceiveEndpointHandle Start(string endpointName, CancellationToken cancellationToken = default);
+    /// <summary>Starts one registered receive endpoint.</summary>
+    /// <param name="endpointName">The name of the endpoint to start.</param>
+    /// <param name="cancellationToken">The token that cancels endpoint startup.</param>
+    /// <returns>A handle that exposes readiness and controls the connected endpoint.</returns>
+    IHostReceiveEndpointHandle Start(string endpointName, CancellationToken cancellationToken = default);
 
-    /// <summary>Stop all receive endpoints.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Stops and removes every endpoint in the collection.</summary>
+    /// <param name="cancellationToken">The token that cancels endpoint shutdown.</param>
+    /// <returns>A task that completes after every endpoint has stopped.</returns>
     Task StopEndpointsAsync(CancellationToken cancellationToken);
 
-    /// <summary>Checks endpoint health.</summary>
-    /// <returns>The enumerable produced by the operation.</returns>
+    /// <summary>Gets a health snapshot for every registered endpoint.</summary>
+    /// <returns>The current endpoint health results.</returns>
     IEnumerable<EndpointHealthResult> CheckEndpointHealth();
 }

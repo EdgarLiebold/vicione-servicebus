@@ -28,7 +28,7 @@ public class ServiceBusInstance :
     /// <param name="subscriptionName">The subscription name.</param>
     /// <param name="configure">Optionally configures the subscription endpoint.</param>
     /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
+    public IHostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
         Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
         where T : class
     {
@@ -40,7 +40,7 @@ public class ServiceBusInstance :
     /// <param name="topicName">The namespace-relative topic name.</param>
     /// <param name="configure">Optionally configures the subscription endpoint.</param>
     /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
+    public IHostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
         Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
     {
         return _host.ConnectSubscriptionEndpoint(subscriptionName, topicName, configure);
@@ -51,7 +51,7 @@ public class ServiceBusInstance :
     /// <param name="subscriptionName">The subscription name.</param>
     /// <param name="configure">Optionally configures the endpoint with access to registration services.</param>
     /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
+    public IHostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
         Action<IBusRegistrationContext, IServiceBusSubscriptionEndpointConfigurator>? configure = null)
         where T : class
     {
@@ -68,7 +68,7 @@ public class ServiceBusInstance :
     /// <param name="topicName">The namespace-relative topic name.</param>
     /// <param name="configure">Optionally configures the endpoint with access to registration services.</param>
     /// <returns>A handle used to observe readiness and stop the endpoint.</returns>
-    public HostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
+    public IHostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
         Action<IBusRegistrationContext, IServiceBusSubscriptionEndpointConfigurator>? configure = null)
     {
         return _host.ConnectSubscriptionEndpoint(subscriptionName, topicName, configurator =>

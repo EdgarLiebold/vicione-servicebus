@@ -11,7 +11,7 @@ public static class EventHubEndpointConnectorExtensions
     /// <param name="eventHubName">The Event Hub entity name.</param>
     /// <param name="configure">Configures the connected receive endpoint.</param>
     /// <returns>A handle for observing readiness and stopping the connected endpoint.</returns>
-    public static HostReceiveEndpointHandle ConnectEventHubEndpoint(this IEventHubEndpointConnector connector, string eventHubName,
+    public static IHostReceiveEndpointHandle ConnectEventHubEndpoint(this IEventHubEndpointConnector connector, string eventHubName,
         Action<IRiderRegistrationContext, IEventHubReceiveEndpointConfigurator> configure)
     {
         return connector.ConnectEventHubEndpoint(eventHubName, EventHubConsumerClient.DefaultConsumerGroupName, configure);

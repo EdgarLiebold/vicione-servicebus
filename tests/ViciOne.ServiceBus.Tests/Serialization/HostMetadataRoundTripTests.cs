@@ -26,7 +26,7 @@ public sealed class HostMetadataRoundTripTests
             await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             var consumed = new TaskCompletionSource<ConsumeContext<HostMetadataMessage>>(
                 TaskCreationOptions.RunContinuationsAsynchronously);
-            HostReceiveEndpointHandle endpoint = harness.Bus.ConnectReceiveEndpoint(configurator =>
+            IHostReceiveEndpointHandle endpoint = harness.Bus.ConnectReceiveEndpoint(configurator =>
                 configurator.Handler<HostMetadataMessage>(context =>
                 {
                     consumed.TrySetResult(context);

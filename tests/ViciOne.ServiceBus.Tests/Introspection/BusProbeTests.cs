@@ -43,7 +43,7 @@ public sealed class BusProbeTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        HostReceiveEndpointHandle? dynamicEndpoint = null;
+        IHostReceiveEndpointHandle? dynamicEndpoint = null;
 
         try
         {
@@ -80,7 +80,7 @@ public sealed class BusProbeTests
         try
         {
             await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
-            HostReceiveEndpointHandle dynamicEndpoint = harness.Bus.ConnectReceiveEndpoint(
+            IHostReceiveEndpointHandle dynamicEndpoint = harness.Bus.ConnectReceiveEndpoint(
                 $"probe-removed-{NewId.NextGuid():N}",
                 configurator => configurator.Handler<ProbeMessage>(_ => Task.CompletedTask));
             Uri removedAddress = (await dynamicEndpoint.Ready.WaitAsync(timeout, cancellationToken)).InputAddress;

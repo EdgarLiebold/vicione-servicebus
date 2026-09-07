@@ -14,7 +14,7 @@ public sealed class HostConnectReceiveEndpointExtensionsTests
         IEndpointNameFormatter formatter = DispatchProxy.Create<IEndpointNameFormatter, EndpointNameFormatterProxy>();
         Action<IReceiveEndpointConfigurator> configure = _ => { };
 
-        HostReceiveEndpointHandle result = connector.ConnectResponseEndpoint(formatter, configure);
+        IHostReceiveEndpointHandle result = connector.ConnectResponseEndpoint(formatter, configure);
 
         Assert.Same(proxy.Handle, result);
         Assert.IsType<ResponseEndpointDefinition>(proxy.Definition);
@@ -29,7 +29,7 @@ public sealed class HostConnectReceiveEndpointExtensionsTests
         (IReceiveConnector connector, ReceiveConnectorProxy proxy) = CreateConnector();
         Action<IReceiveEndpointConfigurator> configure = _ => { };
 
-        HostReceiveEndpointHandle result = connector.ConnectReceiveEndpoint(configure);
+        IHostReceiveEndpointHandle result = connector.ConnectReceiveEndpoint(configure);
 
         Assert.Same(proxy.Handle, result);
         Assert.IsType<TemporaryEndpointDefinition>(proxy.Definition);
@@ -65,8 +65,8 @@ public sealed class HostConnectReceiveEndpointExtensionsTests
 
         public Action<IReceiveEndpointConfigurator>? ConfigureEndpoint { get; private set; }
 
-        public HostReceiveEndpointHandle Handle { get; } =
-            DispatchProxy.Create<HostReceiveEndpointHandle, HostReceiveEndpointHandleProxy>();
+        public IHostReceiveEndpointHandle Handle { get; } =
+            DispatchProxy.Create<IHostReceiveEndpointHandle, HostReceiveEndpointHandleProxy>();
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
