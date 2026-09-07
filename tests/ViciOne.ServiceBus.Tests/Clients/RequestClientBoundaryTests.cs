@@ -1,4 +1,6 @@
 using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Introspection;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Util;
 using Xunit;
@@ -7,6 +9,63 @@ namespace ViciOne.ServiceBus.Tests.Clients;
 
 public sealed class RequestClientBoundaryTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-CLIENT-BOUNDARY", "factory-constructor-dependencies")]
+    public void ClientFactories_RejectMissingConstructorDependenciesImmediately()
+    {
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => new ClientFactory(null!)).ParamName);
+        Assert.Equal("clientFactory", Assert.Throws<ArgumentNullException>(() => new ScopedClientFactory(null!, null)).ParamName);
+        Assert.Equal("bus", Assert.Throws<ArgumentNullException>(() => new BusClientFactoryContext(null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-CLIENT-DIAGNOSTICS", "request-identity-and-contract")]
+    public void RequestHandleProbe_ReportsItsIdentityAndRequestContract()
+    {
+        var context = new BoundaryClientFactoryContext();
+        ClientRequestHandle<BoundaryRequest>.SendRequestCallback callback = async (_, _, cancellationToken) =>
+        {
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+            return new BoundaryRequest("unused");
+        };
+        using var handle = new ClientRequestHandle<BoundaryRequest>(context, callback);
+
+        IProbeResult result = handle.GetProbeResult(TestContext.Current.CancellationToken);
+
+        IReadOnlyDictionary<string, object> filter = Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(
+            Assert.Contains("filters", result.Results));
+        Assert.Equal("request", Assert.Contains("filterType", filter));
+        Assert.Equal(handle.RequestId, Assert.Contains("requestId", filter));
+        Assert.Equal(TypeCache<BoundaryRequest>.ShortName, Assert.Contains("requestType", filter));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-CLIENT-BOUNDARY", "response-registration-closes-before-send")]
+    public void RequestHandle_RejectsResponseRegistrationAfterSendIsReleased()
+    {
+        var context = new BoundaryClientFactoryContext();
+        ClientRequestHandle<BoundaryRequest>.SendRequestCallback callback = async (_, _, cancellationToken) =>
+        {
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+            return new BoundaryRequest("unused");
+        };
+        using var handle = new ClientRequestHandle<BoundaryRequest>(
+            context,
+            callback,
+            TestContext.Current.CancellationToken);
+
+        _ = handle.GetResponseAsync<BoundaryResponse>(
+            readyToSend: true,
+            TestContext.Current.CancellationToken);
+
+        void RegisterAnotherResponse() => _ = handle.GetResponseAsync<AlternateResponse>(
+            readyToSend: false,
+            TestContext.Current.CancellationToken);
+
+        RequestException exception = Assert.Throws<RequestException>(RegisterAnotherResponse);
+        Assert.Contains("cannot be registered", exception.Message, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData(EntryPoint.CreateTyped, "message")]
     [InlineData(EntryPoint.CreateValues, "values")]
@@ -115,7 +174,10 @@ public sealed class RequestClientBoundaryTests
             IPipe<SendContext<BoundaryRequest>> pipe,
             CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Tests.Clients.RequestClientBoundaryTests.BoundaryRequest>(cancellationToken); SendCount++;
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled<BoundaryRequest>(cancellationToken);
+
+            SendCount++;
             throw new InvalidOperationException("A rejected input reached the send endpoint.");
         }
 
@@ -125,7 +187,10 @@ public sealed class RequestClientBoundaryTests
             IPipe<SendContext<BoundaryRequest>> pipe,
             CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); SendCount++;
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled(cancellationToken);
+
+            SendCount++;
             throw new InvalidOperationException("A rejected input reached the send endpoint.");
         }
     }

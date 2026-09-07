@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>Carries state for host receive endpoint client factory operations.</summary>
-public class HostReceiveEndpointClientFactoryContext :
+/// <summary>Connects request clients to a temporary receive endpoint and owns its lifetime.</summary>
+internal sealed class HostReceiveEndpointClientFactoryContext :
     ReceiveEndpointClientFactoryContext,
     IAsyncDisposable
 {
@@ -20,7 +20,7 @@ public class HostReceiveEndpointClientFactoryContext :
         TimeProvider? timeProvider = null)
         : base(handle, defaultTimeout, timeProvider)
     {
-        _handle = handle;
+        _handle = handle ?? throw new ArgumentNullException(nameof(handle));
     }
 
     /// <summary>Releases the resources owned by this instance.</summary>

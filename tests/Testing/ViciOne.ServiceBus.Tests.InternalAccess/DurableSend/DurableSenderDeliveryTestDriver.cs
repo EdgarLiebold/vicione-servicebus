@@ -1,6 +1,6 @@
 using System.Diagnostics.Metrics;
 using Microsoft.Extensions.Logging.Abstractions;
-using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.Diagnostics.Telemetry;
 
 namespace ViciOne.ServiceBus.Tests.InternalAccess.DurableSend;
 
@@ -8,7 +8,7 @@ public sealed class DurableSenderDeliveryTestDriver<TBus> : IDisposable
     where TBus : class, IBus
 {
     private readonly TestMeterFactory _meterFactory = new();
-    private readonly V5ServiceBusInstrumentation<TBus> _instrumentation;
+    private readonly ServiceBusInstrumentation<TBus> _instrumentation;
     private readonly ReliableMessagingDeliveryService<TBus> _service;
 
     internal DurableSenderDeliveryTestDriver(
@@ -33,7 +33,7 @@ public sealed class DurableSenderDeliveryTestDriver<TBus> : IDisposable
         };
         configure?.Invoke(options);
         ReliableMessagingPolicy<TBus> policy = options.ValidateAndFreeze();
-        _instrumentation = new V5ServiceBusInstrumentation<TBus>(_meterFactory);
+        _instrumentation = new ServiceBusInstrumentation<TBus>(_meterFactory);
         _service = new ReliableMessagingDeliveryService<TBus>(
             [store],
             [dispatcher],

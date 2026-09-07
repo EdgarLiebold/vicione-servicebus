@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.Diagnostics.Telemetry;
 using ViciOne.ServiceBus.Providers.Persistence;
 
 namespace ViciOne.ServiceBus.Operations;
@@ -13,7 +13,7 @@ internal sealed class ReliableMessagingOperations<TBus> : IReliableMessagingOper
 {
     readonly IOutboxStore<TBus> _store;
     readonly IInboxStore<TBus> _inbox;
-    readonly V5ServiceBusInstrumentation<TBus> _instrumentation;
+    readonly ServiceBusInstrumentation<TBus> _instrumentation;
     readonly ILogger<ReliableMessagingOperations<TBus>> _logger;
     readonly TimeProvider _timeProvider;
 
@@ -22,7 +22,7 @@ internal sealed class ReliableMessagingOperations<TBus> : IReliableMessagingOper
         IEnumerable<IInboxStore<TBus>> inboxStores,
         TimeProvider timeProvider,
         ILogger<ReliableMessagingOperations<TBus>> logger,
-        V5ServiceBusInstrumentation<TBus> instrumentation)
+        ServiceBusInstrumentation<TBus> instrumentation)
     {
         _store = ReliableMessagingComposition.RequireExactlyOne<IOutboxStore<TBus>, TBus>(stores, "persistence store");
         _inbox = ReliableMessagingComposition.RequireExactlyOne<IInboxStore<TBus>, TBus>(inboxStores, "inbox store");

@@ -2,8 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>Carries state for bus client factory operations.</summary>
-public class BusClientFactoryContext :
+/// <summary>Connects request clients directly to a bus instance.</summary>
+internal sealed class BusClientFactoryContext :
     ClientFactoryContext
 {
     readonly IBus _bus;
@@ -14,7 +14,7 @@ public class BusClientFactoryContext :
     /// <param name="timeProvider">The time source used by the operation.</param>
     public BusClientFactoryContext(IBus bus, RequestTimeout defaultTimeout = default, TimeProvider? timeProvider = null)
     {
-        _bus = bus;
+        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
 
         DefaultTimeout = defaultTimeout.HasValue ? defaultTimeout : RequestTimeout.Default;
         TimeProvider = timeProvider ?? TimeProvider.System;

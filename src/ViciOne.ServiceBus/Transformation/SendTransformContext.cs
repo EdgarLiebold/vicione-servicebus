@@ -4,12 +4,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Transformation;
 
-/// <summary>
-/// Sits in front of the consume context and allows the inbound message to be
-/// transformed.
-/// </summary>
+/// <summary>Projects an outbound send context and the message being transformed.</summary>
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class SendTransformContext<TMessage> :
+internal sealed class SendTransformContext<TMessage> :
     ProxyPipeContext,
     TransformContext<TMessage>
     where TMessage : class
@@ -19,7 +16,7 @@ public class SendTransformContext<TMessage> :
     /// <summary>Initializes a new instance.</summary>
     /// <param name="context">The context associated with the operation.</param>
     public SendTransformContext(SendContext<TMessage> context)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
         _context = context;
     }
@@ -53,9 +50,9 @@ public class SendTransformContext<TMessage> :
     /// <summary>Gets the host.</summary>
     public HostInfo Host => HostMetadataCache.Host;
 
-    /// <summary>Gets a value indicating whether this instance has input.</summary>
+    /// <summary>Gets whether the outbound message is available.</summary>
     public bool HasInput => true;
 
-    /// <summary>Gets the input.</summary>
+    /// <summary>Gets the outbound message.</summary>
     public TMessage Input => _context.Message;
 }

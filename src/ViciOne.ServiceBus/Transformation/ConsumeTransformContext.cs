@@ -3,12 +3,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Transformation;
 
-/// <summary>
-/// Sits in front of the consume context and allows the inbound message to be
-/// transformed.
-/// </summary>
-/// <typeparam name="TInput">The input type.</typeparam>
-public class ConsumeTransformContext<TInput> :
+/// <summary>Projects an inbound consume context and the message being transformed.</summary>
+/// <typeparam name="TInput">The source message type.</typeparam>
+internal sealed class ConsumeTransformContext<TInput> :
     ProxyPipeContext,
     TransformContext<TInput>
     where TInput : class
@@ -19,10 +16,10 @@ public class ConsumeTransformContext<TInput> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="input">The input.</param>
     public ConsumeTransformContext(ConsumeContext context, TInput input)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
         _context = context;
-        Input = input;
+        Input = input ?? throw new ArgumentNullException(nameof(input));
     }
 
     /// <summary>Gets the message id.</summary>
@@ -52,9 +49,9 @@ public class ConsumeTransformContext<TInput> :
     /// <summary>Gets the host.</summary>
     public HostInfo Host => _context.Host;
 
-    /// <summary>Gets a value indicating whether this instance has input.</summary>
+    /// <summary>Gets whether the source message is available.</summary>
     public bool HasInput => true;
 
-    /// <summary>Gets the input.</summary>
+    /// <summary>Gets the source message.</summary>
     public TInput Input { get; }
 }

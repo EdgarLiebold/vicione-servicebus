@@ -5,10 +5,9 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Introspection;
 
-/// <summary>Builds probe result components.</summary>
-public class ProbeResultBuilder :
-    ScopeProbeContext,
-    IProbeResultBuilder
+/// <summary>Collects a diagnostic probe and creates its structurally read-only result.</summary>
+internal sealed class ProbeResultBuilder :
+    ScopeProbeContext
 {
     readonly Guid _probeId;
     readonly Guid _resultId;
@@ -16,7 +15,7 @@ public class ProbeResultBuilder :
     readonly long _startedAt;
     readonly TimeProvider _timeProvider;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Initializes a collector for one probe request.</summary>
     /// <param name="probeId">The probe id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeProvider">The time source used by the operation.</param>
@@ -31,21 +30,19 @@ public class ProbeResultBuilder :
         _startedAt = _timeProvider.GetTimestamp();
     }
 
-    /// <summary>Builds the configured component.</summary>
-    /// <returns>The configured component.</returns>
-    public new ProbeResult Build()
+    /// <summary>Builds a structurally read-only snapshot of the collected diagnostic data.</summary>
+    /// <returns>The completed probe result.</returns>
+    public IProbeResult Build()
     {
         TimeSpan duration = _timeProvider.GetElapsedTime(_startedAt);
 
-        return new Result(_probeId, _resultId, _startTimestamp, duration, HostMetadataCache.Host, base.Build());
+        return new Result(_probeId, _resultId, _startTimestamp, duration, HostMetadataCache.Host, BuildResults());
     }
-
-
-    class Result :
-        ProbeResult
+    sealed class Result :
+        IProbeResult
     {
         public Result(Guid probeId, Guid resultId, DateTimeOffset startTimestamp, TimeSpan duration, HostInfo host,
-            IDictionary<string, object> results)
+            IReadOnlyDictionary<string, object> results)
         {
             ProbeId = probeId;
             ResultId = resultId;
@@ -60,6 +57,6 @@ public class ProbeResultBuilder :
         public DateTimeOffset StartTimestamp { get; }
         public TimeSpan Duration { get; }
         public HostInfo Host { get; }
-        public IDictionary<string, object> Results { get; }
+        public IReadOnlyDictionary<string, object> Results { get; }
     }
 }

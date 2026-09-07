@@ -85,18 +85,18 @@ public sealed class ActiveMqEndpointConfigurationTests
         int expectedPrefetch,
         int expectedConcurrency)
     {
-        ProbeResult probe = bus.GetProbeResult(TestContext.Current.CancellationToken);
-        IDictionary<string, object> busScope = GetScope(probe.Results, "bus");
-        IDictionary<string, object> hostScope = GetScope(busScope, "host");
+        IProbeResult probe = bus.GetProbeResult(TestContext.Current.CancellationToken);
+        IReadOnlyDictionary<string, object> busScope = GetScope(probe.Results, "bus");
+        IReadOnlyDictionary<string, object> hostScope = GetScope(busScope, "host");
         object endpointValue = Assert.Contains("receiveEndpoint", hostScope);
-        IEnumerable<IDictionary<string, object>> endpoints = endpointValue switch
+        IEnumerable<IReadOnlyDictionary<string, object>> endpoints = endpointValue switch
         {
-            IDictionary<string, object> single => [single],
-            IEnumerable<IDictionary<string, object>> multiple => multiple,
+            IReadOnlyDictionary<string, object> single => [single],
+            IEnumerable<IReadOnlyDictionary<string, object>> multiple => multiple,
             _ => throw new Xunit.Sdk.XunitException(
                 $"The receiveEndpoint probe node has unsupported type '{endpointValue.GetType()}'."),
         };
-        IDictionary<string, object> transport = Assert.Single(
+        IReadOnlyDictionary<string, object> transport = Assert.Single(
             endpoints.Select(endpoint => GetScope(endpoint, "receiveTransport")),
             candidate => entityName.Equals(
                 Assert.IsType<string>(Assert.Contains("entityName", candidate)),
@@ -106,8 +106,8 @@ public sealed class ActiveMqEndpointConfigurationTests
         Assert.Equal(expectedConcurrency, Assert.IsType<int>(Assert.Contains("concurrentMessageLimit", transport)));
     }
 
-    private static IDictionary<string, object> GetScope(IDictionary<string, object> parent, string key) =>
-        Assert.IsAssignableFrom<IDictionary<string, object>>(Assert.Contains(key, parent));
+    private static IReadOnlyDictionary<string, object> GetScope(IReadOnlyDictionary<string, object> parent, string key) =>
+        Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(Assert.Contains(key, parent));
 
     private sealed class TestEndpointDefinition(string name, int? prefetchCount, int? concurrentMessageLimit) : IEndpointDefinition
     {

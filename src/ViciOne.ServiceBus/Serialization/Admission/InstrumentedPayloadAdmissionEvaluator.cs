@@ -1,6 +1,6 @@
 using System;
 
-using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.Diagnostics.Telemetry;
 
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
@@ -10,12 +10,12 @@ internal sealed class InstrumentedPayloadAdmissionEvaluator<TBus> : IPayloadAdmi
     where TBus : class, IBus
 {
     private readonly PayloadAdmissionEvaluator<TBus> _inner;
-    private readonly V5ServiceBusInstrumentation<TBus> _instrumentation;
+    private readonly ServiceBusInstrumentation<TBus> _instrumentation;
     private readonly Action<PayloadAdmissionException> _recordBoundedWriterRejection;
 
     public InstrumentedPayloadAdmissionEvaluator(
         PayloadAdmissionEvaluator<TBus> inner,
-        V5ServiceBusInstrumentation<TBus> instrumentation)
+        ServiceBusInstrumentation<TBus> instrumentation)
     {
         _inner = inner ?? throw new ArgumentNullException(nameof(inner));
         _instrumentation = instrumentation ?? throw new ArgumentNullException(nameof(instrumentation));

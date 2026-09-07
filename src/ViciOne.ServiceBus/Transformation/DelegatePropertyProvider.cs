@@ -5,10 +5,10 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Transformation;
 
-/// <summary>Copies the input property, as-is, for the property value.</summary>
-/// <typeparam name="TInput">The input type.</typeparam>
+/// <summary>Computes a transformed property value from its current value and message context.</summary>
+/// <typeparam name="TInput">The source message type.</typeparam>
 /// <typeparam name="TProperty">The property type.</typeparam>
-public class DelegatePropertyProvider<TInput, TProperty> :
+internal sealed class DelegatePropertyProvider<TInput, TProperty> :
     IPropertyProvider<TInput, TProperty>
     where TInput : class
 {
@@ -21,11 +21,8 @@ public class DelegatePropertyProvider<TInput, TProperty> :
     public DelegatePropertyProvider(IPropertyProvider<TInput, TProperty> inputProvider,
         Func<TransformPropertyContext<TProperty, TInput>, Task<TProperty>> valueProvider)
     {
-        if (inputProvider == null)
-            throw new ArgumentNullException(nameof(inputProvider));
-
-        _inputProvider = inputProvider;
-        _valueProvider = valueProvider;
+        _inputProvider = inputProvider ?? throw new ArgumentNullException(nameof(inputProvider));
+        _valueProvider = valueProvider ?? throw new ArgumentNullException(nameof(valueProvider));
     }
 
     /// <summary>Gets property.</summary>
@@ -43,7 +40,7 @@ public class DelegatePropertyProvider<TInput, TProperty> :
             return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
 
         Task<TProperty?> inputTask = _inputProvider.GetPropertyAsync(context, cancellationToken: cancellationToken);
-        if (inputTask.IsCompleted)
+        if (inputTask.IsCompletedSuccessfully)
             return GetValueAsync(inputTask.Result);
 
         async Task<TProperty?> GetPropertyAsync()

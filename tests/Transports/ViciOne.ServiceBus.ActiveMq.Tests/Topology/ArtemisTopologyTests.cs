@@ -34,7 +34,7 @@ public sealed class ArtemisTopologyTests
         Assert.Equal($"Consumer.{endpointName}.{topicName}", consumer.ConsumerName);
         Assert.True(consumer.IsShared);
 
-        ProbeResult probe = topology.GetProbeResult(TestContext.Current.CancellationToken);
+        IProbeResult probe = topology.GetProbeResult(TestContext.Current.CancellationToken);
         IDictionary<string, object> consumerProbe = Assert.IsAssignableFrom<IDictionary<string, object>>(
             Assert.Contains("consumer", probe.Results));
         Assert.Equal(topicName, Assert.Contains("source", consumerProbe));

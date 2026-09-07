@@ -14989,18 +14989,7 @@ TYPE delegate public ViciOne.ServiceBus.Caching.ResourceFactory<TKey,TValue> [se
   METHOD public virtual System.IAsyncResult BeginInvoke(TKey key, System.Threading.CancellationToken cancellationToken, System.AsyncCallback callback, System.Object object)
   METHOD public virtual System.Threading.Tasks.ValueTask<TValue> EndInvoke(System.IAsyncResult result)
   METHOD public virtual System.Threading.Tasks.ValueTask<TValue> Invoke(TKey key, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.Clients.BusClientFactoryContext
-  CTOR public ViciOne.ServiceBus.Clients.BusClientFactoryContext(ViciOne.ServiceBus.IBus bus, ViciOne.ServiceBus.Advanced.RequestTimeout defaultTimeout = null, System.TimeProvider timeProvider = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumePipe<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumePipe<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe, ViciOne.ServiceBus.Advanced.Middleware.ConnectPipeOptions options)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectRequestPipe<T>(System.Guid requestId, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.IRequestSendEndpoint<T> GetRequestEndpoint<T>(System.Uri destinationAddress, ViciOne.ServiceBus.ConsumeContext consumeContext = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.IRequestSendEndpoint<T> GetRequestEndpoint<T>(ViciOne.ServiceBus.ConsumeContext consumeContext = null)
-  PROPERTY System.TimeProvider TimeProvider { public-get;  }
-  PROPERTY System.Uri ResponseAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.IMessageRouteTable MessageRoutes { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.RequestTimeout DefaultTimeout { public-get;  }
-TYPE class public ViciOne.ServiceBus.Clients.ClientFactory
+TYPE class public ViciOne.ServiceBus.Clients.ClientFactory [sealed]
   CTOR public ViciOne.ServiceBus.Clients.ClientFactory(ViciOne.ServiceBus.Advanced.ClientFactoryContext context)
   METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
   METHOD public virtual ViciOne.ServiceBus.Advanced.RequestHandle<T> CreateRequest<T>(System.Object values, ViciOne.ServiceBus.Advanced.RequestTimeout timeout, System.Threading.CancellationToken cancellationToken)
@@ -15016,96 +15005,7 @@ TYPE class public ViciOne.ServiceBus.Clients.ClientFactory
   METHOD public virtual ViciOne.ServiceBus.IRequestClient<T> CreateRequestClient<T>(ViciOne.ServiceBus.ConsumeContext consumeContext, System.Uri destinationAddress, ViciOne.ServiceBus.Advanced.RequestTimeout timeout)
   METHOD public virtual ViciOne.ServiceBus.IRequestClient<T> CreateRequestClient<T>(ViciOne.ServiceBus.ConsumeContext consumeContext, ViciOne.ServiceBus.Advanced.RequestTimeout timeout)
   PROPERTY ViciOne.ServiceBus.Advanced.ClientFactoryContext Context { public-get;  }
-TYPE class public ViciOne.ServiceBus.Clients.ClientRequestHandle<TRequest>
-  CTOR public ViciOne.ServiceBus.Clients.ClientRequestHandle<TRequest>(ViciOne.ServiceBus.Advanced.ClientFactoryContext context, ViciOne.ServiceBus.Clients.ClientRequestHandle<TRequest> sendRequestCallback, System.Threading.CancellationToken cancellationToken = null, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Nullable<System.Guid> requestId = null, System.Threading.Tasks.TaskScheduler taskScheduler = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.SendContext<TRequest> context)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T>> GetResponseAsync<T>(System.Boolean readyToSend, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void AddPipeSpecification(ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.Advanced.SendContext<TRequest>> specification)
-  METHOD public virtual System.Void Cancel()
-  METHOD public virtual System.Void Dispose()
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-  PROPERTY System.Guid RequestId { public-get;  }
-  PROPERTY System.Threading.Tasks.Task<TRequest> Message { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.RequestTimeout TimeToLive {  public-set; }
-TYPE delegate public ViciOne.ServiceBus.Clients.ClientRequestHandle<TRequest> [sealed]
-  CTOR public ViciOne.ServiceBus.Clients.ClientRequestHandle<TRequest>(System.Object object, System.IntPtr method)
-  METHOD public virtual System.IAsyncResult BeginInvoke(System.Guid requestId, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TRequest>> pipe, System.Threading.CancellationToken cancellationToken, System.AsyncCallback callback, System.Object object)
-  METHOD public virtual System.Threading.Tasks.Task<TRequest> EndInvoke(System.IAsyncResult result)
-  METHOD public virtual System.Threading.Tasks.Task<TRequest> Invoke(System.Guid requestId, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TRequest>> pipe, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.Clients.FaultHandlerConnectHandle
-  CTOR public ViciOne.ServiceBus.Clients.FaultHandlerConnectHandle(ViciOne.ServiceBus.Advanced.ConnectHandle handle)
-  METHOD public virtual System.Void Disconnect()
-  METHOD public virtual System.Void Dispose()
-  METHOD public virtual System.Void TrySetCanceled(System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Void TrySetException(System.Exception exception)
-TYPE interface public ViciOne.ServiceBus.Clients.HandlerConnectHandle
-  METHOD public abstract System.Void TrySetCanceled(System.Threading.CancellationToken cancellationToken)
-  METHOD public abstract System.Void TrySetException(System.Exception exception)
-TYPE interface public ViciOne.ServiceBus.Clients.HandlerConnectHandle<T>
-  PROPERTY System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T>> Task { public-get;  }
-TYPE class public ViciOne.ServiceBus.Clients.HostReceiveEndpointClientFactoryContext [base=ViciOne.ServiceBus.Clients.ReceiveEndpointClientFactoryContext]
-  CTOR public ViciOne.ServiceBus.Clients.HostReceiveEndpointClientFactoryContext(ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle handle, ViciOne.ServiceBus.Advanced.RequestTimeout defaultTimeout = null, System.TimeProvider timeProvider = null)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-TYPE class public ViciOne.ServiceBus.Clients.MessageResponse<TResult> [sealed]
-  CTOR public ViciOne.ServiceBus.Clients.MessageResponse<TResult>(ViciOne.ServiceBus.ConsumeContext<TResult> context)
-  METHOD public TValue DeserializeObject<TValue>(System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> dictionary)
-  PROPERTY TResult Message { public-get;  }
-TYPE class public ViciOne.ServiceBus.Clients.PublishRequestSendEndpoint<TRequest> [base=ViciOne.ServiceBus.Clients.RequestSendEndpoint<TRequest>]
-  CTOR public ViciOne.ServiceBus.Clients.PublishRequestSendEndpoint<TRequest>(ViciOne.ServiceBus.Advanced.IPublishEndpointProvider provider, ViciOne.ServiceBus.ConsumeContext consumeContext)
-  METHOD protected System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetSendEndpointAsync()
-TYPE class public ViciOne.ServiceBus.Clients.ReceiveEndpointClientFactoryContext
-  CTOR public ViciOne.ServiceBus.Clients.ReceiveEndpointClientFactoryContext(ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle handle, ViciOne.ServiceBus.Advanced.RequestTimeout defaultTimeout = null, System.TimeProvider timeProvider = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumePipe<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumePipe<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe, ViciOne.ServiceBus.Advanced.Middleware.ConnectPipeOptions options)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectRequestPipe<T>(System.Guid requestId, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.IRequestSendEndpoint<T> GetRequestEndpoint<T>(System.Uri destinationAddress, ViciOne.ServiceBus.ConsumeContext consumeContext = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.IRequestSendEndpoint<T> GetRequestEndpoint<T>(ViciOne.ServiceBus.ConsumeContext consumeContext = null)
-  PROPERTY System.TimeProvider TimeProvider { public-get;  }
-  PROPERTY System.Uri ResponseAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.IMessageRouteTable MessageRoutes { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.RequestTimeout DefaultTimeout { public-get;  }
-TYPE class public ViciOne.ServiceBus.Clients.ReceiveEndpointPublishRequestSendEndpoint<TRequest> [base=ViciOne.ServiceBus.Clients.RequestSendEndpoint<TRequest>]
-  CTOR public ViciOne.ServiceBus.Clients.ReceiveEndpointPublishRequestSendEndpoint<TRequest>(ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle handle, ViciOne.ServiceBus.ConsumeContext consumeContext)
-  METHOD protected System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetSendEndpointAsync()
-TYPE class public ViciOne.ServiceBus.Clients.ReceiveEndpointSendRequestSendEndpoint<TRequest> [base=ViciOne.ServiceBus.Clients.RequestSendEndpoint<TRequest>]
-  CTOR public ViciOne.ServiceBus.Clients.ReceiveEndpointSendRequestSendEndpoint<TRequest>(ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle handle, System.Uri destinationAddress, ViciOne.ServiceBus.ConsumeContext consumeContext)
-  METHOD protected System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetSendEndpointAsync()
-TYPE class public ViciOne.ServiceBus.Clients.RequestClient<TRequest>
-  CTOR public ViciOne.ServiceBus.Clients.RequestClient<TRequest>(ViciOne.ServiceBus.Advanced.ClientFactoryContext context, ViciOne.ServiceBus.Advanced.IRequestSendEndpoint<TRequest> requestSendEndpoint, ViciOne.ServiceBus.Advanced.RequestTimeout timeout)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2,T3>> GetResponseAsync<T1,T2,T3>(System.Object values, ViciOne.ServiceBus.Advanced.RequestPipeConfiguratorCallback<TRequest> callback, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2,T3>> GetResponseAsync<T1,T2,T3>(System.Object values, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2,T3>> GetResponseAsync<T1,T2,T3>(TRequest message, ViciOne.ServiceBus.Advanced.RequestPipeConfiguratorCallback<TRequest> callback, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2,T3>> GetResponseAsync<T1,T2,T3>(TRequest message, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2>> GetResponseAsync<T1,T2>(System.Object values, ViciOne.ServiceBus.Advanced.RequestPipeConfiguratorCallback<TRequest> callback, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2>> GetResponseAsync<T1,T2>(System.Object values, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2>> GetResponseAsync<T1,T2>(TRequest message, ViciOne.ServiceBus.Advanced.RequestPipeConfiguratorCallback<TRequest> callback, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T1,T2>> GetResponseAsync<T1,T2>(TRequest message, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T>> GetResponseAsync<T>(System.Object values, ViciOne.ServiceBus.Advanced.RequestPipeConfiguratorCallback<TRequest> callback, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T>> GetResponseAsync<T>(System.Object values, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T>> GetResponseAsync<T>(TRequest message, ViciOne.ServiceBus.Advanced.RequestPipeConfiguratorCallback<TRequest> callback, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<T>> GetResponseAsync<T>(TRequest message, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse>> GetResponseAsync<TResponse>(TRequest request, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse>> GetResponseAsync<TResponse>(TRequest request, ViciOne.ServiceBus.RequestOptions options, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.RequestHandle<TRequest> Create(System.Object values, ViciOne.ServiceBus.Advanced.RequestTimeout timeout = null, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.RequestHandle<TRequest> Create(TRequest message, ViciOne.ServiceBus.Advanced.RequestTimeout timeout, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.Clients.RequestSendEndpoint<TRequest> [abstract]
-  CTOR protected ViciOne.ServiceBus.Clients.RequestSendEndpoint<TRequest>(ViciOne.ServiceBus.ConsumeContext consumeContext)
-  METHOD protected abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetSendEndpointAsync()
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(System.Guid requestId, TRequest message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TRequest>> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task<TRequest> SendAsync(System.Guid requestId, System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<TRequest>> pipe, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.Clients.ResponseHandlerConfigurator<TResponse>
-  CTOR public ViciOne.ServiceBus.Clients.ResponseHandlerConfigurator<TResponse>(System.Threading.Tasks.TaskScheduler taskScheduler, ViciOne.ServiceBus.Advanced.MessageHandler<TResponse> handler, System.Threading.Tasks.Task requestTask)
-  METHOD public ViciOne.ServiceBus.Clients.HandlerConnectHandle<TResponse> Connect(ViciOne.ServiceBus.Advanced.Middleware.IRequestPipeConnector connector, System.Guid requestId)
-  METHOD public virtual System.Void AddPipeSpecification(ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.ConsumeContext<TResponse>> specification)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectHandlerConfigurationObserver(ViciOne.ServiceBus.Configuration.IHandlerConfigurationObserver observer)
-TYPE class public ViciOne.ServiceBus.Clients.ResponseHandlerConnectHandle<TResponse>
-  CTOR public ViciOne.ServiceBus.Clients.ResponseHandlerConnectHandle<TResponse>(ViciOne.ServiceBus.Advanced.ConnectHandle handle, System.Threading.Tasks.TaskCompletionSource<ViciOne.ServiceBus.ConsumeContext<TResponse>> completed, System.Threading.Tasks.Task requestTask)
-  METHOD public virtual System.Void Disconnect()
-  METHOD public virtual System.Void Dispose()
-  METHOD public virtual System.Void TrySetCanceled(System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Void TrySetException(System.Exception exception)
-  PROPERTY System.Threading.Tasks.Task<ViciOne.ServiceBus.Response<TResponse>> Task { public-get;  }
-TYPE class public ViciOne.ServiceBus.Clients.ScopedClientFactory
+TYPE class public ViciOne.ServiceBus.Clients.ScopedClientFactory [sealed]
   CTOR public ViciOne.ServiceBus.Clients.ScopedClientFactory(ViciOne.ServiceBus.Advanced.IClientFactory clientFactory, ViciOne.ServiceBus.ConsumeContext consumeContext)
   METHOD public virtual ViciOne.ServiceBus.Advanced.RequestHandle<T> CreateRequest<T>(System.Object values, ViciOne.ServiceBus.Advanced.RequestTimeout timeout, System.Threading.CancellationToken cancellationToken)
   METHOD public virtual ViciOne.ServiceBus.Advanced.RequestHandle<T> CreateRequest<T>(System.Uri destinationAddress, System.Object values, ViciOne.ServiceBus.Advanced.RequestTimeout timeout, System.Threading.CancellationToken cancellationToken)
@@ -15113,9 +15013,6 @@ TYPE class public ViciOne.ServiceBus.Clients.ScopedClientFactory
   METHOD public virtual ViciOne.ServiceBus.Advanced.RequestHandle<T> CreateRequest<T>(T message, ViciOne.ServiceBus.Advanced.RequestTimeout timeout, System.Threading.CancellationToken cancellationToken)
   METHOD public virtual ViciOne.ServiceBus.IRequestClient<T> CreateRequestClient<T>(System.Uri destinationAddress, ViciOne.ServiceBus.Advanced.RequestTimeout timeout)
   METHOD public virtual ViciOne.ServiceBus.IRequestClient<T> CreateRequestClient<T>(ViciOne.ServiceBus.Advanced.RequestTimeout timeout)
-TYPE class public ViciOne.ServiceBus.Clients.SendRequestSendEndpoint<TRequest> [base=ViciOne.ServiceBus.Clients.RequestSendEndpoint<TRequest>]
-  CTOR public ViciOne.ServiceBus.Clients.SendRequestSendEndpoint<TRequest>(ViciOne.ServiceBus.ISendEndpointProvider provider, System.Uri destinationAddress, ViciOne.ServiceBus.ConsumeContext consumeContext)
-  METHOD protected System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetSendEndpointAsync()
 TYPE class public ViciOne.ServiceBus.Configuration.ActivityObserverConfigurationExtensions [static]
   METHOD public static ViciOne.ServiceBus.Advanced.ConnectHandle ConnectActivityObserver(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, ViciOne.ServiceBus.Advanced.Observers.IActivityObserver observer)
   METHOD public static ViciOne.ServiceBus.Advanced.ConnectHandle ConnectActivityObserver(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Advanced.Observers.IActivityObserver observer)
@@ -18465,26 +18362,13 @@ TYPE class public ViciOne.ServiceBus.Initializers.TypeConverters.VersionTypeConv
   METHOD public virtual System.Boolean TryConvert(System.Object input, out System.Version result)
   METHOD public virtual System.Boolean TryConvert(System.String input, out System.Version result)
   METHOD public virtual System.Boolean TryConvert(System.Version input, out System.String result)
-TYPE interface public ViciOne.ServiceBus.Introspection.IProbeResultBuilder
-  METHOD public abstract ViciOne.ServiceBus.Introspection.ProbeResult Build()
-TYPE interface public ViciOne.ServiceBus.Introspection.ProbeResult
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Results { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Introspection.IProbeResult
+  PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> Results { public-get;  }
   PROPERTY System.DateTimeOffset StartTimestamp { public-get;  }
   PROPERTY System.Guid ProbeId { public-get;  }
   PROPERTY System.Guid ResultId { public-get;  }
   PROPERTY System.TimeSpan Duration { public-get;  }
   PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
-TYPE class public ViciOne.ServiceBus.Introspection.ProbeResultBuilder [base=ViciOne.ServiceBus.Introspection.ScopeProbeContext]
-  CTOR public ViciOne.ServiceBus.Introspection.ProbeResultBuilder(System.Guid probeId, System.Threading.CancellationToken cancellationToken, System.TimeProvider timeProvider = null)
-  METHOD public virtual ViciOne.ServiceBus.Introspection.ProbeResult Build()
-TYPE class public ViciOne.ServiceBus.Introspection.ScopeProbeContext
-  CTOR protected ViciOne.ServiceBus.Introspection.ScopeProbeContext(System.Threading.CancellationToken cancellationToken)
-  METHOD protected System.Collections.Generic.IDictionary<System.String,System.Object> Build()
-  METHOD public virtual System.Void Add(System.String key, System.Object value)
-  METHOD public virtual System.Void Add(System.String key, System.String value)
-  METHOD public virtual System.Void Set(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> values)
-  METHOD public virtual System.Void Set(System.Object values)
-  METHOD public virtual ViciOne.ServiceBus.Operations.ProbeContext CreateScope(System.String key)
 TYPE class public ViciOne.ServiceBus.Logging.BusLogContext
   CTOR public ViciOne.ServiceBus.Logging.BusLogContext(Microsoft.Extensions.Logging.ILoggerFactory loggerFactory)
   METHOD public virtual ViciOne.ServiceBus.Logging.ILogContext CreateLogContext(System.String categoryName)
@@ -19429,7 +19313,7 @@ TYPE class public ViciOne.ServiceBus.Monitoring.ServiceBusTelemetry.Metrics [sta
 TYPE class public ViciOne.ServiceBus.Operations.HealthReportExtensions [static]
   METHOD public static System.String ToJsonString(Microsoft.Extensions.Diagnostics.HealthChecks.HealthReport result)
 TYPE class public ViciOne.ServiceBus.Operations.IntrospectionExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Introspection.ProbeResult GetProbeResult(ViciOne.ServiceBus.Operations.IProbeSite probeSite, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static ViciOne.ServiceBus.Introspection.IProbeResult GetProbeResult(ViciOne.ServiceBus.Operations.IProbeSite probeSite, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Providers.Persistence.IReliableMessagingProviderConfigurator
   METHOD public abstract System.Void UseDispatcher(System.Type implementationType)
   METHOD public abstract System.Void UseEndpointSchedulerAdapter(System.Uri endpointAddress)
@@ -21083,104 +20967,9 @@ TYPE class public ViciOne.ServiceBus.Topology.SetSerializerMessageSendTopology<T
 TYPE interface public ViciOne.ServiceBus.Transactions.IAmbientTransactionBus
 TYPE interface public ViciOne.ServiceBus.Transactions.IBufferedBus
   METHOD public abstract System.Threading.Tasks.Task FlushAsync(System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Transformation.ConsumeTransformContext<TInput> [base=ViciOne.ServiceBus.Middleware.ProxyPipeContext]
-  CTOR public ViciOne.ServiceBus.Transformation.ConsumeTransformContext<TInput>(ViciOne.ServiceBus.ConsumeContext context, TInput input)
-  PROPERTY System.Boolean HasInput { public-get;  }
-  PROPERTY System.Nullable<System.DateTimeOffset> ExpirationTime { public-get;  }
-  PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
-  PROPERTY System.Nullable<System.Guid> ConversationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> CorrelationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> InitiatorId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> MessageId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> RequestId { public-get;  }
-  PROPERTY System.Uri DestinationAddress { public-get;  }
-  PROPERTY System.Uri FaultAddress { public-get;  }
-  PROPERTY System.Uri ResponseAddress { public-get;  }
-  PROPERTY System.Uri SourceAddress { public-get;  }
-  PROPERTY TInput Input { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.Headers Headers { public-get;  }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transformation.DelegatePropertyProvider<TInput,TProperty>
-  CTOR public ViciOne.ServiceBus.Transformation.DelegatePropertyProvider<TInput,TProperty>(ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty> inputProvider, System.Func<ViciOne.ServiceBus.Transformation.TransformPropertyContext<TProperty,TInput>,System.Threading.Tasks.Task<TProperty>> valueProvider)
-  METHOD public virtual System.Threading.Tasks.Task<TProperty> GetPropertyAsync<T>(ViciOne.ServiceBus.Initializers.InitializeContext<T,TInput> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Transformation.MessageTransformConvention<TMessage>
-  CTOR public ViciOne.ServiceBus.Transformation.MessageTransformConvention<TMessage>()
-  METHOD public System.Void Add(System.String propertyName, ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TMessage> initializer)
-  METHOD public virtual System.Boolean TryGetHeaderInitializer<T,TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<T,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetHeaderInitializer<TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetHeaderInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TMessage> initializer)
-  METHOD public virtual System.Boolean TryGetHeadersInitializer<T,TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<T,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetHeadersInitializer<TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetHeadersInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IHeaderInitializer<TMessage,TMessage> initializer)
-  METHOD public virtual System.Boolean TryGetPropertyInitializer<T,TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IPropertyInitializer<T,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetPropertyInitializer<TInput,TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TInput> initializer)
-  METHOD public virtual System.Boolean TryGetPropertyInitializer<TProperty>(System.Reflection.PropertyInfo propertyInfo, out ViciOne.ServiceBus.Initializers.IPropertyInitializer<TMessage,TMessage> initializer)
-  PROPERTY System.Int32 Count { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transformation.MessageTransformPropertyContext<TProperty,TInput> [base=ViciOne.ServiceBus.Middleware.ProxyPipeContext]
-  CTOR public ViciOne.ServiceBus.Transformation.MessageTransformPropertyContext<TProperty,TInput>(ViciOne.ServiceBus.Advanced.TransformContext<TInput> context, TProperty value)
-  PROPERTY System.Boolean HasInput { public-get;  }
-  PROPERTY System.Boolean HasValue { public-get;  }
-  PROPERTY System.Nullable<System.DateTimeOffset> ExpirationTime { public-get;  }
-  PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
-  PROPERTY System.Nullable<System.Guid> ConversationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> CorrelationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> InitiatorId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> MessageId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> RequestId { public-get;  }
-  PROPERTY System.Uri DestinationAddress { public-get;  }
-  PROPERTY System.Uri FaultAddress { public-get;  }
-  PROPERTY System.Uri ResponseAddress { public-get;  }
-  PROPERTY System.Uri SourceAddress { public-get;  }
-  PROPERTY TInput Input { public-get;  }
-  PROPERTY TProperty Value { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.Headers Headers { public-get;  }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transformation.PropertyTransformContext<TMessage,TProperty> [base=ViciOne.ServiceBus.Middleware.ProxyPipeContext]
-  CTOR public ViciOne.ServiceBus.Transformation.PropertyTransformContext<TMessage,TProperty>(ViciOne.ServiceBus.Advanced.TransformContext<TMessage> context, TProperty property)
-  PROPERTY System.Boolean HasInput { public-get;  }
-  PROPERTY System.Nullable<System.DateTimeOffset> ExpirationTime { public-get;  }
-  PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
-  PROPERTY System.Nullable<System.Guid> ConversationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> CorrelationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> InitiatorId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> MessageId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> RequestId { public-get;  }
-  PROPERTY System.Uri DestinationAddress { public-get;  }
-  PROPERTY System.Uri FaultAddress { public-get;  }
-  PROPERTY System.Uri ResponseAddress { public-get;  }
-  PROPERTY System.Uri SourceAddress { public-get;  }
-  PROPERTY TProperty Input { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.Headers Headers { public-get;  }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transformation.ReplaceMessageFactory<TMessage>
-  CTOR public ViciOne.ServiceBus.Transformation.ReplaceMessageFactory<TMessage>()
-  METHOD public virtual ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> Create(ViciOne.ServiceBus.Initializers.InitializeContext context)
-TYPE class public ViciOne.ServiceBus.Transformation.SendTransformContext<TMessage> [base=ViciOne.ServiceBus.Middleware.ProxyPipeContext]
-  CTOR public ViciOne.ServiceBus.Transformation.SendTransformContext<TMessage>(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
-  PROPERTY System.Boolean HasInput { public-get;  }
-  PROPERTY System.Nullable<System.DateTimeOffset> ExpirationTime { public-get;  }
-  PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
-  PROPERTY System.Nullable<System.Guid> ConversationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> CorrelationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> InitiatorId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> MessageId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> RequestId { public-get;  }
-  PROPERTY System.Uri DestinationAddress { public-get;  }
-  PROPERTY System.Uri FaultAddress { public-get;  }
-  PROPERTY System.Uri ResponseAddress { public-get;  }
-  PROPERTY System.Uri SourceAddress { public-get;  }
-  PROPERTY TMessage Input { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.Headers Headers { public-get;  }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Transformation.TransformPropertyContext<TProperty,TMessage>
   PROPERTY System.Boolean HasValue { public-get;  }
   PROPERTY TProperty Value { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transformation.TransformPropertyConverter<TProperty>
-  CTOR public ViciOne.ServiceBus.Transformation.TransformPropertyConverter<TProperty>(ViciOne.ServiceBus.Initializers.IMessageInitializer<TProperty> initializer)
-  METHOD public virtual System.Threading.Tasks.Task<TProperty> ConvertAsync<TMessage>(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, TProperty input, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Transformation.TransformPropertyInitializer<TMessage,TInput,TProperty>
-  CTOR public ViciOne.ServiceBus.Transformation.TransformPropertyInitializer<TMessage,TInput,TProperty>(ViciOne.ServiceBus.Initializers.IPropertyProvider<TInput,TProperty> propertyProvider, System.Reflection.PropertyInfo propertyInfo)
-  METHOD public virtual System.Threading.Tasks.Task ApplyAsync(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage,TInput> context, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Transports.AddressEqualityComparer
   CTOR public ViciOne.ServiceBus.Transports.AddressEqualityComparer()
   FIELD public static readonly System.Collections.Generic.IEqualityComparer<System.Uri> Comparer

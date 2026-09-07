@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.Diagnostics.Telemetry;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
@@ -20,7 +20,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
     readonly IReadOnlyList<IDurableSendDispatcher<TBus>>? _dispatchers;
     readonly IReadOnlyList<ITransportSendFailureClassifier> _failureClassifiers;
     readonly IReadOnlyList<IReliableDeliverySource<TBus>> _additionalSources;
-    readonly V5ServiceBusInstrumentation<TBus> _instrumentation;
+    readonly ServiceBusInstrumentation<TBus> _instrumentation;
     readonly ILogger<ReliableMessagingDeliveryService<TBus>> _logger;
     readonly ReliableMessagingPolicy<TBus>? _policy;
     readonly IServiceProvider? _provider;
@@ -37,7 +37,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
         IEnumerable<IReliableDeliverySource<TBus>> additionalSources,
         TimeProvider timeProvider,
         ILogger<ReliableMessagingDeliveryService<TBus>> logger,
-        V5ServiceBusInstrumentation<TBus> instrumentation,
+        ServiceBusInstrumentation<TBus> instrumentation,
         ReliableMessagingPolicy<TBus>? policy = null)
     {
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
@@ -58,7 +58,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
         ReliableMessagingPolicy<TBus> policy,
         TimeProvider timeProvider,
         ILogger<ReliableMessagingDeliveryService<TBus>> logger,
-        V5ServiceBusInstrumentation<TBus> instrumentation)
+        ServiceBusInstrumentation<TBus> instrumentation)
     {
         ArgumentNullException.ThrowIfNull(stores);
         ArgumentNullException.ThrowIfNull(dispatchers);
@@ -220,7 +220,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            RecordCancelled(activity, started);
+            RecordCanceled(activity, started);
             throw;
         }
         catch (Exception dispatchException)
@@ -298,7 +298,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
             // A successful volatile/broker dispatch followed by shutdown before the state transition remains safe: the
             // old lease eventually expires and the persisted producer intent can be replayed. At-least-once duplication
             // is preferred to silent loss.
-            RecordCancelled(activity, started);
+            RecordCanceled(activity, started);
             throw;
         }
         catch (Exception persistenceException)
@@ -338,7 +338,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            RecordCancelled(activity, started);
+            RecordCanceled(activity, started);
             throw;
         }
         catch (Exception persistenceException)
@@ -378,7 +378,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            RecordCancelled(activity, started);
+            RecordCanceled(activity, started);
             throw;
         }
         catch (Exception persistenceException)
@@ -401,15 +401,15 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
     {
         activity.SetTag("vicione.servicebus.delivery.outcome", OutcomeTag(outcome));
         if (failureKind is not null)
-            activity.SetFailure(V5ServiceBusInstrumentation<TBus>.ErrorType(failureKind.Value));
+            activity.SetFailure(ServiceBusInstrumentation<TBus>.ErrorType(failureKind.Value));
         _instrumentation.RecordDurableDelivery(
             outcome,
             failureKind,
             _timeProvider.GetElapsedTime(started).TotalSeconds);
     }
 
-    void RecordCancelled(SafeActivityScope activity, long started)
-        => RecordOutcome(activity, DurableSendDeliveryOutcome.Cancelled, failureKind: null, started);
+    void RecordCanceled(SafeActivityScope activity, long started)
+        => RecordOutcome(activity, DurableSendDeliveryOutcome.Canceled, failureKind: null, started);
 
     static string DispatchPersistenceOutcome(DurableSendCompletionMode completionMode)
         => completionMode switch
@@ -715,7 +715,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
             DurableSendDeliveryOutcome.Quarantined => "quarantined",
             DurableSendDeliveryOutcome.Delivered => "delivered",
             DurableSendDeliveryOutcome.AwaitingConsumerCompletion => "awaiting-consumer-completion",
-            DurableSendDeliveryOutcome.Cancelled => "cancelled",
+            DurableSendDeliveryOutcome.Canceled => "canceled",
             DurableSendDeliveryOutcome.StatePersistenceFailed => "state-persistence-failed",
             _ => "unknown",
         };

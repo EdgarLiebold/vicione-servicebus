@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Util;
@@ -6,7 +7,7 @@ namespace ViciOne.ServiceBus.Transformation;
 
 /// <summary>Converts transform property values.</summary>
 /// <typeparam name="TProperty">The property type.</typeparam>
-public class TransformPropertyConverter<TProperty> :
+internal sealed class TransformPropertyConverter<TProperty> :
     IPropertyConverter<TProperty, TProperty>
     where TProperty : class
 {
@@ -16,7 +17,7 @@ public class TransformPropertyConverter<TProperty> :
     /// <param name="initializer">The initializer.</param>
     public TransformPropertyConverter(IMessageInitializer<TProperty> initializer)
     {
-        _initializer = initializer;
+        _initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
     }
 
     /// <summary>Converts the supplied value.</summary>
@@ -36,7 +37,7 @@ public class TransformPropertyConverter<TProperty> :
         InitializeContext<TProperty> messageContext = _initializer.Create(propertyTransformContext);
 
         Task<InitializeContext<TProperty>> initTask = _initializer.InitializeAsync(messageContext, input, cancellationToken: cancellationToken);
-        if (initTask.IsCompleted)
+        if (initTask.IsCompletedSuccessfully)
             return Task.FromResult<TProperty?>(initTask.Result.Message);
 
         async Task<TProperty?> ConvertAsync()

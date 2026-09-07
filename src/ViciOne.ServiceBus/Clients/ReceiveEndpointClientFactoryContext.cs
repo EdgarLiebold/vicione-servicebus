@@ -2,8 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>Carries state for receive endpoint client factory operations.</summary>
-public class ReceiveEndpointClientFactoryContext :
+/// <summary>Connects request clients to a host receive endpoint.</summary>
+internal class ReceiveEndpointClientFactoryContext :
     ClientFactoryContext
 {
     readonly HostReceiveEndpointHandle _handle;
@@ -18,7 +18,7 @@ public class ReceiveEndpointClientFactoryContext :
         RequestTimeout defaultTimeout = default,
         TimeProvider? timeProvider = null)
     {
-        _handle = handle;
+        _handle = handle ?? throw new ArgumentNullException(nameof(handle));
         _receiveEndpoint = handle.ReceiveEndpoint;
 
         ResponseAddress = _receiveEndpoint.InputAddress;

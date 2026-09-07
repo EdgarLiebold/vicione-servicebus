@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -6,14 +7,14 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Introspection;
 
-/// <summary>Carries state for scope probe operations.</summary>
-public class ScopeProbeContext :
+/// <summary>Collects the values and nested scopes emitted by one diagnostic probe node.</summary>
+internal class ScopeProbeContext :
     ProbeContext
 {
     readonly CancellationToken _cancellationToken;
     readonly IDictionary<string, object> _variables;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Initializes a probe node that shares the caller's cancellation token.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     protected ScopeProbeContext(CancellationToken cancellationToken)
     {
@@ -23,9 +24,9 @@ public class ScopeProbeContext :
 
     CancellationToken ProbeContext.CancellationToken => _cancellationToken;
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <summary>Sets or removes a string value in the current node.</summary>
     /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">The value to process.</param>
+    /// <param name="value">The string to store; an empty value removes the key.</param>
     public void Add(string key, string value)
     {
         if (key == null)
@@ -37,9 +38,9 @@ public class ScopeProbeContext :
             _variables[key] = value;
     }
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <summary>Sets or removes a value in the current node.</summary>
     /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">The value to process.</param>
+    /// <param name="value">The value to store; a null or empty string removes the key.</param>
     public void Add(string key, object value)
     {
         if (key == null)
@@ -51,7 +52,7 @@ public class ScopeProbeContext :
             _variables[key] = value;
     }
 
-    /// <summary>Updates the target with the supplied value.</summary>
+    /// <summary>Copies readable properties from an object into the current node.</summary>
     /// <param name="values">The values.</param>
     public void Set(object values)
     {
@@ -59,18 +60,21 @@ public class ScopeProbeContext :
             SetVariablesFromDictionary(ConvertObject.ToDictionary(values));
     }
 
-    /// <summary>Updates the target with the supplied value.</summary>
+    /// <summary>Copies the supplied values into the current node.</summary>
     /// <param name="values">The values.</param>
     public void Set(IEnumerable<KeyValuePair<string, object>> values)
     {
+        ArgumentNullException.ThrowIfNull(values);
         SetVariablesFromDictionary(values);
     }
 
-    /// <summary>Creates scope.</summary>
+    /// <summary>Creates and appends a child node under the supplied key.</summary>
     /// <param name="key">The key used to identify the requested entry.</param>
     /// <returns>The created scope.</returns>
     public ProbeContext CreateScope(string key)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         var scope = new ScopeProbeContext(_cancellationToken);
 
         IList<ScopeProbeContext> list;
@@ -92,18 +96,18 @@ public class ScopeProbeContext :
         return scope;
     }
 
-    /// <summary>Builds the configured component.</summary>
-    /// <returns>The configured component.</returns>
-    protected IDictionary<string, object> Build()
+    /// <summary>Builds a structurally read-only snapshot of this node and every child node.</summary>
+    /// <returns>The read-only diagnostic node.</returns>
+    protected IReadOnlyDictionary<string, object> BuildResults()
     {
-        return _variables.ToDictionary(x => x.Key, item =>
+        return _variables.ToFrozenDictionary(x => x.Key, item =>
         {
             if (item.Value is IList<ScopeProbeContext> list)
             {
                 if (list.Count == 1)
-                    return list[0].Build();
+                    return list[0].BuildResults();
 
-                return list.Select(x => x.Build()).ToArray();
+                return list.Select(x => x.BuildResults()).ToList().AsReadOnly();
             }
 
             return item.Value;

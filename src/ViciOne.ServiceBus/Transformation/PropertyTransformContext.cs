@@ -1,13 +1,12 @@
 using System;
-using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Transformation;
 
-/// <summary>For nested types transformed.</summary>
-/// <typeparam name="TMessage">The input message transform context type.</typeparam>
+/// <summary>Projects a nested source property while preserving the parent transform metadata.</summary>
+/// <typeparam name="TMessage">The parent message type.</typeparam>
 /// <typeparam name="TProperty">The property type.</typeparam>
-public class PropertyTransformContext<TMessage, TProperty> :
+internal sealed class PropertyTransformContext<TMessage, TProperty> :
     ProxyPipeContext,
     TransformContext<TProperty>
     where TMessage : class
@@ -19,10 +18,10 @@ public class PropertyTransformContext<TMessage, TProperty> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="property">The property.</param>
     public PropertyTransformContext(TransformContext<TMessage> context, TProperty property)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
         _context = context;
-        Input = property;
+        Input = property ?? throw new ArgumentNullException(nameof(property));
     }
 
     /// <summary>Gets the message id.</summary>
@@ -46,14 +45,14 @@ public class PropertyTransformContext<TMessage, TProperty> :
     /// <summary>Gets the fault address.</summary>
     public Uri? FaultAddress => _context.FaultAddress;
     /// <summary>Gets the sent time.</summary>
-    public DateTimeOffset? SentTime => default;
+    public DateTimeOffset? SentTime => _context.SentTime;
     /// <summary>Gets the headers.</summary>
     public Headers Headers => _context.Headers;
     /// <summary>Gets the host.</summary>
-    public HostInfo Host => HostMetadataCache.Host;
+    public HostInfo Host => _context.Host;
 
-    /// <summary>Gets a value indicating whether this instance has input.</summary>
+    /// <summary>Gets whether the nested property is available.</summary>
     public bool HasInput => true;
-    /// <summary>Gets the input.</summary>
+    /// <summary>Gets the nested source property.</summary>
     public TProperty Input { get; }
 }

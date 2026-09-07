@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Clients;
 
 /// <summary>Provides a request response together with its transport metadata and serializer context.</summary>
 /// <typeparam name="TResult">The response contract type.</typeparam>
-public sealed class MessageResponse<TResult> :
+internal sealed class MessageResponse<TResult> :
     Response<TResult>
     where TResult : class
 {

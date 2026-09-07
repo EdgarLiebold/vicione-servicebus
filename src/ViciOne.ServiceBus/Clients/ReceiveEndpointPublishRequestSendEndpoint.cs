@@ -1,10 +1,11 @@
+using System;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Clients;
 
 /// <summary>Provides an endpoint for receive endpoint publish request send.</summary>
 /// <typeparam name="TRequest">The request type.</typeparam>
-public class ReceiveEndpointPublishRequestSendEndpoint<TRequest> :
+internal sealed class ReceiveEndpointPublishRequestSendEndpoint<TRequest> :
     RequestSendEndpoint<TRequest>
     where TRequest : class
 {
@@ -16,7 +17,7 @@ public class ReceiveEndpointPublishRequestSendEndpoint<TRequest> :
     public ReceiveEndpointPublishRequestSendEndpoint(HostReceiveEndpointHandle handle, ConsumeContext? consumeContext)
         : base(consumeContext)
     {
-        _handle = handle;
+        _handle = handle ?? throw new ArgumentNullException(nameof(handle));
     }
 
     /// <summary>Gets send endpoint.</summary>

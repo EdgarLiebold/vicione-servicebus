@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,14 +7,13 @@ using System.Threading;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 
-namespace ViciOne.ServiceBus.Diagnostics;
+namespace ViciOne.ServiceBus.Diagnostics.Telemetry;
 /// <summary>
-/// DI-owned V5 instrumentation for one typed bus. The host owns listeners, exporters, sampling,
-/// retention, RBAC and telemetry endpoints. Every observation path is exception-isolated so that
-/// telemetry can disappear but can never rewrite a messaging outcome.
+/// Records exception-isolated messaging telemetry for one typed bus. The host owns listeners,
+/// exporters, sampling, retention, access control and telemetry endpoints.
 /// </summary>
-/// <typeparam name="TBus">The bus type.</typeparam>
-internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
+/// <typeparam name="TBus">The bus type that scopes metric dimensions.</typeparam>
+internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
     where TBus : class
 {
     internal const string InstrumentationName = "ViciOne.ServiceBus";
@@ -44,11 +42,11 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
     int _payloadMetricsInitialized;
     int _disposed;
 
-    public V5ServiceBusInstrumentation(IMeterFactory meterFactory)
+    public ServiceBusInstrumentation(IMeterFactory meterFactory)
     {
         ArgumentNullException.ThrowIfNull(meterFactory);
 
-        string? version = typeof(V5ServiceBusInstrumentation<>).Assembly
+        string? version = typeof(ServiceBusInstrumentation<>).Assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
 
         KeyValuePair<string, object?>[] meterTags =
@@ -251,7 +249,7 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
         }
         catch
         {
-            // Observation only.
+            // Metric listeners cannot change a rejected payload outcome.
         }
     }
 
@@ -270,13 +268,14 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
         }
         catch
         {
-            // Observation only.
+            // Metric listeners cannot change transport-envelope admission.
         }
     }
 
     public void PublishDurableSnapshot(DurableSendStoreSnapshot snapshot, DateTimeOffset observedAt)
     {
-        EnsureDurableMetrics();
+        if (!EnsureDurableMetrics())
+            return;
 
         // Observable callbacks read these atomics only; they never call storage or block.
         Volatile.Write(ref _durableStoredCount, snapshot.StoredCount);
@@ -294,6 +293,9 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
 
     bool EnsurePayloadMetrics()
     {
+        if (Volatile.Read(ref _disposed) != 0)
+            return false;
+
         if (Volatile.Read(ref _payloadMetricsInitialized) != 0)
             return _payloadAdmission is not null;
 
@@ -338,6 +340,9 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
 
     bool EnsureDurableMetrics()
     {
+        if (Volatile.Read(ref _disposed) != 0)
+            return false;
+
         if (Volatile.Read(ref _durableMetricsInitialized) != 0)
             return _durableAdmission is not null;
 
@@ -456,7 +461,7 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
         }
         catch
         {
-            // Disposal is observation-only.
+            // Instrumentation disposal cannot fail service shutdown.
         }
     }
 
@@ -488,7 +493,7 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
             DurableSendDeliveryOutcome.AwaitingConsumerCompletion => "awaiting-consumer-completion",
             DurableSendDeliveryOutcome.RetryScheduled => "retry-scheduled",
             DurableSendDeliveryOutcome.Quarantined => "quarantined",
-            DurableSendDeliveryOutcome.Cancelled => "cancelled",
+            DurableSendDeliveryOutcome.Canceled => "canceled",
             DurableSendDeliveryOutcome.StatePersistenceFailed => "state-persistence-failed",
             _ => "unknown",
         };
@@ -511,87 +516,4 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
             PayloadAdmissionStage.TransportEnvelope => "transport-envelope-too-large",
             _ => "payload-admission",
         };
-
-}
-
-internal enum DurableSendDeliveryOutcome
-{
-    /// <summary>Indicates delivered.</summary>
-    Delivered = 0,
-    /// <summary>Indicates retry scheduled.</summary>
-    RetryScheduled = 1,
-    /// <summary>Indicates quarantined.</summary>
-    Quarantined = 2,
-    /// <summary>Indicates cancelled.</summary>
-    Cancelled = 3,
-    /// <summary>Indicates state persistence failed.</summary>
-    StatePersistenceFailed = 4,
-    /// <summary>Indicates awaiting consumer completion.</summary>
-    AwaitingConsumerCompletion = 5,
-}
-
-internal enum DurableSendAdmissionFailure
-{
-    /// <summary>Indicates capacity exceeded.</summary>
-    CapacityExceeded = 0,
-    /// <summary>Indicates identity conflict.</summary>
-    IdentityConflict = 1,
-    /// <summary>Indicates contract not registered.</summary>
-    ContractNotRegistered = 2,
-    /// <summary>Indicates store failure.</summary>
-    StoreFailure = 3,
-}
-
-/// <summary>Exception-isolating Activity ownership for library instrumentation.</summary>
-internal readonly struct SafeActivityScope : IDisposable
-{
-    readonly Activity? _activity;
-
-    public SafeActivityScope(Activity activity) => _activity = activity;
-
-    public void SetFailure(string errorType)
-    {
-        if (_activity is null)
-            return;
-
-        try
-        {
-            _activity.SetStatus(ActivityStatusCode.Error);
-            _activity.SetTag("error.type", errorType);
-        }
-        catch
-        {
-            // Observation only.
-        }
-    }
-
-    public void SetTag(string name, object? value)
-    {
-        if (_activity is null)
-            return;
-
-        try
-        {
-            _activity.SetTag(name, value);
-        }
-        catch
-        {
-            // Observation only.
-        }
-    }
-
-    public void Dispose()
-    {
-        if (_activity is null)
-            return;
-
-        try
-        {
-            _activity.Dispose();
-        }
-        catch
-        {
-            // Observation only.
-        }
-    }
 }

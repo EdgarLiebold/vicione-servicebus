@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Clients;
 
 /// <summary>A connection to a request which handles a result, and completes the Task when it's received.</summary>
 /// <typeparam name="TResponse">The response type.</typeparam>
-public class ResponseHandlerConnectHandle<TResponse> :
+internal sealed class ResponseHandlerConnectHandle<TResponse> :
     HandlerConnectHandle<TResponse>
     where TResponse : class
 {
@@ -21,9 +21,9 @@ public class ResponseHandlerConnectHandle<TResponse> :
     /// <param name="requestTask">The request task.</param>
     public ResponseHandlerConnectHandle(ConnectHandle handle, TaskCompletionSource<ConsumeContext<TResponse>> completed, Task requestTask)
     {
-        _handle = handle;
-        _completed = completed;
-        _requestTask = requestTask;
+        _handle = handle ?? throw new ArgumentNullException(nameof(handle));
+        _completed = completed ?? throw new ArgumentNullException(nameof(completed));
+        _requestTask = requestTask ?? throw new ArgumentNullException(nameof(requestTask));
 
         Task = GetTaskAsync();
     }

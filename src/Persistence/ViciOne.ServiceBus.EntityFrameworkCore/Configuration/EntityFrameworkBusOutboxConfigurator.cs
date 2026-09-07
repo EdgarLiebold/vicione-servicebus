@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using ViciOne.ServiceBus.DependencyInjection;
-using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.Diagnostics.Telemetry;
 using ViciOne.ServiceBus.EntityFrameworkCore;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Transactions;
@@ -136,7 +136,7 @@ internal sealed class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
             _services.AddSingleton<IReliableDeliverySource<TBus>,
                 EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>>();
             _services.AddMetrics();
-            _services.TryAddSingleton<V5ServiceBusInstrumentation<TBus>>();
+            _services.TryAddSingleton<ServiceBusInstrumentation<TBus>>();
             _services.TryAddEnumerable(
                 ServiceDescriptor.Singleton<IHostedService, ReliableMessagingDeliveryService<TBus>>());
         }

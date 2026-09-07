@@ -63,14 +63,14 @@ public sealed class JobServiceEndpointConfigurationTests
 
     private static Dictionary<string, HashSet<string>> FiltersByEndpoint(IBusControl bus)
     {
-        ProbeResult probe = bus.GetProbeResult();
-        IDictionary<string, object> busScope = Scope(probe.Results, "bus");
-        IDictionary<string, object> hostScope = Scope(busScope, "host");
+        IProbeResult probe = bus.GetProbeResult();
+        IReadOnlyDictionary<string, object> busScope = Scope(probe.Results, "bus");
+        IReadOnlyDictionary<string, object> hostScope = Scope(busScope, "host");
         object endpointValue = Assert.Contains("receiveEndpoint", hostScope);
-        IEnumerable<IDictionary<string, object>> endpoints = endpointValue switch
+        IEnumerable<IReadOnlyDictionary<string, object>> endpoints = endpointValue switch
         {
-            IDictionary<string, object> single => [single],
-            IEnumerable<IDictionary<string, object>> multiple => multiple,
+            IReadOnlyDictionary<string, object> single => [single],
+            IEnumerable<IReadOnlyDictionary<string, object>> multiple => multiple,
             _ => throw new Xunit.Sdk.XunitException(
                 $"The receiveEndpoint probe node has unsupported type '{endpointValue.GetType()}'."),
         };
@@ -80,14 +80,14 @@ public sealed class JobServiceEndpointConfigurationTests
             endpoint => FilterTypes(endpoint, new HashSet<string>(StringComparer.Ordinal)));
     }
 
-    private static IDictionary<string, object> Scope(IDictionary<string, object> parent, string key) =>
-        Assert.IsAssignableFrom<IDictionary<string, object>>(Assert.Contains(key, parent));
+    private static IReadOnlyDictionary<string, object> Scope(IReadOnlyDictionary<string, object> parent, string key) =>
+        Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(Assert.Contains(key, parent));
 
     private static HashSet<string> FilterTypes(object node, HashSet<string> found)
     {
         switch (node)
         {
-            case IDictionary<string, object> dictionary:
+            case IReadOnlyDictionary<string, object> dictionary:
                 foreach ((string name, object value) in dictionary)
                 {
                     if (name == "filterType" && value is string filterType)

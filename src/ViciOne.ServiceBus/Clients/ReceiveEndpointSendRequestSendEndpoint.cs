@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Clients;
 
 /// <summary>Provides an endpoint for receive endpoint send request send.</summary>
 /// <typeparam name="TRequest">The request type.</typeparam>
-public class ReceiveEndpointSendRequestSendEndpoint<TRequest> :
+internal sealed class ReceiveEndpointSendRequestSendEndpoint<TRequest> :
     RequestSendEndpoint<TRequest>
     where TRequest : class
 {
@@ -19,8 +19,8 @@ public class ReceiveEndpointSendRequestSendEndpoint<TRequest> :
     public ReceiveEndpointSendRequestSendEndpoint(HostReceiveEndpointHandle handle, Uri destinationAddress, ConsumeContext? consumeContext)
         : base(consumeContext)
     {
-        _handle = handle;
-        _destinationAddress = destinationAddress;
+        _handle = handle ?? throw new ArgumentNullException(nameof(handle));
+        _destinationAddress = destinationAddress ?? throw new ArgumentNullException(nameof(destinationAddress));
     }
 
     /// <summary>Gets send endpoint.</summary>

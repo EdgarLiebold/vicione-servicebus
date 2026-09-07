@@ -9,6 +9,34 @@ namespace ViciOne.ServiceBus.Tests.Introspection;
 public sealed class BusProbeTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-PROBE-SNAPSHOT", "root-and-repeated-scopes-are-read-only")]
+    public void ProbeResult_ExposesAReadOnlyDiagnosticStructure()
+    {
+        IProbeResult result = new StaticProbeSite().GetProbeResult(TestContext.Current.CancellationToken);
+
+        IDictionary<string, object> rootMutationSurface =
+            Assert.IsAssignableFrom<IDictionary<string, object>>(result.Results);
+        Assert.True(rootMutationSurface.IsReadOnly);
+        Assert.Throws<NotSupportedException>(() => rootMutationSurface.Add("unexpected", new object()));
+        IReadOnlyList<IReadOnlyDictionary<string, object>> children =
+            Assert.IsAssignableFrom<IReadOnlyList<IReadOnlyDictionary<string, object>>>(
+                Assert.Contains("child", result.Results));
+        Assert.Equal(2, children.Count);
+        Assert.All(children, child =>
+        {
+            IDictionary<string, object> childMutationSurface =
+                Assert.IsAssignableFrom<IDictionary<string, object>>(child);
+            Assert.True(childMutationSurface.IsReadOnly);
+            Assert.Throws<NotSupportedException>(() => childMutationSurface.Clear());
+        });
+
+        IList<IReadOnlyDictionary<string, object>> mutationSurface =
+            Assert.IsAssignableFrom<IList<IReadOnlyDictionary<string, object>>>(children);
+        Assert.True(mutationSurface.IsReadOnly);
+        Assert.Throws<NotSupportedException>(() => mutationSurface.RemoveAt(0));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-BUS-PROBE-ENDPOINTS", "configured-and-dynamic-addresses")]
     public async Task Probe_ReportsEveryConfiguredReceiveEndpointAddressExactlyOnceAsync()
     {
@@ -71,15 +99,15 @@ public sealed class BusProbeTests
         }
     }
 
-    private static Uri[] ReadReceiveEndpointAddresses(ProbeResult result)
+    private static Uri[] ReadReceiveEndpointAddresses(IProbeResult result)
     {
-        IDictionary<string, object> bus = GetScope(result.Results, "bus");
-        IDictionary<string, object> host = GetScope(bus, "host");
+        IReadOnlyDictionary<string, object> bus = GetScope(result.Results, "bus");
+        IReadOnlyDictionary<string, object> host = GetScope(bus, "host");
         object endpointValue = Assert.Contains("receiveEndpoint", host);
-        IEnumerable<IDictionary<string, object>> endpoints = endpointValue switch
+        IEnumerable<IReadOnlyDictionary<string, object>> endpoints = endpointValue switch
         {
-            IDictionary<string, object> single => [single],
-            IEnumerable<IDictionary<string, object>> multiple => multiple,
+            IReadOnlyDictionary<string, object> single => [single],
+            IEnumerable<IReadOnlyDictionary<string, object>> multiple => multiple,
             _ => throw new Xunit.Sdk.XunitException(
                 $"The receiveEndpoint probe node has unsupported type '{endpointValue.GetType()}'."),
         };
@@ -91,8 +119,8 @@ public sealed class BusProbeTests
             .ToArray();
     }
 
-    private static IDictionary<string, object> GetScope(IDictionary<string, object> parent, string key) =>
-        Assert.IsAssignableFrom<IDictionary<string, object>>(Assert.Contains(key, parent));
+    private static IReadOnlyDictionary<string, object> GetScope(IReadOnlyDictionary<string, object> parent, string key) =>
+        Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(Assert.Contains(key, parent));
 
     private static InMemoryTestHarness CreateHarness(TimeSpan timeout) =>
         new($"bus-probe-{NewId.NextGuid():N}")
@@ -106,4 +134,13 @@ public sealed class BusProbeTests
         .OperationTimeout!.Value;
 
     private sealed record ProbeMessage(string Value);
+
+    private sealed class StaticProbeSite : IProbeSite
+    {
+        public void Probe(ProbeContext context)
+        {
+            context.CreateScope("child").Add("name", "first");
+            context.CreateScope("child").Add("name", "second");
+        }
+    }
 }

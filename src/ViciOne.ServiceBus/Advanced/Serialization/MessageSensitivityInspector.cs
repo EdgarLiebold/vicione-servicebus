@@ -12,9 +12,9 @@ public sealed class MessageSensitivityInspector : IMessageSensitivityInspector
 {
     private readonly ConditionalWeakTable<Type, MessageSensitivityDescriptor> _cache = new();
 
-    /// <summary>Inspects the supplied message or type.</summary>
+    /// <summary>Gets the cached sensitivity descriptor for a message contract type.</summary>
     /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <returns>The message sensitivity descriptor produced by the operation.</returns>
+    /// <returns>The immutable payload and member sensitivity descriptor.</returns>
     public MessageSensitivityDescriptor Inspect(Type messageType)
     {
         ArgumentNullException.ThrowIfNull(messageType);

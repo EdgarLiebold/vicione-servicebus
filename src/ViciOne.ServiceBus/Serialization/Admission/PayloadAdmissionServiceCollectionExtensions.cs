@@ -3,7 +3,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus;
-using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.Diagnostics.Telemetry;
 using ViciOne.ServiceBus.Serialization;
 
 
@@ -36,7 +36,7 @@ public static class PayloadAdmissionServiceCollectionExtensions
         services.TryAddEnumerable(
             ServiceDescriptor.Singleton<IValidateOptions<PayloadAdmissionOptions<TBus>>, PayloadAdmissionOptionsValidator<TBus>>());
 
-        services.TryAddSingleton<V5ServiceBusInstrumentation<TBus>>();
+        services.TryAddSingleton<ServiceBusInstrumentation<TBus>>();
         services.TryAddSingleton<PayloadAdmissionPolicyProvider<TBus>>();
         services.TryAddSingleton(provider => new PayloadAdmissionEvaluator<TBus>(
             provider.GetRequiredService<PayloadAdmissionPolicyProvider<TBus>>()));

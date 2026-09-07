@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Clients;
 
 /// <summary>Controls the lifetime of handler connect.</summary>
 /// <typeparam name="T">The value type.</typeparam>
-public interface HandlerConnectHandle<T> :
+internal interface HandlerConnectHandle<T> :
     HandlerConnectHandle
     where T : class
 {
@@ -16,7 +16,7 @@ public interface HandlerConnectHandle<T> :
 
 
 /// <summary>Controls the lifetime of handler connect.</summary>
-public interface HandlerConnectHandle :
+internal interface HandlerConnectHandle :
     ConnectHandle
 {
     /// <summary>Attempts to set exception.</summary>

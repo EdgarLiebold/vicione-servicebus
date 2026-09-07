@@ -4,14 +4,14 @@ using ViciOne.ServiceBus.Introspection;
 
 namespace ViciOne.ServiceBus.Operations;
 
-/// <summary>Builds immutable probe results from service-bus diagnostic sites.</summary>
+/// <summary>Builds structurally read-only probe results from service-bus diagnostic sites.</summary>
 public static class IntrospectionExtensions
 {
     /// <summary>Captures the current diagnostic structure of a probe site.</summary>
     /// <param name="probeSite">The diagnostic site to inspect.</param>
     /// <param name="cancellationToken">Cancels the probe operation.</param>
-    /// <returns>The immutable probe result.</returns>
-    public static ProbeResult GetProbeResult(this IProbeSite probeSite, CancellationToken cancellationToken = default)
+    /// <returns>The completed read-only probe result.</returns>
+    public static IProbeResult GetProbeResult(this IProbeSite probeSite, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(probeSite);
 

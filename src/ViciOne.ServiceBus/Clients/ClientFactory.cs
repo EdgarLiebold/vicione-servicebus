@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>Creates client instances.</summary>
-public class ClientFactory :
+/// <summary>Creates request clients over a configured client-factory context.</summary>
+public sealed class ClientFactory :
     IClientFactory,
     IAsyncDisposable
 {
@@ -13,7 +13,7 @@ public class ClientFactory :
     /// <param name="context">The context associated with the operation.</param>
     public ClientFactory(ClientFactoryContext context)
     {
-        Context = context;
+        Context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     /// <summary>Releases the resources owned by this instance.</summary>

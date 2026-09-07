@@ -3,9 +3,9 @@ using ViciOne.ServiceBus.Initializers;
 
 namespace ViciOne.ServiceBus.Transformation;
 
-/// <summary>Creates replace message instances.</summary>
+/// <summary>Returns the current transform input as the initialized message instance.</summary>
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class ReplaceMessageFactory<TMessage> :
+internal sealed class ReplaceMessageFactory<TMessage> :
     IMessageFactory<TMessage>
     where TMessage : class
 {
@@ -14,6 +14,8 @@ public class ReplaceMessageFactory<TMessage> :
     /// <returns>The newly created instance.</returns>
     public InitializeContext<TMessage> Create(InitializeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         if (context.TryGetPayload(out TransformContext<TMessage>? transformContext) && transformContext.HasInput)
             return context.CreateMessageContext(transformContext.Input);
 

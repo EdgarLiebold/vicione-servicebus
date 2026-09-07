@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus;
-using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.Diagnostics.Telemetry;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 
@@ -75,7 +75,7 @@ public static class ReliableMessagingServiceCollectionExtensions
             ServiceDescriptor.Singleton<IValidateOptions<ReliableMessagingOptions<TBus>>, ReliableMessagingOptionsValidator<TBus>>());
 
         services.TryAddSingleton(TimeProvider.System);
-        services.TryAddSingleton<V5ServiceBusInstrumentation<TBus>>();
+        services.TryAddSingleton<ServiceBusInstrumentation<TBus>>();
         services.TryAddSingleton<ReliableMessagingPolicy<TBus>>(provider =>
             provider.GetRequiredService<IOptions<ReliableMessagingOptions<TBus>>>().Value.ValidateAndFreeze());
         services.TryAddSingleton<IDurableSendAdmission<TBus>, DurableSendAdmission<TBus>>();

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.Diagnostics.Telemetry;
 using ViciOne.ServiceBus.Providers.Persistence;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
@@ -14,11 +14,11 @@ internal sealed class DurableSendAdmission<TBus> : IDurableSendAdmission<TBus>
     readonly ReliableMessagingPolicy<TBus> _policy;
     readonly IMessageContractCatalog _contractCatalog;
     readonly TimeProvider _timeProvider;
-    readonly V5ServiceBusInstrumentation<TBus> _instrumentation;
+    readonly ServiceBusInstrumentation<TBus> _instrumentation;
 
     public DurableSendAdmission(IEnumerable<IOutboxStore<TBus>> stores, ReliableMessagingPolicy<TBus> policy,
         IEnumerable<IMessageContractCatalog> contractCatalogs, TimeProvider timeProvider,
-        V5ServiceBusInstrumentation<TBus> instrumentation)
+        ServiceBusInstrumentation<TBus> instrumentation)
     {
         _store = ReliableMessagingComposition.RequireExactlyOne<IOutboxStore<TBus>, TBus>(stores, "persistence store");
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
@@ -60,7 +60,7 @@ internal sealed class DurableSendAdmission<TBus> : IDurableSendAdmission<TBus>
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            activity.SetTag("vicione.servicebus.admission.outcome", "cancelled");
+            activity.SetTag("vicione.servicebus.admission.outcome", "canceled");
             throw;
         }
         catch (MessageContractException)

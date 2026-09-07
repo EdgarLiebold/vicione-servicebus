@@ -3,8 +3,8 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>Creates scoped client instances.</summary>
-public class ScopedClientFactory :
+/// <summary>Creates request clients that preserve the current consume scope when one exists.</summary>
+public sealed class ScopedClientFactory :
     IScopedClientFactory
 {
     readonly IClientFactory _clientFactory;
@@ -15,7 +15,7 @@ public class ScopedClientFactory :
     /// <param name="consumeContext">The consume context.</param>
     public ScopedClientFactory(IClientFactory clientFactory, ConsumeContext? consumeContext)
     {
-        _clientFactory = clientFactory;
+        _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
         _consumeContext = consumeContext;
     }
 

@@ -126,7 +126,7 @@ public sealed class TechnicalRetryPolicyTests
         IConsumePipe pipe = configurator.BuildConsumePipe();
         using ConnectHandle handle = pipe.ConnectConsumePipe<PolicyMessage>(Pipe.Empty<ConsumeContext<PolicyMessage>>());
 
-        ProbeResult probe = pipe.GetProbeResult();
+        IProbeResult probe = pipe.GetProbeResult();
         return Assert.Single(Descendants(probe.Results),
             candidate => candidate.TryGetValue("policy", out object? policy) && Equals(policy, "Interval"));
     }

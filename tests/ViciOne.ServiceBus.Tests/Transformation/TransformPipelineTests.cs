@@ -1,13 +1,33 @@
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transformation;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Transformation;
 
 public sealed class TransformPipelineTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-NESTED-TRANSFORM-METADATA", "parent-sent-time-and-host-are-preserved")]
+    public void NestedPropertyTransform_PreservesTheParentMessageMetadata()
+    {
+        DateTimeOffset sentTime = new(2026, 9, 7, 10, 30, 0, TimeSpan.Zero);
+        HostInfo host = HostMetadataCache.Host;
+        var parent = new ParentTransformContext(sentTime, host);
+
+        var nested = new PropertyTransformContext<TransformMessage, NestedValue>(
+            parent,
+            new NestedValue("value"));
+
+        Assert.Equal(sentTime, nested.SentTime);
+        Assert.Same(host, nested.Host);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-TRANSFORM", "publish-isolation")]
     public async Task SendTransform_DoesNotChangeAPublishedMessageAsync()
@@ -296,5 +316,28 @@ public sealed class TransformPipelineTests
             Set(message => message.First, "First");
             Set(message => message.Second, "Second");
         }
+    }
+
+    private sealed record NestedValue(string Value);
+
+    private sealed class ParentTransformContext(DateTimeOffset sentTime, HostInfo host) :
+        BasePipeContext,
+        TransformContext<TransformMessage>
+    {
+        public Guid? MessageId => null;
+        public Guid? RequestId => null;
+        public Guid? CorrelationId => null;
+        public Guid? ConversationId => null;
+        public Guid? InitiatorId => null;
+        public DateTimeOffset? ExpirationTime => null;
+        public Uri? SourceAddress => null;
+        public Uri? DestinationAddress => null;
+        public Uri? ResponseAddress => null;
+        public Uri? FaultAddress => null;
+        public DateTimeOffset? SentTime => sentTime;
+        public Headers Headers => EmptyHeaders.Instance;
+        public HostInfo Host => host;
+        public bool HasInput => true;
+        public TransformMessage Input { get; } = new();
     }
 }

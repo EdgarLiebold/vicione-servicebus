@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.Diagnostics.Telemetry;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
 /// <summary>Process-local, generation-fenced completion capability handed to a volatile transport adapter for one dispatch.</summary>
@@ -10,7 +10,7 @@ internal sealed class DurableSendConsumerCompletion<TBus> : IDurableSendConsumer
     where TBus : class, IBus
 {
     readonly Guid _generationToken;
-    readonly V5ServiceBusInstrumentation<TBus> _instrumentation;
+    readonly ServiceBusInstrumentation<TBus> _instrumentation;
     readonly long _startedTimestamp;
     readonly IOutboxStore<TBus> _store;
     readonly TimeProvider _timeProvider;
@@ -20,7 +20,7 @@ internal sealed class DurableSendConsumerCompletion<TBus> : IDurableSendConsumer
         Guid generationToken,
         IOutboxStore<TBus> store,
         TimeProvider timeProvider,
-        V5ServiceBusInstrumentation<TBus> instrumentation)
+        ServiceBusInstrumentation<TBus> instrumentation)
     {
         DurableSendId = durableSendId;
         if (generationToken == Guid.Empty)

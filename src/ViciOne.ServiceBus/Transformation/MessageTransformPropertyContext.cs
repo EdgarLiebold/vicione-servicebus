@@ -3,10 +3,10 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Transformation;
 
-/// <summary>Carries state for message transform property operations.</summary>
+/// <summary>Provides a property transform with its current value and source-message metadata.</summary>
 /// <typeparam name="TProperty">The property type.</typeparam>
 /// <typeparam name="TInput">The input type.</typeparam>
-public class MessageTransformPropertyContext<TProperty, TInput> :
+internal sealed class MessageTransformPropertyContext<TProperty, TInput> :
     ProxyPipeContext,
     TransformPropertyContext<TProperty, TInput>
     where TInput : class
@@ -17,7 +17,7 @@ public class MessageTransformPropertyContext<TProperty, TInput> :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="value">The value to process.</param>
     public MessageTransformPropertyContext(TransformContext<TInput> context, TProperty? value)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
         _context = context;
 
@@ -52,13 +52,13 @@ public class MessageTransformPropertyContext<TProperty, TInput> :
     /// <summary>Gets the host.</summary>
     public HostInfo Host => _context.Host;
 
-    /// <summary>Gets a value indicating whether this instance has input.</summary>
+    /// <summary>Gets whether the source message is available.</summary>
     public bool HasInput => _context.HasInput;
-    /// <summary>Gets the input.</summary>
+    /// <summary>Gets the source message.</summary>
     public TInput Input => _context.Input;
 
-    /// <summary>Gets whether this instance contains a value.</summary>
+    /// <summary>Gets whether the source property was evaluated.</summary>
     public bool HasValue { get; }
-    /// <summary>Gets the value.</summary>
+    /// <summary>Gets the current source-property value.</summary>
     public TProperty? Value { get; }
 }

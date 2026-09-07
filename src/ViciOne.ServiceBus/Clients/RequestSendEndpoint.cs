@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Clients;
 
 /// <summary>Provides an endpoint for request send.</summary>
 /// <typeparam name="TRequest">The request type.</typeparam>
-public abstract class RequestSendEndpoint<TRequest> :
+internal abstract class RequestSendEndpoint<TRequest> :
     IRequestSendEndpoint<TRequest>
     where TRequest : class
 {

@@ -6,9 +6,9 @@ using ViciOne.ServiceBus.Initializers.Conventions;
 
 namespace ViciOne.ServiceBus.Transformation;
 
-/// <summary>Applies conventions for message transform.</summary>
+/// <summary>Maps explicitly configured properties to their transform initializers.</summary>
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class MessageTransformConvention<TMessage> :
+internal sealed class MessageTransformConvention<TMessage> :
     IInitializerConvention<TMessage, TMessage>,
     IInitializerConvention<TMessage>,
     IInitializerConvention
@@ -90,6 +90,8 @@ public class MessageTransformConvention<TMessage> :
     public bool TryGetPropertyInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IPropertyInitializer<TMessage, TMessage>? initializer)
     {
+        ArgumentNullException.ThrowIfNull(propertyInfo);
+
         if (_initializers.TryGetValue(propertyInfo.Name, out initializer))
             return true;
 
@@ -177,6 +179,8 @@ public class MessageTransformConvention<TMessage> :
     /// <param name="initializer">The initializer.</param>
     public void Add(string propertyName, IPropertyInitializer<TMessage, TMessage> initializer)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
+        ArgumentNullException.ThrowIfNull(initializer);
         _initializers.Add(propertyName, initializer);
     }
 }

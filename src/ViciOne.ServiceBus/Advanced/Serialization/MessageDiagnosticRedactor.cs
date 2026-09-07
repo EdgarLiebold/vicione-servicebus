@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>Conservative bounded rendering that never invokes arbitrary application <see cref="object.ToString"/> implementations.</summary>
 public sealed class MessageDiagnosticRedactor : IMessageDiagnosticRedactor
 {
-    /// <summary>Exposes the redacted used by the containing type.</summary>
+    /// <summary>Gets the stable marker used in place of sensitive values.</summary>
     public const string Redacted = "[REDACTED]";
 
     /// <summary>The stable marker for values that diagnostics deliberately do not materialize.</summary>
@@ -15,9 +15,9 @@ public sealed class MessageDiagnosticRedactor : IMessageDiagnosticRedactor
     private readonly IMessageSensitivityInspector _inspector;
     private readonly int _maximumStringLength;
 
-    /// <summary>Creates a redactor with a positive bounded string length.</summary>
-    /// <param name="inspector">The inspector.</param>
-    /// <param name="maximumStringLength">The maximum string length.</param>
+    /// <summary>Creates a redactor with a bounded diagnostic string length.</summary>
+    /// <param name="inspector">The sensitivity metadata source.</param>
+    /// <param name="maximumStringLength">The maximum number of UTF-16 code units retained before adding an ellipsis.</param>
     public MessageDiagnosticRedactor(IMessageSensitivityInspector inspector, int maximumStringLength = 256)
     {
         _inspector = inspector ?? throw new ArgumentNullException(nameof(inspector));
@@ -30,8 +30,8 @@ public sealed class MessageDiagnosticRedactor : IMessageDiagnosticRedactor
     /// <summary>Renders the supplied value for diagnostics.</summary>
     /// <param name="messageType">The runtime type of the message contract.</param>
     /// <param name="memberName">The member name.</param>
-    /// <param name="value">The value to process.</param>
-    /// <returns>The string produced by the operation.</returns>
+    /// <param name="value">The value to render without invoking application-defined string conversion.</param>
+    /// <returns>A bounded invariant representation, a redaction marker or a complex-value marker.</returns>
     public string RenderValue(Type messageType, string? memberName, object? value)
     {
         ArgumentNullException.ThrowIfNull(messageType);
