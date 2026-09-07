@@ -3,11 +3,10 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.MessageData;
 
-
 namespace ViciOne.ServiceBus.Advanced.Serialization;
+
 /// <summary>
-/// Non-generic bridge kept inside the runtime so the transport serialization owner does not lose the
-/// typed-bus policy boundary.
+/// Provides non-generic access to the payload-admission policy selected for a typed bus.
 /// </summary>
 internal interface IPayloadAdmissionRuntime
 {
@@ -23,7 +22,7 @@ internal interface IPayloadAdmissionRuntime
 internal sealed class PayloadAdmissionRuntime<TBus> : IPayloadAdmissionRuntime
     where TBus : class, IBus
 {
-    readonly IPayloadAdmissionEvaluator<TBus> _evaluator;
+    private readonly IPayloadAdmissionEvaluator<TBus> _evaluator;
 
     public PayloadAdmissionRuntime(IPayloadAdmissionEvaluator<TBus> evaluator)
     {

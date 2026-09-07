@@ -6,9 +6,9 @@ using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Diagnostics.Telemetry;
 using ViciOne.ServiceBus.Serialization;
 
-
 namespace Microsoft.Extensions.DependencyInjection;
-/// <summary>Registers one validated payload-admission policy for a typed bus.</summary>
+
+/// <summary>Provides dependency-injection registration for typed-bus payload admission.</summary>
 public static class PayloadAdmissionServiceCollectionExtensions
 {
     /// <summary>
@@ -17,8 +17,8 @@ public static class PayloadAdmissionServiceCollectionExtensions
     /// </summary>
     /// <typeparam name="TBus">The bus type.</typeparam>
     /// <param name="services">The dependency-injection service collection.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The service collection produced by the operation.</returns>
+    /// <param name="configure">An optional callback that configures the admission thresholds.</param>
+    /// <returns><paramref name="services"/>.</returns>
     public static IServiceCollection AddViciOnePayloadAdmission<TBus>(
         this IServiceCollection services,
         Action<PayloadAdmissionOptions<TBus>>? configure = null)
@@ -47,7 +47,6 @@ public static class PayloadAdmissionServiceCollectionExtensions
 
         return services;
     }
-
 }
 
 internal sealed class PayloadAdmissionOptionsValidator<TBus> : IValidateOptions<PayloadAdmissionOptions<TBus>>

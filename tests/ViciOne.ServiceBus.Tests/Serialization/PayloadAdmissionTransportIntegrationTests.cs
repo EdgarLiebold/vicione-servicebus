@@ -677,7 +677,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         var context = new MessageSendContext<BoundaryPayload>(message);
         var policy = new PayloadAdmissionPolicy
         {
-            MaximumSerializedBodyBytes = 1_000_000,
+            MaximumSerializedBodyBytes = BoundaryPayload.SerializedLength,
             MaximumTransportEnvelopeBytes = maximumEnvelopeBytes,
         };
 

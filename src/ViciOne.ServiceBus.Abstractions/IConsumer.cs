@@ -14,7 +14,6 @@ public interface IConsumer<in TMessage> :
     Task ConsumeAsync(ConsumeContext<TMessage> context);
 }
 
-
 /// <summary>Identifies message-consumer implementations for registration and discovery.</summary>
 public interface IConsumer
 {

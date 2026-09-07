@@ -13,31 +13,31 @@ public static class MessageHeaders
     public const string Reason = Prefix + "Reason";
 
     /// <summary>The assembly-qualified type of the reported fault exception.</summary>
-    public const string FaultExceptionType = Prefix + "Fault-ExceptionType";
+    public const string FaultExceptionType = FaultPrefix + "ExceptionType";
 
     /// <summary>The input address of the endpoint where the fault occurred.</summary>
-    public const string FaultInputAddress = Prefix + "Fault-InputAddress";
+    public const string FaultInputAddress = FaultPrefix + "InputAddress";
 
     /// <summary>The message of the reported fault exception.</summary>
-    public const string FaultMessage = Prefix + "Fault-Message";
+    public const string FaultMessage = FaultPrefix + "Message";
 
     /// <summary>The message contract type associated with the fault.</summary>
-    public const string FaultMessageType = Prefix + "Fault-MessageType";
+    public const string FaultMessageType = FaultPrefix + "MessageType";
 
     /// <summary>The consumer type that reported the fault.</summary>
-    public const string FaultConsumerType = Prefix + "Fault-ConsumerType";
+    public const string FaultConsumerType = FaultPrefix + "ConsumerType";
 
     /// <summary>The timestamp at which the fault occurred.</summary>
-    public const string FaultTimestamp = Prefix + "Fault-Timestamp";
+    public const string FaultTimestamp = FaultPrefix + "Timestamp";
 
     /// <summary>The stack trace of the reported fault exception.</summary>
-    public const string FaultStackTrace = Prefix + "Fault-StackTrace";
+    public const string FaultStackTrace = FaultPrefix + "StackTrace";
 
     /// <summary>The number of retry attempts performed before the fault.</summary>
-    public const string FaultRetryCount = Prefix + "Fault-RetryCount";
+    public const string FaultRetryCount = FaultPrefix + "RetryCount";
 
     /// <summary>The number of redeliveries performed before the fault.</summary>
-    public const string FaultRedeliveryCount = Prefix + "Fault-RedeliveryCount";
+    public const string FaultRedeliveryCount = FaultPrefix + "RedeliveryCount";
 
     /// <summary>The address of the endpoint that forwarded the message.</summary>
     public const string ForwarderAddress = Prefix + "Forwarder-Address";
@@ -102,7 +102,6 @@ public static class MessageHeaders
     /// <summary>The future identifier stored in routing-slip variables.</summary>
     public const string FutureId = "FutureId";
 
-
     /// <summary>Defines message header names that describe the producing host.</summary>
     public static class Host
     {
@@ -110,25 +109,32 @@ public static class MessageHeaders
         public const string Prefix = MessageHeaders.Prefix + "Host-";
 
         /// <summary>The serialized producing-host information.</summary>
-        public const string Info = MessageHeaders.Prefix + "Host-Info";
-        /// <summary>The producing machine name.</summary>
-        public const string MachineName = MessageHeaders.Prefix + "Host-MachineName";
-        /// <summary>The producing process name.</summary>
-        public const string ProcessName = MessageHeaders.Prefix + "Host-ProcessName";
-        /// <summary>The producing process identifier.</summary>
-        public const string ProcessId = MessageHeaders.Prefix + "Host-ProcessId";
-        /// <summary>The producing assembly name.</summary>
-        public const string Assembly = MessageHeaders.Prefix + "Host-Assembly";
-        /// <summary>The producing assembly version.</summary>
-        public const string AssemblyVersion = MessageHeaders.Prefix + "Host-AssemblyVersion";
-        /// <summary>The Service Bus version used by the producer.</summary>
-        public const string ViciOneServiceBusVersion = MessageHeaders.Prefix + "Host-ViciOneServiceBusVersion";
-        /// <summary>The .NET runtime version used by the producer.</summary>
-        public const string FrameworkVersion = MessageHeaders.Prefix + "Host-FrameworkVersion";
-        /// <summary>The operating-system version of the producing host.</summary>
-        public const string OperatingSystemVersion = MessageHeaders.Prefix + "Host-OperatingSystemVersion";
-    }
+        public const string Info = Prefix + "Info";
 
+        /// <summary>The producing machine name.</summary>
+        public const string MachineName = Prefix + "MachineName";
+
+        /// <summary>The producing process name.</summary>
+        public const string ProcessName = Prefix + "ProcessName";
+
+        /// <summary>The producing process identifier.</summary>
+        public const string ProcessId = Prefix + "ProcessId";
+
+        /// <summary>The producing assembly name.</summary>
+        public const string Assembly = Prefix + "Assembly";
+
+        /// <summary>The producing assembly version.</summary>
+        public const string AssemblyVersion = Prefix + "AssemblyVersion";
+
+        /// <summary>The Service Bus version used by the producer.</summary>
+        public const string ViciOneServiceBusVersion = Prefix + "ViciOneServiceBusVersion";
+
+        /// <summary>The .NET runtime version used by the producer.</summary>
+        public const string FrameworkVersion = Prefix + "FrameworkVersion";
+
+        /// <summary>The operating-system version of the producing host.</summary>
+        public const string OperatingSystemVersion = Prefix + "OperatingSystemVersion";
+    }
 
     /// <summary>Defines message header names used by request-response conversations.</summary>
     public static class Request
@@ -139,7 +145,6 @@ public static class MessageHeaders
         /// <summary>The retry count maintained by a routing-slip request proxy.</summary>
         public const string RoutingSlipRetryCount = MessageHeaders.Prefix + "RoutingSlip-RetryCount";
     }
-
 
     /// <summary>Defines message header names used by Quartz scheduling.</summary>
     public static class Quartz

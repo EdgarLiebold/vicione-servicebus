@@ -1296,7 +1296,7 @@ TYPE interface public ViciOne.ServiceBus.Advanced.Serialization.IPayloadAdmissio
   METHOD public abstract System.Void ValidateTransportEnvelope(System.ReadOnlyMemory<System.Byte> serializedEnvelope)
   METHOD public abstract ViciOne.ServiceBus.Advanced.Serialization.IPayloadSerializationBuffer CreateSerializedBodyBuffer()
   METHOD public abstract ViciOne.ServiceBus.Advanced.Serialization.IPayloadSerializationBuffer CreateTransportEnvelopeBuffer()
-  METHOD public abstract ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionResult EvaluateSerializedBody(System.ReadOnlyMemory<System.Byte> serializedBody, System.Boolean messageDataAvailable)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionResult EvaluateSerializedBody(System.ReadOnlyMemory<System.Byte> serializedBody, System.Boolean messageDataOffloadObserved)
 TYPE interface public ViciOne.ServiceBus.Advanced.Serialization.IPayloadSerializationBuffer
   PROPERTY System.Int32 WrittenCount { public-get;  }
   PROPERTY System.ReadOnlyMemory<System.Byte> WrittenMemory { public-get;  }
@@ -1340,8 +1340,8 @@ TYPE class public ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionPoli
   METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionPolicy left, ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionPolicy right)
   METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionPolicy left, ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionPolicy right)
   METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionPolicy other)
-  PROPERTY System.Nullable<System.Int32> MaximumSerializedBodyBytes { public-get; public-set; }
-  PROPERTY System.Nullable<System.Int32> MaximumTransportEnvelopeBytes { public-get; public-set; }
+  PROPERTY System.Int32 MaximumSerializedBodyBytes { public-get; public-set; }
+  PROPERTY System.Int32 MaximumTransportEnvelopeBytes { public-get; public-set; }
   PROPERTY System.Nullable<System.Int32> MessageDataOffloadThresholdBytes { public-get; public-set; }
   PROPERTY System.Nullable<System.Int32> WarningBodyBytes { public-get; public-set; }
 TYPE struct public ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionResult
@@ -3202,9 +3202,9 @@ TYPE class public ViciOne.ServiceBus.Operations.ProbeContextExtensions [static]
   METHOD public static ViciOne.ServiceBus.Operations.ProbeContext CreateFilterScope(ViciOne.ServiceBus.Operations.ProbeContext context, System.String filterType)
   METHOD public static ViciOne.ServiceBus.Operations.ProbeContext CreateMessageScope(ViciOne.ServiceBus.Operations.ProbeContext context, System.String messageType)
 TYPE class public ViciOne.ServiceBus.PayloadAdmissionException [sealed,base=System.Exception]
-  CTOR public ViciOne.ServiceBus.PayloadAdmissionException(ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionStage stage, System.Int64 actualBytes, System.Nullable<System.Int64> configuredLimitBytes, System.String message)
+  CTOR public ViciOne.ServiceBus.PayloadAdmissionException(ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionStage stage, System.Int64 actualBytes, System.Int64 configuredLimitBytes, System.String message)
   PROPERTY System.Int64 ActualBytes { public-get;  }
-  PROPERTY System.Nullable<System.Int64> ConfiguredLimitBytes { public-get;  }
+  PROPERTY System.Int64 ConfiguredLimitBytes { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionStage Stage { public-get;  }
 TYPE class public ViciOne.ServiceBus.PayloadException [base=ViciOne.ServiceBus.ViciOneServiceBusException]
   CTOR public ViciOne.ServiceBus.PayloadException()
@@ -14765,7 +14765,7 @@ TYPE class public ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionEval
   METHOD public virtual System.Void ValidateTransportEnvelope(System.ReadOnlyMemory<System.Byte> serializedEnvelope)
   METHOD public virtual ViciOne.ServiceBus.Advanced.Serialization.IPayloadSerializationBuffer CreateSerializedBodyBuffer()
   METHOD public virtual ViciOne.ServiceBus.Advanced.Serialization.IPayloadSerializationBuffer CreateTransportEnvelopeBuffer()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionResult EvaluateSerializedBody(System.ReadOnlyMemory<System.Byte> serializedBody, System.Boolean messageDataAvailable)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionResult EvaluateSerializedBody(System.ReadOnlyMemory<System.Byte> serializedBody, System.Boolean messageDataOffloadObserved)
 TYPE class public ViciOne.ServiceBus.Advanced.Serialization.ReliableEnvelopeMetadataCodec [static]
   METHOD public static System.ReadOnlyMemory<System.Byte> Capture<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context, System.DateTimeOffset capturedAt)
   METHOD public static System.Void Apply(ViciOne.ServiceBus.Advanced.SendContext context, System.ReadOnlyMemory<System.Byte> metadata, System.DateTimeOffset replayedAt)

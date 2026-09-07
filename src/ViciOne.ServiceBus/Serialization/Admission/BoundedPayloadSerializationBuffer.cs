@@ -1,8 +1,8 @@
 using System;
 using System.Threading;
 
-
 namespace ViciOne.ServiceBus.Advanced.Serialization;
+
 /// <summary>Managed writer that never owns more memory than its configured hard maximum.</summary>
 internal sealed class BoundedPayloadSerializationBuffer : IPayloadSerializationBuffer
 {
@@ -26,10 +26,8 @@ internal sealed class BoundedPayloadSerializationBuffer : IPayloadSerializationB
         _maximumBytes = maximumBytes;
         _stage = stage;
         _rejectionObserver = rejectionObserver;
-        // IBufferWriter callers may reserve conservatively (Utf8JsonWriter reserves for
-        // worst-case escaping). Supplying the entire hard-bounded region up front keeps
-        // an exact-size payload admissible without a sizing pass, while the owner can
-        // still never retain more than the configured maximum.
+        // Serializers can reserve for worst-case expansion. Exposing the complete bounded region
+        // keeps an exact-size payload admissible without allocating beyond the hard maximum.
         _buffer = new byte[maximumBytes];
     }
 
@@ -78,8 +76,7 @@ internal sealed class BoundedPayloadSerializationBuffer : IPayloadSerializationB
                 $"Serialization requested at least {required} bytes, exceeding the configured maximum of {_maximumBytes} bytes.");
         }
 
-        // The constructor owns the complete bounded region, so a request that fits
-        // the hard maximum is already satisfiable without reallocating.
+        // The complete bounded region is allocated by the constructor, so no growth is required.
     }
 
     private PayloadAdmissionException CreateRejection(long actualBytes, string message)

@@ -232,11 +232,11 @@
     },
     {
       "type": "PayloadAdmissionOptions<TBus>",
-      "source": "src/ViciOne.ServiceBus/Serialization/Admission/PayloadAdmissionOptions.cs",
+      "source": "src/ViciOne.ServiceBus/Configuration/PayloadAdmissionOptions.cs",
       "boundary": "host-start",
-      "registrationSource": "src/ViciOne.ServiceBus/Serialization/Admission/PayloadAdmissionServiceCollectionExtensions.cs",
+      "registrationSource": "src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
       "invariantCount": 7,
-      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs", "method": "Registration_ValidatesRequiredHardLimitsWhenOptionsAreMaterialized" },
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs", "method": "Registration_RejectsEveryInvalidThresholdWhenOptionsAreMaterialized" },
       "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/MessageLimitsConfigurationTests.cs", "method": "ExplicitLimits_CreateOneBusOwnedPayloadPolicy" }
     },
     {
@@ -427,7 +427,7 @@
     {
       "id": "payload-admission",
       "boundary": "host-start",
-      "source": "src/ViciOne.ServiceBus/Serialization/Admission/PayloadAdmissionServiceCollectionExtensions.cs",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
       "test": "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs",
       "testMethod": "Registration_ValidatesRequiredHardLimitsWhenOptionsAreMaterialized",
       "exception": "OptionsValidationException",

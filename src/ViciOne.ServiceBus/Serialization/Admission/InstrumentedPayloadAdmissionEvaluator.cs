@@ -2,10 +2,10 @@ using System;
 
 using ViciOne.ServiceBus.Diagnostics.Telemetry;
 
-
 namespace ViciOne.ServiceBus.Advanced.Serialization;
-/// <summary>Exception-isolated observation around the exact-byte admission evaluator.</summary>
-/// <typeparam name="TBus">The bus type.</typeparam>
+
+/// <summary>Records payload-admission metrics without allowing instrumentation to alter admission decisions.</summary>
+/// <typeparam name="TBus">The bus whose payload-admission metrics are recorded.</typeparam>
 internal sealed class InstrumentedPayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator<TBus>
     where TBus : class, IBus
 {
@@ -25,11 +25,11 @@ internal sealed class InstrumentedPayloadAdmissionEvaluator<TBus> : IPayloadAdmi
     public IPayloadSerializationBuffer CreateSerializedBodyBuffer()
         => _inner.CreateSerializedBodyBuffer(_recordBoundedWriterRejection);
 
-    public PayloadAdmissionResult EvaluateSerializedBody(ReadOnlyMemory<byte> serializedBody, bool messageDataAvailable)
+    public PayloadAdmissionResult EvaluateSerializedBody(ReadOnlyMemory<byte> serializedBody, bool messageDataOffloadObserved)
     {
         try
         {
-            PayloadAdmissionResult result = _inner.EvaluateSerializedBody(serializedBody, messageDataAvailable);
+            PayloadAdmissionResult result = _inner.EvaluateSerializedBody(serializedBody, messageDataOffloadObserved);
             _instrumentation.RecordPayloadBody(result.Disposition, result.SerializedBodyBytes, result.WarningThresholdExceeded);
             return result;
         }

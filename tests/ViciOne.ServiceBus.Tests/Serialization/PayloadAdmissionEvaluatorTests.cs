@@ -19,14 +19,14 @@ public sealed class PayloadAdmissionEvaluatorTests
 
         if (!rejected)
         {
-            PayloadAdmissionResult result = evaluator.EvaluateSerializedBody(new byte[bytes], messageDataAvailable: false);
+            PayloadAdmissionResult result = evaluator.EvaluateSerializedBody(new byte[bytes], messageDataOffloadObserved: false);
             Assert.Equal(PayloadAdmissionDisposition.Inline, result.Disposition);
             Assert.Equal(bytes, result.SerializedBodyBytes);
             return;
         }
 
         PayloadAdmissionException exception = Assert.Throws<PayloadAdmissionException>(
-            () => evaluator.EvaluateSerializedBody(new byte[bytes], messageDataAvailable: false));
+            () => evaluator.EvaluateSerializedBody(new byte[bytes], messageDataOffloadObserved: false));
         Assert.Equal(PayloadAdmissionStage.SerializedBody, exception.Stage);
         Assert.Equal(bytes, exception.ActualBytes);
         Assert.Equal(100, exception.ConfiguredLimitBytes);
@@ -63,7 +63,7 @@ public sealed class PayloadAdmissionEvaluatorTests
             messageDataThresholdBytes: 50);
 
         PayloadAdmissionException exception = Assert.Throws<PayloadAdmissionException>(
-            () => evaluator.EvaluateSerializedBody(new byte[51], messageDataAvailable: false));
+            () => evaluator.EvaluateSerializedBody(new byte[51], messageDataOffloadObserved: false));
 
         Assert.Equal(PayloadAdmissionStage.MessageData, exception.Stage);
         Assert.Equal(51, exception.ActualBytes);
@@ -82,8 +82,8 @@ public sealed class PayloadAdmissionEvaluatorTests
             MaximumTransportEnvelopeBytes = 200,
         });
 
-        PayloadAdmissionResult exact = evaluator.EvaluateSerializedBody(new byte[25], messageDataAvailable: false);
-        PayloadAdmissionResult exceeded = evaluator.EvaluateSerializedBody(new byte[26], messageDataAvailable: false);
+        PayloadAdmissionResult exact = evaluator.EvaluateSerializedBody(new byte[25], messageDataOffloadObserved: false);
+        PayloadAdmissionResult exceeded = evaluator.EvaluateSerializedBody(new byte[26], messageDataOffloadObserved: false);
 
         Assert.False(exact.WarningThresholdExceeded);
         Assert.True(exceeded.WarningThresholdExceeded);
@@ -151,16 +151,24 @@ public sealed class PayloadAdmissionEvaluatorTests
     }
 
     [Theory]
-    [InlineData(0, 10, 10, 10)]
-    [InlineData(-1, 10, 10, 10)]
-    [InlineData(11, 10, 10, 10)]
-    [InlineData(10, 11, 10, 10)]
+    [InlineData(0, null, 10, 10, "WarningBodyBytes")]
+    [InlineData(-1, null, 10, 10, "WarningBodyBytes")]
+    [InlineData(null, 0, 10, 10, "MessageDataOffloadThresholdBytes")]
+    [InlineData(null, -1, 10, 10, "MessageDataOffloadThresholdBytes")]
+    [InlineData(null, null, 0, 10, "MaximumSerializedBodyBytes")]
+    [InlineData(null, null, -1, 10, "MaximumSerializedBodyBytes")]
+    [InlineData(null, null, 10, 0, "MaximumTransportEnvelopeBytes")]
+    [InlineData(null, null, 10, -1, "MaximumTransportEnvelopeBytes")]
+    [InlineData(11, null, 10, 10, "WarningBodyBytes")]
+    [InlineData(null, 11, 10, 10, "MessageDataOffloadThresholdBytes")]
+    [InlineData(null, null, 11, 10, "MaximumTransportEnvelopeBytes")]
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-POLICY", "invalid-values-and-ordering")]
     public void Policy_RejectsNonPositiveAndIncoherentThresholds(
-        int warning,
-        int messageData,
+        int? warning,
+        int? messageData,
         int maximumBody,
-        int maximumEnvelope)
+        int maximumEnvelope,
+        string expectedParameterName)
     {
         var policy = new PayloadAdmissionPolicy
         {
@@ -170,7 +178,9 @@ public sealed class PayloadAdmissionEvaluatorTests
             MaximumTransportEnvelopeBytes = maximumEnvelope,
         };
 
-        Assert.ThrowsAny<ArgumentException>(() => policy.Validate());
+        ArgumentException exception = Assert.ThrowsAny<ArgumentException>(() => policy.Validate());
+
+        Assert.Equal(expectedParameterName, exception.ParamName);
     }
 
     [Fact]
@@ -186,6 +196,99 @@ public sealed class PayloadAdmissionEvaluatorTests
 
         Assert.Contains(nameof(PayloadAdmissionOptions<IBus>.MaximumTransportEnvelopeBytes),
             string.Join(" | ", exception.Failures), StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(0, null, 10, 10, "WarningBodyBytes")]
+    [InlineData(-1, null, 10, 10, "WarningBodyBytes")]
+    [InlineData(null, 0, 10, 10, "MessageDataOffloadThresholdBytes")]
+    [InlineData(null, -1, 10, 10, "MessageDataOffloadThresholdBytes")]
+    [InlineData(null, null, 0, 10, "MaximumSerializedBodyBytes")]
+    [InlineData(null, null, -1, 10, "MaximumSerializedBodyBytes")]
+    [InlineData(null, null, 10, 0, "MaximumTransportEnvelopeBytes")]
+    [InlineData(null, null, 10, -1, "MaximumTransportEnvelopeBytes")]
+    [InlineData(11, null, 10, 10, "WarningBodyBytes")]
+    [InlineData(null, 11, 10, 10, "MessageDataOffloadThresholdBytes")]
+    [InlineData(null, null, 11, 10, "MaximumTransportEnvelopeBytes")]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-DI", "every-invalid-threshold-rejected-at-options-boundary")]
+    public void Registration_RejectsEveryInvalidThresholdWhenOptionsAreMaterialized(
+        int? warning,
+        int? messageData,
+        int maximumBody,
+        int maximumEnvelope,
+        string expectedPropertyName)
+    {
+        using ServiceProvider provider = new ServiceCollection()
+            .AddViciOnePayloadAdmission<IBus>(options =>
+            {
+                options.WarningBodyBytes = warning;
+                options.MessageDataOffloadThresholdBytes = messageData;
+                options.MaximumSerializedBodyBytes = maximumBody;
+                options.MaximumTransportEnvelopeBytes = maximumEnvelope;
+            })
+            .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+
+        OptionsValidationException exception = Assert.Throws<OptionsValidationException>(
+            () => provider.GetRequiredService<IOptions<PayloadAdmissionOptions<IBus>>>().Value);
+
+        Assert.Contains(expectedPropertyName, string.Join(" | ", exception.Failures), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-FAILURE-CONTRACT", "unknown-stage-rejected")]
+    public void PayloadAdmissionException_RejectsAnUnknownStage()
+    {
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new PayloadAdmissionException((PayloadAdmissionStage)int.MaxValue, 1, 1, "Rejected."));
+
+        Assert.Equal("stage", exception.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-FAILURE-CONTRACT", "negative-actual-size-rejected")]
+    public void PayloadAdmissionException_RejectsANegativeActualSize()
+    {
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new PayloadAdmissionException(PayloadAdmissionStage.SerializedBody, -1, 1, "Rejected."));
+
+        Assert.Equal("actualBytes", exception.ParamName);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(0)]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-FAILURE-CONTRACT", "non-positive-limit-rejected")]
+    public void PayloadAdmissionException_RejectsANonPositiveConfiguredLimit(long configuredLimitBytes)
+    {
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new PayloadAdmissionException(PayloadAdmissionStage.SerializedBody, 1, configuredLimitBytes, "Rejected."));
+
+        Assert.Equal("configuredLimitBytes", exception.ParamName);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-FAILURE-CONTRACT", "actual-size-must-exceed-limit")]
+    public void PayloadAdmissionException_RejectsAnActualSizeWithinTheConfiguredLimit(long actualBytes)
+    {
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new PayloadAdmissionException(PayloadAdmissionStage.SerializedBody, actualBytes, 1, "Rejected."));
+
+        Assert.Equal("actualBytes", exception.ParamName);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-FAILURE-CONTRACT", "missing-description-rejected")]
+    public void PayloadAdmissionException_RejectsAMissingDescription(string? message)
+    {
+        ArgumentException exception = Assert.ThrowsAny<ArgumentException>(() =>
+            new PayloadAdmissionException(PayloadAdmissionStage.SerializedBody, 2, 1, message!));
+
+        Assert.Equal("message", exception.ParamName);
     }
 
     private static PayloadAdmissionEvaluator<IBus> Evaluator(

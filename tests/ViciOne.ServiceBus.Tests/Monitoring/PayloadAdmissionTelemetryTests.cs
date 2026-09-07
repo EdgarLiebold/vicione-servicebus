@@ -74,12 +74,12 @@ public sealed class PayloadAdmissionTelemetryTests
         listener.Start();
         IPayloadAdmissionEvaluator<IBus> evaluator = provider.GetRequiredService<IPayloadAdmissionEvaluator<IBus>>();
 
-        PayloadAdmissionResult accepted = evaluator.EvaluateSerializedBody(new byte[8], messageDataAvailable: false);
+        PayloadAdmissionResult accepted = evaluator.EvaluateSerializedBody(new byte[8], messageDataOffloadObserved: false);
         Assert.Equal(PayloadAdmissionDisposition.Inline, accepted.Disposition);
         Assert.Equal(8, accepted.SerializedBodyBytes);
 
         PayloadAdmissionException evaluatedFailure = Assert.Throws<PayloadAdmissionException>(
-            () => evaluator.EvaluateSerializedBody(new byte[9], messageDataAvailable: false));
+            () => evaluator.EvaluateSerializedBody(new byte[9], messageDataOffloadObserved: false));
         Assert.Equal(PayloadAdmissionStage.SerializedBody, evaluatedFailure.Stage);
         Assert.Equal(9, evaluatedFailure.ActualBytes);
 

@@ -1,9 +1,9 @@
 using System;
 
-
 namespace ViciOne.ServiceBus.Advanced.Serialization;
+
 /// <summary>Evaluates only exact bytes already produced by the configured serializer.</summary>
-/// <typeparam name="TBus">The bus type.</typeparam>
+/// <typeparam name="TBus">The bus whose payload-admission policy is evaluated.</typeparam>
 public sealed class PayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator<TBus>
     where TBus : class, IBus
 {
@@ -15,47 +15,41 @@ public sealed class PayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator
         _policy = policy.Value;
     }
 
-    /// <summary>Creates an evaluator from an immutable validated policy.</summary>
-    /// <param name="policy">The policy.</param>
+    /// <summary>Initializes an evaluator with an immutable payload-admission policy.</summary>
+    /// <param name="policy">The policy to validate and apply.</param>
     public PayloadAdmissionEvaluator(PayloadAdmissionPolicy policy)
     {
         _policy = (policy ?? throw new ArgumentNullException(nameof(policy))).Validate();
     }
 
-    /// <summary>Creates serialized body buffer.</summary>
-    /// <returns>The created serialized body buffer.</returns>
+    /// <inheritdoc />
     public IPayloadSerializationBuffer CreateSerializedBodyBuffer()
         => CreateSerializedBodyBuffer(rejectionObserver: null);
 
     internal IPayloadSerializationBuffer CreateSerializedBodyBuffer(Action<PayloadAdmissionException>? rejectionObserver)
         => new BoundedPayloadSerializationBuffer(
-            _policy.MaximumSerializedBodyBytes
-                ?? throw new ConfigurationException(
-                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Serialization", "unknown", $"{nameof(PayloadAdmissionPolicy.MaximumSerializedBodyBytes)} must be configured for bounded payload serialization.", "Correct the named configuration before starting the host")),
+            _policy.MaximumSerializedBodyBytes,
             PayloadAdmissionStage.SerializedBody,
             rejectionObserver);
 
-    /// <summary>Evaluates serialized body.</summary>
-    /// <param name="serializedBody">The serialized body.</param>
-    /// <param name="messageDataAvailable">The message data available.</param>
-    /// <returns>The payload admission result produced by the operation.</returns>
-    public PayloadAdmissionResult EvaluateSerializedBody(ReadOnlyMemory<byte> serializedBody, bool messageDataAvailable)
+    /// <inheritdoc />
+    public PayloadAdmissionResult EvaluateSerializedBody(ReadOnlyMemory<byte> serializedBody, bool messageDataOffloadObserved)
     {
         int bodyBytes = serializedBody.Length;
 
-        if (_policy.MaximumSerializedBodyBytes is { } maximum && bodyBytes > maximum)
+        if (bodyBytes > _policy.MaximumSerializedBodyBytes)
         {
             throw new PayloadAdmissionException(
                 PayloadAdmissionStage.SerializedBody,
                 bodyBytes,
-                maximum,
-                $"Serialized payload body is {bodyBytes} bytes, exceeding the configured maximum of {maximum} bytes.");
+                _policy.MaximumSerializedBodyBytes,
+                $"Serialized payload body is {bodyBytes} bytes, exceeding the configured maximum of {_policy.MaximumSerializedBodyBytes} bytes.");
         }
 
         bool warning = _policy.WarningBodyBytes is { } warningThreshold && bodyBytes > warningThreshold;
         if (_policy.MessageDataOffloadThresholdBytes is { } offloadThreshold && bodyBytes > offloadThreshold)
         {
-            if (!messageDataAvailable)
+            if (!messageDataOffloadObserved)
             {
                 throw new PayloadAdmissionException(
                     PayloadAdmissionStage.MessageData,
@@ -70,31 +64,27 @@ public sealed class PayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator
         return new PayloadAdmissionResult(PayloadAdmissionDisposition.Inline, bodyBytes, warning);
     }
 
-    /// <summary>Creates transport envelope buffer.</summary>
-    /// <returns>The created transport envelope buffer.</returns>
+    /// <inheritdoc />
     public IPayloadSerializationBuffer CreateTransportEnvelopeBuffer()
         => CreateTransportEnvelopeBuffer(rejectionObserver: null);
 
     internal IPayloadSerializationBuffer CreateTransportEnvelopeBuffer(Action<PayloadAdmissionException>? rejectionObserver)
         => new BoundedPayloadSerializationBuffer(
-            _policy.MaximumTransportEnvelopeBytes
-                ?? throw new ConfigurationException(
-                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Serialization", "unknown", $"{nameof(PayloadAdmissionPolicy.MaximumTransportEnvelopeBytes)} must be configured for bounded transport-envelope serialization.", "Correct the named configuration before starting the host")),
+            _policy.MaximumTransportEnvelopeBytes,
             PayloadAdmissionStage.TransportEnvelope,
             rejectionObserver);
 
-    /// <summary>Validates transport envelope.</summary>
-    /// <param name="serializedEnvelope">The serialized envelope.</param>
+    /// <inheritdoc />
     public void ValidateTransportEnvelope(ReadOnlyMemory<byte> serializedEnvelope)
     {
         int envelopeBytes = serializedEnvelope.Length;
-        if (_policy.MaximumTransportEnvelopeBytes is { } maximum && envelopeBytes > maximum)
+        if (envelopeBytes > _policy.MaximumTransportEnvelopeBytes)
         {
             throw new PayloadAdmissionException(
                 PayloadAdmissionStage.TransportEnvelope,
                 envelopeBytes,
-                maximum,
-                $"Final serialized transport envelope is {envelopeBytes} bytes, exceeding the configured maximum of {maximum} bytes.");
+                _policy.MaximumTransportEnvelopeBytes,
+                $"Final serialized transport envelope is {envelopeBytes} bytes, exceeding the configured maximum of {_policy.MaximumTransportEnvelopeBytes} bytes.");
         }
     }
 }
