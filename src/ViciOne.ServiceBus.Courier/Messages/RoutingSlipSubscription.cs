@@ -5,53 +5,99 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Courier.Messages;
 
-/// <summary>Represents a subscription to routing slip.</summary>
+/// <summary>Materializes a validated routing-slip event subscription.</summary>
 internal sealed class RoutingSlipSubscription :
     Subscription
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty instance for contract materialization.</summary>
     public RoutingSlipSubscription()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="address">The address.</param>
-    /// <param name="events">The events.</param>
-    /// <param name="include">The include.</param>
-    /// <param name="activityName">The activity name.</param>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a subscription from validated event and payload selections.</summary>
+    /// <param name="address">The destination that receives matching events.</param>
+    /// <param name="events">The lifecycle events that trigger delivery.</param>
+    /// <param name="include">The optional routing-slip data included in delivered events.</param>
+    /// <param name="activityName">The activity-name filter, when delivery is limited to one activity.</param>
+    /// <param name="message">The custom subscription message, when configured.</param>
     public RoutingSlipSubscription(Uri address, RoutingSlipEvents events, RoutingSlipEventContents include, string? activityName = null,
         MessageEnvelope? message = null)
     {
-        Include = include;
+        ArgumentNullException.ThrowIfNull(address);
+        if (activityName is not null)
+            ArgumentException.ThrowIfNullOrWhiteSpace(activityName);
+
+        Include = RoutingSlipSubscriptionSelection.Validate(include, nameof(include));
         ActivityName = activityName;
         Address = address;
-        Events = events;
+        Events = RoutingSlipSubscriptionSelection.Validate(events, nameof(events));
         Message = message;
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="subscription">The subscription.</param>
+    /// <summary>Creates a validated snapshot of received subscription data.</summary>
+    /// <param name="subscription">The received subscription to copy.</param>
     public RoutingSlipSubscription(Subscription subscription)
     {
+        ArgumentNullException.ThrowIfNull(subscription);
+
         if (subscription.Address == null)
-            throw new SerializationException("A subscription address is required");
+            throw new SerializationException("A routing-slip subscription address is required.");
 
         Address = subscription.Address;
-        Events = subscription.Events;
-        Include = subscription.Include;
+        Events = ValidateReceived(subscription.Events);
+        Include = ValidateReceived(subscription.Include);
         Message = subscription.Message;
-        ActivityName = subscription.ActivityName;
+        ActivityName = ValidateReceived(subscription.ActivityName);
     }
 
-    /// <summary>Gets or sets the address.</summary>
+    /// <summary>Gets or sets the destination that receives matching events.</summary>
     public Uri Address { get; set; } = null!;
-    /// <summary>Gets or sets the events.</summary>
+    /// <summary>Gets or sets the lifecycle events that trigger delivery.</summary>
     public RoutingSlipEvents Events { get; set; }
-    /// <summary>Gets or sets the include.</summary>
+    /// <summary>Gets or sets the optional routing-slip data included in delivered events.</summary>
     public RoutingSlipEventContents Include { get; set; }
-    /// <summary>Gets or sets the message.</summary>
+    /// <summary>Gets or sets the custom subscription message, when configured.</summary>
     public MessageEnvelope? Message { get; set; }
-    /// <summary>Gets or sets the activity name.</summary>
+    /// <summary>Gets or sets the activity-name filter, when delivery is limited to one activity.</summary>
     public string? ActivityName { get; set; }
+
+    static RoutingSlipEvents ValidateReceived(RoutingSlipEvents events)
+    {
+        try
+        {
+            return RoutingSlipSubscriptionSelection.Validate(events, nameof(Subscription.Events));
+        }
+        catch (ArgumentOutOfRangeException exception)
+        {
+            throw new SerializationException("The routing-slip subscription contains an invalid event selection.", exception);
+        }
+    }
+
+    static RoutingSlipEventContents ValidateReceived(RoutingSlipEventContents contents)
+    {
+        try
+        {
+            return RoutingSlipSubscriptionSelection.Validate(contents, nameof(Subscription.Include));
+        }
+        catch (ArgumentOutOfRangeException exception)
+        {
+            throw new SerializationException("The routing-slip subscription contains an invalid content selection.", exception);
+        }
+    }
+
+    static string? ValidateReceived(string? activityName)
+    {
+        if (activityName is null)
+            return null;
+
+        try
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(activityName);
+            return activityName;
+        }
+        catch (ArgumentException exception)
+        {
+            throw new SerializationException("The routing-slip subscription contains an invalid activity-name filter.", exception);
+        }
+    }
 }

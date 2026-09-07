@@ -4,23 +4,29 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Courier.Messages;
 
-/// <summary>Carries the activity log for routing slip activity.</summary>
+/// <summary>Materializes the completion record of one routing-slip activity execution.</summary>
 internal sealed class RoutingSlipActivityLog :
     ActivityLog
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty instance for contract materialization.</summary>
     public RoutingSlipActivityLog()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="host">The host.</param>
-    /// <param name="executionId">The execution id.</param>
-    /// <param name="name">The name.</param>
-    /// <param name="timestamp">The timestamp.</param>
-    /// <param name="duration">The duration.</param>
+    /// <summary>Creates an activity-completion record.</summary>
+    /// <param name="host">The host that executed the activity.</param>
+    /// <param name="executionId">The non-empty activity execution identifier.</param>
+    /// <param name="name">The non-empty activity name.</param>
+    /// <param name="timestamp">The activity completion timestamp.</param>
+    /// <param name="duration">The non-negative activity duration.</param>
     public RoutingSlipActivityLog(HostInfo host, Guid executionId, string name, DateTimeOffset timestamp, TimeSpan duration)
     {
+        ArgumentNullException.ThrowIfNull(host);
+        if (executionId == Guid.Empty)
+            throw new ArgumentException("The activity execution identifier cannot be empty.", nameof(executionId));
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentOutOfRangeException.ThrowIfLessThan(duration, TimeSpan.Zero);
+
         ExecutionId = executionId;
         Name = name;
         Timestamp = timestamp;
@@ -28,12 +34,20 @@ internal sealed class RoutingSlipActivityLog :
         Host = host;
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="activityLog">The activity log.</param>
+    /// <summary>Creates a validated snapshot of a received activity-completion record.</summary>
+    /// <param name="activityLog">The received activity log to copy.</param>
     public RoutingSlipActivityLog(ActivityLog activityLog)
     {
-        if (string.IsNullOrEmpty(activityLog.Name))
-            throw new SerializationException("An ActivityLog Name is required");
+        ArgumentNullException.ThrowIfNull(activityLog);
+
+        if (activityLog.Host is null)
+            throw new SerializationException("An activity log requires host information.");
+        if (activityLog.ExecutionId == Guid.Empty)
+            throw new SerializationException("An activity log requires a non-empty execution identifier.");
+        if (string.IsNullOrWhiteSpace(activityLog.Name))
+            throw new SerializationException("An activity log requires a name.");
+        if (activityLog.Duration < TimeSpan.Zero)
+            throw new SerializationException("An activity log cannot have a negative duration.");
 
         ExecutionId = activityLog.ExecutionId;
         Name = activityLog.Name;
@@ -42,14 +56,14 @@ internal sealed class RoutingSlipActivityLog :
         Host = activityLog.Host;
     }
 
-    /// <summary>Gets or sets the execution id.</summary>
+    /// <summary>Gets or sets the activity execution identifier.</summary>
     public Guid ExecutionId { get; set; }
-    /// <summary>Gets or sets the name.</summary>
+    /// <summary>Gets or sets the activity name.</summary>
     public string Name { get; set; } = null!;
-    /// <summary>Gets or sets the timestamp.</summary>
+    /// <summary>Gets or sets the activity completion timestamp.</summary>
     public DateTimeOffset Timestamp { get; set; }
-    /// <summary>Gets or sets the duration.</summary>
+    /// <summary>Gets or sets the activity duration.</summary>
     public TimeSpan Duration { get; set; }
-    /// <summary>Gets or sets the host.</summary>
+    /// <summary>Gets or sets the host that executed the activity.</summary>
     public HostInfo Host { get; set; } = null!;
 }

@@ -3,6 +3,9 @@ using System.Runtime.Serialization;
 using System.Text.Json;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Courier.Contracts;
+using ViciOne.ServiceBus.Courier.Messages;
+using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -45,10 +48,76 @@ public sealed class RoutingSlipBuilderContractTests
         Assert.Throws<ArgumentNullException>(() => builder.AddSubscription(null!, RoutingSlipEvents.All, RoutingSlipEventContents.All));
         Assert.Throws<ArgumentException>(() => builder.AddSubscription(address, RoutingSlipEvents.All, RoutingSlipEventContents.All, " "));
         Assert.Throws<ArgumentNullException>(() => builder.AddActivityLog(null!, "Activity", NewId.NextGuid(), DateTimeOffset.UtcNow, TimeSpan.Zero));
+        Assert.Equal("activityTrackingNumber", Assert.Throws<ArgumentException>(() =>
+            builder.AddActivityLog(HostMetadataCache.Host, "Activity", Guid.Empty, DateTimeOffset.UtcNow, TimeSpan.Zero)).ParamName);
+        Assert.Equal("duration", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            builder.AddActivityLog(HostMetadataCache.Host, "Activity", NewId.NextGuid(), DateTimeOffset.UtcNow, TimeSpan.FromTicks(-1))).ParamName);
+        Assert.Equal("activityTrackingNumber", Assert.Throws<ArgumentException>(() =>
+            builder.AddCompensateLog(Guid.Empty, address, new Dictionary<string, object>())).ParamName);
         Assert.Throws<ArgumentNullException>(() => builder.AddCompensateLog(NewId.NextGuid(), null!, new Dictionary<string, object>()));
         Assert.Throws<ArgumentNullException>(() => builder.AddCompensateLog(NewId.NextGuid(), address, null!));
+        Assert.Equal("activityTrackingNumber", Assert.Throws<ArgumentException>(() => builder.AddActivityException(
+            HostMetadataCache.Host, "Activity", Guid.Empty, DateTimeOffset.UtcNow, TimeSpan.Zero, new InvalidOperationException())).ParamName);
+        Assert.Equal("elapsed", Assert.Throws<ArgumentOutOfRangeException>(() => builder.AddActivityException(
+            HostMetadataCache.Host, "Activity", NewId.NextGuid(), DateTimeOffset.UtcNow, TimeSpan.FromTicks(-1),
+            new FaultExceptionInfo(new InvalidOperationException()))).ParamName);
         Assert.Throws<ArgumentNullException>(() => builder.AddActivityException((ActivityException)null!));
-        Assert.Throws<ArgumentNullException>(() => RoutingSlipBuilder.GetObjectAsDictionary(null!));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-BUILDER-ISOLATION", "build-produces-detached-read-only-state")]
+    public void Build_ProducesADetachedReadOnlySnapshotWhileTheBuilderRemainsMutable()
+    {
+        var firstAddress = new Uri("loopback://localhost/first");
+        var secondAddress = new Uri("loopback://localhost/second");
+        var arguments = new Dictionary<string, object> { ["state"] = "original" };
+        var builder = new RoutingSlipBuilder(NewId.NextGuid());
+        builder.AddActivity("First", firstAddress, arguments);
+        builder.AddVariable("tenant", "north");
+        builder.AddSubscription(firstAddress, RoutingSlipEvents.Completed);
+
+        RoutingSlip first = builder.Build();
+        arguments["state"] = "caller-mutated";
+        builder.AddVariable("tenant", "south");
+        builder.AddActivity("Second", secondAddress);
+        builder.AddSubscription(secondAddress, RoutingSlipEvents.Faulted);
+
+        Activity activity = Assert.Single(first.Itinerary);
+        Assert.Equal("original", activity.Arguments["STATE"]);
+        Assert.Equal("north", first.Variables["TENANT"]);
+        Assert.Single(first.Subscriptions);
+        Assert.True(first.Itinerary.IsReadOnly);
+        Assert.True(first.ActivityLogs.IsReadOnly);
+        Assert.True(first.CompensateLogs.IsReadOnly);
+        Assert.True(first.ActivityExceptions.IsReadOnly);
+        Assert.True(first.Subscriptions.IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<KeyValuePair<string, object>>>(first.Variables).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<KeyValuePair<string, object>>>(activity.Arguments).IsReadOnly);
+        Assert.Throws<NotSupportedException>(() => first.Itinerary.Clear());
+        Assert.Throws<NotSupportedException>(() => first.Variables.Add("late", 1));
+        Assert.Throws<NotSupportedException>(() => activity.Arguments.Add("late", 1));
+
+        RoutingSlip second = builder.Build();
+        Assert.Equal(2, second.Itinerary.Count);
+        Assert.Equal(2, second.Subscriptions.Count);
+        Assert.Equal("south", second.Variables["tenant"]);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-BUILDER", "variable-sequences-validate-atomically")]
+    public void VariableSequences_RejectInvalidKeysWithoutApplyingEarlierEntries()
+    {
+        var builder = new RoutingSlipBuilder(NewId.NextGuid());
+        KeyValuePair<string, object>[] values =
+        [
+            new("accepted", 1),
+            new(" ", 2),
+        ];
+
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => builder.SetVariables(values));
+
+        Assert.Equal("values", exception.ParamName);
+        Assert.Empty(builder.Build().Variables);
     }
 
     [Fact]
@@ -85,6 +154,75 @@ public sealed class RoutingSlipBuilderContractTests
         Assert.False(callbackCalled);
     }
 
+    [Theory]
+    [InlineData((int)RoutingSlipEvents.None)]
+    [InlineData((int)RoutingSlipEvents.Supplemental)]
+    [InlineData(0x20000)]
+    [RequirementCoverage("REQ-VSB-COURIER-SUBSCRIPTION-FLAGS", "all-overloads-reject-empty-or-undefined-event-selections")]
+    public void SubscriptionOverloads_RejectEmptyOrUndefinedEventSelectionsBeforeMutationOrCallback(int rawEvents)
+    {
+        var builder = new RoutingSlipBuilder(NewId.NextGuid());
+        var address = new Uri("loopback://localhost/courier-subscription");
+        RoutingSlipEvents events = (RoutingSlipEvents)rawEvents;
+        var callbackCalled = false;
+        Func<ISendEndpoint, Task> callback = _ =>
+        {
+            callbackCalled = true;
+            return Task.CompletedTask;
+        };
+
+        AssertInvalidEvents(() => builder.AddSubscription(address, events));
+        AssertInvalidEvents(() => builder.AddSubscription(address, events, RoutingSlipEventContents.All));
+        AssertInvalidEvents(() => builder.AddSubscription(address, events, RoutingSlipEventContents.All, "ChargeCard"));
+        AssertInvalidEvents(() => builder.AddSubscriptionAsync(address, events, callback));
+        AssertInvalidEvents(() => builder.AddSubscriptionAsync(address, events, RoutingSlipEventContents.All, callback));
+        AssertInvalidEvents(() => builder.AddSubscriptionAsync(address, events, RoutingSlipEventContents.All, "ChargeCard", callback));
+
+        Assert.False(callbackCalled);
+        Assert.Empty(builder.Build().Subscriptions);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-SUBSCRIPTION-FLAGS", "all-content-overloads-reject-undefined-flags")]
+    public void SubscriptionContentOverloads_RejectUndefinedFlagsBeforeMutationOrCallback()
+    {
+        var builder = new RoutingSlipBuilder(NewId.NextGuid());
+        var address = new Uri("loopback://localhost/courier-subscription");
+        var contents = (RoutingSlipEventContents)0x10;
+        var callbackCalled = false;
+        Func<ISendEndpoint, Task> callback = _ =>
+        {
+            callbackCalled = true;
+            return Task.CompletedTask;
+        };
+
+        AssertInvalidContents(() => builder.AddSubscription(address, RoutingSlipEvents.Completed, contents));
+        AssertInvalidContents(() => builder.AddSubscription(address, RoutingSlipEvents.Completed, contents, "ChargeCard"));
+        AssertInvalidContents(() => builder.AddSubscriptionAsync(address, RoutingSlipEvents.Completed, contents, callback));
+        AssertInvalidContents(() => builder.AddSubscriptionAsync(address, RoutingSlipEvents.Completed, contents, "ChargeCard", callback));
+
+        Assert.False(callbackCalled);
+        Assert.Empty(builder.Build().Subscriptions);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-SUBSCRIPTION-FLAGS", "received-contract-state-is-revalidated")]
+    public void ReceivedSubscriptions_RejectInvalidEventContentAndActivitySelections()
+    {
+        var address = new Uri("loopback://localhost/courier-subscription");
+
+        SerializationException events = Assert.Throws<SerializationException>(() => new RoutingSlipSubscription(
+            new StubSubscription(address, RoutingSlipEvents.None, RoutingSlipEventContents.All, null)));
+        SerializationException contents = Assert.Throws<SerializationException>(() => new RoutingSlipSubscription(
+            new StubSubscription(address, RoutingSlipEvents.Completed, (RoutingSlipEventContents)0x10, null)));
+        SerializationException activity = Assert.Throws<SerializationException>(() => new RoutingSlipSubscription(
+            new StubSubscription(address, RoutingSlipEvents.Completed, RoutingSlipEventContents.All, " ")));
+
+        Assert.IsType<ArgumentOutOfRangeException>(events.InnerException);
+        Assert.IsType<ArgumentOutOfRangeException>(contents.InnerException);
+        Assert.IsType<ArgumentException>(activity.InnerException);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-BUILDER-ISOLATION", "no-public-mutable-empty-sentinel")]
     public void Builder_ExposesNoPublicMutableEmptyArgumentSentinel()
@@ -94,6 +232,23 @@ public sealed class RoutingSlipBuilderContractTests
             BindingFlags.Public | BindingFlags.Static);
 
         Assert.Null(field);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-BUILDER-API", "internal-transition-members-are-not-public")]
+    public void Builder_PublicSurfaceExcludesInternalRoutingSlipTransitionMembers()
+    {
+        ConstructorInfo constructor = Assert.Single(typeof(RoutingSlipBuilder).GetConstructors());
+        ParameterInfo[] parameters = constructor.GetParameters();
+
+        Assert.Equal([typeof(Guid), typeof(TimeProvider)], parameters.Select(parameter => parameter.ParameterType));
+        Assert.Null(typeof(RoutingSlipBuilder).GetProperty("SourceItinerary", BindingFlags.Public | BindingFlags.Instance));
+        Assert.Null(typeof(RoutingSlipBuilder).GetMethod("AddActivityLog", BindingFlags.Public | BindingFlags.Instance));
+        Assert.Null(typeof(RoutingSlipBuilder).GetMethod("AddCompensateLog", BindingFlags.Public | BindingFlags.Instance));
+        Assert.DoesNotContain(
+            typeof(RoutingSlipBuilder).GetMethods(BindingFlags.Public | BindingFlags.Instance),
+            method => method.Name == "AddActivityException");
+        Assert.Null(typeof(RoutingSlipBuilder).GetMethod("GetObjectAsDictionary", BindingFlags.Public | BindingFlags.Static));
     }
 
     [Fact]
@@ -254,5 +409,26 @@ public sealed class RoutingSlipBuilderContractTests
         builder.AddActivity("NoArguments", new Uri("loopback://localhost/no-arguments"));
 
         return Assert.Single(builder.Build().Itinerary);
+    }
+
+    private static void AssertInvalidEvents(Action action)
+    {
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(action);
+        Assert.Equal("events", exception.ParamName);
+    }
+
+    private static void AssertInvalidContents(Action action)
+    {
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(action);
+        Assert.Equal("contents", exception.ParamName);
+    }
+
+    private sealed record StubSubscription(
+        Uri Address,
+        RoutingSlipEvents Events,
+        RoutingSlipEventContents Include,
+        string? ActivityName) : Subscription
+    {
+        public ViciOne.ServiceBus.Serialization.MessageEnvelope? Message => null;
     }
 }

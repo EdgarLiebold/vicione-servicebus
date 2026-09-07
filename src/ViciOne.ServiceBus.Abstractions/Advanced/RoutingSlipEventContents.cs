@@ -6,11 +6,8 @@ namespace ViciOne.ServiceBus.Advanced;
 [Flags]
 public enum RoutingSlipEventContents
 {
-    /// <summary>Includes every payload component supported by the event.</summary>
-    All = 0,
-
     /// <summary>Excludes optional payload components.</summary>
-    None = 0x100,
+    None = 0,
 
     /// <summary>Includes the routing-slip variables at the event boundary.</summary>
     Variables = 0x0001,
@@ -22,5 +19,8 @@ public enum RoutingSlipEventContents
     Data = 0x0004,
 
     /// <summary>Includes the retained and discarded itinerary segments for revision or termination events.</summary>
-    Itinerary = 0x0008
+    Itinerary = 0x0008,
+
+    /// <summary>Includes every payload component supported by the event.</summary>
+    All = Variables | Arguments | Data | Itinerary
 }

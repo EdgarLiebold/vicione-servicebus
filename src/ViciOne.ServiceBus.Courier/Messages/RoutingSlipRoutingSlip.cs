@@ -1,56 +1,66 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Courier.Messages;
 
-/// <summary>Represents the mutable wire contract of a routing slip.</summary>
+/// <summary>Materializes routing-slip wire data and creates isolated snapshots for locally built instances.</summary>
 internal sealed class RoutingSlipRoutingSlip :
     RoutingSlip
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty instance for contract materialization.</summary>
     public RoutingSlipRoutingSlip()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="trackingNumber">The tracking number.</param>
-    /// <param name="createTimestamp">The create timestamp.</param>
-    /// <param name="activities">The activities.</param>
-    /// <param name="activityLogs">The activity logs.</param>
-    /// <param name="compensateLogs">The compensate logs.</param>
-    /// <param name="exceptions">The exceptions.</param>
-    /// <param name="variables">The variables.</param>
-    /// <param name="subscriptions">The subscriptions.</param>
+    /// <summary>Creates an isolated, read-only snapshot of a routing slip.</summary>
+    /// <param name="trackingNumber">The non-empty routing-slip identifier.</param>
+    /// <param name="createTimestamp">The routing-slip creation timestamp.</param>
+    /// <param name="activities">The remaining itinerary.</param>
+    /// <param name="activityLogs">The completed activity records.</param>
+    /// <param name="compensateLogs">The pending compensation records.</param>
+    /// <param name="exceptions">The activity failure records.</param>
+    /// <param name="variables">The routing-slip variables.</param>
+    /// <param name="subscriptions">The lifecycle-event subscriptions.</param>
     public RoutingSlipRoutingSlip(Guid trackingNumber, DateTimeOffset createTimestamp, IEnumerable<Activity> activities,
         IEnumerable<ActivityLog> activityLogs, IEnumerable<CompensateLog> compensateLogs, IEnumerable<ActivityException> exceptions,
         IDictionary<string, object> variables, IEnumerable<Subscription> subscriptions)
     {
+        if (trackingNumber == Guid.Empty)
+            throw new ArgumentException("The routing-slip tracking number cannot be empty.", nameof(trackingNumber));
+        ArgumentNullException.ThrowIfNull(activities);
+        ArgumentNullException.ThrowIfNull(activityLogs);
+        ArgumentNullException.ThrowIfNull(compensateLogs);
+        ArgumentNullException.ThrowIfNull(exceptions);
+        ArgumentNullException.ThrowIfNull(variables);
+        ArgumentNullException.ThrowIfNull(subscriptions);
+
         TrackingNumber = trackingNumber;
         CreateTimestamp = createTimestamp;
-        Itinerary = activities.ToList();
-        ActivityLogs = activityLogs.ToList();
-        CompensateLogs = compensateLogs.ToList();
-        Variables = variables;
-        ActivityExceptions = exceptions.ToList();
-        Subscriptions = subscriptions.ToList();
+        Itinerary = Array.AsReadOnly(activities.Select(activity => (Activity)new RoutingSlipActivity(activity)).ToArray());
+        ActivityLogs = Array.AsReadOnly(activityLogs.Select(log => (ActivityLog)new RoutingSlipActivityLog(log)).ToArray());
+        CompensateLogs = Array.AsReadOnly(compensateLogs.Select(log => (CompensateLog)new RoutingSlipCompensateLog(log)).ToArray());
+        Variables = new ReadOnlyDictionary<string, object>(new Dictionary<string, object>(variables, StringComparer.OrdinalIgnoreCase));
+        ActivityExceptions = Array.AsReadOnly(exceptions.Select(exception => (ActivityException)new RoutingSlipActivityException(exception)).ToArray());
+        Subscriptions = Array.AsReadOnly(subscriptions.Select(subscription => (Subscription)new RoutingSlipSubscription(subscription)).ToArray());
     }
 
-    /// <summary>Gets or sets the tracking number.</summary>
+    /// <summary>Gets or sets the routing-slip identifier.</summary>
     public Guid TrackingNumber { get; set; }
-    /// <summary>Gets or sets the create timestamp.</summary>
+    /// <summary>Gets or sets the routing-slip creation timestamp.</summary>
     public DateTimeOffset CreateTimestamp { get; set; }
-    /// <summary>Gets or sets the itinerary.</summary>
+    /// <summary>Gets or sets the remaining itinerary.</summary>
     public IList<Activity> Itinerary { get; set; } = null!;
-    /// <summary>Gets or sets the activity logs.</summary>
+    /// <summary>Gets or sets the completed activity records.</summary>
     public IList<ActivityLog> ActivityLogs { get; set; } = null!;
-    /// <summary>Gets or sets the compensate logs.</summary>
+    /// <summary>Gets or sets the pending compensation records.</summary>
     public IList<CompensateLog> CompensateLogs { get; set; } = null!;
-    /// <summary>Gets or sets the variables.</summary>
+    /// <summary>Gets or sets the routing-slip variables.</summary>
     public IDictionary<string, object> Variables { get; set; } = null!;
-    /// <summary>Gets or sets the activity exceptions.</summary>
+    /// <summary>Gets or sets the activity failure records.</summary>
     public IList<ActivityException> ActivityExceptions { get; set; } = null!;
-    /// <summary>Gets or sets the subscriptions.</summary>
+    /// <summary>Gets or sets the lifecycle-event subscriptions.</summary>
     public IList<Subscription> Subscriptions { get; set; } = null!;
 }

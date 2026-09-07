@@ -4,25 +4,32 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Courier.Messages;
 
-/// <summary>Represents an error related to routing slip activity.</summary>
+/// <summary>Materializes a failure record for one routing-slip activity execution.</summary>
 internal sealed class RoutingSlipActivityException :
     ActivityException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty instance for contract materialization.</summary>
     public RoutingSlipActivityException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="activityName">The activity name.</param>
-    /// <param name="host">The host.</param>
-    /// <param name="executionId">The execution id.</param>
-    /// <param name="timestamp">The timestamp.</param>
-    /// <param name="elapsed">The elapsed.</param>
-    /// <param name="exceptionInfo">The exception info.</param>
+    /// <summary>Creates an activity-failure record.</summary>
+    /// <param name="activityName">The non-empty activity name.</param>
+    /// <param name="host">The host that executed the activity.</param>
+    /// <param name="executionId">The non-empty activity execution identifier.</param>
+    /// <param name="timestamp">The failure timestamp.</param>
+    /// <param name="elapsed">The non-negative duration before failure.</param>
+    /// <param name="exceptionInfo">The captured activity failure.</param>
     public RoutingSlipActivityException(string activityName, HostInfo host, Guid executionId, DateTimeOffset timestamp, TimeSpan elapsed,
         ExceptionInfo exceptionInfo)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(activityName);
+        ArgumentNullException.ThrowIfNull(host);
+        if (executionId == Guid.Empty)
+            throw new ArgumentException("The activity execution identifier cannot be empty.", nameof(executionId));
+        ArgumentOutOfRangeException.ThrowIfLessThan(elapsed, TimeSpan.Zero);
+        ArgumentNullException.ThrowIfNull(exceptionInfo);
+
         ExecutionId = executionId;
 
         Timestamp = timestamp;
@@ -32,14 +39,22 @@ internal sealed class RoutingSlipActivityException :
         ExceptionInfo = exceptionInfo;
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="activityException">The activity exception.</param>
+    /// <summary>Creates a validated snapshot of a received activity-failure record.</summary>
+    /// <param name="activityException">The received activity failure to copy.</param>
     public RoutingSlipActivityException(ActivityException activityException)
     {
-        if (string.IsNullOrEmpty(activityException.Name))
-            throw new SerializationException("An Activity Name is required");
+        ArgumentNullException.ThrowIfNull(activityException);
+
+        if (string.IsNullOrWhiteSpace(activityException.Name))
+            throw new SerializationException("An activity failure requires an activity name.");
+        if (activityException.Host is null)
+            throw new SerializationException("An activity failure requires host information.");
+        if (activityException.ExecutionId == Guid.Empty)
+            throw new SerializationException("An activity failure requires a non-empty execution identifier.");
+        if (activityException.Elapsed < TimeSpan.Zero)
+            throw new SerializationException("An activity failure cannot have a negative elapsed duration.");
         if (activityException.ExceptionInfo == null)
-            throw new SerializationException("An Activity ExceptionInfo is required");
+            throw new SerializationException("An activity failure requires exception information.");
 
         ExecutionId = activityException.ExecutionId;
         Timestamp = activityException.Timestamp;
@@ -49,16 +64,16 @@ internal sealed class RoutingSlipActivityException :
         ExceptionInfo = activityException.ExceptionInfo;
     }
 
-    /// <summary>Gets or sets the execution id.</summary>
+    /// <summary>Gets or sets the activity execution identifier.</summary>
     public Guid ExecutionId { get; set; }
-    /// <summary>Gets or sets the timestamp.</summary>
+    /// <summary>Gets or sets the failure timestamp.</summary>
     public DateTimeOffset Timestamp { get; set; }
-    /// <summary>Gets or sets the elapsed.</summary>
+    /// <summary>Gets or sets the duration before failure.</summary>
     public TimeSpan Elapsed { get; set; }
-    /// <summary>Gets or sets the name.</summary>
+    /// <summary>Gets or sets the activity name.</summary>
     public string Name { get; set; } = null!;
-    /// <summary>Gets or sets the host.</summary>
+    /// <summary>Gets or sets the host that executed the activity.</summary>
     public HostInfo Host { get; set; } = null!;
-    /// <summary>Gets or sets the exception info.</summary>
+    /// <summary>Gets or sets the captured activity failure.</summary>
     public ExceptionInfo ExceptionInfo { get; set; } = null!;
 }

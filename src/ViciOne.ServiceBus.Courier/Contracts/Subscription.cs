@@ -3,24 +3,21 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Courier.Contracts;
 
-/// <summary>
-/// A routing slip subscription defines a specific endpoint where routing
-/// slip events should be sent (not published). If specified, events are not published.
-/// </summary>
+/// <summary>Describes a destination and selection policy for routing-slip lifecycle events.</summary>
 public interface Subscription
 {
-    /// <summary>The address where events should be sent.</summary>
+    /// <summary>Gets the destination that receives matching events.</summary>
     Uri Address { get; }
 
-    /// <summary>The events that are subscribed.</summary>
+    /// <summary>Gets the lifecycle events that trigger delivery.</summary>
     RoutingSlipEvents Events { get; }
 
-    /// <summary>The routing-slip data to include in each subscribed event.</summary>
+    /// <summary>Gets the optional routing-slip data included in each delivered event.</summary>
     RoutingSlipEventContents Include { get; }
 
-    /// <summary>If specified, events are only used in this subscription if the activity name matches.</summary>
+    /// <summary>Gets the activity-name filter, when delivery is limited to one activity.</summary>
     string? ActivityName { get; }
 
-    /// <summary>The message sent as part of the subscription.</summary>
+    /// <summary>Gets the custom subscription message, when configured.</summary>
     MessageEnvelope? Message { get; }
 }

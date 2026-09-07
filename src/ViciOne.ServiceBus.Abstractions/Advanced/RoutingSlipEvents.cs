@@ -6,8 +6,8 @@ namespace ViciOne.ServiceBus.Advanced;
 [Flags]
 public enum RoutingSlipEvents
 {
-    /// <summary>Subscribes to every lifecycle event.</summary>
-    All = 0,
+    /// <summary>Does not select any lifecycle event.</summary>
+    None = 0,
 
     /// <summary>Subscribes to routing-slip completion.</summary>
     Completed = 0x0001,
@@ -36,9 +36,19 @@ public enum RoutingSlipEvents
     /// <summary>Subscribes to failed activity compensation.</summary>
     ActivityCompensationFailed = 0x0800,
 
+    /// <summary>Subscribes to every lifecycle event.</summary>
+    All = Completed
+        | Faulted
+        | CompensationFailed
+        | Terminated
+        | Revised
+        | ActivityCompleted
+        | ActivityFaulted
+        | ActivityCompensated
+        | ActivityCompensationFailed,
+
     /// <summary>
-    /// Delivers the subscription in addition to publishing the corresponding event.
-    /// Without this flag, the presence of a matching subscription suppresses publication.
+    /// Delivers the subscription in addition to publishing lifecycle events through the configured topology.
     /// </summary>
     Supplemental = 0x10000
 }

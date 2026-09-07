@@ -14,17 +14,15 @@ namespace ViciOne.ServiceBus.Courier;
 internal sealed class RoutingSlipEventPublisher :
     IRoutingSlipEventPublisher
 {
-    const RoutingSlipEvents EventMask = (RoutingSlipEvents)0xFFFF;
-
     readonly CourierContext? _context;
     readonly HostInfo _host;
     readonly IPublishEndpoint _publishEndpoint;
     readonly RoutingSlip _routingSlip;
     readonly ISendEndpointProvider _sendEndpointProvider;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="routingSlip">The routing slip.</param>
+    /// <summary>Creates a publisher that can preserve the current Courier serialization context.</summary>
+    /// <param name="context">The active Courier execution context.</param>
+    /// <param name="routingSlip">The routing slip whose lifecycle events are routed.</param>
     public RoutingSlipEventPublisher(CourierContext context, RoutingSlip routingSlip)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -37,10 +35,10 @@ internal sealed class RoutingSlipEventPublisher :
         _context = context;
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="sendEndpointProvider">The send endpoint provider.</param>
-    /// <param name="publishEndpoint">The publish endpoint.</param>
-    /// <param name="routingSlip">The routing slip.</param>
+    /// <summary>Creates a publisher from explicit send and publish capabilities.</summary>
+    /// <param name="sendEndpointProvider">The provider that resolves subscription destinations.</param>
+    /// <param name="publishEndpoint">The endpoint used for topology publication.</param>
+    /// <param name="routingSlip">The routing slip whose lifecycle events are routed.</param>
     public RoutingSlipEventPublisher(ISendEndpointProvider sendEndpointProvider, IPublishEndpoint publishEndpoint, RoutingSlip routingSlip)
     {
         ArgumentNullException.ThrowIfNull(sendEndpointProvider);
@@ -55,14 +53,15 @@ internal sealed class RoutingSlipEventPublisher :
 
     static IDictionary<string, object> CreateEmptyObject() => new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
-    /// <summary>Publishes routing slip completed.</summary>
-    /// <param name="timestamp">The timestamp.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="variables">The variables.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Routes the terminal completion event.</summary>
+    /// <param name="timestamp">The completion timestamp.</param>
+    /// <param name="duration">The total routing-slip duration.</param>
+    /// <param name="variables">The final routing-slip variables.</param>
+    /// <param name="cancellationToken">The token that cancels event delivery.</param>
+    /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     public Task PublishRoutingSlipCompletedAsync(DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables, CancellationToken cancellationToken = default)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThan(duration, TimeSpan.Zero);
         ArgumentNullException.ThrowIfNull(variables);
 
         return PublishEventAsync<RoutingSlipCompleted>(
@@ -75,16 +74,17 @@ internal sealed class RoutingSlipEventPublisher :
             cancellationToken);
     }
 
-    /// <summary>Publishes routing slip faulted.</summary>
-    /// <param name="timestamp">The timestamp.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="variables">The variables.</param>
-    /// <param name="exceptions">The exceptions.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Routes the terminal routing-slip failure event.</summary>
+    /// <param name="timestamp">The failure timestamp.</param>
+    /// <param name="duration">The total routing-slip duration before failure.</param>
+    /// <param name="variables">The routing-slip variables available at failure.</param>
+    /// <param name="exceptions">The recorded activity failures.</param>
+    /// <param name="cancellationToken">The token that cancels event delivery.</param>
+    /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     public Task PublishRoutingSlipFaultedAsync(DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables,
         IReadOnlyCollection<ActivityException> exceptions, CancellationToken cancellationToken = default)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThan(duration, TimeSpan.Zero);
         ArgumentNullException.ThrowIfNull(variables);
         ArgumentNullException.ThrowIfNull(exceptions);
 
@@ -99,21 +99,21 @@ internal sealed class RoutingSlipEventPublisher :
             cancellationToken);
     }
 
-    /// <summary>Publishes routing slip activity completed.</summary>
-    /// <param name="activityName">The activity name.</param>
-    /// <param name="executionId">The execution id.</param>
-    /// <param name="timestamp">The timestamp.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="variables">The variables.</param>
-    /// <param name="arguments">The arguments.</param>
-    /// <param name="data">The data.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Routes an activity-completion event.</summary>
+    /// <param name="activityName">The completed activity name.</param>
+    /// <param name="executionId">The activity execution identifier.</param>
+    /// <param name="timestamp">The completion timestamp.</param>
+    /// <param name="duration">The activity duration.</param>
+    /// <param name="variables">The routing-slip variables after completion.</param>
+    /// <param name="arguments">The activity arguments.</param>
+    /// <param name="data">The activity result data.</param>
+    /// <param name="cancellationToken">The token that cancels event delivery.</param>
+    /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     public Task PublishRoutingSlipActivityCompletedAsync(string activityName, Guid executionId,
         DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables, IDictionary<string, object> arguments,
         IDictionary<string, object> data, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(activityName);
+        ValidateActivityBoundary(activityName, executionId, duration);
         ArgumentNullException.ThrowIfNull(variables);
         ArgumentNullException.ThrowIfNull(arguments);
         ArgumentNullException.ThrowIfNull(data);
@@ -134,20 +134,20 @@ internal sealed class RoutingSlipEventPublisher :
             activityName);
     }
 
-    /// <summary>Publishes routing slip activity faulted.</summary>
-    /// <param name="activityName">The activity name.</param>
-    /// <param name="executionId">The execution id.</param>
-    /// <param name="timestamp">The timestamp.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="exceptionInfo">The exception info.</param>
-    /// <param name="variables">The variables.</param>
-    /// <param name="arguments">The arguments.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Routes an activity-failure event.</summary>
+    /// <param name="activityName">The failed activity name.</param>
+    /// <param name="executionId">The activity execution identifier.</param>
+    /// <param name="timestamp">The failure timestamp.</param>
+    /// <param name="duration">The activity duration before failure.</param>
+    /// <param name="exceptionInfo">The captured activity failure.</param>
+    /// <param name="variables">The routing-slip variables available at failure.</param>
+    /// <param name="arguments">The activity arguments.</param>
+    /// <param name="cancellationToken">The token that cancels event delivery.</param>
+    /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     public Task PublishRoutingSlipActivityFaultedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration, ExceptionInfo exceptionInfo,
         IDictionary<string, object> variables, IDictionary<string, object> arguments, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(activityName);
+        ValidateActivityBoundary(activityName, executionId, duration);
         ArgumentNullException.ThrowIfNull(exceptionInfo);
         ArgumentNullException.ThrowIfNull(variables);
         ArgumentNullException.ThrowIfNull(arguments);
@@ -168,19 +168,19 @@ internal sealed class RoutingSlipEventPublisher :
             activityName);
     }
 
-    /// <summary>Publishes routing slip activity compensated.</summary>
-    /// <param name="activityName">The activity name.</param>
-    /// <param name="executionId">The execution id.</param>
-    /// <param name="timestamp">The timestamp.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="variables">The variables.</param>
-    /// <param name="data">The data.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Routes an activity-compensation event.</summary>
+    /// <param name="activityName">The compensated activity name.</param>
+    /// <param name="executionId">The activity execution identifier.</param>
+    /// <param name="timestamp">The compensation timestamp.</param>
+    /// <param name="duration">The compensation duration.</param>
+    /// <param name="variables">The routing-slip variables after compensation.</param>
+    /// <param name="data">The compensation result data.</param>
+    /// <param name="cancellationToken">The token that cancels event delivery.</param>
+    /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     public Task PublishRoutingSlipActivityCompensatedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration,
         IDictionary<string, object> variables, IDictionary<string, object> data, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(activityName);
+        ValidateActivityBoundary(activityName, executionId, duration);
         ArgumentNullException.ThrowIfNull(variables);
         ArgumentNullException.ThrowIfNull(data);
 
@@ -199,21 +199,21 @@ internal sealed class RoutingSlipEventPublisher :
             activityName);
     }
 
-    /// <summary>Publishes routing slip revised.</summary>
-    /// <param name="activityName">The activity name.</param>
-    /// <param name="executionId">The execution id.</param>
-    /// <param name="timestamp">The timestamp.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="variables">The variables.</param>
-    /// <param name="itinerary">The itinerary.</param>
-    /// <param name="previousItinerary">The previous itinerary.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Routes an itinerary-revision event.</summary>
+    /// <param name="activityName">The activity that revised the itinerary.</param>
+    /// <param name="executionId">The activity execution identifier.</param>
+    /// <param name="timestamp">The revision timestamp.</param>
+    /// <param name="duration">The revising activity duration.</param>
+    /// <param name="variables">The routing-slip variables after revision.</param>
+    /// <param name="itinerary">The retained and appended itinerary.</param>
+    /// <param name="previousItinerary">The discarded itinerary.</param>
+    /// <param name="cancellationToken">The token that cancels event delivery.</param>
+    /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     public Task PublishRoutingSlipRevisedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration,
         IDictionary<string, object> variables,
         IList<Activity> itinerary, IList<Activity> previousItinerary, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(activityName);
+        ValidateActivityBoundary(activityName, executionId, duration);
         ArgumentNullException.ThrowIfNull(variables);
         ArgumentNullException.ThrowIfNull(itinerary);
         ArgumentNullException.ThrowIfNull(previousItinerary);
@@ -234,20 +234,20 @@ internal sealed class RoutingSlipEventPublisher :
             activityName);
     }
 
-    /// <summary>Publishes routing slip terminated.</summary>
-    /// <param name="activityName">The activity name.</param>
-    /// <param name="executionId">The execution id.</param>
-    /// <param name="timestamp">The timestamp.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="variables">The variables.</param>
-    /// <param name="previousItinerary">The previous itinerary.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Routes a routing-slip termination event.</summary>
+    /// <param name="activityName">The activity that terminated the routing slip.</param>
+    /// <param name="executionId">The activity execution identifier.</param>
+    /// <param name="timestamp">The termination timestamp.</param>
+    /// <param name="duration">The terminating activity duration.</param>
+    /// <param name="variables">The final routing-slip variables.</param>
+    /// <param name="previousItinerary">The itinerary discarded by termination.</param>
+    /// <param name="cancellationToken">The token that cancels event delivery.</param>
+    /// <returns>A task that completes after every selected delivery has been accepted.</returns>
     public Task PublishRoutingSlipTerminatedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration,
         IDictionary<string, object> variables,
         IList<Activity> previousItinerary, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(activityName);
+        ValidateActivityBoundary(activityName, executionId, duration);
         ArgumentNullException.ThrowIfNull(variables);
         ArgumentNullException.ThrowIfNull(previousItinerary);
 
@@ -266,23 +266,24 @@ internal sealed class RoutingSlipEventPublisher :
             activityName);
     }
 
-    /// <summary>Publishes routing slip activity compensation failed.</summary>
-    /// <param name="activityName">The activity name.</param>
-    /// <param name="executionId">The execution id.</param>
-    /// <param name="timestamp">The timestamp.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="failureTimestamp">The failure timestamp.</param>
-    /// <param name="routingSlipDuration">The routing slip duration.</param>
-    /// <param name="exceptionInfo">The exception info.</param>
-    /// <param name="variables">The variables.</param>
-    /// <param name="data">The data.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Routes both the activity-level and routing-slip-level compensation failure events.</summary>
+    /// <param name="activityName">The activity whose compensation failed.</param>
+    /// <param name="executionId">The activity execution identifier.</param>
+    /// <param name="timestamp">The activity compensation-failure timestamp.</param>
+    /// <param name="duration">The failed compensation duration.</param>
+    /// <param name="failureTimestamp">The routing-slip compensation-failure timestamp.</param>
+    /// <param name="routingSlipDuration">The total routing-slip duration before compensation failed.</param>
+    /// <param name="exceptionInfo">The captured compensation failure.</param>
+    /// <param name="variables">The routing-slip variables available at failure.</param>
+    /// <param name="data">The compensation data.</param>
+    /// <param name="cancellationToken">The token that cancels event delivery.</param>
+    /// <returns>A task that completes after both failure events have been routed.</returns>
     public Task PublishRoutingSlipActivityCompensationFailedAsync(string activityName, Guid executionId,
         DateTimeOffset timestamp, TimeSpan duration, DateTimeOffset failureTimestamp, TimeSpan routingSlipDuration,
         ExceptionInfo exceptionInfo, IDictionary<string, object> variables, IDictionary<string, object> data, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(activityName);
+        ValidateActivityBoundary(activityName, executionId, duration);
+        ArgumentOutOfRangeException.ThrowIfLessThan(routingSlipDuration, TimeSpan.Zero);
         ArgumentNullException.ThrowIfNull(exceptionInfo);
         ArgumentNullException.ThrowIfNull(variables);
         ArgumentNullException.ThrowIfNull(data);
@@ -332,7 +333,7 @@ internal sealed class RoutingSlipEventPublisher :
         Subscription subscription, string? activityName, CancellationToken cancellationToken)
         where T : class
     {
-        if ((subscription.Events & EventMask) == RoutingSlipEvents.All || subscription.Events.HasFlag(eventFlag))
+        if (subscription.Events.HasFlag(eventFlag))
         {
             if (activityName is null
                 || string.IsNullOrWhiteSpace(subscription.ActivityName)
@@ -355,11 +356,18 @@ internal sealed class RoutingSlipEventPublisher :
         }
     }
 
-    static bool Includes(RoutingSlipEventContents contents, RoutingSlipEventContents value) =>
-        contents == RoutingSlipEventContents.All || contents.HasFlag(value);
+    static bool Includes(RoutingSlipEventContents contents, RoutingSlipEventContents value) => contents.HasFlag(value);
+
+    static void ValidateActivityBoundary(string activityName, Guid executionId, TimeSpan duration)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(activityName);
+        if (executionId == Guid.Empty)
+            throw new ArgumentException("The activity execution identifier cannot be empty.", nameof(executionId));
+        ArgumentOutOfRangeException.ThrowIfLessThan(duration, TimeSpan.Zero);
+    }
 
 
-    class MessageEnvelopeContextAdapter<T> :
+    sealed class MessageEnvelopeContextAdapter<T> :
         IPipe<SendContext<T>>
         where T : class
     {
@@ -368,12 +376,13 @@ internal sealed class RoutingSlipEventPublisher :
 
         public MessageEnvelopeContextAdapter(SerializerContext context, MessageEnvelope envelope)
         {
-            _context = context;
-            _envelope = envelope;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _envelope = envelope ?? throw new ArgumentNullException(nameof(envelope));
         }
 
         public Task SendAsync(SendContext<T> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             context.Serializer = _context.GetMessageSerializer(_envelope, context.Message);
 
             return Task.CompletedTask;
@@ -381,6 +390,8 @@ internal sealed class RoutingSlipEventPublisher :
 
         public void Probe(ProbeContext context)
         {
+            ArgumentNullException.ThrowIfNull(context);
+            context.CreateFilterScope("routingSlipSubscriptionEnvelope");
         }
     }
 }

@@ -52,48 +52,48 @@ public interface IItineraryBuilder
     /// <returns>The number of activities added to the itinerary.</returns>
     int AddActivitiesFromSourceItinerary();
 
-    /// <summary>Adds a subscription for the selected routing-slip events.</summary>
-    /// <param name="address">The destination address where the events are sent.</param>
-    /// <param name="events">The events to include in the subscription.</param>
+    /// <summary>Adds a subscription that receives all optional content for selected lifecycle events.</summary>
+    /// <param name="address">The subscription destination.</param>
+    /// <param name="events">The non-empty lifecycle-event selection.</param>
     void AddSubscription(Uri address, RoutingSlipEvents events);
 
-    /// <summary>Adds a subscription with an explicit event payload selection.</summary>
-    /// <param name="address">The destination address where the events are sent.</param>
-    /// <param name="events">The events to include in the subscription.</param>
-    /// <param name="contents">The routing-slip data included in each subscribed event.</param>
+    /// <summary>Adds a subscription with an explicit optional-content selection.</summary>
+    /// <param name="address">The subscription destination.</param>
+    /// <param name="events">The non-empty lifecycle-event selection.</param>
+    /// <param name="contents">The optional routing-slip data included in delivered events.</param>
     void AddSubscription(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents);
 
-    /// <summary>Adds a message subscription to the routing slip that will be sent at the specified event points.</summary>
+    /// <summary>Captures custom subscription messages for selected lifecycle events.</summary>
     /// <param name="address">The subscription destination.</param>
-    /// <param name="events">The routing-slip events that trigger the subscription.</param>
-    /// <param name="callback">The callback that configures the subscription message.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="events">The non-empty lifecycle-event selection.</param>
+    /// <param name="callback">The asynchronous callback that sends custom messages into the builder.</param>
+    /// <param name="cancellationToken">The token that cancels subscription-message creation.</param>
+    /// <returns>A task that completes after the callback and its message captures complete.</returns>
     Task AddSubscriptionAsync(Uri address, RoutingSlipEvents events, Func<ISendEndpoint, Task> callback, CancellationToken cancellationToken = default);
 
-    /// <summary>Adds a message subscription to the routing slip that will be sent at the specified event points.</summary>
+    /// <summary>Captures custom subscription messages with an explicit optional-content selection.</summary>
     /// <param name="address">The subscription destination.</param>
-    /// <param name="events">The routing-slip events that trigger the subscription.</param>
-    /// <param name="contents">The routing-slip data included in each subscribed event.</param>
-    /// <param name="callback">The callback that configures the subscription message.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="events">The non-empty lifecycle-event selection.</param>
+    /// <param name="contents">The optional routing-slip data included in delivered events.</param>
+    /// <param name="callback">The asynchronous callback that sends custom messages into the builder.</param>
+    /// <param name="cancellationToken">The token that cancels subscription-message creation.</param>
+    /// <returns>A task that completes after the callback and its message captures complete.</returns>
     Task AddSubscriptionAsync(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, Func<ISendEndpoint, Task> callback, CancellationToken cancellationToken = default);
 
-    /// <summary>Adds an activity-specific subscription with an explicit event payload selection.</summary>
-    /// <param name="address">The destination address where the events are sent.</param>
-    /// <param name="events">The events to include in the subscription.</param>
-    /// <param name="contents">The routing-slip data included in each subscribed event.</param>
-    /// <param name="activityName">The activity whose events trigger the subscription.</param>
+    /// <summary>Adds an activity-filtered subscription with an explicit optional-content selection.</summary>
+    /// <param name="address">The subscription destination.</param>
+    /// <param name="events">The non-empty lifecycle-event selection.</param>
+    /// <param name="contents">The optional routing-slip data included in delivered events.</param>
+    /// <param name="activityName">The non-empty activity name that limits delivery.</param>
     void AddSubscription(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, string activityName);
 
-    /// <summary>Adds a message subscription to the routing slip that will be sent at the specified event points.</summary>
+    /// <summary>Captures activity-filtered custom subscription messages.</summary>
     /// <param name="address">The subscription destination.</param>
-    /// <param name="events">The routing-slip events that trigger the subscription.</param>
-    /// <param name="contents">The routing-slip data included in each subscribed event.</param>
-    /// <param name="activityName">The activity whose events trigger the subscription.</param>
-    /// <param name="callback">The callback that configures the subscription message.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="events">The non-empty lifecycle-event selection.</param>
+    /// <param name="contents">The optional routing-slip data included in delivered events.</param>
+    /// <param name="activityName">The non-empty activity name that limits delivery.</param>
+    /// <param name="callback">The asynchronous callback that sends custom messages into the builder.</param>
+    /// <param name="cancellationToken">The token that cancels subscription-message creation.</param>
+    /// <returns>A task that completes after the callback and its message captures complete.</returns>
     Task AddSubscriptionAsync(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, string activityName, Func<ISendEndpoint, Task> callback, CancellationToken cancellationToken = default);
 }

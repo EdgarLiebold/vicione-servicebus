@@ -1108,11 +1108,11 @@ TYPE interface public ViciOne.ServiceBus.Advanced.RoutingKeySendContext
   PROPERTY System.String RoutingKey { public-get; public-set; }
 TYPE enum public ViciOne.ServiceBus.Advanced.RoutingSlipEventContents
   FIELD public System.Int32 value__
-  FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEventContents All = 0
+  FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEventContents All = 15
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEventContents Arguments = 2
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEventContents Data = 4
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEventContents Itinerary = 8
-  FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEventContents None = 256
+  FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEventContents None = 0
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEventContents Variables = 1
 TYPE enum public ViciOne.ServiceBus.Advanced.RoutingSlipEvents
   FIELD public System.Int32 value__
@@ -1120,10 +1120,11 @@ TYPE enum public ViciOne.ServiceBus.Advanced.RoutingSlipEvents
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents ActivityCompensationFailed = 2048
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents ActivityCompleted = 256
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents ActivityFaulted = 512
-  FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents All = 0
+  FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents All = 3871
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents CompensationFailed = 4
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents Completed = 1
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents Faulted = 2
+  FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents None = 0
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents Revised = 16
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents Supplemental = 65536
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents Terminated = 8
@@ -2254,7 +2255,7 @@ TYPE class public ViciOne.ServiceBus.ConfigurationException [base=ViciOne.Servic
   CTOR public ViciOne.ServiceBus.ConfigurationException(System.String message)
   CTOR public ViciOne.ServiceBus.ConfigurationException(System.String message, System.Exception innerException)
   PROPERTY System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Results { public-get; protected-set; }
-TYPE class public ViciOne.ServiceBus.ConfigureConsumeTopologyAttribute [base=System.Attribute]
+TYPE class public ViciOne.ServiceBus.ConfigureConsumeTopologyAttribute [sealed,base=System.Attribute]
   CTOR public ViciOne.ServiceBus.ConfigureConsumeTopologyAttribute()
   CTOR public ViciOne.ServiceBus.ConfigureConsumeTopologyAttribute(System.Boolean configureConsumeTopology)
   PROPERTY System.Boolean ConfigureConsumeTopology { public-get;  }
@@ -2537,7 +2538,7 @@ TYPE class public ViciOne.ServiceBus.EndpointNotFoundException [base=ViciOne.Ser
   CTOR public ViciOne.ServiceBus.EndpointNotFoundException()
   CTOR public ViciOne.ServiceBus.EndpointNotFoundException(System.String message)
   CTOR public ViciOne.ServiceBus.EndpointNotFoundException(System.String message, System.Exception innerException)
-TYPE class public ViciOne.ServiceBus.EntityNameAttribute [base=System.Attribute]
+TYPE class public ViciOne.ServiceBus.EntityNameAttribute [sealed,base=System.Attribute]
   CTOR public ViciOne.ServiceBus.EntityNameAttribute(System.String entityName)
   PROPERTY System.String EntityName { public-get;  }
 TYPE class public ViciOne.ServiceBus.EventExecutionException [base=ViciOne.ServiceBus.SagaStateMachineException]
@@ -2557,11 +2558,11 @@ TYPE class public ViciOne.ServiceBus.ExceptionInfoException [base=ViciOne.Servic
   PROPERTY System.String Source { public-get;  }
   PROPERTY System.String StackTrace { public-get;  }
   PROPERTY ViciOne.ServiceBus.ExceptionInfo ExceptionInfo { public-get;  }
-TYPE class public ViciOne.ServiceBus.ExcludeFromConfigureEndpointsAttribute [base=System.Attribute]
+TYPE class public ViciOne.ServiceBus.ExcludeFromConfigureEndpointsAttribute [sealed,base=System.Attribute]
   CTOR public ViciOne.ServiceBus.ExcludeFromConfigureEndpointsAttribute()
-TYPE class public ViciOne.ServiceBus.ExcludeFromImplementedTypesAttribute [base=System.Attribute]
+TYPE class public ViciOne.ServiceBus.ExcludeFromImplementedTypesAttribute [sealed,base=System.Attribute]
   CTOR public ViciOne.ServiceBus.ExcludeFromImplementedTypesAttribute()
-TYPE class public ViciOne.ServiceBus.ExcludeFromTopologyAttribute [base=System.Attribute]
+TYPE class public ViciOne.ServiceBus.ExcludeFromTopologyAttribute [sealed,base=System.Attribute]
   CTOR public ViciOne.ServiceBus.ExcludeFromTopologyAttribute()
 TYPE interface public ViciOne.ServiceBus.Fault
   PROPERTY System.DateTimeOffset Timestamp { public-get;  }
@@ -2572,7 +2573,7 @@ TYPE interface public ViciOne.ServiceBus.Fault
   PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Fault<T>
   PROPERTY T Message { public-get;  }
-TYPE class public ViciOne.ServiceBus.FaultEntityNameAttribute [base=System.Attribute]
+TYPE class public ViciOne.ServiceBus.FaultEntityNameAttribute [sealed,base=System.Attribute]
   CTOR public ViciOne.ServiceBus.FaultEntityNameAttribute(System.String entityName)
   PROPERTY System.String EntityName { public-get;  }
 TYPE class public ViciOne.ServiceBus.FutureNotFoundException [base=ViciOne.ServiceBus.ViciOneServiceBusException]
@@ -2629,7 +2630,7 @@ TYPE interface public ViciOne.ServiceBus.ISendEndpoint
   METHOD public abstract System.Threading.Tasks.Task SendAsync<T>(T message, ViciOne.ServiceBus.SendOptions options, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.ISendEndpointProvider
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetSendEndpointAsync(System.Uri address, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.IndexedAttribute [base=System.Attribute]
+TYPE class public ViciOne.ServiceBus.IndexedAttribute [sealed,base=System.Attribute]
   CTOR public ViciOne.ServiceBus.IndexedAttribute()
 TYPE interface public ViciOne.ServiceBus.Initializers.IInitializerVariable<T>
   METHOD public abstract System.Threading.Tasks.Task<T> GetValueAsync<TMessage>(ViciOne.ServiceBus.Initializers.InitializeContext<TMessage> context, System.Threading.CancellationToken cancellationToken = null)
@@ -2795,7 +2796,7 @@ TYPE class public ViciOne.ServiceBus.MessageTooLargeException [sealed,base=Syste
   PROPERTY System.Int64 ActualBytes { public-get;  }
   PROPERTY System.Int64 MaximumBytes { public-get;  }
   PROPERTY System.Uri InputAddress { public-get;  }
-TYPE class public ViciOne.ServiceBus.MessageUrnAttribute [base=System.Attribute]
+TYPE class public ViciOne.ServiceBus.MessageUrnAttribute [sealed,base=System.Attribute]
   CTOR public ViciOne.ServiceBus.MessageUrnAttribute(System.String urn, System.Boolean useDefaultPrefix = true)
   PROPERTY System.Uri Urn { public-get;  }
 TYPE class public ViciOne.ServiceBus.Metadata.Activation [static]
@@ -7490,15 +7491,6 @@ TYPE interface public ViciOne.ServiceBus.Courier.IRoutingSlipBuilder
   METHOD public abstract ViciOne.ServiceBus.Courier.Contracts.RoutingSlip Build()
 TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipBuilder [sealed]
   CTOR public ViciOne.ServiceBus.Courier.RoutingSlipBuilder(System.Guid trackingNumber, System.TimeProvider timeProvider = null)
-  CTOR public ViciOne.ServiceBus.Courier.RoutingSlipBuilder(ViciOne.ServiceBus.Courier.Contracts.RoutingSlip routingSlip, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.Activity> itinerary, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.Activity> sourceItinerary)
-  CTOR public ViciOne.ServiceBus.Courier.RoutingSlipBuilder(ViciOne.ServiceBus.Courier.Contracts.RoutingSlip routingSlip, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.CompensateLog> compensateLogs)
-  CTOR public ViciOne.ServiceBus.Courier.RoutingSlipBuilder(ViciOne.ServiceBus.Courier.Contracts.RoutingSlip routingSlip, System.Func<System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.Activity>,System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.Activity>> activitySelector)
-  METHOD public System.Void AddActivityException(ViciOne.ServiceBus.Courier.Contracts.ActivityException activityException)
-  METHOD public System.Void AddActivityException(ViciOne.ServiceBus.HostInfo host, System.String name, System.Guid activityTrackingNumber, System.DateTimeOffset timestamp, System.TimeSpan elapsed, System.Exception exception)
-  METHOD public System.Void AddActivityException(ViciOne.ServiceBus.HostInfo host, System.String name, System.Guid activityTrackingNumber, System.DateTimeOffset timestamp, System.TimeSpan elapsed, ViciOne.ServiceBus.ExceptionInfo exceptionInfo)
-  METHOD public System.Void AddActivityLog(ViciOne.ServiceBus.HostInfo host, System.String name, System.Guid activityTrackingNumber, System.DateTimeOffset timestamp, System.TimeSpan duration)
-  METHOD public System.Void AddCompensateLog(System.Guid activityTrackingNumber, System.Uri compensateAddress, System.Collections.Generic.IDictionary<System.String,System.Object> data)
-  METHOD public static System.Collections.Generic.IDictionary<System.String,System.Object> GetObjectAsDictionary(System.Object values)
   METHOD public virtual System.Int32 AddActivitiesFromSourceItinerary()
   METHOD public virtual System.Threading.Tasks.Task AddSubscriptionAsync(System.Uri address, ViciOne.ServiceBus.Advanced.RoutingSlipEvents events, System.Func<ViciOne.ServiceBus.ISendEndpoint,System.Threading.Tasks.Task> callback, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Threading.Tasks.Task AddSubscriptionAsync(System.Uri address, ViciOne.ServiceBus.Advanced.RoutingSlipEvents events, ViciOne.ServiceBus.Advanced.RoutingSlipEventContents contents, System.Func<ViciOne.ServiceBus.ISendEndpoint,System.Threading.Tasks.Task> callback, System.Threading.CancellationToken cancellationToken = null)
@@ -7514,7 +7506,6 @@ TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipBuilder [sealed]
   METHOD public virtual System.Void SetVariables(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> values)
   METHOD public virtual System.Void SetVariables(System.Object values)
   METHOD public virtual ViciOne.ServiceBus.Courier.Contracts.RoutingSlip Build()
-  PROPERTY System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.Activity> SourceItinerary { public-get;  }
   PROPERTY System.Guid TrackingNumber { public-get;  }
 TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipEventExtensions [static]
   METHOD public static System.Nullable<T> GetArgument<T>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlipActivityCompleted> context, System.String key, System.Nullable<T> defaultValue = null)

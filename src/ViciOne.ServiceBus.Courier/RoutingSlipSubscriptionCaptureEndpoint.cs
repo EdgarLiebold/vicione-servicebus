@@ -3,49 +3,52 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Courier.Contracts;
+using ViciOne.ServiceBus.Courier.Messages;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Courier;
 
-/// <summary>Captures one custom subscription message into a routing-slip builder.</summary>
-internal sealed class RoutingSlipBuilderSendEndpoint :
+/// <summary>Provides the send-endpoint pipeline used to capture custom routing-slip subscription messages.</summary>
+internal sealed class RoutingSlipSubscriptionCaptureEndpoint :
     ISendEndpoint,
     Advanced.IAdvancedSendEndpoint
 {
     readonly string? _activityName;
-    readonly IRoutingSlipSendEndpointTarget _builder;
+    readonly IRoutingSlipSubscriptionTarget _target;
     readonly Uri _destinationAddress;
     readonly RoutingSlipEvents _events;
-    readonly RoutingSlipEventContents _include;
+    readonly RoutingSlipEventContents _contents;
     readonly SendObservable _observers;
 
-    /// <summary>Initializes an endpoint that records sent messages as routing-slip subscriptions.</summary>
-    /// <param name="builder">The builder that receives the configuration.</param>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="events">The events.</param>
-    /// <param name="activityName">The activity name.</param>
-    /// <param name="include">The include.</param>
-    public RoutingSlipBuilderSendEndpoint(IRoutingSlipSendEndpointTarget builder, Uri destinationAddress, RoutingSlipEvents events, string? activityName,
-        RoutingSlipEventContents include = RoutingSlipEventContents.All)
+    /// <summary>Creates an endpoint that captures messages as routing-slip subscriptions.</summary>
+    /// <param name="target">The routing-slip target that receives captured messages.</param>
+    /// <param name="destinationAddress">The destination that receives matching lifecycle events.</param>
+    /// <param name="events">The non-empty lifecycle-event selection.</param>
+    /// <param name="activityName">The activity-name filter, when configured.</param>
+    /// <param name="contents">The optional routing-slip data included in delivered events.</param>
+    internal RoutingSlipSubscriptionCaptureEndpoint(IRoutingSlipSubscriptionTarget target, Uri destinationAddress, RoutingSlipEvents events,
+        string? activityName, RoutingSlipEventContents contents = RoutingSlipEventContents.All)
     {
-        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(target);
         ArgumentNullException.ThrowIfNull(destinationAddress);
+        if (activityName is not null)
+            ArgumentException.ThrowIfNullOrWhiteSpace(activityName);
 
         _observers = new SendObservable();
-        _builder = builder;
-        _events = events;
+        _target = target;
+        _events = RoutingSlipSubscriptionSelection.Validate(events, nameof(events));
         _activityName = activityName;
-        _include = include;
+        _contents = RoutingSlipSubscriptionSelection.Validate(contents, nameof(contents));
         _destinationAddress = destinationAddress;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Captures a typed subscription message without additional send-pipeline configuration.</summary>
     /// <typeparam name="T">The message contract type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="message">The subscription message to capture.</param>
+    /// <param name="cancellationToken">The token that cancels message capture.</param>
+    /// <returns>A task that completes after the subscription message has been captured.</returns>
     public Task SendAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
@@ -54,12 +57,12 @@ internal sealed class RoutingSlipBuilderSendEndpoint :
         return SendAsync(message, Pipe.Empty<SendContext<T>>(), cancellationToken);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Runs the typed send pipeline and captures its serialized subscription message.</summary>
     /// <typeparam name="T">The message contract type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="message">The subscription message to capture.</param>
+    /// <param name="pipe">The send pipeline that configures the message context.</param>
+    /// <param name="cancellationToken">The token that cancels message capture.</param>
+    /// <returns>A task that completes after observer notification, pipeline execution, and message capture.</returns>
     public async Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -75,7 +78,7 @@ internal sealed class RoutingSlipBuilderSendEndpoint :
 
             await pipe.SendAsync(context).ConfigureAwait(false);
 
-            _builder.AddSubscription(_destinationAddress, _events, _include, _activityName, context.GetMessageEnvelope());
+            _target.AddSubscription(_destinationAddress, _events, _contents, _activityName, context.GetMessageEnvelope());
 
             if (_observers.Count > 0)
                 await _observers.PostSendAsync(context).ConfigureAwait(false);
@@ -89,12 +92,12 @@ internal sealed class RoutingSlipBuilderSendEndpoint :
         }
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Runs an untyped send pipeline for a typed message and captures the result.</summary>
     /// <typeparam name="T">The message contract type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="message">The subscription message to capture.</param>
+    /// <param name="pipe">The send pipeline that configures the message context.</param>
+    /// <param name="cancellationToken">The token that cancels message capture.</param>
+    /// <returns>A task that completes after the subscription message has been captured.</returns>
     public Task SendAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -104,10 +107,10 @@ internal sealed class RoutingSlipBuilderSendEndpoint :
         return SendAsync(message, (IPipe<SendContext<T>>)pipe, cancellationToken);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Captures a subscription message using its runtime contract type.</summary>
+    /// <param name="message">The subscription message to capture.</param>
+    /// <param name="cancellationToken">The token that cancels message capture.</param>
+    /// <returns>A task that completes after the subscription message has been captured.</returns>
     public Task SendAsync(object message, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -117,11 +120,11 @@ internal sealed class RoutingSlipBuilderSendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Captures a subscription message using an explicit runtime contract type.</summary>
+    /// <param name="message">The subscription message to capture.</param>
     /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="cancellationToken">The token that cancels message capture.</param>
+    /// <returns>A task that completes after the subscription message has been captured.</returns>
     public Task SendAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -130,11 +133,11 @@ internal sealed class RoutingSlipBuilderSendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Runs an untyped send pipeline and captures a message using its runtime contract type.</summary>
+    /// <param name="message">The subscription message to capture.</param>
+    /// <param name="pipe">The send pipeline that configures the message context.</param>
+    /// <param name="cancellationToken">The token that cancels message capture.</param>
+    /// <returns>A task that completes after the subscription message has been captured.</returns>
     public Task SendAsync(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -145,12 +148,12 @@ internal sealed class RoutingSlipBuilderSendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Runs an untyped send pipeline and captures a message using an explicit runtime contract type.</summary>
+    /// <param name="message">The subscription message to capture.</param>
     /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="pipe">The send pipeline that configures the message context.</param>
+    /// <param name="cancellationToken">The token that cancels message capture.</param>
+    /// <returns>A task that completes after the subscription message has been captured.</returns>
     public Task SendAsync(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -160,11 +163,11 @@ internal sealed class RoutingSlipBuilderSendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Initializes and captures a typed subscription message from object values.</summary>
     /// <typeparam name="T">The message contract type to initialize.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="values">The values used to initialize the message contract.</param>
+    /// <param name="cancellationToken">The token that cancels initialization and message capture.</param>
+    /// <returns>A task that completes after the initialized message has been captured.</returns>
     public async Task SendAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
@@ -176,12 +179,12 @@ internal sealed class RoutingSlipBuilderSendEndpoint :
         await SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Initializes a typed subscription message, applies a typed pipeline, and captures the result.</summary>
     /// <typeparam name="T">The message contract type to initialize.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="values">The values used to initialize the message contract.</param>
+    /// <param name="pipe">The typed send pipeline appended to initialization.</param>
+    /// <param name="cancellationToken">The token that cancels initialization and message capture.</param>
+    /// <returns>A task that completes after the initialized message has been captured.</returns>
     public async Task SendAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -194,12 +197,12 @@ internal sealed class RoutingSlipBuilderSendEndpoint :
         await SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Initializes a typed subscription message, applies an untyped pipeline, and captures the result.</summary>
     /// <typeparam name="T">The message contract type to initialize.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="values">The values used to initialize the message contract.</param>
+    /// <param name="pipe">The untyped send pipeline appended to initialization.</param>
+    /// <param name="cancellationToken">The token that cancels initialization and message capture.</param>
+    /// <returns>A task that completes after the initialized message has been captured.</returns>
     public async Task SendAsync<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -212,7 +215,7 @@ internal sealed class RoutingSlipBuilderSendEndpoint :
         await SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Connects an observer to subscription-message send operations.</summary>
+    /// <summary>Connects an observer to the subscription-message capture lifecycle.</summary>
     /// <param name="observer">The observer to connect.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
