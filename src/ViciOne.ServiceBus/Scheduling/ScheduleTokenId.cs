@@ -1,14 +1,17 @@
+using System;
+
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>Represents the identifier for schedule token.</summary>
+/// <summary>Configures how scheduling tokens are obtained from message contracts.</summary>
 public static class ScheduleTokenId
 {
-    /// <summary>Configures token id for the current pipeline.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="tokenIdSelector">The token id selector.</param>
-    public static void UseTokenId<T>(ScheduleTokenIdCache<T>.TokenIdSelector tokenIdSelector)
+    /// <summary>Registers the process-wide token selector for a message contract.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="tokenIdSelector">Returns an existing scheduling token, or <see langword="null" /> to generate one.</param>
+    public static void UseTokenId<T>(Func<T, Guid?> tokenIdSelector)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(tokenIdSelector);
         ScheduleTokenIdCache<T>.UseTokenId(tokenIdSelector);
     }
 }

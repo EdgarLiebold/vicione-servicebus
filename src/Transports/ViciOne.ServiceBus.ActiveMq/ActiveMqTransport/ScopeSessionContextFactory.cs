@@ -74,7 +74,7 @@ public class ScopeSessionContextFactory :
     }
 
     IActivePipeContextAgent<SessionContext> IPipeContextFactory<SessionContext>.CreateActiveContext(ISupervisor supervisor,
-        PipeContextHandle<SessionContext> context, CancellationToken cancellationToken)
+        IPipeContextHandle<SessionContext> context, CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedSessionAsync(context.Context, cancellationToken));
     }

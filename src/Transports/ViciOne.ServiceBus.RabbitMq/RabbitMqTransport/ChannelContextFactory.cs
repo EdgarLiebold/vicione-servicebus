@@ -86,7 +86,7 @@ public class ChannelContextFactory :
     /// <param name="context">The handle for the shared channel context.</param>
     /// <param name="cancellationToken">Cancellation linked to the scoped view.</param>
     /// <returns>The active scoped context agent.</returns>
-    public IActivePipeContextAgent<ChannelContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ChannelContext> context,
+    public IActivePipeContextAgent<ChannelContext> CreateActiveContext(ISupervisor supervisor, IPipeContextHandle<ChannelContext> context,
         CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedChannelAsync(context.Context, cancellationToken));

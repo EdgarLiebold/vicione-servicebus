@@ -20,9 +20,9 @@ public sealed class AsyncPipeContextHandle<TContext> :
         _inactive = TaskCompletionSources.Create();
     }
 
-    bool PipeContextHandle<TContext>.IsDisposed => _inactive.Task.IsCompleted;
+    bool IPipeContextHandle<TContext>.IsDisposed => _inactive.Task.IsCompleted;
 
-    Task<TContext> PipeContextHandle<TContext>.Context => _context.Task;
+    Task<TContext> IPipeContextHandle<TContext>.Context => _context.Task;
 
     /// <summary>Gets the task that completes when the handle is disposed or faults when the context is invalidated.</summary>
     public Task Completion => _inactive.Task;

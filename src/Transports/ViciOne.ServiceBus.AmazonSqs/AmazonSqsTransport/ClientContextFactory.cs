@@ -36,7 +36,7 @@ public class ClientContextFactory :
     /// <param name="cancellationToken">The operation cancellation token assigned to the scoped context.</param>
     /// <returns>The active scoped-context agent.</returns>
     public IActivePipeContextAgent<ClientContext> CreateActiveContext(ISupervisor supervisor,
-        PipeContextHandle<ClientContext> context, CancellationToken cancellationToken)
+        IPipeContextHandle<ClientContext> context, CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedClientContextAsync(context.Context, cancellationToken));
     }

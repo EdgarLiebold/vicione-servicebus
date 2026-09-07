@@ -2,30 +2,32 @@ using System;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>Carries the command for resume scheduled recurring message.</summary>
-public class ResumeScheduledRecurringMessageCommand :
+/// <summary>Requests resumption of a recurring schedule.</summary>
+public sealed class ResumeScheduledRecurringMessageCommand :
     ResumeScheduledRecurringMessage
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty command for deserialization.</summary>
     public ResumeScheduledRecurringMessageCommand()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="scheduleId">The schedule id.</param>
+    /// <summary>Creates a recurring-schedule resumption command.</summary>
+    /// <param name="scheduleId">The schedule identifier.</param>
     /// <param name="scheduleGroup">The schedule group.</param>
-    /// <param name="timestamp">The timestamp.</param>
+    /// <param name="timestamp">The time at which resumption was requested.</param>
     public ResumeScheduledRecurringMessageCommand(string scheduleId, string scheduleGroup, DateTimeOffset timestamp)
     {
-        Timestamp = timestamp;
+        ArgumentException.ThrowIfNullOrWhiteSpace(scheduleId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(scheduleGroup);
 
+        Timestamp = timestamp;
         ScheduleId = scheduleId;
         ScheduleGroup = scheduleGroup;
     }
 
-    /// <summary>Gets or sets the timestamp.</summary>
+    /// <summary>Gets or sets the time at which resumption was requested.</summary>
     public DateTimeOffset Timestamp { get; set; }
-    /// <summary>Gets or sets the schedule id.</summary>
+    /// <summary>Gets or sets the schedule identifier.</summary>
     public string ScheduleId { get; set; } = null!;
     /// <summary>Gets or sets the schedule group.</summary>
     public string ScheduleGroup { get; set; } = null!;

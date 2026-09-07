@@ -153,7 +153,7 @@ public sealed class PipeContextSupervisorFailureTests
 
         public IActivePipeContextAgent<LifecycleContext> CreateActiveContext(
             ISupervisor supervisor,
-            PipeContextHandle<LifecycleContext> context,
+            IPipeContextHandle<LifecycleContext> context,
             CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested(); ActiveContext = new RecordingActiveContext(context.Context, _events, _faultThrows, _stopThrows, _disposeThrows);

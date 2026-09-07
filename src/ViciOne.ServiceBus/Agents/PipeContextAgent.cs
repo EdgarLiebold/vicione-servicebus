@@ -34,9 +34,9 @@ public sealed class PipeContextAgent<TContext> :
         SetReady(_context);
     }
 
-    bool PipeContextHandle<TContext>.IsDisposed => Volatile.Read(ref _disposeStarted) != 0;
+    bool IPipeContextHandle<TContext>.IsDisposed => Volatile.Read(ref _disposeStarted) != 0;
 
-    Task<TContext> PipeContextHandle<TContext>.Context => _context;
+    Task<TContext> IPipeContextHandle<TContext>.Context => _context;
 
     /// <inheritdoc />
     public ValueTask DisposeAsync()

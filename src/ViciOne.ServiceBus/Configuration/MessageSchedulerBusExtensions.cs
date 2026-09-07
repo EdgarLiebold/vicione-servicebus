@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Scheduling;
 
@@ -22,12 +23,12 @@ public static class MessageSchedulerBusExtensions
     /// <returns>The created message scheduler.</returns>
     public static IMessageScheduler CreateMessageScheduler(this IBus bus, Uri schedulerEndpointAddress, TimeProvider? timeProvider = null)
     {
-        Task<ISendEndpoint> GetSchedulerEndpointAsync()
+        Task<ISendEndpoint> GetSchedulerEndpointAsync(CancellationToken cancellationToken)
         {
-            return bus.GetSendEndpointAsync(schedulerEndpointAddress);
+            return bus.GetSendEndpointAsync(schedulerEndpointAddress, cancellationToken: cancellationToken);
         }
 
-        return new MessageScheduler(new EndpointScheduleMessageProvider(GetSchedulerEndpointAsync), bus.Topology, timeProvider);
+        return new MessageScheduler(new EndpointScheduleMessageProvider(GetSchedulerEndpointAsync, timeProvider), bus.Topology, timeProvider);
     }
 
     /// <summary>
@@ -44,12 +45,12 @@ public static class MessageSchedulerBusExtensions
     public static IMessageScheduler CreateMessageScheduler(this ISendEndpointProvider sendEndpointProvider, IBusTopology busTopology,
         Uri schedulerEndpointAddress, TimeProvider? timeProvider = null)
     {
-        Task<ISendEndpoint> GetSchedulerEndpointAsync()
+        Task<ISendEndpoint> GetSchedulerEndpointAsync(CancellationToken cancellationToken)
         {
-            return sendEndpointProvider.GetSendEndpointAsync(schedulerEndpointAddress);
+            return sendEndpointProvider.GetSendEndpointAsync(schedulerEndpointAddress, cancellationToken: cancellationToken);
         }
 
-        return new MessageScheduler(new EndpointScheduleMessageProvider(GetSchedulerEndpointAsync), busTopology, timeProvider);
+        return new MessageScheduler(new EndpointScheduleMessageProvider(GetSchedulerEndpointAsync, timeProvider), busTopology, timeProvider);
     }
 
     /// <summary>
@@ -64,7 +65,7 @@ public static class MessageSchedulerBusExtensions
     /// <returns>The created message scheduler.</returns>
     public static IMessageScheduler CreateMessageScheduler(this IBus bus, TimeProvider? timeProvider = null)
     {
-        return new MessageScheduler(new PublishScheduleMessageProvider(bus), bus.Topology, timeProvider);
+        return new MessageScheduler(new PublishScheduleMessageProvider(bus, timeProvider), bus.Topology, timeProvider);
     }
 
     /// <summary>
@@ -80,7 +81,7 @@ public static class MessageSchedulerBusExtensions
     /// <returns>The created message scheduler.</returns>
     public static IMessageScheduler CreateMessageScheduler(this IPublishEndpoint publishEndpoint, IBusTopology busTopology, TimeProvider? timeProvider = null)
     {
-        return new MessageScheduler(new PublishScheduleMessageProvider(publishEndpoint), busTopology, timeProvider);
+        return new MessageScheduler(new PublishScheduleMessageProvider(publishEndpoint, timeProvider), busTopology, timeProvider);
     }
 
     /// <summary>

@@ -7,13 +7,13 @@ using ViciOne.ServiceBus.Initializers.TypeConverters;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>Serializes and deserializes system text json message data.</summary>
-public class SystemTextJsonMessageSerializer :
+/// <summary>Serializes and deserializes envelope-encoded messages with <see cref="JsonSerializer" />.</summary>
+public sealed class SystemTextJsonMessageSerializer :
     IMessageDeserializer,
     IMessageSerializer,
     IObjectDeserializer
 {
-    /// <summary>Exposes the json content type used by the containing type.</summary>
+    /// <summary>Gets the content type used for envelope-encoded JSON messages.</summary>
     public static readonly ContentType JsonContentType = new ContentType("application/vnd.vicione.servicebus+json");
 
     readonly JsonSerializerOptions _options;
@@ -59,7 +59,7 @@ public class SystemTextJsonMessageSerializer :
     {
         try
         {
-            JsonElement? bodyElement = body is JsonMessageBody jsonMessageBody
+            JsonElement? bodyElement = body is IJsonMessageBody jsonMessageBody
                 ? jsonMessageBody.GetJsonElement(_options)
                 : JsonSerializer.Deserialize<JsonElement>(body.GetBytes(), _options);
 
@@ -79,7 +79,7 @@ public class SystemTextJsonMessageSerializer :
         }
         catch (Exception ex)
         {
-            throw new SerializationException("An error occured while deserializing the message envelope", ex);
+            throw new SerializationException("An error occurred while deserializing the message envelope", ex);
         }
     }
 

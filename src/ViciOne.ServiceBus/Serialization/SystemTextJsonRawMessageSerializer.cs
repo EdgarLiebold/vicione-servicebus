@@ -5,13 +5,13 @@ using System.Text.Json;
 
 namespace ViciOne.ServiceBus.Serialization;
 
-/// <summary>Serializes and deserializes system text json raw message data.</summary>
-public class SystemTextJsonRawMessageSerializer :
+/// <summary>Serializes and deserializes raw JSON messages with <see cref="JsonSerializer" />.</summary>
+public sealed class SystemTextJsonRawMessageSerializer :
     RawMessageSerializer,
     IMessageDeserializer,
     IMessageSerializer
 {
-    /// <summary>Exposes the json content type used by the containing type.</summary>
+    /// <summary>Gets the content type used for raw JSON messages.</summary>
     public static readonly ContentType JsonContentType = new ContentType("application/json");
 
     readonly IObjectDeserializer _objectDeserializer;
@@ -61,7 +61,7 @@ public class SystemTextJsonRawMessageSerializer :
         try
         {
             JsonElement? bodyElement;
-            if (body is JsonMessageBody jsonMessageBody)
+            if (body is IJsonMessageBody jsonMessageBody)
                 bodyElement = jsonMessageBody.GetJsonElement(_serializerOptions);
             else
             {

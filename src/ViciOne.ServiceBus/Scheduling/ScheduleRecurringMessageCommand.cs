@@ -3,8 +3,8 @@ using System;
 namespace ViciOne.ServiceBus.Scheduling;
 
 /// <summary>Requests recurring delivery of a typed message.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class ScheduleRecurringMessageCommand<T> :
+/// <typeparam name="T">The message contract.</typeparam>
+public sealed class ScheduleRecurringMessageCommand<T> :
     ScheduleRecurringMessage
     where T : class
 {
@@ -26,13 +26,13 @@ public class ScheduleRecurringMessageCommand<T> :
     }
 
     /// <summary>Gets or sets the schedule.</summary>
-    public RecurringSchedule Schedule { get; private set; } = null!;
+    public RecurringSchedule Schedule { get; }
     /// <summary>Gets or sets the payload type.</summary>
-    public string[] PayloadType { get; private set; } = null!;
+    public string[] PayloadType { get; }
     /// <summary>Gets or sets the destination.</summary>
-    public Uri Destination { get; private set; } = null!;
+    public Uri Destination { get; }
     /// <summary>Gets or sets the payload.</summary>
-    public object Payload { get; private set; } = null!;
+    public object Payload { get; }
     /// <summary>Returns the string representation of this instance.</summary>
     /// <returns>The converted string.</returns>
     public override string ToString()
@@ -44,7 +44,7 @@ public class ScheduleRecurringMessageCommand<T> :
 
 
 /// <summary>Requests recurring delivery of a runtime-typed message.</summary>
-public class ScheduleRecurringMessageCommand :
+public sealed class ScheduleRecurringMessageCommand :
     ScheduleRecurringMessage
 {
     /// <summary>Gets or sets the schedule.</summary>

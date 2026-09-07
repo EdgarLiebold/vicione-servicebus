@@ -26,7 +26,7 @@ public class ProducerContextFactory :
     /// <param name="context">The handle for the shared producer context.</param>
     /// <param name="cancellationToken">The cancellation token exposed by the scoped context.</param>
     /// <returns>The active producer-context agent.</returns>
-    public IActivePipeContextAgent<ProducerContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ProducerContext> context,
+    public IActivePipeContextAgent<ProducerContext> CreateActiveContext(ISupervisor supervisor, IPipeContextHandle<ProducerContext> context,
         CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedConnectionAsync(context.Context, cancellationToken));

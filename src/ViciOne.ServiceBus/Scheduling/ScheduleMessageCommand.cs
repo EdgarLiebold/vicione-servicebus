@@ -2,26 +2,28 @@ using System;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>Carries the command for schedule message.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class ScheduleMessageCommand<T> :
+/// <summary>Represents a typed message submitted to an endpoint scheduler.</summary>
+/// <typeparam name="T">The message contract.</typeparam>
+public sealed class ScheduleMessageCommand<T> :
     ScheduleMessage
     where T : class
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty command for deserialization.</summary>
     public ScheduleMessageCommand()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="destination">The destination.</param>
-    /// <param name="payload">The payload.</param>
-    /// <param name="tokenId">The token id.</param>
+    /// <summary>Creates a scheduler command for a typed message.</summary>
+    /// <param name="dueAt">The requested delivery time.</param>
+    /// <param name="destination">The delivery destination.</param>
+    /// <param name="payload">The message payload.</param>
+    /// <param name="tokenId">The scheduling token.</param>
     public ScheduleMessageCommand(DateTimeOffset dueAt, Uri destination, T payload, Guid tokenId)
     {
-        TokenId = tokenId;
+        ArgumentNullException.ThrowIfNull(destination);
+        ArgumentNullException.ThrowIfNull(payload);
 
+        TokenId = tokenId;
         DueAt = dueAt.ToUniversalTime();
 
         Destination = destination;
@@ -30,9 +32,9 @@ public class ScheduleMessageCommand<T> :
         PayloadType = MessageTypeCache<T>.MessageTypeNames.ToArray();
     }
 
-    /// <summary>Gets or sets the token id.</summary>
+    /// <summary>Gets or sets the scheduling token.</summary>
     public Guid TokenId { get; set; }
-    /// <summary>Gets or sets the due at.</summary>
+    /// <summary>Gets or sets the requested delivery time.</summary>
     public DateTimeOffset DueAt { get; set; }
     /// <summary>Gets or sets the payload type.</summary>
     public string[] PayloadType { get; set; } = null!;
@@ -43,13 +45,13 @@ public class ScheduleMessageCommand<T> :
 }
 
 
-/// <summary>Carries the command for schedule message.</summary>
-public class ScheduleMessageCommand :
+/// <summary>Provides the mutable representation used to deserialize endpoint-scheduler commands.</summary>
+public sealed class ScheduleMessageCommand :
     ScheduleMessage
 {
-    /// <summary>Gets or sets the token id.</summary>
+    /// <summary>Gets or sets the scheduling token.</summary>
     public Guid TokenId { get; set; }
-    /// <summary>Gets or sets the due at.</summary>
+    /// <summary>Gets or sets the requested delivery time.</summary>
     public DateTimeOffset DueAt { get; set; }
     /// <summary>Gets or sets the payload type.</summary>
     public string[] PayloadType { get; set; } = null!;

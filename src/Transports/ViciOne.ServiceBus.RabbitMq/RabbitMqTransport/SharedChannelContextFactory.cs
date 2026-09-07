@@ -56,7 +56,7 @@ public class SharedChannelContextFactory :
     /// <param name="cancellationToken">The token that ends the active lease.</param>
     /// <returns>An active agent for the shared channel context.</returns>
     public IActivePipeContextAgent<ChannelContext> CreateActiveContext(ISupervisor supervisor,
-        PipeContextHandle<ChannelContext> context, CancellationToken cancellationToken)
+        IPipeContextHandle<ChannelContext> context, CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedChannelAsync(context.Context, cancellationToken));
     }

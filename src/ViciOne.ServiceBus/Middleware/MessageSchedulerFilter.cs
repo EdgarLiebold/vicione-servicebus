@@ -40,7 +40,8 @@ public class MessageSchedulerFilter :
 
     IMessageScheduler SchedulerFactory(ConsumeContext context)
     {
-        return new MessageScheduler(new EndpointScheduleMessageProvider(() => context.GetSendEndpointAsync(_schedulerAddress)),
+        return new MessageScheduler(new EndpointScheduleMessageProvider(
+                cancellationToken => context.GetSendEndpointAsync(_schedulerAddress, cancellationToken: cancellationToken), context.GetTimeProvider()),
             context.GetPayload<IBusTopology>(), context.GetTimeProvider());
     }
 }

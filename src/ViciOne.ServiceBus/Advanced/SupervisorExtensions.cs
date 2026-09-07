@@ -50,7 +50,7 @@ public static class SupervisorExtensions
     /// <param name="contextHandle">The actual context handle.</param>
     /// <param name="context">The active context.</param>
     /// <returns>A context handle.</returns>
-    public static IActivePipeContextAgent<T> AddActiveContext<T>(this ISupervisor supervisor, PipeContextHandle<T> contextHandle, Task<T> context)
+    public static IActivePipeContextAgent<T> AddActiveContext<T>(this ISupervisor supervisor, IPipeContextHandle<T> contextHandle, Task<T> context)
         where T : class, PipeContext
     {
         ArgumentNullException.ThrowIfNull(supervisor);
@@ -72,7 +72,7 @@ public static class SupervisorExtensions
     /// <param name="contextHandle">The actual context handle.</param>
     /// <param name="context">The active context.</param>
     /// <returns>A context handle.</returns>
-    public static IActivePipeContextAgent<T> AddActiveContext<T>(this ISupervisor supervisor, PipeContextHandle<T> contextHandle, T context)
+    public static IActivePipeContextAgent<T> AddActiveContext<T>(this ISupervisor supervisor, IPipeContextHandle<T> contextHandle, T context)
         where T : class, PipeContext
     {
         ArgumentNullException.ThrowIfNull(supervisor);

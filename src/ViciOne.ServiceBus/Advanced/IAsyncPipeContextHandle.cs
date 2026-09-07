@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Advanced;
 /// <summary>Observes the lifecycle of a pipe context that is created asynchronously.</summary>
 /// <typeparam name="TContext">The context type.</typeparam>
 public interface IAsyncPipeContextHandle<TContext> :
-    PipeContextHandle<TContext>
+    IPipeContextHandle<TContext>
     where TContext : class, PipeContext
 {
     /// <summary>Signals that the pipe context is ready for use.</summary>

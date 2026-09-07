@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Agents;
 /// <summary>Owns the lifetime of an already available pipe context.</summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public sealed class ConstantPipeContextHandle<TContext> :
-    PipeContextHandle<TContext>
+    IPipeContextHandle<TContext>
     where TContext : class, PipeContext
 {
     readonly TContext _context;
@@ -33,7 +33,7 @@ public sealed class ConstantPipeContextHandle<TContext> :
         return new ValueTask(_disposeCompleted.Task);
     }
 
-    bool PipeContextHandle<TContext>.IsDisposed => Volatile.Read(ref _disposeStarted) != 0;
+    bool IPipeContextHandle<TContext>.IsDisposed => Volatile.Read(ref _disposeStarted) != 0;
 
     /// <summary>Gets the context.</summary>
     public Task<TContext> Context { get; }

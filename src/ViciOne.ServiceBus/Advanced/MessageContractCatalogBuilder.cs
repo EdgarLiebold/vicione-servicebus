@@ -3,7 +3,6 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>Bootstrap-only builder for the immutable message contract catalog.</summary>

@@ -26,9 +26,9 @@ public sealed class ActivePipeContextAgent<TContext> :
         context.Context.ContinueWith(SetFaulted, CancellationToken.None, TaskContinuationOptions.NotOnRanToCompletion, TaskScheduler.Default);
     }
 
-    bool PipeContextHandle<TContext>.IsDisposed => _contextHandle.IsDisposed;
+    bool IPipeContextHandle<TContext>.IsDisposed => _contextHandle.IsDisposed;
 
-    Task<TContext> PipeContextHandle<TContext>.Context => _contextHandle.Context;
+    Task<TContext> IPipeContextHandle<TContext>.Context => _contextHandle.Context;
 
     Task ActivePipeContextHandle<TContext>.FaultedAsync(Exception exception)
     {

@@ -28,7 +28,7 @@ public abstract class ConnectionContextFactory :
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The created active context.</returns>
     public IActivePipeContextAgent<ConnectionContext> CreateActiveContext(ISupervisor supervisor,
-        PipeContextHandle<ConnectionContext> context, CancellationToken cancellationToken)
+        IPipeContextHandle<ConnectionContext> context, CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedConnectionAsync(context.Context, cancellationToken));
     }

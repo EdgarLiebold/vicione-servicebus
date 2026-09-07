@@ -39,7 +39,7 @@ public abstract class ClientContextFactory :
     /// <param name="context">The client-context handle to share.</param>
     /// <param name="cancellationToken">The token that ends the active lease.</param>
     /// <returns>An active agent over the shared client context.</returns>
-    public IActivePipeContextAgent<ClientContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ClientContext> context,
+    public IActivePipeContextAgent<ClientContext> CreateActiveContext(ISupervisor supervisor, IPipeContextHandle<ClientContext> context,
         CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedContextAsync(context.Context, cancellationToken));

@@ -37,7 +37,7 @@ public class SessionContextFactory :
     /// <param name="cancellationToken">The token associated with the operation scope.</param>
     /// <returns>The active session-context agent.</returns>
     public IActivePipeContextAgent<SessionContext> CreateActiveContext(ISupervisor supervisor,
-        PipeContextHandle<SessionContext> context, CancellationToken cancellationToken)
+        IPipeContextHandle<SessionContext> context, CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedSessionAsync(context.Context, cancellationToken));
     }

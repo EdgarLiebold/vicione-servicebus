@@ -5,17 +5,17 @@ using ViciOne.ServiceBus.Initializers;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>Schedules message operations.</summary>
-public class MessageScheduler :
+/// <summary>Coordinates scheduled sends and publications through a scheduling provider.</summary>
+public sealed class MessageScheduler :
     Advanced.IAdvancedMessageScheduler
 {
     readonly IBusTopology _busTopology;
     readonly IScheduleMessageProvider _provider;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
-    /// <param name="busTopology">The bus topology.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <summary>Creates a scheduler backed by the specified provider and bus topology.</summary>
+    /// <param name="provider">Persists or dispatches scheduling operations.</param>
+    /// <param name="busTopology">Resolves publish destinations.</param>
+    /// <param name="timeProvider">The clock exposed to scheduling consumers.</param>
     public MessageScheduler(IScheduleMessageProvider provider, IBusTopology busTopology, TimeProvider? timeProvider = null)
     {
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
@@ -23,16 +23,10 @@ public class MessageScheduler :
         TimeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    /// <summary>Gets the time provider.</summary>
+    /// <inheritdoc />
     public TimeProvider TimeProvider { get; }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message,
         CancellationToken cancellationToken)
         where T : class
@@ -45,14 +39,7 @@ public class MessageScheduler :
         return _provider.ScheduleSendAsync(destinationAddress, dueAt, message, Pipe.Empty<SendContext>(), cancellationToken);
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
@@ -67,14 +54,7 @@ public class MessageScheduler :
         return _provider.ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
@@ -89,12 +69,7 @@ public class MessageScheduler :
         return _provider.ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message,
         CancellationToken cancellationToken)
     {
@@ -107,13 +82,7 @@ public class MessageScheduler :
         return MessageSchedulerConverterCache.ScheduleSendAsync(this, destinationAddress, dueAt, message, messageType, cancellationToken);
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, Type messageType,
         CancellationToken cancellationToken)
     {
@@ -127,13 +96,7 @@ public class MessageScheduler :
         return MessageSchedulerConverterCache.ScheduleSendAsync(this, destinationAddress, dueAt, message, messageType, cancellationToken);
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
@@ -149,14 +112,7 @@ public class MessageScheduler :
         return MessageSchedulerConverterCache.ScheduleSendAsync(this, destinationAddress, dueAt, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, Type messageType,
         IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
@@ -172,13 +128,7 @@ public class MessageScheduler :
         return MessageSchedulerConverterCache.ScheduleSendAsync(this, destinationAddress, dueAt, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values,
         CancellationToken cancellationToken)
         where T : class
@@ -193,14 +143,7 @@ public class MessageScheduler :
         return await _provider.ScheduleSendAsync(destinationAddress, dueAt, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
@@ -217,14 +160,7 @@ public class MessageScheduler :
         return await _provider.ScheduleSendAsync(destinationAddress, dueAt, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
@@ -241,22 +177,13 @@ public class MessageScheduler :
         return await _provider.ScheduleSendAsync(destinationAddress, dueAt, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Determines whether the current value can cel scheduled send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="tokenId">The token id.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public Task CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
     {
         return _provider.CancelScheduledSendAsync(destinationAddress, tokenId, cancellationToken);
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -265,13 +192,7 @@ public class MessageScheduler :
         return ScheduleSendAsync(destinationAddress, dueAt, message, cancellationToken);
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class
@@ -281,13 +202,7 @@ public class MessageScheduler :
         return ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class
@@ -297,11 +212,7 @@ public class MessageScheduler :
         return ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, CancellationToken cancellationToken = default)
     {
         if (message == null)
@@ -314,12 +225,7 @@ public class MessageScheduler :
         return ScheduleSendAsync(destinationAddress, dueAt, message, messageType, cancellationToken);
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, Type messageType, CancellationToken cancellationToken = default)
     {
         if (messageType == null)
@@ -330,12 +236,7 @@ public class MessageScheduler :
         return ScheduleSendAsync(destinationAddress, dueAt, message, messageType, cancellationToken);
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
@@ -349,13 +250,7 @@ public class MessageScheduler :
         return ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
@@ -364,12 +259,7 @@ public class MessageScheduler :
         return ScheduleSendAsync(destinationAddress, dueAt, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -378,13 +268,7 @@ public class MessageScheduler :
         return ScheduleSendAsync<T>(destinationAddress, dueAt, values, cancellationToken);
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class
@@ -394,13 +278,7 @@ public class MessageScheduler :
         return ScheduleSendAsync(destinationAddress, dueAt, values, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class
@@ -410,11 +288,7 @@ public class MessageScheduler :
         return ScheduleSendAsync<T>(destinationAddress, dueAt, values, pipe, cancellationToken);
     }
 
-    /// <summary>Determines whether the current value can cel scheduled publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="tokenId">The token id.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public Task CancelScheduledPublishAsync<T>(Guid tokenId, CancellationToken cancellationToken)
         where T : class
     {
@@ -423,11 +297,7 @@ public class MessageScheduler :
         return CancelScheduledSendAsync(destinationAddress, tokenId, cancellationToken);
     }
 
-    /// <summary>Determines whether the current value can cel scheduled publish.</summary>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="tokenId">The token id.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public Task CancelScheduledPublishAsync(Type messageType, Guid tokenId, CancellationToken cancellationToken)
     {
         var destinationAddress = GetPublishAddress(messageType);

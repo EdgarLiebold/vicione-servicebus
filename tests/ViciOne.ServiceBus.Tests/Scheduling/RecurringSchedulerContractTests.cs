@@ -39,6 +39,18 @@ public sealed class RecurringSchedulerContractTests
             new ScheduledRecurringMessageHandle<ScheduledMessage>(schedule, null!, message)).ParamName);
         Assert.Equal("payload", Assert.Throws<ArgumentNullException>(() =>
             new ScheduledRecurringMessageHandle<ScheduledMessage>(schedule, DestinationAddress, null!)).ParamName);
+        Assert.Equal("destination", Assert.Throws<ArgumentNullException>(() =>
+            new ScheduleMessageCommand<ScheduledMessage>(new DateTimeOffset(2039, 1, 2, 3, 4, 5, TimeSpan.Zero), null!, message,
+                NewId.NextGuid())).ParamName);
+        Assert.Equal("payload", Assert.Throws<ArgumentNullException>(() =>
+            new ScheduleMessageCommand<ScheduledMessage>(new DateTimeOffset(2039, 1, 2, 3, 4, 5, TimeSpan.Zero), DestinationAddress, null!,
+                NewId.NextGuid())).ParamName);
+        Assert.Equal("destination", Assert.Throws<ArgumentNullException>(() =>
+            new ScheduledMessageHandle<ScheduledMessage>(NewId.NextGuid(), new DateTimeOffset(2039, 1, 2, 3, 4, 5, TimeSpan.Zero), null!,
+                message)).ParamName);
+        Assert.Equal("payload", Assert.Throws<ArgumentNullException>(() =>
+            new ScheduledMessageHandle<ScheduledMessage>(NewId.NextGuid(), new DateTimeOffset(2039, 1, 2, 3, 4, 5, TimeSpan.Zero),
+                DestinationAddress, null!)).ParamName);
     }
 
     [Theory]
@@ -65,6 +77,23 @@ public sealed class RecurringSchedulerContractTests
             await Assert.ThrowsAnyAsync<ArgumentException>(() =>
                 scheduler.ResumeScheduledRecurringSendAsync(missingValue!, "group", TestContext.Current.CancellationToken));
         }
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "control-command-constructors-reject-invalid-identities")]
+    public void ControlCommandConstructors_RejectMissingScheduleIdentifiers(string? missingValue)
+    {
+        var timestamp = new DateTimeOffset(2039, 1, 2, 3, 4, 5, TimeSpan.Zero);
+
+        Assert.ThrowsAny<ArgumentException>(() =>
+            new CancelScheduledRecurringMessageCommand(missingValue!, "group", timestamp));
+        Assert.ThrowsAny<ArgumentException>(() =>
+            new PauseScheduledRecurringMessageCommand("schedule", missingValue!, timestamp));
+        Assert.ThrowsAny<ArgumentException>(() =>
+            new ResumeScheduledRecurringMessageCommand(missingValue!, "group", timestamp));
     }
 
     [Fact]

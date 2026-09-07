@@ -10,16 +10,18 @@ public static class BusControlExtensions
     /// <summary>Starts a bus and cancels the operation when the specified timeout elapses.</summary>
     /// <param name="bus">The bus to start.</param>
     /// <param name="startTimeout">The positive maximum startup duration.</param>
+    /// <param name="timeProvider">The clock used to measure the timeout, or the system clock when omitted.</param>
     /// <param name="cancellationToken">Cancels startup independently of the timeout.</param>
     /// <returns>A task that completes when the bus has started.</returns>
-    public static async Task StartAsync(this IBusControl bus, TimeSpan startTimeout, CancellationToken cancellationToken = default)
+    public static async Task StartAsync(this IBusControl bus, TimeSpan startTimeout, TimeProvider? timeProvider = null,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(bus);
         if (startTimeout <= TimeSpan.Zero)
             throw new ArgumentOutOfRangeException(nameof(startTimeout), startTimeout, "The startup timeout must be positive.");
 
         cancellationToken.ThrowIfCancellationRequested();
-        using var timeoutTokenSource = new CancellationTokenSource(startTimeout);
+        using var timeoutTokenSource = new CancellationTokenSource(startTimeout, timeProvider ?? TimeProvider.System);
         using var linkedTokenSource = cancellationToken.CanBeCanceled
             ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutTokenSource.Token)
             : null;
@@ -30,16 +32,18 @@ public static class BusControlExtensions
     /// <summary>Stops a bus and cancels the operation when the specified timeout elapses.</summary>
     /// <param name="bus">The bus to stop.</param>
     /// <param name="stopTimeout">The positive maximum shutdown duration.</param>
+    /// <param name="timeProvider">The clock used to measure the timeout, or the system clock when omitted.</param>
     /// <param name="cancellationToken">Cancels shutdown independently of the timeout.</param>
     /// <returns>A task that completes when the bus has stopped.</returns>
-    public static async Task StopAsync(this IBusControl bus, TimeSpan stopTimeout, CancellationToken cancellationToken = default)
+    public static async Task StopAsync(this IBusControl bus, TimeSpan stopTimeout, TimeProvider? timeProvider = null,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(bus);
         if (stopTimeout <= TimeSpan.Zero)
             throw new ArgumentOutOfRangeException(nameof(stopTimeout), stopTimeout, "The shutdown timeout must be positive.");
 
         cancellationToken.ThrowIfCancellationRequested();
-        using var timeoutTokenSource = new CancellationTokenSource(stopTimeout);
+        using var timeoutTokenSource = new CancellationTokenSource(stopTimeout, timeProvider ?? TimeProvider.System);
         using var linkedTokenSource = cancellationToken.CanBeCanceled
             ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutTokenSource.Token)
             : null;

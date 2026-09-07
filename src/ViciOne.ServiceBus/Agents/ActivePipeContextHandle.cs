@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Agents;
 /// <summary>An active, in-use reference to a pipe context.</summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public interface ActivePipeContextHandle<TContext> :
-    PipeContextHandle<TContext>
+    IPipeContextHandle<TContext>
     where TContext : class, PipeContext
 {
     /// <summary>Signals that the active use failed and the underlying context must be invalidated.</summary>

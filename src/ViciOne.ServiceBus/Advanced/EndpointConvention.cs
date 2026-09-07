@@ -41,4 +41,13 @@ internal static class EndpointConvention
             ? destinationAddress
             : throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Endpoint Convention", "unknown", $"A message route for {TypeCache<T>.ShortName} is not configured on this bus.", "Correct the named configuration before starting the host"));
     }
+
+    internal static Uri GetDestinationAddress(ISendEndpointProvider provider, Type messageType)
+    {
+        return TryGetDestinationAddress(provider, messageType, out Uri? destinationAddress)
+            ? destinationAddress
+            : throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                "Endpoint Convention", "unknown", $"A message route for {TypeCache.GetShortName(messageType)} is not configured on this bus.",
+                "Correct the named configuration before starting the host"));
+    }
 }

@@ -148,7 +148,7 @@ public sealed class QuartzScheduleTimingIntegrationTests
     }
 
     private static MessageScheduler CreateMessageScheduler(QuartzTestBus fixture) =>
-        new(new EndpointScheduleMessageProvider(() => Task.FromResult(fixture.SchedulerEndpoint)), fixture.Bus.Topology);
+        new(new EndpointScheduleMessageProvider(_ => Task.FromResult(fixture.SchedulerEndpoint)), fixture.Bus.Topology);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()

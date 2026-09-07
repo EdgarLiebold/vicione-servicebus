@@ -754,7 +754,7 @@ public sealed class ActiveMqLifecycleTests
 
         public IActivePipeContextAgent<SessionContext> CreateActiveContext(
             ISupervisor supervisor,
-            PipeContextHandle<SessionContext> contextHandle,
+            IPipeContextHandle<SessionContext> contextHandle,
             CancellationToken cancellationToken = default)
         { cancellationToken.ThrowIfCancellationRequested(); return supervisor.AddActiveContext(contextHandle, contextHandle.Context); }
     }

@@ -123,7 +123,7 @@ public sealed class FaultDataException :
                 var value = exception.Data[key];
                 if (value != null)
                 {
-                    _data ??= new Dictionary<string, object>();
+                    _data ??= new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
                     _data.Add(stringKey, value);
                 }

@@ -20,8 +20,7 @@ public static class EndpointConventionExtensions
         ArgumentNullException.ThrowIfNull(provider);
         ArgumentNullException.ThrowIfNull(message);
 
-        if (!EndpointConvention.TryGetDestinationAddress<T>(provider, out var destinationAddress))
-            throw new ArgumentException($"A convention for the message type {TypeCache<T>.ShortName} was not found");
+        Uri destinationAddress = EndpointConvention.GetDestinationAddress<T>(provider);
 
         var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -43,8 +42,7 @@ public static class EndpointConventionExtensions
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(pipe);
 
-        if (!EndpointConvention.TryGetDestinationAddress<T>(provider, out var destinationAddress))
-            throw new ArgumentException($"A convention for the message type {TypeCache<T>.ShortName} was not found");
+        Uri destinationAddress = EndpointConvention.GetDestinationAddress<T>(provider);
 
         var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -80,8 +78,7 @@ public static class EndpointConventionExtensions
 
         var messageType = message.GetType();
 
-        if (!EndpointConvention.TryGetDestinationAddress(provider, messageType, out var destinationAddress))
-            throw new ArgumentException($"A convention for the message type {TypeCache.GetShortName(messageType)} was not found");
+        Uri destinationAddress = EndpointConvention.GetDestinationAddress(provider, messageType);
 
         var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -100,8 +97,7 @@ public static class EndpointConventionExtensions
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(messageType);
 
-        if (!EndpointConvention.TryGetDestinationAddress(provider, messageType, out var destinationAddress))
-            throw new ArgumentException($"A convention for the message type {TypeCache.GetShortName(messageType)} was not found");
+        Uri destinationAddress = EndpointConvention.GetDestinationAddress(provider, messageType);
 
         var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -123,8 +119,7 @@ public static class EndpointConventionExtensions
 
         var messageType = message.GetType();
 
-        if (!EndpointConvention.TryGetDestinationAddress(provider, messageType, out var destinationAddress))
-            throw new ArgumentException($"A convention for the message type {TypeCache.GetShortName(messageType)} was not found");
+        Uri destinationAddress = EndpointConvention.GetDestinationAddress(provider, messageType);
 
         var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -146,8 +141,7 @@ public static class EndpointConventionExtensions
         ArgumentNullException.ThrowIfNull(messageType);
         ArgumentNullException.ThrowIfNull(pipe);
 
-        if (!EndpointConvention.TryGetDestinationAddress(provider, messageType, out var destinationAddress))
-            throw new ArgumentException($"A convention for the message type {TypeCache.GetShortName(messageType)} was not found");
+        Uri destinationAddress = EndpointConvention.GetDestinationAddress(provider, messageType);
 
         var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -184,8 +178,7 @@ public static class EndpointConventionExtensions
         ArgumentNullException.ThrowIfNull(values);
         ArgumentNullException.ThrowIfNull(pipe);
 
-        if (!EndpointConvention.TryGetDestinationAddress<T>(provider, out var destinationAddress))
-            throw new ArgumentException($"A convention for the message type {TypeCache<T>.ShortName} was not found");
+        Uri destinationAddress = EndpointConvention.GetDestinationAddress<T>(provider);
 
         var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 

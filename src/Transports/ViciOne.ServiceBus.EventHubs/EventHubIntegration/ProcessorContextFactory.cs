@@ -42,7 +42,7 @@ public class ProcessorContextFactory :
     /// <param name="context">The handle for the shared processor context.</param>
     /// <param name="cancellationToken">The cancellation token exposed by the scoped context.</param>
     /// <returns>The active processor-context agent.</returns>
-    public IActivePipeContextAgent<ProcessorContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ProcessorContext> context,
+    public IActivePipeContextAgent<ProcessorContext> CreateActiveContext(ISupervisor supervisor, IPipeContextHandle<ProcessorContext> context,
         CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedConnectionAsync(context.Context, cancellationToken));

@@ -10,7 +10,7 @@ public sealed class ActivePipeContext<TContext> :
     where TContext : class, PipeContext
 {
     readonly Task<TContext> _context;
-    readonly PipeContextHandle<TContext> _contextHandle;
+    readonly IPipeContextHandle<TContext> _contextHandle;
 
     /// <summary>
     /// Creates an active handle backed by the supplied context task and managed by
@@ -18,7 +18,7 @@ public sealed class ActivePipeContext<TContext> :
     /// </summary>
     /// <param name="contextHandle">The handle that owns the underlying context.</param>
     /// <param name="context">The context task exposed by this active use.</param>
-    public ActivePipeContext(PipeContextHandle<TContext> contextHandle, Task<TContext> context)
+    public ActivePipeContext(IPipeContextHandle<TContext> contextHandle, Task<TContext> context)
     {
         _contextHandle = contextHandle ?? throw new ArgumentNullException(nameof(contextHandle));
         _context = RequireContextAsync(context ?? throw new ArgumentNullException(nameof(context)));
@@ -30,15 +30,15 @@ public sealed class ActivePipeContext<TContext> :
     /// </summary>
     /// <param name="contextHandle">The handle that owns the underlying context.</param>
     /// <param name="context">The context exposed by this active use.</param>
-    public ActivePipeContext(PipeContextHandle<TContext> contextHandle, TContext context)
+    public ActivePipeContext(IPipeContextHandle<TContext> contextHandle, TContext context)
     {
         _contextHandle = contextHandle ?? throw new ArgumentNullException(nameof(contextHandle));
         _context = Task.FromResult(context ?? throw new ArgumentNullException(nameof(context)));
     }
 
-    bool PipeContextHandle<TContext>.IsDisposed => _contextHandle.IsDisposed;
+    bool IPipeContextHandle<TContext>.IsDisposed => _contextHandle.IsDisposed;
 
-    Task<TContext> PipeContextHandle<TContext>.Context => _context;
+    Task<TContext> IPipeContextHandle<TContext>.Context => _context;
 
     async Task ActivePipeContextHandle<TContext>.FaultedAsync(Exception exception)
     {

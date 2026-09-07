@@ -28,7 +28,7 @@ public sealed class PublishRecurringMessageScheduler :
     public TimeProvider TimeProvider { get; }
 
     /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="schedule">The schedule.</param>
     /// <param name="message">The message to process.</param>
@@ -48,7 +48,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="schedule">The schedule.</param>
     /// <param name="message">The message to process.</param>
@@ -72,7 +72,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="schedule">The schedule.</param>
     /// <param name="message">The message to process.</param>
@@ -188,7 +188,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="schedule">The schedule.</param>
     /// <param name="values">The values.</param>
@@ -210,7 +210,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="schedule">The schedule.</param>
     /// <param name="values">The values.</param>
@@ -236,7 +236,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="schedule">The schedule.</param>
     /// <param name="values">The values.</param>
@@ -262,7 +262,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="schedule">The schedule.</param>
     /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -280,7 +280,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="schedule">The schedule.</param>
     /// <param name="message">The message to process.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
@@ -301,7 +301,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="schedule">The schedule.</param>
     /// <param name="message">The message to process.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
@@ -401,7 +401,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
     /// <param name="schedule">The schedule.</param>
     /// <param name="values">The values.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -421,7 +421,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
     /// <param name="schedule">The schedule.</param>
     /// <param name="values">The values.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
@@ -444,7 +444,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
     /// <param name="schedule">The schedule.</param>
     /// <param name="values">The values.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
@@ -467,7 +467,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Cancels a recurring schedule.</summary>
-    /// <param name="scheduleId">The schedule id.</param>
+    /// <param name="scheduleId">The schedule identifier.</param>
     /// <param name="scheduleGroup">The schedule group.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -482,7 +482,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Pauses scheduled recurring send.</summary>
-    /// <param name="scheduleId">The schedule id.</param>
+    /// <param name="scheduleId">The schedule identifier.</param>
     /// <param name="scheduleGroup">The schedule group.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -497,7 +497,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
     /// <summary>Resumes scheduled recurring send.</summary>
-    /// <param name="scheduleId">The schedule id.</param>
+    /// <param name="scheduleId">The schedule identifier.</param>
     /// <param name="scheduleGroup">The schedule group.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -582,7 +582,7 @@ public sealed class PublishRecurringMessageScheduler :
     }
 
 
-    class ScheduleRecurringMessageContextPipe<T> :
+    sealed class ScheduleRecurringMessageContextPipe<T> :
         IPipe<PublishContext<ScheduleRecurringMessage>>
         where T : class
     {

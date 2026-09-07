@@ -88,7 +88,7 @@ public class ConnectionContextFactory :
     /// <param name="context">The handle for the shared connection context.</param>
     /// <param name="cancellationToken">Cancellation linked to the scoped view.</param>
     /// <returns>The active scoped context agent.</returns>
-    public IActivePipeContextAgent<ConnectionContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ConnectionContext> context,
+    public IActivePipeContextAgent<ConnectionContext> CreateActiveContext(ISupervisor supervisor, IPipeContextHandle<ConnectionContext> context,
         CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedConnectionAsync(context.Context, cancellationToken));

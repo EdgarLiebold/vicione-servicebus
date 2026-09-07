@@ -3,57 +3,67 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>
-/// For transport-based schedulers, used to invoke the <see cref="SendContext{T}" /> pipe and
-/// manage the ScheduledMessageId, as well as set the transport delay property.
-/// </summary>
+/// <summary>Applies scheduling identity and transport delay to a send context.</summary>
 /// <typeparam name="TMessage">The message type.</typeparam>
-public class ScheduleSendPipe<TMessage> :
+public sealed class ScheduleSendPipe<TMessage> :
     SendContextPipeAdapter<TMessage>
     where TMessage : class
 {
     readonly DateTimeOffset _dueAt;
-    readonly TimeProvider _timeProvider = null!;
+    readonly TimeProvider? _timeProvider;
     SendContext _context = null!;
 
     Guid? _scheduledMessageId;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="dueAt">The due at.</param>
+    /// <summary>Creates a scheduling pipe that obtains its clock from each send context.</summary>
+    /// <param name="pipe">The message-specific send pipeline.</param>
+    /// <param name="dueAt">The requested delivery time.</param>
     public ScheduleSendPipe(IPipe<SendContext<TMessage>> pipe, DateTimeOffset dueAt)
-        : base(pipe)
+        : base(pipe ?? throw new ArgumentNullException(nameof(pipe)))
     {
         _dueAt = dueAt;
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <summary>Creates a scheduling pipe that calculates delays from a specified clock.</summary>
+    /// <param name="pipe">The message-specific send pipeline.</param>
+    /// <param name="dueAt">The requested delivery time.</param>
+    /// <param name="timeProvider">The clock used to calculate the transport delay.</param>
     public ScheduleSendPipe(IPipe<SendContext<TMessage>> pipe, DateTimeOffset dueAt, TimeProvider timeProvider)
-        : base(pipe)
+        : base(pipe ?? throw new ArgumentNullException(nameof(pipe)))
     {
         _dueAt = dueAt;
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
-    /// <summary>Gets or sets the scheduled message id.</summary>
+    /// <summary>Gets or sets the scheduling token applied to the send context.</summary>
     public Guid? ScheduledMessageId
     {
         get => _context?.ScheduledMessageId ?? _scheduledMessageId;
         set => _scheduledMessageId = value;
     }
 
-    /// <summary>Gets the message id.</summary>
+    /// <summary>Gets the message identifier assigned by the send pipeline.</summary>
     public Guid? MessageId => _context?.MessageId;
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Applies scheduling metadata to the message context.</summary>
+    /// <param name="context">The message send context.</param>
     protected override void Send(SendContext<TMessage> context)
     {
+        Apply(context);
+    }
+
+    /// <summary>Applies scheduling metadata when the pipe is invoked through its untyped contract.</summary>
+    /// <typeparam name="T">The runtime message contract.</typeparam>
+    /// <param name="context">The runtime message send context.</param>
+    protected override void Send<T>(SendContext<T> context)
+    {
+        Apply(context);
+    }
+
+    void Apply(SendContext context)
+    {
         _context = context;
-        _context.ScheduledMessageId = _scheduledMessageId;
+        context.ScheduledMessageId = _scheduledMessageId;
 
         TimeProvider timeProvider = _timeProvider ?? context.GetTimeProvider();
         TimeSpan delay = _dueAt - timeProvider.GetUtcNow();
@@ -61,14 +71,7 @@ public class ScheduleSendPipe<TMessage> :
         if (delay > TimeSpan.Zero)
             context.Delay = delay;
 
-        if (ScheduledMessageId.HasValue)
-            context.Headers.Set(MessageHeaders.SchedulingTokenId, ScheduledMessageId.Value.ToString("D"));
-    }
-
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    protected override void Send<T>(SendContext<T> context)
-    {
+        if (context.ScheduledMessageId.HasValue)
+            context.Headers.Set(MessageHeaders.SchedulingTokenId, context.ScheduledMessageId.Value.ToString("D"));
     }
 }

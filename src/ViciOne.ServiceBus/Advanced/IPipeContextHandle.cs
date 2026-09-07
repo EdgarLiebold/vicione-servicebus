@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Advanced;
 /// Owns the asynchronous availability and lifetime of a pipe context.
 /// </summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-public interface PipeContextHandle<TContext> :
+public interface IPipeContextHandle<TContext> :
     IAsyncDisposable
     where TContext : class, PipeContext
 {

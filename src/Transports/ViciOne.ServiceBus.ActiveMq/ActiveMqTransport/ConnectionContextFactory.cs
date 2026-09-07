@@ -82,7 +82,7 @@ public class ConnectionContextFactory :
     }
 
     IActivePipeContextAgent<ConnectionContext> IPipeContextFactory<ConnectionContext>.CreateActiveContext(ISupervisor supervisor,
-        PipeContextHandle<ConnectionContext> context, CancellationToken cancellationToken)
+        IPipeContextHandle<ConnectionContext> context, CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedConnectionAsync(context.Context, cancellationToken));
     }

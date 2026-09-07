@@ -25,6 +25,19 @@ public sealed class FaultExceptionInfoTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "imported-exception-data-is-case-insensitive")]
+    public void ImportedExceptionData_RemainsCaseInsensitiveWithoutApplicationOverrides()
+    {
+        var source = new InvalidOperationException("source");
+        source.Data["TraceId"] = "trace-27";
+
+        var wrapper = new FaultDataException(source);
+
+        Assert.Equal("trace-27", wrapper.ApplicationData["traceid"]);
+        Assert.Throws<ArgumentException>(() => wrapper.ApplicationData.Add("TRACEID", "duplicate"));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "fault-data-required-arguments")]
     public void FaultDataConstruction_RejectsEveryMissingRequiredArgument()
     {

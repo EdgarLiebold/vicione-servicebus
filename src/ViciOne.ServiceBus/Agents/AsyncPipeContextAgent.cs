@@ -22,9 +22,9 @@ public sealed class AsyncPipeContextAgent<TContext> :
         _agent = new PipeContextAgent<TContext>(_context.Task);
     }
 
-    bool PipeContextHandle<TContext>.IsDisposed => _agent.IsDisposed;
+    bool IPipeContextHandle<TContext>.IsDisposed => _agent.IsDisposed;
 
-    Task<TContext> PipeContextHandle<TContext>.Context => _agent.Context;
+    Task<TContext> IPipeContextHandle<TContext>.Context => _agent.Context;
 
     ValueTask IAsyncDisposable.DisposeAsync()
     {

@@ -20,9 +20,9 @@ public sealed class ScheduledRecurringMessageHandle<T> :
     }
 
     /// <summary>Gets the recurring schedule.</summary>
-    public RecurringSchedule Schedule { get; private set; }
+    public RecurringSchedule Schedule { get; }
     /// <summary>Gets the delivery destination.</summary>
-    public Uri Destination { get; private set; }
+    public Uri Destination { get; }
     /// <summary>Gets the original message payload.</summary>
-    public T Payload { get; private set; }
+    public T Payload { get; }
 }

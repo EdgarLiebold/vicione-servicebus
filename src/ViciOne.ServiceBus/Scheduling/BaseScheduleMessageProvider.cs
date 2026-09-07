@@ -4,22 +4,19 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>Provides base schedule message services.</summary>
+/// <summary>Builds scheduler commands and delegates their transport-specific dispatch.</summary>
 public abstract class BaseScheduleMessageProvider :
     IScheduleMessageProvider
 {
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
+
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
@@ -37,60 +34,53 @@ public abstract class BaseScheduleMessageProvider :
             command.Destination, message);
     }
 
-    /// <summary>Determines whether the current value can cel scheduled send.</summary>
-    /// <param name="tokenId">The token id.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public Task CancelScheduledSendAsync(Guid tokenId, CancellationToken cancellationToken)
     {
         return CancelScheduledSendAsync(tokenId, null, cancellationToken);
     }
 
-    /// <summary>Determines whether the current value can cel scheduled send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="tokenId">The token id.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public Task CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
         return CancelScheduledSendAsync(tokenId, destinationAddress, cancellationToken);
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Dispatches a scheduling command through the provider-specific channel.</summary>
+    /// <param name="message">The scheduling command.</param>
+    /// <param name="pipe">Applies the original message's send configuration to the command.</param>
+    /// <param name="cancellationToken">Cancels command dispatch.</param>
+    /// <returns>A task that completes when the scheduler channel accepts the command.</returns>
     protected abstract Task ScheduleSendAsync(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken);
 
-    /// <summary>Determines whether the current value can cel scheduled send.</summary>
-    /// <param name="tokenId">The token id.</param>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Dispatches cancellation for a previously accepted scheduling token.</summary>
+    /// <param name="tokenId">The scheduling token.</param>
+    /// <param name="destinationAddress">The original destination when required by the provider.</param>
+    /// <param name="cancellationToken">Cancels command dispatch.</param>
+    /// <returns>A task that completes when the scheduler channel accepts the cancellation.</returns>
     protected abstract Task CancelScheduledSendAsync(Guid tokenId, Uri? destinationAddress, CancellationToken cancellationToken);
 }
 
 
 /// <summary>
-/// For remote endpoint schedulers, used to invoke the <see cref="SendContext{T}" /> pipe and
-/// manage the ScheduledMessageId.
+/// Applies the original message's send pipe to a remote scheduler command while preserving its scheduling token.
 /// </summary>
 /// <typeparam name="T">The message type.</typeparam>
-class ScheduleMessageContextPipe<T> :
+sealed class ScheduleMessageContextPipe<T> :
     IPipe<SendContext<ScheduleMessage>>
     where T : class
 {
     readonly T _payload;
     readonly IPipe<SendContext<T>> _pipe;
-    SendContext _context = null!;
+    SendContext? _context;
 
     Guid? _scheduledMessageId;
 
     public ScheduleMessageContextPipe(T payload, IPipe<SendContext<T>> pipe)
     {
-        _payload = payload;
-        _pipe = pipe;
+        _payload = payload ?? throw new ArgumentNullException(nameof(payload));
+        _pipe = pipe ?? throw new ArgumentNullException(nameof(pipe));
     }
 
     public Guid? ScheduledMessageId
@@ -103,8 +93,8 @@ class ScheduleMessageContextPipe<T> :
     {
         _context = context;
 
-        _context.ScheduledMessageId = _scheduledMessageId;
-        _context.CorrelationId ??= _scheduledMessageId;
+        context.ScheduledMessageId = _scheduledMessageId;
+        context.CorrelationId ??= _scheduledMessageId;
 
         if (_pipe.IsNotEmpty())
         {
@@ -116,6 +106,6 @@ class ScheduleMessageContextPipe<T> :
 
     void IProbeSite.Probe(ProbeContext context)
     {
-        _pipe?.Probe(context);
+        _pipe.Probe(context);
     }
 }

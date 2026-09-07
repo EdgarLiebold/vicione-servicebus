@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -22,11 +23,31 @@ public sealed class InMemoryBusLifecycleTests
         Assert.DoesNotContain(publicMethods, method =>
             (method.Name == "Start" || method.Name == "Stop") && method.ReturnType == typeof(void));
         Assert.Equal("bus", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            BusControlExtensions.StartAsync(null!, TimeSpan.FromSeconds(1), cancellationToken))).ParamName);
+            BusControlExtensions.StartAsync(null!, TimeSpan.FromSeconds(1), cancellationToken: cancellationToken))).ParamName);
         Assert.Equal("startTimeout", (await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
-            bus.StartAsync(TimeSpan.Zero, cancellationToken))).ParamName);
+            bus.StartAsync(TimeSpan.Zero, cancellationToken: cancellationToken))).ParamName);
         Assert.Equal("stopTimeout", (await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
-            bus.StopAsync(TimeSpan.FromMilliseconds(-1), cancellationToken))).ParamName);
+            bus.StopAsync(TimeSpan.FromMilliseconds(-1), cancellationToken: cancellationToken))).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-CONTROL-LIFECYCLE", "bounded-operations-use-supplied-clock")]
+    public async Task BoundedLifecycleExtensions_UseTheSuppliedClockAsync()
+    {
+        var clock = new FakeTimeProvider();
+        IBusControl bus = DispatchProxy.Create<IBusControl, LifecycleTimeoutProxy>();
+
+        Task start = bus.StartAsync(TimeSpan.FromMinutes(1), clock, TestContext.Current.CancellationToken);
+        Assert.False(start.IsCompleted);
+
+        clock.Advance(TimeSpan.FromMinutes(1));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => start);
+
+        Task stop = bus.StopAsync(TimeSpan.FromMinutes(2), clock, TestContext.Current.CancellationToken);
+        Assert.False(stop.IsCompleted);
+
+        clock.Advance(TimeSpan.FromMinutes(2));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => stop);
     }
 
     [Fact]
@@ -338,6 +359,28 @@ public sealed class InMemoryBusLifecycleTests
             ?? throw new InvalidOperationException("The in-memory transport executor field was not found.");
 
         return Assert.IsType<TaskExecutor>(executorField.GetValue(transportHandle));
+    }
+
+    public class LifecycleTimeoutProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+            CancellationToken cancellationToken = Assert.IsType<CancellationToken>(args![0]);
+
+            return targetMethod.Name switch
+            {
+                nameof(IBusControl.StartAsync) or nameof(IBusControl.StopAsync) => WaitForCancellationAsync(cancellationToken),
+                _ => throw new InvalidOperationException($"Unexpected bus-control member: {targetMethod.Name}."),
+            };
+        }
+
+        private static async Task WaitForCancellationAsync(CancellationToken cancellationToken)
+        {
+            var completion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            using CancellationTokenRegistration registration = cancellationToken.Register(() => completion.TrySetCanceled(cancellationToken));
+            await completion.Task;
+        }
     }
 
     public sealed class FailingDependency : IReceiveEndpointDependency

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Scheduling;
@@ -43,6 +44,27 @@ public sealed class SchedulerTimeProviderTests
         Assert.Same(TimeProvider.System, context.GetTimeProvider());
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SCHEDULER-TIME-OWNER", "untyped-delayed-send-pipe-preserves-scheduling-metadata")]
+    public async Task DelayedSendPipe_AppliesSchedulingMetadataThroughItsUntypedContractAsync()
+    {
+        var clock = new FakeTimeProvider(CommandTime);
+        DateTimeOffset dueAt = CommandTime + TimeSpan.FromMinutes(45);
+        Guid tokenId = NewId.NextGuid();
+        var context = new InMemorySendContext<RuntimeClockProbe>(new RuntimeClockProbe());
+        var pipe = new ScheduleSendPipe<ClockProbe>(Pipe.Empty<SendContext<ClockProbe>>(), dueAt, clock)
+        {
+            ScheduledMessageId = tokenId,
+        };
+
+        await ((ISendContextPipe)pipe).SendAsync(context, TestContext.Current.CancellationToken);
+
+        Assert.Equal(TimeSpan.FromMinutes(45), context.Delay);
+        Assert.Equal(tokenId, context.ScheduledMessageId);
+        Assert.True(context.Headers.TryGetHeader(MessageHeaders.SchedulingTokenId, out object? header));
+        Assert.Equal(tokenId.ToString("D"), header);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -80,6 +102,83 @@ public sealed class SchedulerTimeProviderTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SCHEDULER-TIME-OWNER", "cancellation-command-clock-and-resolution-token")]
+    public async Task SchedulerProviders_UseTheirClockAndForwardCallerCancellationAsync()
+    {
+        var clock = new FakeTimeProvider(CommandTime);
+        ISendEndpoint sendEndpoint = DispatchProxy.Create<AdvancedScheduleEndpoint, CaptureEndpointProxy>();
+        var sendCapture = (CaptureEndpointProxy)(object)sendEndpoint;
+        CancellationToken observedToken = default;
+        var endpointProvider = new EndpointScheduleMessageProvider(cancellationToken =>
+        {
+            observedToken = cancellationToken;
+            return Task.FromResult(sendEndpoint);
+        }, clock);
+
+        using var callerCancellation = new CancellationTokenSource();
+        await endpointProvider.CancelScheduledSendAsync(NewId.NextGuid(), callerCancellation.Token);
+
+        Assert.Equal(callerCancellation.Token, observedToken);
+        AssertCancellationTimestamp(Assert.Single(sendCapture.Messages));
+
+        IPublishEndpoint publishEndpoint = DispatchProxy.Create<AdvancedPublishEndpoint, CaptureEndpointProxy>();
+        var publishCapture = (CaptureEndpointProxy)(object)publishEndpoint;
+        var publishProvider = new PublishScheduleMessageProvider(publishEndpoint, clock);
+
+        await publishProvider.CancelScheduledSendAsync(NewId.NextGuid(), TestContext.Current.CancellationToken);
+
+        AssertCancellationTimestamp(Assert.Single(publishCapture.Messages));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DELAYED-SCHEDULER", "unsupported-cancellation-is-never-reported-as-success")]
+    public async Task DelayedScheduler_ExplicitlyRejectsCancellationAfterTransportAcceptanceAsync()
+    {
+        ISendEndpointProvider endpoints = DispatchProxy.Create<ISendEndpointProvider, UnsupportedProxy>();
+        var provider = new DelayedScheduleMessageProvider(endpoints);
+        Guid tokenId = NewId.NextGuid();
+
+        NotSupportedException withoutDestination = await Assert.ThrowsAsync<NotSupportedException>(() =>
+            provider.CancelScheduledSendAsync(tokenId, TestContext.Current.CancellationToken));
+        NotSupportedException withDestination = await Assert.ThrowsAsync<NotSupportedException>(() =>
+            provider.CancelScheduledSendAsync(new Uri("loopback://localhost/delayed"), tokenId, TestContext.Current.CancellationToken));
+
+        Assert.Equal(withoutDestination.Message, withDestination.Message);
+        Assert.Contains("cannot be canceled", withoutDestination.Message, StringComparison.Ordinal);
+
+        using var cancellation = new CancellationTokenSource();
+        await cancellation.CancelAsync();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            provider.CancelScheduledSendAsync(tokenId, cancellation.Token));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SCHEDULE-TOKEN", "configured-selector-controls-scheduled-handle")]
+    public async Task ScheduleTokenId_UsesTheConfiguredSelectorAndRejectsNullSelectorsAsync()
+    {
+        Assert.Equal("tokenIdSelector", Assert.Throws<ArgumentNullException>(() =>
+            ScheduleTokenId.UseTokenId<NullSelectorProbe>(null!)).ParamName);
+
+        Guid tokenId = NewId.NextGuid();
+        ScheduleTokenId.UseTokenId<TokenProbe>(message => message.TokenId);
+        ISendEndpoint endpoint = DispatchProxy.Create<AdvancedScheduleEndpoint, ScheduleEndpointProxy>();
+        ISendEndpointProvider endpoints = DispatchProxy.Create<ISendEndpointProvider, SchedulerEndpointProviderProxy>();
+        ((SchedulerEndpointProviderProxy)(object)endpoints).Endpoint = endpoint;
+        var provider = new DelayedScheduleMessageProvider(endpoints, new FakeTimeProvider(CommandTime));
+
+        ScheduledMessage<TokenProbe> scheduled = await provider.ScheduleSendAsync(
+            new Uri("loopback://localhost/token-probe"),
+            CommandTime + TimeSpan.FromMinutes(10),
+            new TokenProbe(tokenId),
+            Pipe.Empty<SendContext<TokenProbe>>(),
+            TestContext.Current.CancellationToken);
+
+        Assert.Equal(tokenId, scheduled.TokenId);
+        Assert.Equal(tokenId, Assert.IsType<InMemorySendContext<TokenProbe>>(
+            ((ScheduleEndpointProxy)(object)endpoint).Context).ScheduledMessageId);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER-CLOCK", "default-schedule-local-boundary")]
     public void DefaultRecurringSchedule_UsesTheInjectedClockAndItsLocalTimeZone()
     {
@@ -91,6 +190,18 @@ public sealed class SchedulerTimeProviderTests
 
         Assert.Equal(timeZone.Id, schedule.TimeZoneId);
         Assert.Equal(CommandTime.ToOffset(TimeSpan.FromHours(3)), schedule.StartTime);
+        Assert.Equal("0 0 2 * * ?", schedule.CronExpression);
+        Assert.Equal(schedule.ScheduleId, schedule.Description);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER-CLOCK", "default-schedule-requires-cron-expression")]
+    public void DefaultRecurringSchedule_RejectsAMissingCronExpression(string? cronExpression)
+    {
+        Assert.ThrowsAny<ArgumentException>(() => new TestRecurringSchedule(TimeProvider.System, cronExpression!));
     }
 
     [Fact]
@@ -137,6 +248,14 @@ public sealed class SchedulerTimeProviderTests
 
     }
 
+    private static void AssertCancellationTimestamp(object commandValues)
+    {
+        PropertyInfo timestamp = commandValues.GetType().GetProperty("Timestamp")
+            ?? throw new InvalidOperationException("The cancellation command values do not expose a timestamp.");
+
+        Assert.Equal(CommandTime, Assert.IsType<DateTimeOffset>(timestamp.GetValue(commandValues)));
+    }
+
     private static void AssertCommand(CancelScheduledRecurringMessage command)
     {
         Assert.Equal(CommandTime, command.Timestamp);
@@ -161,16 +280,27 @@ public sealed class SchedulerTimeProviderTests
         Assert.Equal("operations", command.ScheduleGroup);
     }
 
-    private sealed class TestRecurringSchedule(TimeProvider timeProvider) : DefaultRecurringSchedule(timeProvider)
+    private sealed class TestRecurringSchedule(TimeProvider timeProvider, string cronExpression = "0 0 2 * * ?") :
+        DefaultRecurringSchedule(cronExpression, timeProvider: timeProvider)
     {
         public override string ToString() => CronExpression;
     }
 
     private sealed record ClockProbe;
 
+    private sealed record RuntimeClockProbe;
+
+    private sealed record TokenProbe(Guid TokenId);
+
+    private sealed record NullSelectorProbe;
+
     private interface AdvancedScheduleEndpoint :
         ISendEndpoint,
         ViciOne.ServiceBus.Advanced.IAdvancedSendEndpoint;
+
+    private interface AdvancedPublishEndpoint :
+        IPublishEndpoint,
+        ViciOne.ServiceBus.Advanced.IAdvancedPublishEndpoint;
 
     private class CaptureEndpointProxy : DispatchProxy
     {
@@ -204,6 +334,14 @@ public sealed class SchedulerTimeProviderTests
                 var context = new InMemorySendContext<ClockProbe>(message);
                 Context = context;
                 return pipe.SendAsync(context);
+            }
+
+            if (targetMethod.Name == "SendAsync"
+                && args is [TokenProbe tokenMessage, IPipe<SendContext<TokenProbe>> tokenPipe, CancellationToken _])
+            {
+                var context = new InMemorySendContext<TokenProbe>(tokenMessage);
+                Context = context;
+                return tokenPipe.SendAsync(context);
             }
 
             throw new NotSupportedException(targetMethod.Name);

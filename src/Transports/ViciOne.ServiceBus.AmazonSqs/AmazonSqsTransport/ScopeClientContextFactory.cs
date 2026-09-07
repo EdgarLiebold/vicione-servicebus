@@ -28,7 +28,7 @@ public class ScopeClientContextFactory :
     }
 
     IActivePipeContextAgent<ClientContext> IPipeContextFactory<ClientContext>.CreateActiveContext(ISupervisor supervisor,
-        PipeContextHandle<ClientContext> context, CancellationToken cancellationToken)
+        IPipeContextHandle<ClientContext> context, CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedModelAsync(context.Context, cancellationToken));
     }

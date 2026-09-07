@@ -4,9 +4,9 @@ using Amazon.SQS.Model;
 namespace ViciOne.ServiceBus.AmazonSqs;
 
 /// <summary>Reads a native Amazon SQS body or unwraps the JSON envelope delivered by Amazon SNS.</summary>
-public class SqsMessageBody :
+public sealed class SqsMessageBody :
     StringMessageBody,
-    JsonMessageBody
+    IJsonMessageBody
 {
     readonly Message _message;
     JsonElement? _topicArn;

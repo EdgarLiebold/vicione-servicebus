@@ -43,7 +43,7 @@ public class SendEndpointContextFactory :
     /// <param name="context">The sender-context handle to share.</param>
     /// <param name="cancellationToken">Cancels acquisition and bounds the lease lifetime.</param>
     /// <returns>The active shared-context agent.</returns>
-    public IActivePipeContextAgent<SendEndpointContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<SendEndpointContext> context,
+    public IActivePipeContextAgent<SendEndpointContext> CreateActiveContext(ISupervisor supervisor, IPipeContextHandle<SendEndpointContext> context,
         CancellationToken cancellationToken)
     {
         return supervisor.AddActiveContext(context, CreateSharedContextAsync(context.Context, cancellationToken));

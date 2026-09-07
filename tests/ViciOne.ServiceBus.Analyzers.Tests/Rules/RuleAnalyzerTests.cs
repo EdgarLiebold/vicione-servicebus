@@ -1,6 +1,6 @@
 using Microsoft.CodeAnalysis.Diagnostics;
-using ViciOne.ServiceBus.Analyzers.Tests.Fixtures;
 using ViciOne.ServiceBus.Analyzers.Rules;
+using ViciOne.ServiceBus.Analyzers.Tests.Fixtures;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Infrastructure.Roslyn;
 using ViciOne.ServiceBus.Tests.Infrastructure.Roslyn.Diagnostics;

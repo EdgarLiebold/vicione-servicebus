@@ -4,39 +4,34 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>Provides publish schedule message services.</summary>
-public class PublishScheduleMessageProvider :
+/// <summary>Publishes scheduling commands for an external scheduler.</summary>
+public sealed class PublishScheduleMessageProvider :
     BaseScheduleMessageProvider
 {
     readonly IPublishEndpoint _publishEndpoint;
+    readonly TimeProvider _timeProvider;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="publishEndpoint">The publish endpoint.</param>
-    public PublishScheduleMessageProvider(IPublishEndpoint publishEndpoint)
+    /// <summary>Creates a provider that publishes scheduler commands.</summary>
+    /// <param name="publishEndpoint">Publishes commands to the scheduler.</param>
+    /// <param name="timeProvider">The clock used to timestamp cancellation commands.</param>
+    public PublishScheduleMessageProvider(IPublishEndpoint publishEndpoint, TimeProvider? timeProvider = null)
     {
-        _publishEndpoint = publishEndpoint;
+        _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
+        _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     protected override Task ScheduleSendAsync(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken = default)
     {
         return _publishEndpoint.PublishAsync(message, pipe, cancellationToken);
     }
 
-    /// <summary>Determines whether the current value can cel scheduled send.</summary>
-    /// <param name="tokenId">The token id.</param>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     protected override Task CancelScheduledSendAsync(Guid tokenId, Uri? destinationAddress, CancellationToken cancellationToken = default)
     {
         return _publishEndpoint.PublishAsync<CancelScheduledMessage>(new
         {
-            Timestamp = TimeProvider.System.GetUtcNow(),
+            Timestamp = _timeProvider.GetUtcNow(),
             TokenId = tokenId
         }, cancellationToken);
     }

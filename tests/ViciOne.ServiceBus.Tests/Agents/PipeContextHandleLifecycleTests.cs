@@ -14,7 +14,7 @@ public sealed class PipeContextHandleLifecycleTests
     {
         var handle = new AsyncPipeContextHandle<AgentContext>();
         IAsyncPipeContextHandle<AgentContext> asyncHandle = handle;
-        PipeContextHandle<AgentContext> contextHandle = handle;
+        IPipeContextHandle<AgentContext> contextHandle = handle;
         var expected = new AgentContext();
         using var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Cancel();
@@ -37,7 +37,7 @@ public sealed class PipeContextHandleLifecycleTests
     {
         var handle = new AsyncPipeContextHandle<AgentContext>();
         IAsyncPipeContextHandle<AgentContext> asyncHandle = handle;
-        PipeContextHandle<AgentContext> contextHandle = handle;
+        IPipeContextHandle<AgentContext> contextHandle = handle;
         using var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Cancel();
 
@@ -55,7 +55,7 @@ public sealed class PipeContextHandleLifecycleTests
     {
         var handle = new AsyncPipeContextHandle<AgentContext>();
         IAsyncPipeContextHandle<AgentContext> asyncHandle = handle;
-        PipeContextHandle<AgentContext> contextHandle = handle;
+        IPipeContextHandle<AgentContext> contextHandle = handle;
         var expected = new ExpectedFailureException();
 
         await asyncHandle.FaultedAsync(expected);
@@ -164,7 +164,7 @@ public sealed class PipeContextHandleLifecycleTests
         await agent.Completed;
 
         Assert.Equal(1, context.DisposeCount);
-        Assert.True(((PipeContextHandle<CoordinatedDisposableContext>)agent).IsDisposed);
+        Assert.True(((IPipeContextHandle<CoordinatedDisposableContext>)agent).IsDisposed);
         Assert.True(agent.Completed.IsCompletedSuccessfully);
     }
 
@@ -231,7 +231,7 @@ public sealed class PipeContextHandleLifecycleTests
         Task second = disposable.DisposeAsync().AsTask();
 
         Assert.False(second.IsCompleted);
-        Assert.True(((PipeContextHandle<CoordinatedDisposableContext>)handle).IsDisposed);
+        Assert.True(((IPipeContextHandle<CoordinatedDisposableContext>)handle).IsDisposed);
 
         context.ReleaseDisposal();
         ExpectedFailureException firstFailure = await Assert.ThrowsAsync<ExpectedFailureException>(() => first);
@@ -296,9 +296,9 @@ public sealed class PipeContextHandleLifecycleTests
         var borrowed = new ActivePipeContext<AgentContext>(owner, nullContext);
 
         InvalidOperationException ownerFailure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            ((PipeContextHandle<AgentContext>)owner).Context);
+            ((IPipeContextHandle<AgentContext>)owner).Context);
         InvalidOperationException borrowedFailure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            ((PipeContextHandle<AgentContext>)borrowed).Context);
+            ((IPipeContextHandle<AgentContext>)borrowed).Context);
 
         Assert.Equal("The context task completed without a context.", ownerFailure.Message);
         Assert.Equal("The active context task completed without a context.", borrowedFailure.Message);
@@ -352,7 +352,7 @@ public sealed class PipeContextHandleLifecycleTests
 
         public IActivePipeContextAgent<AgentContext> CreateActiveContext(
             ISupervisor supervisor,
-            PipeContextHandle<AgentContext> context,
+            IPipeContextHandle<AgentContext> context,
             CancellationToken cancellationToken = default) => supervisor.AddActiveContext(context, context.Context);
     }
 
@@ -364,7 +364,7 @@ public sealed class PipeContextHandleLifecycleTests
 
         public IActivePipeContextAgent<AgentContext> CreateActiveContext(
             ISupervisor supervisor,
-            PipeContextHandle<AgentContext> context,
+            IPipeContextHandle<AgentContext> context,
             CancellationToken cancellationToken = default) => null!;
     }
 

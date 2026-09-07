@@ -130,8 +130,7 @@ public static class MessageDataExtensions
     /// <param name="cancellationToken">Cancels serialization or storage.</param>
     /// <returns>The inline or repository-backed serialized message data.</returns>
     public static Task<IMessageData> PutObjectAsync(this IMessageDataRepository repository, object? value, Type objectType,
-        CancellationToken cancellationToken =
-            default)
+        CancellationToken cancellationToken = default)
     {
         return PutObjectAsync(repository, value, objectType, default, MessageDataPolicy.Default, cancellationToken);
     }

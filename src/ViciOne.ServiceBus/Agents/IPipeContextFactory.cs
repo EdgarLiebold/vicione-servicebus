@@ -17,6 +17,6 @@ public interface IPipeContextFactory<TContext>
     /// <param name="context">The owned context handle.</param>
     /// <param name="cancellationToken">The token that cancels creation of the active handle.</param>
     /// <returns>The active context handle.</returns>
-    IActivePipeContextAgent<TContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<TContext> context,
+    IActivePipeContextAgent<TContext> CreateActiveContext(ISupervisor supervisor, IPipeContextHandle<TContext> context,
         CancellationToken cancellationToken = default);
 }

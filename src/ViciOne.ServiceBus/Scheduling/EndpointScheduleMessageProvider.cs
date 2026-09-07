@@ -4,43 +4,38 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>Provides endpoint schedule message services.</summary>
-public class EndpointScheduleMessageProvider :
+/// <summary>Submits scheduling commands to a dedicated endpoint.</summary>
+public sealed class EndpointScheduleMessageProvider :
     BaseScheduleMessageProvider
 {
-    readonly Func<Task<ISendEndpoint>> _schedulerEndpoint;
+    readonly Func<CancellationToken, Task<ISendEndpoint>> _schedulerEndpoint;
+    readonly TimeProvider _timeProvider;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="schedulerEndpoint">The scheduler endpoint.</param>
-    public EndpointScheduleMessageProvider(Func<Task<ISendEndpoint>> schedulerEndpoint)
+    /// <summary>Creates a provider that resolves the scheduler endpoint for each operation.</summary>
+    /// <param name="schedulerEndpoint">Resolves the scheduler endpoint with caller cancellation.</param>
+    /// <param name="timeProvider">The clock used to timestamp cancellation commands.</param>
+    public EndpointScheduleMessageProvider(Func<CancellationToken, Task<ISendEndpoint>> schedulerEndpoint, TimeProvider? timeProvider = null)
     {
-        _schedulerEndpoint = schedulerEndpoint;
+        _schedulerEndpoint = schedulerEndpoint ?? throw new ArgumentNullException(nameof(schedulerEndpoint));
+        _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     protected override async Task ScheduleSendAsync(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken = default)
     {
-        var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
+        var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
 
         await endpoint.SendAsync(message, pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Determines whether the current value can cel scheduled send.</summary>
-    /// <param name="tokenId">The token id.</param>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     protected override async Task CancelScheduledSendAsync(Guid tokenId, Uri? destinationAddress, CancellationToken cancellationToken = default)
     {
-        var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
+        var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
 
         await endpoint.SendAsync<CancelScheduledMessage>(new
         {
-            Timestamp = TimeProvider.System.GetUtcNow(),
+            Timestamp = _timeProvider.GetUtcNow(),
             TokenId = tokenId
         }, cancellationToken)
             .ConfigureAwait(false);

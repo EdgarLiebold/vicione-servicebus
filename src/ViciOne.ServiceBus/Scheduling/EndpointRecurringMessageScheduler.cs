@@ -10,7 +10,7 @@ public sealed class EndpointRecurringMessageScheduler :
     IRecurringMessageScheduler
 {
     readonly IBusTopology? _busTopology;
-    readonly Func<Task<ISendEndpoint>> _schedulerEndpoint;
+    readonly Func<CancellationToken, Task<ISendEndpoint>> _schedulerEndpoint;
 
     /// <summary>Creates a scheduler that resolves its command endpoint from a provider.</summary>
     /// <param name="sendEndpointProvider">Resolves the scheduler endpoint.</param>
@@ -24,7 +24,8 @@ public sealed class EndpointRecurringMessageScheduler :
         ArgumentNullException.ThrowIfNull(schedulerAddress);
 
         _busTopology = busTopology;
-        _schedulerEndpoint = () => sendEndpointProvider.GetSendEndpointAsync(schedulerAddress);
+        _schedulerEndpoint = cancellationToken =>
+            sendEndpointProvider.GetSendEndpointAsync(schedulerAddress, cancellationToken: cancellationToken);
         TimeProvider = timeProvider ?? TimeProvider.System;
     }
 
@@ -37,7 +38,7 @@ public sealed class EndpointRecurringMessageScheduler :
         ArgumentNullException.ThrowIfNull(sendEndpoint);
 
         _busTopology = busTopology;
-        _schedulerEndpoint = () => Task.FromResult(sendEndpoint);
+        _schedulerEndpoint = _ => Task.FromResult(sendEndpoint);
         TimeProvider = timeProvider ?? TimeProvider.System;
     }
 
@@ -45,7 +46,7 @@ public sealed class EndpointRecurringMessageScheduler :
     public TimeProvider TimeProvider { get; }
 
     /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="schedule">The schedule.</param>
     /// <param name="message">The message to process.</param>
@@ -65,7 +66,7 @@ public sealed class EndpointRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="schedule">The schedule.</param>
     /// <param name="message">The message to process.</param>
@@ -90,7 +91,7 @@ public sealed class EndpointRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="schedule">The schedule.</param>
     /// <param name="message">The message to process.</param>
@@ -208,7 +209,7 @@ public sealed class EndpointRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="schedule">The schedule.</param>
     /// <param name="values">The values.</param>
@@ -230,7 +231,7 @@ public sealed class EndpointRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="schedule">The schedule.</param>
     /// <param name="values">The values.</param>
@@ -256,7 +257,7 @@ public sealed class EndpointRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="schedule">The schedule.</param>
     /// <param name="values">The values.</param>
@@ -282,7 +283,7 @@ public sealed class EndpointRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="schedule">The schedule.</param>
     /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -300,7 +301,7 @@ public sealed class EndpointRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="schedule">The schedule.</param>
     /// <param name="message">The message to process.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
@@ -321,7 +322,7 @@ public sealed class EndpointRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="schedule">The schedule.</param>
     /// <param name="message">The message to process.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
@@ -421,7 +422,7 @@ public sealed class EndpointRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
     /// <param name="schedule">The schedule.</param>
     /// <param name="values">The values.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -441,7 +442,7 @@ public sealed class EndpointRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
     /// <param name="schedule">The schedule.</param>
     /// <param name="values">The values.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
@@ -464,7 +465,7 @@ public sealed class EndpointRecurringMessageScheduler :
     }
 
     /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
     /// <param name="schedule">The schedule.</param>
     /// <param name="values">The values.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
@@ -487,7 +488,7 @@ public sealed class EndpointRecurringMessageScheduler :
     }
 
     /// <summary>Cancels a recurring schedule.</summary>
-    /// <param name="scheduleId">The schedule id.</param>
+    /// <param name="scheduleId">The schedule identifier.</param>
     /// <param name="scheduleGroup">The schedule group.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -498,13 +499,13 @@ public sealed class EndpointRecurringMessageScheduler :
 
         var command = new CancelScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
-        var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
+        var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
 
         await endpoint.SendAsync<CancelScheduledRecurringMessage>(command, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Pauses scheduled recurring send.</summary>
-    /// <param name="scheduleId">The schedule id.</param>
+    /// <param name="scheduleId">The schedule identifier.</param>
     /// <param name="scheduleGroup">The schedule group.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -515,13 +516,13 @@ public sealed class EndpointRecurringMessageScheduler :
 
         var command = new PauseScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
-        var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
+        var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
 
         await endpoint.SendAsync<PauseScheduledRecurringMessage>(command, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Resumes scheduled recurring send.</summary>
-    /// <param name="scheduleId">The schedule id.</param>
+    /// <param name="scheduleId">The schedule identifier.</param>
     /// <param name="scheduleGroup">The schedule group.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -532,7 +533,7 @@ public sealed class EndpointRecurringMessageScheduler :
 
         var command = new ResumeScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
-        var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
+        var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
 
         await endpoint.SendAsync<ResumeScheduledRecurringMessage>(command, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
@@ -543,7 +544,7 @@ public sealed class EndpointRecurringMessageScheduler :
     {
         var command = CreateCommand(destinationAddress, schedule, message);
 
-        var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
+        var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
 
         await endpoint.SendAsync(command, cancellationToken).ConfigureAwait(false);
 
@@ -556,7 +557,7 @@ public sealed class EndpointRecurringMessageScheduler :
     {
         var command = CreateCommand(destinationAddress, schedule, message);
 
-        var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
+        var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
 
         await endpoint.SendAsync(command, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -571,7 +572,7 @@ public sealed class EndpointRecurringMessageScheduler :
 
         var scheduleMessagePipe = new ScheduleRecurringMessageContextPipe<T>(message, pipe);
 
-        var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
+        var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
 
         await endpoint.SendAsync(command, scheduleMessagePipe, cancellationToken).ConfigureAwait(false);
 
@@ -615,7 +616,7 @@ public sealed class EndpointRecurringMessageScheduler :
     }
 
 
-    class ScheduleRecurringMessageContextPipe<T> :
+    sealed class ScheduleRecurringMessageContextPipe<T> :
         IPipe<SendContext<ScheduleRecurringMessage>>
         where T : class
     {

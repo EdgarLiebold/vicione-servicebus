@@ -24,6 +24,19 @@ public sealed class EndpointConventionIntegrationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-ENDPOINT-CONVENTION", "missing-route-is-a-configuration-error")]
+    public async Task ConventionSend_ReportsAMissingRouteAsAConfigurationErrorAsync()
+    {
+        IBusControl bus = Bus.Factory.CreateUsingInMemory(_ => { });
+
+        ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() =>
+            bus.SendAsync(new UnmappedRouteMessage(), TestContext.Current.CancellationToken));
+
+        Assert.Contains(nameof(UnmappedRouteMessage), exception.Message, StringComparison.Ordinal);
+        Assert.Contains("not configured", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CONVENTION", "full-short-interface-base-and-concrete-override")]
     public async Task ConventionMatrix_RoutesEachRuntimeContractToItsExactMappedEndpointAsync()
     {

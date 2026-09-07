@@ -17,7 +17,7 @@ public class PipeContextSupervisor<TContext> :
     readonly ISupervisor _activeSupervisor;
     readonly IPipeContextFactory<TContext> _contextFactory;
     readonly object _contextLock = new object();
-    PipeContextHandle<TContext>? _context;
+    IPipeContextHandle<TContext>? _context;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="contextFactory">Factory used to create the underlying and active contexts.</param>
@@ -137,20 +137,20 @@ public class PipeContextSupervisor<TContext> :
 
     IActivePipeContextAgent<TContext> CreateActiveContext(CancellationToken cancellationToken)
     {
-        PipeContextHandle<TContext> pipeContextHandle = GetContext();
+        IPipeContextHandle<TContext> pipeContextHandle = GetContext();
 
         return _contextFactory.CreateActiveContext(_activeSupervisor, pipeContextHandle, cancellationToken)
             ?? throw new InvalidOperationException($"The context factory returned no active {TypeCache<TContext>.ShortName} context.");
     }
 
-    PipeContextHandle<TContext> GetContext()
+    IPipeContextHandle<TContext> GetContext()
     {
         lock (_contextLock)
         {
             if (_context is { IsDisposed: false })
                 return _context;
 
-            PipeContextHandle<TContext> context = _contextFactory.CreateContext(this)
+            IPipeContextHandle<TContext> context = _contextFactory.CreateContext(this)
                 ?? throw new InvalidOperationException($"The context factory returned no {TypeCache<TContext>.ShortName} context.");
             _context = context;
 

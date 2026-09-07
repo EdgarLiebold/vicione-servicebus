@@ -233,7 +233,7 @@ public sealed class SchedulerCommandIntegrationTests
         var consumed = new ConsumeCompletionObserver<ScheduleMessage>(_ => true);
         using ConnectHandle observer = fixture.Bus.ConnectConsumeObserver(consumed);
         var scheduler = new MessageScheduler(
-            new EndpointScheduleMessageProvider(() => Task.FromResult(fixture.SchedulerEndpoint)),
+            new EndpointScheduleMessageProvider(_ => Task.FromResult(fixture.SchedulerEndpoint)),
             fixture.Bus.Topology);
 
         ScheduledMessage<ScheduledPayload> scheduled = await scheduler.ScheduleSendAsync(

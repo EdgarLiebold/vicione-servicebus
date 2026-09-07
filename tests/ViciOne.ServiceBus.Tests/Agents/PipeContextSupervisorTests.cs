@@ -94,7 +94,7 @@ public sealed class PipeContextSupervisorTests
 
         public IActivePipeContextAgent<TrackingContext> CreateActiveContext(
             ISupervisor supervisor,
-            PipeContextHandle<TrackingContext> context,
+            IPipeContextHandle<TrackingContext> context,
             CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested(); return supervisor.AddActiveContext(context, context.Context);
