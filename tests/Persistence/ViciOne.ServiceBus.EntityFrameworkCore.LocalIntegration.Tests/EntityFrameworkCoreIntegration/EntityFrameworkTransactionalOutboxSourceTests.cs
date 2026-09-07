@@ -168,12 +168,12 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
         Assert.Equal(OutboxFailureKind.Unclassified, firstFailure.LastFailureKind);
         Assert.Equal((FrozenTime + TimeSpan.FromSeconds(1)).UtcDateTime, firstFailure.NextDeliveryTime);
 
-        notification.Delivered();
+        notification.SignalDelivery();
         Assert.Equal(3, await notification.ReadWaitEntryAsync(fixture.OperationTimeout, fixture.CancellationToken));
         Assert.Equal(1, failingSend.AttemptCount);
 
         fixture.TimeProvider.Advance(TimeSpan.FromSeconds(1));
-        notification.Delivered();
+        notification.SignalDelivery();
         Assert.Equal(2, await failingSend.ReadAttemptAsync(fixture.OperationTimeout, fixture.CancellationToken));
         Assert.Equal(4, await notification.ReadWaitEntryAsync(fixture.OperationTimeout, fixture.CancellationToken));
         Assert.Equal(2, failingSend.AttemptCount);
@@ -476,7 +476,7 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
             new UnboundedChannelOptions { SingleReader = true, SingleWriter = false });
         private int _waitCount;
 
-        public void Delivered()
+        public void SignalDelivery()
         {
             if (!_wakeUps.Writer.TryWrite(true))
                 throw new InvalidOperationException("The controlled outbox notification rejected a delivery signal.");

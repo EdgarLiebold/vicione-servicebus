@@ -5,9 +5,9 @@ using Microsoft.Extensions.Options;
 
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 
-/// <summary>Signals changes to bus outbox.</summary>
-/// <typeparam name="TScope">The scope type.</typeparam>
-public class BusOutboxNotification<TScope> :
+/// <summary>Coordinates persisted outbox work with the single delivery agent for a bus scope.</summary>
+/// <typeparam name="TScope">The bus and persistence scope whose delivery agent is notified.</typeparam>
+public sealed class BusOutboxNotification<TScope> :
     IBusOutboxNotification<TScope>
     where TScope : class
 {
@@ -17,21 +17,23 @@ public class BusOutboxNotification<TScope> :
     CancellationTokenSource? _deliverySignal;
     bool _deliveryPending;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="options">The options that control the operation.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <summary>Initializes a notification channel for one outbox delivery scope.</summary>
+    /// <param name="options">The polling settings for the delivery service.</param>
+    /// <param name="timeProvider">The clock used for the polling interval.</param>
     public BusOutboxNotification(IOptions<OutboxDeliveryServiceOptions<TScope>> options, TimeProvider timeProvider)
     {
         ArgumentNullException.ThrowIfNull(options);
-        _options = options.Value;
+        _options = options.Value ?? throw new ArgumentException("The options wrapper must contain a value.", nameof(options));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
-    /// <summary>Waits for for delivery.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Waits until persisted work is signaled or the configured polling interval elapses.</summary>
+    /// <param name="cancellationToken">The token that cancels the wait.</param>
+    /// <returns>A task that completes when the delivery agent should query for work.</returns>
     public async Task WaitForDeliveryAsync(CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         CancellationTokenSource signal;
         lock (_lock)
         {
@@ -58,7 +60,7 @@ public class BusOutboxNotification<TScope> :
         }
         catch (OperationCanceledException)
         {
-            // Delivered() intentionally wakes the single delivery agent.
+            // A delivery signal intentionally wakes the single waiting agent.
         }
         finally
         {
@@ -76,8 +78,8 @@ public class BusOutboxNotification<TScope> :
         }
     }
 
-    /// <summary>Delivers ed.</summary>
-    public void Delivered()
+    /// <summary>Signals that persisted outbox work is available for delivery.</summary>
+    public void SignalDelivery()
     {
         lock (_lock)
         {

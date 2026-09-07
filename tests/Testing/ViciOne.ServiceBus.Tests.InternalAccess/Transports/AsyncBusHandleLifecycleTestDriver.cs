@@ -13,13 +13,17 @@ public sealed class AsyncBusHandleLifecycleTestDriver : IAsyncDisposable
     private readonly TestBusDepot _depot;
     private readonly Task _startTask;
 
-    public AsyncBusHandleLifecycleTestDriver(bool blockStop = false)
+    public AsyncBusHandleLifecycleTestDriver(
+        bool blockStop = false,
+        TimeSpan? stopTimeout = null,
+        TimeProvider? timeProvider = null)
     {
         _depot = new TestBusDepot(blockStop);
         _handle = new AsyncBusHandle(
             _depot,
-            NullLogger<ViciOneServiceBusBus>.Instance,
-            Options.Create(new ViciOneServiceBusHostOptions()));
+            NullLogger<AsyncBusHandle>.Instance,
+            Options.Create(new ViciOneServiceBusHostOptions { StopTimeout = stopTimeout }),
+            timeProvider);
         _startTask = (Task)(typeof(AsyncBusHandle)
             .GetField("_startTask", BindingFlags.Instance | BindingFlags.NonPublic)
             ?.GetValue(_handle)
@@ -91,7 +95,7 @@ public sealed class AsyncBusHandleLifecycleTestDriver : IAsyncDisposable
             _stopEntered.TrySetResult();
 
             if (blockStop)
-                await _stopRelease.Task.ConfigureAwait(false);
+                await _stopRelease.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public void CompleteStart() => _start.TrySetResult();

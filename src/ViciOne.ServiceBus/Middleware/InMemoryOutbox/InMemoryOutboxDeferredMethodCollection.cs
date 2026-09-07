@@ -7,28 +7,31 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
-/// <summary>Stores a collection of in memory outbox deferred method values.</summary>
-public class InMemoryOutboxDeferredMethodCollection
+/// <summary>Owns the ordered operations deferred by one in-memory outbox.</summary>
+internal sealed class InMemoryOutboxDeferredMethodCollection
 {
     readonly Task? _clearToSend;
     readonly List<InMemoryOutboxDeferredMethod> _pendingMethods;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="clearToSend">The clear to send.</param>
+    /// <summary>Initializes an empty deferred-operation collection.</summary>
+    /// <param name="clearToSend">An optional task whose completion permits immediate execution of later additions.</param>
     public InMemoryOutboxDeferredMethodCollection(Task? clearToSend = null)
     {
         _clearToSend = clearToSend;
         _pendingMethods = [];
     }
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="method">The method.</param>
+    /// <summary>Queues an operation or executes it immediately after the outbox has been released.</summary>
+    /// <param name="method">The asynchronous operation to invoke.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the operation has been queued or immediately executed.</returns>
     public Task AddAsync(Func<Task> method, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (_clearToSend?.IsCompleted ?? false)
-            return method();
+        ArgumentNullException.ThrowIfNull(method);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+        if (_clearToSend?.IsCompleted ?? false)
+            return method() ?? throw new InvalidOperationException("The deferred outbox operation returned a null task.");
 
         var executionContext = ExecutionContext.Capture();
 
@@ -46,12 +49,14 @@ public class InMemoryOutboxDeferredMethodCollection
             return _pendingMethods.Count;
     }
 
-    /// <summary>Runs the configured action.</summary>
-    /// <param name="concurrent">The concurrent.</param>
+    /// <summary>Removes and executes all queued operations.</summary>
+    /// <param name="concurrent">Whether independent operations may execute concurrently.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the removed operations have finished.</returns>
     public async Task ExecuteAsync(bool concurrent, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         InMemoryOutboxDeferredMethod[] pendingActions;
         lock (_pendingMethods)
         {
@@ -74,11 +79,7 @@ public class InMemoryOutboxDeferredMethodCollection
                 else
                 {
                     foreach (var method in pendingActions)
-                    {
-                        var task = method.RunAsync(cancellationToken: cancellationToken);
-                        if (task != null)
-                            await task.ConfigureAwait(false);
-                    }
+                        await method.RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
                 }
             }
         }
@@ -89,11 +90,12 @@ public class InMemoryOutboxDeferredMethodCollection
         }
     }
 
-    /// <summary>Discards the current value.</summary>
+    /// <summary>Removes all queued operations without executing them.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public void Discard(CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); InMemoryOutboxDeferredMethod[] pendingMethods;
+        cancellationToken.ThrowIfCancellationRequested();
+        InMemoryOutboxDeferredMethod[] pendingMethods;
         lock (_pendingMethods)
         {
             pendingMethods = _pendingMethods.ToArray();
@@ -122,6 +124,5 @@ public class InMemoryOutboxDeferredMethodCollection
 
         foreach (var method in pendingMethods)
             method.Dispose();
-
     }
 }

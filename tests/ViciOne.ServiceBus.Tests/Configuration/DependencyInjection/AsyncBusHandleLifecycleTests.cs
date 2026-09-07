@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.Transports;
 using Xunit;
@@ -46,5 +47,30 @@ public sealed class AsyncBusHandleLifecycleTests
         await Task.WhenAll(firstDispose, secondDispose);
 
         Assert.Equal(1, driver.StopCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASYNC-BUS-LIFECYCLE", "dispose-timeout-uses-injected-clock")]
+    public async Task DisposeTimeout_UsesTheInjectedTimeProviderAsync()
+    {
+        var timeProvider = new FakeTimeProvider();
+        var driver = new AsyncBusHandleLifecycleTestDriver(
+            blockStop: true,
+            stopTimeout: TimeSpan.FromSeconds(5),
+            timeProvider: timeProvider);
+        await driver.StartEntered.WaitAsync(TestContext.Current.CancellationToken);
+        driver.CompleteStart();
+        await driver.StartCompletion.WaitAsync(TestContext.Current.CancellationToken);
+
+        Task firstDisposal = driver.DisposeAsync().AsTask();
+        await driver.StopEntered.WaitAsync(TestContext.Current.CancellationToken);
+        timeProvider.Advance(TimeSpan.FromSeconds(5));
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => firstDisposal);
+        Assert.Equal(1, driver.StopCount);
+
+        driver.ReleaseStop();
+        await driver.DisposeAsync();
+        Assert.Equal(2, driver.StopCount);
     }
 }

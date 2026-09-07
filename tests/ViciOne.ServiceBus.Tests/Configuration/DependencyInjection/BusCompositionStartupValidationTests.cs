@@ -34,7 +34,7 @@ public sealed class BusCompositionStartupValidationTests
             descriptor.ImplementationType?.IsGenericType == true
             && descriptor.ImplementationType.GetGenericTypeDefinition().Name == "BusCompositionStartupValidator`1").ToArray();
         ServiceDescriptor runtime = Assert.Single(hosted, static descriptor =>
-            descriptor.ImplementationType?.Name == "ViciOneServiceBusHostedService");
+            descriptor.ImplementationType?.Name == "ServiceBusHostedService");
 
         Assert.Equal(2, validators.Length);
         Assert.Equal([typeof(IBus), typeof(IOrdersBus)], validators

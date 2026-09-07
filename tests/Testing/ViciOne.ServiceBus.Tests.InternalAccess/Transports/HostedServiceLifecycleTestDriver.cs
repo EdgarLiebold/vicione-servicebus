@@ -7,14 +7,22 @@ namespace ViciOne.ServiceBus.Tests.InternalAccess.Transports;
 public sealed class HostedServiceLifecycleTestDriver : IAsyncDisposable
 {
     private readonly TestBusDepot _depot;
-    private readonly ViciOneServiceBusHostedService _hostedService;
+    private readonly ServiceBusHostedService _hostedService;
 
-    public HostedServiceLifecycleTestDriver(bool blockFirstStop = false)
+    public HostedServiceLifecycleTestDriver(
+        bool blockFirstStop = false,
+        TimeSpan? stopTimeout = null,
+        TimeProvider? timeProvider = null)
     {
         _depot = new TestBusDepot(blockFirstStop);
-        _hostedService = new ViciOneServiceBusHostedService(
+        _hostedService = new ServiceBusHostedService(
             new TestServiceProvider(_depot),
-            Options.Create(new ViciOneServiceBusHostOptions { WaitUntilStarted = true }));
+            Options.Create(new ViciOneServiceBusHostOptions
+            {
+                WaitUntilStarted = true,
+                StopTimeout = stopTimeout,
+            }),
+            timeProvider);
     }
 
     public Task StartEntered => _depot.StartEntered;
@@ -74,7 +82,7 @@ public sealed class HostedServiceLifecycleTestDriver : IAsyncDisposable
             _stopEntered.TrySetResult();
 
             if (blockFirstStop && call == 1)
-                await _stopRelease.Task.ConfigureAwait(false);
+                await _stopRelease.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
 
             cancellationToken.ThrowIfCancellationRequested();
         }

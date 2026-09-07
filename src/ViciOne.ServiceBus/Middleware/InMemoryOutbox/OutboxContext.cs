@@ -4,44 +4,41 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
 /// <summary>
-/// The context for an outbox instance as part of consume context. Used to signal the completion of
-/// the consume, and store any Task factories that should be created.
+/// Buffers outgoing operations for one consume context and controls whether they execute or are discarded.
 /// </summary>
 public interface OutboxContext
 {
-    /// <summary>Returns an awaitable task that is completed when it is clear to send messages.</summary>
+    /// <summary>Gets a task that completes when buffered operations may be delivered.</summary>
     Task ClearToSend { get; }
 
-    /// <summary>Adds a method to be invoked once the outbox is ready to be sent.</summary>
-    /// <param name="method">The method.</param>
+    /// <summary>Adds an asynchronous operation to be invoked after successful consumption.</summary>
+    /// <param name="method">The operation to defer.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the operation has been queued or invoked.</returns>
     Task AddAsync(Func<Task> method, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Captures the current pending-operation boundary so an owning transactional attempt can
-    /// discard only the messages and schedules added by that attempt if it is rolled back.
+    /// Captures the current pending-operation boundary so later additions can be discarded independently.
     /// </summary>
-    /// <returns>The created checkpoint.</returns>
+    /// <returns>An opaque checkpoint owned by this outbox.</returns>
     OutboxCheckpoint CreateCheckpoint();
 
-    /// <summary>Execute all the pending outbox operations (success case).</summary>
-    /// <param name="concurrentMessageDelivery">The concurrent message delivery.</param>
+    /// <summary>Releases and executes every pending outbox operation.</summary>
+    /// <param name="concurrentMessageDelivery">Whether independent deferred sends may execute concurrently.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when every pending operation has finished.</returns>
     Task ExecutePendingActionsAsync(bool concurrentMessageDelivery, CancellationToken cancellationToken = default);
 
-    /// <summary>Discard any pending outbox operations, and cancel any scheduled messages.</summary>
+    /// <summary>Discards every pending operation and cancels every tracked scheduled message.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when pending work and tracked schedules have been discarded.</returns>
     Task DiscardPendingActionsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Discards operations added after <paramref name="checkpoint" /> while preserving pending
-    /// work owned by an earlier successful stage of the same consume pipeline.
+    /// Discards operations added after <paramref name="checkpoint"/> while preserving earlier pending work.
     /// </summary>
-    /// <param name="checkpoint">The checkpoint used by the operation.</param>
+    /// <param name="checkpoint">The checkpoint that defines the state to retain.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when work added after the checkpoint has been discarded.</returns>
     Task DiscardPendingActionsAsync(OutboxCheckpoint checkpoint, CancellationToken cancellationToken = default);
 }

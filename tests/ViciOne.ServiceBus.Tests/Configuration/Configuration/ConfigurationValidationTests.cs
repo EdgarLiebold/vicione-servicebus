@@ -51,12 +51,40 @@ public sealed class ConfigurationValidationTests
         ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(async () =>
         {
             IHostedService hostedService = provider.GetServices<IHostedService>()
-                .Single(service => service.GetType().FullName == "ViciOne.ServiceBus.ViciOneServiceBusHostedService");
+                .Single(service => service.GetType().FullName == "ViciOne.ServiceBus.ServiceBusHostedService");
             await hostedService.StartAsync(TestContext.Current.CancellationToken);
         });
 
         Assert.Null(exception.InnerException);
         Assert.Contains("transport", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DI-REGISTRATION", "all-overloads-reject-null-required-inputs")]
+    public void BusRegistration_RejectsNullCollectionsAndRequiredCallbacks()
+    {
+        ArgumentNullException defaultCollection = Assert.Throws<ArgumentNullException>(() =>
+            DependencyInjectionRegistrationExtensions.AddViciOneServiceBus(null!));
+        ArgumentNullException explicitCollection = Assert.Throws<ArgumentNullException>(() =>
+            DependencyInjectionRegistrationExtensions.AddViciOneServiceBus<ITestBus, TestBusInstance>(null!, _ => { }));
+        ArgumentNullException explicitIdentityCollection = Assert.Throws<ArgumentNullException>(() =>
+            DependencyInjectionRegistrationExtensions.AddViciOneServiceBus<ITestBus, TestBusInstance>(null!, "test-bus", _ => { }));
+        ArgumentNullException generatedCollection = Assert.Throws<ArgumentNullException>(() =>
+            DependencyInjectionRegistrationExtensions.AddViciOneServiceBus<ITestBus>(null!, _ => { }));
+        ArgumentNullException generatedIdentityCollection = Assert.Throws<ArgumentNullException>(() =>
+            DependencyInjectionRegistrationExtensions.AddViciOneServiceBus<ITestBus>(null!, "test-bus", _ => { }));
+        ArgumentNullException explicitConfigure = Assert.Throws<ArgumentNullException>(() =>
+            new ServiceCollection().AddViciOneServiceBus<ITestBus, TestBusInstance>(null!));
+        ArgumentNullException generatedConfigure = Assert.Throws<ArgumentNullException>(() =>
+            new ServiceCollection().AddViciOneServiceBus<ITestBus>(null!));
+
+        Assert.Equal("collection", defaultCollection.ParamName);
+        Assert.Equal("collection", explicitCollection.ParamName);
+        Assert.Equal("collection", explicitIdentityCollection.ParamName);
+        Assert.Equal("collection", generatedCollection.ParamName);
+        Assert.Equal("collection", generatedIdentityCollection.ParamName);
+        Assert.Equal("configure", explicitConfigure.ParamName);
+        Assert.Equal("configure", generatedConfigure.ParamName);
     }
 
     private static void ConfigureEmptyRetry(IInMemoryReceiveEndpointConfigurator endpoint, EmptyRetryScope scope)
@@ -127,6 +155,10 @@ public sealed class ConfigurationValidationTests
     public sealed record ActivityArguments;
 
     public sealed record ActivityLog;
+
+    public interface ITestBus : IBus;
+
+    public sealed class TestBusInstance(IBusControl busControl) : BusInstance<ITestBus>(busControl), ITestBus;
 
     public sealed class RetryActivity : IActivity<ActivityArguments, ActivityLog>
     {

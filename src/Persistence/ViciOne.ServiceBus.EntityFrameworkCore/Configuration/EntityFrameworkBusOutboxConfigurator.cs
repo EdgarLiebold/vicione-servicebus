@@ -13,8 +13,8 @@ using ViciOne.ServiceBus.Transactions;
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Registers and configures an Entity Framework Core transactional outbox for a bus and DbContext.</summary>
-/// <typeparam name="TBus">The bus type.</typeparam>
-/// <typeparam name="TDbContext">The db context type.</typeparam>
+/// <typeparam name="TBus">The bus contract whose sends and publishes are buffered.</typeparam>
+/// <typeparam name="TDbContext">The EF Core context whose transaction owns the outbox writes.</typeparam>
 internal sealed class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
     IEntityFrameworkBusOutboxConfigurator
     where TBus : class, IBus
@@ -27,7 +27,7 @@ internal sealed class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
 
     /// <summary>Initializes the bus-specific outbox configurator over the shared EF Core outbox settings.</summary>
     /// <param name="services">The service collection owned by the bus configuration.</param>
-    /// <param name="outboxConfigurator">The outbox configurator.</param>
+    /// <param name="outboxConfigurator">The shared EF Core query and delivery configuration.</param>
     internal EntityFrameworkBusOutboxConfigurator(IServiceCollection services,
         EntityFrameworkOutboxConfigurator<TBus, TDbContext> outboxConfigurator)
     {
@@ -82,7 +82,10 @@ internal sealed class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
             provider.GetRequiredService<EntityFrameworkBusOutboxSessionRegistry<TBus>>().GetOrCreateTransactional<TDbContext>(provider));
         _services.AddSingleton<IEntityFrameworkScopedBusContextFactory<TBus>>(
             new EntityFrameworkTransactionalScopedBusContextFactory<TBus, TDbContext>(_isDefault));
-        _services.ReplaceScoped<IScopedBusContextProvider<TBus>, EntityFrameworkScopedBusContextProvider<TBus>>();
+        _services.Replace(new ServiceDescriptor(
+            typeof(IScopedBusContextProvider<TBus>),
+            typeof(EntityFrameworkScopedBusContextProvider<TBus>),
+            ServiceLifetime.Scoped));
         _services.AddScoped<IEntityFrameworkTransactionalOutbox<TBus, TDbContext>>(provider =>
             provider.GetRequiredService<EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext>>());
         _services.AddScoped<IEntityFrameworkOutboxOperations<TBus, TDbContext>, EntityFrameworkOutboxOperations<TBus, TDbContext>>();

@@ -7,7 +7,7 @@ using ViciOne.ServiceBus.Transactions;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides extension methods for dependency injection transaction.</summary>
+/// <summary>Registers transaction-aware and explicitly buffered send/publish capabilities for dependency-injected buses.</summary>
 public static class DependencyInjectionTransactionExtensions
 {
     /// <summary>
@@ -15,7 +15,7 @@ public static class DependencyInjectionTransactionExtensions
     /// ambient transaction exists and are deferred to the prepare phase while <see cref="System.Transactions.Transaction.Current" /> is active.
     /// This capability is best-effort and is not a durable atomic outbox.
     /// </summary>
-    /// <param name="busConfigurator">The bus configurator.</param>
+    /// <param name="busConfigurator">The default bus registration that will expose the ambient-transaction capability.</param>
     public static void AddAmbientTransactionBus(this IBusRegistrationConfigurator busConfigurator)
     {
         if (busConfigurator == null)
@@ -31,12 +31,15 @@ public static class DependencyInjectionTransactionExtensions
         busConfigurator.Services.TryAddSingleton(provider =>
             Bind<IBus>.Create(provider.GetRequiredService<IAmbientTransactionBus>()));
 
-        busConfigurator.Services.ReplaceScoped<IScopedBusContextProvider<IBus>, AmbientTransactionScopedBusContextProvider<IBus>>();
+        busConfigurator.Services.Replace(new ServiceDescriptor(
+            typeof(IScopedBusContextProvider<IBus>),
+            typeof(AmbientTransactionScopedBusContextProvider<IBus>),
+            ServiceLifetime.Scoped));
     }
 
     /// <summary>Adds a singleton ambient-transaction capability bound to the specified bus instance.</summary>
-    /// <typeparam name="TBus">The bus type.</typeparam>
-    /// <param name="busConfigurator">The bus configurator.</param>
+    /// <typeparam name="TBus">The application-facing bus contract.</typeparam>
+    /// <param name="busConfigurator">The typed bus registration that will expose the ambient-transaction capability.</param>
     public static void AddAmbientTransactionBus<TBus>(this IBusRegistrationConfigurator<TBus> busConfigurator)
         where TBus : class, IBus
     {
@@ -51,15 +54,18 @@ public static class DependencyInjectionTransactionExtensions
         busConfigurator.Services.TryAddSingleton(provider =>
             Bind<TBus>.Create<IAmbientTransactionBus>(new AmbientTransactionBus(provider.GetRequiredService<TBus>())));
 
-        busConfigurator.Services.ReplaceScoped<IScopedBusContextProvider<TBus>, AmbientTransactionScopedBusContextProvider<TBus>>();
+        busConfigurator.Services.Replace(new ServiceDescriptor(
+            typeof(IScopedBusContextProvider<TBus>),
+            typeof(AmbientTransactionScopedBusContextProvider<TBus>),
+            ServiceLifetime.Scoped));
     }
 
     /// <summary>
     /// Adds a scoped <see cref="IBufferedBus" /> for the default bus. Each scope owns an in-memory FIFO buffer that is dispatched only by
     /// <see cref="IBufferedBus.FlushAsync" />. This capability is not durable and is not an atomic outbox.
     /// </summary>
-    /// <param name="busConfigurator">The bus configurator.</param>
-    /// <param name="capacity">The capacity.</param>
+    /// <param name="busConfigurator">The default bus registration that will expose the buffered capability.</param>
+    /// <param name="capacity">The maximum number of pending operations retained by one scoped buffer.</param>
     public static void AddBufferedBus(this IBusRegistrationConfigurator busConfigurator, int capacity = BufferedBus.DefaultCapacity)
     {
         if (busConfigurator == null)
@@ -76,13 +82,16 @@ public static class DependencyInjectionTransactionExtensions
         busConfigurator.Services.TryAddScoped<IBufferedBus>(provider => new BufferedBus(provider.GetRequiredService<IBus>(), capacity));
         busConfigurator.Services.TryAddScoped(provider => Bind<IBus>.Create(provider.GetRequiredService<IBufferedBus>()));
 
-        busConfigurator.Services.ReplaceScoped<IScopedBusContextProvider<IBus>, BufferedBusScopedBusContextProvider<IBus>>();
+        busConfigurator.Services.Replace(new ServiceDescriptor(
+            typeof(IScopedBusContextProvider<IBus>),
+            typeof(BufferedBusScopedBusContextProvider<IBus>),
+            ServiceLifetime.Scoped));
     }
 
-    /// <summary>Adds a scoped explicitly buffered capability bound to the specified bus instance.</summary>
-    /// <typeparam name="TBus">The bus type.</typeparam>
-    /// <param name="busConfigurator">The bus configurator.</param>
-    /// <param name="capacity">The capacity.</param>
+    /// <summary>Adds a scoped explicitly buffered capability bound to the specified typed bus.</summary>
+    /// <typeparam name="TBus">The application-facing bus contract.</typeparam>
+    /// <param name="busConfigurator">The typed bus registration that will expose the buffered capability.</param>
+    /// <param name="capacity">The maximum number of pending operations retained by one scoped buffer.</param>
     public static void AddBufferedBus<TBus>(this IBusRegistrationConfigurator<TBus> busConfigurator,
         int capacity = BufferedBus.DefaultCapacity)
         where TBus : class, IBus
@@ -101,7 +110,10 @@ public static class DependencyInjectionTransactionExtensions
         busConfigurator.Services.TryAddScoped(provider =>
             Bind<TBus>.Create<IBufferedBus>(new BufferedBus(provider.GetRequiredService<TBus>(), capacity)));
 
-        busConfigurator.Services.ReplaceScoped<IScopedBusContextProvider<TBus>, BufferedBusScopedBusContextProvider<TBus>>();
+        busConfigurator.Services.Replace(new ServiceDescriptor(
+            typeof(IScopedBusContextProvider<TBus>),
+            typeof(BufferedBusScopedBusContextProvider<TBus>),
+            ServiceLifetime.Scoped));
     }
 
     static void EnsureBufferedCapacity<TBus>(IServiceCollection services, int capacity)

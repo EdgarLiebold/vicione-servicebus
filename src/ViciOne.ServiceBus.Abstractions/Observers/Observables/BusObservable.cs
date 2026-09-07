@@ -4,73 +4,84 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Observables;
 
-/// <summary>Publishes observations for bus.</summary>
+/// <summary>Fans out bus lifecycle notifications to a stable snapshot of connected observers.</summary>
 public class BusObservable :
     Connectable<IBusObserver>,
     IBusObserver
 {
-    /// <summary>Runs after create.</summary>
-    /// <param name="bus">The bus.</param>
+    /// <summary>Notifies observers after a bus has been constructed.</summary>
+    /// <param name="bus">The constructed bus.</param>
     public void PostCreate(IBus bus)
     {
+        ArgumentNullException.ThrowIfNull(bus);
         ForEach(x => x.PostCreate(bus));
     }
 
-    /// <summary>Creates faulted.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Notifies observers that bus construction failed.</summary>
+    /// <param name="exception">The construction failure.</param>
     public void CreateFaulted(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
         ForEach(x => x.CreateFaulted(exception));
     }
 
-    /// <summary>Runs before start.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Notifies observers before bus startup begins.</summary>
+    /// <param name="bus">The bus that will start.</param>
+    /// <returns>A task that completes after every observer has processed the notification.</returns>
     public Task PreStartAsync(IBus bus)
     {
+        ArgumentNullException.ThrowIfNull(bus);
         return ForEachAsync(x => x.PreStartAsync(bus));
     }
 
-    /// <summary>Runs after start.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <param name="busReady">The bus ready.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Notifies observers after startup has produced its readiness task.</summary>
+    /// <param name="bus">The started bus.</param>
+    /// <param name="busReady">The task that completes when the bus and all receive endpoints are ready.</param>
+    /// <returns>A task that completes after every observer has processed the notification.</returns>
     public Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
+        ArgumentNullException.ThrowIfNull(bus);
+        ArgumentNullException.ThrowIfNull(busReady);
         return ForEachAsync(x => x.PostStartAsync(bus, busReady));
     }
 
-    /// <summary>Starts faulted.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Notifies observers that bus startup failed.</summary>
+    /// <param name="bus">The bus whose startup failed.</param>
+    /// <param name="exception">The startup failure.</param>
+    /// <returns>A task that completes after every observer has processed the notification.</returns>
     public Task StartFaultedAsync(IBus bus, Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(bus);
+        ArgumentNullException.ThrowIfNull(exception);
         return ForEachAsync(x => x.StartFaultedAsync(bus, exception));
     }
 
-    /// <summary>Runs before stop.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Notifies observers before bus shutdown begins.</summary>
+    /// <param name="bus">The bus that will stop.</param>
+    /// <returns>A task that completes after every observer has processed the notification.</returns>
     public Task PreStopAsync(IBus bus)
     {
+        ArgumentNullException.ThrowIfNull(bus);
         return ForEachAsync(x => x.PreStopAsync(bus));
     }
 
-    /// <summary>Runs after stop.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Notifies observers after the bus has stopped.</summary>
+    /// <param name="bus">The stopped bus.</param>
+    /// <returns>A task that completes after every observer has processed the notification.</returns>
     public Task PostStopAsync(IBus bus)
     {
+        ArgumentNullException.ThrowIfNull(bus);
         return ForEachAsync(x => x.PostStopAsync(bus));
     }
 
-    /// <summary>Stops faulted.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Notifies observers that bus shutdown failed.</summary>
+    /// <param name="bus">The bus whose shutdown failed.</param>
+    /// <param name="exception">The shutdown failure.</param>
+    /// <returns>A task that completes after every observer has processed the notification.</returns>
     public Task StopFaultedAsync(IBus bus, Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(bus);
+        ArgumentNullException.ThrowIfNull(exception);
         return ForEachAsync(x => x.StopFaultedAsync(bus, exception));
     }
 }

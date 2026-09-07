@@ -3,69 +3,77 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Middleware.Outbox;
 
-namespace ViciOne.ServiceBus.Middleware.Outbox;
+namespace ViciOne.ServiceBus.Middleware.Outbox.InMemory;
 
-/// <summary>Carries state for in memory outbox consume operations.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class InMemoryOutboxConsumeContext<TMessage> :
+/// <summary>Persists consume and outgoing-message progress in a process-local inbox entry.</summary>
+/// <typeparam name="TMessage">The consumed message contract.</typeparam>
+internal sealed class InMemoryOutboxConsumeContext<TMessage> :
     OutboxConsumeContextProxy<TMessage>
     where TMessage : class
 {
     readonly InMemoryInboxMessage _inboxMessage;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="options">The options that control the operation.</param>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
-    /// <param name="inboxMessage">The inbox message.</param>
+    /// <summary>Initializes an outbox context over an exclusively owned inbox entry.</summary>
+    /// <param name="context">The incoming message context.</param>
+    /// <param name="options">The inbox identity and outbox delivery settings.</param>
+    /// <param name="provider">The scoped service provider exposed through the context.</param>
+    /// <param name="inboxMessage">The inbox entry that stores consume and delivery progress.</param>
     public InMemoryOutboxConsumeContext(ConsumeContext<TMessage> context, OutboxConsumeOptions options, IServiceProvider provider,
         InMemoryInboxMessage inboxMessage)
         : base(context, options, provider)
     {
-        _inboxMessage = inboxMessage;
+        _inboxMessage = inboxMessage ?? throw new ArgumentNullException(nameof(inboxMessage));
     }
 
-    /// <summary>Gets or sets the continue processing.</summary>
+    /// <summary>Gets or sets whether the receive pipeline may continue after outbox processing.</summary>
     public override bool ContinueProcessing { get; set; } = true;
 
-    /// <summary>Gets a value indicating whether message consumed.</summary>
+    /// <summary>Gets a value indicating whether consumption has been committed.</summary>
     public override bool IsMessageConsumed => _inboxMessage.Consumed.HasValue;
-    /// <summary>Gets a value indicating whether outbox delivered.</summary>
+    /// <summary>Gets a value indicating whether every captured message has been delivered.</summary>
     public override bool IsOutboxDelivered => _inboxMessage.Delivered.HasValue;
-    /// <summary>Gets the receive count.</summary>
+    /// <summary>Gets the number of delivery attempts for the inbox entry.</summary>
     public override int ReceiveCount => _inboxMessage.ReceiveCount;
-    /// <summary>Gets the last sequence number.</summary>
+    /// <summary>Gets the sequence number of the last successfully delivered outgoing message.</summary>
     public override long? LastSequenceNumber => _inboxMessage.LastSequenceNumber;
 
     Guid InboxMessageId => _inboxMessage.MessageId;
 
-    /// <summary>Sets consumed.</summary>
+    /// <summary>Marks consumption as committed at the current bus time.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public override async Task SetConsumedAsync(CancellationToken cancellationToken = default)
+    /// <returns>A completed task after the timestamp has been stored.</returns>
+    public override Task SetConsumedAsync(CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); _inboxMessage.Consumed = this.GetTimeProvider().GetUtcNow().UtcDateTime;
+        cancellationToken.ThrowIfCancellationRequested();
+        _inboxMessage.Consumed = this.GetTimeProvider().GetUtcNow();
 
         LogContext.Debug?.Log("Outbox Consumed: {MessageId} {Consumed}", InboxMessageId, _inboxMessage.Consumed);
+        return Task.CompletedTask;
     }
 
-    /// <summary>Sets delivered.</summary>
+    /// <summary>Marks every captured message as delivered at the current bus time.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public override async Task SetDeliveredAsync(CancellationToken cancellationToken = default)
+    /// <returns>A completed task after the timestamp has been stored.</returns>
+    public override Task SetDeliveredAsync(CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); _inboxMessage.Delivered = this.GetTimeProvider().GetUtcNow().UtcDateTime;
+        cancellationToken.ThrowIfCancellationRequested();
+        _inboxMessage.Delivered = this.GetTimeProvider().GetUtcNow();
 
         LogContext.Debug?.Log("Outbox Delivered: {MessageId} {Delivered}", InboxMessageId, _inboxMessage.Delivered);
+        return Task.CompletedTask;
     }
 
-    /// <summary>Loads outbox messages.</summary>
+    /// <summary>Loads and materializes messages that have not yet been delivered.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the load outbox messages outcome.</returns>
+    /// <returns>A task containing the ordered messages awaiting delivery.</returns>
     public override Task<List<OutboxMessageContext>> LoadOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::System.Collections.Generic.List<global::ViciOne.ServiceBus.Middleware.OutboxMessageContext>>(cancellationToken); List<InMemoryOutboxMessage> messages = _inboxMessage.GetOutboxMessages();
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<List<OutboxMessageContext>>(cancellationToken);
+
+        List<InMemoryOutboxMessage> messages = _inboxMessage.GetOutboxMessages();
 
         for (var i = 0; i < messages.Count; i++)
             messages[i].Deserialize(SerializerContext);
@@ -73,28 +81,35 @@ public class InMemoryOutboxConsumeContext<TMessage> :
         return Task.FromResult(messages.Cast<OutboxMessageContext>().ToList());
     }
 
-    /// <summary>Reports that notify outbox message has been delivered.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Advances the durable delivery position to a delivered message.</summary>
+    /// <param name="message">The delivered outbox message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A completed task after the delivery position has been advanced.</returns>
     public override Task NotifyOutboxMessageDeliveredAsync(OutboxMessageContext message, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _inboxMessage.LastSequenceNumber = message.SequenceNumber;
+        ArgumentNullException.ThrowIfNull(message);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        _inboxMessage.LastSequenceNumber = message.SequenceNumber;
 
         return Task.CompletedTask;
     }
 
-    /// <summary>Removes outbox messages.</summary>
+    /// <summary>Removes every committed outgoing message from the inbox entry.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public override async Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default)
+    /// <returns>A completed task after the messages have been removed.</returns>
+    public override Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); List<InMemoryOutboxMessage> messages = _inboxMessage.GetOutboxMessages();
+        cancellationToken.ThrowIfCancellationRequested();
+        List<InMemoryOutboxMessage> messages = _inboxMessage.GetOutboxMessages();
 
         _inboxMessage.RemoveOutboxMessages();
 
         if (messages.Count > 0)
             LogContext.Debug?.Log("Outbox removed {Count} messages: {MessageId}", messages.Count, InboxMessageId);
+
+        return Task.CompletedTask;
     }
 
     internal void DiscardPendingConsumerMessages()
@@ -103,15 +118,17 @@ public class InMemoryOutboxConsumeContext<TMessage> :
         _inboxMessage.LastSequenceNumber = null;
     }
 
-    /// <summary>Adds send to the configuration.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Serializes and appends an outgoing send to the inbox entry.</summary>
+    /// <typeparam name="T">The outgoing message contract.</typeparam>
+    /// <param name="context">The populated send context to persist.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public override async Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
+    /// <returns>A completed task after the serialized message has been appended.</returns>
+    public override Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        cancellationToken.ThrowIfCancellationRequested(); if (context.MessageId.HasValue == false)
+        ArgumentNullException.ThrowIfNull(context);
+        cancellationToken.ThrowIfCancellationRequested();
+        if (context.MessageId.HasValue == false)
             throw new MessageException(typeof(T), "The SendContext MessageId must be present");
 
         var body = context.Serializer.GetMessageBody(context);
@@ -152,5 +169,6 @@ public class InMemoryOutboxConsumeContext<TMessage> :
         }
 
         _inboxMessage.AddOutboxMessage(outboxMessage);
+        return Task.CompletedTask;
     }
 }

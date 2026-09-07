@@ -14,18 +14,17 @@ using ViciOne.ServiceBus.Transports;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-/// <summary>
-/// Standard registration extensions, which are used to configure consumers, sagas, and activities on receive endpoints from a
-/// dependency injection container.
-/// </summary>
+/// <summary>Registers default and typed buses with dependency injection.</summary>
 public static class DependencyInjectionRegistrationExtensions
 {
-    /// <summary>Adds ViciOne.ServiceBus and its dependencies to the <paramref name="collection" />, and allows consumers, sagas, and activities to be configured.</summary>
-    /// <param name="collection">The collection.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The service collection produced by the operation.</returns>
+    /// <summary>Registers the default bus and applies its endpoint, consumer, saga, activity, and transport configuration.</summary>
+    /// <param name="collection">The service collection that will own the bus.</param>
+    /// <param name="configure">An optional callback that configures the bus registration.</param>
+    /// <returns>The same service collection.</returns>
     public static IServiceCollection AddViciOneServiceBus(this IServiceCollection collection, Action<IBusRegistrationConfigurator>? configure = null)
     {
+        ArgumentNullException.ThrowIfNull(collection);
+
         if (collection.Any(d => d.ServiceType == typeof(IBus)))
         {
             throw new ConfigurationException(
@@ -45,22 +44,19 @@ public static class DependencyInjectionRegistrationExtensions
         return collection;
     }
 
-    /// <summary>
-    /// Configure a ViciOne.ServiceBus bus instance, using the specified <typeparamref name="TBus" /> bus type, which must inherit directly from <see cref="IBus" />.
-    /// A type that implements <typeparamref name="TBus" /> is required, specified by the <typeparamref name="TBusInstance" /> parameter.
-    /// </summary>
-    /// <typeparam name="TBus">The bus type.</typeparam>
-    /// <typeparam name="TBusInstance">The bus instance type.</typeparam>
-    /// <param name="collection">The service collection.</param>
-    /// <param name="configure">Bus instance configuration method.</param>
-    /// <returns>The service collection produced by the operation.</returns>
+    /// <summary>Registers a typed bus through an explicit bus-instance implementation.</summary>
+    /// <typeparam name="TBus">The application-facing bus contract.</typeparam>
+    /// <typeparam name="TBusInstance">The implementation that binds the bus contract to its runtime instance.</typeparam>
+    /// <param name="collection">The service collection that will own the bus.</param>
+    /// <param name="configure">The callback that configures the typed bus registration.</param>
+    /// <returns>The same service collection.</returns>
     public static IServiceCollection AddViciOneServiceBus<TBus, TBusInstance>(this IServiceCollection collection,
         Action<IBusRegistrationConfigurator<TBus>> configure)
         where TBus : class, IBus
         where TBusInstance : BusInstance<TBus>, TBus
     {
-        if (configure == null)
-            throw new ArgumentNullException(nameof(configure));
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(configure);
 
         if (collection.Any(d => d.ServiceType == typeof(TBus)))
         {
@@ -74,20 +70,20 @@ public static class DependencyInjectionRegistrationExtensions
 
         var configurator = new ServiceCollectionBusConfigurator<TBus, TBusInstance>(collection);
 
-        configure?.Invoke(configurator);
+        configure(configurator);
 
         configurator.Complete();
 
         return collection;
     }
 
-    /// <summary>Configures a typed bus with the one rename-stable identity shared by all of its persistent features.</summary>
-    /// <typeparam name="TBus">The bus type.</typeparam>
-    /// <typeparam name="TBusInstance">The bus instance type.</typeparam>
-    /// <param name="collection">The collection.</param>
-    /// <param name="persistenceIdentity">The persistence identity.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The service collection produced by the operation.</returns>
+    /// <summary>Registers a typed bus whose persistent features share an identity that remains stable across type renames.</summary>
+    /// <typeparam name="TBus">The application-facing bus contract.</typeparam>
+    /// <typeparam name="TBusInstance">The implementation that binds the bus contract to its runtime instance.</typeparam>
+    /// <param name="collection">The service collection that will own the bus.</param>
+    /// <param name="persistenceIdentity">The stable identity used to partition all durable state owned by the bus.</param>
+    /// <param name="configure">The callback that configures the typed bus registration.</param>
+    /// <returns>The same service collection.</returns>
     public static IServiceCollection AddViciOneServiceBus<TBus, TBusInstance>(
         this IServiceCollection collection,
         string persistenceIdentity,
@@ -95,6 +91,7 @@ public static class DependencyInjectionRegistrationExtensions
         where TBus : class, IBus
         where TBusInstance : BusInstance<TBus>, TBus
     {
+        ArgumentNullException.ThrowIfNull(collection);
         ArgumentNullException.ThrowIfNull(configure);
         BusPersistenceIdentity<TBus> identity = BusPersistenceIdentity<TBus>.Create(persistenceIdentity);
         return collection.AddViciOneServiceBus<TBus, TBusInstance>(configurator =>
@@ -105,20 +102,16 @@ public static class DependencyInjectionRegistrationExtensions
         });
     }
 
-    /// <summary>
-    /// Configure a ViciOne.ServiceBus MultiBus instance, using the specified <typeparamref name="TBus" /> bus type, which must inherit directly from <see cref="IBus" />.
-    /// A dynamic type will be created to support the bus instance, which will be initialized when the <typeparamref name="TBus" /> type is retrieved
-    /// from the container.
-    /// </summary>
-    /// <typeparam name="TBus">The bus type.</typeparam>
-    /// <param name="collection">The service collection.</param>
-    /// <param name="configure">Bus instance configuration method.</param>
-    /// <returns>The service collection produced by the operation.</returns>
+    /// <summary>Registers a typed bus and creates the internal bus-instance binding for its contract.</summary>
+    /// <typeparam name="TBus">The application-facing bus contract.</typeparam>
+    /// <param name="collection">The service collection that will own the bus.</param>
+    /// <param name="configure">The callback that configures the typed bus registration.</param>
+    /// <returns>The same service collection.</returns>
     public static IServiceCollection AddViciOneServiceBus<TBus>(this IServiceCollection collection, Action<IBusRegistrationConfigurator<TBus>> configure)
         where TBus : class, IBus
     {
-        if (configure == null)
-            throw new ArgumentNullException(nameof(configure));
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(configure);
 
         var doIt = new Callback<TBus>(collection, configure);
 
@@ -127,18 +120,19 @@ public static class DependencyInjectionRegistrationExtensions
         return collection;
     }
 
-    /// <summary>Configures a typed bus with the one rename-stable identity shared by all of its persistent features.</summary>
-    /// <typeparam name="TBus">The bus type.</typeparam>
-    /// <param name="collection">The collection.</param>
-    /// <param name="persistenceIdentity">The persistence identity.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The service collection produced by the operation.</returns>
+    /// <summary>Registers a typed bus whose persistent features share an identity that remains stable across type renames.</summary>
+    /// <typeparam name="TBus">The application-facing bus contract.</typeparam>
+    /// <param name="collection">The service collection that will own the bus.</param>
+    /// <param name="persistenceIdentity">The stable identity used to partition all durable state owned by the bus.</param>
+    /// <param name="configure">The callback that configures the typed bus registration.</param>
+    /// <returns>The same service collection.</returns>
     public static IServiceCollection AddViciOneServiceBus<TBus>(
         this IServiceCollection collection,
         string persistenceIdentity,
         Action<IBusRegistrationConfigurator<TBus>> configure)
         where TBus : class, IBus
     {
+        ArgumentNullException.ThrowIfNull(collection);
         ArgumentNullException.ThrowIfNull(configure);
         BusPersistenceIdentity<TBus> identity = BusPersistenceIdentity<TBus>.Create(persistenceIdentity);
         return collection.AddViciOneServiceBus<TBus>(configurator =>
@@ -147,42 +141,6 @@ public static class DependencyInjectionRegistrationExtensions
             collection.AddSingleton(identity);
             configure(configurator);
         });
-    }
-
-    /// <summary>
-    /// In some situations, it may be necessary to Remove the ViciOneServiceBusHostedService from the container, such as
-    /// when using older versions of the Azure Functions runtime.
-    /// </summary>
-    /// <param name="services">The dependency-injection service collection.</param>
-    /// <returns>The service collection produced by the operation.</returns>
-    public static IServiceCollection RemoveViciOneServiceBusHostedService(this IServiceCollection services)
-    {
-        return RemoveHostedService<ViciOneServiceBusHostedService>(services);
-    }
-
-    /// <summary>Remove the specified hosted service from the service collection.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="services">The dependency-injection service collection.</param>
-    /// <returns>The service collection produced by the operation.</returns>
-    public static IServiceCollection RemoveHostedService<T>(this IServiceCollection services)
-        where T : IHostedService
-    {
-        var descriptor = services.FirstOrDefault(x => x.ServiceType == typeof(IHostedService) && x.ImplementationType == typeof(T));
-        if (descriptor != null)
-            services.Remove(descriptor);
-
-        return services;
-    }
-
-    /// <summary>Replace a scoped service registration with a new one.</summary>
-    /// <typeparam name="TService">The service type.</typeparam>
-    /// <typeparam name="TImplementation">The implementation type.</typeparam>
-    /// <param name="services">The dependency-injection service collection.</param>
-    public static void ReplaceScoped<TService, TImplementation>(this IServiceCollection services)
-        where TService : class
-        where TImplementation : class, TService
-    {
-        services.Replace(new ServiceDescriptor(typeof(TService), typeof(TImplementation), ServiceLifetime.Scoped));
     }
 
     static void AddInstrumentation(IServiceCollection collection)
@@ -210,7 +168,7 @@ public static class DependencyInjectionRegistrationExtensions
                 && descriptor.ImplementationType == validatorType))
         {
             int runtimeIndex = collection.ToList().FindIndex(descriptor => descriptor.ServiceType == typeof(IHostedService)
-                && descriptor.ImplementationType == typeof(ViciOneServiceBusHostedService));
+                && descriptor.ImplementationType == typeof(ServiceBusHostedService));
             var validator = ServiceDescriptor.Singleton(typeof(IHostedService), validatorType);
             if (runtimeIndex < 0)
                 collection.Add(validator);
@@ -218,7 +176,7 @@ public static class DependencyInjectionRegistrationExtensions
                 collection.Insert(runtimeIndex, validator);
         }
 
-        collection.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, ViciOneServiceBusHostedService>());
+        collection.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, ServiceBusHostedService>());
     }
 
     internal static void RemoveViciOneServiceBus(this IServiceCollection collection)
@@ -228,8 +186,6 @@ public static class DependencyInjectionRegistrationExtensions
         collection.RemoveAll<IBusRegistrationContext>();
         collection.RemoveAll(typeof(IReceiveEndpointDispatcher<>));
         collection.RemoveAll<IReceiveEndpointDispatcherFactory>();
-
-
         collection.RemoveAll<IBusDepot>();
         collection.RemoveAll<IScopedConsumeContextProvider>();
         collection.RemoveAll<Bind<IBus, ISetScopedConsumeContext>>();
@@ -249,8 +205,6 @@ public static class DependencyInjectionRegistrationExtensions
 
         collection.RemoveAll<IScopedClientFactory>();
     }
-
-
     class Callback<TBus> :
         IBusInstanceBuilderCallback<TBus, IServiceCollection>
         where TBus : class, IBus
@@ -260,8 +214,8 @@ public static class DependencyInjectionRegistrationExtensions
 
         public Callback(IServiceCollection services, Action<IBusRegistrationConfigurator<TBus>> configure)
         {
-            _services = services;
-            _configure = configure;
+            _services = services ?? throw new ArgumentNullException(nameof(services));
+            _configure = configure ?? throw new ArgumentNullException(nameof(configure));
         }
 
         public IServiceCollection GetResult<TBusInstance>()

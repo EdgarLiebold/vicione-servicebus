@@ -151,6 +151,28 @@ public sealed class SourceFileNamingArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "core-project-root-contains-only-project-infrastructure")]
+    public void CoreProjectRoot_ContainsOnlyProjectInfrastructure()
+    {
+        string coreRoot = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus");
+        string[] expectedFiles =
+        [
+            "GlobalUsings.cs",
+            "ViciOne.ServiceBus.csproj",
+            "ViciOne.ServiceBus.csproj.DotSettings",
+            "packages.lock.json",
+        ];
+
+        string[] actualFiles = Directory.EnumerateFiles(coreRoot, "*", SearchOption.TopDirectoryOnly)
+            .Select(static path => Path.GetFileName(path)
+                ?? throw new InvalidOperationException($"Source path '{path}' has no file name."))
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(expectedFiles, actualFiles);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "saga-project-folders-mirror-top-level-namespaces")]
     public void SagaProjectSourceFolders_MirrorTheirTopLevelNamespace()
     {

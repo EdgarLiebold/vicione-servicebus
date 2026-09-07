@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
 /// <summary>Buffers activity side effects while preserving activity execution metadata.</summary>
-public abstract class InMemoryOutboxActivityContextProxy :
+internal abstract class InMemoryOutboxActivityContextProxy :
     InMemoryOutboxConsumeContext,
     ActivityContext
 {
@@ -15,7 +15,7 @@ public abstract class InMemoryOutboxActivityContextProxy :
     /// <summary>Initializes the outbox context for the specified activity context.</summary>
     /// <param name="activityContext">The activity context.</param>
     protected InMemoryOutboxActivityContextProxy(ActivityContext activityContext)
-        : base(activityContext)
+        : base(activityContext ?? throw new ArgumentNullException(nameof(activityContext)))
     {
         _activityContext = activityContext;
     }
@@ -39,6 +39,9 @@ public abstract class InMemoryOutboxActivityContextProxy :
     public IReadOnlyDictionary<string, object> Variables => _activityContext.Variables;
 
     /// <inheritdoc />
-    public Task NotifyActivityConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default) =>
-        _activityContext.NotifyActivityConsumedAsync(duration, consumerType, cancellationToken);
+    public Task NotifyActivityConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
+        return _activityContext.NotifyActivityConsumedAsync(duration, consumerType, cancellationToken);
+    }
 }

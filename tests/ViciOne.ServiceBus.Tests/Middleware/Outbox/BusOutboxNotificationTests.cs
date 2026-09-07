@@ -14,13 +14,13 @@ public sealed class BusOutboxNotificationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-OUTBOX-NOTIFICATION", "delivery-signal-bypasses-poll-delay")]
-    public async Task Delivered_WakesTheWaiterWithoutAdvancingTheConfiguredClockAsync()
+    public async Task SignalDelivery_WakesTheWaiterWithoutAdvancingTheConfiguredClockAsync()
     {
         var timeProvider = new FakeTimeProvider(Now);
         var notification = CreateNotification(timeProvider);
         Task wait = notification.WaitForDeliveryAsync(TestContext.Current.CancellationToken);
 
-        notification.Delivered();
+        notification.SignalDelivery();
         await wait.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
 
         Assert.Equal(Now, timeProvider.GetUtcNow());
@@ -28,12 +28,12 @@ public sealed class BusOutboxNotificationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-OUTBOX-NOTIFICATION", "delivery-signal-before-wait-is-retained")]
-    public async Task DeliveredBeforeWait_IsConsumedWithoutAdvancingTheConfiguredClockAsync()
+    public async Task SignalBeforeWait_IsConsumedWithoutAdvancingTheConfiguredClockAsync()
     {
         var timeProvider = new FakeTimeProvider(Now);
         var notification = CreateNotification(timeProvider);
 
-        notification.Delivered();
+        notification.SignalDelivery();
         await notification.WaitForDeliveryAsync(TestContext.Current.CancellationToken)
             .WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
 
@@ -65,10 +65,27 @@ public sealed class BusOutboxNotificationTests
 
         InvalidOperationException rejected = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             notification.WaitForDeliveryAsync(TestContext.Current.CancellationToken));
-        notification.Delivered();
+        notification.SignalDelivery();
         await firstWait.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
 
         Assert.Equal("Only one outbox delivery agent may wait on NotificationScope.", rejected.Message);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-OUTBOX-NOTIFICATION", "pre-cancellation-preserves-pending-signal")]
+    public async Task PreCanceledWait_DoesNotConsumeAPendingDeliverySignalAsync()
+    {
+        var timeProvider = new FakeTimeProvider(Now);
+        var notification = CreateNotification(timeProvider);
+        notification.SignalDelivery();
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => notification.WaitForDeliveryAsync(cancellation.Token));
+        await notification.WaitForDeliveryAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+
+        Assert.Equal(Now, timeProvider.GetUtcNow());
     }
 
     private static BusOutboxNotification<NotificationScope> CreateNotification(TimeProvider timeProvider) => new(

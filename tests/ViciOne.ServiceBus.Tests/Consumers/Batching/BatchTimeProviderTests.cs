@@ -119,6 +119,7 @@ public sealed class BatchTimeProviderTests
     {
         private BatchItem _message = null!;
         private ReceiveContext _receiveContext = null!;
+        private SerializerContext _serializerContext = null!;
         private DateTimeOffset _sentTime;
         private Guid _messageId;
 
@@ -127,6 +128,7 @@ public sealed class BatchTimeProviderTests
             _message = message;
             _sentTime = new DateTimeOffset(sentTime, TimeSpan.Zero);
             _receiveContext = receiveContext;
+            _serializerContext = DispatchProxy.Create<SerializerContext, UnsupportedInvocationProxy>();
             _messageId = NewId.NextGuid();
         }
 
@@ -140,7 +142,7 @@ public sealed class BatchTimeProviderTests
                 "get_MessageId" => _messageId,
                 "get_SentTime" => _sentTime,
                 "get_ReceiveContext" => _receiveContext,
-                "get_SerializerContext" => null,
+                "get_SerializerContext" => _serializerContext,
                 "get_CancellationToken" => CancellationToken.None,
                 "HasPayloadType" => false,
                 "TryGetPayload" => SetMissingPayload(args),
@@ -151,18 +153,35 @@ public sealed class BatchTimeProviderTests
 
     private class ReceiveContextProxy : DispatchProxy
     {
+        private static readonly IPublishEndpointProvider PublishEndpointProvider = new UnsupportedPublishEndpointProvider();
+
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
             ArgumentNullException.ThrowIfNull(targetMethod);
 
             return targetMethod.Name switch
             {
-                "get_PublishEndpointProvider" => null,
+                "get_PublishEndpointProvider" => PublishEndpointProvider,
                 "HasPayloadType" => false,
                 "TryGetPayload" => SetMissingPayload(args),
                 _ => throw new NotSupportedException(targetMethod.Name),
             };
         }
+    }
+
+    private class UnsupportedInvocationProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            throw new NotSupportedException(targetMethod?.Name);
+    }
+
+    private sealed class UnsupportedPublishEndpointProvider : IPublishEndpointProvider
+    {
+        public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
+            where T : class => throw new NotSupportedException();
+
+        public ConnectHandle ConnectPublishObserver(IPublishObserver observer) =>
+            throw new NotSupportedException();
     }
 
     private static bool SetMissingPayload(object?[]? args)

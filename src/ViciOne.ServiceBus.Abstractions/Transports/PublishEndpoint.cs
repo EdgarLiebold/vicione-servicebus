@@ -5,64 +5,77 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>Provides an endpoint for publish.</summary>
+/// <summary>Publishes typed messages through transport-specific send endpoints resolved by a provider.</summary>
 public class PublishEndpoint :
     IPublishEndpoint,
     Advanced.IAdvancedPublishEndpoint
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    IPublishEndpointProvider _publishEndpointProvider;
+
+    /// <summary>Initializes a publish endpoint over a transport endpoint provider.</summary>
+    /// <param name="provider">The provider that resolves publish send endpoints and owns publish observers.</param>
     public PublishEndpoint(IPublishEndpointProvider provider)
     {
-        PublishEndpointProvider = provider;
+        _publishEndpointProvider = provider ?? throw new ArgumentNullException(nameof(provider));
     }
 
-    /// <summary>Gets or sets the publish endpoint provider.</summary>
-    protected IPublishEndpointProvider PublishEndpointProvider { get; set; }
+    /// <summary>Gets the provider used to resolve transport-specific publish endpoints.</summary>
+    protected IPublishEndpointProvider PublishEndpointProvider => _publishEndpointProvider;
+
+    /// <summary>Replaces the provider used by subsequent publish operations.</summary>
+    /// <param name="provider">The provider that resolves publish send endpoints and owns publish observers.</param>
+    protected void SetPublishEndpointProvider(IPublishEndpointProvider provider)
+    {
+        _publishEndpointProvider = provider ?? throw new ArgumentNullException(nameof(provider));
+    }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <param name="message">The message to publish.</param>
+    /// <param name="cancellationToken">The token that cancels endpoint resolution or delivery.</param>
+    /// <returns>A task that completes when the transport accepts the message.</returns>
     public Task PublishAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
         return PublishInternalAsync(cancellationToken, message);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="publishPipe">The publish pipe.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <param name="message">The message to publish.</param>
+    /// <param name="publishPipe">The typed pipe that customizes the publish context.</param>
+    /// <param name="cancellationToken">The token that cancels endpoint resolution or delivery.</param>
+    /// <returns>A task that completes when the transport accepts the message.</returns>
     public Task PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(publishPipe);
         return PublishInternalAsync(cancellationToken, message, publishPipe);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="publishPipe">The publish pipe.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <param name="message">The message to publish.</param>
+    /// <param name="publishPipe">The untyped pipe that customizes the publish context.</param>
+    /// <param name="cancellationToken">The token that cancels endpoint resolution or delivery.</param>
+    /// <returns>A task that completes when the transport accepts the message.</returns>
     public Task PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(publishPipe);
         return PublishInternalAsync(cancellationToken, message, publishPipe);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="message">The message whose runtime type is the publish contract.</param>
+    /// <param name="cancellationToken">The token that cancels endpoint resolution or delivery.</param>
+    /// <returns>A task that completes when the transport accepts the message.</returns>
     public Task PublishAsync(object message, CancellationToken cancellationToken)
     {
-        if (message == null)
-            throw new ArgumentNullException(nameof(message));
+        ArgumentNullException.ThrowIfNull(message);
 
         var messageType = message.GetType();
 
@@ -70,14 +83,14 @@ public class PublishEndpoint :
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="publishPipe">The publish pipe.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="message">The message whose runtime type is the publish contract.</param>
+    /// <param name="publishPipe">The pipe that customizes the publish context.</param>
+    /// <param name="cancellationToken">The token that cancels endpoint resolution or delivery.</param>
+    /// <returns>A task that completes when the transport accepts the message.</returns>
     public Task PublishAsync(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
     {
-        if (message == null)
-            throw new ArgumentNullException(nameof(message));
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(publishPipe);
 
         var messageType = message.GetType();
 
@@ -85,91 +98,97 @@ public class PublishEndpoint :
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <param name="message">The message to publish.</param>
     /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="cancellationToken">The token that cancels endpoint resolution or delivery.</param>
+    /// <returns>A task that completes when the transport accepts the message.</returns>
     public Task PublishAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageType);
         return PublishEndpointConverterCache.PublishAsync(this, message, messageType, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <param name="message">The message to publish.</param>
     /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="publishPipe">The publish pipe.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="publishPipe">The pipe that customizes the publish context.</param>
+    /// <param name="cancellationToken">The token that cancels endpoint resolution or delivery.</param>
+    /// <returns>A task that completes when the transport accepts the message.</returns>
     public Task PublishAsync(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageType);
+        ArgumentNullException.ThrowIfNull(publishPipe);
         return PublishEndpointConverterCache.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <typeparam name="T">The message contract to initialize and publish.</typeparam>
+    /// <param name="values">The values used to initialize the message contract.</param>
+    /// <param name="cancellationToken">The token that cancels endpoint resolution or delivery.</param>
+    /// <returns>A task that completes when the transport accepts the initialized message.</returns>
     public Task PublishAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
-        if (values == null)
-            throw new ArgumentNullException(nameof(values));
+        ArgumentNullException.ThrowIfNull(values);
 
         return PublishInternalAsync<T>(cancellationToken, values);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="publishPipe">The publish pipe.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <typeparam name="T">The message contract to initialize and publish.</typeparam>
+    /// <param name="values">The values used to initialize the message contract.</param>
+    /// <param name="publishPipe">The typed pipe that customizes the publish context.</param>
+    /// <param name="cancellationToken">The token that cancels endpoint resolution or delivery.</param>
+    /// <returns>A task that completes when the transport accepts the initialized message.</returns>
     public Task PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
-        if (values == null)
-            throw new ArgumentNullException(nameof(values));
+        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(publishPipe);
 
         return PublishInternalAsync(cancellationToken, values, publishPipe);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="publishPipe">The publish pipe.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <typeparam name="T">The message contract to initialize and publish.</typeparam>
+    /// <param name="values">The values used to initialize the message contract.</param>
+    /// <param name="publishPipe">The untyped pipe that customizes the publish context.</param>
+    /// <param name="cancellationToken">The token that cancels endpoint resolution or delivery.</param>
+    /// <returns>A task that completes when the transport accepts the initialized message.</returns>
     public Task PublishAsync<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
-        if (values == null)
-            throw new ArgumentNullException(nameof(values));
+        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(publishPipe);
 
         return PublishInternalAsync<T>(cancellationToken, values, publishPipe);
     }
 
-    /// <summary>Connects publish observer.</summary>
+    /// <summary>Registers an observer for publish delivery events.</summary>
     /// <param name="observer">The observer to connect.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <returns>An idempotent handle that disconnects the registration.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
         return PublishEndpointProvider.ConnectPublishObserver(observer);
     }
 
-    /// <summary>Gets publish send endpoint.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <returns>A task that produces the requested value.</returns>
-    protected virtual Task<ISendEndpoint> GetPublishSendEndpointAsync<T>()
+    /// <summary>Resolves the transport send endpoint for a message contract.</summary>
+    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <param name="cancellationToken">The token that cancels endpoint resolution.</param>
+    /// <returns>A task containing the resolved send endpoint.</returns>
+    protected virtual Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
-        return PublishEndpointProvider.GetPublishSendEndpointAsync<T>();
+        return PublishEndpointProvider.GetPublishSendEndpointAsync<T>(cancellationToken);
     }
 
     Task PublishInternalAsync<T>(CancellationToken cancellationToken, T message, IPipe<PublishContext<T>>? pipe = null)
         where T : class
     {
-        Task<ISendEndpoint> sendEndpointTask = GetPublishSendEndpointAsync<T>();
+        Task<ISendEndpoint> sendEndpointTask = GetPublishSendEndpointAsync<T>(cancellationToken);
         if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
         {
             var sendEndpoint = sendEndpointTask.Result;
@@ -195,7 +214,7 @@ public class PublishEndpoint :
     Task PublishInternalAsync<T>(CancellationToken cancellationToken, object values, IPipe<PublishContext<T>>? pipe = null)
         where T : class
     {
-        Task<ISendEndpoint> sendEndpointTask = GetPublishSendEndpointAsync<T>();
+        Task<ISendEndpoint> sendEndpointTask = GetPublishSendEndpointAsync<T>(cancellationToken);
         if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
         {
             var sendEndpoint = sendEndpointTask.Result;

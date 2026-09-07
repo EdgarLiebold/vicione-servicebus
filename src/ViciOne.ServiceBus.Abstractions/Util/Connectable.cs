@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Util;
 
-/// <summary>Maintains a collection of connections of the generic type.</summary>
-/// <typeparam name="T">The connectable type.</typeparam>
+/// <summary>Maintains thread-safe registrations and dispatches callbacks over stable point-in-time snapshots.</summary>
+/// <typeparam name="T">The registered connection type.</typeparam>
 public class Connectable<T>
     where T : class
 {
@@ -14,7 +14,7 @@ public class Connectable<T>
     T[]? _connected;
     long _nextId;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Initializes an empty connection set.</summary>
     public Connectable()
     {
         _connections = new Dictionary<long, T>();
@@ -27,12 +27,12 @@ public class Connectable<T>
     /// </summary>
     public T[] Connected => [.. GetConnected()];
 
-    /// <summary>The number of connections.</summary>
+    /// <summary>Gets the number of currently registered connections.</summary>
     public int Count => GetConnected().Length;
 
-    /// <summary>Connect a connectable type.</summary>
-    /// <param name="connection">The connection to add.</param>
-    /// <returns>The connection handle.</returns>
+    /// <summary>Adds one connection.</summary>
+    /// <param name="connection">The connection to register.</param>
+    /// <returns>An idempotent handle that removes this registration.</returns>
     public ConnectHandle Connect(T connection)
     {
         ArgumentNullException.ThrowIfNull(connection);
@@ -48,13 +48,15 @@ public class Connectable<T>
         return new Handle(id, this);
     }
 
-    /// <summary>Enumerate the connections invoking the callback for each connection.</summary>
-    /// <param name="callback">The callback.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>An awaitable Task for the operation.</returns>
+    /// <summary>Invokes an asynchronous callback for every connection in a stable point-in-time snapshot.</summary>
+    /// <param name="callback">The callback to invoke for each connection.</param>
+    /// <param name="cancellationToken">The token that cancels dispatch before callbacks begin.</param>
+    /// <returns>A task that completes when every invoked callback has completed.</returns>
     public Task ForEachAsync(Func<T, Task> callback, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); ArgumentNullException.ThrowIfNull(callback);
+        ArgumentNullException.ThrowIfNull(callback);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
 
         T[] connected = GetConnected();
 
@@ -82,7 +84,7 @@ public class Connectable<T>
     }
 
     /// <summary>Invokes <paramref name="callback" /> for every instance in a stable point-in-time snapshot.</summary>
-    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <param name="callback">The callback to invoke for each connection.</param>
     public void ForEach(Action<T> callback)
     {
         ArgumentNullException.ThrowIfNull(callback);
@@ -109,7 +111,7 @@ public class Connectable<T>
     /// Returns whether <paramref name="callback" /> accepts every instance in a stable
     /// point-in-time snapshot, stopping at the first rejection.
     /// </summary>
-    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <param name="callback">The predicate to evaluate for each connection.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool All(Func<T, bool> callback)
     {
@@ -174,9 +176,7 @@ public class Connectable<T>
             _connected = null;
         }
     }
-
-
-    class Handle :
+    sealed class Handle :
         ConnectHandle
     {
         readonly Connectable<T> _connectable;

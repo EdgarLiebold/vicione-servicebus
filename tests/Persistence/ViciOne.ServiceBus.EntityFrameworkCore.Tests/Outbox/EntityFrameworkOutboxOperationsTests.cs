@@ -165,7 +165,7 @@ public sealed class EntityFrameworkOutboxOperationsTests
         private int _deliveredCount;
         public int DeliveredCount => Volatile.Read(ref _deliveredCount);
         public Task WaitForDeliveryAsync(CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
-        public void Delivered() => Interlocked.Increment(ref _deliveredCount);
+        public void SignalDelivery() => Interlocked.Increment(ref _deliveredCount);
     }
 
     private sealed class OperationsDbContext(DbContextOptions<OperationsDbContext> options) : DbContext(options)

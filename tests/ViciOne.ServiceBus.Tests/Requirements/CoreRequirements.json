@@ -2744,14 +2744,14 @@
    {
       "requirementId" : "REQ-VSB-BUS-OUTBOX-NOTIFICATION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "Delivered_WakesTheWaiterWithoutAdvancingTheConfiguredClockAsync",
+      "testMethod" : "SignalDelivery_WakesTheWaiterWithoutAdvancingTheConfiguredClockAsync",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.Outbox.BusOutboxNotificationTests",
       "variantKey" : "delivery-signal-bypasses-poll-delay"
    },
    {
       "requirementId" : "REQ-VSB-BUS-OUTBOX-NOTIFICATION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "DeliveredBeforeWait_IsConsumedWithoutAdvancingTheConfiguredClockAsync",
+      "testMethod" : "SignalBeforeWait_IsConsumedWithoutAdvancingTheConfiguredClockAsync",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.Outbox.BusOutboxNotificationTests",
       "variantKey" : "delivery-signal-before-wait-is-retained"
    },
@@ -2768,6 +2768,13 @@
       "testMethod" : "ConcurrentWaiter_IsRejectedWithoutReplacingTheActiveSignalAsync",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.Outbox.BusOutboxNotificationTests",
       "variantKey" : "second-waiter-fails-closed"
+   },
+   {
+      "requirementId" : "REQ-VSB-BUS-OUTBOX-NOTIFICATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PreCanceledWait_DoesNotConsumeAPendingDeliverySignalAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Outbox.BusOutboxNotificationTests",
+      "variantKey" : "pre-cancellation-preserves-pending-signal"
    },
    {
       "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT",
@@ -3921,6 +3928,13 @@
   ,{ "requirementId": "REQ-VSB-STATE-MACHINE-NESTED-REQUEST", "variantKey": "faulted-request-faults-original-request", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineNestedRequestIntegrationTests", "testMethod": "NestedRequestFault_PropagatesOneTypedFaultToTheOriginalRequesterAsync" }
   ,{ "requirementId": "REQ-VSB-RELIABLE-INBOX", "variantKey": "concurrent-duplicate-message-id-executes-body-once", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.ReliableMessaging.ReliableInMemoryIntegrationTests", "testMethod": "InboxLock_AllowsExactlyOneOfThreeConcurrentDeliveriesToPublishTheHundredEventsAsync" }
   ,{ "requirementId": "REQ-VSB-RELIABLE-INBOX", "variantKey": "held-message-lock-honors-requested-cancellation", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Outbox.InMemoryOutboxMessageRepositoryTests", "testMethod": "HeldMessageLock_HonorsAnAlreadyRequestedCancellationAsync" }
+  ,{ "requirementId": "REQ-VSB-RELIABLE-INBOX", "variantKey": "repository-key-rejects-empty-identifiers", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Outbox.InMemoryOutboxMessageRepositoryTests", "testMethod": "Lock_RejectsEachEmptyIdentifierBeforeObservingCancellationAsync" }
+  ,{ "requirementId": "REQ-VSB-RELIABLE-INBOX", "variantKey": "new-entry-uses-injected-clock", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Outbox.InMemoryOutboxMessageRepositoryTests", "testMethod": "NewInboxEntry_UsesTheInjectedClockAsync" }
+  ,{ "requirementId": "REQ-VSB-OUTBOX-SEND-ENDPOINT", "variantKey": "persistent-endpoint-validates-every-required-input", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Outbox.OutboxSendEndpointBoundaryTests", "testMethod": "PersistentEndpoint_RejectsEveryMissingRequiredInputBeforeTransportUseAsync" }
+  ,{ "requirementId": "REQ-VSB-OUTBOX-SEND-ENDPOINT", "variantKey": "persistent-endpoint-delegates-observer-registration", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Outbox.OutboxSendEndpointBoundaryTests", "testMethod": "PersistentEndpoint_ReturnsTheTransportObserverHandle" }
+  ,{ "requirementId": "REQ-VSB-OUTBOX-SEND-ENDPOINT", "variantKey": "volatile-endpoint-validates-inputs-and-forwards-cancellation", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Outbox.OutboxSendEndpointBoundaryTests", "testMethod": "VolatileEndpoint_ValidatesEveryRequiredInputAndForwardsCancellationAsync" }
+  ,{ "requirementId": "REQ-VSB-INMEMORY-OUTBOX-SCHEDULER", "variantKey": "every-overload-validates-required-inputs", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxMessageSchedulerBoundaryTests", "testMethod": "EveryScheduleOverload_RejectsEachMissingRequiredInputBeforeSchedulerUseAsync" }
+  ,{ "requirementId": "REQ-VSB-INMEMORY-OUTBOX-SCHEDULER", "variantKey": "cancellation-is-honored-before-queueing", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxMessageSchedulerBoundaryTests", "testMethod": "PreCanceledOperations_DoNotResolveTheSchedulerOrQueueWorkAsync" }
   ,{ "requirementId": "REQ-VSB-RELIABLE-CONSUMER", "variantKey": "outbox-exactly-once-across-success-and-first-attempt-retry", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.ReliableMessaging.ReliableInMemoryIntegrationTests", "testMethod": "ConsumerOutbox_PublishesBothScopedEventsExactlyOnceWithTheirRoutingKeysAsync" }
   ,{ "requirementId": "REQ-VSB-RELIABLE-SAGA", "variantKey": "success-consume-retry-and-delivery-redelivery-reach-verified", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.ReliableMessaging.ReliableInMemoryIntegrationTests", "testMethod": "SagaOutbox_ReachesVerifiedWithOneCommittedStateMessageAsync" }
   ,{ "requirementId": "REQ-VSB-CONTAINER-BATCH-FUTURE", "variantKey": "completed-result-is-durable-without-reexecuting-fanout", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests", "testMethod": "CompletedFuture_ReplaysTheDurableResultWithoutRepeatingAnyChildRequestAsync" }
@@ -4150,6 +4164,8 @@
   ,{ "requirementId": "REQ-VSB-CAPABILITY-PACKAGES", "variantKey": "custom-consumer-kind-rejects-unsupported-harness-shape", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumerKindExtensionTests", "testMethod": "CustomConsumerKind_RejectsAnUnsupportedHarnessObservationShape" }
   ,{ "requirementId": "REQ-VSB-RECEIVER-CONFIGURATION", "variantKey": "shared-settings-topology-and-lifecycle-links-forward-to-endpoint-owner", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ReceiverConfigurationTests", "testMethod": "Wrapper_ForwardsEverySharedSettingAndLifecycleLinkToTheEndpointOwnerAsync" }
   ,{ "requirementId": "REQ-VSB-INMEMORY-CONFIGURATION", "variantKey": "bus-endpoint-auto-start-follows-configured-value", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryBusFactoryConfiguratorTests", "testMethod": "AutoStart_ChangesTheBusEndpointStartupPolicy" }
+  ,{ "requirementId": "REQ-VSB-BUS-FACTORY", "variantKey": "build-rejects-null-required-inputs", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryBusFactoryConfiguratorTests", "testMethod": "Build_RejectsEveryNullRequiredInput" }
+  ,{ "requirementId": "REQ-VSB-BUS-FACTORY", "variantKey": "fault-observer-cannot-replace-construction-failure", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryBusFactoryConfiguratorTests", "testMethod": "CreationFaultObserverFailure_DoesNotReplaceTheConstructionFailure" }
   ,{ "requirementId": "REQ-VSB-ENDPOINT-REGISTRATION", "variantKey": "configure-endpoints-inclusion-is-owned-by-the-registration", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.EndpointRegistrationTests", "testMethod": "IncludeInConfigureEndpoints_UpdatesTheAuthoritativeRegistration" }
   ,{ "requirementId": "REQ-VSB-COMPOSITE-FILTER", "variantKey": "get-only-predicate-owners-and-complete-truth-table", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.Configuration.CompositeFilterTests", "testMethod": "Filter_ExposesGetOnlyPredicatesAndAppliesIncludesBeforeExcludes" }
   ,{ "requirementId": "REQ-VSB-JOB-CANCELLATION", "variantKey": "every-notification-forwards-the-operation-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.JobService.JobService.ConsumeJobContextCancellationTests", "testMethod": "NotificationOperation_ForwardsTheExactCancellationTokenAsync" }
@@ -4185,6 +4201,7 @@
   ,{ "requirementId": "REQ-VSB-HOSTED-LIFECYCLE", "variantKey": "stop-before-start-is-terminal-without-depot", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests", "testMethod": "StopBeforeStart_IsIdempotentAndRejectsLaterStartupAsync" }
   ,{ "requirementId": "REQ-VSB-HOSTED-LIFECYCLE", "variantKey": "completed-stop-is-idempotent-with-canceled-caller", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests", "testMethod": "CompletedStop_RemainsIdempotentForAnAlreadyCanceledCallerAsync" }
   ,{ "requirementId": "REQ-VSB-HOSTED-LIFECYCLE", "variantKey": "concurrent-stop-and-dispose-share-owner", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests", "testMethod": "ConcurrentStopAndDispose_InvokeTheDepotOnceAsync" }
+  ,{ "requirementId": "REQ-VSB-HOSTED-LIFECYCLE", "variantKey": "dispose-timeout-uses-injected-clock", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests", "testMethod": "DisposeTimeout_UsesTheInjectedTimeProviderAsync" }
   ,{ "requirementId": "REQ-VSB-CONSUME-CONTEXT-ACTIVATION", "variantKey": "no-payload-preserves-explicit-arguments", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeContextActivatorExtensionsTests", "testMethod": "NoPayload_CreateInstancePreservesExplicitConstructorArguments" }
   ,{ "requirementId": "REQ-VSB-CONSUME-CONTEXT-ACTIVATION", "variantKey": "provider-resolves-and-constructs", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeContextActivatorExtensionsTests", "testMethod": "ProviderPayload_ResolvesExistingServiceAndCombinesServicesWithExplicitArguments" }
   ,{ "requirementId": "REQ-VSB-CONSUME-CONTEXT-ACTIVATION", "variantKey": "scope-precedes-provider", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeContextActivatorExtensionsTests", "testMethod": "ScopePayload_TakesPrecedenceOverAProviderPayload" }
@@ -4203,6 +4220,7 @@
   ,{ "requirementId": "REQ-VSB-JSON-TYPE-MAPPING", "variantKey": "rejects-nonconforming-implementations-at-registration", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Serialization.JsonMessageTypeMappingRegistryTests", "testMethod": "Registration_RejectsImplementationsThatCannotRepresentTheContract" }
   ,{ "requirementId": "REQ-VSB-ASYNC-BUS-LIFECYCLE", "variantKey": "dispose-awaits-start-cancellation", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.AsyncBusHandleLifecycleTests", "testMethod": "DisposeDuringStart_WaitsUntilCancellationIsOwnedAsync" }
   ,{ "requirementId": "REQ-VSB-ASYNC-BUS-LIFECYCLE", "variantKey": "concurrent-dispose-stops-once", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.AsyncBusHandleLifecycleTests", "testMethod": "ConcurrentDisposeAfterStart_StopsTheDepotExactlyOnceAsync" }
+  ,{ "requirementId": "REQ-VSB-ASYNC-BUS-LIFECYCLE", "variantKey": "dispose-timeout-uses-injected-clock", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.AsyncBusHandleLifecycleTests", "testMethod": "DisposeTimeout_UsesTheInjectedTimeProviderAsync" }
   ,{ "requirementId": "REQ-VSB-COURIER-BUILDER", "variantKey": "constructor-boundaries", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Courier.RoutingSlipBuilderContractTests", "testMethod": "Constructors_RejectInvalidIdentityAndNullStateInputs" }
   ,{ "requirementId": "REQ-VSB-COURIER-BUILDER", "variantKey": "mutation-boundaries", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Courier.RoutingSlipBuilderContractTests", "testMethod": "MutationMethods_RejectInvalidRequiredInputs" }
   ,{ "requirementId": "REQ-VSB-COURIER-BUILDER", "variantKey": "async-subscription-boundaries", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Courier.RoutingSlipBuilderContractTests", "testMethod": "AsyncSubscriptions_ValidateInputsOwnCancellationAndRejectNullTasksAsync" }
@@ -4330,4 +4348,6 @@
   ,{ "requirementId": "REQ-VSB-STATE-MACHINE-COMPOSITE", "variantKey": "status-value-equality-and-hashing", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.SagaStateMachine.CompositeEventStatusTests", "testMethod": "EqualBitPatterns_HaveEqualValuesAndHashCodes" }
   ,{ "requirementId": "REQ-VSB-STATE-MACHINE-COMPOSITE", "variantKey": "status-ordering-full-integer-range", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.SagaStateMachine.CompositeEventStatusTests", "testMethod": "Comparison_UsesNaturalOrderingAcrossTheFullIntegerRange" }
   ,{ "requirementId": "REQ-VSB-RELIABLE-INBOX", "variantKey": "repeated-failures-advance-attempts-and-reach-quarantine", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.ReliableMessaging.ReliableInMemoryIntegrationTests", "testMethod": "ConsumerInbox_RepeatedFailuresAdvanceAttemptsAndReachQuarantineAsync" }
+  ,{ "requirementId": "REQ-VSB-DI-REGISTRATION", "variantKey": "all-overloads-reject-null-required-inputs", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.Configuration.ConfigurationValidationTests", "testMethod": "BusRegistration_RejectsNullCollectionsAndRequiredCallbacks" }
+  ,{ "requirementId": "REQ-VSB-INMEMORY-CONFIGURATION", "variantKey": "public-entry-points-validate-required-inputs", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryBusFactoryConfiguratorTests", "testMethod": "PublicEntryPoints_RejectEveryMissingRequiredInput" }
 ]

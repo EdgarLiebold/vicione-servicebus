@@ -13,7 +13,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus;
 
-internal sealed partial class ViciOneServiceBusBus :
+internal sealed partial class ServiceBusRuntime :
     IBusControl,
     Advanced.IAdvancedPublishEndpoint,
     IMessageRouteProvider
@@ -40,7 +40,7 @@ internal sealed partial class ViciOneServiceBusBus :
     BusState _busState;
     string _healthMessage = "not started";
 
-    public ViciOneServiceBusBus(IHost host, IBusObserver busObservable, IReceiveEndpointConfiguration endpointConfiguration,
+    public ServiceBusRuntime(IHost host, IBusObserver busObservable, IReceiveEndpointConfiguration endpointConfiguration,
         TimeProvider? timeProvider = null)
     {
         ArgumentNullException.ThrowIfNull(endpointConfiguration);
@@ -57,7 +57,7 @@ internal sealed partial class ViciOneServiceBusBus :
         Topology = _host.Topology;
 
         if (LogContext.Current == null)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Vici One Service Bus Bus", "unknown", "The LogContext was not set.", "Correct the named configuration before starting the host"));
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Service Bus Runtime", "unknown", "The LogContext was not set.", "Correct the named configuration before starting the host"));
 
         _logContext = LogContext.Current;
 
@@ -248,6 +248,8 @@ internal sealed partial class ViciOneServiceBusBus :
 
     void IProbeSite.Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var scope = context.CreateScope("bus");
         scope.Add("address", Address);
 

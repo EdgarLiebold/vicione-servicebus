@@ -4,18 +4,18 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>Stores and validates in memory bus configuration.</summary>
+/// <summary>Owns the endpoint, host, routing, and observer configuration for one in-memory bus.</summary>
 public class InMemoryBusConfiguration :
     InMemoryEndpointConfiguration,
     IInMemoryBusConfiguration
 {
     readonly BusObservable _busObservers;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="topologyConfiguration">The topology configuration.</param>
-    /// <param name="baseAddress">The base address.</param>
+    /// <summary>Initializes a bus configuration over a shared in-memory topology.</summary>
+    /// <param name="topologyConfiguration">The topology used to address and connect in-memory entities.</param>
+    /// <param name="baseAddress">The transport base address, or <see langword="null" /> for the default.</param>
     public InMemoryBusConfiguration(IInMemoryTopologyConfiguration topologyConfiguration, Uri? baseAddress)
-        : base(topologyConfiguration)
+        : base(topologyConfiguration ?? throw new ArgumentNullException(nameof(topologyConfiguration)))
     {
         MessageRoutes = new MessageRouteTable();
         HostConfiguration = new InMemoryHostConfiguration(this, baseAddress, topologyConfiguration);
@@ -29,26 +29,28 @@ public class InMemoryBusConfiguration :
     IEndpointConfiguration IBusConfiguration.BusEndpointConfiguration => BusEndpointConfiguration;
     IBusObserver IBusConfiguration.BusObservers => _busObservers;
 
-    /// <summary>Gets the bus endpoint configuration.</summary>
+    /// <summary>Gets the receive-endpoint configuration owned by the bus runtime.</summary>
     public IInMemoryEndpointConfiguration BusEndpointConfiguration { get; }
-    /// <summary>Gets the host configuration.</summary>
+    /// <summary>Gets the in-memory transport host configuration.</summary>
     public IInMemoryHostConfiguration HostConfiguration { get; }
-    /// <summary>Gets the message routes.</summary>
+    /// <summary>Gets the route table frozen when bus construction begins.</summary>
     public MessageRouteTable MessageRoutes { get; }
 
-    /// <summary>Connects bus observer.</summary>
+    /// <summary>Registers an observer for bus lifecycle events.</summary>
     /// <param name="observer">The observer to connect.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectBusObserver(IBusObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
         return _busObservers.Connect(observer);
     }
 
-    /// <summary>Connects endpoint configuration observer.</summary>
+    /// <summary>Registers an observer for receive-endpoint configuration events.</summary>
     /// <param name="observer">The observer to connect.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectEndpointConfigurationObserver(IEndpointConfigurationObserver observer)
     {
+        ArgumentNullException.ThrowIfNull(observer);
         return HostConfiguration.ConnectEndpointConfigurationObserver(observer);
     }
 }

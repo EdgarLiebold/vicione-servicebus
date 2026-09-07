@@ -203,7 +203,7 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
         if (_outboxState == null || !WasCommitted())
             return;
 
-        _notification.Delivered();
+        _notification.SignalDelivery();
         _outboxState = null;
         _outboxId = NewId.NextGuid();
     }

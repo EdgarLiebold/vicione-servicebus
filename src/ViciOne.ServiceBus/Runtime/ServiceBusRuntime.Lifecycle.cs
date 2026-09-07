@@ -8,7 +8,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus;
 
-internal sealed partial class ViciOneServiceBusBus
+internal sealed partial class ServiceBusRuntime
 {
     public async Task StartAsync(CancellationToken cancellationToken)
     {
@@ -149,14 +149,14 @@ internal sealed partial class ViciOneServiceBusBus
 
     sealed class BusLifecycleHandle
     {
-        readonly ViciOneServiceBusBus _bus;
+        readonly ServiceBusRuntime _bus;
         readonly IBusObserver _busObserver;
         readonly IHost _host;
         readonly HostHandle _hostHandle;
         readonly ILogContext _logContext;
         bool _stopped;
 
-        public BusLifecycleHandle(IHost host, HostHandle hostHandle, ViciOneServiceBusBus bus, IBusObserver busObserver, ILogContext logContext)
+        public BusLifecycleHandle(IHost host, HostHandle hostHandle, ServiceBusRuntime bus, IBusObserver busObserver, ILogContext logContext)
         {
             _host = host;
             _bus = bus;
@@ -164,7 +164,7 @@ internal sealed partial class ViciOneServiceBusBus
             _logContext = logContext;
             _hostHandle = hostHandle;
 
-            Ready = ReadyOrNotAsync(hostHandle.Ready);
+            Ready = CreateReadyResultAsync(hostHandle.Ready);
         }
 
         public Task<BusReady> Ready { get; }
@@ -206,7 +206,7 @@ internal sealed partial class ViciOneServiceBusBus
             _bus._healthMessage = "stopped";
         }
 
-        async Task<BusReady> ReadyOrNotAsync(Task<HostReady> ready)
+        async Task<BusReady> CreateReadyResultAsync(Task<HostReady> ready)
         {
             var hostReady = await ready.ConfigureAwait(false);
             return new BusReadyEvent(hostReady, _bus);

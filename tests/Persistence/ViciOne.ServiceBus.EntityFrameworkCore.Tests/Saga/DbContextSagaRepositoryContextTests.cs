@@ -315,12 +315,14 @@ public sealed class DbContextSagaRepositoryContextTests
     {
         private CancellationToken _cancellationToken;
         private ReceiveContext _receiveContext = null!;
+        private SerializerContext _serializerContext = null!;
 
         public void Configure(CancellationToken cancellationToken)
         {
             _cancellationToken = cancellationToken;
             _receiveContext = DispatchProxy.Create<ReceiveContext, ReceiveContextProxy>();
             ((ReceiveContextProxy)(object)_receiveContext).CancellationToken = cancellationToken;
+            _serializerContext = DispatchProxy.Create<SerializerContext, SerializerContextProxy>();
         }
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
@@ -329,7 +331,7 @@ public sealed class DbContextSagaRepositoryContextTests
             {
                 "get_CancellationToken" => _cancellationToken,
                 "get_ReceiveContext" => _receiveContext,
-                "get_SerializerContext" => null,
+                "get_SerializerContext" => _serializerContext,
                 "get_Message" => new TestMessage(),
                 "get_CorrelationId" => null,
                 _ when targetMethod?.ReturnType == typeof(Task) => Task.CompletedTask,
@@ -338,6 +340,12 @@ public sealed class DbContextSagaRepositoryContextTests
                     : null,
             };
         }
+    }
+
+    private class SerializerContextProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            throw new InvalidOperationException($"Unexpected serializer-context member: {targetMethod?.Name ?? "<null>"}.");
     }
 
     private class ReceiveContextProxy : DispatchProxy

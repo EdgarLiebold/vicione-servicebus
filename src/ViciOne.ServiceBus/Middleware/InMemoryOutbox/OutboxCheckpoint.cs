@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
+
 /// <summary>
-/// An opaque boundary in an in-memory outbox. The outbox that created the checkpoint is the only
-/// component that can interpret it.
+/// Identifies an opaque state boundary within the in-memory outbox that created it.
 /// </summary>
 public sealed class OutboxCheckpoint
 {

@@ -10,50 +10,54 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 
-/// <summary>Provides an endpoint for outbox send.</summary>
-public class OutboxSendEndpoint :
+/// <summary>Captures outgoing messages in a durable outbox instead of delivering them immediately.</summary>
+internal sealed class OutboxSendEndpoint :
     ITransportSendEndpoint
 {
     readonly OutboxSendContext _context;
     readonly ITransportSendEndpoint _endpoint;
 
-    /// <summary>Creates an send endpoint on the outbox.</summary>
-    /// <param name="outboxContext">The outbox context for this consume operation.</param>
-    /// <param name="endpoint">The endpoint.</param>
+    /// <summary>Initializes an outbox endpoint over a transport endpoint.</summary>
+    /// <param name="outboxContext">The outbox context that captures outgoing messages.</param>
+    /// <param name="endpoint">The transport endpoint used to create send contexts.</param>
     public OutboxSendEndpoint(OutboxSendContext outboxContext, ISendEndpoint endpoint)
     {
-        _context = outboxContext;
+        _context = outboxContext ?? throw new ArgumentNullException(nameof(outboxContext));
+        ArgumentNullException.ThrowIfNull(endpoint);
         _endpoint = endpoint as ITransportSendEndpoint ?? throw new ArgumentException("Must be a transport endpoint", nameof(endpoint));
     }
 
-    /// <summary>Gets the endpoint.</summary>
+    /// <summary>Gets the wrapped transport endpoint.</summary>
     public ISendEndpoint Endpoint => _endpoint;
 
-    /// <summary>Connects send observer.</summary>
+    /// <summary>Registers an observer with the wrapped transport endpoint.</summary>
     /// <param name="observer">The observer to connect.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
-        return new EmptyConnectHandle();
+        ArgumentNullException.ThrowIfNull(observer);
+        return _endpoint.ConnectSendObserver(observer);
     }
 
-    /// <summary>Creates send context.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the created value.</returns>
+    /// <summary>Creates a send context configured to expose the outbox consume scope.</summary>
+    /// <typeparam name="T">The outgoing message contract.</typeparam>
+    /// <param name="message">The outgoing message.</param>
+    /// <param name="pipe">The pipe that customizes the send context.</param>
+    /// <param name="cancellationToken">The token that cancels context creation.</param>
+    /// <returns>A task containing the configured send context.</returns>
     public Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
         return _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Captures a typed message for delivery to the configured destination after the outbox commits.</summary>
+    /// <typeparam name="T">The outgoing message contract.</typeparam>
+    /// <param name="message">The outgoing message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the message has been captured.</returns>
     public async Task SendAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
@@ -66,12 +70,12 @@ public class OutboxSendEndpoint :
         await AddSendAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <summary>Captures a typed message with typed send-context configuration for delivery after the outbox commits.</summary>
+    /// <typeparam name="T">The outgoing message contract.</typeparam>
+    /// <param name="message">The outgoing message.</param>
+    /// <param name="pipe">The pipe that customizes the send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the message has been captured.</returns>
     public async Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -86,10 +90,10 @@ public class OutboxSendEndpoint :
         await AddSendAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Captures a message using its runtime type for delivery after the outbox commits.</summary>
+    /// <param name="message">The outgoing message whose runtime type is its contract.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the message has been captured.</returns>
     public Task SendAsync(object message, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -100,11 +104,11 @@ public class OutboxSendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Captures a runtime-typed message for delivery after the outbox commits.</summary>
+    /// <param name="message">The outgoing message.</param>
     /// <param name="messageType">The runtime type of the message contract.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the message has been captured.</returns>
     public Task SendAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -115,12 +119,12 @@ public class OutboxSendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <summary>Captures a typed message with untyped send-context configuration for delivery after the outbox commits.</summary>
+    /// <typeparam name="T">The outgoing message contract.</typeparam>
+    /// <param name="message">The outgoing message.</param>
+    /// <param name="pipe">The untyped pipe that customizes the send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the message has been captured.</returns>
     public async Task SendAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -135,11 +139,11 @@ public class OutboxSendEndpoint :
         await AddSendAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <summary>Captures a message using its runtime type and send-context configuration for delivery after the outbox commits.</summary>
+    /// <param name="message">The outgoing message whose runtime type is its contract.</param>
+    /// <param name="pipe">The pipe that customizes the send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the message has been captured.</returns>
     public Task SendAsync(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -152,12 +156,12 @@ public class OutboxSendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Captures a runtime-typed message with send-context configuration for delivery after the outbox commits.</summary>
+    /// <param name="message">The outgoing message.</param>
     /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <param name="pipe">The pipe that customizes the send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the message has been captured.</returns>
     public Task SendAsync(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -170,11 +174,11 @@ public class OutboxSendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="values">The values.</param>
+    /// <summary>Initializes and captures a typed message for delivery after the outbox commits.</summary>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
+    /// <param name="values">The values used to initialize the outgoing message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the initialized message has been captured.</returns>
     public async Task SendAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
@@ -190,17 +194,19 @@ public class OutboxSendEndpoint :
         await AddSendAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <summary>Initializes and captures a typed message with typed send-context configuration for delivery after the outbox commits.</summary>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
+    /// <param name="values">The values used to initialize the outgoing message.</param>
+    /// <param name="pipe">The typed pipe that customizes the send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the initialized message has been captured.</returns>
     public async Task SendAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
+        if (pipe == null)
+            throw new ArgumentNullException(nameof(pipe));
 
         (var message, IPipe<SendContext<T>> sendPipe) =
             await MessageInitializerCache<T>.InitializeMessageAsync(values, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken)
@@ -212,12 +218,12 @@ public class OutboxSendEndpoint :
         await AddSendAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
+    /// <summary>Initializes and captures a typed message with untyped send-context configuration for delivery after the outbox commits.</summary>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
+    /// <param name="values">The values used to initialize the outgoing message.</param>
+    /// <param name="pipe">The untyped pipe that customizes the send context.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the initialized message has been captured.</returns>
     public async Task SendAsync<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {

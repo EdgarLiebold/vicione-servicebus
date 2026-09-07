@@ -5,8 +5,8 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 
-/// <summary>Forwards outbox consume context operations to an underlying context.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Decorates a consume context so outgoing messages are captured by a durable outbox.</summary>
+/// <typeparam name="TMessage">The consumed message contract.</typeparam>
 public abstract class OutboxConsumeContextProxy<TMessage> :
     ConsumeContextProxy<TMessage>,
     OutboxConsumeContext<TMessage>
@@ -14,21 +14,25 @@ public abstract class OutboxConsumeContextProxy<TMessage> :
 {
     readonly IServiceProvider _provider;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="options">The options that control the operation.</param>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <summary>Initializes the outbox decorator over an existing consume context.</summary>
+    /// <param name="context">The consume context whose outgoing operations are captured.</param>
+    /// <param name="options">The delivery and consumer identity settings for the outbox.</param>
+    /// <param name="provider">The scoped service provider exposed through the context.</param>
     protected OutboxConsumeContextProxy(ConsumeContext<TMessage> context, OutboxConsumeOptions options, IServiceProvider provider)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
-        CapturedContext = context.Advanced();
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(provider);
+
+        ConsumeContext capturedContext = context.Advanced();
+        CapturedContext = capturedContext;
         Options = options;
         _provider = provider;
 
-        var outboxReceiveContext = new OutboxReceiveContext(this, context.Advanced().ReceiveContext);
+        var outboxReceiveContext = new OutboxReceiveContext(this, capturedContext.ReceiveContext);
 
         ReceiveContext = outboxReceiveContext;
-        PublishEndpointProvider = outboxReceiveContext.PublishEndpointProvider;
+        SetPublishEndpointProvider(outboxReceiveContext.PublishEndpointProvider);
 
         if (context.TryGetPayload(out MessageSchedulerContext? schedulerContext))
         {
@@ -38,64 +42,65 @@ public abstract class OutboxConsumeContextProxy<TMessage> :
         }
     }
 
-    /// <summary>Gets the options.</summary>
+    /// <summary>Gets the outbox delivery and consumer identity settings.</summary>
     protected OutboxConsumeOptions Options { get; }
 
-    /// <summary>Gets the consumer id.</summary>
+    /// <summary>Gets the stable identity of the consumer whose inbox is being processed.</summary>
     protected Guid ConsumerId => Options.ConsumerId;
 
-    /// <summary>Gets the captured context.</summary>
+    /// <summary>Gets the original consume context outside the outbox decorator.</summary>
     public ConsumeContext CapturedContext { get; }
 
-    /// <summary>Gets or sets the continue processing.</summary>
+    /// <summary>Gets or sets whether the receive pipeline may continue after outbox processing.</summary>
     public abstract bool ContinueProcessing { get; set; }
-    /// <summary>Gets a value indicating whether message consumed.</summary>
+    /// <summary>Gets a value indicating whether consumption has been committed to the inbox.</summary>
     public abstract bool IsMessageConsumed { get; }
-    /// <summary>Gets a value indicating whether outbox delivered.</summary>
+    /// <summary>Gets a value indicating whether every captured outbox message has been delivered.</summary>
     public abstract bool IsOutboxDelivered { get; }
-    /// <summary>Gets the receive count.</summary>
+    /// <summary>Gets the number of attempts made to process the inbox message.</summary>
     public abstract int ReceiveCount { get; }
-    /// <summary>Gets the last sequence number.</summary>
+    /// <summary>Gets the sequence number of the last delivered outbox message, if any.</summary>
     public abstract long? LastSequenceNumber { get; }
 
-    /// <summary>Sets consumed.</summary>
+    /// <summary>Persists that the incoming message has been consumed.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the consumed state has been stored.</returns>
     public abstract Task SetConsumedAsync(CancellationToken cancellationToken = default);
-    /// <summary>Sets delivered.</summary>
+    /// <summary>Persists that every captured outbox message has been delivered.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the delivered state has been stored.</returns>
     public abstract Task SetDeliveredAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>Loads outbox messages.</summary>
+    /// <summary>Loads the next ordered set of captured messages awaiting delivery.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the load outbox messages outcome.</returns>
+    /// <returns>A task containing the messages awaiting delivery.</returns>
     public abstract Task<List<OutboxMessageContext>> LoadOutboxMessagesAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>Reports that notify outbox message has been delivered.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Persists the delivery progress for one outbox message.</summary>
+    /// <param name="message">The delivered outbox message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the delivery checkpoint has been stored.</returns>
     public abstract Task NotifyOutboxMessageDeliveredAsync(OutboxMessageContext message, CancellationToken cancellationToken = default);
 
-    /// <summary>Removes outbox messages.</summary>
+    /// <summary>Removes messages whose delivery has been committed.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the delivered messages have been removed.</returns>
     public abstract Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>Adds send to the configuration.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Captures an outgoing send for later delivery by the outbox.</summary>
+    /// <typeparam name="T">The outgoing message contract.</typeparam>
+    /// <param name="context">The populated send context to capture.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the outgoing message has been captured.</returns>
     public abstract Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Gets service.</summary>
-    /// <param name="serviceType">The runtime service type used by the operation.</param>
-    /// <returns>The service.</returns>
+    /// <summary>Resolves an optional service from the consume scope.</summary>
+    /// <param name="serviceType">The service type to resolve.</param>
+    /// <returns>The resolved service, or <see langword="null"/> when it is not registered.</returns>
     public object? GetService(Type serviceType)
     {
+        ArgumentNullException.ThrowIfNull(serviceType);
         return _provider.GetService(serviceType);
     }
 }

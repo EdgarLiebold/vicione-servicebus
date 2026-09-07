@@ -162,12 +162,16 @@ public sealed class ConnectableTests
     public async Task PublicOperations_RejectEveryMissingRequiredInputBeforeInspectingConnectionsAsync()
     {
         var connectable = new Connectable<Connection>();
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
 
         Assert.Equal("connection", Assert.Throws<ArgumentNullException>(() => connectable.Connect(null!)).ParamName);
         Assert.Equal("callback", Assert.Throws<ArgumentNullException>(() => connectable.ForEach(null!)).ParamName);
         Assert.Equal("callback", Assert.Throws<ArgumentNullException>(() => connectable.All(null!)).ParamName);
         ArgumentNullException asynchronous = await Assert.ThrowsAsync<ArgumentNullException>(() => connectable.ForEachAsync(null!, TestContext.Current.CancellationToken));
+        ArgumentNullException canceled = await Assert.ThrowsAsync<ArgumentNullException>(() => connectable.ForEachAsync(null!, cancellation.Token));
         Assert.Equal("callback", asynchronous.ParamName);
+        Assert.Equal("callback", canceled.ParamName);
     }
 
     private sealed record Connection(string Name);

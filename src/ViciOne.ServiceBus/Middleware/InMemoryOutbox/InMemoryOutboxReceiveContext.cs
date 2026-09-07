@@ -2,24 +2,25 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
-/// <summary>Carries state for in memory outbox receive operations.</summary>
-public class InMemoryOutboxReceiveContext :
+/// <summary>Redirects send and publish endpoint resolution through an in-memory outbox.</summary>
+internal sealed class InMemoryOutboxReceiveContext :
     ReceiveContextProxy
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="outboxContext">The outbox context.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Initializes the decorator over an existing receive context.</summary>
+    /// <param name="outboxContext">The outbox that defers outgoing operations.</param>
+    /// <param name="context">The receive context whose endpoint providers are decorated.</param>
     public InMemoryOutboxReceiveContext(OutboxContext outboxContext, ReceiveContext context)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
+        ArgumentNullException.ThrowIfNull(outboxContext);
         SendEndpointProvider = new InMemoryOutboxSendEndpointProvider(outboxContext, context.SendEndpointProvider);
 
         PublishEndpointProvider = new InMemoryOutboxPublishEndpointProvider(outboxContext, context.PublishEndpointProvider);
     }
 
-    /// <summary>Gets the publish endpoint provider.</summary>
+    /// <summary>Gets the provider that defers publishes through the outbox.</summary>
     public override IPublishEndpointProvider PublishEndpointProvider { get; }
 
-    /// <summary>Gets the send endpoint provider.</summary>
+    /// <summary>Gets the provider that defers addressed sends through the outbox.</summary>
     public override ISendEndpointProvider SendEndpointProvider { get; }
 }

@@ -18,6 +18,8 @@ public static class AzureFunctionsTestExtensions
     /// <returns>The same bus registration configurator.</returns>
     public static IBusRegistrationConfigurator AddAzureFunctionsTestComponents(this IBusRegistrationConfigurator configurator)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         configurator.Services.TryAddSingleton<IAsyncBusHandle, AsyncBusHandle>();
         configurator.Services.TryAddSingleton<IMessageReceiver, MessageReceiver>();
 
@@ -33,7 +35,12 @@ public static class AzureFunctionsTestExtensions
     public static Task HandleConsumerAsync<TConsumer>(this ITestHarness harness, object message, CancellationToken cancellationToken = default)
         where TConsumer : class, IConsumer
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); var body = ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(message);
+        ArgumentNullException.ThrowIfNull(harness);
+        ArgumentNullException.ThrowIfNull(message);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        var body = ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(message);
 
         var messageBody = new AmqpMessageBody([new BinaryData(body.GetBytes()).ToMemory()]);
         var annotatedMessage = new AmqpAnnotatedMessage(messageBody)

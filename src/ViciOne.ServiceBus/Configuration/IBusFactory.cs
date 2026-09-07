@@ -3,12 +3,12 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Creates bus instances.</summary>
+/// <summary>Validates a transport configuration and creates the receive endpoint owned by its bus.</summary>
 public interface IBusFactory :
     ISpecification
 {
-    /// <summary>Create the bus endpoint configuration, which is used to create the bus.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The created bus endpoint configuration.</returns>
+    /// <summary>Creates the temporary receive-endpoint configuration used by the bus runtime.</summary>
+    /// <param name="configure">The callback that applies runtime-owned endpoint settings.</param>
+    /// <returns>The configured bus receive endpoint.</returns>
     IReceiveEndpointConfiguration CreateBusEndpointConfiguration(Action<IReceiveEndpointConfigurator> configure);
 }

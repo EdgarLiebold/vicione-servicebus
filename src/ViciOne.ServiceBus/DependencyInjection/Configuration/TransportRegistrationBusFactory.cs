@@ -9,41 +9,45 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Creates transport registration bus instances.</summary>
-/// <typeparam name="TEndpointConfigurator">The endpoint configurator type.</typeparam>
+/// <summary>Coordinates dependency-injection services with a transport-specific bus factory.</summary>
+/// <typeparam name="TEndpointConfigurator">The receive-endpoint configurator exposed by the transport.</typeparam>
 public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
     IRegistrationBusFactory
     where TEndpointConfigurator : class, IReceiveEndpointConfigurator
 {
     readonly IHostConfiguration _hostConfiguration;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <summary>Initializes the factory with the transport host configuration it owns.</summary>
+    /// <param name="hostConfiguration">The mutable transport host configuration used to build each bus instance.</param>
     protected TransportRegistrationBusFactory(IHostConfiguration hostConfiguration)
     {
-        _hostConfiguration = hostConfiguration;
+        _hostConfiguration = hostConfiguration ?? throw new ArgumentNullException(nameof(hostConfiguration));
     }
 
-    /// <summary>Creates bus.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="specifications">The specifications.</param>
-    /// <param name="busName">The bus name.</param>
-    /// <returns>The created bus.</returns>
+    /// <summary>Creates the transport bus represented by one dependency-injection registration.</summary>
+    /// <param name="context">The registration context that resolves observers, policies, and runtime services.</param>
+    /// <param name="specifications">The bus-instance specifications to validate and apply.</param>
+    /// <param name="busName">The configured name that identifies the bus registration.</param>
+    /// <returns>The bus instance owned by the registration.</returns>
     public abstract IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName);
 
-    /// <summary>Creates bus.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <typeparam name="TConfigurator">The configurator type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <param name="specifications">The specifications.</param>
-    /// <returns>The created bus.</returns>
+    /// <summary>Builds a bus from a concrete transport configurator and the services bound to its registration.</summary>
+    /// <typeparam name="T">The concrete transport factory type.</typeparam>
+    /// <typeparam name="TConfigurator">The public configurator contract implemented by the transport factory.</typeparam>
+    /// <param name="configurator">The transport factory and configurator used to construct the bus endpoint.</param>
+    /// <param name="context">The registration context that resolves observers, policies, and runtime services.</param>
+    /// <param name="configure">An optional callback that applies the caller's transport configuration.</param>
+    /// <param name="specifications">The bus-instance specifications to validate and apply.</param>
+    /// <returns>The constructed bus instance.</returns>
     protected IBusInstance CreateBus<T, TConfigurator>(T configurator, IBusRegistrationContext context,
         Action<IBusRegistrationContext, TConfigurator>? configure, IEnumerable<IBusInstanceSpecification> specifications)
         where T : TConfigurator, IBusFactory
         where TConfigurator : IBusFactoryConfigurator
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(specifications);
+
         LogContext.ConfigureCurrentLogContextIfNull(context);
 
         _hostConfiguration.LogContext = LogContext.Current;
@@ -65,7 +69,7 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
             return options;
         });
 
-        IBusInstanceSpecification[] busInstanceSpecifications = specifications?.ToArray() ?? [];
+        IBusInstanceSpecification[] busInstanceSpecifications = specifications.ToArray();
 
         IEnumerable<ValidationResult> validationResult = configurator.Validate()
             .Concat(busInstanceSpecifications.SelectMany(x => x.Validate()));
@@ -90,7 +94,7 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
             var host = _hostConfiguration.Build() as IHost<TEndpointConfigurator>
                 ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Transport Registration Bus", "unknown", $"The configured host does not implement {typeof(IHost<TEndpointConfigurator>)}.", "Correct the named configuration before starting the host"));
 
-            var bus = new ViciOneServiceBusBus(host, _hostConfiguration.BusConfiguration.BusObservers, busReceiveEndpointConfiguration,
+            var bus = new ServiceBusRuntime(host, _hostConfiguration.BusConfiguration.BusObservers, busReceiveEndpointConfiguration,
                 context.GetService<TimeProvider>() ?? TimeProvider.System);
 
             ConnectReceiveEndpointObservers(context, bus);
@@ -110,7 +114,15 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
         }
         catch (Exception ex)
         {
-            _hostConfiguration.BusConfiguration.BusObservers.CreateFaulted(ex);
+            try
+            {
+                _hostConfiguration.BusConfiguration.BusObservers.CreateFaulted(ex);
+            }
+            catch (Exception observerException)
+            {
+                LogContext.Warning?.Log(observerException,
+                    "Bus creation-fault observation failed without replacing the construction failure");
+            }
 
             throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Transport Registration Bus", "unknown", "An exception occurred during bus creation", "Correct the named configuration before starting the host"), ex);
         }
@@ -231,12 +243,12 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
             connector.ConnectPublishObserver(observer);
     }
 
-    /// <summary>Creates bus instance.</summary>
-    /// <param name="bus">The bus.</param>
-    /// <param name="host">The host.</param>
-    /// <param name="hostConfiguration">The host configuration.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The created bus instance.</returns>
+    /// <summary>Wraps a constructed bus and host in the transport's dependency-injection runtime instance.</summary>
+    /// <param name="bus">The bus control that owns the runtime lifecycle.</param>
+    /// <param name="host">The transport host used by the bus.</param>
+    /// <param name="hostConfiguration">The validated host configuration used to build the runtime.</param>
+    /// <param name="context">The registration context associated with the bus.</param>
+    /// <returns>The bus instance registered in the dependency-injection container.</returns>
     protected virtual IBusInstance CreateBusInstance(IBusControl bus, IHost<TEndpointConfigurator> host, IHostConfiguration hostConfiguration,
         IBusRegistrationContext context)
     {

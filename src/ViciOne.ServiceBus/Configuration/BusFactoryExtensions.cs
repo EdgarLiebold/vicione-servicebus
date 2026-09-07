@@ -5,26 +5,33 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides extension methods for bus factory.</summary>
+/// <summary>Builds standalone bus runtimes from validated transport configurations.</summary>
 public static class BusFactoryExtensions
 {
-    /// <summary>Builds the configured component.</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
-    /// <param name="busConfiguration">The bus configuration.</param>
-    /// <param name="dependencies">The dependencies.</param>
-    /// <returns>The configured component.</returns>
+    /// <summary>Builds a bus after validating both its factory and the supplied dependent specifications.</summary>
+    /// <param name="factory">The transport factory that creates the bus endpoint.</param>
+    /// <param name="busConfiguration">The host, routing, serialization, and observer configuration for the bus.</param>
+    /// <param name="dependencies">Additional specifications whose validation must succeed before construction.</param>
+    /// <returns>The constructed bus control.</returns>
     public static IBusControl Build(this IBusFactory factory, IBusConfiguration busConfiguration, IEnumerable<ISpecification> dependencies)
     {
+        ArgumentNullException.ThrowIfNull(factory);
+        ArgumentNullException.ThrowIfNull(busConfiguration);
+        ArgumentNullException.ThrowIfNull(dependencies);
+
         return Build(factory, busConfiguration, factory.Validate()
             .Concat(dependencies.SelectMany(x => x.Validate())));
     }
 
-    /// <summary>Builds the configured component.</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
-    /// <param name="busConfiguration">The bus configuration.</param>
-    /// <returns>The configured component.</returns>
+    /// <summary>Builds a bus after validating its transport factory.</summary>
+    /// <param name="factory">The transport factory that creates the bus endpoint.</param>
+    /// <param name="busConfiguration">The host, routing, serialization, and observer configuration for the bus.</param>
+    /// <returns>The constructed bus control.</returns>
     public static IBusControl Build(this IBusFactory factory, IBusConfiguration busConfiguration)
     {
+        ArgumentNullException.ThrowIfNull(factory);
+        ArgumentNullException.ThrowIfNull(busConfiguration);
+
         return Build(factory, busConfiguration, factory.Validate());
     }
 
@@ -48,7 +55,7 @@ public static class BusFactoryExtensions
 
             var host = busConfiguration.HostConfiguration.Build();
 
-            var bus = new ViciOneServiceBusBus(host, busConfiguration.BusObservers, busReceiveEndpointConfiguration);
+            var bus = new ServiceBusRuntime(host, busConfiguration.BusObservers, busReceiveEndpointConfiguration);
 
             busConfiguration.BusObservers.PostCreate(bus);
 
@@ -56,7 +63,15 @@ public static class BusFactoryExtensions
         }
         catch (Exception ex)
         {
-            busConfiguration.BusObservers.CreateFaulted(ex);
+            try
+            {
+                busConfiguration.BusObservers.CreateFaulted(ex);
+            }
+            catch (Exception observerException)
+            {
+                LogContext.Warning?.Log(observerException,
+                    "Bus creation-fault observation failed without replacing the construction failure");
+            }
 
             throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Bus Factory Extensions", "unknown", "An exception occurred during bus creation", "Correct the named configuration before starting the host"), ex);
         }

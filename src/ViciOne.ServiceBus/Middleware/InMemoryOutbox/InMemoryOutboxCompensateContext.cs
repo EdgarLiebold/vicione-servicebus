@@ -4,17 +4,17 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
-/// <summary>Carries state for in memory outbox compensate operations.</summary>
-/// <typeparam name="TLog">The log type.</typeparam>
-public class InMemoryOutboxCompensateContext<TLog> :
+/// <summary>Buffers outgoing compensation operations while preserving the activity log and result.</summary>
+/// <typeparam name="TLog">The compensation log contract.</typeparam>
+internal sealed class InMemoryOutboxCompensateContext<TLog> :
     InMemoryOutboxActivityContextProxy,
     CompensateContext<TLog>
     where TLog : class
 {
     readonly CompensateContext<TLog> _context;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Initializes an in-memory outbox over a compensation context.</summary>
+    /// <param name="context">The compensation context whose outgoing operations are buffered.</param>
     public InMemoryOutboxCompensateContext(CompensateContext<TLog> context)
         : base(context)
     {
@@ -28,11 +28,13 @@ public class InMemoryOutboxCompensateContext<TLog> :
 
     CompensationResult CompensateContext.Compensated(object values)
     {
+        ArgumentNullException.ThrowIfNull(values);
         return _context.Compensated(values);
     }
 
     CompensationResult CompensateContext.Compensated(IDictionary<string, object> variables)
     {
+        ArgumentNullException.ThrowIfNull(variables);
         return _context.Compensated(variables);
     }
 
@@ -43,6 +45,7 @@ public class InMemoryOutboxCompensateContext<TLog> :
 
     CompensationResult CompensateContext.Failed(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
         return _context.Failed(exception);
     }
 
@@ -56,6 +59,7 @@ public class InMemoryOutboxCompensateContext<TLog> :
 
     CompensateActivityContext<TActivity, TLog> CompensateContext<TLog>.CreateActivityContext<TActivity>(TActivity activity)
     {
+        ArgumentNullException.ThrowIfNull(activity);
         return new HostCompensateActivityContext<TActivity, TLog>(activity, this);
     }
 }

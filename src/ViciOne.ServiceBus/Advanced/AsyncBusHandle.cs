@@ -14,17 +14,23 @@ internal sealed class AsyncBusHandle :
 {
     readonly IBusDepot _depot;
     readonly SemaphoreSlim _disposeGate = new(1, 1);
-    readonly ILogger<ViciOneServiceBusBus> _logger;
+    readonly ILogger<AsyncBusHandle> _logger;
     readonly IOptions<ViciOneServiceBusHostOptions> _options;
     readonly Task _startTask;
+    readonly TimeProvider _timeProvider;
     readonly CancellationTokenSource _tokenSource;
     bool _stopped;
 
-    public AsyncBusHandle(IBusDepot depot, ILogger<ViciOneServiceBusBus> logger, IOptions<ViciOneServiceBusHostOptions> options)
+    public AsyncBusHandle(
+        IBusDepot depot,
+        ILogger<AsyncBusHandle> logger,
+        IOptions<ViciOneServiceBusHostOptions> options,
+        TimeProvider? timeProvider = null)
     {
         _depot = depot ?? throw new ArgumentNullException(nameof(depot));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _options = options ?? throw new ArgumentNullException(nameof(options));
+        _timeProvider = timeProvider ?? TimeProvider.System;
 
         _tokenSource = new CancellationTokenSource();
 
@@ -65,7 +71,7 @@ internal sealed class AsyncBusHandle :
             _logger.LogInformation("Stopping ViciOne.ServiceBus (disposed)");
             if (_options.Value.StopTimeout is { } stopTimeout)
             {
-                using var tokenSource = new CancellationTokenSource(stopTimeout);
+                using var tokenSource = new CancellationTokenSource(stopTimeout, _timeProvider);
                 await _depot.StopAsync(tokenSource.Token).ConfigureAwait(false);
             }
             else

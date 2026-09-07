@@ -9,7 +9,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus;
 
-internal sealed partial class ViciOneServiceBusBus
+internal sealed partial class ServiceBusRuntime
 {
     /// <summary>
     /// Waits for the on-demand bus endpoint to become ready and surfaces a terminal transport failure
@@ -76,6 +76,8 @@ internal sealed partial class ViciOneServiceBusBus
         /// <param name="waiter">The cancellation source associated with one readiness wait.</param>
         public void Attach(CancellationTokenSource waiter)
         {
+            ArgumentNullException.ThrowIfNull(waiter);
+
             lock (_lock)
             {
                 if (_cause == null)
@@ -92,6 +94,8 @@ internal sealed partial class ViciOneServiceBusBus
         /// <param name="waiter">The cancellation source associated with one readiness wait.</param>
         public void Detach(CancellationTokenSource waiter)
         {
+            ArgumentNullException.ThrowIfNull(waiter);
+
             lock (_lock)
                 _waiting.Remove(waiter);
         }

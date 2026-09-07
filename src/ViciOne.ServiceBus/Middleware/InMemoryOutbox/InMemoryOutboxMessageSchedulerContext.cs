@@ -6,38 +6,43 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
-/// <summary>Carries state for in memory outbox message scheduler operations.</summary>
-public class InMemoryOutboxMessageSchedulerContext :
+/// <summary>Tracks scheduled messages so an in-memory outbox can cancel them when consumption fails.</summary>
+internal sealed class InMemoryOutboxMessageSchedulerContext :
     MessageSchedulerContext
 {
     readonly InMemoryOutboxDeferredMethodCollection _cancelMessages;
     readonly Task _clearToSend;
     readonly Uri _inputAddress;
-    readonly object _listLock = new object();
+    readonly object _listLock = new();
     readonly List<ScheduledMessage> _scheduledMessages;
     readonly Lazy<IMessageScheduler> _scheduler;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="consumeContext">The consume context.</param>
-    /// <param name="schedulerFactory">The scheduler factory.</param>
-    /// <param name="clearToSend">The clear to send.</param>
+    /// <summary>Initializes scheduler tracking for one consume operation.</summary>
+    /// <param name="consumeContext">The consume context that supplies the input address and scheduler scope.</param>
+    /// <param name="schedulerFactory">The factory that resolves the message scheduler.</param>
+    /// <param name="clearToSend">The task whose completion marks the outbox as committed.</param>
     public InMemoryOutboxMessageSchedulerContext(ConsumeContext consumeContext, MessageSchedulerFactory schedulerFactory, Task clearToSend)
     {
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        ArgumentNullException.ThrowIfNull(schedulerFactory);
+        ArgumentNullException.ThrowIfNull(clearToSend);
+
         _inputAddress = consumeContext.ReceiveContext.InputAddress;
         _clearToSend = clearToSend;
 
         SchedulerFactory = schedulerFactory;
 
-        _scheduler = new Lazy<IMessageScheduler>(() => schedulerFactory(consumeContext));
+        _scheduler = new Lazy<IMessageScheduler>(() =>
+            schedulerFactory(consumeContext) ?? throw new InvalidOperationException("The message scheduler factory returned null."));
 
         _scheduledMessages = [];
         _cancelMessages = new InMemoryOutboxDeferredMethodCollection();
     }
 
-    /// <summary>Gets the scheduler factory.</summary>
+    /// <summary>Gets the factory used to resolve the scoped message scheduler.</summary>
     public MessageSchedulerFactory SchedulerFactory { get; }
 
-    /// <summary>Gets the time provider.</summary>
+    /// <summary>Gets the clock exposed by the resolved message scheduler.</summary>
     public TimeProvider TimeProvider => _scheduler.Value.Advanced().TimeProvider;
 
     internal readonly record struct Checkpoint(int ScheduledMessageCount, int CancelMessageCount);
@@ -86,16 +91,12 @@ public class InMemoryOutboxMessageSchedulerContext :
         }
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, cancellationToken).ConfigureAwait(false);
 
@@ -104,18 +105,14 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -124,18 +121,14 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -144,15 +137,12 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
         var scheduledMessage = await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
@@ -160,16 +150,13 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, Type messageType,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageType);
         var scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, messageType, cancellationToken).ConfigureAwait(false);
 
@@ -178,16 +165,13 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
         var scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -196,17 +180,14 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, Type messageType,
         IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageType);
+        ArgumentNullException.ThrowIfNull(pipe);
         var scheduledMessage = await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, messageType, pipe, cancellationToken)
             .ConfigureAwait(false);
 
@@ -215,17 +196,13 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(values);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync<T>(destinationAddress, dueAt, values, cancellationToken).ConfigureAwait(false);
 
@@ -234,19 +211,15 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values,
         IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(pipe);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, values, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -255,19 +228,15 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values,
         IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(pipe);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync<T>(destinationAddress, dueAt, values, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -276,15 +245,11 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, T message, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, cancellationToken).ConfigureAwait(false);
 
@@ -293,17 +258,13 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -312,17 +273,13 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -331,13 +288,10 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(message);
         var scheduledMessage = await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
@@ -345,15 +299,12 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, Type messageType,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageType);
         var scheduledMessage = await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, messageType, cancellationToken)
             .ConfigureAwait(false);
 
@@ -362,15 +313,12 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
         var scheduledMessage = await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
@@ -378,16 +326,13 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageType);
+        ArgumentNullException.ThrowIfNull(pipe);
         var scheduledMessage = await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, messageType, pipe, cancellationToken)
             .ConfigureAwait(false);
 
@@ -396,15 +341,11 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, object values, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(values);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync<T>(_inputAddress, dueAt, values, cancellationToken).ConfigureAwait(false);
 
@@ -413,17 +354,13 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(pipe);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, values, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -432,17 +369,13 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(pipe);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().ScheduleSendAsync<T>(_inputAddress, dueAt, values, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -451,15 +384,11 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
         ScheduledMessage<T> scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
@@ -467,17 +396,13 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -486,17 +411,13 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -505,13 +426,10 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(message);
         var scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
@@ -519,15 +437,12 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, Type messageType,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageType);
         var scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, messageType, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
@@ -535,15 +450,12 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
         var scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
@@ -551,16 +463,13 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageType);
+        ArgumentNullException.ThrowIfNull(pipe);
         var scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, messageType, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
@@ -568,15 +477,11 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(values);
         ScheduledMessage<T> scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync<T>(dueAt, values, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
@@ -584,17 +489,13 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(pipe);
         ScheduledMessage<T> scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, values, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
@@ -602,17 +503,13 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Schedules publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(pipe);
         ScheduledMessage<T> scheduledMessage =
             await _scheduler.Value.Advanced().SchedulePublishAsync<T>(dueAt, values, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -621,62 +518,85 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    /// <summary>Determines whether the current value can cel scheduled publish.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="tokenId">The token id.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Defers cancellation of a scheduled publish until the outbox commits.</summary>
+    /// <typeparam name="T">The scheduled message contract.</typeparam>
+    /// <param name="tokenId">The scheduler token that identifies the publish.</param>
+    /// <param name="cancellationToken">The token that cancels queuing or executing the cancellation.</param>
+    /// <returns>A task that completes when the cancellation is queued or executed.</returns>
     public Task CancelScheduledPublishAsync<T>(Guid tokenId, CancellationToken cancellationToken)
         where T : class
     {
-        return AddCancelMessageAsync(() => _scheduler.Value.Advanced().CancelScheduledPublishAsync<T>(tokenId, cancellationToken));
+        if (tokenId == Guid.Empty)
+            throw new ArgumentException("The scheduled-message token identifier must not be empty.", nameof(tokenId));
+
+        return AddCancelMessageAsync(
+            () => _scheduler.Value.Advanced().CancelScheduledPublishAsync<T>(tokenId, cancellationToken),
+            cancellationToken);
     }
 
-    /// <summary>Determines whether the current value can cel scheduled publish.</summary>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="tokenId">The token id.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Defers cancellation of a runtime-typed scheduled publish until the outbox commits.</summary>
+    /// <param name="messageType">The scheduled message contract.</param>
+    /// <param name="tokenId">The scheduler token that identifies the publish.</param>
+    /// <param name="cancellationToken">The token that cancels queuing or executing the cancellation.</param>
+    /// <returns>A task that completes when the cancellation is queued or executed.</returns>
     public Task CancelScheduledPublishAsync(Type messageType, Guid tokenId, CancellationToken cancellationToken)
     {
-        return AddCancelMessageAsync(() => _scheduler.Value.Advanced().CancelScheduledPublishAsync(messageType, tokenId, cancellationToken));
+        ArgumentNullException.ThrowIfNull(messageType);
+        if (tokenId == Guid.Empty)
+            throw new ArgumentException("The scheduled-message token identifier must not be empty.", nameof(tokenId));
+
+        return AddCancelMessageAsync(
+            () => _scheduler.Value.Advanced().CancelScheduledPublishAsync(messageType, tokenId, cancellationToken),
+            cancellationToken);
     }
 
-    /// <summary>Determines whether the current value can cel scheduled send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="tokenId">The token id.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Defers cancellation of a scheduled send until the outbox commits.</summary>
+    /// <param name="destinationAddress">The destination of the scheduled send.</param>
+    /// <param name="tokenId">The scheduler token that identifies the send.</param>
+    /// <param name="cancellationToken">The token that cancels queuing or executing the cancellation.</param>
+    /// <returns>A task that completes when the cancellation is queued or executed.</returns>
     public Task CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
     {
-        return AddCancelMessageAsync(() => _scheduler.Value.Advanced().CancelScheduledSendAsync(destinationAddress, tokenId, cancellationToken));
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        if (tokenId == Guid.Empty)
+            throw new ArgumentException("The scheduled-message token identifier must not be empty.", nameof(tokenId));
+
+        return AddCancelMessageAsync(
+            () => _scheduler.Value.Advanced().CancelScheduledSendAsync(destinationAddress, tokenId, cancellationToken),
+            cancellationToken);
     }
 
     void AddScheduledMessage(ScheduledMessage scheduledMessage)
     {
-        if (_clearToSend.IsCompleted)
-            return;
+        ArgumentNullException.ThrowIfNull(scheduledMessage);
 
         lock (_listLock)
-            _scheduledMessages.Add(scheduledMessage);
+        {
+            if (!_clearToSend.IsCompleted)
+                _scheduledMessages.Add(scheduledMessage);
+        }
     }
 
-    Task AddCancelMessageAsync(Func<Task> cancel)
+    Task AddCancelMessageAsync(Func<Task> cancel, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(cancel);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
         if (_clearToSend.IsCompleted)
-            return cancel();
+            return cancel() ?? throw new InvalidOperationException("The scheduled-message cancellation returned a null task.");
 
         lock (_listLock)
-            _cancelMessages.AddAsync(cancel);
-
-        return Task.CompletedTask;
+            return _cancelMessages.AddAsync(cancel, cancellationToken);
     }
 
-    /// <summary>Determines whether the current value can cel all scheduled messages.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Cancels every scheduled message tracked by this outbox.</summary>
+    /// <param name="cancellationToken">The token that cancels the cleanup operation.</param>
+    /// <returns>A task that completes when every tracked schedule is canceled.</returns>
     public Task CancelAllScheduledMessagesAsync(CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
         ScheduledMessage[] scheduledMessages;
 
         lock (_listLock)
@@ -694,9 +614,9 @@ public class InMemoryOutboxMessageSchedulerContext :
         return tasks.CompletedAsync(cancellationToken: cancellationToken);
     }
 
-    /// <summary>Executes pending actions.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Executes every deferred scheduled-message cancellation.</summary>
+    /// <param name="cancellationToken">The token that cancels pending cancellation delivery.</param>
+    /// <returns>A task that completes when all deferred cancellations finish.</returns>
     public Task ExecutePendingActionsAsync(CancellationToken cancellationToken = default)
     {
         return _cancelMessages.ExecuteAsync(true, cancellationToken: cancellationToken);

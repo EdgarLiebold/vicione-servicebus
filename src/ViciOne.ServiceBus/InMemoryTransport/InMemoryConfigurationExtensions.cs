@@ -8,44 +8,51 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides extension methods for in memory configuration.</summary>
+/// <summary>Exposes standalone and dependency-injection entry points for the in-memory transport.</summary>
 public static class InMemoryConfigurationExtensions
 {
-    /// <summary>Configure and create an in-memory bus.</summary>
-    /// <param name="selector">Hang off the selector interface for visibility.</param>
-    /// <param name="configure">The configuration callback to configure the bus.</param>
-    /// <returns>The created using in memory.</returns>
+    /// <summary>Creates a standalone in-memory bus at the default loopback address.</summary>
+    /// <param name="selector">The transport-independent bus factory selector.</param>
+    /// <param name="configure">The callback that configures the bus before construction.</param>
+    /// <returns>The constructed bus control.</returns>
     public static IBusControl CreateUsingInMemory(this IBusFactorySelector selector, Action<IInMemoryBusFactoryConfigurator> configure)
     {
+        ArgumentNullException.ThrowIfNull(selector);
+        ArgumentNullException.ThrowIfNull(configure);
         return InMemoryBus.Create(configure);
     }
 
-    /// <summary>Configure and create an in-memory bus.</summary>
-    /// <param name="selector">Hang off the selector interface for visibility.</param>
-    /// <param name="baseAddress">Override the default base address.</param>
-    /// <param name="configure">The configuration callback to configure the bus.</param>
-    /// <returns>The created using in memory.</returns>
+    /// <summary>Creates a standalone in-memory bus at a custom loopback address.</summary>
+    /// <param name="selector">The transport-independent bus factory selector.</param>
+    /// <param name="baseAddress">The base address assigned to the in-memory host.</param>
+    /// <param name="configure">The callback that configures the bus before construction.</param>
+    /// <returns>The constructed bus control.</returns>
     public static IBusControl CreateUsingInMemory(this IBusFactorySelector selector, Uri baseAddress, Action<IInMemoryBusFactoryConfigurator> configure)
     {
+        ArgumentNullException.ThrowIfNull(selector);
+        ArgumentNullException.ThrowIfNull(baseAddress);
+        ArgumentNullException.ThrowIfNull(configure);
         return InMemoryBus.Create(baseAddress, configure);
     }
 
-    /// <summary>Configure ViciOne.ServiceBus to use the In-Memory transport.</summary>
-    /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus).</param>
-    /// <param name="configure">The configuration callback for the bus factory.</param>
+    /// <summary>Selects the in-memory transport for the default bus.</summary>
+    /// <param name="configurator">The bus registration that will own the transport.</param>
+    /// <param name="configure">An optional callback that configures the in-memory bus factory.</param>
     public static void UsingInMemory(this IBusRegistrationConfigurator configurator,
         Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure = null)
     {
         UsingInMemory(configurator, null, configure);
     }
 
-    /// <summary>Configure ViciOne.ServiceBus to use the In-Memory transport.</summary>
-    /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus).</param>
-    /// <param name="baseAddress">The base Address of the transport.</param>
-    /// <param name="configure">The configuration callback for the bus factory.</param>
+    /// <summary>Selects the in-memory transport and its optional custom address for the default bus.</summary>
+    /// <param name="configurator">The bus registration that will own the transport.</param>
+    /// <param name="baseAddress">The transport base address, or <see langword="null" /> for the default.</param>
+    /// <param name="configure">An optional callback that configures the in-memory bus factory.</param>
     public static void UsingInMemory(this IBusRegistrationConfigurator configurator, Uri? baseAddress,
         Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure = null)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         configurator.SetBusFactory(new InMemoryRegistrationBusFactory(baseAddress, configure));
         configurator.Services.TryAddSingleton<IDurableSendDispatcher<IBus>, InMemoryDurableSendDispatcher<IBus>>();
 
@@ -57,10 +64,10 @@ public static class InMemoryConfigurationExtensions
         });
     }
 
-    /// <summary>Configure ViciOne.ServiceBus to use the In-Memory transport for the multi-bus instance.</summary>
-    /// <typeparam name="TBus">The bus type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="configure">The configuration callback for the bus factory.</param>
+    /// <summary>Selects the in-memory transport for a typed bus.</summary>
+    /// <typeparam name="TBus">The application-facing bus contract.</typeparam>
+    /// <param name="configurator">The typed bus registration that will own the transport.</param>
+    /// <param name="configure">An optional callback that configures the in-memory bus factory.</param>
     public static void UsingInMemory<TBus>(this IBusRegistrationConfigurator<TBus> configurator,
         Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure = null)
         where TBus : class, IBus
@@ -68,15 +75,17 @@ public static class InMemoryConfigurationExtensions
         UsingInMemory(configurator, null, configure);
     }
 
-    /// <summary>Configure ViciOne.ServiceBus to use the In-Memory transport for the multi-bus instance.</summary>
-    /// <typeparam name="TBus">The bus type.</typeparam>
-    /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus).</param>
-    /// <param name="baseAddress">The base Address of the transport.</param>
-    /// <param name="configure">The configuration callback for the bus factory.</param>
+    /// <summary>Selects the in-memory transport and its optional custom address for a typed bus.</summary>
+    /// <typeparam name="TBus">The application-facing bus contract.</typeparam>
+    /// <param name="configurator">The typed bus registration that will own the transport.</param>
+    /// <param name="baseAddress">The transport base address, or <see langword="null" /> for the default.</param>
+    /// <param name="configure">An optional callback that configures the in-memory bus factory.</param>
     public static void UsingInMemory<TBus>(this IBusRegistrationConfigurator<TBus> configurator, Uri? baseAddress,
         Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure = null)
         where TBus : class, IBus
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         configurator.SetBusFactory(new InMemoryRegistrationBusFactory(baseAddress, configure));
         configurator.Services.TryAddSingleton<IDurableSendDispatcher<TBus>, InMemoryDurableSendDispatcher<TBus>>();
 

@@ -5,23 +5,26 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>Provides the bus implementation for in memory.</summary>
+/// <summary>Creates standalone buses backed by the process-local in-memory transport.</summary>
 public static class InMemoryBus
 {
-    /// <summary>Configure and create an in-memory bus.</summary>
-    /// <param name="configure">The configuration callback to configure the bus.</param>
-    /// <returns>The newly created instance.</returns>
+    /// <summary>Creates an in-memory bus at the default loopback address.</summary>
+    /// <param name="configure">The callback that configures the bus before validation and construction.</param>
+    /// <returns>The constructed bus control.</returns>
     public static IBusControl Create(Action<IInMemoryBusFactoryConfigurator> configure)
     {
+        ArgumentNullException.ThrowIfNull(configure);
         return Create(null, configure);
     }
 
-    /// <summary>Configure and create an in-memory bus.</summary>
-    /// <param name="baseAddress">Override the default base address.</param>
-    /// <param name="configure">The configuration callback to configure the bus.</param>
-    /// <returns>The newly created instance.</returns>
+    /// <summary>Creates an in-memory bus at an optional custom loopback address.</summary>
+    /// <param name="baseAddress">The transport base address, or <see langword="null" /> for the default.</param>
+    /// <param name="configure">The callback that configures the bus before validation and construction.</param>
+    /// <returns>The constructed bus control.</returns>
     public static IBusControl Create(Uri? baseAddress, Action<IInMemoryBusFactoryConfigurator> configure)
     {
+        ArgumentNullException.ThrowIfNull(configure);
+
         var topologyConfiguration = new InMemoryTopologyConfiguration(CreateMessageTopology());
         var busConfiguration = new InMemoryBusConfiguration(topologyConfiguration, baseAddress);
 
@@ -32,14 +35,12 @@ public static class InMemoryBus
         return configurator.Build(busConfiguration);
     }
 
-    /// <summary>Creates message topology.</summary>
-    /// <returns>The created message topology.</returns>
+    /// <summary>Creates an in-memory message topology using the transport's entity-name formatter.</summary>
+    /// <returns>A new mutable message-topology configurator.</returns>
     public static IMessageTopologyConfigurator CreateMessageTopology()
     {
         return new MessageTopology(Cached.EntityNameFormatter);
     }
-
-
     static class Cached
     {
         internal static readonly IEntityNameFormatter EntityNameFormatter;

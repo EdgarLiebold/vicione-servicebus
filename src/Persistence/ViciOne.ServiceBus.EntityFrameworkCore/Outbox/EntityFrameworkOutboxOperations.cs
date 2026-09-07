@@ -86,7 +86,7 @@ internal sealed class EntityFrameworkOutboxOperations<TBus, TDbContext> : IEntit
         state.Delivered = null;
 
         await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        _notification.Delivered();
+        _notification.SignalDelivery();
     }
 
     public async Task DiscardAsync(Guid outboxId, CancellationToken cancellationToken = default)

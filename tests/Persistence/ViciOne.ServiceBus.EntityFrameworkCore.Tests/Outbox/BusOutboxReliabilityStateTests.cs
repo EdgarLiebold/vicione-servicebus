@@ -333,7 +333,7 @@ public sealed class BusOutboxReliabilityStateTests
                 ? Task.FromCanceled(cancellationToken)
                 : Task.CompletedTask;
 
-        public void Delivered()
+        public void SignalDelivery()
         {
         }
     }

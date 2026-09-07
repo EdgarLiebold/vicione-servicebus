@@ -298,7 +298,7 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
         public int DeliveredCount => Volatile.Read(ref _deliveredCount);
 
-        public void Delivered() => Interlocked.Increment(ref _deliveredCount);
+        public void SignalDelivery() => Interlocked.Increment(ref _deliveredCount);
 
         public Task WaitForDeliveryAsync(CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new InvalidOperationException("The outbox write tests must not wait for delivery."); }
     }

@@ -95,7 +95,7 @@ public sealed class BusOutboxDeliveryTelemetryTests
         public Task WaitForDeliveryAsync(CancellationToken cancellationToken) =>
             Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
 
-        public void Delivered()
+        public void SignalDelivery()
         {
         }
     }

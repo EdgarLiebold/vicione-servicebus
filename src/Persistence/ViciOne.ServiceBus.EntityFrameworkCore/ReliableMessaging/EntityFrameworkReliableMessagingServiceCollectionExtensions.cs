@@ -18,7 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class EntityFrameworkReliableMessagingServiceCollectionExtensions
 {
     /// <summary>Selects EF Core persistence inside the owning bus's reliable-messaging configuration.</summary>
-    /// <typeparam name="TDbContext">The db context type.</typeparam>
+    /// <typeparam name="TDbContext">The EF Core context that stores reliable-messaging state.</typeparam>
     /// <param name="configurator">The reliable-messaging configuration that owns the bus registration.</param>
     /// <returns>The same reliable-messaging configurator.</returns>
     public static IReliableMessagingConfigurator UseEntityFramework<TDbContext>(
@@ -38,8 +38,8 @@ public static class EntityFrameworkReliableMessagingServiceCollectionExtensions
     }
 
     /// <summary>Registers one EF Core store as the outbox, inbox, and recurring-schedule store for a bus.</summary>
-    /// <typeparam name="TBus">The bus type.</typeparam>
-    /// <typeparam name="TDbContext">The db context type.</typeparam>
+    /// <typeparam name="TBus">The bus contract whose durable state is isolated by persistence identity.</typeparam>
+    /// <typeparam name="TDbContext">The EF Core context that stores reliable-messaging state.</typeparam>
     /// <param name="services">The dependency-injection service collection.</param>
     /// <returns>The same service collection.</returns>
     public static IServiceCollection AddEntityFrameworkReliableStore<TBus, TDbContext>(
@@ -84,7 +84,10 @@ public static class EntityFrameworkReliableMessagingServiceCollectionExtensions
             provider.GetRequiredService<EntityFrameworkBusOutboxSessionRegistry<TBus>>().GetOrCreate<TDbContext>(provider));
         services.AddSingleton<IEntityFrameworkScopedBusContextFactory<TBus>>(
             new EntityFrameworkScopedBusContextFactory<TBus, TDbContext>(isDefault: false));
-        services.ReplaceScoped<IScopedBusContextProvider<TBus>, EntityFrameworkScopedBusContextProvider<TBus>>();
+        services.Replace(new ServiceDescriptor(
+            typeof(IScopedBusContextProvider<TBus>),
+            typeof(EntityFrameworkScopedBusContextProvider<TBus>),
+            ServiceLifetime.Scoped));
         services.AddScoped<IEntityFrameworkTransactionalOutbox<TBus, TDbContext>>(provider =>
             provider.GetRequiredService<EntityFrameworkScopedBusContext<TBus, TDbContext>>());
         services.AddSingleton<IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>>,

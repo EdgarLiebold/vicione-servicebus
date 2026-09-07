@@ -1,10 +1,10 @@
 namespace ViciOne.ServiceBus.Advanced.Observers;
 
-/// <summary>Defines the operations required by bus observer connector.</summary>
+/// <summary>Connects observers that receive bus lifecycle notifications.</summary>
 public interface IBusObserverConnector
 {
-    /// <summary>Connects a bus observer to the bus to observe lifecycle events on the bus.</summary>
+    /// <summary>Registers an observer for construction, startup, and shutdown events.</summary>
     /// <param name="observer">The observer to connect.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <returns>An idempotent handle that disconnects the registration.</returns>
     ConnectHandle ConnectBusObserver(IBusObserver observer);
 }

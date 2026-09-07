@@ -8,7 +8,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus;
 
-internal sealed class ViciOneServiceBusHostedService :
+internal sealed class ServiceBusHostedService :
     IHostedService,
     IAsyncDisposable
 {
@@ -16,15 +16,20 @@ internal sealed class ViciOneServiceBusHostedService :
     readonly object _stateLock = new();
     readonly IOptions<ViciOneServiceBusHostOptions> _options;
     readonly IServiceProvider _provider;
+    readonly TimeProvider _timeProvider;
     IBusDepot? _depot;
     Task? _startTask;
     bool _stopping;
     bool _stopped;
 
-    public ViciOneServiceBusHostedService(IServiceProvider provider, IOptions<ViciOneServiceBusHostOptions> options)
+    public ServiceBusHostedService(
+        IServiceProvider provider,
+        IOptions<ViciOneServiceBusHostOptions> options,
+        TimeProvider? timeProvider = null)
     {
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         _options = options ?? throw new ArgumentNullException(nameof(options));
+        _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
     public async ValueTask DisposeAsync()
@@ -46,7 +51,7 @@ internal sealed class ViciOneServiceBusHostedService :
             {
                 if (_options.Value.StopTimeout is { } stopTimeout)
                 {
-                    using var tokenSource = new CancellationTokenSource(stopTimeout);
+                    using var tokenSource = new CancellationTokenSource(stopTimeout, _timeProvider);
                     await depot.StopAsync(tokenSource.Token).ConfigureAwait(false);
                 }
                 else

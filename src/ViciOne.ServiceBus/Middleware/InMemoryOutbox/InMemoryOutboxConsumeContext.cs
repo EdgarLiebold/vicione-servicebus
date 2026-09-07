@@ -8,26 +8,26 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
-/// <summary>Carries state for in memory outbox consume operations.</summary>
+/// <summary>Buffers outgoing operations until the enclosing consume pipeline commits or discards them.</summary>
 public class InMemoryOutboxConsumeContext :
     ConsumeContextProxy,
     OutboxContext
 {
     readonly TaskCompletionSource<InMemoryOutboxConsumeContext> _clearToSend;
     readonly InMemoryOutboxDeferredMethodCollection _deferredMethods;
-    readonly InMemoryOutboxMessageSchedulerContext _outboxSchedulerContext = null!;
+    readonly InMemoryOutboxMessageSchedulerContext? _outboxSchedulerContext;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Initializes an in-memory outbox over an existing consume context.</summary>
+    /// <param name="context">The consume context whose outgoing operations are deferred.</param>
     protected InMemoryOutboxConsumeContext(ConsumeContext context)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
         CapturedContext = context;
 
         var outboxReceiveContext = new InMemoryOutboxReceiveContext(this, context.ReceiveContext);
 
         ReceiveContext = outboxReceiveContext;
-        PublishEndpointProvider = outboxReceiveContext.PublishEndpointProvider;
+        SetPublishEndpointProvider(outboxReceiveContext.PublishEndpointProvider);
 
         _clearToSend = TaskCompletionSources.Create<InMemoryOutboxConsumeContext>();
 
@@ -41,23 +41,24 @@ public class InMemoryOutboxConsumeContext :
         }
     }
 
-    /// <summary>Gets the captured context.</summary>
+    /// <summary>Gets the original consume context outside the outbox decorator.</summary>
     public ConsumeContext CapturedContext { get; }
 
-    /// <summary>Gets the clear to send.</summary>
+    /// <summary>Gets a task that completes when deferred operations may be delivered.</summary>
     public Task ClearToSend => _clearToSend.Task;
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="method">The method.</param>
+    /// <summary>Queues an asynchronous operation until the outbox is committed.</summary>
+    /// <param name="method">The operation to execute after the outbox is cleared for delivery.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the operation has been queued or invoked.</returns>
     public Task AddAsync(Func<Task> method, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(method);
         return _deferredMethods.AddAsync(method, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates checkpoint.</summary>
-    /// <returns>The created checkpoint.</returns>
+    /// <summary>Captures the current deferred-operation and scheduler positions.</summary>
+    /// <returns>A checkpoint that can be used to discard later additions.</returns>
     public virtual OutboxCheckpoint CreateCheckpoint()
     {
         return new OutboxCheckpoint(
@@ -66,10 +67,10 @@ public class InMemoryOutboxConsumeContext :
             _outboxSchedulerContext?.CreateCheckpoint() ?? default);
     }
 
-    /// <summary>Executes pending actions.</summary>
-    /// <param name="concurrentMessageDelivery">The concurrent message delivery.</param>
+    /// <summary>Releases and executes all pending operations.</summary>
+    /// <param name="concurrentMessageDelivery">Whether independent deferred sends may execute concurrently.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when all deferred operations and cancellations have finished.</returns>
     public virtual async Task ExecutePendingActionsAsync(bool concurrentMessageDelivery, CancellationToken cancellationToken = default)
     {
         _clearToSend.TrySetResult(this);
@@ -89,9 +90,9 @@ public class InMemoryOutboxConsumeContext :
         }
     }
 
-    /// <summary>Discards pending actions.</summary>
+    /// <summary>Discards every pending operation and cancels every deferred scheduled message.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after pending operations are discarded and tracked schedules are canceled.</returns>
     public virtual async Task DiscardPendingActionsAsync(CancellationToken cancellationToken = default)
     {
         _deferredMethods.Discard(cancellationToken);
@@ -109,15 +110,17 @@ public class InMemoryOutboxConsumeContext :
         }
     }
 
-    /// <summary>Discards pending actions.</summary>
-    /// <param name="checkpoint">The checkpoint.</param>
+    /// <summary>Discards operations and scheduled messages added after a checkpoint.</summary>
+    /// <param name="checkpoint">The checkpoint that defines the state to retain.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when work added after the checkpoint has been discarded.</returns>
     public virtual async Task DiscardPendingActionsAsync(OutboxCheckpoint checkpoint, CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(checkpoint);
+        ArgumentNullException.ThrowIfNull(checkpoint);
         if (!ReferenceEquals(checkpoint.Owner, this))
             throw new ArgumentException("The checkpoint belongs to a different outbox context.", nameof(checkpoint));
+
+        cancellationToken.ThrowIfCancellationRequested();
 
         _deferredMethods.DiscardSince(checkpoint.DeferredMethodCount);
 
@@ -127,8 +130,8 @@ public class InMemoryOutboxConsumeContext :
 }
 
 
-/// <summary>Carries state for in memory outbox consume operations.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Exposes a typed consumed message while buffering its outgoing operations in memory.</summary>
+/// <typeparam name="T">The consumed message contract.</typeparam>
 public class InMemoryOutboxConsumeContext<T> :
     InMemoryOutboxConsumeContext,
     ConsumeContext<T>
@@ -136,33 +139,33 @@ public class InMemoryOutboxConsumeContext<T> :
 {
     readonly ConsumeContext<T> _context;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Initializes a typed in-memory outbox over an existing consume context.</summary>
+    /// <param name="context">The typed consume context whose outgoing operations are deferred.</param>
     public InMemoryOutboxConsumeContext(ConsumeContext<T> context)
-        : base(context.Advanced())
+        : base((context ?? throw new ArgumentNullException(nameof(context))).Advanced())
     {
         _context = context;
     }
 
-    /// <summary>Gets the message.</summary>
+    /// <summary>Gets the consumed message.</summary>
     public T Message => _context.Message;
 
-    /// <summary>Reports that notify has been consumed.</summary>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
+    /// <summary>Notifies observers that the message was consumed successfully.</summary>
+    /// <param name="duration">The elapsed message-processing time.</param>
+    /// <param name="consumerType">The display name of the consumer that processed the message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>The observer-notification task.</returns>
     public virtual Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
         return NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Reports that notify has faulted.</summary>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Notifies observers that message consumption faulted.</summary>
+    /// <param name="duration">The elapsed message-processing time.</param>
+    /// <param name="consumerType">The display name of the consumer that attempted to process the message.</param>
+    /// <param name="exception">The exception raised by the consumer.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>The observer-notification task.</returns>
     public virtual Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
         return NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);
@@ -177,44 +180,44 @@ public class InMemoryOutboxConsumeContext<T> :
         readonly MessageBatch<T> _batch;
         readonly List<InMemoryOutboxConsumeContext<T>> _messages;
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="context">The context associated with the operation.</param>
+        /// <summary>Initializes per-message outboxes for every message in a consumed batch.</summary>
+        /// <param name="context">The batch consume context to decorate.</param>
         public Batch(ConsumeContext<Batch<T>> context)
-            : base(context.Advanced())
+            : base((context ?? throw new ArgumentNullException(nameof(context))).Advanced())
         {
             Batch<T> batch = context.Message;
             _messages = batch.Select(x => new InMemoryOutboxConsumeContext<T>(x)).ToList();
             _batch = new MessageBatch<T>(batch.FirstMessageReceived, batch.LastMessageReceived, batch.Mode, _messages);
         }
 
-        /// <summary>Gets the message.</summary>
+        /// <summary>Gets the batch whose message contexts are backed by child outboxes.</summary>
         public Batch<T> Message => _batch;
 
-        /// <summary>Reports that notify has been consumed.</summary>
-        /// <param name="duration">The duration.</param>
-        /// <param name="consumerType">The runtime consumer type used by the operation.</param>
+        /// <summary>Notifies observers that the batch was consumed successfully.</summary>
+        /// <param name="duration">The elapsed batch-processing time.</param>
+        /// <param name="consumerType">The display name of the consumer that processed the batch.</param>
         /// <param name="cancellationToken">The token used to cancel the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <returns>The observer-notification task.</returns>
         public Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         {
             return NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
         }
 
-        /// <summary>Reports that notify has faulted.</summary>
-        /// <param name="duration">The duration.</param>
-        /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-        /// <param name="exception">The exception associated with the operation.</param>
+        /// <summary>Notifies observers that batch consumption faulted.</summary>
+        /// <param name="duration">The elapsed batch-processing time.</param>
+        /// <param name="consumerType">The display name of the consumer that attempted to process the batch.</param>
+        /// <param name="exception">The exception raised by the consumer.</param>
         /// <param name="cancellationToken">The token used to cancel the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <returns>The observer-notification task.</returns>
         public Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         {
             return NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);
         }
 
-        /// <summary>Executes pending actions.</summary>
-        /// <param name="concurrentMessageDelivery">The concurrent message delivery.</param>
+        /// <summary>Executes pending operations for the batch and every message it contains.</summary>
+        /// <param name="concurrentMessageDelivery">Whether independent deferred sends may execute concurrently.</param>
         /// <param name="cancellationToken">The token used to cancel the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <returns>A task that completes when the parent and child outboxes have finished delivery.</returns>
         public override async Task ExecutePendingActionsAsync(bool concurrentMessageDelivery, CancellationToken cancellationToken = default)
         {
             await base.ExecutePendingActionsAsync(concurrentMessageDelivery, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -222,9 +225,9 @@ public class InMemoryOutboxConsumeContext<T> :
             await Task.WhenAll(_messages.Select(x => x.ExecutePendingActionsAsync(concurrentMessageDelivery, cancellationToken: cancellationToken))).ConfigureAwait(false);
         }
 
-        /// <summary>Discards pending actions.</summary>
+        /// <summary>Discards pending operations for the batch and every message it contains.</summary>
         /// <param name="cancellationToken">The token used to cancel the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <returns>A task that completes after the parent and child outboxes have discarded pending work.</returns>
         public override async Task DiscardPendingActionsAsync(CancellationToken cancellationToken = default)
         {
             await base.DiscardPendingActionsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -232,8 +235,8 @@ public class InMemoryOutboxConsumeContext<T> :
             await Task.WhenAll(_messages.Select(x => x.DiscardPendingActionsAsync(cancellationToken: cancellationToken))).ConfigureAwait(false);
         }
 
-        /// <summary>Creates checkpoint.</summary>
-        /// <returns>The created checkpoint.</returns>
+        /// <summary>Captures the current state of the batch outbox and every child outbox.</summary>
+        /// <returns>A composite checkpoint that can be used to discard later additions.</returns>
         public override OutboxCheckpoint CreateCheckpoint()
         {
             OutboxCheckpoint parentCheckpoint = base.CreateCheckpoint();
@@ -246,10 +249,10 @@ public class InMemoryOutboxConsumeContext<T> :
                 childCheckpoints);
         }
 
-        /// <summary>Discards pending actions.</summary>
-        /// <param name="checkpoint">The checkpoint.</param>
+        /// <summary>Discards batch and child operations added after a composite checkpoint.</summary>
+        /// <param name="checkpoint">The composite checkpoint that defines the state to retain.</param>
         /// <param name="cancellationToken">The token used to cancel the operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <returns>A task that completes when work added after the parent and child checkpoints has been discarded.</returns>
         public override async Task DiscardPendingActionsAsync(OutboxCheckpoint checkpoint, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(checkpoint);
