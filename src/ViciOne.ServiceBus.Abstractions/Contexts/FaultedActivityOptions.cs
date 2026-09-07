@@ -3,22 +3,22 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>Defines configuration options for faulted activity.</summary>
+/// <summary>Configures routing-slip state after an activity faults.</summary>
 public interface FaultedActivityOptions
 {
-    /// <summary>When specified, uses the scheduler to delay execution of the next activity by the specified duration.</summary>
+    /// <summary>Sets an optional delay before compensation starts.</summary>
     TimeSpan? Delay { set; }
 
-    /// <summary>Add or update the variables on the routing slip with the specified object (properties are mapped to variables).</summary>
-    /// <param name="variables">The variables.</param>
+    /// <summary>Adds, updates, or removes variables using the readable properties of an object.</summary>
+    /// <param name="variables">The object whose properties define the variable updates.</param>
     void SetVariables(object variables);
 
-    /// <summary>Add or update the variables on the routing slip with the specified values.</summary>
-    /// <param name="variables">The variables.</param>
+    /// <summary>Adds, updates, or removes routing-slip variables.</summary>
+    /// <param name="variables">The variables; an entry with a null value removes the matching variable.</param>
     void SetVariables(IEnumerable<KeyValuePair<string, object>> variables);
 
-    /// <summary>Add or update the variable on the routing slip with the specified object.</summary>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">The value to process.</param>
-    void SetVariable(string key, object value);
+    /// <summary>Adds, updates, or removes one routing-slip variable.</summary>
+    /// <param name="key">The variable name.</param>
+    /// <param name="value">The new value, or <see langword="null"/> to remove the variable.</param>
+    void SetVariable(string key, object? value);
 }

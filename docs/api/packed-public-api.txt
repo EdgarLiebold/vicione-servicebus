@@ -1113,7 +1113,6 @@ TYPE enum public ViciOne.ServiceBus.Advanced.RoutingSlipEventContents
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEventContents Data = 4
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEventContents Itinerary = 8
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEventContents None = 256
-  FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEventContents SkipEncrypted = 256
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEventContents Variables = 1
 TYPE enum public ViciOne.ServiceBus.Advanced.RoutingSlipEvents
   FIELD public System.Int32 value__
@@ -1124,7 +1123,6 @@ TYPE enum public ViciOne.ServiceBus.Advanced.RoutingSlipEvents
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents All = 0
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents CompensationFailed = 4
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents Completed = 1
-  FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents EventMask = 65535
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents Faulted = 2
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents Revised = 16
   FIELD public const ViciOne.ServiceBus.Advanced.RoutingSlipEvents Supplemental = 65536
@@ -7261,8 +7259,8 @@ ASSEMBLY ViciOne.ServiceBus.Courier VERSION=1.0.0.0
 TYPE interface public ViciOne.ServiceBus.Advanced.CourierContext
 TYPE interface public ViciOne.ServiceBus.Advanced.IRoutingSlipExecutor
   METHOD public abstract System.Threading.Tasks.Task ExecuteAsync(ViciOne.ServiceBus.Courier.Contracts.RoutingSlip routingSlip, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Configuration.ActivityDefinition<TActivity,TArguments,TLog> [base=ViciOne.ServiceBus.Configuration.ExecuteActivityDefinition<TActivity,TArguments>]
-  CTOR public ViciOne.ServiceBus.Configuration.ActivityDefinition<TActivity,TArguments,TLog>()
+TYPE class public ViciOne.ServiceBus.Configuration.ActivityDefinition<TActivity,TArguments,TLog> [abstract,base=ViciOne.ServiceBus.Configuration.ExecuteActivityDefinition<TActivity,TArguments>]
+  CTOR protected ViciOne.ServiceBus.Configuration.ActivityDefinition<TActivity,TArguments,TLog>()
   METHOD protected System.Void CompensateEndpoint(System.Action<ViciOne.ServiceBus.Configuration.IEndpointRegistrationConfigurator> configure = null)
   METHOD protected virtual System.Void ConfigureCompensateActivity(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator endpointConfigurator, ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator<TActivity,TLog> compensateActivityConfigurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
   PROPERTY System.String CompensateEndpointName {  protected-set; }
@@ -7270,24 +7268,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.ActivityDefinition<TActivity,
 TYPE class public ViciOne.ServiceBus.Configuration.ActivityPipeConfiguratorExtensions [static]
   METHOD public static System.Void AddPipeSpecification<TActivity,TArguments>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> configurator, ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TArguments>> specification)
   METHOD public static System.Void AddPipeSpecification<TActivity,TLog>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> configurator, ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TLog>> specification)
-TYPE class public ViciOne.ServiceBus.Configuration.CompensateActivityEndpointDefinition<TActivity,TLog> [base=ViciOne.ServiceBus.Configuration.SettingsEndpointDefinition<ViciOne.ServiceBus.Courier.ICompensateActivity<TLog>>]
-  CTOR public ViciOne.ServiceBus.Configuration.CompensateActivityEndpointDefinition<TActivity,TLog>(ViciOne.ServiceBus.Configuration.IEndpointSettings<ViciOne.ServiceBus.Configuration.IEndpointDefinition<ViciOne.ServiceBus.Courier.ICompensateActivity<TLog>>> settings)
-  METHOD protected System.String FormatEndpointName(ViciOne.ServiceBus.Advanced.IEndpointNameFormatter formatter)
-TYPE class public ViciOne.ServiceBus.Configuration.CompensateActivityHostConfigurator<TActivity,TLog>
-  CTOR public ViciOne.ServiceBus.Configuration.CompensateActivityHostConfigurator<TActivity,TLog>(ViciOne.ServiceBus.Courier.ICompensateActivityFactory<TActivity,TLog> activityFactory, ViciOne.ServiceBus.Configuration.IActivityConfigurationObserver observer)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void ActivityLog(System.Action<ViciOne.ServiceBus.Configuration.ICompensateActivityLogConfigurator<TLog>> configure)
-  METHOD public virtual System.Void AddPipeSpecification(ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> specification)
-  METHOD public virtual System.Void Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointBuilder builder)
-  METHOD public virtual System.Void Log(System.Action<ViciOne.ServiceBus.Configuration.ICompensateLogConfigurator<TLog>> configure)
-  METHOD public virtual System.Void Message<TMessage>(System.Action<ViciOne.ServiceBus.Advanced.Observers.IActivityMessageConfigurator<TMessage>> configure)
-  METHOD public virtual System.Void RoutingSlip(System.Action<ViciOne.ServiceBus.Configuration.IRoutingSlipConfigurator> configure)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectActivityObserver(ViciOne.ServiceBus.Advanced.Observers.IActivityObserver observer)
-  PROPERTY System.Nullable<System.Int32> ConcurrentMessageLimit { public-get; public-set; }
-  PROPERTY System.Type MessageType { public-get;  }
-TYPE class public ViciOne.ServiceBus.Configuration.CompensateActivityLogConfigurator<TActivity,TLog>
-  CTOR public ViciOne.ServiceBus.Configuration.CompensateActivityLogConfigurator<TActivity,TLog>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> configurator)
-  METHOD public virtual System.Void AddPipeSpecification(ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TLog>> specification)
 TYPE class public ViciOne.ServiceBus.Configuration.CourierHostConfiguratorExtensions [static]
   METHOD public static System.Void CompensateActivityHost<TActivity,TLog>(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator<TActivity,TLog>> configure = null)
   METHOD public static System.Void CompensateActivityHost<TActivity,TLog>(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, System.Func<TActivity> activityFactory, System.Action<ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator<TActivity,TLog>> configure = null)
@@ -7318,56 +7298,17 @@ TYPE class public ViciOne.ServiceBus.Configuration.CourierRegistrationExtensions
   METHOD public static System.Void AddActivitiesFromNamespaceContaining<T>(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator, System.Func<System.Type,System.Boolean> filter = null)
   METHOD public static ViciOne.ServiceBus.Configuration.IActivityRegistrationConfigurator<TActivity,TArguments,TLog> AddActivity<TActivity,TArguments,TLog,TDefinition>(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments>> configureExecute = null, System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator<TActivity,TLog>> configureCompensate = null)
   METHOD public static ViciOne.ServiceBus.Configuration.IExecuteActivityRegistrationConfigurator<TActivity,TArguments> AddExecuteActivity<TActivity,TArguments,TDefinition>(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments>> configure = null)
-TYPE class public ViciOne.ServiceBus.Configuration.DefaultActivityDefinition<TActivity,TArguments,TLog> [base=ViciOne.ServiceBus.Configuration.ActivityDefinition<TActivity,TArguments,TLog>]
-  CTOR public ViciOne.ServiceBus.Configuration.DefaultActivityDefinition<TActivity,TArguments,TLog>()
-TYPE class public ViciOne.ServiceBus.Configuration.DefaultExecuteActivityDefinition<TActivity,TArguments> [base=ViciOne.ServiceBus.Configuration.ExecuteActivityDefinition<TActivity,TArguments>]
-  CTOR public ViciOne.ServiceBus.Configuration.DefaultExecuteActivityDefinition<TActivity,TArguments>()
-TYPE class public ViciOne.ServiceBus.Configuration.DependencyInjectionActivityRegistrationExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Configuration.IActivityRegistration RegisterActivity(Microsoft.Extensions.DependencyInjection.IServiceCollection collection, ViciOne.ServiceBus.Configuration.IContainerRegistrar registrar, System.Type activityType, System.Type activityDefinitionType = null)
-  METHOD public static ViciOne.ServiceBus.Configuration.IActivityRegistration RegisterActivity<TActivity,TArguments,TLog,TDefinition>(Microsoft.Extensions.DependencyInjection.IServiceCollection collection)
-  METHOD public static ViciOne.ServiceBus.Configuration.IActivityRegistration RegisterActivity<TActivity,TArguments,TLog,TDefinition>(Microsoft.Extensions.DependencyInjection.IServiceCollection collection, ViciOne.ServiceBus.Configuration.IContainerRegistrar registrar)
-  METHOD public static ViciOne.ServiceBus.Configuration.IActivityRegistration RegisterActivity<TActivity,TArguments,TLog>(Microsoft.Extensions.DependencyInjection.IServiceCollection collection)
-  METHOD public static ViciOne.ServiceBus.Configuration.IActivityRegistration RegisterActivity<TActivity,TArguments,TLog>(Microsoft.Extensions.DependencyInjection.IServiceCollection collection, System.Type activityDefinitionType)
-  METHOD public static ViciOne.ServiceBus.Configuration.IActivityRegistration RegisterActivity<TActivity,TArguments,TLog>(Microsoft.Extensions.DependencyInjection.IServiceCollection collection, ViciOne.ServiceBus.Configuration.IContainerRegistrar registrar)
-  METHOD public static ViciOne.ServiceBus.Configuration.IActivityRegistration RegisterActivity<TActivity,TArguments,TLog>(Microsoft.Extensions.DependencyInjection.IServiceCollection collection, ViciOne.ServiceBus.Configuration.IContainerRegistrar registrar, System.Type activityDefinitionType)
 TYPE class public ViciOne.ServiceBus.Configuration.DependencyInjectionCourierReceiveEndpointExtensions [static]
   METHOD public static System.Void CompensateActivityHost<TActivity,TLog>(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context, System.Action<ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator<TActivity,TLog>> configure = null)
   METHOD public static System.Void ExecuteActivityHost<TActivity,TArguments>(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, System.Uri compensateAddress, ViciOne.ServiceBus.Configuration.IRegistrationContext context, System.Action<ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments>> configure = null)
   METHOD public static System.Void ExecuteActivityHost<TActivity,TArguments>(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context, System.Action<ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments>> configure = null)
-TYPE class public ViciOne.ServiceBus.Configuration.DependencyInjectionExecuteActivityRegistrationExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Configuration.IExecuteActivityRegistration RegisterExecuteActivity(Microsoft.Extensions.DependencyInjection.IServiceCollection collection, ViciOne.ServiceBus.Configuration.IContainerRegistrar registrar, System.Type activityType, System.Type activityDefinitionType = null)
-  METHOD public static ViciOne.ServiceBus.Configuration.IExecuteActivityRegistration RegisterExecuteActivity<TActivity,TArguments,TDefinition>(Microsoft.Extensions.DependencyInjection.IServiceCollection collection)
-  METHOD public static ViciOne.ServiceBus.Configuration.IExecuteActivityRegistration RegisterExecuteActivity<TActivity,TArguments,TDefinition>(Microsoft.Extensions.DependencyInjection.IServiceCollection collection, ViciOne.ServiceBus.Configuration.IContainerRegistrar registrar)
-  METHOD public static ViciOne.ServiceBus.Configuration.IExecuteActivityRegistration RegisterExecuteActivity<TActivity,TArguments>(Microsoft.Extensions.DependencyInjection.IServiceCollection collection)
-  METHOD public static ViciOne.ServiceBus.Configuration.IExecuteActivityRegistration RegisterExecuteActivity<TActivity,TArguments>(Microsoft.Extensions.DependencyInjection.IServiceCollection collection, System.Type activityDefinitionType)
-  METHOD public static ViciOne.ServiceBus.Configuration.IExecuteActivityRegistration RegisterExecuteActivity<TActivity,TArguments>(Microsoft.Extensions.DependencyInjection.IServiceCollection collection, ViciOne.ServiceBus.Configuration.IContainerRegistrar registrar)
-  METHOD public static ViciOne.ServiceBus.Configuration.IExecuteActivityRegistration RegisterExecuteActivity<TActivity,TArguments>(Microsoft.Extensions.DependencyInjection.IServiceCollection collection, ViciOne.ServiceBus.Configuration.IContainerRegistrar registrar, System.Type activityDefinitionType)
-TYPE class public ViciOne.ServiceBus.Configuration.ExecuteActivityArgumentsConfigurator<TActivity,TArguments>
-  CTOR public ViciOne.ServiceBus.Configuration.ExecuteActivityArgumentsConfigurator<TActivity,TArguments>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> configurator)
-  METHOD public virtual System.Void AddPipeSpecification(ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TArguments>> specification)
-TYPE class public ViciOne.ServiceBus.Configuration.ExecuteActivityDefinition<TActivity,TArguments>
+TYPE class public ViciOne.ServiceBus.Configuration.ExecuteActivityDefinition<TActivity,TArguments> [abstract]
   CTOR protected ViciOne.ServiceBus.Configuration.ExecuteActivityDefinition<TActivity,TArguments>()
   METHOD protected System.Void ExecuteEndpoint(System.Action<ViciOne.ServiceBus.Configuration.IEndpointRegistrationConfigurator> configure = null)
   METHOD protected virtual System.Void ConfigureExecuteActivity(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator endpointConfigurator, ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments> executeActivityConfigurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
   PROPERTY System.Nullable<System.Int32> ConcurrentMessageLimit { public-get; protected-set; }
   PROPERTY System.String ExecuteEndpointName {  protected-set; }
   PROPERTY ViciOne.ServiceBus.Configuration.IEndpointDefinition<ViciOne.ServiceBus.Courier.IExecuteActivity<TArguments>> ExecuteEndpointDefinition { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Configuration.ExecuteActivityEndpointDefinition<TActivity,TArguments> [base=ViciOne.ServiceBus.Configuration.SettingsEndpointDefinition<ViciOne.ServiceBus.Courier.IExecuteActivity<TArguments>>]
-  CTOR public ViciOne.ServiceBus.Configuration.ExecuteActivityEndpointDefinition<TActivity,TArguments>(ViciOne.ServiceBus.Configuration.IEndpointSettings<ViciOne.ServiceBus.Configuration.IEndpointDefinition<ViciOne.ServiceBus.Courier.IExecuteActivity<TArguments>>> settings)
-  METHOD protected System.String FormatEndpointName(ViciOne.ServiceBus.Advanced.IEndpointNameFormatter formatter)
-TYPE class public ViciOne.ServiceBus.Configuration.ExecuteActivityHostConfigurator<TActivity,TArguments>
-  CTOR public ViciOne.ServiceBus.Configuration.ExecuteActivityHostConfigurator<TActivity,TArguments>(ViciOne.ServiceBus.Courier.IExecuteActivityFactory<TActivity,TArguments> activityFactory, System.Uri compensateAddress, ViciOne.ServiceBus.Configuration.IActivityConfigurationObserver observer)
-  CTOR public ViciOne.ServiceBus.Configuration.ExecuteActivityHostConfigurator<TActivity,TArguments>(ViciOne.ServiceBus.Courier.IExecuteActivityFactory<TActivity,TArguments> activityFactory, ViciOne.ServiceBus.Configuration.IActivityConfigurationObserver observer)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void ActivityArguments(System.Action<ViciOne.ServiceBus.Configuration.IExecuteActivityArgumentsConfigurator<TArguments>> configure)
-  METHOD public virtual System.Void AddPipeSpecification(ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> specification)
-  METHOD public virtual System.Void Arguments(System.Action<ViciOne.ServiceBus.Configuration.IExecuteArgumentsConfigurator<TArguments>> configure)
-  METHOD public virtual System.Void Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointBuilder builder)
-  METHOD public virtual System.Void Message<TMessage>(System.Action<ViciOne.ServiceBus.Advanced.Observers.IActivityMessageConfigurator<TMessage>> configure)
-  METHOD public virtual System.Void RoutingSlip(System.Action<ViciOne.ServiceBus.Configuration.IRoutingSlipConfigurator> configure)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectActivityObserver(ViciOne.ServiceBus.Advanced.Observers.IActivityObserver observer)
-  PROPERTY System.Nullable<System.Int32> ConcurrentMessageLimit { public-get; public-set; }
-  PROPERTY System.Type MessageType { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Configuration.IActivityDefinition
   METHOD public abstract System.String GetCompensateEndpointName(ViciOne.ServiceBus.Advanced.IEndpointNameFormatter formatter)
   PROPERTY System.Type LogType { public-get;  }
@@ -7375,13 +7316,6 @@ TYPE interface public ViciOne.ServiceBus.Configuration.IActivityDefinition
 TYPE interface public ViciOne.ServiceBus.Configuration.IActivityDefinition<TActivity,TArguments,TLog>
   METHOD public abstract System.Void Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator endpointConfigurator, ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator<TActivity,TLog> compensateActivityConfigurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
   PROPERTY ViciOne.ServiceBus.Configuration.IEndpointDefinition<ViciOne.ServiceBus.Courier.ICompensateActivity<TLog>> CompensateEndpointDefinition {  public-set; }
-TYPE interface public ViciOne.ServiceBus.Configuration.IActivityRegistration
-  METHOD public abstract System.Void AddConfigureAction<T,TArguments>(System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<T,TArguments>> configure)
-  METHOD public abstract System.Void AddConfigureAction<T,TLog>(System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator<T,TLog>> configure)
-  METHOD public abstract System.Void Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator executeEndpointConfigurator, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator compensateEndpointConfigurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-  METHOD public abstract System.Void ConfigureCompensate(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-  METHOD public abstract System.Void ConfigureExecute(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context, System.Uri compensateAddress)
-  METHOD public abstract ViciOne.ServiceBus.Configuration.IActivityDefinition GetDefinition(ViciOne.ServiceBus.Configuration.IRegistrationContext context)
 TYPE interface public ViciOne.ServiceBus.Configuration.IActivityRegistrationConfigurator
   METHOD public abstract System.Void ExcludeFromConfigureEndpoints()
   METHOD public abstract ViciOne.ServiceBus.Configuration.IActivityRegistrationConfigurator CompensateEndpoint(System.Action<ViciOne.ServiceBus.Configuration.IEndpointRegistrationConfigurator> configureCompensate)
@@ -7407,33 +7341,11 @@ TYPE interface public ViciOne.ServiceBus.Configuration.IExecuteActivityDefinitio
 TYPE interface public ViciOne.ServiceBus.Configuration.IExecuteActivityDefinition<TActivity,TArguments>
   METHOD public abstract System.Void Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator endpointConfigurator, ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments> executeActivityConfigurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
   PROPERTY ViciOne.ServiceBus.Configuration.IEndpointDefinition<ViciOne.ServiceBus.Courier.IExecuteActivity<TArguments>> ExecuteEndpointDefinition {  public-set; }
-TYPE interface public ViciOne.ServiceBus.Configuration.IExecuteActivityRegistration
-  METHOD public abstract System.Void AddConfigureAction<T,TArguments>(System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<T,TArguments>> configure)
-  METHOD public abstract System.Void Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-  METHOD public abstract ViciOne.ServiceBus.Configuration.IExecuteActivityDefinition GetDefinition(ViciOne.ServiceBus.Configuration.IRegistrationContext context)
 TYPE interface public ViciOne.ServiceBus.Configuration.IExecuteActivityRegistrationConfigurator
   METHOD public abstract System.Void Endpoint(System.Action<ViciOne.ServiceBus.Configuration.IEndpointRegistrationConfigurator> configure)
   METHOD public abstract System.Void ExcludeFromConfigureEndpoints()
 TYPE interface public ViciOne.ServiceBus.Configuration.IExecuteActivityRegistrationConfigurator<TActivity,TArguments>
 TYPE interface public ViciOne.ServiceBus.Configuration.IRoutingSlipConfigurator
-TYPE class public ViciOne.ServiceBus.Configuration.RoutingSlipConfigurator
-  CTOR public ViciOne.ServiceBus.Configuration.RoutingSlipConfigurator()
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void AddPipeSpecification(ViciOne.ServiceBus.Configuration.IPipeSpecification<ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip>> specification)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip>> Build()
-TYPE class public ViciOne.ServiceBus.Context.BaseCourierContext [abstract,base=ViciOne.ServiceBus.Context.ConsumeContextScope<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip>]
-  CTOR protected ViciOne.ServiceBus.Context.BaseCourierContext(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip> consumeContext)
-  PROPERTY System.String ActivityName { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Courier.IRoutingSlipEventPublisher Publisher { protected-get;  }
-  PROPERTY ViciOne.ServiceBus.Courier.SanitizedRoutingSlip RoutingSlip { protected-get;  }
-TYPE class public ViciOne.ServiceBus.Context.CourierContextProxy [abstract,base=ViciOne.ServiceBus.Context.ConsumeContextProxy<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip>]
-  CTOR protected ViciOne.ServiceBus.Context.CourierContextProxy(ViciOne.ServiceBus.Advanced.CourierContext courierContext)
-TYPE class public ViciOne.ServiceBus.Context.CourierContextScope [abstract,base=ViciOne.ServiceBus.Context.ConsumeContextScope<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip>]
-  CTOR protected ViciOne.ServiceBus.Context.CourierContextScope(ViciOne.ServiceBus.Advanced.CourierContext courierContext, System.Object[] payloads)
-TYPE class public ViciOne.ServiceBus.Courier.CompensateActivityHost<TActivity,TLog>
-  CTOR public ViciOne.ServiceBus.Courier.CompensateActivityHost<TActivity,TLog>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.CompensateContext<TLog>> compensatePipe)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip>> next)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
 TYPE interface public ViciOne.ServiceBus.Courier.Contracts.Activity
   PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Arguments { public-get;  }
   PROPERTY System.String Name { public-get;  }
@@ -7550,236 +7462,31 @@ TYPE class public ViciOne.ServiceBus.Courier.DefaultConstructorCompensateActivit
   PROPERTY ViciOne.ServiceBus.Courier.ICompensateActivityFactory<TActivity,TLog> CompensateFactory { public-get;  }
 TYPE class public ViciOne.ServiceBus.Courier.DefaultConstructorExecuteActivityFactory<TActivity,TArguments> [static]
   PROPERTY ViciOne.ServiceBus.Courier.IExecuteActivityFactory<TActivity,TArguments> ExecuteFactory { public-get;  }
-TYPE class public ViciOne.ServiceBus.Courier.ExecuteActivityHost<TActivity,TArguments>
-  CTOR public ViciOne.ServiceBus.Courier.ExecuteActivityHost<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments>> executePipe, System.Uri compensateAddress)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip>> next)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.Courier.FactoryMethodActivityFactory<TActivity,TArguments,TLog>
+TYPE class public ViciOne.ServiceBus.Courier.FactoryMethodActivityFactory<TActivity,TArguments,TLog> [sealed]
   CTOR public ViciOne.ServiceBus.Courier.FactoryMethodActivityFactory<TActivity,TArguments,TLog>(System.Func<TArguments,TActivity> executeFactory, System.Func<TLog,TActivity> compensateFactory)
   METHOD public virtual System.Threading.Tasks.Task CompensateAsync(ViciOne.ServiceBus.Advanced.CompensateContext<TLog> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> next, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Threading.Tasks.Task ExecuteAsync(ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> next, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.Courier.FactoryMethodCompensateActivityFactory<TActivity,TLog>
+TYPE class public ViciOne.ServiceBus.Courier.FactoryMethodCompensateActivityFactory<TActivity,TLog> [sealed]
   CTOR public ViciOne.ServiceBus.Courier.FactoryMethodCompensateActivityFactory<TActivity,TLog>(System.Func<TLog,TActivity> compensateFactory)
   METHOD public virtual System.Threading.Tasks.Task CompensateAsync(ViciOne.ServiceBus.Advanced.CompensateContext<TLog> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> next, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.Courier.FactoryMethodExecuteActivityFactory<TActivity,TArguments>
+TYPE class public ViciOne.ServiceBus.Courier.FactoryMethodExecuteActivityFactory<TActivity,TArguments> [sealed]
   CTOR public ViciOne.ServiceBus.Courier.FactoryMethodExecuteActivityFactory<TActivity,TArguments>(System.Func<TArguments,TActivity> executeFactory)
   METHOD public virtual System.Threading.Tasks.Task ExecuteAsync(ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> next, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.Courier.HostCompensateContext<TLog> [base=ViciOne.ServiceBus.Context.BaseCourierContext]
-  CTOR public ViciOne.ServiceBus.Courier.HostCompensateContext<TLog>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip> context)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog> CreateActivityContext<TActivity>(TActivity activity)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.CompensationResult Failed(System.Exception exception)
-  PROPERTY System.String ActivityName { public-get;  }
-  PROPERTY TLog Log { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.CompensationResult Result { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.HostExecuteContext<TArguments> [base=ViciOne.ServiceBus.Context.BaseCourierContext]
-  CTOR public ViciOne.ServiceBus.Courier.HostExecuteContext<TArguments>(System.Uri compensationAddress, ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip> context)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments> CreateActivityContext<TActivity>(TActivity activity)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult Completed()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult Completed(ViciOne.ServiceBus.Advanced.ConfigureCompletedActivityOptionsCallback callback)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult Completed<TLog>(System.Object logValues)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult Completed<TLog>(System.Object logValues, ViciOne.ServiceBus.Advanced.ConfigureCompletedActivityOptionsCallback callback)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult Completed<TLog>(TLog log)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult Completed<TLog>(TLog log, ViciOne.ServiceBus.Advanced.ConfigureCompletedActivityOptionsCallback callback)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult CompletedWithVariables(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> variables)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult CompletedWithVariables(System.Object variables)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult CompletedWithVariables<TLog>(System.Object logValues, System.Object variables)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult CompletedWithVariables<TLog>(TLog log, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> variables)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult CompletedWithVariables<TLog>(TLog log, System.Object variables)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult Faulted()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult Faulted(System.Exception exception)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult Faulted(System.Exception exception, ViciOne.ServiceBus.Advanced.ConfigureFaultedActivityOptionsCallback callback)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult FaultedWithVariables(System.Exception exception, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> variables)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult FaultedWithVariables(System.Exception exception, System.Object variables)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult ReviseItinerary(System.Action<ViciOne.ServiceBus.Advanced.IItineraryBuilder> buildItinerary)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult ReviseItinerary<TLog>(TLog log, System.Action<ViciOne.ServiceBus.Advanced.IItineraryBuilder> buildItinerary)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult ReviseItinerary<TLog>(TLog log, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> variables, System.Action<ViciOne.ServiceBus.Advanced.IItineraryBuilder> buildItinerary)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult ReviseItinerary<TLog>(TLog log, System.Object variables, System.Action<ViciOne.ServiceBus.Advanced.IItineraryBuilder> buildItinerary)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult Terminate()
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult Terminate(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> variables)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ExecutionResult Terminate(System.Object variables)
-  PROPERTY System.String ActivityName { public-get;  }
-  PROPERTY TArguments Arguments { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.ExecutionResult Result { public-get; public-set; }
-TYPE interface public ViciOne.ServiceBus.Courier.IActivity
 TYPE interface public ViciOne.ServiceBus.Courier.IActivity<TArguments,TLog>
-TYPE interface public ViciOne.ServiceBus.Courier.IActivityFactory
-  METHOD public abstract System.Threading.Tasks.Task CompensateAsync<TActivity,TLog>(ViciOne.ServiceBus.Advanced.CompensateContext<TLog> compensateContext, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> next, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task ExecuteAsync<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> next, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Courier.IActivityFactory<TActivity,TArguments,TLog>
-TYPE interface public ViciOne.ServiceBus.Courier.ICompensateActivity
 TYPE interface public ViciOne.ServiceBus.Courier.ICompensateActivity<TLog>
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.CompensationResult> CompensateAsync(ViciOne.ServiceBus.Advanced.CompensateContext<TLog> context)
 TYPE interface public ViciOne.ServiceBus.Courier.ICompensateActivityFactory<TActivity,TLog>
   METHOD public abstract System.Threading.Tasks.Task CompensateAsync(ViciOne.ServiceBus.Advanced.CompensateContext<TLog> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> next, System.Threading.CancellationToken cancellationToken = null)
-TYPE interface public ViciOne.ServiceBus.Courier.IExecuteActivity
 TYPE interface public ViciOne.ServiceBus.Courier.IExecuteActivity<TArguments>
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.ExecutionResult> ExecuteAsync(ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments> context)
 TYPE interface public ViciOne.ServiceBus.Courier.IExecuteActivityFactory<TActivity,TArguments>
   METHOD public abstract System.Threading.Tasks.Task ExecuteAsync(ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> next, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Courier.IRoutingSlipBuilder
   METHOD public abstract ViciOne.ServiceBus.Courier.Contracts.RoutingSlip Build()
-TYPE interface public ViciOne.ServiceBus.Courier.IRoutingSlipEventPublisher
-  METHOD public abstract System.Threading.Tasks.Task PublishRoutingSlipActivityCompensatedAsync(System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IDictionary<System.String,System.Object> data, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task PublishRoutingSlipActivityCompensationFailedAsync(System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.DateTimeOffset failureTimestamp, System.TimeSpan routingSlipDuration, ViciOne.ServiceBus.ExceptionInfo exceptionInfo, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IDictionary<System.String,System.Object> data, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task PublishRoutingSlipActivityCompletedAsync(System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IDictionary<System.String,System.Object> arguments, System.Collections.Generic.IDictionary<System.String,System.Object> data, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task PublishRoutingSlipActivityFaultedAsync(System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, ViciOne.ServiceBus.ExceptionInfo exceptionInfo, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IDictionary<System.String,System.Object> arguments, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task PublishRoutingSlipCompletedAsync(System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task PublishRoutingSlipFaultedAsync(System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IReadOnlyCollection<ViciOne.ServiceBus.Courier.Contracts.ActivityException> exceptions, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task PublishRoutingSlipRevisedAsync(System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.Activity> itinerary, System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.Activity> previousItinerary, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task PublishRoutingSlipTerminatedAsync(System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.Activity> previousItinerary, System.Threading.CancellationToken cancellationToken = null)
-TYPE interface public ViciOne.ServiceBus.Courier.IRoutingSlipSendEndpointTarget
-  METHOD public abstract System.Void AddSubscription(System.Uri address, ViciOne.ServiceBus.Advanced.RoutingSlipEvents events, ViciOne.ServiceBus.Advanced.RoutingSlipEventContents contents, System.String activityName, ViciOne.ServiceBus.Serialization.MessageEnvelope message)
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivity
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivity()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivity(System.String name, System.Uri address, System.Collections.Generic.IDictionary<System.String,System.Object> arguments)
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivity(ViciOne.ServiceBus.Courier.Contracts.Activity activity)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Arguments { public-get; public-set; }
-  PROPERTY System.String Name { public-get; public-set; }
-  PROPERTY System.Uri Address { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityCompensatedMessage
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityCompensatedMessage()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityCompensatedMessage(ViciOne.ServiceBus.HostInfo host, System.Guid trackingNumber, System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IDictionary<System.String,System.Object> data)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Data { public-get; public-set; }
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Variables { public-get; public-set; }
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid ExecutionId { public-get; public-set; }
-  PROPERTY System.Guid TrackingNumber { public-get; public-set; }
-  PROPERTY System.String ActivityName { public-get; public-set; }
-  PROPERTY System.TimeSpan Duration { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityCompensationFailedMessage
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityCompensationFailedMessage()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityCompensationFailedMessage(ViciOne.ServiceBus.HostInfo host, System.Guid trackingNumber, System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, ViciOne.ServiceBus.ExceptionInfo exceptionInfo, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IDictionary<System.String,System.Object> data)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Data { public-get; public-set; }
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Variables { public-get; public-set; }
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid ExecutionId { public-get; public-set; }
-  PROPERTY System.Guid TrackingNumber { public-get; public-set; }
-  PROPERTY System.String ActivityName { public-get; public-set; }
-  PROPERTY System.TimeSpan Duration { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.ExceptionInfo ExceptionInfo { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityCompletedMessage
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityCompletedMessage()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityCompletedMessage(ViciOne.ServiceBus.HostInfo host, System.Guid trackingNumber, System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IDictionary<System.String,System.Object> arguments, System.Collections.Generic.IDictionary<System.String,System.Object> data)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Arguments { public-get; public-set; }
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Data { public-get; public-set; }
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Variables { public-get; public-set; }
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid ExecutionId { public-get; public-set; }
-  PROPERTY System.Guid TrackingNumber { public-get; public-set; }
-  PROPERTY System.String ActivityName { public-get; public-set; }
-  PROPERTY System.TimeSpan Duration { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityException
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityException()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityException(System.String activityName, ViciOne.ServiceBus.HostInfo host, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan elapsed, ViciOne.ServiceBus.ExceptionInfo exceptionInfo)
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityException(ViciOne.ServiceBus.Courier.Contracts.ActivityException activityException)
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid ExecutionId { public-get; public-set; }
-  PROPERTY System.String Name { public-get; public-set; }
-  PROPERTY System.TimeSpan Elapsed { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.ExceptionInfo ExceptionInfo { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityFaultedMessage
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityFaultedMessage()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityFaultedMessage(ViciOne.ServiceBus.HostInfo host, System.Guid trackingNumber, System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, ViciOne.ServiceBus.ExceptionInfo exceptionInfo, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IDictionary<System.String,System.Object> arguments)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Arguments { public-get; public-set; }
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Variables { public-get; public-set; }
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid ExecutionId { public-get; public-set; }
-  PROPERTY System.Guid TrackingNumber { public-get; public-set; }
-  PROPERTY System.String ActivityName { public-get; public-set; }
-  PROPERTY System.TimeSpan Duration { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.ExceptionInfo ExceptionInfo { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityLog
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityLog()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityLog(ViciOne.ServiceBus.Courier.Contracts.ActivityLog activityLog)
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipActivityLog(ViciOne.ServiceBus.HostInfo host, System.Guid executionId, System.String name, System.DateTimeOffset timestamp, System.TimeSpan duration)
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid ExecutionId { public-get; public-set; }
-  PROPERTY System.String Name { public-get; public-set; }
-  PROPERTY System.TimeSpan Duration { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipCompensateLog
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipCompensateLog()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipCompensateLog(System.Guid executionId, System.Uri address, System.Collections.Generic.IDictionary<System.String,System.Object> data)
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipCompensateLog(ViciOne.ServiceBus.Courier.Contracts.CompensateLog compensateLog)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Data { public-get; public-set; }
-  PROPERTY System.Guid ExecutionId { public-get; public-set; }
-  PROPERTY System.Uri Address { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipCompensationFailedMessage
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipCompensationFailedMessage()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipCompensationFailedMessage(ViciOne.ServiceBus.HostInfo host, System.Guid trackingNumber, System.DateTimeOffset failureTimestamp, System.TimeSpan routingSlipDuration, ViciOne.ServiceBus.ExceptionInfo exceptionInfo, System.Collections.Generic.IDictionary<System.String,System.Object> variables)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Variables { public-get; public-set; }
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid TrackingNumber { public-get; public-set; }
-  PROPERTY System.TimeSpan Duration { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.ExceptionInfo ExceptionInfo { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipCompletedMessage
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipCompletedMessage()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipCompletedMessage(System.Guid trackingNumber, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Variables { public-get; public-set; }
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid TrackingNumber { public-get; public-set; }
-  PROPERTY System.TimeSpan Duration { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipFaultedMessage
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipFaultedMessage()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipFaultedMessage(System.Guid trackingNumber, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.ActivityException> activityExceptions, System.Collections.Generic.IDictionary<System.String,System.Object> variables)
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipFaultedMessage(System.Guid trackingNumber, System.DateTimeOffset timestamp, System.TimeSpan duration, ViciOne.ServiceBus.Courier.Contracts.ActivityException activityException)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Variables { public-get; public-set; }
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid TrackingNumber { public-get; public-set; }
-  PROPERTY System.TimeSpan Duration { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Courier.Contracts.ActivityException[] ActivityExceptions { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipRevisedMessage
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipRevisedMessage()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipRevisedMessage(ViciOne.ServiceBus.HostInfo host, System.Guid trackingNumber, System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.Activity> itinerary, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.Activity> discardedItinerary)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Variables { public-get; public-set; }
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid ExecutionId { public-get; public-set; }
-  PROPERTY System.Guid TrackingNumber { public-get; public-set; }
-  PROPERTY System.String ActivityName { public-get; public-set; }
-  PROPERTY System.TimeSpan Duration { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Courier.Contracts.Activity[] DiscardedItinerary { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Courier.Contracts.Activity[] Itinerary { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipRoutingSlip
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipRoutingSlip()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipRoutingSlip(System.Guid trackingNumber, System.DateTimeOffset createTimestamp, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.Activity> activities, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.ActivityLog> activityLogs, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.CompensateLog> compensateLogs, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.ActivityException> exceptions, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.Subscription> subscriptions)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Variables { public-get; public-set; }
-  PROPERTY System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.Activity> Itinerary { public-get; public-set; }
-  PROPERTY System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.ActivityException> ActivityExceptions { public-get; public-set; }
-  PROPERTY System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.ActivityLog> ActivityLogs { public-get; public-set; }
-  PROPERTY System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.CompensateLog> CompensateLogs { public-get; public-set; }
-  PROPERTY System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.Subscription> Subscriptions { public-get; public-set; }
-  PROPERTY System.DateTimeOffset CreateTimestamp { public-get; public-set; }
-  PROPERTY System.Guid TrackingNumber { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipSubscription
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipSubscription()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipSubscription(System.Uri address, ViciOne.ServiceBus.Advanced.RoutingSlipEvents events, ViciOne.ServiceBus.Advanced.RoutingSlipEventContents include, System.String activityName = null, ViciOne.ServiceBus.Serialization.MessageEnvelope message = null)
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipSubscription(ViciOne.ServiceBus.Courier.Contracts.Subscription subscription)
-  PROPERTY System.String ActivityName { public-get; public-set; }
-  PROPERTY System.Uri Address { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Advanced.RoutingSlipEventContents Include { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Advanced.RoutingSlipEvents Events { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Serialization.MessageEnvelope Message { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Courier.Messages.RoutingSlipTerminatedMessage
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipTerminatedMessage()
-  CTOR public ViciOne.ServiceBus.Courier.Messages.RoutingSlipTerminatedMessage(ViciOne.ServiceBus.HostInfo host, System.Guid trackingNumber, System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.Activity> discardedItinerary)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Variables { public-get; public-set; }
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid ExecutionId { public-get; public-set; }
-  PROPERTY System.Guid TrackingNumber { public-get; public-set; }
-  PROPERTY System.String ActivityName { public-get; public-set; }
-  PROPERTY System.TimeSpan Duration { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Courier.Contracts.Activity[] DiscardedItinerary { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
 TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipBuilder [sealed]
   CTOR public ViciOne.ServiceBus.Courier.RoutingSlipBuilder(System.Guid trackingNumber, System.TimeProvider timeProvider = null)
   CTOR public ViciOne.ServiceBus.Courier.RoutingSlipBuilder(ViciOne.ServiceBus.Courier.Contracts.RoutingSlip routingSlip, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.Activity> itinerary, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Courier.Contracts.Activity> sourceItinerary)
@@ -7808,19 +7515,6 @@ TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipBuilder [sealed]
   METHOD public virtual ViciOne.ServiceBus.Courier.Contracts.RoutingSlip Build()
   PROPERTY System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.Activity> SourceItinerary { public-get;  }
   PROPERTY System.Guid TrackingNumber { public-get;  }
-TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipBuilderSendEndpoint
-  CTOR public ViciOne.ServiceBus.Courier.RoutingSlipBuilderSendEndpoint(ViciOne.ServiceBus.Courier.IRoutingSlipSendEndpointTarget builder, System.Uri destinationAddress, ViciOne.ServiceBus.Advanced.RoutingSlipEvents events, System.String activityName, ViciOne.ServiceBus.Advanced.RoutingSlipEventContents include = All)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(System.Object message, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(System.Object message, System.Type messageType, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(System.Object message, System.Type messageType, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(System.Object message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(System.Object values, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(T message, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver observer)
 TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipEventExtensions [static]
   METHOD public static System.Nullable<T> GetArgument<T>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlipActivityCompleted> context, System.String key, System.Nullable<T> defaultValue = null)
   METHOD public static System.Nullable<T> GetArgument<T>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlipActivityFaulted> context, System.String key, System.Nullable<T> defaultValue = null)
@@ -7850,18 +7544,7 @@ TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipEventExtensions [static]
   METHOD public static T GetVariable<T>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlipCompleted> context, System.String key, T defaultValue = null)
   METHOD public static T GetVariable<T>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlipFaulted> context, System.String key, T defaultValue = null)
   METHOD public static T GetVariable<T>(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlipTerminated> context, System.String key, T defaultValue = null)
-TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipEventPublisher
-  CTOR public ViciOne.ServiceBus.Courier.RoutingSlipEventPublisher(ViciOne.ServiceBus.Advanced.CourierContext context, ViciOne.ServiceBus.Courier.Contracts.RoutingSlip routingSlip, System.Threading.CancellationToken cancellationToken)
-  CTOR public ViciOne.ServiceBus.Courier.RoutingSlipEventPublisher(ViciOne.ServiceBus.ISendEndpointProvider sendEndpointProvider, ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, ViciOne.ServiceBus.Courier.Contracts.RoutingSlip routingSlip, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task PublishRoutingSlipActivityCompensatedAsync(System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IDictionary<System.String,System.Object> data, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task PublishRoutingSlipActivityCompensationFailedAsync(System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.DateTimeOffset failureTimestamp, System.TimeSpan routingSlipDuration, ViciOne.ServiceBus.ExceptionInfo exceptionInfo, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IDictionary<System.String,System.Object> data, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task PublishRoutingSlipActivityCompletedAsync(System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IDictionary<System.String,System.Object> arguments, System.Collections.Generic.IDictionary<System.String,System.Object> data, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task PublishRoutingSlipActivityFaultedAsync(System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, ViciOne.ServiceBus.ExceptionInfo exceptionInfo, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IDictionary<System.String,System.Object> arguments, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task PublishRoutingSlipCompletedAsync(System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task PublishRoutingSlipFaultedAsync(System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IReadOnlyCollection<ViciOne.ServiceBus.Courier.Contracts.ActivityException> exceptions, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task PublishRoutingSlipRevisedAsync(System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.Activity> itinerary, System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.Activity> previousItinerary, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task PublishRoutingSlipTerminatedAsync(System.String activityName, System.Guid executionId, System.DateTimeOffset timestamp, System.TimeSpan duration, System.Collections.Generic.IDictionary<System.String,System.Object> variables, System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.Activity> previousItinerary, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipExecutor
+TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipExecutor [sealed]
   CTOR public ViciOne.ServiceBus.Courier.RoutingSlipExecutor(ViciOne.ServiceBus.ISendEndpointProvider sendEndpointProvider, ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.TimeProvider timeProvider = null)
   METHOD public virtual System.Threading.Tasks.Task ExecuteAsync(ViciOne.ServiceBus.Courier.Contracts.RoutingSlip routingSlip, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipExtensions [static]
@@ -7870,26 +7553,11 @@ TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipExtensions [static]
   METHOD public static System.Threading.Tasks.Task ExecuteAsync<T>(T source, ViciOne.ServiceBus.Courier.Contracts.RoutingSlip routingSlip, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Uri GetNextCompensateAddress(ViciOne.ServiceBus.Courier.Contracts.RoutingSlip routingSlip)
   METHOD public static System.Uri GetNextExecuteAddress(ViciOne.ServiceBus.Courier.Contracts.RoutingSlip routingSlip)
-TYPE struct public ViciOne.ServiceBus.Courier.RoutingSlipRequestInfo<T>
-  CTOR public ViciOne.ServiceBus.Courier.RoutingSlipRequestInfo<T>(ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer context, System.Collections.Generic.IDictionary<System.String,System.Object> variables)
-  FIELD public readonly System.Guid RequestId
-  FIELD public readonly System.Nullable<System.Int32> RetryAttempt
-  FIELD public readonly System.Uri FaultAddress
-  FIELD public readonly System.Uri RequestAddress
-  FIELD public readonly System.Uri ResponseAddress
-  FIELD public readonly T Request
 TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipRequestProxy<TRequest> [abstract]
   CTOR protected ViciOne.ServiceBus.Courier.RoutingSlipRequestProxy<TRequest>()
   METHOD protected abstract System.Threading.Tasks.Task BuildRoutingSlipAsync(ViciOne.ServiceBus.Courier.RoutingSlipBuilder builder, ViciOne.ServiceBus.ConsumeContext<TRequest> request)
   METHOD protected virtual System.Uri GetResponseEndpointAddress(ViciOne.ServiceBus.ConsumeContext<TRequest> context)
   METHOD public virtual System.Threading.Tasks.Task ConsumeAsync(ViciOne.ServiceBus.ConsumeContext<TRequest> context)
-TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipRequestVariableNames [static]
-  FIELD public const System.String FaultAddress = "FaultAddress"
-  FIELD public const System.String Request = "Request"
-  FIELD public const System.String RequestAddress = "RequestAddress"
-  FIELD public const System.String RequestId = "RequestId"
-  FIELD public const System.String ResponseAddress = "ResponseAddress"
-  FIELD public const System.String RetryAttempt = "RetryAttempt"
 TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipResponseProxy<TRequest,TResponse,TFault> [abstract]
   CTOR protected ViciOne.ServiceBus.Courier.RoutingSlipResponseProxy<TRequest,TResponse,TFault>()
   METHOD protected abstract System.Threading.Tasks.Task<TFault> CreateFaultedResponseMessageAsync(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlipFaulted> context, TRequest request, System.Guid requestId)
@@ -7900,115 +7568,7 @@ TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipResponseProxy<TRequest,T
 TYPE class public ViciOne.ServiceBus.Courier.RoutingSlipResponseProxy<TRequest,TResponse> [abstract,base=ViciOne.ServiceBus.Courier.RoutingSlipResponseProxy<TRequest,TResponse,ViciOne.ServiceBus.Fault<TRequest>>]
   CTOR protected ViciOne.ServiceBus.Courier.RoutingSlipResponseProxy<TRequest,TResponse>()
   METHOD protected System.Threading.Tasks.Task<ViciOne.ServiceBus.Fault<TRequest>> CreateFaultedResponseMessageAsync(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlipFaulted> context, TRequest request, System.Guid requestId)
-TYPE class public ViciOne.ServiceBus.Courier.SanitizedRoutingSlip
-  CTOR public ViciOne.ServiceBus.Courier.SanitizedRoutingSlip(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip> context)
-  METHOD public T GetActivityArguments<T>()
-  METHOD public T GetCompensateLogData<T>()
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Variables { public-get;  }
-  PROPERTY System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.Activity> Itinerary { public-get;  }
-  PROPERTY System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.ActivityException> ActivityExceptions { public-get;  }
-  PROPERTY System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.ActivityLog> ActivityLogs { public-get;  }
-  PROPERTY System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.CompensateLog> CompensateLogs { public-get;  }
-  PROPERTY System.Collections.Generic.IList<ViciOne.ServiceBus.Courier.Contracts.Subscription> Subscriptions { public-get;  }
-  PROPERTY System.DateTimeOffset CreateTimestamp { public-get;  }
-  PROPERTY System.Guid TrackingNumber { public-get;  }
-TYPE class public ViciOne.ServiceBus.DependencyInjection.CompensateActivityScopeProvider<TActivity,TLog> [base=ViciOne.ServiceBus.DependencyInjection.BaseConsumeScopeProvider]
-  CTOR public ViciOne.ServiceBus.DependencyInjection.CompensateActivityScopeProvider<TActivity,TLog>(System.IServiceProvider serviceProvider, ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext setScopedConsumeContext)
-  CTOR public ViciOne.ServiceBus.DependencyInjection.CompensateActivityScopeProvider<TActivity,TLog>(ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-  METHOD public virtual System.Threading.Tasks.ValueTask<ViciOne.ServiceBus.DependencyInjection.ICompensateActivityScopeContext<TActivity,TLog>> GetActivityScopeAsync(ViciOne.ServiceBus.Advanced.CompensateContext<TLog> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.ValueTask<ViciOne.ServiceBus.DependencyInjection.ICompensateScopeContext<TLog>> GetScopeAsync(ViciOne.ServiceBus.Advanced.CompensateContext<TLog> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.DependencyInjection.CreatedCompensateActivityScopeContext<TActivity,TLog>
-  CTOR public ViciOne.ServiceBus.DependencyInjection.CreatedCompensateActivityScopeContext<TActivity,TLog>(ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog> context, Microsoft.Extensions.DependencyInjection.IServiceScope scope, System.IDisposable disposable)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  METHOD public virtual T GetService<T>()
-  PROPERTY ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog> Context { public-get;  }
-TYPE class public ViciOne.ServiceBus.DependencyInjection.CreatedExecuteActivityScopeContext<TActivity,TArguments>
-  CTOR public ViciOne.ServiceBus.DependencyInjection.CreatedExecuteActivityScopeContext<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments> context, Microsoft.Extensions.DependencyInjection.IServiceScope scope, System.IDisposable disposable)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  METHOD public virtual T GetService<T>()
-  PROPERTY ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments> Context { public-get;  }
-TYPE class public ViciOne.ServiceBus.DependencyInjection.ExecuteActivityScopeProvider<TActivity,TArguments> [base=ViciOne.ServiceBus.DependencyInjection.BaseConsumeScopeProvider]
-  CTOR public ViciOne.ServiceBus.DependencyInjection.ExecuteActivityScopeProvider<TActivity,TArguments>(System.IServiceProvider serviceProvider, ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext setScopedConsumeContext)
-  CTOR public ViciOne.ServiceBus.DependencyInjection.ExecuteActivityScopeProvider<TActivity,TArguments>(ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-  METHOD public virtual System.Threading.Tasks.ValueTask<ViciOne.ServiceBus.DependencyInjection.IExecuteActivityScopeContext<TActivity,TArguments>> GetActivityScopeAsync(ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.ValueTask<ViciOne.ServiceBus.DependencyInjection.IExecuteScopeContext<TArguments>> GetScopeAsync(ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.DependencyInjection.ExistingCompensateActivityScopeContext<TActivity,TLog>
-  CTOR public ViciOne.ServiceBus.DependencyInjection.ExistingCompensateActivityScopeContext<TActivity,TLog>(ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog> context, Microsoft.Extensions.DependencyInjection.IServiceScope scope, System.IDisposable disposable)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  METHOD public virtual T GetService<T>()
-  PROPERTY ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog> Context { public-get;  }
-TYPE class public ViciOne.ServiceBus.DependencyInjection.ExistingExecuteActivityScopeContext<TActivity,TArguments>
-  CTOR public ViciOne.ServiceBus.DependencyInjection.ExistingExecuteActivityScopeContext<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments> context, Microsoft.Extensions.DependencyInjection.IServiceScope scope, System.IDisposable disposable)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  METHOD public virtual T GetService<T>()
-  PROPERTY ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments> Context { public-get;  }
-TYPE interface public ViciOne.ServiceBus.DependencyInjection.ICompensateActivityScopeContext<TActivity,TLog>
-  METHOD public abstract T GetService<T>()
-  PROPERTY ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog> Context { public-get;  }
-TYPE interface public ViciOne.ServiceBus.DependencyInjection.ICompensateActivityScopeProvider<TActivity,TLog>
-  METHOD public abstract System.Threading.Tasks.ValueTask<ViciOne.ServiceBus.DependencyInjection.ICompensateActivityScopeContext<TActivity,TLog>> GetActivityScopeAsync(ViciOne.ServiceBus.Advanced.CompensateContext<TLog> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.ValueTask<ViciOne.ServiceBus.DependencyInjection.ICompensateScopeContext<TLog>> GetScopeAsync(ViciOne.ServiceBus.Advanced.CompensateContext<TLog> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE interface public ViciOne.ServiceBus.DependencyInjection.IExecuteActivityScopeContext<TActivity,TArguments>
-  METHOD public abstract T GetService<T>()
-  PROPERTY ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments> Context { public-get;  }
-TYPE interface public ViciOne.ServiceBus.DependencyInjection.IExecuteActivityScopeProvider<TActivity,TArguments>
-  METHOD public abstract System.Threading.Tasks.ValueTask<ViciOne.ServiceBus.DependencyInjection.IExecuteActivityScopeContext<TActivity,TArguments>> GetActivityScopeAsync(ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.ValueTask<ViciOne.ServiceBus.DependencyInjection.IExecuteScopeContext<TArguments>> GetScopeAsync(ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments> context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.DependencyInjection.Registration.ActivityRegistration<TActivity,TArguments,TLog>
-  CTOR public ViciOne.ServiceBus.DependencyInjection.Registration.ActivityRegistration<TActivity,TArguments,TLog>(ViciOne.ServiceBus.Configuration.IContainerSelector selector)
-  METHOD public virtual System.Void AddConfigureAction<T,TA>(System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<T,TA>> configure)
-  METHOD public virtual System.Void AddConfigureAction<T,TL>(System.Action<ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator<T,TL>> configure)
-  METHOD public virtual System.Void Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator executeEndpointConfigurator, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator compensateEndpointConfigurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-  METHOD public virtual System.Void ConfigureCompensate(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-  METHOD public virtual System.Void ConfigureExecute(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context, System.Uri compensateAddress)
-  PROPERTY System.Boolean IncludeInConfigureEndpoints { public-get; public-set; }
-  PROPERTY System.Type Type { public-get;  }
-TYPE class public ViciOne.ServiceBus.DependencyInjection.Registration.ActivityRegistrationConfigurator<TActivity,TArguments,TLog>
-  CTOR public ViciOne.ServiceBus.DependencyInjection.Registration.ActivityRegistrationConfigurator<TActivity,TArguments,TLog>(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator, ViciOne.ServiceBus.Configuration.IActivityRegistration registration)
-  METHOD public virtual System.Void ExcludeFromConfigureEndpoints()
-  METHOD public virtual ViciOne.ServiceBus.Configuration.IActivityRegistrationConfigurator CompensateEndpoint(System.Action<ViciOne.ServiceBus.Configuration.IEndpointRegistrationConfigurator> configureCompensate)
-  METHOD public virtual ViciOne.ServiceBus.Configuration.IActivityRegistrationConfigurator ExecuteEndpoint(System.Action<ViciOne.ServiceBus.Configuration.IEndpointRegistrationConfigurator> configureExecute)
-TYPE class public ViciOne.ServiceBus.DependencyInjection.Registration.ExecuteActivityRegistration<TActivity,TArguments>
-  CTOR public ViciOne.ServiceBus.DependencyInjection.Registration.ExecuteActivityRegistration<TActivity,TArguments>(ViciOne.ServiceBus.Configuration.IContainerSelector selector)
-  METHOD public virtual System.Void Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-  PROPERTY System.Boolean IncludeInConfigureEndpoints { public-get; public-set; }
-  PROPERTY System.Type Type { public-get;  }
-TYPE class public ViciOne.ServiceBus.DependencyInjection.Registration.ExecuteActivityRegistrationConfigurator<TActivity,TArguments>
-  CTOR public ViciOne.ServiceBus.DependencyInjection.Registration.ExecuteActivityRegistrationConfigurator<TActivity,TArguments>(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator, ViciOne.ServiceBus.Configuration.IExecuteActivityRegistration registration)
-  METHOD public virtual System.Void Endpoint(System.Action<ViciOne.ServiceBus.Configuration.IEndpointRegistrationConfigurator> configure)
-  METHOD public virtual System.Void ExcludeFromConfigureEndpoints()
-TYPE class public ViciOne.ServiceBus.DependencyInjection.ScopeCompensateActivityFactory<TActivity,TLog>
-  CTOR public ViciOne.ServiceBus.DependencyInjection.ScopeCompensateActivityFactory<TActivity,TLog>(ViciOne.ServiceBus.DependencyInjection.ICompensateActivityScopeProvider<TActivity,TLog> scopeProvider)
-  METHOD public virtual System.Threading.Tasks.Task CompensateAsync(ViciOne.ServiceBus.Advanced.CompensateContext<TLog> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> next, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.DependencyInjection.ScopeExecuteActivityFactory<TActivity,TArguments>
-  CTOR public ViciOne.ServiceBus.DependencyInjection.ScopeExecuteActivityFactory<TActivity,TArguments>(ViciOne.ServiceBus.DependencyInjection.IExecuteActivityScopeProvider<TActivity,TArguments> scopeProvider)
-  METHOD public virtual System.Threading.Tasks.Task ExecuteAsync(ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> next, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.Logging.CourierLogContextExtensions [static]
-  METHOD public static System.Nullable<ViciOne.ServiceBus.Logging.StartedActivity> StartCompensateActivity<TActivity,TLog>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip> context)
-  METHOD public static System.Nullable<ViciOne.ServiceBus.Logging.StartedActivity> StartExecuteActivity<TActivity,TArguments>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip> context)
-  METHOD public static ViciOne.ServiceBus.Logging.MetricOperation StartActivityCompensateInstrument<TActivity,TLog>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip> context)
-  METHOD public static ViciOne.ServiceBus.Logging.MetricOperation StartActivityExecuteInstrument<TActivity,TArguments>(ViciOne.ServiceBus.Logging.ILogContext logContext, ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip> context)
-TYPE class public ViciOne.ServiceBus.Middleware.CompensateActivityFactoryFilter<TActivity,TLog>
-  CTOR public ViciOne.ServiceBus.Middleware.CompensateActivityFactoryFilter<TActivity,TLog>(ViciOne.ServiceBus.Courier.ICompensateActivityFactory<TActivity,TLog> factory, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> pipe)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.CompensateContext<TLog> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.CompensateContext<TLog>> next)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.Middleware.CompensateActivityFilter<TActivity,TLog>
-  CTOR public ViciOne.ServiceBus.Middleware.CompensateActivityFilter<TActivity,TLog>(ViciOne.ServiceBus.Observables.ActivityObservable observers)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> next)
-TYPE class public ViciOne.ServiceBus.Middleware.ExecuteActivityFactoryFilter<TActivity,TArguments>
-  CTOR public ViciOne.ServiceBus.Middleware.ExecuteActivityFactoryFilter<TActivity,TArguments>(ViciOne.ServiceBus.Courier.IExecuteActivityFactory<TActivity,TArguments> factory, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> pipe)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ExecuteContext<TArguments>> next)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.Middleware.ExecuteActivityFilter<TActivity,TArguments>
-  CTOR public ViciOne.ServiceBus.Middleware.ExecuteActivityFilter<TActivity,TArguments>(ViciOne.ServiceBus.Observables.ActivityObservable observers)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> next)
-TYPE class public ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxCourierContextProxy [abstract,base=ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxConsumeContext<ViciOne.ServiceBus.Courier.Contracts.RoutingSlip>]
-  CTOR protected ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxCourierContextProxy(ViciOne.ServiceBus.Advanced.CourierContext courierContext)
-TYPE class public ViciOne.ServiceBus.RoutingSlipArgumentException [base=ViciOne.ServiceBus.RoutingSlipException]
+TYPE class public ViciOne.ServiceBus.RoutingSlipArgumentException [sealed,base=ViciOne.ServiceBus.RoutingSlipException]
   CTOR public ViciOne.ServiceBus.RoutingSlipArgumentException()
   CTOR public ViciOne.ServiceBus.RoutingSlipArgumentException(System.String message)
   CTOR public ViciOne.ServiceBus.RoutingSlipArgumentException(System.String message, System.Exception innerException)
@@ -8016,12 +7576,9 @@ TYPE class public ViciOne.ServiceBus.RoutingSlipException [base=ViciOne.ServiceB
   CTOR public ViciOne.ServiceBus.RoutingSlipException()
   CTOR public ViciOne.ServiceBus.RoutingSlipException(System.String message)
   CTOR public ViciOne.ServiceBus.RoutingSlipException(System.String message, System.Exception innerException)
-TYPE class public ViciOne.ServiceBus.RoutingSlipRequestFaultedException [base=ViciOne.ServiceBus.RoutingSlipException]
+TYPE class public ViciOne.ServiceBus.RoutingSlipRequestFaultedException [sealed,base=ViciOne.ServiceBus.RoutingSlipException]
   CTOR public ViciOne.ServiceBus.RoutingSlipRequestFaultedException(ViciOne.ServiceBus.Courier.Contracts.RoutingSlipFaulted faulted)
   PROPERTY ViciOne.ServiceBus.Courier.Contracts.RoutingSlipFaulted Faulted { public-get;  }
-TYPE class public ViciOne.ServiceBus.Transports.ExecuteActivityReceiveEndpointDispatcher<TActivity,TArguments>
-  CTOR public ViciOne.ServiceBus.Transports.ExecuteActivityReceiveEndpointDispatcher<TActivity,TArguments>()
-  METHOD public virtual ViciOne.ServiceBus.Transports.IReceiveEndpointDispatcher Create(ViciOne.ServiceBus.Transports.IReceiveEndpointDispatcherFactory factory, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter formatter)
 
 ASSEMBLY ViciOne.ServiceBus.DynamoDb VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.Configuration.DynamoDbSagaRepositoryConfigurator<TSaga>

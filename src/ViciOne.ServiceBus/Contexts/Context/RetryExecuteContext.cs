@@ -11,7 +11,7 @@ public class RetryExecuteContext<TArguments> :
     where TArguments : class
 {
     readonly ExecuteContext<TArguments> _context;
-    readonly ExecutionResult _existingResult = null!;
+    readonly ExecutionResult? _existingResult;
     readonly IRetryPolicy _retryPolicy;
 
     /// <summary>Initializes a new instance.</summary>
@@ -66,7 +66,10 @@ public class RetryExecuteContext<TArguments> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task NotifyPendingFaultsAsync(CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (_existingResult != null && Result is RetryExecutionResult)
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        if (_existingResult != null && Result is RetryExecutionResult)
             Result = _existingResult;
 
         return Task.CompletedTask;
@@ -76,7 +79,7 @@ public class RetryExecuteContext<TArguments> :
     class RetryExecutionResult :
         ExecutionResult
     {
-        readonly Exception? _exception = null!;
+        readonly Exception? _exception;
 
         public RetryExecutionResult(Exception? exception = null)
         {
@@ -85,7 +88,9 @@ public class RetryExecuteContext<TArguments> :
 
         public Task EvaluateAsync(CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled(cancellationToken)
+                : Task.CompletedTask;
         }
 
         public bool IsFaulted([NotNullWhen(true)] out Exception? exception)

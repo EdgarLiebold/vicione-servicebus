@@ -34,14 +34,14 @@ public class CompensateContextScope<TLog> :
         return new HostCompensateActivityContext<TActivity, TLog>(activity, this);
     }
 
-    /// <summary>Compensates d.</summary>
+    /// <summary>Completes compensation successfully.</summary>
     /// <returns>The compensation result produced by the operation.</returns>
     public CompensationResult Compensated()
     {
         return _context.Compensated();
     }
 
-    /// <summary>Compensates d.</summary>
+    /// <summary>Completes compensation successfully and updates routing-slip variables.</summary>
     /// <param name="values">The values.</param>
     /// <returns>The compensation result produced by the operation.</returns>
     public CompensationResult Compensated(object values)
@@ -49,7 +49,7 @@ public class CompensateContextScope<TLog> :
         return _context.Compensated(values);
     }
 
-    /// <summary>Compensates d.</summary>
+    /// <summary>Completes compensation successfully and updates routing-slip variables.</summary>
     /// <param name="variables">The variables.</param>
     /// <returns>The compensation result produced by the operation.</returns>
     public CompensationResult Compensated(IDictionary<string, object> variables)
@@ -72,8 +72,8 @@ public class CompensateContextScope<TLog> :
         return _context.Failed(exception);
     }
 
-    /// <summary>Gets or sets the result.</summary>
-    public CompensationResult Result
+    /// <summary>Gets or sets the result; the value is unset until compensation completes.</summary>
+    public CompensationResult? Result
     {
         get => _context.Result;
         set => _context.Result = value;

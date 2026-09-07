@@ -35,6 +35,7 @@ public sealed class CapabilityPackageArchitectureTests
         AssertAssembly("ViciOne.ServiceBus.JobService", typeof(IJobConsumer<>), typeof(JobContext<>));
         AssertAssembly("ViciOne.ServiceBus.Mediator", typeof(IMediator));
         AssertAssembly("ViciOne.ServiceBus.Initializers", typeof(InVar), typeof(AdvancedMessageInitializerExtensions));
+        AssertProjectOwnsAllCompiledSources("src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj");
         AssertProjectOwnsAllCompiledSources("src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj");
 
         Assembly mediatorAssembly = typeof(IMediator).Assembly;

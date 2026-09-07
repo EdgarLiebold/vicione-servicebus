@@ -11,7 +11,7 @@ public class RetryCompensateContext<TLog> :
     where TLog : class
 {
     readonly CompensateContext<TLog> _context;
-    readonly CompensationResult _existingResult = null!;
+    readonly CompensationResult? _existingResult;
     readonly IRetryPolicy _retryPolicy;
 
     /// <summary>Initializes a new instance.</summary>
@@ -66,7 +66,10 @@ public class RetryCompensateContext<TLog> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task NotifyPendingFaultsAsync(CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (_existingResult != null && Result is RetryCompensationResult)
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        if (_existingResult != null && Result is RetryCompensationResult)
             Result = _existingResult;
 
         return Task.CompletedTask;
@@ -76,7 +79,7 @@ public class RetryCompensateContext<TLog> :
     class RetryCompensationResult :
         CompensationResult
     {
-        readonly Exception? _exception = null!;
+        readonly Exception? _exception;
 
         public RetryCompensationResult(Exception? exception = null)
         {
@@ -85,7 +88,9 @@ public class RetryCompensateContext<TLog> :
 
         public Task EvaluateAsync(CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled(cancellationToken)
+                : Task.CompletedTask;
         }
 
         public bool IsFailed([NotNullWhen(true)] out Exception? exception)

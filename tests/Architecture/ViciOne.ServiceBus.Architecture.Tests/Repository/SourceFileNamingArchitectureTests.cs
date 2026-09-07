@@ -73,8 +73,6 @@ public sealed class SourceFileNamingArchitectureTests
                 "internal interface IBusTransportRegistration`0", "internal class BusTransportRegistration`1",
                 "internal interface IBusFeatureRegistration`0", "internal class BusFeatureRegistration`1",
                 "internal class BusCompositionRegistrations`0", "internal class BusCompositionStartupValidator`1"),
-            ["src/ViciOne.ServiceBus/Courier/Configuration/ActivityConsumerKinds.cs"] = Types(
-                "internal class ActivityConsumerKind`0", "internal class ExecuteActivityConsumerKind`0"),
             ["src/ViciOne.ServiceBus/DependencyInjection/DeferredBusScopedContextProviders.cs"] = Types(
                 "internal class DeferredBusScopedContextProvider`1", "internal class AmbientTransactionScopedBusContextProvider`1",
                 "internal class BufferedBusScopedBusContextProvider`1"),

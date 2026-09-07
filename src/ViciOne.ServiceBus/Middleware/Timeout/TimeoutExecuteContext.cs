@@ -144,7 +144,7 @@ internal sealed class TimeoutExecuteContext<TArguments> :
         return _context.FaultedWithVariables(exception, variables);
     }
 
-    public ExecutionResult Result
+    public ExecutionResult? Result
     {
         get => _context.Result;
         set => _context.Result = value;

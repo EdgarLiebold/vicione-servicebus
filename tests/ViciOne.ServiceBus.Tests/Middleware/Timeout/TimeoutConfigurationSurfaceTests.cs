@@ -159,7 +159,7 @@ public sealed class TimeoutConfigurationSurfaceTests
         typeof(SagaPipelineConfigurationExtensions).Assembly.GetType(fullName, throwOnError: true)!;
 
     private static Type RequiredCourierType(string fullName) =>
-        typeof(IActivity).Assembly.GetType(fullName, throwOnError: true)!;
+        typeof(IActivity<,>).Assembly.GetType(fullName, throwOnError: true)!;
 
     private static object ConfigureScope(string scope, TimeSpan configuredTimeout)
     {

@@ -3,36 +3,36 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>Defines configuration options for completed activity.</summary>
+/// <summary>Configures routing-slip state after an activity completes successfully.</summary>
 public interface CompletedActivityOptions
 {
-    /// <summary>When specified, uses the scheduler to delay execution of the next activity by the specified duration.</summary>
+    /// <summary>Sets an optional delay before the next activity executes.</summary>
     TimeSpan? Delay { set; }
 
-    /// <summary>Add or update the variables on the routing slip with the specified object (properties are mapped to variables).</summary>
-    /// <param name="variables">The variables.</param>
+    /// <summary>Adds, updates, or removes variables using the readable properties of an object.</summary>
+    /// <param name="variables">The object whose properties define the variable updates.</param>
     void SetVariables(object variables);
 
-    /// <summary>Add or update the variables on the routing slip with the specified values.</summary>
-    /// <param name="variables">The variables.</param>
+    /// <summary>Adds, updates, or removes routing-slip variables.</summary>
+    /// <param name="variables">The variables; an entry with a null value removes the matching variable.</param>
     void SetVariables(IEnumerable<KeyValuePair<string, object>> variables);
 
-    /// <summary>Add or update the variable on the routing slip with the specified object.</summary>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">The value to process.</param>
-    void SetVariable(string key, object value);
+    /// <summary>Adds, updates, or removes one routing-slip variable.</summary>
+    /// <param name="key">The variable name.</param>
+    /// <param name="value">The new value, or <see langword="null"/> to remove the variable.</param>
+    void SetVariable(string key, object? value);
 
-    /// <summary>Set the log data for compensation.</summary>
+    /// <summary>Sets the typed compensation log.</summary>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <param name="log">The log output to serialize and store in the routing slip for compensation.</param>
     void SetLog<TLog>(TLog log)
         where TLog : class;
 
-    /// <summary>Set the log data for compensation.</summary>
-    /// <param name="values">An object to convert to a dictionary for the log data.</param>
+    /// <summary>Sets compensation-log fields using the readable properties of an object.</summary>
+    /// <param name="values">The object whose properties define the compensation log.</param>
     void SetLog(object values);
 
-    /// <summary>Set the log data for compensation using a collection of string/object pairs.</summary>
-    /// <param name="values">The values.</param>
+    /// <summary>Sets compensation-log fields from a name/value sequence.</summary>
+    /// <param name="values">The compensation-log fields.</param>
     void SetLog(IEnumerable<KeyValuePair<string, object>> values);
 }

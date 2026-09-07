@@ -46,7 +46,7 @@ public class InMemoryOutboxCompensateContext<TLog> :
         return _context.Failed(exception);
     }
 
-    CompensationResult CompensateContext.Result
+    CompensationResult? CompensateContext.Result
     {
         get => _context.Result;
         set => _context.Result = value;

@@ -8,6 +8,46 @@ namespace ViciOne.ServiceBus.Tests.Courier;
 public sealed class RoutingSlipLifecycleIntegrationTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-LIFECYCLE", "completion-delay-defers-next-activity")]
+    public async Task CompletionDelay_DefersTheNextActivityByTheConfiguredDurationAsync()
+    {
+        TimeSpan timeout = CourierTestSupport.OperationTimeout();
+        TimeSpan delay = TimeSpan.FromMilliseconds(400);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observed = new TaskCompletionSource<DateTimeOffset>(TaskCreationOptions.RunContinuationsAsynchronously);
+        using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-completion-delay");
+        harness.OnConfigureInMemoryBus += bus => bus.ConfigureDelayedMessageScheduler();
+        ExecuteActivityTestHarness<DelayedCompletionCourierActivity, DelayedCourierArguments> delayed = harness.ExecuteActivity<
+            DelayedCompletionCourierActivity,
+            DelayedCourierArguments>();
+        ExecuteActivityTestHarness<ObservingExecuteCourierActivity, CourierArguments> next = harness.ExecuteActivity<
+            ObservingExecuteCourierActivity,
+            CourierArguments>(_ => new ObservingExecuteCourierActivity(observed));
+        using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
+        completed.Configure(harness);
+        await harness.StartAsync(cancellationToken);
+
+        try
+        {
+            var builder = new RoutingSlipBuilder(NewId.NextGuid());
+            builder.AddActivity(delayed.Name, delayed.ExecuteAddress, new DelayedCourierArguments(delay));
+            builder.AddActivity(next.Name, next.ExecuteAddress, new CourierArguments("next"));
+            DateTimeOffset startedAt = DateTimeOffset.UtcNow;
+
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
+            DateTimeOffset observedAt = await observed.Task.WaitAsync(timeout, cancellationToken);
+            await completed.WaitAsync(timeout, cancellationToken);
+
+            Assert.True(observedAt - startedAt >= TimeSpan.FromMilliseconds(250),
+                $"The next activity started after {observedAt - startedAt}, before the configured {delay} delay could elapse.");
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-LIFECYCLE", "empty-itinerary-completes")]
     public async Task EmptyItinerary_PublishesExactlyOneCompletionAsync()
     {

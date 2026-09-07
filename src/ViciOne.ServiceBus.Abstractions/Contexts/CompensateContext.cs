@@ -7,8 +7,8 @@ namespace ViciOne.ServiceBus.Advanced;
 public interface CompensateContext :
     ActivityContext
 {
-    /// <summary>Set the compensation result, which completes the activity.</summary>
-    CompensationResult Result { get; set; }
+    /// <summary>Gets or sets the result; the value is unset until the activity completes.</summary>
+    CompensationResult? Result { get; set; }
 
     /// <summary>The compensation was successful.</summary>
     /// <returns>The compensation result produced by the operation.</returns>

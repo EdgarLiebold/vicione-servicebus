@@ -25,8 +25,8 @@ public class ExecuteContextScope<TArguments> :
     /// <summary>Gets the arguments.</summary>
     public TArguments Arguments { get; }
 
-    /// <summary>Gets or sets the result.</summary>
-    public ExecutionResult Result
+    /// <summary>Gets or sets the result; the value is unset until the activity completes.</summary>
+    public ExecutionResult? Result
     {
         get => _context.Result;
         set => _context.Result = value;
@@ -57,7 +57,7 @@ public class ExecuteContextScope<TArguments> :
         return _context.Completed(callback);
     }
 
-    /// <summary>Completes d with variables.</summary>
+    /// <summary>Completes the activity and updates routing-slip variables.</summary>
     /// <param name="variables">The variables.</param>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult CompletedWithVariables(IEnumerable<KeyValuePair<string, object>> variables)
@@ -65,7 +65,7 @@ public class ExecuteContextScope<TArguments> :
         return _context.CompletedWithVariables(variables);
     }
 
-    /// <summary>Completes d with variables.</summary>
+    /// <summary>Completes the activity and updates routing-slip variables.</summary>
     /// <param name="variables">The variables.</param>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult CompletedWithVariables(object variables)
@@ -115,7 +115,7 @@ public class ExecuteContextScope<TArguments> :
         return _context.Completed<TLog>(logValues, callback);
     }
 
-    /// <summary>Completes d with variables.</summary>
+    /// <summary>Completes the activity with a compensation log and updated routing-slip variables.</summary>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <param name="log">The log.</param>
     /// <param name="variables">The variables.</param>
@@ -126,7 +126,7 @@ public class ExecuteContextScope<TArguments> :
         return _context.CompletedWithVariables(log, variables);
     }
 
-    /// <summary>Completes d with variables.</summary>
+    /// <summary>Completes the activity with a mapped compensation log and updated routing-slip variables.</summary>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <param name="logValues">The log values.</param>
     /// <param name="variables">The variables.</param>
@@ -137,7 +137,7 @@ public class ExecuteContextScope<TArguments> :
         return _context.CompletedWithVariables<TLog>(logValues, variables);
     }
 
-    /// <summary>Completes d with variables.</summary>
+    /// <summary>Completes the activity with a compensation log and updated routing-slip variables.</summary>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <param name="log">The log.</param>
     /// <param name="variables">The variables.</param>
@@ -148,7 +148,7 @@ public class ExecuteContextScope<TArguments> :
         return _context.CompletedWithVariables(log, variables);
     }
 
-    /// <summary>Revises itinerary.</summary>
+    /// <summary>Replaces the remaining itinerary through the supplied builder callback.</summary>
     /// <param name="buildItinerary">The build itinerary.</param>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult ReviseItinerary(Action<IItineraryBuilder> buildItinerary)
@@ -156,7 +156,7 @@ public class ExecuteContextScope<TArguments> :
         return _context.ReviseItinerary(buildItinerary);
     }
 
-    /// <summary>Revises itinerary.</summary>
+    /// <summary>Replaces the remaining itinerary and records a compensation log.</summary>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <param name="log">The log.</param>
     /// <param name="buildItinerary">The build itinerary.</param>
@@ -167,7 +167,7 @@ public class ExecuteContextScope<TArguments> :
         return _context.ReviseItinerary(log, buildItinerary);
     }
 
-    /// <summary>Revises itinerary.</summary>
+    /// <summary>Replaces the remaining itinerary, records a compensation log, and updates variables.</summary>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <param name="log">The log.</param>
     /// <param name="variables">The variables.</param>
@@ -179,7 +179,7 @@ public class ExecuteContextScope<TArguments> :
         return _context.ReviseItinerary(log, variables, buildItinerary);
     }
 
-    /// <summary>Revises itinerary.</summary>
+    /// <summary>Replaces the remaining itinerary, records a compensation log, and updates variables.</summary>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <param name="log">The log.</param>
     /// <param name="variables">The variables.</param>
@@ -191,14 +191,14 @@ public class ExecuteContextScope<TArguments> :
         return _context.ReviseItinerary(log, variables, buildItinerary);
     }
 
-    /// <summary>Terminates the current operation.</summary>
+    /// <summary>Terminates the routing slip successfully and discards the remaining itinerary.</summary>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Terminate()
     {
         return _context.Terminate();
     }
 
-    /// <summary>Terminates the current operation.</summary>
+    /// <summary>Terminates the routing slip successfully, updates variables, and discards the remaining itinerary.</summary>
     /// <param name="variables">The variables.</param>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Terminate(object variables)
@@ -206,7 +206,7 @@ public class ExecuteContextScope<TArguments> :
         return _context.Terminate(variables);
     }
 
-    /// <summary>Terminates the current operation.</summary>
+    /// <summary>Terminates the routing slip successfully, updates variables, and discards the remaining itinerary.</summary>
     /// <param name="variables">The variables.</param>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Terminate(IEnumerable<KeyValuePair<string, object>> variables)

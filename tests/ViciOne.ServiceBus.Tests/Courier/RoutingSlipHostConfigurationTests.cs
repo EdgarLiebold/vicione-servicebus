@@ -9,6 +9,24 @@ namespace ViciOne.ServiceBus.Tests.Courier;
 
 public sealed class RoutingSlipHostConfigurationTests
 {
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    [RequirementCoverage("REQ-VSB-COURIER-HOST-CONFIGURATION", "concurrency-limit-boundaries")]
+    public void HostConcurrencyLimits_RejectNonPositiveValues(int value)
+    {
+        var observer = new NoopActivityConfigurationObserver();
+        var execute = new ExecuteActivityHostConfigurator<FirstCourierActivity, CourierArguments>(
+            new FactoryMethodExecuteActivityFactory<FirstCourierActivity, CourierArguments>(_ => new FirstCourierActivity()),
+            observer);
+        var compensate = new CompensateActivityHostConfigurator<FirstCourierActivity, CourierLog>(
+            new FactoryMethodCompensateActivityFactory<FirstCourierActivity, CourierLog>(_ => new FirstCourierActivity()),
+            observer);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => execute.ConcurrentMessageLimit = value);
+        Assert.Throws<ArgumentOutOfRangeException>(() => compensate.ConcurrentMessageLimit = value);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-HOST-CONFIGURATION", "all-execute-and-compensate-pipe-surfaces-run")]
     public async Task ActivityHostConfiguration_ExecutesEveryConfiguredContextSurfaceWithExactDataAsync()
@@ -137,5 +155,30 @@ public sealed class RoutingSlipHostConfigurationTests
     {
         keys.Enqueue(key);
         return key;
+    }
+
+    private sealed class NoopActivityConfigurationObserver : IActivityConfigurationObserver
+    {
+        public void ActivityConfigured<TActivity, TArguments>(
+            IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator,
+            Uri compensateAddress)
+            where TActivity : class
+            where TArguments : class
+        {
+        }
+
+        public void ExecuteActivityConfigured<TActivity, TArguments>(
+            IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
+            where TActivity : class
+            where TArguments : class
+        {
+        }
+
+        public void CompensateActivityConfigured<TActivity, TLog>(
+            ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
+            where TActivity : class
+            where TLog : class
+        {
+        }
     }
 }

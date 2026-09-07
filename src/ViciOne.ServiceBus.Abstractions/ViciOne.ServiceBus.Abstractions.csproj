@@ -23,25 +23,6 @@
     <Compile Remove="Configuration/DependencyInjection/Configuration/SagaEndpointDefinition.cs" />
     <Compile Remove="Configuration/DependencyInjection/ISagaDefinition.cs" />
     <Compile Remove="Configuration/DependencyInjection/SagaDefinition.cs" />
-    <Compile Remove="Courier/**/*.cs" />
-    <Compile Remove="Exceptions/RoutingSlip*.cs" />
-    <Compile Remove="Configuration/Consumers/ICompensateActivityConfigurator.cs" />
-    <Compile Remove="Configuration/Consumers/ICompensateActivityLogConfigurator.cs" />
-    <Compile Remove="Configuration/Consumers/IExecuteActivityArgumentsConfigurator.cs" />
-    <Compile Remove="Configuration/Consumers/IExecuteActivityConfigurator.cs" />
-    <Compile Remove="Configuration/Consumers/IRoutingSlipConfigurator.cs" />
-    <Compile Remove="Configuration/DependencyInjection/ActivityDefinition.cs" />
-    <Compile Remove="Configuration/DependencyInjection/Configuration/CompensateActivityEndpointDefinition.cs" />
-    <Compile Remove="Configuration/DependencyInjection/Configuration/ExecuteActivityEndpointDefinition.cs" />
-    <Compile Remove="Configuration/DependencyInjection/ExecuteActivityDefinition.cs" />
-    <Compile Remove="Configuration/DependencyInjection/IActivityDefinition.cs" />
-    <Compile Remove="Configuration/DependencyInjection/IActivityRegistrationConfigurator.cs" />
-    <Compile Remove="Configuration/DependencyInjection/IExecuteActivityDefinition.cs" />
-    <Compile Remove="Configuration/DependencyInjection/IExecuteActivityRegistrationConfigurator.cs" />
-    <Compile Remove="Contexts/CourierContext.cs" />
-    <Compile Include="Courier/IItineraryBuilder.cs" Link="Advanced/IItineraryBuilder.cs" />
-    <Compile Include="Courier/Contracts/RoutingSlipEvents.cs" Link="Advanced/RoutingSlipEvents.cs" />
-    <Compile Include="Courier/Contracts/RoutingSlipEventContents.cs" Link="Advanced/RoutingSlipEventContents.cs" />
   </ItemGroup>
 
   <ItemGroup>

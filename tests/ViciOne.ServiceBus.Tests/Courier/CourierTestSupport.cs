@@ -112,7 +112,10 @@ internal sealed class SecondCourierActivity(ConcurrentQueue<string>? compensatio
     public Task<CompensationResult> CompensateAsync(CompensateContext<CourierLog> context)
     {
         compensationOrder?.Enqueue($"second:{context.Log.OriginalValue}");
-        return Task.FromResult(context.Compensated());
+        return Task.FromResult(context.Compensated(new Dictionary<string, object>
+        {
+            ["ActivityValue"] = null!,
+        }));
     }
 }
 
@@ -126,10 +129,93 @@ internal sealed class FaultingCourierActivity : IExecuteActivity<FaultingCourier
             new { FaultVariable = "fault-output" }));
 }
 
+internal sealed record DelayedCourierArguments(TimeSpan Delay);
+
+internal sealed class DelayedCompletionCourierActivity : IExecuteActivity<DelayedCourierArguments>
+{
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<DelayedCourierArguments> context) =>
+        Task.FromResult(context.Completed(options => options.Delay = context.Arguments.Delay));
+}
+
+internal sealed class DelayedFaultingCourierActivity : IExecuteActivity<DelayedCourierArguments>
+{
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<DelayedCourierArguments> context) =>
+        Task.FromResult(context.Faulted(
+            new CourierExpectedException("delayed-courier-failure"),
+            options => options.Delay = context.Arguments.Delay));
+}
+
+internal sealed class ObservingExecuteCourierActivity(TaskCompletionSource<DateTimeOffset> observed) :
+    IExecuteActivity<CourierArguments>
+{
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<CourierArguments> context)
+    {
+        observed.TrySetResult(DateTimeOffset.UtcNow);
+        return Task.FromResult(context.Completed());
+    }
+}
+
+internal sealed class ObservingCompensationCourierActivity(TaskCompletionSource<DateTimeOffset> observed) :
+    IActivity<CourierArguments, CourierLog>
+{
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<CourierArguments> context) =>
+        Task.FromResult(context.Completed(new CourierLog(context.Arguments.Value)));
+
+    public Task<CompensationResult> CompensateAsync(CompensateContext<CourierLog> context)
+    {
+        observed.TrySetResult(DateTimeOffset.UtcNow);
+        return Task.FromResult(context.Compensated());
+    }
+}
+
+internal sealed record InvalidResultOptionsArguments(InvalidResultOption Option);
+
+public enum InvalidResultOption
+{
+    CompletedNullCallback,
+    CompletedTypedLogNullCallback,
+    CompletedProjectedLogNullCallback,
+    FaultedNullCallback,
+    NegativeDelay,
+}
+
+internal sealed class InvalidResultOptionsCourierActivity : IExecuteActivity<InvalidResultOptionsArguments>
+{
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<InvalidResultOptionsArguments> context)
+    {
+        ExecutionResult result = context.Arguments.Option switch
+        {
+            InvalidResultOption.CompletedNullCallback => context.Completed(null!),
+            InvalidResultOption.CompletedTypedLogNullCallback => context.Completed(new CourierLog("value"), null!),
+            InvalidResultOption.CompletedProjectedLogNullCallback => context.Completed<CourierLog>(new { OriginalValue = "value" }, null!),
+            InvalidResultOption.FaultedNullCallback => context.Faulted(new CourierExpectedException("fault"), null!),
+            InvalidResultOption.NegativeDelay => context.Completed(options => options.Delay = TimeSpan.FromTicks(-1)),
+            _ => throw new ArgumentOutOfRangeException(nameof(context)),
+        };
+
+        return Task.FromResult(result);
+    }
+}
+
 internal sealed class ThrowingCourierActivity : IExecuteActivity<FaultingCourierArguments>
 {
     public Task<ExecutionResult> ExecuteAsync(ExecuteContext<FaultingCourierArguments> context) =>
         throw new CourierExpectedException(context.Arguments.Reason);
+}
+
+internal sealed class CancellingExecuteCourierActivity : IExecuteActivity<CourierArguments>
+{
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<CourierArguments> context) =>
+        throw new OperationCanceledException("The execute activity canceled its own operation.", new CancellationToken(canceled: true));
+}
+
+internal sealed class CancellingCompensationCourierActivity : IActivity<CourierArguments, CourierLog>
+{
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<CourierArguments> context) =>
+        Task.FromResult(context.Completed(new CourierLog(context.Arguments.Value)));
+
+    public Task<CompensationResult> CompensateAsync(CompensateContext<CourierLog> context) =>
+        throw new OperationCanceledException("The compensate activity canceled its own operation.", new CancellationToken(canceled: true));
 }
 
 internal sealed class CourierExpectedException(string message) : Exception(message);
