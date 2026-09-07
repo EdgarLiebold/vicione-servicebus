@@ -26,10 +26,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Anchored to this file, not to the project. A relative ..\..\ resolved to the repository root
-         only for the projects that sit directly under src/; for the ones a folder deeper it pointed at
-         src/ and pack failed with NU5019 for fifteen of them. -->
-    <None Include="$(MSBuildThisFileDirectory)..\NuGet.README.md" Pack="true" Visible="false" PackagePath=""/>
+    <!-- Every source project packs the repository-level package readme from one location independent of project depth. -->
+    <None Include="$(MSBuildThisFileDirectory)..\NuGet.README.md" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
 
 </Project>

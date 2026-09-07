@@ -7,7 +7,7 @@ using FastExpressionCompiler;
 
 namespace ViciOne.ServiceBus.Internals;
 
-internal class WriteProperty<T, TProperty> : IWriteProperty<T, TProperty>
+internal sealed class WriteProperty<T, TProperty> : IWriteProperty<T, TProperty>
     where T : class
 {
     readonly Action<T, TProperty> _setMethod;

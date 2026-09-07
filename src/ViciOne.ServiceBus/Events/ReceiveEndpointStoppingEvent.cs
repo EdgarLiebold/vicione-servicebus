@@ -2,27 +2,27 @@ using System;
 
 namespace ViciOne.ServiceBus.Events;
 
-/// <summary>Carries the receive endpoint stopping event data.</summary>
-public class ReceiveEndpointStoppingEvent :
+/// <summary>Reports that a receive endpoint is stopping or being removed.</summary>
+internal sealed class ReceiveEndpointStoppingEvent :
     ReceiveEndpointStopping
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="inputAddress">The input address.</param>
-    /// <param name="receiveEndpoint">The receive endpoint.</param>
-    /// <param name="removed">The removed.</param>
+    /// <summary>Creates a receive-endpoint stopping notification.</summary>
+    /// <param name="inputAddress">The endpoint's input address.</param>
+    /// <param name="receiveEndpoint">The endpoint that is stopping.</param>
+    /// <param name="removed">Whether the endpoint is being removed from its host.</param>
     public ReceiveEndpointStoppingEvent(Uri inputAddress, IReceiveEndpoint receiveEndpoint, bool removed)
     {
-        InputAddress = inputAddress;
-        ReceiveEndpoint = receiveEndpoint;
+        InputAddress = inputAddress ?? throw new ArgumentNullException(nameof(inputAddress));
+        ReceiveEndpoint = receiveEndpoint ?? throw new ArgumentNullException(nameof(receiveEndpoint));
         Removed = removed;
     }
 
-    /// <summary>Gets the removed.</summary>
+    /// <summary>Gets whether the endpoint is being removed from its host.</summary>
     public bool Removed { get; }
 
-    /// <summary>Gets the input address.</summary>
+    /// <summary>Gets the endpoint's input address.</summary>
     public Uri InputAddress { get; }
 
-    /// <summary>Gets the receive endpoint.</summary>
+    /// <summary>Gets the endpoint that is stopping.</summary>
     public IReceiveEndpoint ReceiveEndpoint { get; }
 }

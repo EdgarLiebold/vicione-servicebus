@@ -4,14 +4,16 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>Carries metadata for registration.</summary>
-public static class RegistrationMetadata
+/// <summary>Classifies runtime types for convention-based consumer registration.</summary>
+internal static class RegistrationMetadata
 {
-    /// <summary>Returns true if the type is a consumer, or a consumer definition.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public static bool IsConsumerOrDefinition(Type type)
+    /// <summary>Determines whether a type is owned by core consumer or consumer-definition registration.</summary>
+    /// <param name="type">The runtime type to classify.</param>
+    /// <returns><see langword="true" /> for a non-excluded consumer or consumer definition; otherwise, <see langword="false" />.</returns>
+    internal static bool IsConsumerOrDefinition(Type type)
     {
+        ArgumentNullException.ThrowIfNull(type);
+
         Type[] interfaces = type.GetInterfaces();
 
         return !IsConsumerRegistrationExcluded(type)
@@ -19,18 +21,19 @@ public static class RegistrationMetadata
                 || interfaces.Any(candidate => candidate.ImplementsInterface(typeof(IConsumerDefinition<>))));
     }
 
-    /// <summary>Returns true if the type is a consumer, or a consumer definition.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public static bool IsConsumer(Type type)
+    /// <summary>Determines whether a type is owned by core consumer registration.</summary>
+    /// <param name="type">The runtime type to classify.</param>
+    /// <returns><see langword="true" /> for a non-excluded consumer; otherwise, <see langword="false" />.</returns>
+    internal static bool IsConsumer(Type type)
     {
+        ArgumentNullException.ThrowIfNull(type);
         return !IsConsumerRegistrationExcluded(type) && typeof(IConsumer).IsAssignableFrom(type);
     }
 
     /// <summary>Returns whether a capability package, rather than the core consumer kind, owns registration of the type.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
+    /// <param name="type">The runtime type to classify.</param>
     /// <returns><see langword="true" /> when an implemented handler contract excludes core consumer registration.</returns>
-    public static bool IsConsumerRegistrationExcluded(Type type)
+    internal static bool IsConsumerRegistrationExcluded(Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
 
@@ -38,5 +41,4 @@ public static class RegistrationMetadata
         return interfaces.Any(candidate =>
             candidate.IsDefined(typeof(ConsumerRegistrationExclusionAttribute), inherit: false));
     }
-
 }

@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace ViciOne.ServiceBus.Internals;
 
-internal class ReadPropertyCache<T> :
+internal sealed class ReadPropertyCache<T> :
     IReadPropertyCache<T>
     where T : class
 {
@@ -87,6 +87,6 @@ internal class ReadPropertyCache<T> :
 
     static class Cached
     {
-        internal static readonly Lazy<IReadPropertyCache<T>> PropertyCache = new Lazy<IReadPropertyCache<T>>(() => new ReadPropertyCache<T>());
+        internal static readonly Lazy<IReadPropertyCache<T>> PropertyCache = new(() => new ReadPropertyCache<T>());
     }
 }

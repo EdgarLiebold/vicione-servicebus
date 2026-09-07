@@ -8,6 +8,20 @@ namespace ViciOne.ServiceBus.Tests.Metadata;
 public sealed class TypeMetadataCacheImmutabilityTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-METADATA-VALIDATION", "null-runtime-type")]
+    public void PublicRuntimeTypeOperations_RejectNull()
+    {
+        Assert.Throws<ArgumentNullException>(() => TypeMetadataCache.GetImplementationType(null!));
+        Assert.Throws<ArgumentNullException>(() => TypeMetadataCache.GetShortName(null!));
+        Assert.Throws<ArgumentNullException>(() => TypeMetadataCache.GetProperties(null!));
+        Assert.Throws<ArgumentNullException>(() => TypeMetadataCache.IsValidMessageType(null!));
+        Assert.Throws<ArgumentNullException>(() => TypeMetadataCache.IsTemporaryMessageType(null!));
+        Assert.Throws<ArgumentNullException>(() => TypeMetadataCache.GetMessageTypes(null!));
+        Assert.Throws<ArgumentNullException>(() => TypeMetadataCache.GetMessageTypeNames(null!));
+        Assert.Throws<ArgumentNullException>(() => TypeMetadataCache.IsValidMessageDataType(null!));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-METADATA-IMMUTABILITY", "core-facade-preserves-read-only-contract")]
     public void PublicFacade_PreservesTheReadOnlyStableMetadataContract()
     {

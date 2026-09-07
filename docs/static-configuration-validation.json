@@ -3,17 +3,12 @@
   "scope": "All public application and provider configuration families whose invalidity is knowable before runtime messaging begins.",
   "rule": "Reject at registration when possible; otherwise reject during host startup before provider I/O or background delivery.",
   "reviewBaseline": {
-    "measuredPublicOptionsClasses": 44,
-    "measurement": "The external review used a lexical class-name grep on its pre-program snapshot.",
+    "measuredPublicOptionsClasses": 43,
+    "measurement": "The source inventory uses a lexical scan of current public Options-suffixed class declarations.",
     "currentConcreteOptionsModels": 41,
-    "explanation": "The source inventory is authoritative. The current lexical scan finds 44 Options-suffixed class declarations; two are validators or configurers rather than option models, and one is an abstract inheritance base. Application-operation records are immutable invocation values rather than startup configuration."
+    "explanation": "The current lexical scan finds 43 public Options-suffixed class declarations; one is a validator and one is an abstract inheritance base. Application-operation records are immutable invocation values rather than startup configuration."
   },
   "excludedDeclarations": [
-    {
-      "type": "ConfigureBusHealthCheckServiceOptions",
-      "source": "src/ViciOne.ServiceBus/Monitoring/ConfigureBusHealthCheckServiceOptions.cs",
-      "reason": "IConfigureOptions implementation, not an options model"
-    },
     {
       "type": "InboxCleanupServiceOptions",
       "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/InboxCleanupServiceOptions.cs",
@@ -405,10 +400,10 @@
     {
       "id": "message-contract-catalog",
       "boundary": "registration",
-      "source": "src/ViciOne.ServiceBus/Contracts/MessageContractCatalogBuilder.cs",
+      "source": "src/ViciOne.ServiceBus/Advanced/MessageContractCatalogBuilder.cs",
       "test": "tests/ViciOne.ServiceBus.Tests/Contracts/MessageContractCatalogTests.cs",
       "testMethod": "Registration_RejectsValueOpenGenericAndUnattributedTypesBeforeMutation",
-      "exception": "MessageContractException",
+      "exception": "ConfigurationException",
       "actionableFragment": "contract"
     },
     {

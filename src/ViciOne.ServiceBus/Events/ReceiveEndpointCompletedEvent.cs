@@ -2,28 +2,28 @@ using System;
 
 namespace ViciOne.ServiceBus.Events;
 
-/// <summary>Carries the receive endpoint completed event data.</summary>
-public class ReceiveEndpointCompletedEvent :
+/// <summary>Projects a transport-completion snapshot through its owning receive endpoint.</summary>
+internal sealed class ReceiveEndpointCompletedEvent :
     ReceiveEndpointCompleted
 {
     readonly ReceiveTransportCompleted _completed;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="completed">The completed.</param>
-    /// <param name="receiveEndpoint">The receive endpoint.</param>
+    /// <summary>Creates an endpoint-completion notification.</summary>
+    /// <param name="completed">The completed transport and its final delivery counters.</param>
+    /// <param name="receiveEndpoint">The endpoint that owns the transport.</param>
     public ReceiveEndpointCompletedEvent(ReceiveTransportCompleted completed, IReceiveEndpoint receiveEndpoint)
     {
-        _completed = completed;
-        ReceiveEndpoint = receiveEndpoint;
+        _completed = completed ?? throw new ArgumentNullException(nameof(completed));
+        ReceiveEndpoint = receiveEndpoint ?? throw new ArgumentNullException(nameof(receiveEndpoint));
     }
 
-    /// <summary>Gets the input address.</summary>
+    /// <summary>Gets the completed transport's input address.</summary>
     public Uri InputAddress => _completed.InputAddress;
-    /// <summary>Gets the delivery count.</summary>
+    /// <summary>Gets the completed transport's delivery count.</summary>
     public long DeliveryCount => _completed.DeliveryCount;
-    /// <summary>Gets the concurrent delivery count.</summary>
+    /// <summary>Gets the completed transport's remaining concurrent delivery count.</summary>
     public long ConcurrentDeliveryCount => _completed.ConcurrentDeliveryCount;
 
-    /// <summary>Gets the receive endpoint.</summary>
+    /// <summary>Gets the endpoint that owns the completed transport.</summary>
     public IReceiveEndpoint ReceiveEndpoint { get; }
 }

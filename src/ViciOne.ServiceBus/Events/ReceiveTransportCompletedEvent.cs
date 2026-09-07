@@ -3,24 +3,26 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Events;
 
-/// <summary>Carries the receive transport completed event data.</summary>
-public class ReceiveTransportCompletedEvent :
+/// <summary>Captures the final delivery metrics reported by a stopped receive transport.</summary>
+internal sealed class ReceiveTransportCompletedEvent :
     ReceiveTransportCompleted
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="inputAddress">The input address.</param>
-    /// <param name="metrics">The metrics.</param>
+    /// <summary>Creates a transport-completion snapshot.</summary>
+    /// <param name="inputAddress">The address of the completed receive transport.</param>
+    /// <param name="metrics">The transport's final delivery counters.</param>
     public ReceiveTransportCompletedEvent(Uri inputAddress, DeliveryMetrics metrics)
     {
-        InputAddress = inputAddress;
+        ArgumentNullException.ThrowIfNull(metrics);
+
+        InputAddress = inputAddress ?? throw new ArgumentNullException(nameof(inputAddress));
         DeliveryCount = metrics.DeliveryCount;
         ConcurrentDeliveryCount = metrics.ConcurrentDeliveryCount;
     }
 
-    /// <summary>Gets the input address.</summary>
+    /// <summary>Gets the address of the completed receive transport.</summary>
     public Uri InputAddress { get; }
-    /// <summary>Gets the delivery count.</summary>
+    /// <summary>Gets the number of deliveries accepted by the transport.</summary>
     public long DeliveryCount { get; }
-    /// <summary>Gets the concurrent delivery count.</summary>
+    /// <summary>Gets the number of deliveries still executing when completion was observed.</summary>
     public long ConcurrentDeliveryCount { get; }
 }

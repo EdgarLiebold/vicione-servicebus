@@ -13,25 +13,25 @@ public sealed class MessageContractCatalogBuilder
     private readonly Dictionary<MessageContractIdentity, Type> _byIdentity = new();
     private bool _built;
 
-    /// <summary>Registers the supplied component.</summary>
+    /// <summary>Registers a message contract with an explicit stable name and major version.</summary>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="name">The name.</param>
-    /// <param name="majorVersion">The major version.</param>
-    /// <returns>The message contract catalog builder produced by the operation.</returns>
+    /// <param name="name">The stable application-level contract name.</param>
+    /// <param name="majorVersion">The contract's compatibility-breaking major version.</param>
+    /// <returns>This builder for fluent bootstrap configuration.</returns>
     public MessageContractCatalogBuilder Register<TMessage>(string name, int majorVersion = 1)
         where TMessage : class
         => Register(typeof(TMessage), new MessageContractIdentity(name, majorVersion));
 
-    /// <summary>Registers the supplied component.</summary>
+    /// <summary>Registers a message contract using its declared <see cref="MessageContractAttribute" />.</summary>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <returns>The message contract catalog builder produced by the operation.</returns>
+    /// <returns>This builder for fluent bootstrap configuration.</returns>
     public MessageContractCatalogBuilder Register<TMessage>()
         where TMessage : class
         => Register(typeof(TMessage));
 
-    /// <summary>Registers the supplied component.</summary>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <returns>The message contract catalog builder produced by the operation.</returns>
+    /// <summary>Registers a runtime message type using its declared <see cref="MessageContractAttribute" />.</summary>
+    /// <param name="messageType">The closed class or interface message contract to register.</param>
+    /// <returns>This builder for fluent bootstrap configuration.</returns>
     public MessageContractCatalogBuilder Register(Type messageType)
     {
         ArgumentNullException.ThrowIfNull(messageType);
@@ -45,16 +45,20 @@ public sealed class MessageContractCatalogBuilder
         if (attribute is null)
         {
             throw new ConfigurationException(
-                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Contract Catalog", "unknown", $"Message type '{messageType}' has no {nameof(MessageContractAttribute)}. Durable contracts require an explicit stable identity.", "Correct the named configuration before starting the host"));
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Message contract catalog",
+                    "all configured buses",
+                    $"Message contract '{messageType}' has no {nameof(MessageContractAttribute)}",
+                    "Declare a stable identity or use the overload that accepts a name and major version before starting the host"));
         }
 
         return Register(messageType, new MessageContractIdentity(attribute.Name, attribute.MajorVersion));
     }
 
-    /// <summary>Registers the supplied component.</summary>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="identity">The identity.</param>
-    /// <returns>The message contract catalog builder produced by the operation.</returns>
+    /// <summary>Registers a runtime message type with an explicit stable identity.</summary>
+    /// <param name="messageType">The closed class or interface message contract to register.</param>
+    /// <param name="identity">The stable application-level contract identity.</param>
+    /// <returns>This builder for fluent bootstrap configuration.</returns>
     public MessageContractCatalogBuilder Register(Type messageType, MessageContractIdentity identity)
     {
         ArgumentNullException.ThrowIfNull(messageType);
@@ -83,13 +87,21 @@ public sealed class MessageContractCatalogBuilder
                 return this;
 
             throw new ConfigurationException(
-                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Contract Catalog", "unknown", $"Message type '{messageType}' is already registered as '{existingIdentity}' and cannot also be '{identity}'.", "Correct the named configuration before starting the host"));
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Message contract catalog",
+                    "all configured buses",
+                    $"Message contract '{messageType}' is already registered as '{existingIdentity}' and cannot also be '{identity}'",
+                    "Keep exactly one stable identity for each runtime message type"));
         }
 
         if (_byIdentity.TryGetValue(identity, out Type? existingType))
         {
             throw new ConfigurationException(
-                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Contract Catalog", "unknown", $"Message contract identity '{identity}' is already registered for '{existingType}' and cannot also map to '{messageType}'.", "Correct the named configuration before starting the host"));
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Message contract catalog",
+                    "all configured buses",
+                    $"Message contract identity '{identity}' is already registered for '{existingType}' and cannot also map to '{messageType}'",
+                    "Keep exactly one runtime message type for each stable identity"));
         }
 
         _byType.Add(messageType, identity);
@@ -97,8 +109,8 @@ public sealed class MessageContractCatalogBuilder
         return this;
     }
 
-    /// <summary>Builds the configured component.</summary>
-    /// <returns>The configured component.</returns>
+    /// <summary>Freezes the registered mappings into an immutable bidirectional catalog.</summary>
+    /// <returns>The immutable message contract catalog.</returns>
     public IMessageContractCatalog Build()
     {
         ThrowIfBuilt();

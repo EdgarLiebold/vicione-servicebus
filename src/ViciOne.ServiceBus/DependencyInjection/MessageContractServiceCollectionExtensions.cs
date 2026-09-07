@@ -12,8 +12,8 @@ public static class MessageContractServiceCollectionExtensions
     /// contribute declarations; the catalog is built exactly once when the container materializes it.
     /// </summary>
     /// <param name="services">The dependency-injection service collection.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The service collection produced by the operation.</returns>
+    /// <param name="configure">The bootstrap callback that contributes stable message contract identities.</param>
+    /// <returns>The same service collection for fluent composition.</returns>
     public static IServiceCollection AddViciOneMessageContracts(
         this IServiceCollection services,
         Action<MessageContractCatalogBuilder> configure)
@@ -26,7 +26,11 @@ public static class MessageContractServiceCollectionExtensions
         if (!owned && services.Any(static descriptor => descriptor.ServiceType == typeof(IMessageContractCatalog)))
         {
             throw new ConfigurationException(
-                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Contract Service Collection Extensions", "unknown", "An application-owned message-contract catalog is already registered. ViciOne cannot compose a second catalog owner.", "Correct the named configuration before starting the host"));
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Message contract catalog",
+                    "all configured buses",
+                    $"An {nameof(IMessageContractCatalog)} is already registered outside {nameof(AddViciOneMessageContracts)}",
+                    "Use one catalog ownership model so all declarations compose into a single immutable catalog"));
         }
 
         if (!owned)

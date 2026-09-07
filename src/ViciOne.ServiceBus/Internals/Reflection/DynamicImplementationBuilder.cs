@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 
 namespace ViciOne.ServiceBus.Internals;
 
-internal class DynamicImplementationBuilder :
+internal sealed class DynamicImplementationBuilder :
     IImplementationBuilder
 {
     const MethodAttributes PropertyAccessMethodAttributes = MethodAttributes.Public
@@ -44,8 +44,7 @@ internal class DynamicImplementationBuilder :
 
     public Type GetImplementationType(Type interfaceType)
     {
-        if (interfaceType == null)
-            throw new ArgumentNullException(nameof(interfaceType));
+        ArgumentNullException.ThrowIfNull(interfaceType);
 
         return _proxyTypes.GetOrAdd(interfaceType, x => new Lazy<Type>(() => CreateImplementation(x))).Value;
     }
@@ -159,9 +158,6 @@ internal class DynamicImplementationBuilder :
                 : TypeCache.GetShortName(interfaceType));
         try
         {
-            // The retained System.Text.Json and MessagePack serializers do not consume the CLI
-            // serializable bit. Omitting it keeps the emitted data contract free of obsolete
-            // formatter metadata and avoids a suppression for behavior the product does not use.
             var typeBuilder = builder.DefineType(typeName,
                 TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed,
                 typeof(object), new[] { interfaceType });
@@ -319,8 +315,7 @@ internal class DynamicImplementationBuilder :
 
     static CustomAttributeBuilder GetCustomAttributeBuilder(CustomAttributeData data)
     {
-        if (data == null)
-            throw new ArgumentNullException(nameof(data));
+        ArgumentNullException.ThrowIfNull(data);
 
         var propertyArguments = new List<PropertyInfo>();
         var propertyArgumentValues = new List<object>();

@@ -7,7 +7,7 @@ using FastExpressionCompiler;
 
 namespace ViciOne.ServiceBus.Internals;
 
-internal class ReadProperty<T, TProperty> : IReadProperty<T, TProperty>
+internal sealed class ReadProperty<T, TProperty> : IReadProperty<T, TProperty>
     where T : class
 {
     readonly Func<T, TProperty> _getMethod;

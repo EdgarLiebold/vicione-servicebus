@@ -8,26 +8,30 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Monitoring;
 
-/// <summary>Evaluates the health of bus health.</summary>
-public class BusHealthCheck :
+/// <summary>Projects one bus instance's aggregate transport health into the .NET health-check model.</summary>
+internal sealed class BusHealthCheck :
     IHealthCheck
 {
     readonly IBusInstance _busInstance;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="busInstance">The bus instance.</param>
+    /// <summary>Creates a health check for one configured bus instance.</summary>
+    /// <param name="busInstance">The bus instance whose control surface supplies health snapshots.</param>
     public BusHealthCheck(IBusInstance busInstance)
     {
-        _busInstance = busInstance;
+        _busInstance = busInstance ?? throw new ArgumentNullException(nameof(busInstance));
     }
 
-    /// <summary>Checks health.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the check health outcome.</returns>
+    /// <summary>Captures the current bus snapshot and maps it to a .NET health-check result.</summary>
+    /// <param name="context">The registration context that defines the minimum reported failure status.</param>
+    /// <param name="cancellationToken">Cancels the health observation before the snapshot is captured.</param>
+    /// <returns>The completed health-check result.</returns>
     public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult>(cancellationToken); var result = _busInstance.BusControl.CheckHealth();
+        ArgumentNullException.ThrowIfNull(context);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<HealthCheckResult>(cancellationToken);
+
+        BusHealthResult result = _busInstance.BusControl.CheckHealth();
 
         var data = new Dictionary<string, object>
         {
@@ -54,7 +58,7 @@ public class BusHealthCheck :
     }
 
 
-    class EndpointDictionary :
+    sealed class EndpointDictionary :
         Dictionary<string, Endpoint>
     {
         public EndpointDictionary(IDictionary<string, Endpoint> dictionary)
@@ -69,7 +73,7 @@ public class BusHealthCheck :
     }
 
 
-    class Endpoint
+    sealed class Endpoint
     {
         public Endpoint(string? status, string? description)
         {
@@ -77,8 +81,9 @@ public class BusHealthCheck :
             Description = description;
         }
 
-        public string? Status { get; set; }
-        public string? Description { get; set; }
+        public string? Status { get; }
+        public string? Description { get; }
+
         public override string ToString()
         {
             return $"{Status} - {Description}";

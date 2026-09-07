@@ -2,22 +2,22 @@ using System;
 
 namespace ViciOne.ServiceBus.Events;
 
-/// <summary>Carries the receive transport ready event data.</summary>
-public class ReceiveTransportReadyEvent :
+/// <summary>Reports that a receive transport is available to accept deliveries.</summary>
+internal sealed class ReceiveTransportReadyEvent :
     ReceiveTransportReady
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="inputAddress">The input address.</param>
-    /// <param name="isStarted">The is started.</param>
+    /// <summary>Creates a receive-transport readiness notification.</summary>
+    /// <param name="inputAddress">The transport's input address.</param>
+    /// <param name="isStarted">Whether this notification follows transport startup.</param>
     public ReceiveTransportReadyEvent(Uri inputAddress, bool isStarted = true)
     {
-        InputAddress = inputAddress;
+        InputAddress = inputAddress ?? throw new ArgumentNullException(nameof(inputAddress));
         IsStarted = isStarted;
     }
 
-    /// <summary>Gets the input address.</summary>
+    /// <summary>Gets the transport's input address.</summary>
     public Uri InputAddress { get; }
 
-    /// <summary>Gets a value indicating whether started.</summary>
+    /// <summary>Gets whether this notification follows transport startup.</summary>
     public bool IsStarted { get; }
 }

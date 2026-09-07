@@ -5,54 +5,53 @@ namespace ViciOne.ServiceBus.Internals;
 
 static class StringExtensions
 {
-    /// <summary>Allows null-safe trimming of string.</summary>
-    /// <param name="s">The <c>s</c> value.</param>
-    /// <returns>The string produced by the operation.</returns>
-    internal static string? NullSafeTrim(this string? s)
+    /// <summary>Trims a string while preserving a <see langword="null" /> receiver.</summary>
+    /// <param name="value">The string to trim.</param>
+    /// <returns>The trimmed string, or <see langword="null" /> when <paramref name="value" /> is <see langword="null" />.</returns>
+    internal static string? NullSafeTrim(this string? value)
     {
-        return s?.Trim();
+        return value?.Trim();
     }
 
-    /// <summary>Trims string and if resulting string is empty, null is returned.</summary>
-    /// <param name="s">The <c>s</c> value.</param>
-    /// <returns>The string produced by the operation.</returns>
-    internal static string? TrimEmptyToNull(this string? s)
+    /// <summary>Trims a string and normalizes an empty result to <see langword="null" />.</summary>
+    /// <param name="value">The string to normalize.</param>
+    /// <returns>The nonempty trimmed string, or <see langword="null" /> when no characters remain.</returns>
+    internal static string? TrimEmptyToNull(this string? value)
     {
-        if (s is null)
+        if (value is null)
             return null;
 
-        s = s.Trim();
+        value = value.Trim();
 
-        if (s.Length == 0)
+        if (value.Length == 0)
             return null;
 
-        return s;
+        return value;
     }
 
-    internal static StringSplitEnumerator SpanSplit(this string str, char ch1, char ch2 = char.MinValue)
+    internal static StringSplitEnumerator SpanSplit(this string value, char separator, char alternateSeparator = char.MinValue)
     {
-        return SpanSplit(str.AsSpan(), ch1, ch2);
+        return SpanSplit(value.AsSpan(), separator, alternateSeparator);
     }
 
-    internal static StringSplitEnumerator SpanSplit(this ReadOnlySpan<char> span, char ch1, char ch2 = char.MinValue)
+    internal static StringSplitEnumerator SpanSplit(this ReadOnlySpan<char> span, char separator, char alternateSeparator = char.MinValue)
     {
-        return new StringSplitEnumerator(span, ch1, ch2);
+        return new StringSplitEnumerator(span, separator, alternateSeparator);
     }
-
 
     // A ref struct confines the enumerator's ReadOnlySpan<char> to the stack.
     [StructLayout(LayoutKind.Auto)]
     internal ref struct StringSplitEnumerator
     {
-        ReadOnlySpan<char> _str;
-        readonly char ch1;
-        readonly char ch2;
+        readonly char _alternateSeparator;
+        ReadOnlySpan<char> _remaining;
+        readonly char _separator;
 
-        public StringSplitEnumerator(ReadOnlySpan<char> str, char ch1, char ch2)
+        public StringSplitEnumerator(ReadOnlySpan<char> value, char separator, char alternateSeparator)
         {
-            _str = str;
-            this.ch1 = ch1;
-            this.ch2 = ch2;
+            _remaining = value;
+            _separator = separator;
+            _alternateSeparator = alternateSeparator;
             Current = default;
         }
 
@@ -64,29 +63,28 @@ static class StringExtensions
 
         public bool MoveNext()
         {
-            ReadOnlySpan<char> span = _str;
-            if (span.Length == 0) // Reach the end of the string
+            ReadOnlySpan<char> span = _remaining;
+            if (span.Length == 0)
                 return false;
 
-            var index = ch2 != char.MinValue
-                ? span.IndexOfAny(ch1, ch2)
-                : span.IndexOf(ch1);
+            int index = _alternateSeparator != char.MinValue
+                ? span.IndexOfAny(_separator, _alternateSeparator)
+                : span.IndexOf(_separator);
 
-            if (index == -1) // The string is composed of only token
+            if (index < 0)
             {
-                _str = ReadOnlySpan<char>.Empty; // The remaining string is an empty string
+                _remaining = ReadOnlySpan<char>.Empty;
                 Current = new StringSplitEntry(span, ReadOnlySpan<char>.Empty);
                 return true;
             }
 
             Current = new StringSplitEntry(span.Slice(0, index), span.Slice(index, 1));
-            _str = span.Slice(index + 1);
+            _remaining = span.Slice(index + 1);
             return true;
         }
 
         public StringSplitEntry Current { get; private set; }
     }
-
 
     [StructLayout(LayoutKind.Auto)]
     internal readonly ref struct StringSplitEntry

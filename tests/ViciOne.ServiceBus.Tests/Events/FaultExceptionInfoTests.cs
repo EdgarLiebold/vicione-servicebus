@@ -1,6 +1,7 @@
 using System.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -10,6 +11,88 @@ namespace ViciOne.ServiceBus.Tests.Events;
 
 public sealed class FaultExceptionInfoTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "empty-application-data-is-non-null-and-writable")]
+    public void ApplicationDiagnosticData_IsAlwaysAvailableAndBacksExceptionData()
+    {
+        var wrapper = new FaultDataException(new InvalidOperationException("source"));
+
+        Assert.Empty(wrapper.ApplicationData);
+        wrapper.ApplicationData.Add("TraceId", "trace-27");
+
+        Assert.Same(wrapper.ApplicationData, wrapper.Data);
+        Assert.Equal("trace-27", wrapper.Data["traceid"]);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "fault-data-required-arguments")]
+    public void FaultDataConstruction_RejectsEveryMissingRequiredArgument()
+    {
+        var failure = new InvalidOperationException("source");
+        KeyValuePair<string, object>[] values = [];
+
+        Assert.Equal("innerException", Assert.Throws<ArgumentNullException>(() => new FaultDataException(null!)).ParamName);
+        Assert.Equal("values", Assert.Throws<ArgumentNullException>(() => new FaultDataException(failure, (object)null!)).ParamName);
+        Assert.Equal("values", Assert.Throws<ArgumentNullException>(() =>
+            new FaultDataException(failure, (IEnumerable<KeyValuePair<string, object>>)null!)).ParamName);
+        Assert.Equal("message", Assert.Throws<ArgumentNullException>(() => new FaultDataException(null!, failure)).ParamName);
+        Assert.Equal("innerException", Assert.Throws<ArgumentNullException>(() => new FaultDataException("fault", null!)).ParamName);
+        Assert.Equal("values", Assert.Throws<ArgumentNullException>(() => new FaultDataException("fault", failure, (object)null!)).ParamName);
+        Assert.Equal("values", Assert.Throws<ArgumentNullException>(() =>
+            new FaultDataException("fault", failure, (IEnumerable<KeyValuePair<string, object>>)null!)).ParamName);
+        Assert.Equal("innerException", Assert.Throws<ArgumentNullException>(() => new FaultDataException("fault", null!, values)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "mutable-type-identifiers-are-snapshotted")]
+    public void FaultConstruction_CopiesMutableMessageTypeCollections()
+    {
+        string[] faultMessageTypes = ["urn:message:original"];
+        var fault = new FaultEvent<DiagnosticFailure>(
+            new DiagnosticFailure(FailureSource.ExceptionData),
+            null,
+            HostMetadataCache.Host,
+            new InvalidOperationException("source"),
+            faultMessageTypes);
+        var receiveFault = new ReceiveFaultEvent(
+            HostMetadataCache.Host,
+            new InvalidOperationException("source"),
+            "application/json",
+            null,
+            faultMessageTypes);
+
+        faultMessageTypes[0] = "urn:message:mutated";
+
+        Assert.Equal(["urn:message:original"], fault.FaultMessageTypes);
+        Assert.Equal(["urn:message:original"], receiveFault.FaultMessageTypes);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "fault-contract-required-values")]
+    public void FaultConstruction_RejectsEveryMissingRequiredValue()
+    {
+        var message = new DiagnosticFailure(FailureSource.ExceptionData);
+        var failure = new InvalidOperationException("source");
+        ExceptionInfo exceptionInfo = new StubExceptionInfo("Failure", "source", null);
+
+        Assert.Equal("message", Assert.Throws<ArgumentNullException>(() =>
+            new FaultEvent<DiagnosticFailure>(null!, null, HostMetadataCache.Host, failure, [])).ParamName);
+        Assert.Equal("host", Assert.Throws<ArgumentNullException>(() =>
+            new FaultEvent<DiagnosticFailure>(message, null, null!, failure, [])).ParamName);
+        Assert.Equal("exception", Assert.Throws<ArgumentNullException>(() =>
+            new FaultEvent<DiagnosticFailure>(message, null, HostMetadataCache.Host, (Exception)null!, [])).ParamName);
+        Assert.Equal("exceptions", Assert.Throws<ArgumentNullException>(() =>
+            new FaultEvent<DiagnosticFailure>(message, null, HostMetadataCache.Host, (IEnumerable<ExceptionInfo>)null!, [])).ParamName);
+        Assert.Equal("faultMessageTypes", Assert.Throws<ArgumentNullException>(() =>
+            new FaultEvent<DiagnosticFailure>(message, null, HostMetadataCache.Host, failure, null!)).ParamName);
+        Assert.Equal("exceptions", Assert.Throws<ArgumentException>(() =>
+            new FaultEvent<DiagnosticFailure>(message, null, HostMetadataCache.Host, new[] { exceptionInfo, null! }, [])).ParamName);
+        Assert.Equal("host", Assert.Throws<ArgumentNullException>(() =>
+            new ReceiveFaultEvent(null!, failure, null, null, null)).ParamName);
+        Assert.Equal("exception", Assert.Throws<ArgumentNullException>(() =>
+            new ReceiveFaultEvent(HostMetadataCache.Host, null!, null, null, null)).ParamName);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "application-data-transport")]
     public async Task ApplicationDiagnosticData_IsCarriedByExactlyOnePublishedFaultAsync()
@@ -56,7 +139,7 @@ public sealed class FaultExceptionInfoTests
     {
         var source = new InvalidOperationException("source");
         source.Data["TraceId"] = "inner";
-        var wrapper = new ViciOneServiceBusApplicationException(
+        var wrapper = new FaultDataException(
             source,
             new[] { new KeyValuePair<string, object>("traceid", "application") });
 
@@ -112,7 +195,7 @@ public sealed class FaultExceptionInfoTests
         var fault = new FaultEvent<DiagnosticFailure>(
             new DiagnosticFailure(FailureSource.ExceptionData),
             null,
-            null!,
+            HostMetadataCache.Host,
             new AggregateException(exceptions),
             []);
 
@@ -135,7 +218,7 @@ public sealed class FaultExceptionInfoTests
         var fault = new FaultEvent<DiagnosticFailure>(
             new DiagnosticFailure(FailureSource.ExceptionData),
             null,
-            null!,
+            HostMetadataCache.Host,
             exceptions,
             []);
 
@@ -152,7 +235,7 @@ public sealed class FaultExceptionInfoTests
         Assert.Throws<ArgumentNullException>(() => new FaultEvent<DiagnosticFailure>(
             new DiagnosticFailure(FailureSource.ExceptionData),
             null,
-            null!,
+            HostMetadataCache.Host,
             (IEnumerable<ExceptionInfo>)null!,
             []));
     }
@@ -165,7 +248,7 @@ public sealed class FaultExceptionInfoTests
             .Select(index => new InvalidOperationException($"failure-{index}"))
             .ToArray();
 
-        var fault = new ReceiveFaultEvent(null!, new AggregateException(exceptions), "application/json", null, []);
+        var fault = new ReceiveFaultEvent(HostMetadataCache.Host, new AggregateException(exceptions), "application/json", null, []);
 
         Assert.Equal(16, fault.Exceptions.Length);
         Assert.Equal("failure-0", fault.Exceptions[0].Message);
@@ -307,7 +390,7 @@ public sealed class FaultExceptionInfoTests
 
             if (context.Message.Source == FailureSource.ApplicationWrapper)
             {
-                throw new ViciOneServiceBusApplicationException(failure, new
+                throw new FaultDataException(failure, new
                 {
                     Username = "Frank",
                     CustomerId = 27,

@@ -10,25 +10,27 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Monitoring;
 
-/// <summary>Defines configuration options for configure bus health check service.</summary>
-public sealed class ConfigureBusHealthCheckServiceOptions :
+/// <summary>Adds one .NET health-check registration for every configured bus instance.</summary>
+internal sealed class ConfigureBusHealthCheckServiceOptions :
     IConfigureOptions<HealthCheckServiceOptions>
 {
     readonly IServiceProvider _provider;
     readonly string[] _tags;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <summary>Creates the options contributor from the application service provider.</summary>
+    /// <param name="provider">The service provider containing bus registrations and their health options.</param>
     public ConfigureBusHealthCheckServiceOptions(IServiceProvider provider)
     {
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-        _tags = new[] { "ready", "vicione-servicebus" };
+        _tags = ["ready", "vicione-servicebus"];
     }
 
-    /// <summary>Applies the supplied configuration.</summary>
-    /// <param name="options">The options that control the operation.</param>
+    /// <summary>Adds the health-check registrations represented by the configured buses.</summary>
+    /// <param name="options">The .NET health-check options to extend.</param>
     public void Configure(HealthCheckServiceOptions options)
     {
+        ArgumentNullException.ThrowIfNull(options);
+
         foreach (IBusCompositionRegistration busRegistration in _provider.GetServices<IBusCompositionRegistration>())
         {
             Type busType = busRegistration.BusType;

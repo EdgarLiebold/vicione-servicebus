@@ -3,35 +3,38 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Events;
 
-/// <summary>Carries the receive fault event data.</summary>
-public class ReceiveFaultEvent :
+/// <summary>Materializes the fault contract published when an incoming envelope cannot be consumed.</summary>
+internal sealed class ReceiveFaultEvent :
     ReceiveFault
 {
     const int MaximumExceptionCount = 16;
 
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty instance for contract materialization.</summary>
     public ReceiveFaultEvent()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="host">The host.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="contentType">The runtime content type used by the operation.</param>
-    /// <param name="faultedMessageId">The faulted message id.</param>
-    /// <param name="faultMessageTypes">The fault message types.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <summary>Creates a bounded fault snapshot from a receive-pipeline failure.</summary>
+    /// <param name="host">The host that received the failed envelope.</param>
+    /// <param name="exception">The receive-pipeline failure.</param>
+    /// <param name="contentType">The content type declared by the incoming envelope.</param>
+    /// <param name="faultedMessageId">The identifier of the failed message, when supplied.</param>
+    /// <param name="faultMessageTypes">The message type identifiers declared by the failed envelope.</param>
+    /// <param name="timeProvider">The time source used to timestamp the fault.</param>
     public ReceiveFaultEvent(HostInfo host, Exception exception, string? contentType, Guid? faultedMessageId, string[]? faultMessageTypes,
         TimeProvider? timeProvider = null)
     {
+        ArgumentNullException.ThrowIfNull(host);
+        ArgumentNullException.ThrowIfNull(exception);
+
         Timestamp = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
         FaultId = NewId.NextGuid();
 
         Host = host;
         ContentType = contentType;
         FaultedMessageId = faultedMessageId;
-        FaultMessageTypes = faultMessageTypes ?? [];
+        FaultMessageTypes = faultMessageTypes is null ? [] : [.. faultMessageTypes];
 
         var aggregateException = exception as AggregateException;
 
@@ -40,18 +43,18 @@ public class ReceiveFaultEvent :
             ?? [new FaultExceptionInfo(exception)];
     }
 
-    /// <summary>Gets or sets the fault id.</summary>
+    /// <summary>Gets or sets the identifier of this fault event.</summary>
     public Guid FaultId { get; set; }
-    /// <summary>Gets or sets the timestamp.</summary>
+    /// <summary>Gets or sets the UTC time at which the fault was created.</summary>
     public DateTimeOffset Timestamp { get; set; }
-    /// <summary>Gets or sets the faulted message id.</summary>
+    /// <summary>Gets or sets the identifier of the failed message, when supplied.</summary>
     public Guid? FaultedMessageId { get; set; }
-    /// <summary>Gets or sets the exceptions.</summary>
+    /// <summary>Gets or sets the bounded exception snapshots associated with the fault.</summary>
     public ExceptionInfo[] Exceptions { get; set; } = null!;
-    /// <summary>Gets or sets the host.</summary>
+    /// <summary>Gets or sets the host that received the failed envelope.</summary>
     public HostInfo Host { get; set; } = null!;
-    /// <summary>Gets or sets the fault message types.</summary>
+    /// <summary>Gets or sets the message type identifiers declared by the failed envelope.</summary>
     public string[] FaultMessageTypes { get; set; } = null!;
-    /// <summary>Gets or sets the content type.</summary>
+    /// <summary>Gets or sets the content type declared by the incoming envelope.</summary>
     public string? ContentType { get; set; }
 }

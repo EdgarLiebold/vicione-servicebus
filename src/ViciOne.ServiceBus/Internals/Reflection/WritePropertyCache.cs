@@ -6,7 +6,7 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Internals;
 
-internal class WritePropertyCache<T> :
+internal sealed class WritePropertyCache<T> :
     IWritePropertyCache<T>
     where T : class
 {
@@ -102,6 +102,6 @@ internal class WritePropertyCache<T> :
 
     static class Cached
     {
-        internal static readonly Lazy<IWritePropertyCache<T>> PropertyCache = new Lazy<IWritePropertyCache<T>>(() => new WritePropertyCache<T>());
+        internal static readonly Lazy<IWritePropertyCache<T>> PropertyCache = new(() => new WritePropertyCache<T>());
     }
 }

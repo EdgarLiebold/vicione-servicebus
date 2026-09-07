@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Tests.Contracts;
 public sealed class MessageContractCatalogTests
 {
     [Fact]
-    [RequirementCoverage("REQ-VSB-V5-CONTRACT-CATALOG", "explicit-and-attribute-bidirectional-lookup")]
+    [RequirementCoverage("REQ-VSB-CONTRACT-CATALOG", "explicit-and-attribute-bidirectional-lookup")]
     public void Build_ProducesAnImmutableBidirectionalCatalog()
     {
         MessageContractIdentity explicitIdentity = new("vicione.contract.explicit", 2);
@@ -28,7 +28,7 @@ public sealed class MessageContractCatalogTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-V5-CONTRACT-CATALOG", "idempotent-registration-and-conflict-rejection")]
+    [RequirementCoverage("REQ-VSB-CONTRACT-CATALOG", "idempotent-registration-and-conflict-rejection")]
     public void Registration_IsIdempotentOnlyForTheExactTypeIdentityPair()
     {
         var identity = new MessageContractIdentity("vicione.contract.first", 1);
@@ -47,7 +47,7 @@ public sealed class MessageContractCatalogTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-V5-CONTRACT-CATALOG", "invalid-contract-types-rejected")]
+    [RequirementCoverage("REQ-VSB-CONTRACT-CATALOG", "invalid-contract-types-rejected")]
     public void Registration_RejectsValueOpenGenericAndUnattributedTypesBeforeMutation()
     {
         var builder = new MessageContractCatalogBuilder();
@@ -65,7 +65,7 @@ public sealed class MessageContractCatalogTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-V5-CONTRACT-CATALOG", "attribute-does-not-flow-through-inheritance")]
+    [RequirementCoverage("REQ-VSB-CONTRACT-CATALOG", "attribute-does-not-flow-through-inheritance")]
     public void AttributeRegistration_RequiresTheConcreteTypeToDeclareItsOwnIdentity()
     {
         MessageContractCatalogBuilder builder = new();
@@ -77,7 +77,7 @@ public sealed class MessageContractCatalogTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-V5-CONTRACT-CATALOG", "unknown-and-null-lookups-fail-closed")]
+    [RequirementCoverage("REQ-VSB-CONTRACT-CATALOG", "unknown-and-null-lookups-fail-closed")]
     public void Catalog_FailsClosedForUnknownOrNullRuntimeLookups()
     {
         IMessageContractCatalog catalog = new MessageContractCatalogBuilder()

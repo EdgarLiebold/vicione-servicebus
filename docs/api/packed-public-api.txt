@@ -14474,6 +14474,15 @@ TYPE class public ViciOne.ServiceBus.Advanced.EndpointConventionExtensions [stat
   METHOD public static System.Threading.Tasks.Task SendAsync<T>(ViciOne.ServiceBus.ISendEndpointProvider provider, T message, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task SendAsync<T>(ViciOne.ServiceBus.ISendEndpointProvider provider, T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task SendAsync<T>(ViciOne.ServiceBus.ISendEndpointProvider provider, T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken = null)
+TYPE class public ViciOne.ServiceBus.Advanced.FaultDataException [sealed,base=System.Exception]
+  CTOR public ViciOne.ServiceBus.Advanced.FaultDataException(System.Exception innerException)
+  CTOR public ViciOne.ServiceBus.Advanced.FaultDataException(System.Exception innerException, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> values)
+  CTOR public ViciOne.ServiceBus.Advanced.FaultDataException(System.Exception innerException, System.Object values)
+  CTOR public ViciOne.ServiceBus.Advanced.FaultDataException(System.String message, System.Exception innerException)
+  CTOR public ViciOne.ServiceBus.Advanced.FaultDataException(System.String message, System.Exception innerException, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> values)
+  CTOR public ViciOne.ServiceBus.Advanced.FaultDataException(System.String message, System.Exception innerException, System.Object values)
+  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> ApplicationData { public-get;  }
+  PROPERTY System.Collections.IDictionary Data { public-get;  }
 TYPE class public ViciOne.ServiceBus.Advanced.ForwardExtensions [static]
   METHOD public static System.Threading.Tasks.Task ForwardAsync<T>(ViciOne.ServiceBus.ConsumeContext context, System.Uri address, T message)
   METHOD public static System.Threading.Tasks.Task ForwardAsync<T>(ViciOne.ServiceBus.ConsumeContext context, ViciOne.ServiceBus.ISendEndpoint endpoint, T message)
@@ -14838,16 +14847,6 @@ TYPE class public ViciOne.ServiceBus.Advanced.TransactionContextExtensions [stat
   METHOD public static System.Transactions.TransactionScope CreateTransactionScope(ViciOne.ServiceBus.Advanced.PipeContext context)
   METHOD public static System.Transactions.TransactionScope CreateTransactionScope(ViciOne.ServiceBus.Advanced.PipeContext context, System.TimeSpan scopeTimeout)
   METHOD public static System.Transactions.TransactionScope CreateTransactionScope(ViciOne.ServiceBus.Advanced.PipeContext context, System.TimeSpan scopeTimeout, System.Transactions.TransactionScopeAsyncFlowOption asyncFlowOptions)
-TYPE class public ViciOne.ServiceBus.Advanced.ViciOneServiceBusApplicationException [base=System.Exception]
-  CTOR protected ViciOne.ServiceBus.Advanced.ViciOneServiceBusApplicationException()
-  CTOR public ViciOne.ServiceBus.Advanced.ViciOneServiceBusApplicationException(System.Exception innerException)
-  CTOR public ViciOne.ServiceBus.Advanced.ViciOneServiceBusApplicationException(System.Exception innerException, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> values)
-  CTOR public ViciOne.ServiceBus.Advanced.ViciOneServiceBusApplicationException(System.Exception innerException, System.Object values)
-  CTOR public ViciOne.ServiceBus.Advanced.ViciOneServiceBusApplicationException(System.String message, System.Exception innerException)
-  CTOR public ViciOne.ServiceBus.Advanced.ViciOneServiceBusApplicationException(System.String message, System.Exception innerException, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> values)
-  CTOR public ViciOne.ServiceBus.Advanced.ViciOneServiceBusApplicationException(System.String message, System.Exception innerException, System.Object values)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> ApplicationData { public-get;  }
-  PROPERTY System.Collections.IDictionary Data { public-get;  }
 TYPE class public ViciOne.ServiceBus.Agents.ActivePipeContext<TContext> [sealed]
   CTOR public ViciOne.ServiceBus.Agents.ActivePipeContext<TContext>(ViciOne.ServiceBus.Advanced.PipeContextHandle<TContext> contextHandle, System.Threading.Tasks.Task<TContext> context)
   CTOR public ViciOne.ServiceBus.Agents.ActivePipeContext<TContext>(ViciOne.ServiceBus.Advanced.PipeContextHandle<TContext> contextHandle, TContext context)
@@ -17770,89 +17769,6 @@ TYPE class public ViciOne.ServiceBus.DependencyInjection.SetScopedConsumeContext
 TYPE class public ViciOne.ServiceBus.DependencyInjection.TypedScopedConsumeContextProvider [base=ViciOne.ServiceBus.DependencyInjection.ScopedConsumeContextProvider]
   CTOR public ViciOne.ServiceBus.DependencyInjection.TypedScopedConsumeContextProvider(ViciOne.ServiceBus.DependencyInjection.IScopedConsumeContextProvider global)
   METHOD public System.IDisposable PushContext(ViciOne.ServiceBus.ConsumeContext context)
-TYPE class public ViciOne.ServiceBus.Events.BusReadyEvent
-  CTOR public ViciOne.ServiceBus.Events.BusReadyEvent(ViciOne.ServiceBus.Advanced.Observers.HostReady host, ViciOne.ServiceBus.IBus bus)
-  PROPERTY ViciOne.ServiceBus.Advanced.Observers.HostReady Host { public-get;  }
-  PROPERTY ViciOne.ServiceBus.IBus Bus { public-get;  }
-TYPE class public ViciOne.ServiceBus.Events.FaultEvent
-  CTOR public ViciOne.ServiceBus.Events.FaultEvent()
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid FaultId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> FaultedMessageId { public-get; public-set; }
-  PROPERTY System.String[] FaultMessageTypes { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.ExceptionInfo[] Exceptions { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Events.FaultEvent<T>
-  CTOR public ViciOne.ServiceBus.Events.FaultEvent<T>()
-  CTOR public ViciOne.ServiceBus.Events.FaultEvent<T>(T message, System.Nullable<System.Guid> faultedMessageId, ViciOne.ServiceBus.HostInfo host, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.ExceptionInfo> exceptions, System.String[] faultMessageTypes, System.TimeProvider timeProvider = null)
-  CTOR public ViciOne.ServiceBus.Events.FaultEvent<T>(T message, System.Nullable<System.Guid> faultedMessageId, ViciOne.ServiceBus.HostInfo host, System.Exception exception, System.String[] faultMessageTypes, System.TimeProvider timeProvider = null)
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid FaultId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> FaultedMessageId { public-get; public-set; }
-  PROPERTY System.String[] FaultMessageTypes { public-get; public-set; }
-  PROPERTY T Message { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.ExceptionInfo[] Exceptions { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Events.FaultExceptionInfo [sealed]
-  CTOR public ViciOne.ServiceBus.Events.FaultExceptionInfo()
-  CTOR public ViciOne.ServiceBus.Events.FaultExceptionInfo(System.Exception exception)
-  PROPERTY System.Collections.Generic.IDictionary<System.String,System.Object> Data { public-get; public-set; }
-  PROPERTY System.String ExceptionType { public-get; public-set; }
-  PROPERTY System.String Message { public-get; public-set; }
-  PROPERTY System.String Source { public-get; public-set; }
-  PROPERTY System.String StackTrace { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.ExceptionInfo InnerException { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Events.HostReadyEvent
-  CTOR public ViciOne.ServiceBus.Events.HostReadyEvent(System.Uri hostAddress, ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointReady[] receiveEndpoints, ViciOne.ServiceBus.Advanced.Observers.RiderReady[] riders)
-  PROPERTY System.Uri HostAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointReady[] ReceiveEndpoints { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.Observers.RiderReady[] Riders { public-get;  }
-TYPE class public ViciOne.ServiceBus.Events.ReceiveEndpointCompletedEvent
-  CTOR public ViciOne.ServiceBus.Events.ReceiveEndpointCompletedEvent(ViciOne.ServiceBus.Advanced.Observers.ReceiveTransportCompleted completed, ViciOne.ServiceBus.Advanced.IReceiveEndpoint receiveEndpoint)
-  PROPERTY System.Int64 ConcurrentDeliveryCount { public-get;  }
-  PROPERTY System.Int64 DeliveryCount { public-get;  }
-  PROPERTY System.Uri InputAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.IReceiveEndpoint ReceiveEndpoint { public-get;  }
-TYPE class public ViciOne.ServiceBus.Events.ReceiveEndpointFaultedEvent
-  CTOR public ViciOne.ServiceBus.Events.ReceiveEndpointFaultedEvent(ViciOne.ServiceBus.Advanced.Observers.ReceiveTransportFaulted faulted, ViciOne.ServiceBus.Advanced.IReceiveEndpoint receiveEndpoint)
-  PROPERTY System.Boolean IsTerminal { public-get;  }
-  PROPERTY System.Exception Exception { public-get;  }
-  PROPERTY System.Uri InputAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.IReceiveEndpoint ReceiveEndpoint { public-get;  }
-TYPE class public ViciOne.ServiceBus.Events.ReceiveEndpointReadyEvent
-  CTOR public ViciOne.ServiceBus.Events.ReceiveEndpointReadyEvent(System.Uri inputAddress, ViciOne.ServiceBus.Advanced.IReceiveEndpoint receiveEndpoint, System.Boolean isStarted)
-  PROPERTY System.Boolean IsStarted { public-get;  }
-  PROPERTY System.Uri InputAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.IReceiveEndpoint ReceiveEndpoint { public-get;  }
-TYPE class public ViciOne.ServiceBus.Events.ReceiveEndpointStoppingEvent
-  CTOR public ViciOne.ServiceBus.Events.ReceiveEndpointStoppingEvent(System.Uri inputAddress, ViciOne.ServiceBus.Advanced.IReceiveEndpoint receiveEndpoint, System.Boolean removed)
-  PROPERTY System.Boolean Removed { public-get;  }
-  PROPERTY System.Uri InputAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.IReceiveEndpoint ReceiveEndpoint { public-get;  }
-TYPE class public ViciOne.ServiceBus.Events.ReceiveFaultEvent
-  CTOR public ViciOne.ServiceBus.Events.ReceiveFaultEvent()
-  CTOR public ViciOne.ServiceBus.Events.ReceiveFaultEvent(ViciOne.ServiceBus.HostInfo host, System.Exception exception, System.String contentType, System.Nullable<System.Guid> faultedMessageId, System.String[] faultMessageTypes, System.TimeProvider timeProvider = null)
-  PROPERTY System.DateTimeOffset Timestamp { public-get; public-set; }
-  PROPERTY System.Guid FaultId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> FaultedMessageId { public-get; public-set; }
-  PROPERTY System.String ContentType { public-get; public-set; }
-  PROPERTY System.String[] FaultMessageTypes { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.ExceptionInfo[] Exceptions { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Events.ReceiveTransportCompletedEvent
-  CTOR public ViciOne.ServiceBus.Events.ReceiveTransportCompletedEvent(System.Uri inputAddress, ViciOne.ServiceBus.Transports.DeliveryMetrics metrics)
-  PROPERTY System.Int64 ConcurrentDeliveryCount { public-get;  }
-  PROPERTY System.Int64 DeliveryCount { public-get;  }
-  PROPERTY System.Uri InputAddress { public-get;  }
-TYPE class public ViciOne.ServiceBus.Events.ReceiveTransportFaultedEvent
-  CTOR public ViciOne.ServiceBus.Events.ReceiveTransportFaultedEvent(System.Uri inputAddress, System.Exception exception, System.Boolean isTerminal)
-  PROPERTY System.Boolean IsTerminal { public-get;  }
-  PROPERTY System.Exception Exception { public-get;  }
-  PROPERTY System.Uri InputAddress { public-get;  }
-TYPE class public ViciOne.ServiceBus.Events.ReceiveTransportReadyEvent
-  CTOR public ViciOne.ServiceBus.Events.ReceiveTransportReadyEvent(System.Uri inputAddress, System.Boolean isStarted = true)
-  PROPERTY System.Boolean IsStarted { public-get;  }
-  PROPERTY System.Uri InputAddress { public-get;  }
 TYPE class public ViciOne.ServiceBus.InMemoryTransport.Configuration.ExchangeBindingConsumeTopologySpecification
   CTOR public ViciOne.ServiceBus.InMemoryTransport.Configuration.ExchangeBindingConsumeTopologySpecification(System.String exchange, ViciOne.ServiceBus.Transports.Fabric.ExchangeType exchangeType, System.String routingKey)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
@@ -18964,12 +18880,6 @@ TYPE class public ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits [s
   PROPERTY System.TimeSpan RetentionPeriod { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Metadata.IMessageDataConverter<T>
   METHOD public abstract System.Threading.Tasks.Task<T> ConvertAsync(System.IO.Stream stream, System.Threading.CancellationToken cancellationToken)
-TYPE interface public ViciOne.ServiceBus.Metadata.ITypeMetadataCache<T>
-  PROPERTY System.Type ImplementationType { public-get;  }
-TYPE class public ViciOne.ServiceBus.Metadata.RegistrationMetadata [static]
-  METHOD public static System.Boolean IsConsumer(System.Type type)
-  METHOD public static System.Boolean IsConsumerOrDefinition(System.Type type)
-  METHOD public static System.Boolean IsConsumerRegistrationExcluded(System.Type type)
 TYPE class public ViciOne.ServiceBus.Metadata.TypeMetadataCache [static]
   METHOD public static System.Boolean IsTemporaryMessageType(System.Type type)
   METHOD public static System.Boolean IsValidMessageDataType(System.Type type)
@@ -18979,7 +18889,7 @@ TYPE class public ViciOne.ServiceBus.Metadata.TypeMetadataCache [static]
   METHOD public static System.Collections.Generic.IReadOnlyList<System.Type> GetMessageTypes(System.Type type)
   METHOD public static System.String GetShortName(System.Type type)
   METHOD public static System.Type GetImplementationType(System.Type type)
-TYPE class public ViciOne.ServiceBus.Metadata.TypeMetadataCache<T>
+TYPE class public ViciOne.ServiceBus.Metadata.TypeMetadataCache<T> [static]
   PROPERTY System.Boolean IsTemporaryMessageType { public-get;  }
   PROPERTY System.Boolean IsValidMessageType { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyList<System.Reflection.PropertyInfo> Properties { public-get;  }
@@ -19484,12 +19394,6 @@ TYPE class public ViciOne.ServiceBus.Middleware.TransportReadyFilter<T>
   CTOR public ViciOne.ServiceBus.Middleware.TransportReadyFilter<T>(ViciOne.ServiceBus.Transports.ReceiveEndpointContext context)
   METHOD public virtual System.Threading.Tasks.Task SendAsync(T context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<T> next)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.Monitoring.BusHealthCheck
-  CTOR public ViciOne.ServiceBus.Monitoring.BusHealthCheck(ViciOne.ServiceBus.Transports.IBusInstance busInstance)
-  METHOD public virtual System.Threading.Tasks.Task<Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult> CheckHealthAsync(Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckContext context, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.Monitoring.ConfigureBusHealthCheckServiceOptions [sealed]
-  CTOR public ViciOne.ServiceBus.Monitoring.ConfigureBusHealthCheckServiceOptions(System.IServiceProvider provider)
-  METHOD public virtual System.Void Configure(Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckServiceOptions options)
 TYPE class public ViciOne.ServiceBus.Monitoring.ServiceBusTelemetry [static]
   FIELD public const System.String ActivitySourceName = "ViciOne.ServiceBus"
   FIELD public const System.String MeterName = "ViciOne.ServiceBus"

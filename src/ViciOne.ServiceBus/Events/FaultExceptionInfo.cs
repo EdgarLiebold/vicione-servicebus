@@ -6,8 +6,8 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Events;
 
-/// <summary>Carries diagnostic information for fault exception.</summary>
-public sealed class FaultExceptionInfo : ExceptionInfo
+/// <summary>Creates bounded, serialization-safe diagnostic data from an exception.</summary>
+internal sealed class FaultExceptionInfo : ExceptionInfo
 {
     const int MaximumDataCount = 32;
     const int MaximumInnerExceptionCount = 16;
@@ -15,13 +15,13 @@ public sealed class FaultExceptionInfo : ExceptionInfo
     const int MaximumTextLength = 2048;
 
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an empty instance for contract materialization.</summary>
     public FaultExceptionInfo()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Captures the diagnostic identity, text, data, and bounded inner chain of an exception.</summary>
+    /// <param name="exception">The exception to snapshot.</param>
     public FaultExceptionInfo(Exception exception)
         : this(exception, 0)
     {
@@ -35,10 +35,8 @@ public sealed class FaultExceptionInfo : ExceptionInfo
         Exception reportedException = exception;
         IDictionary? fallbackData = null;
 
-        // The application wrapper adds diagnostic data without replacing the exception identity
-        // reported to consumers. Wrapper values win when the wrapped exception contains the same
-        // key, which lets an application deliberately refine the diagnostic context.
-        if (exception is ViciOneServiceBusApplicationException { InnerException: { } innerException })
+        // Fault-specific data augments the wrapped failure without changing the exception identity reported to consumers.
+        if (exception is FaultDataException { InnerException: { } innerException })
         {
             reportedException = innerException;
             fallbackData = GetData(innerException);
@@ -54,22 +52,22 @@ public sealed class FaultExceptionInfo : ExceptionInfo
         Source = Limit(GetSource(reportedException), MaximumTextLength);
     }
 
-    /// <summary>Gets or sets the exception type.</summary>
+    /// <summary>Gets or sets the diagnostic type name of the reported exception.</summary>
     public string ExceptionType { get; set; } = null!;
 
-    /// <summary>Gets or sets the inner exception.</summary>
+    /// <summary>Gets or sets the next exception snapshot in the bounded inner chain.</summary>
     public ExceptionInfo? InnerException { get; set; }
 
-    /// <summary>Gets or sets the stack trace.</summary>
+    /// <summary>Gets or sets the bounded stack trace.</summary>
     public string StackTrace { get; set; } = null!;
 
-    /// <summary>Gets or sets the message.</summary>
+    /// <summary>Gets or sets the bounded exception message.</summary>
     public string Message { get; set; } = null!;
 
-    /// <summary>Gets or sets the source.</summary>
+    /// <summary>Gets or sets the bounded exception source.</summary>
     public string Source { get; set; } = null!;
 
-    /// <summary>Gets or sets the data.</summary>
+    /// <summary>Gets or sets the bounded, serialization-safe diagnostic entries.</summary>
     public IDictionary<string, object>? Data { get; set; }
 
     static IDictionary? GetData(Exception exception)
