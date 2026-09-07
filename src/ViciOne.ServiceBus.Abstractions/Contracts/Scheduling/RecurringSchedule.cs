@@ -2,31 +2,28 @@ using System;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
-/// <summary>Defines the operations required by recurring schedule.</summary>
+/// <summary>Defines when and how a recurring message is delivered.</summary>
 public interface RecurringSchedule
 {
-    /// <summary>The timezone of the schedule.</summary>
+    /// <summary>Gets the time-zone identifier used to evaluate the cron expression.</summary>
     string TimeZoneId { get; }
 
-    /// <summary>The time the recurring schedule is enabled.</summary>
+    /// <summary>Gets the first time at which the schedule may run.</summary>
     DateTimeOffset StartTime { get; }
 
-    /// <summary>
-    /// The time the recurring schedule is disabled
-    /// If null then the job is repeated forever.
-    /// </summary>
+    /// <summary>Gets the optional time after which the schedule no longer runs.</summary>
     DateTimeOffset? EndTime { get; }
 
-    /// <summary>A unique name that identifies this schedule.</summary>
+    /// <summary>Gets the identifier of the schedule within its group.</summary>
     string ScheduleId { get; }
 
-    /// <summary>A.</summary>
+    /// <summary>Gets the group that scopes the schedule identifier.</summary>
     string ScheduleGroup { get; }
 
-    /// <summary>The Cron Schedule Expression in Cron Syntax.</summary>
+    /// <summary>Gets the cron expression that defines recurring occurrences.</summary>
     string CronExpression { get; }
 
-    /// <summary>Schedule description.</summary>
+    /// <summary>Gets a human-readable description of the schedule.</summary>
     string Description { get; }
 
     /// <summary>Gets the misfire policy.</summary>

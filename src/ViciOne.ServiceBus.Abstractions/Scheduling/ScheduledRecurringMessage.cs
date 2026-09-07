@@ -8,6 +8,7 @@ public interface ScheduledRecurringMessage
 {
     /// <summary>Gets the recurring schedule.</summary>
     RecurringSchedule Schedule { get; }
+
     /// <summary>Gets the delivery destination.</summary>
     Uri Destination { get; }
 }

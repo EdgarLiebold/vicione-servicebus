@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>Provides extension methods for consume context self scheduler.</summary>
+/// <summary>Provides advanced scheduling overloads targeting the current receive endpoint.</summary>
 public static class ConsumeContextSelfSchedulerExtensions
 {
-    /// <summary>Send a message.</summary>
+    /// <summary>Schedules a message for delivery to the current receive endpoint.</summary>
     /// <typeparam name="T">The message type.</typeparam>
     /// <param name="context">The consume context.</param>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
@@ -18,12 +18,12 @@ public static class ConsumeContextSelfSchedulerExtensions
         CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduler = context.GetPayload<MessageSchedulerContext>();
+        var scheduler = GetScheduler(context);
 
         return scheduler.ScheduleSendAsync(context.ReceiveContext.InputAddress, dueAt, message, cancellationToken);
     }
 
-    /// <summary>Send a message.</summary>
+    /// <summary>Schedules a message to the current receive endpoint with a typed send pipe.</summary>
     /// <typeparam name="T">The message type.</typeparam>
     /// <param name="context">The consume context.</param>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
@@ -35,12 +35,12 @@ public static class ConsumeContextSelfSchedulerExtensions
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduler = context.GetPayload<MessageSchedulerContext>();
+        var scheduler = GetScheduler(context);
 
         return scheduler.ScheduleSendAsync(context.ReceiveContext.InputAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    /// <summary>Send a message.</summary>
+    /// <summary>Schedules a message to the current receive endpoint with an untyped send pipe.</summary>
     /// <typeparam name="T">The message type.</typeparam>
     /// <param name="context">The consume context.</param>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
@@ -52,12 +52,12 @@ public static class ConsumeContextSelfSchedulerExtensions
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduler = context.GetPayload<MessageSchedulerContext>();
+        var scheduler = GetScheduler(context);
 
         return scheduler.ScheduleSendAsync(context.ReceiveContext.InputAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    /// <summary>Sends an object as a message, using the type of the message instance.</summary>
+    /// <summary>Schedules an object to the current receive endpoint using its runtime contract type.</summary>
     /// <param name="context">The consume context.</param>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="message">The message object.</param>
@@ -66,14 +66,14 @@ public static class ConsumeContextSelfSchedulerExtensions
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, DateTimeOffset dueAt, object message,
         CancellationToken cancellationToken = default)
     {
-        var scheduler = context.GetPayload<MessageSchedulerContext>();
+        var scheduler = GetScheduler(context);
 
         return scheduler.ScheduleSendAsync(context.ReceiveContext.InputAddress, dueAt, message, cancellationToken);
     }
 
     /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
+    /// Schedules an object to the current receive endpoint using an explicit contract type. The
+    /// message must be assignable to that type.
     /// </summary>
     /// <param name="context">The consume context.</param>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
@@ -84,12 +84,12 @@ public static class ConsumeContextSelfSchedulerExtensions
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, DateTimeOffset dueAt, object message,
         Type messageType, CancellationToken cancellationToken = default)
     {
-        var scheduler = context.GetPayload<MessageSchedulerContext>();
+        var scheduler = GetScheduler(context);
 
         return scheduler.ScheduleSendAsync(context.ReceiveContext.InputAddress, dueAt, message, messageType, cancellationToken);
     }
 
-    /// <summary>Sends an object as a message.</summary>
+    /// <summary>Schedules an object to the current receive endpoint with an untyped send pipe.</summary>
     /// <param name="context">The consume context.</param>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="message">The message object.</param>
@@ -99,14 +99,14 @@ public static class ConsumeContextSelfSchedulerExtensions
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, DateTimeOffset dueAt, object message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        var scheduler = context.GetPayload<MessageSchedulerContext>();
+        var scheduler = GetScheduler(context);
 
         return scheduler.ScheduleSendAsync(context.ReceiveContext.InputAddress, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
+    /// Schedules an object to the current receive endpoint using an explicit contract type and an
+    /// untyped send pipe. The message must be assignable to the specified type.
     /// </summary>
     /// <param name="context">The consume context.</param>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
@@ -118,14 +118,14 @@ public static class ConsumeContextSelfSchedulerExtensions
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, DateTimeOffset dueAt, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        var scheduler = context.GetPayload<MessageSchedulerContext>();
+        var scheduler = GetScheduler(context);
 
         return scheduler.ScheduleSendAsync(context.ReceiveContext.InputAddress, dueAt, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a message contract from the supplied values and schedules it to the current
+    /// receive endpoint.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
     /// <param name="context">The consume context.</param>
@@ -137,14 +137,14 @@ public static class ConsumeContextSelfSchedulerExtensions
         CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduler = context.GetPayload<MessageSchedulerContext>();
+        var scheduler = GetScheduler(context);
 
         return scheduler.ScheduleSendAsync<T>(context.ReceiveContext.InputAddress, dueAt, values, cancellationToken);
     }
 
     /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a message contract from the supplied values and schedules it to the current
+    /// receive endpoint with a typed send pipe.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
     /// <param name="context">The consume context.</param>
@@ -157,14 +157,14 @@ public static class ConsumeContextSelfSchedulerExtensions
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduler = context.GetPayload<MessageSchedulerContext>();
+        var scheduler = GetScheduler(context);
 
         return scheduler.ScheduleSendAsync(context.ReceiveContext.InputAddress, dueAt, values, pipe, cancellationToken);
     }
 
     /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a message contract from the supplied values and schedules it to the current
+    /// receive endpoint with an untyped send pipe.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
     /// <param name="context">The consume context.</param>
@@ -177,12 +177,12 @@ public static class ConsumeContextSelfSchedulerExtensions
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduler = context.GetPayload<MessageSchedulerContext>();
+        var scheduler = GetScheduler(context);
 
         return scheduler.ScheduleSendAsync<T>(context.ReceiveContext.InputAddress, dueAt, values, pipe, cancellationToken);
     }
 
-    /// <summary>Send a message.</summary>
+    /// <summary>Schedules a message to the current receive endpoint after a relative delay.</summary>
     /// <typeparam name="T">The message type.</typeparam>
     /// <param name="context">The consume context.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
@@ -193,12 +193,12 @@ public static class ConsumeContextSelfSchedulerExtensions
         CancellationToken cancellationToken = default)
         where T : class
     {
-        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
+        var dueAt = GetDueAt(context, delay);
 
         return ScheduleSendAsync(context, dueAt, message, cancellationToken);
     }
 
-    /// <summary>Send a message.</summary>
+    /// <summary>Schedules a delayed message to the current receive endpoint with a typed send pipe.</summary>
     /// <typeparam name="T">The message type.</typeparam>
     /// <param name="context">The consume context.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
@@ -210,12 +210,12 @@ public static class ConsumeContextSelfSchedulerExtensions
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
+        var dueAt = GetDueAt(context, delay);
 
         return ScheduleSendAsync(context, dueAt, message, pipe, cancellationToken);
     }
 
-    /// <summary>Send a message.</summary>
+    /// <summary>Schedules a delayed message to the current receive endpoint with an untyped send pipe.</summary>
     /// <typeparam name="T">The message type.</typeparam>
     /// <param name="context">The consume context.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
@@ -227,12 +227,12 @@ public static class ConsumeContextSelfSchedulerExtensions
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
+        var dueAt = GetDueAt(context, delay);
 
         return ScheduleSendAsync(context, dueAt, message, pipe, cancellationToken);
     }
 
-    /// <summary>Sends an object as a message, using the type of the message instance.</summary>
+    /// <summary>Schedules a delayed object using its runtime contract type.</summary>
     /// <param name="context">The consume context.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="message">The message object.</param>
@@ -241,14 +241,14 @@ public static class ConsumeContextSelfSchedulerExtensions
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, TimeSpan delay, object message,
         CancellationToken cancellationToken = default)
     {
-        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
+        var dueAt = GetDueAt(context, delay);
 
         return ScheduleSendAsync(context, dueAt, message, cancellationToken);
     }
 
     /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
+    /// Schedules a delayed object using an explicit contract type. The message must be assignable to
+    /// that type.
     /// </summary>
     /// <param name="context">The consume context.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
@@ -259,12 +259,12 @@ public static class ConsumeContextSelfSchedulerExtensions
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, TimeSpan delay, object message,
         Type messageType, CancellationToken cancellationToken = default)
     {
-        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
+        var dueAt = GetDueAt(context, delay);
 
         return ScheduleSendAsync(context, dueAt, message, messageType, cancellationToken);
     }
 
-    /// <summary>Sends an object as a message.</summary>
+    /// <summary>Schedules a delayed object with an untyped send pipe.</summary>
     /// <param name="context">The consume context.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="message">The message object.</param>
@@ -274,14 +274,14 @@ public static class ConsumeContextSelfSchedulerExtensions
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, TimeSpan delay, object message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
+        var dueAt = GetDueAt(context, delay);
 
         return ScheduleSendAsync(context, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a message contract from the supplied values and schedules it to the current
+    /// receive endpoint after a relative delay.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
     /// <param name="context">The consume context.</param>
@@ -293,14 +293,14 @@ public static class ConsumeContextSelfSchedulerExtensions
         CancellationToken cancellationToken = default)
         where T : class
     {
-        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
+        var dueAt = GetDueAt(context, delay);
 
         return ScheduleSendAsync<T>(context, dueAt, values, cancellationToken);
     }
 
     /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
+    /// Schedules a delayed object using an explicit contract type and an untyped send pipe. The
+    /// message must be assignable to that type.
     /// </summary>
     /// <param name="context">The consume context.</param>
     /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
@@ -312,14 +312,14 @@ public static class ConsumeContextSelfSchedulerExtensions
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, TimeSpan delay, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
+        var dueAt = GetDueAt(context, delay);
 
         return ScheduleSendAsync(context, dueAt, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a message contract from the supplied values and schedules it after a delay with a
+    /// typed send pipe.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
     /// <param name="context">The consume context.</param>
@@ -332,14 +332,14 @@ public static class ConsumeContextSelfSchedulerExtensions
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
+        var dueAt = GetDueAt(context, delay);
 
         return ScheduleSendAsync(context, dueAt, values, pipe, cancellationToken);
     }
 
     /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a message contract from the supplied values and schedules it after a delay with an
+    /// untyped send pipe.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
     /// <param name="context">The consume context.</param>
@@ -352,8 +352,20 @@ public static class ConsumeContextSelfSchedulerExtensions
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
+        var dueAt = GetDueAt(context, delay);
 
         return ScheduleSendAsync<T>(context, dueAt, values, pipe, cancellationToken);
+    }
+
+    static DateTimeOffset GetDueAt(ConsumeContext context, TimeSpan delay)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        return context.GetTimeProvider().GetUtcNow() + delay;
+    }
+
+    static MessageSchedulerContext GetScheduler(ConsumeContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        return context.GetPayload<MessageSchedulerContext>();
     }
 }

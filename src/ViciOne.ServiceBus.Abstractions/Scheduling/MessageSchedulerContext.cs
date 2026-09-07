@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>Exposes state for message scheduler operations.</summary>
+/// <summary>Provides scheduling operations associated with a consume context.</summary>
 public interface MessageSchedulerContext :
-    Advanced.IAdvancedMessageScheduler
+    IAdvancedMessageScheduler
 {
-    /// <summary>Gets the scheduler factory.</summary>
+    /// <summary>Gets the factory used to create the underlying scheduler for a consume context.</summary>
     MessageSchedulerFactory SchedulerFactory { get; }
 
-    /// <summary>Send a message.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
+    /// <summary>Schedules a message for delivery to the current receive endpoint.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="message">The message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -20,8 +20,8 @@ public interface MessageSchedulerContext :
     Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, T message, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Send a message.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
+    /// <summary>Schedules a configured message for delivery to the current receive endpoint.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="message">The message.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
@@ -30,8 +30,8 @@ public interface MessageSchedulerContext :
     Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Send a message.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
+    /// <summary>Schedules a configured message for delivery to the current receive endpoint.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="message">The message.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
@@ -40,7 +40,7 @@ public interface MessageSchedulerContext :
     Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Sends an object as a message, using the type of the message instance.</summary>
+    /// <summary>Schedules an object for delivery to the current receive endpoint using its runtime contract type.</summary>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="message">The message object.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -48,8 +48,8 @@ public interface MessageSchedulerContext :
     Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
+    /// Schedules an object for delivery to the current receive endpoint using an explicit contract
+    /// type. The message must be assignable to that type.
     /// </summary>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="message">The message object.</param>
@@ -58,7 +58,7 @@ public interface MessageSchedulerContext :
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, Type messageType, CancellationToken cancellationToken = default);
 
-    /// <summary>Sends an object as a message.</summary>
+    /// <summary>Schedules a configured object for delivery to the current receive endpoint.</summary>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="message">The message object.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
@@ -67,8 +67,8 @@ public interface MessageSchedulerContext :
     Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
+    /// Schedules a configured object for delivery to the current receive endpoint using an explicit
+    /// contract type. The message must be assignable to that type.
     /// </summary>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="message">The message object.</param>
@@ -80,8 +80,8 @@ public interface MessageSchedulerContext :
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a message contract from the supplied values and schedules it for delivery to the
+    /// current receive endpoint.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
@@ -92,8 +92,8 @@ public interface MessageSchedulerContext :
         where T : class;
 
     /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a message contract from the supplied values and schedules it for delivery to the
+    /// current receive endpoint with a typed send pipe.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
@@ -106,8 +106,8 @@ public interface MessageSchedulerContext :
         where T : class;
 
     /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a message contract from the supplied values and schedules it for delivery to the
+    /// current receive endpoint with an untyped send pipe.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
     /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>

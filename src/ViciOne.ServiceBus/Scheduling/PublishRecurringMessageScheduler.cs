@@ -19,7 +19,9 @@ public sealed class PublishRecurringMessageScheduler :
     /// <param name="timeProvider">The clock used to timestamp control commands.</param>
     public PublishRecurringMessageScheduler(IPublishEndpoint publishEndpoint, IBusTopology? busTopology = null, TimeProvider? timeProvider = null)
     {
-        _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
+        ArgumentNullException.ThrowIfNull(publishEndpoint);
+
+        _publishEndpoint = publishEndpoint;
         _busTopology = busTopology;
         TimeProvider = timeProvider ?? TimeProvider.System;
     }
@@ -27,13 +29,7 @@ public sealed class PublishRecurringMessageScheduler :
     /// <summary>Gets the clock used to timestamp control commands.</summary>
     public TimeProvider TimeProvider { get; }
 
-    /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The message contract.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(Uri destinationAddress, RecurringSchedule schedule, T message,
         CancellationToken cancellationToken)
         where T : class
@@ -41,20 +37,15 @@ public sealed class PublishRecurringMessageScheduler :
         if (destinationAddress == null)
             throw new ArgumentNullException(nameof(destinationAddress));
 
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
         return ScheduleAsync(destinationAddress, schedule, message, cancellationToken);
     }
 
-    /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The message contract.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(Uri destinationAddress, RecurringSchedule schedule, T message,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
@@ -62,6 +53,8 @@ public sealed class PublishRecurringMessageScheduler :
         if (destinationAddress == null)
             throw new ArgumentNullException(nameof(destinationAddress));
 
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
@@ -71,14 +64,7 @@ public sealed class PublishRecurringMessageScheduler :
         return ScheduleAsync(destinationAddress, schedule, message, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The message contract.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(Uri destinationAddress, RecurringSchedule schedule, T message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
@@ -86,6 +72,8 @@ public sealed class PublishRecurringMessageScheduler :
         if (destinationAddress == null)
             throw new ArgumentNullException(nameof(destinationAddress));
 
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
@@ -95,18 +83,15 @@ public sealed class PublishRecurringMessageScheduler :
         return ScheduleAsync(destinationAddress, schedule, message, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules recurring send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(Uri destinationAddress, RecurringSchedule schedule, object message,
         CancellationToken cancellationToken)
     {
         if (destinationAddress == null)
             throw new ArgumentNullException(nameof(destinationAddress));
 
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
@@ -115,19 +100,15 @@ public sealed class PublishRecurringMessageScheduler :
         return MessageSchedulerConverterCache.ScheduleRecurringSendAsync(this, destinationAddress, schedule, message, messageType, cancellationToken);
     }
 
-    /// <summary>Schedules recurring send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(Uri destinationAddress, RecurringSchedule schedule, object message,
         Type messageType, CancellationToken cancellationToken)
     {
         if (destinationAddress == null)
             throw new ArgumentNullException(nameof(destinationAddress));
 
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
@@ -137,18 +118,14 @@ public sealed class PublishRecurringMessageScheduler :
         return MessageSchedulerConverterCache.ScheduleRecurringSendAsync(this, destinationAddress, schedule, message, messageType, cancellationToken);
     }
 
-    /// <summary>Schedules recurring send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(Uri destinationAddress, RecurringSchedule schedule, object message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (destinationAddress == null)
             throw new ArgumentNullException(nameof(destinationAddress));
+
+        ArgumentNullException.ThrowIfNull(schedule);
 
         if (message == null)
             throw new ArgumentNullException(nameof(message));
@@ -161,19 +138,14 @@ public sealed class PublishRecurringMessageScheduler :
         return MessageSchedulerConverterCache.ScheduleRecurringSendAsync(this, destinationAddress, schedule, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules recurring send.</summary>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring send outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(Uri destinationAddress, RecurringSchedule schedule, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (destinationAddress == null)
             throw new ArgumentNullException(nameof(destinationAddress));
+
+        ArgumentNullException.ThrowIfNull(schedule);
 
         if (message == null)
             throw new ArgumentNullException(nameof(message));
@@ -187,19 +159,15 @@ public sealed class PublishRecurringMessageScheduler :
         return MessageSchedulerConverterCache.ScheduleRecurringSendAsync(this, destinationAddress, schedule, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The message contract to initialize.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(Uri destinationAddress, RecurringSchedule schedule,
         object values, CancellationToken cancellationToken)
         where T : class
     {
         if (destinationAddress == null)
             throw new ArgumentNullException(nameof(destinationAddress));
+
+        ArgumentNullException.ThrowIfNull(schedule);
 
         if (values == null)
             throw new ArgumentNullException(nameof(values));
@@ -209,14 +177,7 @@ public sealed class PublishRecurringMessageScheduler :
         return await ScheduleAsync(destinationAddress, schedule, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The message contract to initialize.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(Uri destinationAddress, RecurringSchedule schedule,
         object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
@@ -224,6 +185,8 @@ public sealed class PublishRecurringMessageScheduler :
         if (destinationAddress == null)
             throw new ArgumentNullException(nameof(destinationAddress));
 
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
@@ -235,14 +198,7 @@ public sealed class PublishRecurringMessageScheduler :
         return await ScheduleAsync(destinationAddress, schedule, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Schedules recurring send.</summary>
-    /// <typeparam name="T">The message contract to initialize.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring send outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(Uri destinationAddress, RecurringSchedule schedule,
         object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
@@ -250,6 +206,8 @@ public sealed class PublishRecurringMessageScheduler :
         if (destinationAddress == null)
             throw new ArgumentNullException(nameof(destinationAddress));
 
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
@@ -261,16 +219,13 @@ public sealed class PublishRecurringMessageScheduler :
         return await ScheduleAsync(destinationAddress, schedule, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The message contract.</typeparam>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublishAsync<T>(RecurringSchedule schedule, T message,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
@@ -279,17 +234,13 @@ public sealed class PublishRecurringMessageScheduler :
         return ScheduleAsync(destinationAddress, schedule, message, cancellationToken);
     }
 
-    /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The message contract.</typeparam>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublishAsync<T>(RecurringSchedule schedule, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (message == null)
             throw new ArgumentNullException(nameof(message));
         if (pipe == null)
@@ -300,17 +251,13 @@ public sealed class PublishRecurringMessageScheduler :
         return ScheduleAsync(destinationAddress, schedule, message, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The message contract.</typeparam>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublishAsync<T>(RecurringSchedule schedule, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (message == null)
             throw new ArgumentNullException(nameof(message));
         if (pipe == null)
@@ -321,13 +268,11 @@ public sealed class PublishRecurringMessageScheduler :
         return ScheduleAsync(destinationAddress, schedule, message, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules recurring publish.</summary>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage> ScheduleRecurringPublishAsync(RecurringSchedule schedule, object message, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
@@ -338,15 +283,12 @@ public sealed class PublishRecurringMessageScheduler :
         return MessageSchedulerConverterCache.ScheduleRecurringSendAsync(this, destinationAddress, schedule, message, messageType, cancellationToken);
     }
 
-    /// <summary>Schedules recurring publish.</summary>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage> ScheduleRecurringPublishAsync(RecurringSchedule schedule, object message, Type messageType,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (message == null)
             throw new ArgumentNullException(nameof(message));
         if (messageType == null)
@@ -357,15 +299,12 @@ public sealed class PublishRecurringMessageScheduler :
         return MessageSchedulerConverterCache.ScheduleRecurringSendAsync(this, destinationAddress, schedule, message, messageType, cancellationToken);
     }
 
-    /// <summary>Schedules recurring publish.</summary>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage> ScheduleRecurringPublishAsync(RecurringSchedule schedule, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (message == null)
             throw new ArgumentNullException(nameof(message));
         if (pipe == null)
@@ -378,16 +317,12 @@ public sealed class PublishRecurringMessageScheduler :
         return MessageSchedulerConverterCache.ScheduleRecurringSendAsync(this, destinationAddress, schedule, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules recurring publish.</summary>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring publish outcome.</returns>
+    /// <inheritdoc />
     public Task<ScheduledRecurringMessage> ScheduleRecurringPublishAsync(RecurringSchedule schedule, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (message == null)
             throw new ArgumentNullException(nameof(message));
         if (messageType == null)
@@ -400,16 +335,13 @@ public sealed class PublishRecurringMessageScheduler :
         return MessageSchedulerConverterCache.ScheduleRecurringSendAsync(this, destinationAddress, schedule, message, messageType, pipe, cancellationToken);
     }
 
-    /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The message contract to initialize.</typeparam>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring publish outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublishAsync<T>(RecurringSchedule schedule, object values,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
@@ -420,17 +352,13 @@ public sealed class PublishRecurringMessageScheduler :
         return await ScheduleAsync(destinationAddress, schedule, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The message contract to initialize.</typeparam>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring publish outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublishAsync<T>(RecurringSchedule schedule, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (values == null)
             throw new ArgumentNullException(nameof(values));
         if (pipe == null)
@@ -443,17 +371,13 @@ public sealed class PublishRecurringMessageScheduler :
         return await ScheduleAsync(destinationAddress, schedule, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Schedules recurring publish.</summary>
-    /// <typeparam name="T">The message contract to initialize.</typeparam>
-    /// <param name="schedule">The schedule.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule recurring publish outcome.</returns>
+    /// <inheritdoc />
     public async Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublishAsync<T>(RecurringSchedule schedule, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(schedule);
+
         if (values == null)
             throw new ArgumentNullException(nameof(values));
         if (pipe == null)
@@ -466,11 +390,7 @@ public sealed class PublishRecurringMessageScheduler :
         return await ScheduleAsync(destinationAddress, schedule, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Cancels a recurring schedule.</summary>
-    /// <param name="scheduleId">The schedule identifier.</param>
-    /// <param name="scheduleGroup">The schedule group.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public Task CancelScheduledRecurringSendAsync(string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(scheduleId);
@@ -481,11 +401,7 @@ public sealed class PublishRecurringMessageScheduler :
         return _publishEndpoint.PublishAsync<CancelScheduledRecurringMessage>(command, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Pauses scheduled recurring send.</summary>
-    /// <param name="scheduleId">The schedule identifier.</param>
-    /// <param name="scheduleGroup">The schedule group.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public Task PauseScheduledRecurringSendAsync(string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(scheduleId);
@@ -496,11 +412,7 @@ public sealed class PublishRecurringMessageScheduler :
         return _publishEndpoint.PublishAsync<PauseScheduledRecurringMessage>(command, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Resumes scheduled recurring send.</summary>
-    /// <param name="scheduleId">The schedule identifier.</param>
-    /// <param name="scheduleGroup">The schedule group.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public Task ResumeScheduledRecurringSendAsync(string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(scheduleId);
@@ -562,7 +474,7 @@ public sealed class PublishRecurringMessageScheduler :
         where T : class
     {
         if (_busTopology == null)
-            throw new InvalidOperationException("The bus topology is required to use ScheduleRecurringPublish.");
+            throw new InvalidOperationException("The bus topology is required to use ScheduleRecurringPublishAsync.");
 
         if (_busTopology.TryGetPublishAddress<T>(out var address))
             return address;
@@ -573,14 +485,13 @@ public sealed class PublishRecurringMessageScheduler :
     Uri GetPublishAddress(Type messageType)
     {
         if (_busTopology == null)
-            throw new InvalidOperationException("The bus topology is required to use ScheduleRecurringPublish.");
+            throw new InvalidOperationException("The bus topology is required to use ScheduleRecurringPublishAsync.");
 
         if (_busTopology.TryGetPublishAddress(messageType, out var address))
             return address;
 
         throw new ArgumentException($"The publish address for the specified type was not returned: {TypeCache.GetShortName(messageType)}");
     }
-
 
     sealed class ScheduleRecurringMessageContextPipe<T> :
         IPipe<PublishContext<ScheduleRecurringMessage>>

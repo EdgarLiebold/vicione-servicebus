@@ -7,10 +7,10 @@ namespace ViciOne.ServiceBus;
 public interface IMessageScheduler
 {
     /// <summary>Schedules a message for delivery to a destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="destination">The address to which the message will be delivered.</param>
+    /// <param name="dueAt">The time at which the message becomes eligible for delivery.</param>
+    /// <param name="message">The message payload.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the schedule send outcome.</returns>
     Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, T message,
@@ -18,11 +18,11 @@ public interface IMessageScheduler
         where T : class;
 
     /// <summary>Schedules a configured message for delivery to a destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="options">The options used by the operation.</param>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="destination">The address to which the message will be delivered.</param>
+    /// <param name="dueAt">The time at which the message becomes eligible for delivery.</param>
+    /// <param name="message">The message payload.</param>
+    /// <param name="options">The headers and transport-independent settings applied to the scheduled send.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the schedule send outcome.</returns>
     Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, T message, ScheduleOptions options,
@@ -30,9 +30,9 @@ public interface IMessageScheduler
         where T : class;
 
     /// <summary>Schedules a message for publication.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="dueAt">The time at which the message becomes eligible for publication.</param>
+    /// <param name="message">The message payload.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the schedule publish outcome.</returns>
     Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message,
@@ -40,7 +40,7 @@ public interface IMessageScheduler
         where T : class;
 
     /// <summary>Cancels a previously scheduled send.</summary>
-    /// <param name="scheduled">The scheduled used by the operation.</param>
+    /// <param name="scheduled">The scheduled message to cancel.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task CancelScheduledSendAsync(ScheduledMessage scheduled, CancellationToken cancellationToken = default);

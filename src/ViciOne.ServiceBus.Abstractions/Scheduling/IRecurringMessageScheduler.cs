@@ -5,28 +5,28 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>A message scheduler is able to schedule a message for delivery.</summary>
+/// <summary>Schedules recurring messages and controls their lifecycle.</summary>
 public interface IRecurringMessageScheduler
 {
-    /// <summary>Gets the time provider.</summary>
+    /// <summary>Gets the clock used to timestamp scheduling commands.</summary>
     TimeProvider TimeProvider { get; }
 
-    /// <summary>Send a message.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
-    /// <param name="message">The message.</param>
+    /// <summary>Schedules a recurring message for delivery to a destination.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="destinationAddress">The address to which each occurrence will be delivered.</param>
+    /// <param name="schedule">The recurring delivery schedule.</param>
+    /// <param name="message">The message payload.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(Uri destinationAddress, RecurringSchedule schedule, T message,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Send a message.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
-    /// <param name="message">The message.</param>
+    /// <summary>Schedules a recurring message with a typed send pipe.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="destinationAddress">The address to which each occurrence will be delivered.</param>
+    /// <param name="schedule">The recurring delivery schedule.</param>
+    /// <param name="message">The message payload.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
@@ -34,11 +34,11 @@ public interface IRecurringMessageScheduler
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Send a message.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
-    /// <param name="message">The message.</param>
+    /// <summary>Schedules a recurring message with an untyped send pipe.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="destinationAddress">The address to which each occurrence will be delivered.</param>
+    /// <param name="schedule">The recurring delivery schedule.</param>
+    /// <param name="message">The message payload.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
@@ -46,9 +46,9 @@ public interface IRecurringMessageScheduler
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Sends an object as a message, using the type of the message instance.</summary>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <summary>Schedules a recurring object using its runtime contract type.</summary>
+    /// <param name="destinationAddress">The address to which each occurrence will be delivered.</param>
+    /// <param name="schedule">The recurring delivery schedule.</param>
     /// <param name="message">The message object.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
@@ -56,11 +56,11 @@ public interface IRecurringMessageScheduler
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
+    /// Schedules a recurring object using an explicit contract type. The message must be assignable
+    /// to that type.
     /// </summary>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="destinationAddress">The address to which each occurrence will be delivered.</param>
+    /// <param name="schedule">The recurring delivery schedule.</param>
     /// <param name="message">The message object.</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired).</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -68,9 +68,9 @@ public interface IRecurringMessageScheduler
     Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(Uri destinationAddress, RecurringSchedule schedule, object message, Type messageType,
         CancellationToken cancellationToken = default);
 
-    /// <summary>Sends an object as a message.</summary>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <summary>Schedules a recurring object with an untyped send pipe.</summary>
+    /// <param name="destinationAddress">The address to which each occurrence will be delivered.</param>
+    /// <param name="schedule">The recurring delivery schedule.</param>
     /// <param name="message">The message object.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -79,11 +79,11 @@ public interface IRecurringMessageScheduler
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
+    /// Schedules a recurring object with an explicit contract type and an untyped send pipe. The
+    /// message must be assignable to the specified type.
     /// </summary>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="destinationAddress">The address to which each occurrence will be delivered.</param>
+    /// <param name="schedule">The recurring delivery schedule.</param>
     /// <param name="message">The message object.</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired).</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
@@ -94,12 +94,12 @@ public interface IRecurringMessageScheduler
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a recurring message contract from the supplied values and schedules it for
+    /// delivery to a destination.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="destinationAddress">The address to which each occurrence will be delivered.</param>
+    /// <param name="schedule">The recurring delivery schedule.</param>
     /// <param name="values">The property values to initialize on the interface.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
@@ -108,12 +108,12 @@ public interface IRecurringMessageScheduler
         where T : class;
 
     /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a recurring message contract from the supplied values and schedules it with a
+    /// typed send pipe.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="destinationAddress">The address to which each occurrence will be delivered.</param>
+    /// <param name="schedule">The recurring delivery schedule.</param>
     /// <param name="values">The property values to initialize on the interface.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -124,12 +124,12 @@ public interface IRecurringMessageScheduler
         where T : class;
 
     /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a recurring message contract from the supplied values and schedules it with an
+    /// untyped send pipe.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent.</param>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="destinationAddress">The address to which each occurrence will be delivered.</param>
+    /// <param name="schedule">The recurring delivery schedule.</param>
     /// <param name="values">The property values to initialize on the interface.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -138,19 +138,19 @@ public interface IRecurringMessageScheduler
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Send a message.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
-    /// <param name="message">The message.</param>
+    /// <summary>Schedules a recurring message for publication.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="schedule">The recurring publication schedule.</param>
+    /// <param name="message">The message payload.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublishAsync<T>(RecurringSchedule schedule, T message, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Publish a message.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
-    /// <param name="message">The message.</param>
+    /// <summary>Schedules a recurring publication with a typed send pipe.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="schedule">The recurring publication schedule.</param>
+    /// <param name="message">The message payload.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
@@ -158,10 +158,10 @@ public interface IRecurringMessageScheduler
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Publish a message.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
-    /// <param name="message">The message.</param>
+    /// <summary>Schedules a recurring publication with an untyped send pipe.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="schedule">The recurring publication schedule.</param>
+    /// <param name="message">The message payload.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
@@ -169,18 +169,18 @@ public interface IRecurringMessageScheduler
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Publishes an object as a message, using the type of the message instance.</summary>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <summary>Schedules a recurring publication using the object's runtime contract type.</summary>
+    /// <param name="schedule">The recurring publication schedule.</param>
     /// <param name="message">The message object.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     Task<ScheduledRecurringMessage> ScheduleRecurringPublishAsync(RecurringSchedule schedule, object message, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Publishes an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
+    /// Schedules a recurring publication using an explicit contract type. The message must be
+    /// assignable to that type.
     /// </summary>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="schedule">The recurring publication schedule.</param>
     /// <param name="message">The message object.</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired).</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -188,8 +188,8 @@ public interface IRecurringMessageScheduler
     Task<ScheduledRecurringMessage> ScheduleRecurringPublishAsync(RecurringSchedule schedule, object message, Type messageType,
         CancellationToken cancellationToken = default);
 
-    /// <summary>Publishes an object as a message.</summary>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <summary>Schedules a recurring object publication with an untyped send pipe.</summary>
+    /// <param name="schedule">The recurring publication schedule.</param>
     /// <param name="message">The message object.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -198,10 +198,10 @@ public interface IRecurringMessageScheduler
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Publishes an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
+    /// Schedules a recurring object publication with an explicit contract type and an untyped send
+    /// pipe. The message must be assignable to the specified type.
     /// </summary>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="schedule">The recurring publication schedule.</param>
     /// <param name="message">The message object.</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired).</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
@@ -211,11 +211,11 @@ public interface IRecurringMessageScheduler
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Publishes an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a recurring message contract from the supplied values and schedules it for
+    /// publication.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="schedule">The recurring publication schedule.</param>
     /// <param name="values">The property values to initialize on the interface.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
@@ -224,11 +224,11 @@ public interface IRecurringMessageScheduler
         where T : class;
 
     /// <summary>
-    /// Publishes an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a recurring message contract from the supplied values and schedules it for
+    /// publication with a typed send pipe.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="schedule">The recurring publication schedule.</param>
     /// <param name="values">The property values to initialize on the interface.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -238,11 +238,11 @@ public interface IRecurringMessageScheduler
         where T : class;
 
     /// <summary>
-    /// Publishes an interface message, initializing the properties of the interface using the anonymous
-    /// object specified.
+    /// Initializes a recurring message contract from the supplied values and schedules it for
+    /// publication with an untyped send pipe.
     /// </summary>
     /// <typeparam name="T">The interface type to send.</typeparam>
-    /// <param name="schedule">The schedule for the message to be delivered.</param>
+    /// <param name="schedule">The recurring publication schedule.</param>
     /// <param name="values">The property values to initialize on the interface.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -251,23 +251,23 @@ public interface IRecurringMessageScheduler
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Cancel a scheduled message by TokenId.</summary>
-    /// <param name="scheduleId">The scheduleId from the recurring schedule.</param>
-    /// <param name="scheduleGroup">The scheduleGroup from the recurring schedule.</param>
+    /// <summary>Cancels a recurring schedule.</summary>
+    /// <param name="scheduleId">The identifier of the recurring schedule.</param>
+    /// <param name="scheduleGroup">The group that scopes the schedule identifier.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task CancelScheduledRecurringSendAsync(string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default);
 
-    /// <summary>Pause a scheduled message by ScheduleId and ScheduleGroup.</summary>
-    /// <param name="scheduleId">The scheduleId from the recurring schedule.</param>
-    /// <param name="scheduleGroup">The scheduleGroup from the recurring schedule.</param>
+    /// <summary>Pauses a recurring schedule.</summary>
+    /// <param name="scheduleId">The identifier of the recurring schedule.</param>
+    /// <param name="scheduleGroup">The group that scopes the schedule identifier.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task PauseScheduledRecurringSendAsync(string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default);
 
-    /// <summary>Resume a scheduled message by ScheduleId and ScheduleGroup.</summary>
-    /// <param name="scheduleId">The scheduleId from the recurring schedule.</param>
-    /// <param name="scheduleGroup">The scheduleGroup from the recurring schedule.</param>
+    /// <summary>Resumes a recurring schedule.</summary>
+    /// <param name="scheduleId">The identifier of the recurring schedule.</param>
+    /// <param name="scheduleGroup">The group that scopes the schedule identifier.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task ResumeScheduledRecurringSendAsync(string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default);

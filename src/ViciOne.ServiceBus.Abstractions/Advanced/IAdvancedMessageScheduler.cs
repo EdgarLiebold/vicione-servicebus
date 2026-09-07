@@ -4,18 +4,11 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>Exposes low-level scheduler pipes, runtime message types, initializers, and provider time.</summary>
+/// <summary>Exposes scheduler pipes, runtime contract types, message initializers, and the scheduler clock.</summary>
 public interface IAdvancedMessageScheduler :
     IMessageScheduler
 {
-    /// <summary>Schedules send.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destination">The destination.</param>
-    /// <param name="dueAt">The due at.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="options">The options that control the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <inheritdoc />
     Task<ScheduledMessage<T>> IMessageScheduler.ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, T message, ScheduleOptions options,
         CancellationToken cancellationToken)
     {
@@ -23,10 +16,7 @@ public interface IAdvancedMessageScheduler :
         return ScheduleSendAsync(destination, dueAt, message, new ScheduleOptionsPipe<T>(options), cancellationToken);
     }
 
-    /// <summary>Determines whether the current value can cel scheduled send.</summary>
-    /// <param name="scheduled">The scheduled.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     Task IMessageScheduler.CancelScheduledSendAsync(ScheduledMessage scheduled, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(scheduled);
@@ -34,231 +24,224 @@ public interface IAdvancedMessageScheduler :
     }
 
     /// <inheritdoc />
-    /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to schedule.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     new Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, T message,
         CancellationToken cancellationToken = default)
         where T : class;
 
     /// <inheritdoc />
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to schedule.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     new Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Gets the time provider.</summary>
+    /// <summary>Gets the clock used to calculate and timestamp schedules.</summary>
     TimeProvider TimeProvider { get; }
 
-    /// <summary>Schedules a typed message through a typed send-context pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <summary>Schedules a message with a typed send pipe.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="destination">The address to which the message will be delivered.</param>
+    /// <param name="dueAt">The time at which the message becomes eligible for delivery.</param>
+    /// <param name="message">The message payload.</param>
+    /// <param name="pipe">The typed send pipeline applied before scheduling.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Schedules a typed message through an untyped send-context pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <summary>Schedules a message with an untyped send pipe.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="destination">The address to which the message will be delivered.</param>
+    /// <param name="dueAt">The time at which the message becomes eligible for delivery.</param>
+    /// <param name="message">The message payload.</param>
+    /// <param name="pipe">The untyped send pipeline applied before scheduling.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Schedules a runtime-typed message.</summary>
-    /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Schedules an object using its runtime contract type.</summary>
+    /// <param name="destination">The address to which the message will be delivered.</param>
+    /// <param name="dueAt">The time at which the message becomes eligible for delivery.</param>
+    /// <param name="message">The message payload.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage> ScheduleSendAsync(Uri destination, DateTimeOffset dueAt, object message,
         CancellationToken cancellationToken = default);
 
-    /// <summary>Schedules a message as the specified runtime type.</summary>
-    /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The message type used by the operation.</param>
+    /// <summary>Schedules an object using an explicit contract type.</summary>
+    /// <param name="destination">The address to which the message will be delivered.</param>
+    /// <param name="dueAt">The time at which the message becomes eligible for delivery.</param>
+    /// <param name="message">The message payload.</param>
+    /// <param name="messageType">The contract type under which the message will be delivered.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage> ScheduleSendAsync(Uri destination, DateTimeOffset dueAt, object message, Type messageType,
         CancellationToken cancellationToken = default);
 
-    /// <summary>Schedules a runtime-typed message through a send-context pipe.</summary>
-    /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <summary>Schedules an object with an untyped send pipe.</summary>
+    /// <param name="destination">The address to which the message will be delivered.</param>
+    /// <param name="dueAt">The time at which the message becomes eligible for delivery.</param>
+    /// <param name="message">The message payload.</param>
+    /// <param name="pipe">The untyped send pipeline applied before scheduling.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage> ScheduleSendAsync(Uri destination, DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default);
 
-    /// <summary>Schedules a message as the specified runtime type through a send-context pipe.</summary>
-    /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The message type used by the operation.</param>
-    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <summary>Schedules an object using an explicit contract type and an untyped send pipe.</summary>
+    /// <param name="destination">The address to which the message will be delivered.</param>
+    /// <param name="dueAt">The time at which the message becomes eligible for delivery.</param>
+    /// <param name="message">The message payload.</param>
+    /// <param name="messageType">The contract type under which the message will be delivered.</param>
+    /// <param name="pipe">The untyped send pipeline applied before scheduling.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage> ScheduleSendAsync(Uri destination, DateTimeOffset dueAt, object message, Type messageType,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default);
 
-    /// <summary>Schedules a message initialized from values.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="values">The values used by the operation.</param>
+    /// <summary>Initializes a message contract from values and schedules it for delivery.</summary>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
+    /// <param name="destination">The address to which the message will be delivered.</param>
+    /// <param name="dueAt">The time at which the message becomes eligible for delivery.</param>
+    /// <param name="values">The property values used to initialize the message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, object values,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Schedules an initialized message through a typed send-context pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="values">The values used by the operation.</param>
-    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <summary>Initializes a message contract and schedules it with a typed send pipe.</summary>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
+    /// <param name="destination">The address to which the message will be delivered.</param>
+    /// <param name="dueAt">The time at which the message becomes eligible for delivery.</param>
+    /// <param name="values">The property values used to initialize the message.</param>
+    /// <param name="pipe">The typed send pipeline applied before scheduling.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Schedules an initialized message through an untyped send-context pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="values">The values used by the operation.</param>
-    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <summary>Initializes a message contract and schedules it with an untyped send pipe.</summary>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
+    /// <param name="destination">The address to which the message will be delivered.</param>
+    /// <param name="dueAt">The time at which the message becomes eligible for delivery.</param>
+    /// <param name="values">The property values used to initialize the message.</param>
+    /// <param name="pipe">The untyped send pipeline applied before scheduling.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule send outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Cancels a scheduled send by destination and token.</summary>
-    /// <param name="destination">The destination used by the operation.</param>
-    /// <param name="tokenId">The token id used by the operation.</param>
+    /// <summary>Cancels a scheduled send at a destination.</summary>
+    /// <param name="destination">The destination that owns the scheduled message.</param>
+    /// <param name="tokenId">The token that identifies the scheduled message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task CancelScheduledSendAsync(Uri destination, Guid tokenId, CancellationToken cancellationToken = default);
 
-    /// <summary>Schedules a typed publication through a typed send-context pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <summary>Schedules a publication with a typed send pipe.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="dueAt">The time at which the message becomes eligible for publication.</param>
+    /// <param name="message">The message payload.</param>
+    /// <param name="pipe">The typed send pipeline applied before scheduling.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Schedules a typed publication through an untyped send-context pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <summary>Schedules a publication with an untyped send pipe.</summary>
+    /// <typeparam name="T">The message contract.</typeparam>
+    /// <param name="dueAt">The time at which the message becomes eligible for publication.</param>
+    /// <param name="message">The message payload.</param>
+    /// <param name="pipe">The untyped send pipeline applied before scheduling.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Schedules a runtime-typed publication.</summary>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Schedules an object for publication using its runtime contract type.</summary>
+    /// <param name="dueAt">The time at which the message becomes eligible for publication.</param>
+    /// <param name="message">The message payload.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, CancellationToken cancellationToken = default);
 
-    /// <summary>Schedules a publication as the specified runtime type.</summary>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The message type used by the operation.</param>
+    /// <summary>Schedules an object for publication using an explicit contract type.</summary>
+    /// <param name="dueAt">The time at which the message becomes eligible for publication.</param>
+    /// <param name="message">The message payload.</param>
+    /// <param name="messageType">The contract type under which the message will be published.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, Type messageType,
         CancellationToken cancellationToken = default);
 
-    /// <summary>Schedules a runtime-typed publication through a send-context pipe.</summary>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <summary>Schedules an object for publication with an untyped send pipe.</summary>
+    /// <param name="dueAt">The time at which the message becomes eligible for publication.</param>
+    /// <param name="message">The message payload.</param>
+    /// <param name="pipe">The untyped send pipeline applied before scheduling.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default);
 
-    /// <summary>Schedules a publication as the specified runtime type through a send-context pipe.</summary>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="messageType">The message type used by the operation.</param>
-    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <summary>Schedules an object for publication using an explicit contract type and an untyped send pipe.</summary>
+    /// <param name="dueAt">The time at which the message becomes eligible for publication.</param>
+    /// <param name="message">The message payload.</param>
+    /// <param name="messageType">The contract type under which the message will be published.</param>
+    /// <param name="pipe">The untyped send pipeline applied before scheduling.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default);
 
-    /// <summary>Schedules a publication initialized from values.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="values">The values used by the operation.</param>
+    /// <summary>Initializes a message contract from values and schedules it for publication.</summary>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
+    /// <param name="dueAt">The time at which the message becomes eligible for publication.</param>
+    /// <param name="values">The property values used to initialize the message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Schedules an initialized publication through a typed send-context pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="values">The values used by the operation.</param>
-    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <summary>Initializes a message contract and schedules it for publication with a typed send pipe.</summary>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
+    /// <param name="dueAt">The time at which the message becomes eligible for publication.</param>
+    /// <param name="values">The property values used to initialize the message.</param>
+    /// <param name="pipe">The typed send pipeline applied before scheduling.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Schedules an initialized publication through an untyped send-context pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="dueAt">The due at used by the operation.</param>
-    /// <param name="values">The values used by the operation.</param>
-    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <summary>Initializes a message contract and schedules it for publication with an untyped send pipe.</summary>
+    /// <typeparam name="T">The message contract to initialize.</typeparam>
+    /// <param name="dueAt">The time at which the message becomes eligible for publication.</param>
+    /// <param name="values">The property values used to initialize the message.</param>
+    /// <param name="pipe">The untyped send pipeline applied before scheduling.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the schedule publish outcome.</returns>
+    /// <returns>A task that returns the accepted scheduled message.</returns>
     Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Cancels a scheduled publication by message type and token.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="tokenId">The token id used by the operation.</param>
+    /// <summary>Cancels a scheduled publication for a message contract.</summary>
+    /// <typeparam name="T">The published message contract.</typeparam>
+    /// <param name="tokenId">The token that identifies the scheduled publication.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task CancelScheduledPublishAsync<T>(Guid tokenId, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Cancels a scheduled publication by runtime message type and token.</summary>
-    /// <param name="messageType">The message type used by the operation.</param>
-    /// <param name="tokenId">The token id used by the operation.</param>
+    /// <summary>Cancels a scheduled publication for a runtime contract type.</summary>
+    /// <param name="messageType">The published message contract.</param>
+    /// <param name="tokenId">The token that identifies the scheduled publication.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task CancelScheduledPublishAsync(Type messageType, Guid tokenId, CancellationToken cancellationToken = default);
