@@ -109,7 +109,9 @@ public class SagaRepository<TSaga> :
         public Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
             where T : class
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<T?>(cancellationToken); throw new NotSupportedException(LoadErrorMessage);
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled<T?>(cancellationToken)
+                : Task.FromException<T?>(new NotSupportedException(LoadErrorMessage));
         }
 
         public void Probe(ProbeContext context)
@@ -119,7 +121,9 @@ public class SagaRepository<TSaga> :
         public Task<T> ExecuteAsync<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
             where T : class
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<T>(cancellationToken); throw new NotSupportedException(QueryErrorMessage);
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled<T>(cancellationToken)
+                : Task.FromException<T>(new NotSupportedException(QueryErrorMessage));
         }
     }
 }

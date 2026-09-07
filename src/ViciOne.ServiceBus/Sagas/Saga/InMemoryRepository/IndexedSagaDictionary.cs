@@ -84,6 +84,8 @@ public class IndexedSagaDictionary<TSaga>
         {
             foreach (IIndexedSagaProperty<TSaga> index in _indices.Values)
                 index.Remove(item);
+
+            item.Remove();
         }
     }
 

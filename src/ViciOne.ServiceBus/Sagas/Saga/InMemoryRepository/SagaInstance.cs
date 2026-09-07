@@ -12,20 +12,32 @@ public class SagaInstance<TSaga> :
     where TSaga : class, ISaga
 {
     readonly SemaphoreSlim _inUse;
+    readonly CancellationTokenSource _removal;
+    readonly object _stateLock;
+    bool _isRemoved;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="instance">The instance.</param>
     public SagaInstance(TSaga instance)
     {
         Instance = instance;
-        _inUse = new SemaphoreSlim(1);
+        _inUse = new SemaphoreSlim(1, 1);
+        _removal = new CancellationTokenSource();
+        _stateLock = new object();
     }
 
     /// <summary>Gets the instance.</summary>
     public TSaga Instance { get; }
 
-    /// <summary>Gets or sets a value indicating whether removed.</summary>
-    public bool IsRemoved { get; set; }
+    /// <summary>Gets a value indicating whether the instance has been removed from its repository.</summary>
+    public bool IsRemoved
+    {
+        get
+        {
+            lock (_stateLock)
+                return _isRemoved;
+        }
+    }
 
     /// <summary>Determines whether this instance equals the supplied value.</summary>
     /// <param name="other">The other.</param>
@@ -68,27 +80,55 @@ public class SagaInstance<TSaga> :
     /// <summary>Marks in use.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task MarkInUseAsync(CancellationToken cancellationToken)
+    public async Task MarkInUseAsync(CancellationToken cancellationToken)
     {
-        if (IsRemoved)
-            throw new InvalidOperationException($"The saga instance was removed: {TypeCache<TSaga>.ShortName}: {Instance.CorrelationId}");
+        lock (_stateLock)
+        {
+            if (_isRemoved)
+                throw CreateRemovedException();
+        }
 
-        return _inUse.WaitAsync(cancellationToken);
+        using var linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _removal.Token);
+        try
+        {
+            await _inUse.WaitAsync(linkedCancellation.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (_removal.IsCancellationRequested)
+        {
+            throw CreateRemovedException();
+        }
+
+        lock (_stateLock)
+        {
+            if (!_isRemoved)
+                return;
+
+            _inUse.Release();
+        }
+
+        throw CreateRemovedException();
     }
 
     /// <summary>Releases the owned resource.</summary>
     public void Release()
     {
-        if (IsRemoved)
-            return;
-
         _inUse.Release();
     }
 
     /// <summary>Removes the selected value.</summary>
     public void Remove()
     {
-        IsRemoved = true;
-        _inUse.Release();
+        lock (_stateLock)
+        {
+            if (_isRemoved)
+                return;
+
+            _isRemoved = true;
+        }
+
+        _removal.Cancel();
     }
+
+    SagaInstanceRemovedException CreateRemovedException() =>
+        new(typeof(TSaga), Instance.CorrelationId);
 }

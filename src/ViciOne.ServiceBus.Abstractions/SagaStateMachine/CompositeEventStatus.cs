@@ -7,7 +7,8 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <summary>Represents a composite event status.</summary>
 [DebuggerDisplay("{Status}")]
 public struct CompositeEventStatus :
-    IComparable<CompositeEventStatus>
+    IComparable<CompositeEventStatus>,
+    IEquatable<CompositeEventStatus>
 {
     int _bits;
 
@@ -31,12 +32,12 @@ public struct CompositeEventStatus :
     /// <summary>Gets the bits.</summary>
     public int Bits => _bits;
 
-    /// <summary>Compares this instance with the supplied value.</summary>
-    /// <param name="other">The other.</param>
-    /// <returns>The int produced by the operation.</returns>
+    /// <summary>Compares the numeric bit pattern with another composite-event status.</summary>
+    /// <param name="other">The status to compare with this instance.</param>
+    /// <returns>A negative, zero, or positive value when this instance sorts before, with, or after <paramref name="other" />.</returns>
     public int CompareTo(CompositeEventStatus other)
     {
-        return other._bits - _bits;
+        return _bits.CompareTo(other._bits);
     }
 
     /// <summary>Determines whether this instance equals the supplied value.</summary>
@@ -59,11 +60,11 @@ public struct CompositeEventStatus :
         return Equals((CompositeEventStatus)obj);
     }
 
-    /// <summary>Gets hash code.</summary>
+    /// <summary>Returns a hash code derived from the tracked event bits.</summary>
     /// <returns>The hash code for this instance.</returns>
     public override int GetHashCode()
     {
-        return 0;
+        return _bits;
     }
 
     /// <summary>Updates the target with the supplied value.</summary>

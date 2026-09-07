@@ -163,7 +163,11 @@ public sealed class StateMachineNestedRequestIntegrationTests
             During(LinkRequest.Pending,
                 When(LinkRequest.Completed)
                     .Then(context => context.Saga.ShortLink = context.Message.ShortLink)
-                    .RequestCompleted()
+                    .RequestCompleted(async context =>
+                    {
+                        await Task.Yield();
+                        return context.Message;
+                    })
                     .TransitionTo(Valid),
                 When(LinkRequest.Faulted)
                     .RequestFaulted(CreateRequested)

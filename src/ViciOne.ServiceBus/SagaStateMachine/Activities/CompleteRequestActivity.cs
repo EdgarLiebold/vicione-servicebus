@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Contracts;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
-/// <summary>Executes the complete request activity.</summary>
+/// <summary>Forwards a completed request payload to the original response address.</summary>
 public class CompleteRequestActivity :
     IStateMachineActivity<RequestState, RequestCompleted>
 {
@@ -31,13 +31,12 @@ public class CompleteRequestActivity :
     {
         if (!context.Saga.ExpirationTime.HasValue || context.Saga.ExpirationTime.Value > context.GetTimeProvider().GetUtcNow().UtcDateTime)
         {
-            IPipe<SendContext> pipe = new RequestStateMessagePipe(context, context.Message.Payload, context.Message.PayloadType);
+            var outcome = new ForwardedRequestOutcome(context.Message.Payload, context.Message.PayloadType);
+            IPipe<SendContext> pipe = new RequestStateMessagePipe(context, outcome);
 
             var endpoint = await context.GetSendEndpointAsync(context.Saga.ResponseAddress).ConfigureAwait(false);
 
-            var dummyMessage = new CompletedEvent();
-
-            await endpoint.SendAsync(dummyMessage, pipe, context.CancellationToken).ConfigureAwait(false);
+            await endpoint.SendAsync(outcome, pipe, context.CancellationToken).ConfigureAwait(false);
         }
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
@@ -53,10 +52,5 @@ public class CompleteRequestActivity :
         where TException : Exception
     {
         return next.FaultedAsync(context);
-    }
-
-
-    class CompletedEvent
-    {
     }
 }

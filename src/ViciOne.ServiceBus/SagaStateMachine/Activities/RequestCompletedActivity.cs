@@ -19,7 +19,7 @@ public class RequestCompletedActivity<TSaga, TMessage> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
-        context.CreateScope("requestStarted");
+        context.CreateScope("requestCompleted");
     }
 
     /// <summary>Accepts the supplied value.</summary>
@@ -38,7 +38,7 @@ public class RequestCompletedActivity<TSaga, TMessage> :
         await context.PublishAsync<RequestCompleted>(new
         {
             context.Saga.CorrelationId,
-            Timestamp = TimeProvider.System.GetUtcNow(),
+            Timestamp = context.GetTimeProvider().GetUtcNow(),
             PayloadType = MessageTypeCache<TMessage>.MessageTypeNames.ToArray(),
             Payload = context.Message
         }, context.CancellationToken).ConfigureAwait(false);
@@ -78,14 +78,14 @@ public class RequestCompletedActivity<TSaga, TMessage, TResponse> :
     /// <param name="messageFactory">The message factory.</param>
     public RequestCompletedActivity(AsyncEventMessageFactory<TSaga, TMessage, TResponse> messageFactory)
     {
-        _messageFactory = messageFactory;
+        _messageFactory = messageFactory ?? throw new ArgumentNullException(nameof(messageFactory));
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
-        context.CreateScope("requestStarted");
+        context.CreateScope("requestCompleted");
     }
 
     /// <summary>Accepts the supplied value.</summary>
@@ -101,12 +101,14 @@ public class RequestCompletedActivity<TSaga, TMessage, TResponse> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
+        TResponse response = await _messageFactory(context).ConfigureAwait(false);
+
         await context.PublishAsync<RequestCompleted>(new
         {
             context.Saga.CorrelationId,
-            Timestamp = TimeProvider.System.GetUtcNow(),
+            Timestamp = context.GetTimeProvider().GetUtcNow(),
             PayloadType = MessageTypeCache<TResponse>.MessageTypeNames.ToArray(),
-            Payload = _messageFactory(context)
+            Payload = response
         }, context.CancellationToken).ConfigureAwait(false);
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
