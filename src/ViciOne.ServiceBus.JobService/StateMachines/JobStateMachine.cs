@@ -40,7 +40,7 @@ internal sealed class JobStateMachine :
         Event(() => GetJobState, x =>
         {
             x.ReadOnly = true;
-            x.OnMissingInstance(i => i.ExecuteAsync(context => context.RespondAsync<JobState>(new JobStateResponse
+            x.OnMissingInstance(i => i.ExecuteAwaited(context => context.RespondAsync<JobState>(new JobStateResponse
             {
                 JobId = context.Message.JobId,
                 Status = JobLifecycleStatus.NotFound
@@ -281,7 +281,7 @@ internal sealed class JobStateMachine :
 
         DuringAny(
             When(GetJobState)
-                .RespondAsync(async context =>
+                .RespondAwaited(async context =>
                 {
                     State? state = await Accessor.GetAsync(context).ConfigureAwait(false);
                     return new JobStateResponse
@@ -754,7 +754,7 @@ static class JobStateMachineBehaviorExtensions
     public static EventActivityBinder<JobSaga, T> FinalizeJobAttempts<T>(this EventActivityBinder<JobSaga, T> binder)
         where T : class
     {
-        return binder.ThenAsync(async context =>
+        return binder.ThenAwaited(async context =>
         {
             if (context.Saga.IncompleteAttempts is { Count: > 0 })
             {

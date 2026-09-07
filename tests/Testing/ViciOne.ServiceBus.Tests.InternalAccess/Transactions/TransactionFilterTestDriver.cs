@@ -27,7 +27,7 @@ public sealed class TransactionFilterTestDriver
         var context = new DriverContext();
         return _filter.SendAsync(
             context,
-            Pipe.ExecuteAsync<DriverContext>(current => downstream(current.GetPayload<TransactionContext>())));
+            Pipe.ExecuteAwaited<DriverContext>(current => downstream(current.GetPayload<TransactionContext>())));
     }
 
     public Task ExecuteNestedAsync(Func<TransactionContext, Task> downstream)
@@ -37,10 +37,10 @@ public sealed class TransactionFilterTestDriver
         var context = new DriverContext();
         return _filter.SendAsync(
             context,
-            Pipe.ExecuteAsync<DriverContext>(outerContext =>
+            Pipe.ExecuteAwaited<DriverContext>(outerContext =>
                 _filter.SendAsync(
                     outerContext,
-                    Pipe.ExecuteAsync<DriverContext>(innerContext =>
+                    Pipe.ExecuteAwaited<DriverContext>(innerContext =>
                         downstream(innerContext.GetPayload<TransactionContext>())))));
     }
 
@@ -53,7 +53,7 @@ public sealed class TransactionFilterTestDriver
         context.GetOrAddPayload(() => existing);
         return _filter.SendAsync(
             context,
-            Pipe.ExecuteAsync<DriverContext>(current => downstream(current.GetPayload<TransactionContext>())));
+            Pipe.ExecuteAwaited<DriverContext>(current => downstream(current.GetPayload<TransactionContext>())));
     }
 
     public static object CreateWithNullFactory() =>

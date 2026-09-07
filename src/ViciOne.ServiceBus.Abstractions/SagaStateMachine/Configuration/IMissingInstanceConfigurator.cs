@@ -21,7 +21,7 @@ public interface IMissingInstanceConfigurator<TSaga, TMessage>
     /// <summary>Execute an asynchronous method when the instance is missed, allowing a custom behavior to be specified.</summary>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The pipe produced by the operation.</returns>
-    IPipe<ConsumeContext<TMessage>> ExecuteAsync(Func<ConsumeContext<TMessage>, Task> callback);
+    IPipe<ConsumeContext<TMessage>> ExecuteAwaited(Func<ConsumeContext<TMessage>, Task> callback);
 
     /// <summary>Execute a method when the instance is missed, allowing a custom behavior to be specified.</summary>
     /// <param name="callback">The callback invoked by the operation.</param>

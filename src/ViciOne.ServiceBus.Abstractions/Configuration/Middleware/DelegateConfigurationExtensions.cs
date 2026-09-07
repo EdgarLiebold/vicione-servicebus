@@ -26,7 +26,7 @@ public static class DelegateConfigurationExtensions
     /// <typeparam name="TContext">The context type.</typeparam>
     /// <param name="configurator">The pipe configurator.</param>
     /// <param name="callback">The callback to invoke.</param>
-    public static void UseExecuteAsync<TContext>(this IPipeConfigurator<TContext> configurator, Func<TContext, Task> callback)
+    public static void UseExecuteAwaited<TContext>(this IPipeConfigurator<TContext> configurator, Func<TContext, Task> callback)
         where TContext : class, PipeContext
     {
         if (configurator == null)

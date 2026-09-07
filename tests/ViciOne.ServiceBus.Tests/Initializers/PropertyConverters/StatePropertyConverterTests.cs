@@ -95,7 +95,7 @@ public sealed class StatePropertyConverterTests
             Initially(
                 When(Started)
                     .TransitionTo(Running)
-                    .PublishAsync(context => context.InitAsync<StateTransitionPublished>(new
+                    .PublishAwaited(context => context.InitAsync<StateTransitionPublished>(new
                     {
                         context.Saga.CorrelationId,
                         CurrentState = this.GetStateAsync(context),

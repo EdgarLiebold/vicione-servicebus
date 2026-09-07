@@ -300,7 +300,7 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
             DuringAny(
                 When(StatusRequested)
                     .Then(context => context.Saga.StatusCount++)
-                    .RespondAsync(context => Task.FromResult(new ResponseStatus(
+                    .RespondAwaited(context => Task.FromResult(new ResponseStatus(
                         context.Saga.CorrelationId,
                         context.Saga.CurrentState,
                         "async"))));
@@ -388,7 +388,7 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
             InstanceState(instance => instance.CurrentState);
             Event(() => Status, configuration => configuration
                 .CorrelateBy(instance => instance.ServiceName, context => context.Message.ServiceName)
-                .OnMissingInstance(missing => missing.ExecuteAsync(context =>
+                .OnMissingInstance(missing => missing.ExecuteAwaited(context =>
                     context.RespondAsync(new InstanceMissing(context.Message.ServiceName, "substitute")))));
             During(
                 Running,

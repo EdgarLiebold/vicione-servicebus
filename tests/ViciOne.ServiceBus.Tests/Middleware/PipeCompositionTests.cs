@@ -13,7 +13,7 @@ public sealed class PipeCompositionTests
         var trace = new List<string>();
         IPipe<ParentContext> parent = Pipe.New<ParentContext>(configuration =>
         {
-            configuration.UseExecuteAsync(async _ =>
+            configuration.UseExecuteAwaited(async _ =>
             {
                 IPipe<ChildContext> child = Pipe.Execute<ChildContext>(_ => trace.Add("child"));
                 await child.SendAsync(new ChildContext());

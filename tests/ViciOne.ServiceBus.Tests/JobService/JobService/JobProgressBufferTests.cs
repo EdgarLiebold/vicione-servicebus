@@ -97,7 +97,7 @@ public sealed class JobProgressBufferTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-PROGRESS-TIME", "publication-failure-propagates-from-flush")]
-    public async Task FlushAsync_PropagatesProgressPublicationFailure()
+    public async Task Flush_PropagatesProgressPublicationFailureAsync()
     {
         var expected = new InvalidOperationException("progress publication refused");
         var notifications = new RecordingJobContext(expected);

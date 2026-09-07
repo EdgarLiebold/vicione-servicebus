@@ -56,14 +56,13 @@ public sealed class AsyncApiConventionArchitectureTests
 
         foreach (MethodDeclarationSyntax method in root.DescendantNodes().OfType<MethodDeclarationSyntax>())
         {
-            if (method.ExplicitInterfaceSpecifier is not null || IsTestEntryPoint(method) || IsExternallyNamedInterfaceMethod(method))
+            if (method.ExplicitInterfaceSpecifier is not null || IsExternallyNamedInterfaceMethod(method))
                 continue;
 
             string? violation = AsyncNameViolation(
                 path,
                 method.Identifier.ValueText,
                 method.ReturnType,
-                method.ParameterList.Parameters,
                 method.Modifiers.Any(SyntaxKind.AsyncKeyword),
                 method.GetLocation().GetLineSpan().StartLinePosition.Line + 1);
             if (violation is not null)
@@ -76,7 +75,6 @@ public sealed class AsyncApiConventionArchitectureTests
                 path,
                 method.Identifier.ValueText,
                 method.ReturnType,
-                method.ParameterList.Parameters,
                 method.Modifiers.Any(SyntaxKind.AsyncKeyword),
                 method.GetLocation().GetLineSpan().StartLinePosition.Line + 1);
             if (violation is not null)
@@ -88,16 +86,12 @@ public sealed class AsyncApiConventionArchitectureTests
         string path,
         string name,
         TypeSyntax returnType,
-        SeparatedSyntaxList<ParameterSyntax> parameters,
         bool hasAsyncModifier,
         int line)
     {
         bool hasAsyncName = name.EndsWith("Async", StringComparison.Ordinal)
             || name.Contains("AsyncCore", StringComparison.Ordinal);
-        bool hasAsyncContract = hasAsyncModifier
-            || IsAsynchronousReturnType(returnType)
-            || hasAsyncName && (ContainsAsynchronousType(returnType)
-                || parameters.Any(parameter => parameter.Type is not null && ContainsAsynchronousType(parameter.Type)));
+        bool hasAsyncContract = hasAsyncModifier || IsAsynchronousReturnType(returnType);
         if (hasAsyncName == hasAsyncContract)
             return null;
 
@@ -144,23 +138,10 @@ public sealed class AsyncApiConventionArchitectureTests
             || type.Modifiers.Any(SyntaxKind.ProtectedKeyword));
     }
 
-    private static bool IsTestEntryPoint(MethodDeclarationSyntax method) => method.AttributeLists
-        .SelectMany(list => list.Attributes)
-        .Select(attribute => attribute.Name.ToString())
-        .Any(name => name is "Fact" or "FactAttribute" or "Theory" or "TheoryAttribute");
-
     private static bool IsExternallyNamedInterfaceMethod(MethodDeclarationSyntax method) =>
         method.Identifier.ValueText == "Execute"
         && method.Ancestors().OfType<BaseTypeDeclarationSyntax>().FirstOrDefault()?.BaseList?.Types
             .Any(type => type.Type.ToString() == "IJob") == true;
-
-    private static bool ContainsAsynchronousType(TypeSyntax type)
-    {
-        return type.DescendantNodesAndSelf()
-            .OfType<SimpleNameSyntax>()
-            .Select(name => name.Identifier.ValueText)
-            .Any(name => AsyncReturnTypes.Contains(name) || name.Contains("Async", StringComparison.Ordinal));
-    }
 
     private static bool IsAsynchronousReturnType(TypeSyntax returnType)
     {

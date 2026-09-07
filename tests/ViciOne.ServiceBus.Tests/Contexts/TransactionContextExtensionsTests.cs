@@ -19,7 +19,7 @@ public sealed class TransactionContextExtensionsTests
         IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
         {
             configuration.UseTransaction();
-            configuration.UseExecuteAsync(async context =>
+            configuration.UseExecuteAwaited(async context =>
             {
                 using TransactionScope scope = context.CreateTransactionScope(
                     TimeSpan.FromSeconds(5),
@@ -48,7 +48,7 @@ public sealed class TransactionContextExtensionsTests
         IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
         {
             configuration.UseTransaction();
-            configuration.UseExecuteAsync(async context =>
+            configuration.UseExecuteAwaited(async context =>
             {
                 using TransactionScope scope = context.CreateTransactionScope(TimeSpan.FromSeconds(5));
                 beforeAwait = Transaction.Current;

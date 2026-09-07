@@ -108,10 +108,10 @@ public class DataEventActivityBinder<TInstance, TData> :
         return IfElse(condition, activityCallback, b => b);
     }
 
-    EventActivityBinder<TInstance, TData> EventActivityBinder<TInstance, TData>.IfAsync(StateMachineAsyncCondition<TInstance, TData> condition,
+    EventActivityBinder<TInstance, TData> EventActivityBinder<TInstance, TData>.IfAwaited(StateMachineAsyncCondition<TInstance, TData> condition,
         Func<EventActivityBinder<TInstance, TData>, EventActivityBinder<TInstance, TData>> activityCallback)
     {
-        return IfElseAsync(condition, activityCallback, b => b);
+        return IfElseAwaited(condition, activityCallback, b => b);
     }
 
     /// <summary>Adds conditional success and alternative branches.</summary>
@@ -136,7 +136,7 @@ public class DataEventActivityBinder<TInstance, TData> :
     /// <param name="thenActivityCallback">The then activity callback.</param>
     /// <param name="elseActivityCallback">The else activity callback.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public EventActivityBinder<TInstance, TData> IfElseAsync(StateMachineAsyncCondition<TInstance, TData> condition,
+    public EventActivityBinder<TInstance, TData> IfElseAwaited(StateMachineAsyncCondition<TInstance, TData> condition,
         Func<EventActivityBinder<TInstance, TData>, EventActivityBinder<TInstance, TData>> thenActivityCallback,
         Func<EventActivityBinder<TInstance, TData>, EventActivityBinder<TInstance, TData>> elseActivityCallback)
     {

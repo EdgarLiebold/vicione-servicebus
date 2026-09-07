@@ -41,19 +41,19 @@ public class SharedClientContext :
     /// <summary>Forwards asynchronous message and error callback registration to the shared client.</summary>
     /// <param name="callback">The callback that processes each received message.</param>
     /// <param name="exceptionHandler">The callback that processes SDK processor errors.</param>
-    public void OnMessageAsync(Func<ProcessMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
+    public void ConfigureMessageProcessor(Func<ProcessMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
         Func<ProcessErrorEventArgs, Task> exceptionHandler)
     {
-        _context.OnMessageAsync(callback, exceptionHandler);
+        _context.ConfigureMessageProcessor(callback, exceptionHandler);
     }
 
     /// <summary>Forwards asynchronous session-message and error callback registration to the shared client.</summary>
     /// <param name="callback">The callback that processes each received session message.</param>
     /// <param name="exceptionHandler">The callback that processes SDK processor errors.</param>
-    public void OnSessionAsync(Func<ProcessSessionMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
+    public void ConfigureSessionProcessor(Func<ProcessSessionMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
         Func<ProcessErrorEventArgs, Task> exceptionHandler)
     {
-        _context.OnSessionAsync(callback, exceptionHandler);
+        _context.ConfigureSessionProcessor(callback, exceptionHandler);
     }
 
     /// <summary>Starts the shared client's configured processor.</summary>

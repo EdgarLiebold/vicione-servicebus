@@ -14,6 +14,5 @@ public interface ProcessorContext :
     /// <returns>The owned processor client.</returns>
     EventProcessorClient GetClient(ProcessorClientBuilderContext context);
     /// <summary>Unsubscribes the partition callbacks associated with the current client lease.</summary>
-    /// <param name="processorLockContext">The callback target whose lease is being released.</param>
-    void ReleaseClient(ProcessorClientBuilderContext processorLockContext);
+    void ReleaseClient();
 }

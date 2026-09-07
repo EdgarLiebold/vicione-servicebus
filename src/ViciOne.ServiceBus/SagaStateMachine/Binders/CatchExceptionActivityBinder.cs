@@ -90,10 +90,10 @@ public class CatchExceptionActivityBinder<TInstance, TException> :
     /// <param name="condition">The condition.</param>
     /// <param name="activityCallback">The activity callback.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public ExceptionActivityBinder<TInstance, TException> IfAsync(StateMachineAsyncExceptionCondition<TInstance, TException> condition,
+    public ExceptionActivityBinder<TInstance, TException> IfAwaited(StateMachineAsyncExceptionCondition<TInstance, TException> condition,
         Func<ExceptionActivityBinder<TInstance, TException>, ExceptionActivityBinder<TInstance, TException>> activityCallback)
     {
-        return IfElseAsync(condition, activityCallback, b => b);
+        return IfElseAwaited(condition, activityCallback, b => b);
     }
 
     /// <summary>Adds conditional success and alternative branches.</summary>
@@ -118,7 +118,7 @@ public class CatchExceptionActivityBinder<TInstance, TException> :
     /// <param name="thenActivityCallback">The then activity callback.</param>
     /// <param name="elseActivityCallback">The else activity callback.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public ExceptionActivityBinder<TInstance, TException> IfElseAsync(StateMachineAsyncExceptionCondition<TInstance, TException> condition,
+    public ExceptionActivityBinder<TInstance, TException> IfElseAwaited(StateMachineAsyncExceptionCondition<TInstance, TException> condition,
         Func<ExceptionActivityBinder<TInstance, TException>, ExceptionActivityBinder<TInstance, TException>> thenActivityCallback,
         Func<ExceptionActivityBinder<TInstance, TException>, ExceptionActivityBinder<TInstance, TException>> elseActivityCallback)
     {
@@ -240,10 +240,10 @@ public class CatchExceptionActivityBinder<TInstance, TData, TException> :
     /// <param name="condition">The condition.</param>
     /// <param name="activityCallback">The activity callback.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public ExceptionActivityBinder<TInstance, TData, TException> IfAsync(StateMachineAsyncExceptionCondition<TInstance, TData, TException> condition,
+    public ExceptionActivityBinder<TInstance, TData, TException> IfAwaited(StateMachineAsyncExceptionCondition<TInstance, TData, TException> condition,
         Func<ExceptionActivityBinder<TInstance, TData, TException>, ExceptionActivityBinder<TInstance, TData, TException>> activityCallback)
     {
-        return IfElseAsync(condition, activityCallback, b => b);
+        return IfElseAwaited(condition, activityCallback, b => b);
     }
 
     /// <summary>Adds conditional success and alternative branches.</summary>
@@ -268,7 +268,7 @@ public class CatchExceptionActivityBinder<TInstance, TData, TException> :
     /// <param name="thenActivityCallback">The then activity callback.</param>
     /// <param name="elseActivityCallback">The else activity callback.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public ExceptionActivityBinder<TInstance, TData, TException> IfElseAsync(StateMachineAsyncExceptionCondition<TInstance, TData, TException> condition,
+    public ExceptionActivityBinder<TInstance, TData, TException> IfElseAwaited(StateMachineAsyncExceptionCondition<TInstance, TData, TException> condition,
         Func<ExceptionActivityBinder<TInstance, TData, TException>, ExceptionActivityBinder<TInstance, TData, TException>> thenActivityCallback,
         Func<ExceptionActivityBinder<TInstance, TData, TException>, ExceptionActivityBinder<TInstance, TData, TException>> elseActivityCallback)
     {

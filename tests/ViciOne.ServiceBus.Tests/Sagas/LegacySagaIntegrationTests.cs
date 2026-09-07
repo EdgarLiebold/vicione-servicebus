@@ -450,7 +450,7 @@ public sealed class LegacySagaIntegrationTests
             Initially(When(Created)
                 .Publish(context => new RepositoryCreated(context.Saga.CorrelationId))
                 .TransitionTo(Active)
-                .ThenAsync(context => context.RaiseAsync(Destroyed)));
+                .ThenAwaited(context => context.RaiseAsync(Destroyed)));
             During(Active, When(Destroyed).Finalize());
             Finally(binder => binder.Publish(context => new RepositoryFinally(context.Saga.CorrelationId)));
         }

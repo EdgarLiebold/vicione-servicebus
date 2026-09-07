@@ -105,10 +105,10 @@ public class TriggerEventActivityBinder<TInstance> :
         return IfElse(condition, activityCallback, b => b);
     }
 
-    EventActivityBinder<TInstance> EventActivityBinder<TInstance>.IfAsync(StateMachineAsyncCondition<TInstance> condition,
+    EventActivityBinder<TInstance> EventActivityBinder<TInstance>.IfAwaited(StateMachineAsyncCondition<TInstance> condition,
         Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> activityCallback)
     {
-        return IfElseAsync(condition, activityCallback, b => b);
+        return IfElseAwaited(condition, activityCallback, b => b);
     }
 
     /// <summary>Adds conditional success and alternative branches.</summary>
@@ -133,7 +133,7 @@ public class TriggerEventActivityBinder<TInstance> :
     /// <param name="thenActivityCallback">The then activity callback.</param>
     /// <param name="elseActivityCallback">The else activity callback.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public EventActivityBinder<TInstance> IfElseAsync(StateMachineAsyncCondition<TInstance> condition,
+    public EventActivityBinder<TInstance> IfElseAwaited(StateMachineAsyncCondition<TInstance> condition,
         Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> thenActivityCallback,
         Func<EventActivityBinder<TInstance>, EventActivityBinder<TInstance>> elseActivityCallback)
     {

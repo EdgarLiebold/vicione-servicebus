@@ -2737,7 +2737,7 @@
    {
       "requirementId" : "REQ-VSB-JOB-PROGRESS-TIME",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "FlushAsync_PropagatesProgressPublicationFailure",
+      "testMethod" : "Flush_PropagatesProgressPublicationFailureAsync",
       "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobProgressBufferTests",
       "variantKey" : "publication-failure-propagates-from-flush"
    },
@@ -3479,28 +3479,28 @@
    {
       "requirementId" : "REQ-VSB-JOB-DISTRIBUTION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "SelectInstanceAsync_SelectsTheLeastLoadedEligibleInstance",
+      "testMethod" : "SelectInstance_SelectsTheLeastLoadedEligibleInstanceAsync",
       "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobDistributionStrategyTests",
       "variantKey" : "least-loaded-eligible-instance-is-selected"
    },
    {
       "requirementId" : "REQ-VSB-JOB-DISTRIBUTION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "SelectInstanceAsync_PrefersTheLeastRecentlyUsedInstanceWhenLoadsMatch",
+      "testMethod" : "SelectInstance_PrefersTheLeastRecentlyUsedInstanceWhenLoadsMatchAsync",
       "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobDistributionStrategyTests",
       "variantKey" : "least-recently-used-breaks-equal-load"
    },
    {
       "requirementId" : "REQ-VSB-JOB-DISTRIBUTION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "SelectInstanceAsync_ReturnsNullWhenEveryInstanceIsAtItsLimit",
+      "testMethod" : "SelectInstance_ReturnsNullWhenEveryInstanceIsAtItsLimitAsync",
       "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobDistributionStrategyTests",
       "variantKey" : "fully-allocated-instances-are-ineligible"
    },
    {
       "requirementId" : "REQ-VSB-JOB-DISTRIBUTION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "SelectInstanceAsync_RejectsMissingInputsAndCancellation",
+      "testMethod" : "SelectInstance_RejectsMissingInputsAndCancellationAsync",
       "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobDistributionStrategyTests",
       "variantKey" : "required-inputs-and-cancellation-are-honored"
    },

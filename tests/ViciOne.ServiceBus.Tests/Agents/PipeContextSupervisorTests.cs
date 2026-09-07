@@ -50,7 +50,7 @@ public sealed class PipeContextSupervisorTests
         var supervisor = new PipeContextSupervisor<TrackingContext>(factory);
         var observedContextIds = new List<string>();
         var callCount = 0;
-        IPipe<TrackingContext> pipe = Pipe.New<TrackingContext>(configurator => configurator.UseExecuteAsync(async context =>
+        IPipe<TrackingContext> pipe = Pipe.New<TrackingContext>(configurator => configurator.UseExecuteAwaited(async context =>
         {
             observedContextIds.Add(context.Id);
             if (Interlocked.Increment(ref callCount) == 2)

@@ -32,7 +32,7 @@ public static class RespondExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> RespondAsync<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
+    public static EventActivityBinder<TInstance, TData> RespondAwaited<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
         Task<TMessage> message, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
@@ -67,7 +67,7 @@ public static class RespondExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> RespondAsync<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
+    public static EventActivityBinder<TInstance, TData> RespondAwaited<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
         AsyncEventMessageFactory<TInstance, TData, TMessage> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -85,7 +85,7 @@ public static class RespondExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    public static EventActivityBinder<TInstance, TData> RespondAsync<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
+    public static EventActivityBinder<TInstance, TData> RespondAwaited<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
         Func<BehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -121,7 +121,7 @@ public static class RespondExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> RespondAsync<TInstance, TException, TMessage>(
+    public static ExceptionActivityBinder<TInstance, TException> RespondAwaited<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source, Task<TMessage> message,
         Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -158,7 +158,7 @@ public static class RespondExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TException> RespondAsync<TInstance, TException, TMessage>(
+    public static ExceptionActivityBinder<TInstance, TException> RespondAwaited<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source,
         AsyncEventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory,
         Action<SendContext<TMessage>>? callback = null)
@@ -198,7 +198,7 @@ public static class RespondExtensions
     /// <param name="message">The message to process.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> RespondAsync<TInstance, TData, TException, TMessage>(
+    public static ExceptionActivityBinder<TInstance, TData, TException> RespondAwaited<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source, Task<TMessage> message,
         Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
@@ -239,7 +239,7 @@ public static class RespondExtensions
     /// <param name="messageFactory">The message factory.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    public static ExceptionActivityBinder<TInstance, TData, TException> RespondAsync<TInstance, TData, TException, TMessage>(
+    public static ExceptionActivityBinder<TInstance, TData, TException> RespondAwaited<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source,
         AsyncEventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory,
         Action<SendContext<TMessage>>? callback = null)

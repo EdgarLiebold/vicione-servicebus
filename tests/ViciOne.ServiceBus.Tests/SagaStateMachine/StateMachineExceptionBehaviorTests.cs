@@ -205,17 +205,17 @@ public sealed class StateMachineExceptionBehaviorTests
             .Then(context => context.Saga.Markers.Add("after-throw"))
             .Catch<ApplicationException>(caught => caught
                 .If(_ => true, selected => selected.Then(context => context.Saga.Markers.Add("if-true")))
-                .IfAsync(_ => Task.FromResult(true), selected => selected.Then(context => context.Saga.Markers.Add("if-async-true")))
+                .IfAwaited(_ => Task.FromResult(true), selected => selected.Then(context => context.Saga.Markers.Add("if-async-true")))
                 .IfElse(
                     _ => false,
                     selected => selected.Then(context => context.Saga.Markers.Add("if-false-then")),
                     selected => selected.Then(context => context.Saga.Markers.Add("if-false-else")))
-                .IfElseAsync(
+                .IfElseAwaited(
                     _ => Task.FromResult(false),
                     selected => selected.Then(context => context.Saga.Markers.Add("if-async-false-then")),
                     selected => selected.Then(context => context.Saga.Markers.Add("if-async-false-else")))
                 .Then(context => Capture(context.Saga, context.Exception, "catch"))
-                .ThenAsync(context =>
+                .ThenAwaited(context =>
                 {
                     context.Saga.Markers.Add("catch-async");
                     return Task.CompletedTask;
@@ -251,12 +251,12 @@ public sealed class StateMachineExceptionBehaviorTests
             .Then(context => context.Saga.Markers.Add("after-throw"))
             .Catch<Exception>(caught => caught
                 .If(_ => true, selected => selected.Then(context => context.Saga.Markers.Add("if-true")))
-                .IfAsync(_ => Task.FromResult(true), selected => selected.Then(context => context.Saga.Markers.Add("if-async-true")))
+                .IfAwaited(_ => Task.FromResult(true), selected => selected.Then(context => context.Saga.Markers.Add("if-async-true")))
                 .IfElse(
                     _ => false,
                     selected => selected.Then(context => context.Saga.Markers.Add("if-false-then")),
                     selected => selected.Then(context => context.Saga.Markers.Add("if-false-else")))
-                .IfElseAsync(
+                .IfElseAwaited(
                     _ => Task.FromResult(false),
                     selected => selected.Then(context => context.Saga.Markers.Add("if-async-false-then")),
                     selected => selected.Then(context => context.Saga.Markers.Add("if-async-false-else")))

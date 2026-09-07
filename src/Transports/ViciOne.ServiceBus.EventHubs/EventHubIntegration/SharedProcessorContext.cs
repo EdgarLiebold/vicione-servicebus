@@ -37,9 +37,8 @@ public class SharedProcessorContext :
     }
 
     /// <summary>Releases the processor client lease and its partition callback subscriptions.</summary>
-    /// <param name="processorLockContext">The callback target whose lease is being released.</param>
-    public void ReleaseClient(ProcessorClientBuilderContext processorLockContext)
+    public void ReleaseClient()
     {
-        _context.ReleaseClient(processorLockContext);
+        _context.ReleaseClient();
     }
 }

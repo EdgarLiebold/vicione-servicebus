@@ -139,7 +139,7 @@ public sealed class RateAndConcurrencyLimitTests
         IPipe<IndexedLimitContext> pipe = Pipe.New<IndexedLimitContext>(configuration =>
         {
             configuration.UseConcurrencyLimit(2, router);
-            configuration.UseExecuteAsync(async context =>
+            configuration.UseExecuteAwaited(async context =>
             {
                 entered[context.Index].SetResult();
                 await release[context.Index].Task;
@@ -182,7 +182,7 @@ public sealed class RateAndConcurrencyLimitTests
         IPipe<LimitContext> pipe = Pipe.New<LimitContext>(configuration =>
         {
             configuration.UseConcurrencyLimit(limit);
-            configuration.UseExecuteAsync(async _ =>
+            configuration.UseExecuteAwaited(async _ =>
             {
                 int current = Interlocked.Increment(ref executing);
                 UpdateMaximum(ref maximum, current);
@@ -228,7 +228,7 @@ public sealed class RateAndConcurrencyLimitTests
         using var filter = new ConcurrencyLimitFilter<IndexedLimitContext>(3);
         TaskCompletionSource[] entered = [NewSignal(), NewSignal(), NewSignal()];
         var release = NewSignal();
-        IPipe<IndexedLimitContext> next = Pipe.ExecuteAsync<IndexedLimitContext>(async context =>
+        IPipe<IndexedLimitContext> next = Pipe.ExecuteAwaited<IndexedLimitContext>(async context =>
         {
             entered[context.Index].SetResult();
             await release.Task;

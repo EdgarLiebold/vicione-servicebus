@@ -31,7 +31,7 @@ public class Receiver :
     /// <summary>Registers processor callbacks and starts the Azure Service Bus processor.</summary>
     public virtual void Start()
     {
-        _clientContext.OnMessageAsync(OnMessageAsync, ExceptionHandlerAsync);
+        _clientContext.ConfigureMessageProcessor(OnMessageAsync, ExceptionHandlerAsync);
 
         SetReady(_clientContext.StartAsync());
     }

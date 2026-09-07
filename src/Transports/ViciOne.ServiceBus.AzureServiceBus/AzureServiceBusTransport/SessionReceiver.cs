@@ -25,7 +25,7 @@ public class SessionReceiver :
     /// <summary>Registers session callbacks and starts the Azure Service Bus session processor.</summary>
     public override void Start()
     {
-        _clientContext.OnSessionAsync(OnSessionAsync, ExceptionHandlerAsync);
+        _clientContext.ConfigureSessionProcessor(OnSessionAsync, ExceptionHandlerAsync);
 
         SetReady(_clientContext.StartAsync());
     }

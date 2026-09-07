@@ -21,13 +21,13 @@ public interface ClientContext :
     /// <summary>Registers the asynchronous message and error callbacks used by a non-session processor.</summary>
     /// <param name="callback">The callback that processes each received message.</param>
     /// <param name="exceptionHandler">The callback that processes processor errors.</param>
-    void OnMessageAsync(Func<ProcessMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
+    void ConfigureMessageProcessor(Func<ProcessMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
         Func<ProcessErrorEventArgs, Task> exceptionHandler);
 
     /// <summary>Registers the asynchronous message and error callbacks used by a session processor.</summary>
     /// <param name="callback">The callback that processes each received session message.</param>
     /// <param name="exceptionHandler">The callback that processes processor errors.</param>
-    void OnSessionAsync(Func<ProcessSessionMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
+    void ConfigureSessionProcessor(Func<ProcessSessionMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
         Func<ProcessErrorEventArgs, Task> exceptionHandler);
 
     /// <summary>Starts the configured message or session processor.</summary>

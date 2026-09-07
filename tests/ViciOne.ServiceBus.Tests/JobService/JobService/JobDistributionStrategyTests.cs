@@ -13,7 +13,7 @@ public sealed class JobDistributionStrategyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-DISTRIBUTION", "least-loaded-eligible-instance-is-selected")]
-    public async Task SelectInstanceAsync_SelectsTheLeastLoadedEligibleInstance()
+    public async Task SelectInstance_SelectsTheLeastLoadedEligibleInstanceAsync()
     {
         ConsumeContext<AllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
         JobDistributionContext distributionContext = CreateDistributionContext(
@@ -35,7 +35,7 @@ public sealed class JobDistributionStrategyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-DISTRIBUTION", "least-recently-used-breaks-equal-load")]
-    public async Task SelectInstanceAsync_PrefersTheLeastRecentlyUsedInstanceWhenLoadsMatch()
+    public async Task SelectInstance_PrefersTheLeastRecentlyUsedInstanceWhenLoadsMatchAsync()
     {
         ConsumeContext<AllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
         JobDistributionContext distributionContext = CreateDistributionContext(
@@ -56,7 +56,7 @@ public sealed class JobDistributionStrategyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-DISTRIBUTION", "fully-allocated-instances-are-ineligible")]
-    public async Task SelectInstanceAsync_ReturnsNullWhenEveryInstanceIsAtItsLimit()
+    public async Task SelectInstance_ReturnsNullWhenEveryInstanceIsAtItsLimitAsync()
     {
         ConsumeContext<AllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
         JobDistributionContext distributionContext = CreateDistributionContext(
@@ -79,7 +79,7 @@ public sealed class JobDistributionStrategyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-DISTRIBUTION", "required-inputs-and-cancellation-are-honored")]
-    public async Task SelectInstanceAsync_RejectsMissingInputsAndCancellation()
+    public async Task SelectInstance_RejectsMissingInputsAndCancellationAsync()
     {
         ConsumeContext<AllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
         JobDistributionContext distributionContext = CreateDistributionContext(

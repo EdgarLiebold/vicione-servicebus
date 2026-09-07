@@ -14,7 +14,7 @@ public sealed class ForkFilterTests
         var nextEntered = NewSignal();
         var releaseFork = NewSignal();
         var releaseNext = NewSignal();
-        IPipe<TestPipeContext> fork = Pipe.ExecuteAsync<TestPipeContext>(async _ =>
+        IPipe<TestPipeContext> fork = Pipe.ExecuteAwaited<TestPipeContext>(async _ =>
         {
             forkEntered.SetResult();
             await releaseFork.Task;
@@ -22,7 +22,7 @@ public sealed class ForkFilterTests
         IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
         {
             configuration.UseFork(fork);
-            configuration.UseExecuteAsync(async _ =>
+            configuration.UseExecuteAwaited(async _ =>
             {
                 nextEntered.SetResult();
                 await releaseNext.Task;
@@ -45,11 +45,11 @@ public sealed class ForkFilterTests
     {
         var forkFailure = new ForkBranchException("fork");
         var nextFailure = new NextBranchException("next");
-        IPipe<TestPipeContext> fork = Pipe.ExecuteAsync<TestPipeContext>(_ => Task.FromException(forkFailure));
+        IPipe<TestPipeContext> fork = Pipe.ExecuteAwaited<TestPipeContext>(_ => Task.FromException(forkFailure));
         IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
         {
             configuration.UseFork(fork);
-            configuration.UseExecuteAsync(_ => Task.FromException(nextFailure));
+            configuration.UseExecuteAwaited(_ => Task.FromException(nextFailure));
         });
 
         Task send = pipe.SendAsync(new TestPipeContext());

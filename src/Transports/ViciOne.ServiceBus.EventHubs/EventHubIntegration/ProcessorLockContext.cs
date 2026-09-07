@@ -39,7 +39,7 @@ public class ProcessorLockContext :
     /// <returns>A completed value task.</returns>
     public ValueTask DisposeAsync()
     {
-        _context.ReleaseClient(this);
+        _context.ReleaseClient();
 
         _pending.Dispose();
 

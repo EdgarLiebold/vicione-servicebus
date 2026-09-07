@@ -143,7 +143,7 @@ public sealed class StateMachineConditionTests
     {
         behavior = behavior.Then(context => context.Saga.InitializeOnly = context.Message.InitializeOnly);
         behavior = useAsync
-            ? behavior.IfAsync(StartConditionAsync, selected => selected.Then(context => context.Saga.IfBranches++))
+            ? behavior.IfAwaited(StartConditionAsync, selected => selected.Then(context => context.Saga.IfBranches++))
             : behavior.If(StartCondition, selected => selected.Then(context => context.Saga.IfBranches++));
 
         return behavior
@@ -158,7 +158,7 @@ public sealed class StateMachineConditionTests
     {
         if (useAsync)
         {
-            return behavior.IfElseAsync(
+            return behavior.IfElseAwaited(
                 ExplicitConditionAsync,
                 selected => selected
                     .Then(context => context.Saga.ThenBranches++)
@@ -179,7 +179,7 @@ public sealed class StateMachineConditionTests
         State running,
         bool useAsync) =>
         useAsync
-            ? behavior.IfAsync(EnterConditionAsync, selected => selected.TransitionTo(running))
+            ? behavior.IfAwaited(EnterConditionAsync, selected => selected.TransitionTo(running))
             : behavior.If(EnterCondition, selected => selected.TransitionTo(running));
 
     private static bool StartCondition(BehaviorContext<ConditionInstance, StartSignal> context)

@@ -74,7 +74,7 @@ public static class Pipe
     /// <typeparam name="T">The pipe context type.</typeparam>
     /// <param name="action">The method to execute.</param>
     /// <returns>The constructed pipe.</returns>
-    public static IPipe<T> ExecuteAsync<T>(Func<T, Task> action)
+    public static IPipe<T> ExecuteAwaited<T>(Func<T, Task> action)
         where T : class, PipeContext
     {
         if (action == null)

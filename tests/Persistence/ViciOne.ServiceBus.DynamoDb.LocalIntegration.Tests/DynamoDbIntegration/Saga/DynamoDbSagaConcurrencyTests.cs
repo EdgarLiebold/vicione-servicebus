@@ -232,7 +232,7 @@ public sealed class DynamoDbSagaConcurrencyTests
             During(
                 Active,
                 When(AddVoice)
-                    .ThenAsync(context => probe.EnterAsync(context.CancellationToken))
+                    .ThenAwaited(context => probe.EnterAsync(context.CancellationToken))
                     .Then(context =>
                     {
                         if (!context.Saga.Voices.Contains(context.Message.Voice, StringComparer.Ordinal))

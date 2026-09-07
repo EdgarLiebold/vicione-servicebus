@@ -54,7 +54,7 @@ public static class FutureExtensions
         ArgumentNullException.ThrowIfNull(binder);
         ArgumentNullException.ThrowIfNull(getResultId);
         ArgumentNullException.ThrowIfNull(messageFactory);
-        return binder.ThenAsync(context =>
+        return binder.ThenAwaited(context =>
         {
             var resultId = getResultId(context);
 

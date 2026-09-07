@@ -18,7 +18,7 @@ public sealed class ServiceBusConnectionContextTests
         var connection = new ServiceBusConnectionContext(client, null!, CancellationToken.None);
         ReceiveEndpointSettings settings = CreateSettings();
         var context = new QueueClientContext(connection, new Uri("sb://unit.servicebus.invalid/input"), settings, null!);
-        context.OnMessageAsync(
+        context.ConfigureMessageProcessor(
             static (_, _, _) => Task.CompletedTask,
             static _ => Task.CompletedTask);
         using var caller = new CancellationTokenSource();

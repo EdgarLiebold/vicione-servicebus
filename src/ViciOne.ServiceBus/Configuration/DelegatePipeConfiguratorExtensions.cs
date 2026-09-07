@@ -20,7 +20,7 @@ public static class DelegatePipeConfiguratorExtensions
     /// <summary>Adds a callback filter to the send pipeline.</summary>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="callback">The callback to invoke.</param>
-    public static void UseSendExecuteAsync(this ISendPipeConfigurator configurator, Func<SendContext, Task> callback)
+    public static void UseSendExecuteAwaited(this ISendPipeConfigurator configurator, Func<SendContext, Task> callback)
     {
         var specification = new AsyncDelegatePipeSpecification<SendContext>(callback);
 
@@ -43,7 +43,7 @@ public static class DelegatePipeConfiguratorExtensions
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="callback">The callback to invoke.</param>
-    public static void UseSendExecuteAsync<T>(this ISendPipeConfigurator configurator, Func<SendContext<T>, Task> callback)
+    public static void UseSendExecuteAwaited<T>(this ISendPipeConfigurator configurator, Func<SendContext<T>, Task> callback)
         where T : class
     {
         var specification = new AsyncDelegatePipeSpecification<SendContext<T>>(callback);

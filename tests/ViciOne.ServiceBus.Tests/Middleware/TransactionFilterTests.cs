@@ -19,7 +19,7 @@ public sealed class TransactionFilterTests
         IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
         {
             configuration.UseTransaction();
-            configuration.UseExecuteAsync(async context =>
+            configuration.UseExecuteAwaited(async context =>
             {
                 using TransactionScope scope = context.CreateTransactionScope();
                 beforeAwait = Transaction.Current;

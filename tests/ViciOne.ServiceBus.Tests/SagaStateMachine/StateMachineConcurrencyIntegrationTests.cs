@@ -292,7 +292,7 @@ public sealed class StateMachineConcurrencyIntegrationTests
             WhenEnter(
                 PendingDecision,
                 behavior => behavior
-                    .ThenAsync(async context =>
+                    .ThenAwaited(async context =>
                     {
                         entered.TrySetResult();
                         context.Saga.Decision = await decision;
@@ -329,7 +329,7 @@ public sealed class StateMachineConcurrencyIntegrationTests
             During(
                 Active,
                 When(Complete)
-                    .ThenAsync(async _ =>
+                    .ThenAwaited(async _ =>
                     {
                         completionEntered.TrySetResult();
                         await releaseCompletion;

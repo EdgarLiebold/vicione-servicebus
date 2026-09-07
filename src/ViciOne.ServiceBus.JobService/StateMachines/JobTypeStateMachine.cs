@@ -34,7 +34,7 @@ internal sealed class JobTypeStateMachine :
 
         During(Initial, Active, Idle,
             When(JobSlotRequested)
-                .IfElseAsync(context => context.IsSlotAvailableAsync(context.GetPayload<JobSagaSettings>().HeartbeatTimeout),
+                .IfElseAwaited(context => context.IsSlotAvailableAsync(context.GetPayload<JobSagaSettings>().HeartbeatTimeout),
                     allocate => allocate
                         .TransitionTo(Active),
                     unavailable => unavailable

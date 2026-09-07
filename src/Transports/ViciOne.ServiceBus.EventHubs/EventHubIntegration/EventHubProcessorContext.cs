@@ -31,6 +31,9 @@ public class EventHubProcessorContext :
         Func<PartitionClosingEventArgs, Task>? partitionClosingHandler, CancellationToken cancellationToken)
         : base(cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(hostConfiguration);
+        ArgumentNullException.ThrowIfNull(client);
+
         _hostConfiguration = hostConfiguration;
 
         _client = client;
@@ -48,38 +51,33 @@ public class EventHubProcessorContext :
     /// <returns>The owned processor client.</returns>
     public EventProcessorClient GetClient(ProcessorClientBuilderContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         if (_releaseClient != null)
-            throw new InvalidOperationException("The client has already been configured and will throw an exception if it is used again");
+            throw new InvalidOperationException("The processor client already has an active lease.");
 
-        Func<PartitionInitializingEventArgs, Task> OnPartitionInitializingAsync()
+        async Task HandlePartitionInitializingAsync(PartitionInitializingEventArgs args)
         {
-            return async args =>
-            {
-                await context.OnPartitionInitializingAsync(args).ConfigureAwait(false);
-                if (_partitionInitializingHandler != null)
-                    await _partitionInitializingHandler(args).ConfigureAwait(false);
-            };
+            await context.OnPartitionInitializingAsync(args).ConfigureAwait(false);
+            if (_partitionInitializingHandler != null)
+                await _partitionInitializingHandler(args).ConfigureAwait(false);
         }
 
-        _client.PartitionInitializingAsync += OnPartitionInitializingAsync();
-
-        Func<PartitionClosingEventArgs, Task> OnPartitionClosingAsync()
+        async Task HandlePartitionClosingAsync(PartitionClosingEventArgs args)
         {
-            return async args =>
-            {
-                if (_partitionClosingHandler != null)
-                    await _partitionClosingHandler(args).ConfigureAwait(false);
+            if (_partitionClosingHandler != null)
+                await _partitionClosingHandler(args).ConfigureAwait(false);
 
-                await context.OnPartitionClosingAsync(args).ConfigureAwait(false);
-            };
+            await context.OnPartitionClosingAsync(args).ConfigureAwait(false);
         }
 
-        _client.PartitionClosingAsync += OnPartitionClosingAsync();
+        _client.PartitionInitializingAsync += HandlePartitionInitializingAsync;
+        _client.PartitionClosingAsync += HandlePartitionClosingAsync;
 
         _releaseClient = () =>
         {
-            _client.PartitionClosingAsync -= OnPartitionClosingAsync();
-            _client.PartitionInitializingAsync -= OnPartitionInitializingAsync();
+            _client.PartitionClosingAsync -= HandlePartitionClosingAsync;
+            _client.PartitionInitializingAsync -= HandlePartitionInitializingAsync;
 
             _releaseClient = null;
         };
@@ -88,8 +86,7 @@ public class EventHubProcessorContext :
     }
 
     /// <summary>Removes the partition callbacks installed by the current client lease.</summary>
-    /// <param name="processorLockContext">The callback target whose lease is being released.</param>
-    public void ReleaseClient(ProcessorClientBuilderContext processorLockContext)
+    public void ReleaseClient()
     {
         _releaseClient?.Invoke();
     }

@@ -198,7 +198,7 @@ public sealed class PostgreSqlSagaConcurrencyTests
                     .TransitionTo(Active));
             During(Active,
                 When(Increment)
-                    .ThenAsync(context => handler.EnterAsync(context.CancellationToken))
+                    .ThenAwaited(context => handler.EnterAsync(context.CancellationToken))
                     .Then(context => context.Saga.Counter++)
                     .Publish(context => new SerializedSagaIncremented(context.Saga.CorrelationId, context.Saga.Counter)));
         }

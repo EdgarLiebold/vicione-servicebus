@@ -19,7 +19,7 @@ public sealed class ConfigurationObserverTests
                 consumer.Message<AlphaMessage>(message => message.UseExecute(_ => { }));
                 consumer.Message<ZuluMessage>(message => message.UseExecute(_ => { }));
                 consumer.ConsumerMessage<AlphaMessage>(message => message.UseExecute(_ => { }));
-                consumer.UseExecuteAsync(_ => Task.CompletedTask);
+                consumer.UseExecuteAwaited(_ => Task.CompletedTask);
             }),
             endpoint => endpoint.Consumer<DualConsumer>(),
             endpoint => endpoint.Consumer(typeof(DualConsumer), requestedType =>
@@ -65,7 +65,7 @@ public sealed class ConfigurationObserverTests
                     saga.Message<SagaStarted>(message => message.UseExecute(_ => { }));
                     saga.Message<SagaContinued>(message => message.UseExecute(_ => { }));
                     saga.SagaMessage<SagaStarted>(message => message.UseExecute(_ => { }));
-                    saga.UseExecuteAsync(_ => Task.CompletedTask);
+                    saga.UseExecuteAwaited(_ => Task.CompletedTask);
                 });
             });
         });

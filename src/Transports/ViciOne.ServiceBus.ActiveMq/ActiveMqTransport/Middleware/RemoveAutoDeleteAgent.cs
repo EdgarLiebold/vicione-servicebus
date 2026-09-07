@@ -34,7 +34,7 @@ public sealed class RemoveAutoDeleteAgent :
         var failures = new ActiveMqCleanupFailures();
         await failures.CaptureAsync(
             () => _connectionContextSupervisor.SendAsync(
-                Pipe.ExecuteAsync<ConnectionContext>(async connectionContext =>
+                Pipe.ExecuteAwaited<ConnectionContext>(async connectionContext =>
                 {
                     // Topology setup runs through a scoped session which is released as soon as that
                     // operation completes. Resolve the current connection at stop time: after broker

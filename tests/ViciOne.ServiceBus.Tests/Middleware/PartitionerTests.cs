@@ -20,7 +20,7 @@ public sealed class PartitionerTests
         IPipe<PartitionContext> pipe = Pipe.New<PartitionContext>(configuration =>
         {
             configuration.UsePartitioner(partitioner, context => context.Key);
-            configuration.UseExecuteAsync(async context =>
+            configuration.UseExecuteAwaited(async context =>
             {
                 Interlocked.Increment(ref total);
                 if (context.Key[0] == 1)

@@ -49,13 +49,13 @@ public class QueueClientContext :
     /// <summary>Creates a non-session queue processor and registers its asynchronous message and error callbacks.</summary>
     /// <param name="callback">The callback that processes each received message.</param>
     /// <param name="exceptionHandler">The callback that processes SDK processor errors.</param>
-    public void OnMessageAsync(Func<ProcessMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
+    public void ConfigureMessageProcessor(Func<ProcessMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
         Func<ProcessErrorEventArgs, Task> exceptionHandler)
     {
         if (_processor != null)
-            throw new InvalidOperationException("OnMessageAsync can only be called once");
+            throw new InvalidOperationException("The message processor has already been configured.");
         if (_sessionProcessor != null)
-            throw new InvalidOperationException("OnMessageAsync cannot be called with operating on a session");
+            throw new InvalidOperationException("A message processor cannot be configured after a session processor.");
 
         _processor = ConnectionContext.CreateQueueProcessor(_settings);
 
@@ -66,13 +66,13 @@ public class QueueClientContext :
     /// <summary>Creates a session-aware queue processor and registers its asynchronous message and error callbacks.</summary>
     /// <param name="callback">The callback that processes each received session message.</param>
     /// <param name="exceptionHandler">The callback that processes SDK processor errors.</param>
-    public void OnSessionAsync(Func<ProcessSessionMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
+    public void ConfigureSessionProcessor(Func<ProcessSessionMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
         Func<ProcessErrorEventArgs, Task> exceptionHandler)
     {
         if (_sessionProcessor != null)
-            throw new InvalidOperationException("OnSessionAsync can only be called once");
+            throw new InvalidOperationException("The session processor has already been configured.");
         if (_processor != null)
-            throw new InvalidOperationException("OnSessionAsync cannot be called with operating without a session");
+            throw new InvalidOperationException("A session processor cannot be configured after a message processor.");
 
         _sessionProcessor = ConnectionContext.CreateQueueSessionProcessor(_settings);
 

@@ -67,7 +67,7 @@ internal static class RabbitMqFaultRedriveExecutor
             hostConfiguration.Topology.SendTopology.ErrorQueueNameFormatter);
 
         RabbitMqFaultRedriveResult? result = null;
-        await hostConfiguration.ConnectionContextSupervisor.SendAsync(Pipe.ExecuteAsync<ConnectionContext>(async connectionContext =>
+        await hostConfiguration.ConnectionContextSupervisor.SendAsync(Pipe.ExecuteAwaited<ConnectionContext>(async connectionContext =>
         {
             result = await ExecuteAsync(connectionContext, request, sourceQueueName, cancellationToken).ConfigureAwait(false);
         }), cancellationToken).ConfigureAwait(false);

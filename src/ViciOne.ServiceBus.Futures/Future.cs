@@ -54,16 +54,16 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         During(Completed,
             When(CommandReceived)
-                .RespondAsync(x => GetResultAsync(x)),
+                .RespondAwaited(x => GetResultAsync(x)),
             When(ResultRequested)
-                .RespondAsync(x => GetResultAsync(x))
+                .RespondAwaited(x => GetResultAsync(x))
         );
 
         During(Faulted,
             When(CommandReceived)
-                .RespondAsync(x => GetFaultAsync(x)),
+                .RespondAwaited(x => GetFaultAsync(x)),
             When(ResultRequested)
-                .RespondAsync(x => GetFaultAsync(x))
+                .RespondAwaited(x => GetFaultAsync(x))
         );
 
         WhenAnyFaulted(x => x.SetFaultInitializer(context =>
@@ -126,7 +126,7 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         Initially(
             When(CommandReceived)
-                .ThenAsync(context => request.SendAsync(context))
+                .ThenAwaited(context => request.SendAsync(context))
         );
 
         return request;
@@ -148,7 +148,7 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         Initially(
             When(CommandReceived)
-                .ThenAsync(context => request.SendAsync(context, inputSelector(context.Message)))
+                .ThenAwaited(context => request.SendAsync(context, inputSelector(context.Message)))
         );
 
         return request;
@@ -171,7 +171,7 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         Initially(
             When(CommandReceived)
-                .ThenAsync(context => request.SendRangeAsync(context, inputSelector(context.Message)))
+                .ThenAwaited(context => request.SendRangeAsync(context, inputSelector(context.Message)))
         );
 
         return request;
@@ -187,7 +187,7 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         Initially(
             When(CommandReceived)
-                .ThenAsync(context => routingSlip.ExecuteAsync(context))
+                .ThenAwaited(context => routingSlip.ExecuteAsync(context))
         );
 
         return routingSlip;
@@ -308,11 +308,11 @@ public abstract class Future<TCommand, TResult, TFault> :
                 .SetResult(x => pendingIdProvider(x.Message), x => x.Message)
                 .IfElse(context => context.Saga.Completed.HasValue,
                     completed => completed
-                        .ThenAsync(context => _result.SetResultAsync(context))
+                        .ThenAwaited(context => _result.SetResultAsync(context))
                         .TransitionTo(Completed),
                     notCompleted => notCompleted.If(context => context.Saga.Faulted.HasValue,
                         faulted => faulted
-                            .ThenAsync(context => _fault.SetFaultedAsync(context))
+                            .ThenAwaited(context => _fault.SetFaultedAsync(context))
                             .TransitionTo(Faulted)))
         );
     }
@@ -331,7 +331,7 @@ public abstract class Future<TCommand, TResult, TFault> :
                 .SetFault(x => pendingIdProvider(x.Message.Message), x => x.Message)
                 .If(context => context.Saga.Faulted.HasValue,
                     faulted => faulted
-                        .ThenAsync(context => _fault.SetFaultedAsync(context))
+                        .ThenAwaited(context => _fault.SetFaultedAsync(context))
                         .TransitionTo(Faulted))
         );
     }
@@ -344,7 +344,7 @@ public abstract class Future<TCommand, TResult, TFault> :
                 .SetFault(x => x.Message)
                 .If(context => context.Saga.Faulted.HasValue,
                     faulted => faulted
-                        .ThenAsync(context => _fault.SetFaultedAsync(context))
+                        .ThenAwaited(context => _fault.SetFaultedAsync(context))
                         .TransitionTo(Faulted))
         );
     }
@@ -363,7 +363,7 @@ public abstract class Future<TCommand, TResult, TFault> :
         ArgumentNullException.ThrowIfNull(callback);
         DuringAny(
             When(resultEvent)
-                .ThenAsync(context => callback(context))
+                .ThenAwaited(context => callback(context))
                 .TransitionTo(Completed)
         );
     }
@@ -385,7 +385,7 @@ public abstract class Future<TCommand, TResult, TFault> :
         ArgumentNullException.ThrowIfNull(callback);
         DuringAny(
             When(faultEvent)
-                .ThenAsync(context => callback(context))
+                .ThenAwaited(context => callback(context))
                 .TransitionTo(Faulted)
         );
     }

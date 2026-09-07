@@ -118,7 +118,7 @@ public sealed class AzureTableSagaConcurrencyTests
                     .TransitionTo(Active));
             During(Active,
                 When(Increment)
-                    .ThenAsync(context => handler.EnterAsync(context.CancellationToken))
+                    .ThenAwaited(context => handler.EnterAsync(context.CancellationToken))
                     .Then(context => context.Saga.Counter++)
                     .Publish(context => new ConcurrentSagaIncremented(
                         context.Saga.CorrelationId,

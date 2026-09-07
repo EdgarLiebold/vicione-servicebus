@@ -28,7 +28,7 @@ public class ServiceBusQueueMoveTransport
     /// <returns>A task that completes when the destination sender accepts the copied message.</returns>
     protected Task MoveAsync(ReceiveContext context, Action<ServiceBusMessage, SendHeaders> preSend)
     {
-        IPipe<SendEndpointContext> clientPipe = Pipe.ExecuteAsync<SendEndpointContext>(async clientContext =>
+        IPipe<SendEndpointContext> clientPipe = Pipe.ExecuteAwaited<SendEndpointContext>(async clientContext =>
         {
             if (!context.TryGetPayload(out ServiceBusMessageContext? messageContext))
                 throw new ArgumentException("The ReceiveContext must contain a BrokeredMessageContext (from Azure Service Bus)", nameof(context));

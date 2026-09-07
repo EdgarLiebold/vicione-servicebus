@@ -497,7 +497,7 @@ public sealed class SagaTestHarnessBehaviorTests
             Initially(
                 When(Request)
                     .Then(context => context.Saga.Value = context.Message.Value)
-                    .RespondAsync(context => Task.FromResult(new ResponsiveResponse(
+                    .RespondAwaited(context => Task.FromResult(new ResponsiveResponse(
                         context.Saga.CorrelationId,
                         $"response:{context.Saga.Value}")))
                     .TransitionTo(Responded));
@@ -538,7 +538,7 @@ public sealed class SagaTestHarnessBehaviorTests
                 .SelectId(context => context.Message.CorrelationId));
             Event(() => Check, configuration => configuration
                 .CorrelateBy(instance => instance.Key, context => context.Message.Key)
-                .OnMissingInstance(missing => missing.ExecuteAsync(context =>
+                .OnMissingInstance(missing => missing.ExecuteAwaited(context =>
                     context.Advanced().PublishAsync(new QuerySagaMissing(context.Message.Key), context.CancellationToken))));
 
             Initially(
@@ -550,7 +550,7 @@ public sealed class SagaTestHarnessBehaviorTests
                 Running,
                 When(Check)
                     .Then(context => context.Saga.CheckCount++)
-                    .RespondAsync(context => Task.FromResult(new QuerySagaStatus(
+                    .RespondAwaited(context => Task.FromResult(new QuerySagaStatus(
                         context.Saga.CorrelationId,
                         context.Saga.Key,
                         context.Saga.CheckCount))));

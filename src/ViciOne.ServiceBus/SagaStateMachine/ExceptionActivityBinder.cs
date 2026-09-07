@@ -39,7 +39,7 @@ public interface ExceptionActivityBinder<TSaga, TException> :
     /// <param name="condition">The condition.</param>
     /// <param name="activityCallback">The activity callback.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    ExceptionActivityBinder<TSaga, TException> IfAsync(StateMachineAsyncExceptionCondition<TSaga, TException> condition,
+    ExceptionActivityBinder<TSaga, TException> IfAwaited(StateMachineAsyncExceptionCondition<TSaga, TException> condition,
         Func<ExceptionActivityBinder<TSaga, TException>, ExceptionActivityBinder<TSaga, TException>> activityCallback);
 
     /// <summary>Create a conditional branch of activities for processing.</summary>
@@ -56,7 +56,7 @@ public interface ExceptionActivityBinder<TSaga, TException> :
     /// <param name="thenActivityCallback">The then activity callback.</param>
     /// <param name="elseActivityCallback">The else activity callback.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    ExceptionActivityBinder<TSaga, TException> IfElseAsync(StateMachineAsyncExceptionCondition<TSaga, TException> condition,
+    ExceptionActivityBinder<TSaga, TException> IfElseAwaited(StateMachineAsyncExceptionCondition<TSaga, TException> condition,
         Func<ExceptionActivityBinder<TSaga, TException>, ExceptionActivityBinder<TSaga, TException>> thenActivityCallback,
         Func<ExceptionActivityBinder<TSaga, TException>, ExceptionActivityBinder<TSaga, TException>> elseActivityCallback);
 }
@@ -107,7 +107,7 @@ public interface ExceptionActivityBinder<TSaga, TMessage, TException> :
     /// <param name="condition">The condition.</param>
     /// <param name="activityCallback">The activity callback.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    ExceptionActivityBinder<TSaga, TMessage, TException> IfAsync(StateMachineAsyncExceptionCondition<TSaga, TMessage, TException> condition,
+    ExceptionActivityBinder<TSaga, TMessage, TException> IfAwaited(StateMachineAsyncExceptionCondition<TSaga, TMessage, TException> condition,
         Func<ExceptionActivityBinder<TSaga, TMessage, TException>, ExceptionActivityBinder<TSaga, TMessage, TException>> activityCallback);
 
     /// <summary>Create a conditional branch of activities for processing.</summary>
@@ -124,7 +124,7 @@ public interface ExceptionActivityBinder<TSaga, TMessage, TException> :
     /// <param name="thenActivityCallback">The then activity callback.</param>
     /// <param name="elseActivityCallback">The else activity callback.</param>
     /// <returns>The exception activity binder produced by the operation.</returns>
-    ExceptionActivityBinder<TSaga, TMessage, TException> IfElseAsync(StateMachineAsyncExceptionCondition<TSaga, TMessage, TException> condition,
+    ExceptionActivityBinder<TSaga, TMessage, TException> IfElseAwaited(StateMachineAsyncExceptionCondition<TSaga, TMessage, TException> condition,
         Func<ExceptionActivityBinder<TSaga, TMessage, TException>, ExceptionActivityBinder<TSaga, TMessage, TException>> thenActivityCallback,
         Func<ExceptionActivityBinder<TSaga, TMessage, TException>, ExceptionActivityBinder<TSaga, TMessage, TException>> elseActivityCallback);
 }

@@ -676,7 +676,7 @@ public sealed class CircuitBreakerFilterTests
                     .SetTimeProvider(timeProvider);
                 configure?.Invoke(options);
             });
-            configuration.UseExecuteAsync(protectedOperation);
+            configuration.UseExecuteAwaited(protectedOperation);
         });
     }
 

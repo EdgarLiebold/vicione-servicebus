@@ -44,7 +44,7 @@ public interface EventActivityBinder<TSaga> :
     /// <param name="condition">The condition.</param>
     /// <param name="activityCallback">The activity callback.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    EventActivityBinder<TSaga> IfAsync(StateMachineAsyncCondition<TSaga> condition,
+    EventActivityBinder<TSaga> IfAwaited(StateMachineAsyncCondition<TSaga> condition,
         Func<EventActivityBinder<TSaga>, EventActivityBinder<TSaga>> activityCallback);
 
     /// <summary>Create a conditional branch of activities for processing.</summary>
@@ -61,7 +61,7 @@ public interface EventActivityBinder<TSaga> :
     /// <param name="thenActivityCallback">The then activity callback.</param>
     /// <param name="elseActivityCallback">The else activity callback.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    EventActivityBinder<TSaga> IfElseAsync(StateMachineAsyncCondition<TSaga> condition,
+    EventActivityBinder<TSaga> IfElseAwaited(StateMachineAsyncCondition<TSaga> condition,
         Func<EventActivityBinder<TSaga>, EventActivityBinder<TSaga>> thenActivityCallback,
         Func<EventActivityBinder<TSaga>, EventActivityBinder<TSaga>> elseActivityCallback);
 }
@@ -117,7 +117,7 @@ public interface EventActivityBinder<TSaga, TMessage> :
     /// <param name="condition">The condition.</param>
     /// <param name="activityCallback">The activity callback.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    EventActivityBinder<TSaga, TMessage> IfAsync(StateMachineAsyncCondition<TSaga, TMessage> condition,
+    EventActivityBinder<TSaga, TMessage> IfAwaited(StateMachineAsyncCondition<TSaga, TMessage> condition,
         Func<EventActivityBinder<TSaga, TMessage>, EventActivityBinder<TSaga, TMessage>> activityCallback);
 
     /// <summary>Create a conditional branch of activities for processing.</summary>
@@ -134,7 +134,7 @@ public interface EventActivityBinder<TSaga, TMessage> :
     /// <param name="thenActivityCallback">The then activity callback.</param>
     /// <param name="elseActivityCallback">The else activity callback.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
-    EventActivityBinder<TSaga, TMessage> IfElseAsync(StateMachineAsyncCondition<TSaga, TMessage> condition,
+    EventActivityBinder<TSaga, TMessage> IfElseAwaited(StateMachineAsyncCondition<TSaga, TMessage> condition,
         Func<EventActivityBinder<TSaga, TMessage>, EventActivityBinder<TSaga, TMessage>> thenActivityCallback,
         Func<EventActivityBinder<TSaga, TMessage>, EventActivityBinder<TSaga, TMessage>> elseActivityCallback);
 }

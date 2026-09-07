@@ -29,7 +29,7 @@ public class EventMissingInstanceConfigurator<TSaga, TMessage> :
     /// <summary>Runs the configured action.</summary>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The pipe produced by the operation.</returns>
-    public IPipe<ConsumeContext<TMessage>> ExecuteAsync(Func<ConsumeContext<TMessage>, Task> callback)
+    public IPipe<ConsumeContext<TMessage>> ExecuteAwaited(Func<ConsumeContext<TMessage>, Task> callback)
     {
         return callback.ToPipe();
     }

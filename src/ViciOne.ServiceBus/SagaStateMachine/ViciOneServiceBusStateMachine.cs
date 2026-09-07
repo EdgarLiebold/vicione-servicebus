@@ -1814,7 +1814,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
         DuringAny(
             When(schedule.AnyReceived)
-                .ThenAsync(async context =>
+                .ThenAwaited(async context =>
                 {
                     Guid? tokenId = schedule.GetTokenId(context.Saga);
 
