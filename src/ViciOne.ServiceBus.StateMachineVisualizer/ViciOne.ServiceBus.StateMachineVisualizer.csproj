@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Description>$(Description)</Description>
+    <Description>Generates Graphviz DOT and Mermaid diagrams from ViciOne ServiceBus state machines.</Description>
     <PackageTags>ViciOne.ServiceBus;StateMachine;Visualizer</PackageTags>
   </PropertyGroup>
 

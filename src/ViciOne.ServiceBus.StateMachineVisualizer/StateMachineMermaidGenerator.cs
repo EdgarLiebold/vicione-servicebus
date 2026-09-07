@@ -3,35 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using QuikGraph;
+using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.SagaStateMachine;
-using ViciOne.ServiceBus.Visualizer.Abstractions;
+using ViciOne.ServiceBus.Sagas;
+using ViciOne.ServiceBus.Visualizer.Internal;
 
 namespace ViciOne.ServiceBus.Visualizer;
 
-/// <summary>Generates state machine mermaid values.</summary>
-public class StateMachineMermaidGenerator : StateMachineGenerator
+/// <summary>Generates Mermaid flowchart documents from state-machine graphs.</summary>
+public sealed class StateMachineMermaidGenerator
 {
     const string OpenBracket = "«";
     const string CloseBracket = "»";
+    readonly AdjacencyGraph<Vertex, Edge<Vertex>> _graph;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="data">The data.</param>
-    public StateMachineMermaidGenerator(StateMachineGraph data)
-        : base(data)
+    /// <summary>Creates a generator for a state-machine graph.</summary>
+    /// <param name="graph">The state-machine graph to render.</param>
+    public StateMachineMermaidGenerator(StateMachineGraph graph)
     {
+        _graph = StateMachineGraphFactory.Create(graph);
     }
 
-    /// <summary>Creates mermaid file.</summary>
-    /// <returns>The created mermaid file.</returns>
-    public string CreateMermaidFile()
+    /// <summary>Generates a Mermaid flowchart document.</summary>
+    /// <returns>The complete Mermaid document.</returns>
+    public string Generate()
     {
         StringBuilder output = new();
-        List<Vertex> vertices = Graph.Vertices.ToList();
+        List<Vertex> vertices = _graph.Vertices.ToList();
 
         output.Append("flowchart TB;");
 
-        foreach (Edge<Vertex> edge in Graph.Edges)
+        foreach (Edge<Vertex> edge in _graph.Edges)
         {
             var source = FormatVertex(edge.Source, vertices);
             var target = FormatVertex(edge.Target, vertices);

@@ -2,27 +2,31 @@ using System;
 using QuikGraph;
 using QuikGraph.Graphviz;
 using QuikGraph.Graphviz.Dot;
+using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.SagaStateMachine;
-using ViciOne.ServiceBus.Visualizer.Abstractions;
+using ViciOne.ServiceBus.Sagas;
+using ViciOne.ServiceBus.Visualizer.Internal;
 
 namespace ViciOne.ServiceBus.Visualizer;
 
-/// <summary>Generates state machine graphviz values.</summary>
-public class StateMachineGraphvizGenerator : StateMachineGenerator
+/// <summary>Generates Graphviz DOT documents from state-machine graphs.</summary>
+public sealed class StateMachineGraphvizGenerator
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="data">The data.</param>
-    public StateMachineGraphvizGenerator(StateMachineGraph data)
-        : base(data)
+    readonly AdjacencyGraph<Vertex, Edge<Vertex>> _graph;
+
+    /// <summary>Creates a generator for a state-machine graph.</summary>
+    /// <param name="graph">The state-machine graph to render.</param>
+    public StateMachineGraphvizGenerator(StateMachineGraph graph)
     {
+        _graph = StateMachineGraphFactory.Create(graph);
     }
 
-    /// <summary>Creates dot file.</summary>
-    /// <returns>The created dot file.</returns>
-    public string CreateDotFile()
+    /// <summary>Generates a Graphviz DOT document.</summary>
+    /// <returns>The complete DOT document.</returns>
+    public string Generate()
     {
-        var algorithm = new GraphvizAlgorithm<Vertex, Edge<Vertex>>(Graph);
+        var algorithm = new GraphvizAlgorithm<Vertex, Edge<Vertex>>(_graph);
         algorithm.FormatVertex += VertexStyler;
         return algorithm.Generate();
     }

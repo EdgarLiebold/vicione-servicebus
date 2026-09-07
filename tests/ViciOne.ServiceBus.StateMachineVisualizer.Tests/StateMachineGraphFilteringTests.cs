@@ -3,18 +3,18 @@ using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Visualizer;
 using Xunit;
 
-namespace ViciOne.ServiceBus.StateMachineVisualizer.Tests.Abstractions;
+namespace ViciOne.ServiceBus.StateMachineVisualizer.Tests;
 
-public sealed class StateMachineGeneratorTests
+public sealed class StateMachineGraphFilteringTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-VISUALIZER-GRAPH-FILTER", "composite-target-outgoing-edges")]
     public void CompositeEventAssignment_RemovesOutgoingEdgesFromItsTargetState()
     {
         string composite = new StateMachineGraphvizGenerator(StateMachineGraphFixtures.Composite(true))
-            .CreateDotFile();
+            .Generate();
         string ordinary = new StateMachineGraphvizGenerator(StateMachineGraphFixtures.Composite(false))
-            .CreateDotFile();
+            .Generate();
 
         Assert.Contains("5 [shape=invhouse, label=\"AllReceived\"]", composite, StringComparison.Ordinal);
         Assert.DoesNotContain("2 -> 4;", composite, StringComparison.Ordinal);
@@ -30,8 +30,8 @@ public sealed class StateMachineGeneratorTests
     {
         var graph = new StateMachineGraph([], []);
 
-        string graphviz = new StateMachineGraphvizGenerator(graph).CreateDotFile();
-        string mermaid = new StateMachineMermaidGenerator(graph).CreateMermaidFile();
+        string graphviz = new StateMachineGraphvizGenerator(graph).Generate();
+        string mermaid = new StateMachineMermaidGenerator(graph).Generate();
 
         Assert.Equal(StateMachineGraphFixtures.PlatformLines("digraph G {\n}"), graphviz);
         Assert.Equal("flowchart TB;", mermaid);

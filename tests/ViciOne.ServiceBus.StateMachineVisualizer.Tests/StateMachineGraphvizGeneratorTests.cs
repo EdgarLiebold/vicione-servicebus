@@ -39,7 +39,7 @@ public sealed class StateMachineGraphvizGeneratorTests
     public void CanonicalGraph_RendersTheExactDotContract()
     {
         string output = new StateMachineGraphvizGenerator(StateMachineGraphFixtures.Canonical())
-            .CreateDotFile();
+            .Generate();
 
         Assert.Equal(StateMachineGraphFixtures.PlatformLines(Expected), output);
     }

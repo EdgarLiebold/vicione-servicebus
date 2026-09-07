@@ -57,7 +57,7 @@ public sealed class StateMachineInputTests
     {
         var machine = new DeclarativeMachine();
 
-        string output = new StateMachineGraphvizGenerator(machine.GetGraph()).CreateDotFile();
+        string output = new StateMachineGraphvizGenerator(machine.GetGraph()).Generate();
 
         Assert.Equal(StateMachineGraphFixtures.PlatformLines(ExpectedGraphviz), output);
     }
@@ -88,7 +88,7 @@ public sealed class StateMachineInputTests
             .During(failed)
             .When(restart, context => context.Message.Name != null, binder => binder.TransitionTo(running)));
 
-        string output = new StateMachineMermaidGenerator(machine.GetGraph()).CreateMermaidFile();
+        string output = new StateMachineMermaidGenerator(machine.GetGraph()).Generate();
 
         Assert.Equal(StateMachineGraphFixtures.PlatformLines(ExpectedMermaid), output);
     }
@@ -99,7 +99,7 @@ public sealed class StateMachineInputTests
     {
         var machine = new RequestMachine();
 
-        string output = new StateMachineGraphvizGenerator(machine.GetGraph()).CreateDotFile();
+        string output = new StateMachineGraphvizGenerator(machine.GetGraph()).Generate();
 
         Assert.Contains(machine.Process.Pending.Name, output, StringComparison.Ordinal);
         Assert.Contains(machine.Process.Completed.Name, output, StringComparison.Ordinal);

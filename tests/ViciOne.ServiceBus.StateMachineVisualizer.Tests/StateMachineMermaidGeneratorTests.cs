@@ -27,7 +27,7 @@ public sealed class StateMachineMermaidGeneratorTests
     public void CanonicalGraph_RendersTheExactMermaidContract()
     {
         string output = new StateMachineMermaidGenerator(StateMachineGraphFixtures.Canonical())
-            .CreateMermaidFile();
+            .Generate();
 
         Assert.Equal(StateMachineGraphFixtures.PlatformLines(Expected), output);
     }

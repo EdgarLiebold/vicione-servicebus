@@ -13526,15 +13526,12 @@ TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.UriTypeHandler [base
   METHOD public System.Void SetValue(System.Data.IDbDataParameter parameter, System.Uri value)
 
 ASSEMBLY ViciOne.ServiceBus.StateMachineVisualizer VERSION=1.0.0.0
-TYPE class public ViciOne.ServiceBus.Visualizer.Abstractions.StateMachineGenerator [abstract]
-  CTOR public ViciOne.ServiceBus.Visualizer.Abstractions.StateMachineGenerator(ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph data)
-  FIELD protected readonly QuikGraph.AdjacencyGraph<ViciOne.ServiceBus.SagaStateMachine.Vertex,QuikGraph.Edge<ViciOne.ServiceBus.SagaStateMachine.Vertex>> Graph
-TYPE class public ViciOne.ServiceBus.Visualizer.StateMachineGraphvizGenerator [base=ViciOne.ServiceBus.Visualizer.Abstractions.StateMachineGenerator]
-  CTOR public ViciOne.ServiceBus.Visualizer.StateMachineGraphvizGenerator(ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph data)
-  METHOD public System.String CreateDotFile()
-TYPE class public ViciOne.ServiceBus.Visualizer.StateMachineMermaidGenerator [base=ViciOne.ServiceBus.Visualizer.Abstractions.StateMachineGenerator]
-  CTOR public ViciOne.ServiceBus.Visualizer.StateMachineMermaidGenerator(ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph data)
-  METHOD public System.String CreateMermaidFile()
+TYPE class public ViciOne.ServiceBus.Visualizer.StateMachineGraphvizGenerator [sealed]
+  CTOR public ViciOne.ServiceBus.Visualizer.StateMachineGraphvizGenerator(ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph graph)
+  METHOD public System.String Generate()
+TYPE class public ViciOne.ServiceBus.Visualizer.StateMachineMermaidGenerator [sealed]
+  CTOR public ViciOne.ServiceBus.Visualizer.StateMachineMermaidGenerator(ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph graph)
+  METHOD public System.String Generate()
 
 ASSEMBLY ViciOne.ServiceBus.Testing VERSION=1.0.0.0
 TYPE class public Microsoft.Extensions.DependencyInjection.DependencyInjectionTestingExtensions [static]
