@@ -6,20 +6,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using ViciOne.ServiceBus.Analyzers.Helpers;
+using Microsoft.CodeAnalysis.Operations;
+using ViciOne.ServiceBus.Analyzers.Internals;
 
 namespace ViciOne.ServiceBus.Analyzers;
 
-/// <summary>Analyzes source code for message contract.</summary>
+/// <summary>Validates anonymous message values against their declared message contracts.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class MessageContractAnalyzer :
+public sealed class MessageContractAnalyzer :
     DiagnosticAnalyzer
 {
-    /// <summary>Exposes the structurally compatible rule id used by the containing type.</summary>
+    /// <summary>Identifies structurally incompatible anonymous message values.</summary>
     public const string StructurallyCompatibleRuleId = "VOSB1002";
-    /// <summary>Exposes the valid message contract structure rule id used by the containing type.</summary>
-    public const string ValidMessageContractStructureRuleId = "VOSB1003";
-    /// <summary>Exposes the missing properties rule id used by the containing type.</summary>
+    /// <summary>Identifies message-contract properties omitted from anonymous values.</summary>
     public const string MissingPropertiesRuleId = "VOSB1004";
 
     const string Category = "Usage";
@@ -30,24 +29,18 @@ public class MessageContractAnalyzer :
         Category, DiagnosticSeverity.Error, true,
         "Anonymous type should map to message contract.");
 
-    static readonly DiagnosticDescriptor ValidMessageContractStructureRule = new DiagnosticDescriptor(ValidMessageContractStructureRuleId,
-        "Message contract does not have a valid structure",
-        "Message contract '{0}' does not have a valid structure",
-        Category, DiagnosticSeverity.Error, true,
-        "Message contract should have a valid structure. Properties should be primitive, string or IReadOnlyList or ImmutableArray of a primitive, string or message contract.");
-
     static readonly DiagnosticDescriptor MissingPropertiesRule = new DiagnosticDescriptor(MissingPropertiesRuleId,
         "Anonymous type is missing properties that are in the message contract",
         "Anonymous type is missing properties that are in the message contract '{0}'. The following properties are missing: {1}.",
         Category, DiagnosticSeverity.Info, true,
         "Anonymous type misses properties that are in the message contract.");
 
-    /// <summary>Gets the supported diagnostics.</summary>
+    /// <summary>Gets the structural-compatibility and missing-property diagnostics.</summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ImmutableArray.Create(StructurallyCompatibleRule, ValidMessageContractStructureRule, MissingPropertiesRule);
+        ImmutableArray.Create(StructurallyCompatibleRule, MissingPropertiesRule);
 
-    /// <summary>Initializes the target component.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Registers analysis for invocations of recognized message producers.</summary>
+    /// <param name="context">The analyzer registration context.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context == null)
@@ -56,22 +49,17 @@ public class MessageContractAnalyzer :
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
-        context.RegisterSyntaxNodeAction(AnalyzeAnonymousObjectCreationNode, SyntaxKind.InvocationExpression);
+        context.RegisterSyntaxNodeAction(AnalyzeProducerInvocation, SyntaxKind.InvocationExpression);
     }
 
-    void AnalyzeAnonymousObjectCreationNode(SyntaxNodeAnalysisContext context)
+    static void AnalyzeProducerInvocation(SyntaxNodeAnalysisContext context)
     {
         ITypeSymbol typeArgument;
 
         var invocationExpression = (InvocationExpressionSyntax)context.Node;
-        if (!(invocationExpression.Expression is MemberAccessExpressionSyntax memberAccessExpr))
+        if (context.SemanticModel.GetSymbolInfo(invocationExpression.Expression, context.CancellationToken).Symbol is not IMethodSymbol methodSymbol)
             return;
 
-        var symbol = context.SemanticModel.GetSymbolInfo(memberAccessExpr);
-        if (symbol.Symbol?.Kind != SymbolKind.Method)
-            return;
-
-        var methodSymbol = (IMethodSymbol)symbol.Symbol;
         if (!methodSymbol.IsProducerMethod(out var producerIndex))
             return;
 
@@ -94,34 +82,24 @@ public class MessageContractAnalyzer :
                     break;
                 }
             default:
-                throw new InvalidOperationException();
+                return;
         }
 
-        var argumentIndex = -1;
-        for (var i = 0; i < methodSymbol.Parameters.Length; i++)
-        {
-            if (methodSymbol.Parameters[i].Type.SpecialType == SpecialType.System_Object)
+        var messageArgument = invocationExpression.ArgumentList.Arguments.FirstOrDefault(argument =>
+            context.SemanticModel.GetOperation(argument, context.CancellationToken) is IArgumentOperation
             {
-                argumentIndex = i;
-                break;
-            }
-        }
-
-        if (argumentIndex == -1)
+                Parameter.Type.SpecialType: SpecialType.System_Object,
+            });
+        if (messageArgument == null)
             return;
 
-        if (argumentIndex >= invocationExpression.ArgumentList.Arguments.Count)
-            return;
+        SyntaxNode messageValue = messageArgument.Expression;
 
-        var argument = invocationExpression.ArgumentList.Arguments[argumentIndex];
-
-        SyntaxNode anonymousObject = argument.Expression;
-
-        var typeConverterHelper = new TypeConversionHelper(context.SemanticModel);
+        var typeConversion = new MessageTypeConversion(context.SemanticModel);
 
         if (typeArgument.HasMessageContract(out var messageContractType))
         {
-            var anonymousType = context.SemanticModel.GetTypeInfo(anonymousObject).Type;
+            var anonymousType = context.SemanticModel.GetTypeInfo(messageValue, context.CancellationToken).Type;
 
             if (anonymousType == null || anonymousType.SpecialType == SpecialType.System_Object)
                 return;
@@ -133,9 +111,10 @@ public class MessageContractAnalyzer :
                     .ToImmutableDictionary();
 
             var incompatibleProperties = new List<string>();
-            if (!TypesAreStructurallyCompatible(typeConverterHelper, messageContractType, anonymousType, string.Empty, incompatibleProperties))
+            if (!TypesAreStructurallyCompatible(typeConversion, messageContractType, anonymousType, string.Empty, incompatibleProperties))
             {
-                var diagnostic = Diagnostic.Create(StructurallyCompatibleRule, anonymousType.Locations[0], immutableDictionary, messageContractType.Name,
+                var diagnostic = Diagnostic.Create(StructurallyCompatibleRule, DiagnosticLocation(anonymousType, messageValue), immutableDictionary,
+                    messageContractType.Name,
                     string.Join(", ", incompatibleProperties));
                 context.ReportDiagnostic(diagnostic);
             }
@@ -144,14 +123,19 @@ public class MessageContractAnalyzer :
             IEnumerable<ITypeSymbol> symbolPath = Enumerable.Empty<ITypeSymbol>();
             if (HasMissingProperties(anonymousType, messageContractType, string.Empty, symbolPath, missingProperties))
             {
-                var diagnostic = Diagnostic.Create(MissingPropertiesRule, anonymousType.Locations[0], immutableDictionary,
+                var diagnostic = Diagnostic.Create(MissingPropertiesRule, DiagnosticLocation(anonymousType, messageValue), immutableDictionary,
                     messageContractType.Name, string.Join(", ", missingProperties));
                 context.ReportDiagnostic(diagnostic);
             }
         }
+
+        static Location DiagnosticLocation(ITypeSymbol messageType, SyntaxNode messageValue)
+        {
+            return messageType.Locations.FirstOrDefault(location => location.IsInSource) ?? messageValue.GetLocation();
+        }
     }
 
-    static bool TypesAreStructurallyCompatible(TypeConversionHelper typeConverterHelper, ITypeSymbol contractType, ITypeSymbol inputType,
+    static bool TypesAreStructurallyCompatible(MessageTypeConversion typeConversion, ITypeSymbol contractType, ITypeSymbol inputType,
         string path, ICollection<string> incompatibleProperties)
     {
         if (SymbolEqualityComparer.Default.Equals(inputType, contractType))
@@ -169,33 +153,33 @@ public class MessageContractAnalyzer :
 
             if (contractProperty == null)
             {
-                if (!IsHeaderProperty(typeConverterHelper, inputProperty))
+                if (!IsHeaderProperty(typeConversion, inputProperty))
                 {
                     incompatibleProperties.Add(propertyPath);
                     result = false;
                 }
             }
-            else if (!PropertyTypesAreStructurallyCompatible(typeConverterHelper, contractProperty, inputProperty, propertyPath, incompatibleProperties))
+            else if (!PropertyTypesAreStructurallyCompatible(typeConversion, contractProperty, inputProperty, propertyPath, incompatibleProperties))
                 result = false;
         }
 
         return result;
     }
 
-    static bool PropertyTypesAreStructurallyCompatible(TypeConversionHelper typeConverterHelper, IPropertySymbol contractProperty,
+    static bool PropertyTypesAreStructurallyCompatible(MessageTypeConversion typeConversion, IPropertySymbol contractProperty,
         IPropertySymbol inputProperty,
         string path, ICollection<string> incompatibleProperties)
     {
         var contractPropertyType = contractProperty.Type;
         var inputPropertyType = inputProperty.Type;
 
-        if (typeConverterHelper.CanConvert(contractPropertyType, inputPropertyType))
+        if (typeConversion.CanConvert(contractPropertyType, inputPropertyType))
             return true;
 
-        var result = AnonymousTypeAndInterfaceAreStructurallyCompatible(typeConverterHelper, contractPropertyType, inputPropertyType, path,
+        var result = AnonymousTypeAndInterfaceAreStructurallyCompatible(typeConversion, contractPropertyType, inputPropertyType, path,
                 incompatibleProperties)
-            ?? EnumerableTypesAreStructurallyCompatible(typeConverterHelper, contractPropertyType, inputPropertyType, path, incompatibleProperties)
-            ?? DictionaryTypesAreStructurallyCompatible(typeConverterHelper, contractPropertyType, inputPropertyType, path, incompatibleProperties);
+            ?? EnumerableTypesAreStructurallyCompatible(typeConversion, contractPropertyType, inputPropertyType, path, incompatibleProperties)
+            ?? DictionaryTypesAreStructurallyCompatible(typeConversion, contractPropertyType, inputPropertyType, path, incompatibleProperties);
         if (result.HasValue)
             return result.Value;
 
@@ -203,7 +187,7 @@ public class MessageContractAnalyzer :
         return false;
     }
 
-    static bool? AnonymousTypeAndInterfaceAreStructurallyCompatible(TypeConversionHelper typeConverterHelper, ITypeSymbol contractPropertyType,
+    static bool? AnonymousTypeAndInterfaceAreStructurallyCompatible(MessageTypeConversion typeConversion, ITypeSymbol contractPropertyType,
         ITypeSymbol inputPropertyType,
         string path, ICollection<string> incompatibleProperties)
     {
@@ -211,7 +195,7 @@ public class MessageContractAnalyzer :
         {
             if (contractPropertyType.TypeKind.IsClassOrInterface())
             {
-                if (!TypesAreStructurallyCompatible(typeConverterHelper, contractPropertyType, inputPropertyType, path, incompatibleProperties))
+                if (!TypesAreStructurallyCompatible(typeConversion, contractPropertyType, inputPropertyType, path, incompatibleProperties))
                     return false;
             }
             else
@@ -226,7 +210,7 @@ public class MessageContractAnalyzer :
         return null;
     }
 
-    static bool? EnumerableTypesAreStructurallyCompatible(TypeConversionHelper typeConverterHelper, ITypeSymbol contractPropertyType,
+    static bool? EnumerableTypesAreStructurallyCompatible(MessageTypeConversion typeConversion, ITypeSymbol contractPropertyType,
         ITypeSymbol inputPropertyType, string path, ICollection<string> incompatibleProperties)
     {
         if (contractPropertyType.IsImmutableArray(out var contractElementType)
@@ -241,11 +225,11 @@ public class MessageContractAnalyzer :
                 || inputPropertyType.IsEnumerable(out inputElementType)
                 || inputPropertyType.IsCollection(out inputElementType))
             {
-                if (!ElementTypesAreStructurallyCompatible(typeConverterHelper, contractElementType, inputElementType, path, incompatibleProperties))
+                if (!ElementTypesAreStructurallyCompatible(typeConversion, contractElementType, inputElementType, path, incompatibleProperties))
                     return false;
             }
             // A convertible scalar initializes a one-element message-contract collection.
-            else if (!typeConverterHelper.CanConvert(contractElementType, inputPropertyType))
+            else if (!typeConversion.CanConvert(contractElementType, inputPropertyType))
             {
                 incompatibleProperties.Add(path);
                 return false;
@@ -257,15 +241,15 @@ public class MessageContractAnalyzer :
         return null;
     }
 
-    static bool ElementTypesAreStructurallyCompatible(TypeConversionHelper typeConverterHelper, ITypeSymbol contractElementType,
+    static bool ElementTypesAreStructurallyCompatible(MessageTypeConversion typeConversion, ITypeSymbol contractElementType,
         ITypeSymbol inputElementType, string path, ICollection<string> incompatibleProperties)
     {
-        if (typeConverterHelper.CanConvert(contractElementType, inputElementType))
+        if (typeConversion.CanConvert(contractElementType, inputElementType))
             return true;
 
         if (contractElementType.TypeKind.IsClassOrInterface())
         {
-            if (!TypesAreStructurallyCompatible(typeConverterHelper, contractElementType, inputElementType, path, incompatibleProperties))
+            if (!TypesAreStructurallyCompatible(typeConversion, contractElementType, inputElementType, path, incompatibleProperties))
                 return false;
         }
         else
@@ -277,14 +261,14 @@ public class MessageContractAnalyzer :
         return true;
     }
 
-    static bool? DictionaryTypesAreStructurallyCompatible(TypeConversionHelper typeConverterHelper, ITypeSymbol contractPropertyType,
+    static bool? DictionaryTypesAreStructurallyCompatible(MessageTypeConversion typeConversion, ITypeSymbol contractPropertyType,
         ITypeSymbol inputPropertyType, string path, ICollection<string> incompatibleProperties)
     {
         if (contractPropertyType.IsDictionary(out var contractKeyType, out var contractValueType))
         {
             if (inputPropertyType.IsDictionary(out var inputKeyType, out var inputValueType))
             {
-                if (!KeyValueTypesAreStructurallyCompatible(typeConverterHelper, contractKeyType, contractValueType, inputKeyType, inputValueType, path,
+                if (!KeyValueTypesAreStructurallyCompatible(typeConversion, contractKeyType, contractValueType, inputKeyType, inputValueType, path,
                         incompatibleProperties))
                     return false;
             }
@@ -300,16 +284,21 @@ public class MessageContractAnalyzer :
         return null;
     }
 
-    static bool KeyValueTypesAreStructurallyCompatible(TypeConversionHelper typeConverterHelper, ITypeSymbol contractKeyType, ITypeSymbol contractValueType,
+    static bool KeyValueTypesAreStructurallyCompatible(MessageTypeConversion typeConversion, ITypeSymbol contractKeyType, ITypeSymbol contractValueType,
         ITypeSymbol inputKeyType, ITypeSymbol inputValueType, string path, ICollection<string> incompatibleProperties)
     {
-        if (typeConverterHelper.CanConvert(contractKeyType, inputKeyType)
-            && typeConverterHelper.CanConvert(contractValueType, inputValueType))
+        if (!typeConversion.CanConvert(contractKeyType, inputKeyType))
+        {
+            incompatibleProperties.Add(path);
+            return false;
+        }
+
+        if (typeConversion.CanConvert(contractValueType, inputValueType))
             return true;
 
         if (contractValueType.TypeKind.IsClassOrInterface())
         {
-            if (!TypesAreStructurallyCompatible(typeConverterHelper, contractValueType, inputValueType, path, incompatibleProperties))
+            if (!TypesAreStructurallyCompatible(typeConversion, contractValueType, inputValueType, path, incompatibleProperties))
                 return false;
         }
         else
@@ -321,7 +310,7 @@ public class MessageContractAnalyzer :
         return true;
     }
 
-    static bool IsHeaderProperty(TypeConversionHelper typeConverterHelper, IPropertySymbol messageProperty)
+    static bool IsHeaderProperty(MessageTypeConversion typeConversion, IPropertySymbol messageProperty)
     {
         if (!messageProperty.Name.StartsWith("__"))
             return false;
@@ -331,18 +320,18 @@ public class MessageContractAnalyzer :
 
         return messageProperty.Name switch
         {
-            "__SourceAddress" => typeConverterHelper.CanConvert(typeof(Uri), messageProperty.Type),
-            "__DestinationAddress" => typeConverterHelper.CanConvert(typeof(Uri), messageProperty.Type),
-            "__ResponseAddress" => typeConverterHelper.CanConvert(typeof(Uri), messageProperty.Type),
-            "__FaultAddress" => typeConverterHelper.CanConvert(typeof(Uri), messageProperty.Type),
-            "__RequestId" => typeConverterHelper.CanConvert(typeof(Guid), messageProperty.Type),
-            "__MessageId" => typeConverterHelper.CanConvert(typeof(Guid), messageProperty.Type),
-            "__ConversationId" => typeConverterHelper.CanConvert(typeof(Guid), messageProperty.Type),
-            "__CorrelationId" => typeConverterHelper.CanConvert(typeof(Guid), messageProperty.Type),
-            "__InitiatorId" => typeConverterHelper.CanConvert(typeof(Guid), messageProperty.Type),
-            "__ScheduledMessageId" => typeConverterHelper.CanConvert(typeof(Guid), messageProperty.Type),
-            "__TimeToLive" => typeConverterHelper.CanConvert(typeof(TimeSpan), messageProperty.Type),
-            "__Durable" => typeConverterHelper.CanConvert(typeof(bool), messageProperty.Type),
+            "__SourceAddress" => typeConversion.CanConvert(typeof(Uri), messageProperty.Type),
+            "__DestinationAddress" => typeConversion.CanConvert(typeof(Uri), messageProperty.Type),
+            "__ResponseAddress" => typeConversion.CanConvert(typeof(Uri), messageProperty.Type),
+            "__FaultAddress" => typeConversion.CanConvert(typeof(Uri), messageProperty.Type),
+            "__RequestId" => typeConversion.CanConvert(typeof(Guid), messageProperty.Type),
+            "__MessageId" => typeConversion.CanConvert(typeof(Guid), messageProperty.Type),
+            "__ConversationId" => typeConversion.CanConvert(typeof(Guid), messageProperty.Type),
+            "__CorrelationId" => typeConversion.CanConvert(typeof(Guid), messageProperty.Type),
+            "__InitiatorId" => typeConversion.CanConvert(typeof(Guid), messageProperty.Type),
+            "__ScheduledMessageId" => typeConversion.CanConvert(typeof(Guid), messageProperty.Type),
+            "__TimeToLive" => typeConversion.CanConvert(typeof(TimeSpan), messageProperty.Type),
+            "__Durable" => typeConversion.CanConvert(typeof(bool), messageProperty.Type),
             _ => false
         };
     }
@@ -376,6 +365,7 @@ public class MessageContractAnalyzer :
         string path, IEnumerable<ITypeSymbol> symbolPath, ICollection<string> missingProperties)
     {
         var result = EnumerableTypeHasMissingProperties(inputProperty, contractProperty, path, symbolPath, missingProperties)
+            ?? DictionaryTypeHasMissingProperties(inputProperty, contractProperty, path, symbolPath, missingProperties)
             ?? AnonymousTypeHasMissingProperties(inputProperty, contractProperty, path, symbolPath, missingProperties);
 
         return result ?? false;
@@ -386,11 +376,15 @@ public class MessageContractAnalyzer :
     {
         if (contractProperty.Type.IsImmutableArray(out var contractElementType)
             || contractProperty.Type.IsList(out contractElementType)
-            || contractProperty.Type.IsArray(out contractElementType))
+            || contractProperty.Type.IsArray(out contractElementType)
+            || contractProperty.Type.IsCollection(out contractElementType)
+            || contractProperty.Type.IsEnumerable(out contractElementType))
         {
             if ((inputProperty.Type.IsImmutableArray(out var inputElementType)
                     || inputProperty.Type.IsList(out inputElementType)
-                    || inputProperty.Type.IsArray(out inputElementType))
+                    || inputProperty.Type.IsArray(out inputElementType)
+                    || inputProperty.Type.IsCollection(out inputElementType)
+                    || inputProperty.Type.IsEnumerable(out inputElementType))
                 && contractElementType.TypeKind.IsClassOrInterface()
                 && !symbolPath.Contains(contractElementType, SymbolEqualityComparer.Default)
                 && HasMissingProperties(inputElementType, contractElementType, path, symbolPath.Concat(new[] { contractElementType }), missingProperties))
@@ -400,6 +394,22 @@ public class MessageContractAnalyzer :
         }
 
         return null;
+    }
+
+    static bool? DictionaryTypeHasMissingProperties(IPropertySymbol inputProperty, IPropertySymbol contractProperty,
+        string path, IEnumerable<ITypeSymbol> symbolPath, ICollection<string> missingProperties)
+    {
+        if (!contractProperty.Type.IsDictionary(out _, out var contractValueType))
+            return null;
+
+        if (inputProperty.Type.IsDictionary(out _, out var inputValueType)
+            && contractValueType.TypeKind.IsClassOrInterface()
+            && !symbolPath.Contains(contractValueType, SymbolEqualityComparer.Default)
+            && HasMissingProperties(inputValueType, contractValueType, path,
+                symbolPath.Concat(new[] { contractValueType }), missingProperties))
+            return true;
+
+        return false;
     }
 
     static bool? AnonymousTypeHasMissingProperties(IPropertySymbol inputProperty, IPropertySymbol contractProperty,

@@ -21,10 +21,31 @@
     "testMethod": "TaskRunFix_PreservesExistingTokenUseAndAddsTheMissingOneAsync"
   },
   {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-CODEFIX",
+    "variantKey": "named-arguments-remain-valid",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CancellationTokenOverloadMethodFixerTests",
+    "testMethod": "NamedArgumentFix_AddsANamedCancellationTokenAsync"
+  },
+  {
     "requirementId": "REQ-VSB-MESSAGE-CONTRACT-CODEFIX",
     "variantKey": "canonical-scenario-catalog",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.MessageContractCodeFixProvider.MessageContractCodeFixScenarioTests",
     "testMethod": "MissingPropertiesFix_AddsOnlyTheRequiredLeafInitializersAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-CODEFIX",
+    "variantKey": "inferred-identifier-is-preserved",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.MessageContractCodeFixProvider.MessageContractCodeFixScenarioTests",
+    "testMethod": "MissingPropertiesFix_PreservesAnInferredIdentifierInitializerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-CODEFIX",
+    "variantKey": "qualified-custom-value-type",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.MessageContractCodeFixProvider.MessageContractCodeFixScenarioTests",
+    "testMethod": "MissingPropertiesFix_QualifiesACustomValueTypeOutsideTheCurrentNamespaceAsync"
   }
 ]

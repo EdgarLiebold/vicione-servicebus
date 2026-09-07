@@ -2,7 +2,7 @@ using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using ViciOne.ServiceBus.Analyzers.Tests.Fixtures;
-using ViciOne.ServiceBus.Analyzers.V5;
+using ViciOne.ServiceBus.Analyzers.Rules;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Infrastructure.Roslyn;
 using Xunit;

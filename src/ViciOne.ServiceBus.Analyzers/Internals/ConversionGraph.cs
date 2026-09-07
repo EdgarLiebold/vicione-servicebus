@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 
-namespace ViciOne.ServiceBus.Analyzers.Helpers;
+namespace ViciOne.ServiceBus.Analyzers.Internals;
 
-class NodeList<T>
+sealed class ConversionGraph<T>
+    where T : notnull
 {
     readonly IList<HashSet<int>> _nodes;
-    readonly NodeTable<T> _nodeTable;
+    readonly SymbolIndex<T> _symbolIndex;
 
-    public NodeList(int capacity)
+    public ConversionGraph(int capacity, IEqualityComparer<T>? comparer = null)
     {
         _nodes = new List<HashSet<int>>(capacity);
-        _nodeTable = new NodeTable<T>(capacity);
+        _symbolIndex = new SymbolIndex<T>(capacity, comparer);
     }
 
     public void Add(T key, params T[] values)
@@ -25,12 +26,9 @@ class NodeList<T>
         return _nodes[Index(key) - 1].Contains(Index(value));
     }
 
-    /// <summary>Retrieve the index for a given key.</summary>
-    /// <param name="key">The key.</param>
-    /// <returns>The index.</returns>
     int Index(T key)
     {
-        var index = _nodeTable[key];
+        var index = _symbolIndex[key];
 
         if (index <= _nodes.Count)
             return index;

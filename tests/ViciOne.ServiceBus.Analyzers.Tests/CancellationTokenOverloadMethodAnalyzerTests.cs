@@ -175,6 +175,37 @@ namespace ConsoleApplication1
         await AssertDiagnosticsAsync(source);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "incompatible-overload-shapes-are-silent")]
+    public async Task ReorderedAndRefIncompatibleOverloads_DoNotReportAsync()
+    {
+        var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
+namespace ConsoleApplication1
+{
+    static class Operations
+    {
+        public static Task Reordered(int value, string label) => Task.CompletedTask;
+        public static Task Reordered(string label, System.Threading.CancellationToken cancellationToken, int value) => Task.CompletedTask;
+
+        public static Task RefSensitive(ref int value) => Task.CompletedTask;
+        public static Task RefSensitive(int value, System.Threading.CancellationToken cancellationToken) => Task.CompletedTask;
+    }
+
+    class Consumer : IConsumer<SubmitOrder>
+    {
+        public Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
+        {
+            var value = 42;
+            Operations.Reordered(value, ""label"");
+            return Operations.RefSensitive(ref value);
+        }
+    }
+}
+";
+
+        await AssertDiagnosticsAsync(source);
+    }
+
     private static async Task AssertDiagnosticsAsync(
         string source,
         params DiagnosticObservation[] expected)

@@ -162,16 +162,64 @@ namespace ConsoleApplication1
         await AssertDiagnosticsAsync(source);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "dictionary-incompatible-key")]
+    public async Task StructurallyCompatibleValues_DoNotHideAnIncompatibleDictionaryKeyAsync()
+    {
+        var source = ServiceBusAnalyzerFixture.Usings + Contracts + @"
+namespace ConsoleApplication1
+{
+    sealed class ItemKey;
+
+    class Program
+    {
+        static async Task Main()
+        {
+            var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
+
+            await bus.PublishAsync<OrderSubmitted>(new
+            {
+                InVar.Id,
+                CustomerId = ""Customer"",
+                OrderItems = new []
+                {
+                    new
+                    {
+                        Id = Guid.Empty,
+                        Product = new { Name = ""Pencil"", Category = ""category:office"" },
+                        Quantity = 10,
+                        Price = 10.0m
+                    }
+                }.ToDictionary(_ => new ItemKey())
+            });
+        }
+    }
+}
+";
+
+        var diagnostics = await AnalyzeAsync(source);
+
+        var diagnostic = Assert.Single(diagnostics);
+        Assert.Equal("VOSB1002", diagnostic.Id);
+        Assert.Equal(DiagnosticSeverity.Error, diagnostic.Severity);
+        Assert.Contains("incompatible: OrderItems", diagnostic.Message, StringComparison.Ordinal);
+    }
+
     private static async Task AssertDiagnosticsAsync(
         string source,
         params DiagnosticObservation[] expected)
     {
-        var actual = await RoslynTestHost.AnalyzeAsync(
+        var actual = await AnalyzeAsync(source);
+
+        ServiceBusAnalyzerFixture.AssertDiagnostics(actual, expected);
+    }
+
+    private static Task<IReadOnlyList<DiagnosticObservation>> AnalyzeAsync(string source)
+    {
+        return RoslynTestHost.AnalyzeAsync(
             source,
             new global::ViciOne.ServiceBus.Analyzers.MessageContractAnalyzer(),
             ServiceBusAnalyzerFixture.ReferenceRoots,
             TestContext.Current.CancellationToken);
-
-        ServiceBusAnalyzerFixture.AssertDiagnostics(actual, expected);
     }
 }

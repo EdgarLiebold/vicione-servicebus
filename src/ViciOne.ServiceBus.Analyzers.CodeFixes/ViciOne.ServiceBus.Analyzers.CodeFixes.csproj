@@ -4,11 +4,9 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <!-- The standard Roslyn property. It states what this assembly is; it does not grant the
-         framework exception - Directory.Build.targets grants that by path. -->
+    <!-- Marks the assembly for loading by IDE code-fix hosts. -->
     <IsRoslynComponent>true</IsRoslynComponent>
-    <!-- Same host boundary as the analyzer assembly. netstandard2.0 otherwise selects C# 7.3;
-         "latest" follows the installed stable SDK and therefore does not pin a language release. -->
+    <!-- Enables current nullable C# syntax while retaining the Roslyn host target. -->
     <LangVersion>latest</LangVersion>
     <WarningLevel>10</WarningLevel>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
@@ -16,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Code fixes run inside an IDE or a fix-all host, which does provide Workspaces. -->
+    <!-- Code-fix editing and formatting require Roslyn workspace APIs. -->
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>

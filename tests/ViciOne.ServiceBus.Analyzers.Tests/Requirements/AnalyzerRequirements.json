@@ -63,6 +63,13 @@
     "testMethod": "RequestHandleCreation_DoesNotReportAsyncMessageLossRiskAsync"
   },
   {
+    "requirementId": "REQ-VSB-ASYNC-METHOD-ANALYZER",
+    "variantKey": "lookalike-producer-is-excluded",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.AsyncMethodAnalyzerTests",
+    "testMethod": "SourceDefinedLookalikeProducer_DoesNotReportAsync"
+  },
+  {
     "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER",
     "variantKey": "task-delay-overload",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
@@ -98,6 +105,13 @@
     "testMethod": "ServiceBusPublishMethod_DoesNotSuggestItsOwnContextTokenAsync"
   },
   {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-ANALYZER",
+    "variantKey": "incompatible-overload-shapes-are-silent",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.CancellationTokenOverloadMethodAnalyzerTests",
+    "testMethod": "ReorderedAndRefIncompatibleOverloads_DoNotReportAsync"
+  },
+  {
     "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
     "variantKey": "dictionary-missing-properties",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
@@ -117,6 +131,34 @@
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.DictionaryInitializerTests",
     "testMethod": "DictionaryProjection_SatisfiesTheDictionaryContractAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "dictionary-incompatible-key",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.DictionaryInitializerTests",
+    "testMethod": "StructurallyCompatibleValues_DoNotHideAnIncompatibleDictionaryKeyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "supported-rules-are-executable",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractRuleContractTests",
+    "testMethod": "SupportedDiagnostics_ContainOnlyImplementedRules"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "nonserialized-properties-are-ignored",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractRuleContractTests",
+    "testMethod": "StaticAndIndexerProperties_AreNotRequiredMessageValuesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
+    "variantKey": "named-message-argument-is-resolved",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractRuleContractTests",
+    "testMethod": "NamedMessageArgument_IsMatchedToItsObjectParameterAsync"
   },
   {
     "requirementId": "REQ-VSB-MESSAGE-CONTRACT-ANALYZER",
@@ -161,45 +203,45 @@
     "testMethod": "Catalog_ContainsEveryCanonicalScenarioAndSourceFormExactlyOnce"
   },
   {
-    "requirementId": "REQ-VSB-V5-ANALYZERS",
+    "requirementId": "REQ-VSB-RULE-ANALYZERS",
     "variantKey": "blocking-only-inside-canonical-consume",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
-    "testType": "ViciOne.ServiceBus.Analyzers.Tests.V5.V5AnalyzerTests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.Rules.RuleAnalyzerTests",
     "testMethod": "BlockingConsumerAnalyzer_ReportsCanonicalBlockingCallsOnlyInsideConsumeAsync"
   },
   {
-    "requirementId": "REQ-VSB-V5-ANALYZERS",
+    "requirementId": "REQ-VSB-RULE-ANALYZERS",
     "variantKey": "consumer-definition-canonical-properties",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
-    "testType": "ViciOne.ServiceBus.Analyzers.Tests.V5.V5AnalyzerTests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.Rules.RuleAnalyzerTests",
     "testMethod": "DefinitionAnalyzers_ReportOnlyCanonicalInheritedPropertiesInConsumerDefinitionsAsync"
   },
   {
-    "requirementId": "REQ-VSB-V5-ANALYZERS",
+    "requirementId": "REQ-VSB-RULE-ANALYZERS",
     "variantKey": "excluded-topology-canonical-contract",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
-    "testType": "ViciOne.ServiceBus.Analyzers.Tests.V5.V5AnalyzerTests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.Rules.RuleAnalyzerTests",
     "testMethod": "ExcludedTopologyAnalyzer_ReportsOnlyCanonicalExcludedConsumedContractsAsync"
   },
   {
-    "requirementId": "REQ-VSB-V5-ANALYZERS",
+    "requirementId": "REQ-VSB-RULE-ANALYZERS",
     "variantKey": "large-inline-inherited-consumed-and-outbound-contracts",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
-    "testType": "ViciOne.ServiceBus.Analyzers.Tests.V5.V5AnalyzerTests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.Rules.RuleAnalyzerTests",
     "testMethod": "LargeInlinePayloadAnalyzer_CoversInheritedConsumedAndOutboundContractsWithoutMessageDataFalsePositiveAsync"
   },
   {
-    "requirementId": "REQ-VSB-V5-ANALYZERS",
+    "requirementId": "REQ-VSB-RULE-ANALYZERS",
     "variantKey": "generated-code-is-excluded",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
-    "testType": "ViciOne.ServiceBus.Analyzers.Tests.V5.V5AnalyzerTests",
-    "testMethod": "EveryV5Analyzer_IgnoresGeneratedCodeAsync"
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.Rules.RuleAnalyzerTests",
+    "testMethod": "EveryRuleAnalyzer_IgnoresGeneratedCodeAsync"
   },
   {
-    "requirementId": "REQ-VSB-V5-ANALYZERS",
+    "requirementId": "REQ-VSB-RULE-ANALYZERS",
     "variantKey": "parallel-deterministic-shared-instance",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
-    "testType": "ViciOne.ServiceBus.Analyzers.Tests.V5.V5AnalyzerTests",
-    "testMethod": "EveryV5Analyzer_IsDeterministicWhenOneInstanceAnalyzesInParallelAsync"
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.Rules.RuleAnalyzerTests",
+    "testMethod": "EveryRuleAnalyzer_IsDeterministicWhenOneInstanceAnalyzesInParallelAsync"
   }
 ]

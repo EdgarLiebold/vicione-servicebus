@@ -4,14 +4,13 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
 
+namespace ViciOne.ServiceBus.Analyzers.Rules;
 
-namespace ViciOne.ServiceBus.Analyzers.V5;
-
-/// <summary>Analyzes source code for blocking consumer call.</summary>
+/// <summary>Rejects synchronous blocking inside message-consumer implementations.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class BlockingConsumerCallAnalyzer : DiagnosticAnalyzer
 {
-    /// <summary>Exposes the diagnostic id used by the containing type.</summary>
+    /// <summary>Identifies blocking calls in consumer code.</summary>
     public const string DiagnosticId = "VOSB5001";
 
     private static readonly DiagnosticDescriptor s_rule = new(
@@ -23,11 +22,11 @@ public sealed class BlockingConsumerCallAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: "Blocking waits consume receive concurrency and make shutdown or cancellation nondeterministic.");
 
-    /// <summary>Gets the supported diagnostics.</summary>
+    /// <summary>Gets the blocking-consumer-call diagnostic.</summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [s_rule];
 
-    /// <summary>Initializes the target component.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Registers invocation and task-result analysis for non-generated source.</summary>
+    /// <param name="context">The analyzer registration context.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context is null)
@@ -41,30 +40,30 @@ public sealed class BlockingConsumerCallAnalyzer : DiagnosticAnalyzer
     private static void AnalyzeInvocation(OperationAnalysisContext context)
     {
         if (context.Operation is not IInvocationOperation invocation
-            || !AnalyzerSymbolFacts.IsInsideConsumerImplementation(context.Compilation, context.ContainingSymbol))
+            || !ServiceBusSymbolFacts.IsInsideConsumerImplementation(context.Compilation, context.ContainingSymbol))
             return;
 
         IMethodSymbol method = invocation.TargetMethod;
         bool blocking =
-            (method.Name == "Sleep" && AnalyzerSymbolFacts.IsCanonicalFrameworkType(
+            (method.Name == "Sleep" && ServiceBusSymbolFacts.IsCanonicalFrameworkType(
                 context.Compilation, method.ContainingType, "System.Threading.Thread"))
-            || (method.Name is "WaitAll" or "WaitAny" && AnalyzerSymbolFacts.IsCanonicalFrameworkType(
+            || (method.Name is "WaitAll" or "WaitAny" && ServiceBusSymbolFacts.IsCanonicalFrameworkType(
                 context.Compilation, method.ContainingType, "System.Threading.Tasks.Task"))
-            || (method.Name == "Wait" && AnalyzerSymbolFacts.IsTaskLikeResultOwner(
+            || (method.Name == "Wait" && ServiceBusSymbolFacts.IsTaskLikeResultOwner(
                 context.Compilation, method.ContainingType))
-            || (method.Name == "Wait" && AnalyzerSymbolFacts.IsCanonicalFrameworkType(
+            || (method.Name == "Wait" && ServiceBusSymbolFacts.IsCanonicalFrameworkType(
                 context.Compilation,
                 method.ContainingType,
                 "System.Threading.SemaphoreSlim",
                 "System.Threading.ManualResetEventSlim",
                 "System.Threading.CountdownEvent"))
-            || (method.Name == "SignalAndWait" && AnalyzerSymbolFacts.IsCanonicalFrameworkType(
+            || (method.Name == "SignalAndWait" && ServiceBusSymbolFacts.IsCanonicalFrameworkType(
                 context.Compilation, method.ContainingType, "System.Threading.Barrier"))
-            || (method.Name is "WaitOne" or "WaitAll" or "WaitAny" && AnalyzerSymbolFacts.IsCanonicalFrameworkType(
+            || (method.Name is "WaitOne" or "WaitAll" or "WaitAny" && ServiceBusSymbolFacts.IsCanonicalFrameworkType(
                 context.Compilation, method.ContainingType, "System.Threading.WaitHandle"))
-            || (method.Name == "Join" && AnalyzerSymbolFacts.IsCanonicalFrameworkType(
+            || (method.Name == "Join" && ServiceBusSymbolFacts.IsCanonicalFrameworkType(
                 context.Compilation, method.ContainingType, "System.Threading.Thread"))
-            || (method.Name == "GetResult" && AnalyzerSymbolFacts.IsCanonicalFrameworkType(
+            || (method.Name == "GetResult" && ServiceBusSymbolFacts.IsCanonicalFrameworkType(
                 context.Compilation,
                 method.ContainingType,
                 "System.Runtime.CompilerServices.TaskAwaiter",
@@ -83,11 +82,11 @@ public sealed class BlockingConsumerCallAnalyzer : DiagnosticAnalyzer
     private static void AnalyzePropertyReference(OperationAnalysisContext context)
     {
         if (context.Operation is not IPropertyReferenceOperation propertyReference
-            || !AnalyzerSymbolFacts.IsInsideConsumerImplementation(context.Compilation, context.ContainingSymbol))
+            || !ServiceBusSymbolFacts.IsInsideConsumerImplementation(context.Compilation, context.ContainingSymbol))
             return;
 
         IPropertySymbol property = propertyReference.Property;
-        if (property.Name == "Result" && AnalyzerSymbolFacts.IsTaskLikeResultOwner(
+        if (property.Name == "Result" && ServiceBusSymbolFacts.IsTaskLikeResultOwner(
                 context.Compilation, property.ContainingType))
             context.ReportDiagnostic(Diagnostic.Create(s_rule, propertyReference.Syntax.GetLocation(), property.Name));
     }

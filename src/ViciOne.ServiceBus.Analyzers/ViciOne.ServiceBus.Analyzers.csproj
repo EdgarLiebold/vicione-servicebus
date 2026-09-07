@@ -4,29 +4,19 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <!-- The standard Roslyn property. It states what this assembly is; it does not grant the
-         framework exception - Directory.Build.targets grants that by path. -->
+    <!-- Marks the assembly for loading by compiler and IDE analyzer hosts. -->
     <IsRoslynComponent>true</IsRoslynComponent>
-    <!-- The compiler that loads an analyzer is not a net10.0 process, so this project targets
-         netstandard2.0. That target otherwise defaults to C# 7.3, which cannot compile this nullable-
-         annotated source. "latest" deliberately follows the installed stable SDK and is not a
-         language-version pin. -->
+    <!-- Enables current nullable C# syntax while retaining the Roslyn host target. -->
     <LangVersion>latest</LangVersion>
     <WarningLevel>10</WarningLevel>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-    <!-- The package is produced by ViciOne.ServiceBus.Analyzers.Package, which carries this assembly
-         and the code fix assembly. This project ships no package of its own. Restore names a project
-         node after its PackageId, so leaving it at the project name would make this project and the
-         package it belongs to one ambiguous node. The identifier below exists only to name this node
-         and is never published, because IsPackable is false. -->
+    <!-- The aggregate analyzer package publishes this assembly. -->
     <IsPackable>false</IsPackable>
     <PackageId>ViciOne.ServiceBus.Analyzers.Assembly</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Command line compilations do not provide Microsoft.CodeAnalysis.Workspaces, so an assembly a
-         compiler loads must not reference it. Only the CSharp package is referenced here; everything
-         that needs Workspaces lives in ViciOne.ServiceBus.Analyzers.CodeFixes. -->
+    <!-- Analyzer execution depends only on compiler-layer Roslyn APIs. -->
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>

@@ -6,14 +6,13 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
+namespace ViciOne.ServiceBus.Analyzers.Rules;
 
-namespace ViciOne.ServiceBus.Analyzers.V5;
-
-/// <summary>Analyzes source code for large inline payload.</summary>
+/// <summary>Warns when message contracts carry potentially large binary content inline.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class LargeInlinePayloadAnalyzer : DiagnosticAnalyzer
 {
-    /// <summary>Exposes the diagnostic id used by the containing type.</summary>
+    /// <summary>Identifies inline binary or stream members in message contracts.</summary>
     public const string DiagnosticId = "VOSB5005";
 
     private static readonly DiagnosticDescriptor s_rule = new(
@@ -25,11 +24,11 @@ public sealed class LargeInlinePayloadAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: "Large byte or stream members create broker-limit and resource-pressure risk.");
 
-    /// <summary>Gets the supported diagnostics.</summary>
+    /// <summary>Gets the large-inline-payload diagnostic.</summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [s_rule];
 
-    /// <summary>Initializes the target component.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Registers per-compilation contract analysis for non-generated source.</summary>
+    /// <param name="context">The analyzer registration context.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context is null)
@@ -52,13 +51,13 @@ public sealed class LargeInlinePayloadAnalyzer : DiagnosticAnalyzer
         if (context.Symbol is not INamedTypeSymbol type)
             return;
 
-        if (AnalyzerSymbolFacts.IsConsumerType(context.Compilation, type))
+        if (ServiceBusSymbolFacts.IsConsumerType(context.Compilation, type))
         {
-            foreach (INamedTypeSymbol message in AnalyzerSymbolFacts.ConsumedMessageTypes(context.Compilation, type))
+            foreach (INamedTypeSymbol message in ServiceBusSymbolFacts.ConsumedMessageTypes(context.Compilation, type))
                 AnalyzeContract(context, message, reported);
         }
 
-        if (AnalyzerSymbolFacts.HasCanonicalAttribute(
+        if (ServiceBusSymbolFacts.HasCanonicalAttribute(
                 context.Compilation,
                 type,
                 "ViciOne.ServiceBus.MessageContractAttribute"))
@@ -112,10 +111,10 @@ public sealed class LargeInlinePayloadAnalyzer : DiagnosticAnalyzer
         if (type is not INamedTypeSymbol named)
             return false;
 
-        if (AnalyzerSymbolFacts.IsCanonicalMessageData(compilation, named))
+        if (ServiceBusSymbolFacts.IsCanonicalMessageData(compilation, named))
             return false;
 
-        if (AnalyzerSymbolFacts.IsCanonicalFrameworkType(
+        if (ServiceBusSymbolFacts.IsCanonicalFrameworkType(
                 compilation,
                 named,
                 "System.Memory`1",
@@ -126,7 +125,7 @@ public sealed class LargeInlinePayloadAnalyzer : DiagnosticAnalyzer
 
         for (INamedTypeSymbol? current = named; current is not null; current = current.BaseType)
         {
-            if (AnalyzerSymbolFacts.IsCanonicalFrameworkType(compilation, current, "System.IO.Stream"))
+            if (ServiceBusSymbolFacts.IsCanonicalFrameworkType(compilation, current, "System.IO.Stream"))
                 return true;
         }
 

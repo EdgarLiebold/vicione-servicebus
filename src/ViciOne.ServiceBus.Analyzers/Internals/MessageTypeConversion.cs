@@ -5,19 +5,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 
-namespace ViciOne.ServiceBus.Analyzers.Helpers;
+namespace ViciOne.ServiceBus.Analyzers.Internals;
 
-/// <summary>Provides helper operations for type conversion.</summary>
-public class TypeConversionHelper
+/// <summary>Evaluates conversions supported by anonymous message initializers.</summary>
+sealed class MessageTypeConversion
 {
     readonly SemanticModel _semanticModel;
-    readonly NodeList<ITypeSymbol> _typeSymbols;
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="semanticModel">The semantic model.</param>
-    public TypeConversionHelper(SemanticModel semanticModel)
+    readonly ConversionGraph<ITypeSymbol> _typeSymbols;
+    public MessageTypeConversion(SemanticModel semanticModel)
     {
         _semanticModel = semanticModel;
-        _typeSymbols = new NodeList<ITypeSymbol>(100);
+        _typeSymbols = new ConversionGraph<ITypeSymbol>(100, SymbolEqualityComparer.Default);
 
         _typeSymbols.Add(semanticModel, SpecialType.System_String, SpecialType.System_Boolean);
         _typeSymbols.Add(semanticModel, SpecialType.System_Boolean, SpecialType.System_String, SpecialType.System_Object, SpecialType.System_SByte,
@@ -123,10 +121,6 @@ public class TypeConversionHelper
             ?? throw new InvalidOperationException($"The compilation does not reference '{metadataName}'.");
     }
 
-    /// <summary>Determines whether the current value can convert.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <param name="sourceSymbol">The source symbol.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool CanConvert(Type type, ITypeSymbol sourceSymbol)
     {
         var symbol = GetRequiredType(type);
@@ -134,10 +128,6 @@ public class TypeConversionHelper
         return CanConvert(symbol, sourceSymbol);
     }
 
-    /// <summary>Determines whether the current value can convert.</summary>
-    /// <param name="symbol">The symbol.</param>
-    /// <param name="sourceSymbol">The source symbol.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool CanConvert(ITypeSymbol symbol, ITypeSymbol sourceSymbol)
     {
         while (true)
@@ -163,17 +153,17 @@ public class TypeConversionHelper
                 continue;
             }
 
-            if (IsTask(sourceSymbol, out var taskType))
+            if (TryGetTaskResultType(sourceSymbol, out var taskType))
             {
                 sourceSymbol = taskType;
                 continue;
             }
 
-            if (IsMessageData(symbol, out var messageDataType))
+            if (TryGetMessageDataValueType(symbol, out var messageDataType))
             {
                 if (messageDataType.IsArray(out var arrayType) && arrayType.SpecialType == SpecialType.System_Byte)
                 {
-                    if (IsMessageData(sourceSymbol, out var sourceMessageDataType))
+                    if (TryGetMessageDataValueType(sourceSymbol, out var sourceMessageDataType))
                     {
                         if (sourceMessageDataType.IsArray(out var sourceDataArrayType) && sourceDataArrayType.SpecialType == SpecialType.System_Byte)
                             return true;
@@ -211,7 +201,7 @@ public class TypeConversionHelper
                 if (messageDataType.IsReferenceType)
                 {
                     symbol = messageDataType;
-                    if (IsMessageData(sourceSymbol, out messageDataType))
+                    if (TryGetMessageDataValueType(sourceSymbol, out messageDataType))
                         sourceSymbol = messageDataType;
                 }
 
@@ -225,7 +215,7 @@ public class TypeConversionHelper
         }
     }
 
-    static bool IsTask(ITypeSymbol symbol, [NotNullWhen(true)] out ITypeSymbol? result)
+    static bool TryGetTaskResultType(ITypeSymbol symbol, [NotNullWhen(true)] out ITypeSymbol? result)
     {
         if (symbol.TypeKind == TypeKind.Class
             && symbol.Name == "Task"
@@ -244,11 +234,7 @@ public class TypeConversionHelper
         return false;
     }
 
-    /// <summary>Determines whether message data.</summary>
-    /// <param name="symbol">The symbol.</param>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public static bool IsMessageData(ITypeSymbol symbol, [NotNullWhen(true)] out ITypeSymbol? result)
+    static bool TryGetMessageDataValueType(ITypeSymbol symbol, [NotNullWhen(true)] out ITypeSymbol? result)
     {
         if (symbol.TypeKind == TypeKind.Interface
             && symbol.Name == "MessageData"
@@ -267,27 +253,27 @@ public class TypeConversionHelper
 }
 
 
-static class NodeListExtensions
+static class ConversionGraphExtensions
 {
-    public static void Add(this NodeList<ITypeSymbol> table, SemanticModel semanticModel, ITypeSymbol symbol, params SpecialType[] types)
+    public static void Add(this ConversionGraph<ITypeSymbol> graph, SemanticModel semanticModel, ITypeSymbol symbol, params SpecialType[] types)
     {
         ITypeSymbol[] typeSymbols = types.Select(type => semanticModel.Compilation.GetSpecialType(type)).Cast<ITypeSymbol>().ToArray();
 
-        table.Add(symbol, typeSymbols);
+        graph.Add(symbol, typeSymbols);
     }
 
-    public static void Add(this NodeList<ITypeSymbol> table, SemanticModel semanticModel, SpecialType specialType, params SpecialType[] types)
+    public static void Add(this ConversionGraph<ITypeSymbol> graph, SemanticModel semanticModel, SpecialType specialType, params SpecialType[] types)
     {
         var specialTypeSymbol = semanticModel.Compilation.GetSpecialType(specialType);
         ITypeSymbol[] typeSymbols = types.Select(type => semanticModel.Compilation.GetSpecialType(type)).Cast<ITypeSymbol>().ToArray();
 
-        table.Add(specialTypeSymbol, typeSymbols);
+        graph.Add(specialTypeSymbol, typeSymbols);
     }
 
-    public static void Add(this NodeList<ITypeSymbol> table, SemanticModel semanticModel, SpecialType specialType, params ITypeSymbol[] typeSymbols)
+    public static void Add(this ConversionGraph<ITypeSymbol> graph, SemanticModel semanticModel, SpecialType specialType, params ITypeSymbol[] typeSymbols)
     {
         var specialTypeSymbol = semanticModel.Compilation.GetSpecialType(specialType);
 
-        table.Add(specialTypeSymbol, typeSymbols);
+        graph.Add(specialTypeSymbol, typeSymbols);
     }
 }

@@ -4,14 +4,13 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
 
+namespace ViciOne.ServiceBus.Analyzers.Rules;
 
-namespace ViciOne.ServiceBus.Analyzers.V5;
-
-/// <summary>Analyzes source code for consumer concurrency declaration.</summary>
+/// <summary>Directs consumer concurrency declarations to the first-class policy contract.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ConsumerConcurrencyDeclarationAnalyzer : DiagnosticAnalyzer
 {
-    /// <summary>Exposes the diagnostic id used by the containing type.</summary>
+    /// <summary>Identifies direct assignments to a consumer definition's concurrency limit.</summary>
     public const string DiagnosticId = "VOSB5003";
 
     private static readonly DiagnosticDescriptor s_rule = new(
@@ -22,11 +21,11 @@ public sealed class ConsumerConcurrencyDeclarationAnalyzer : DiagnosticAnalyzer
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
-    /// <summary>Gets the supported diagnostics.</summary>
+    /// <summary>Gets the consumer-concurrency-policy diagnostic.</summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [s_rule];
 
-    /// <summary>Initializes the target component.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Registers assignment analysis for non-generated source.</summary>
+    /// <param name="context">The analyzer registration context.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context is null)
@@ -40,7 +39,7 @@ public sealed class ConsumerConcurrencyDeclarationAnalyzer : DiagnosticAnalyzer
     {
         if (context.Operation is not ISimpleAssignmentOperation assignment
             || assignment.Target is not IPropertyReferenceOperation property
-            || !AnalyzerSymbolFacts.IsConsumerDefinitionProperty(
+            || !ServiceBusSymbolFacts.IsConsumerDefinitionProperty(
                 context.Compilation,
                 property.Property,
                 "ConcurrentMessageLimit"))

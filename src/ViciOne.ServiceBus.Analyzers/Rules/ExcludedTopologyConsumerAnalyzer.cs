@@ -4,14 +4,13 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
+namespace ViciOne.ServiceBus.Analyzers.Rules;
 
-namespace ViciOne.ServiceBus.Analyzers.V5;
-
-/// <summary>Analyzes source code for excluded topology consumer.</summary>
+/// <summary>Warns when a consumer relies on a message excluded from automatic topology.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ExcludedTopologyConsumerAnalyzer : DiagnosticAnalyzer
 {
-    /// <summary>Exposes the diagnostic id used by the containing type.</summary>
+    /// <summary>Identifies consumers of topology-excluded contracts.</summary>
     public const string DiagnosticId = "VOSB5004";
 
     private static readonly DiagnosticDescriptor s_rule = new(
@@ -22,11 +21,11 @@ public sealed class ExcludedTopologyConsumerAnalyzer : DiagnosticAnalyzer
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
 
-    /// <summary>Gets the supported diagnostics.</summary>
+    /// <summary>Gets the excluded-topology-consumer diagnostic.</summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [s_rule];
 
-    /// <summary>Initializes the target component.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Registers consumer-type analysis for non-generated source.</summary>
+    /// <param name="context">The analyzer registration context.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context is null)
@@ -39,16 +38,16 @@ public sealed class ExcludedTopologyConsumerAnalyzer : DiagnosticAnalyzer
     private static void AnalyzeNamedType(SymbolAnalysisContext context)
     {
         if (context.Symbol is not INamedTypeSymbol consumer
-            || !AnalyzerSymbolFacts.IsConsumerType(context.Compilation, consumer))
+            || !ServiceBusSymbolFacts.IsConsumerType(context.Compilation, consumer))
             return;
 
         Location? location = consumer.Locations.FirstOrDefault(static candidate => candidate.IsInSource);
         if (location is null)
             return;
 
-        foreach (INamedTypeSymbol message in AnalyzerSymbolFacts.ConsumedMessageTypes(context.Compilation, consumer))
+        foreach (INamedTypeSymbol message in ServiceBusSymbolFacts.ConsumedMessageTypes(context.Compilation, consumer))
         {
-            if (!AnalyzerSymbolFacts.HasCanonicalAttribute(
+            if (!ServiceBusSymbolFacts.HasCanonicalAttribute(
                     context.Compilation,
                     message,
                     "ViciOne.ServiceBus.ExcludeFromTopologyAttribute"))

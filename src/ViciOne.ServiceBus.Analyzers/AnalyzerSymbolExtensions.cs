@@ -4,14 +4,20 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ViciOne.ServiceBus.Analyzers;
 
-/// <summary>Classifies message-producing invocations and their Roslyn type shapes.</summary>
-public static class CommonExpressions
+/// <summary>Classifies message-producing methods and Roslyn type shapes used by analyzer rules.</summary>
+public static class AnalyzerSymbolExtensions
 {
     static readonly IReadOnlyDictionary<string, int> _producerMethods = InitializeProducerMethods();
+    static readonly HashSet<string> _producerAssemblies = new HashSet<string>(StringComparer.Ordinal)
+    {
+        "ViciOne.ServiceBus",
+        "ViciOne.ServiceBus.Abstractions",
+        "ViciOne.ServiceBus.Initializers",
+        "ViciOne.ServiceBus.Sagas",
+    };
     const string TaskNamespace = "System.Threading.Tasks";
 
     static IReadOnlyDictionary<string, int> InitializeProducerMethods()
@@ -55,52 +61,23 @@ public static class CommonExpressions
         };
     }
 
-    /// <summary>Determines whether producer method.</summary>
-    /// <param name="method">The method.</param>
-    /// <param name="index">Receives the index produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Identifies message-producing Service Bus methods and locates their contract type.</summary>
+    /// <param name="method">The invoked method.</param>
+    /// <param name="index">The generic contract argument index, or <c>-1</c> when the receiver supplies the contract.</param>
+    /// <returns><see langword="true" /> when <paramref name="method" /> is a recognized producer method.</returns>
     public static bool IsProducerMethod(this IMethodSymbol method, out int index)
     {
-        return _producerMethods.TryGetValue($"{method.ContainingNamespace}.{method.ContainingType.Name}.{method.Name}", out index);
-    }
+        if (_producerAssemblies.Contains(method.ContainingAssembly.Name))
+            return _producerMethods.TryGetValue($"{method.ContainingNamespace}.{method.ContainingType.Name}.{method.Name}", out index);
 
-    /// <summary>Determines whether activator.</summary>
-    /// <param name="argumentSyntax">The argument syntax.</param>
-    /// <param name="semanticModel">The semantic model.</param>
-    /// <param name="typeArgument">Receives the type argument produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public static bool IsActivator(this ArgumentSyntax? argumentSyntax, SemanticModel semanticModel,
-        [NotNullWhen(true)] out ITypeSymbol? typeArgument)
-    {
-        if (argumentSyntax != null
-            && argumentSyntax.Parent is ArgumentListSyntax argumentListSyntax
-            && argumentListSyntax.Parent is InvocationExpressionSyntax invocationExpressionSyntax
-            && invocationExpressionSyntax.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax
-            && semanticModel.GetSymbolInfo(memberAccessExpressionSyntax).Symbol is IMethodSymbol method
-            && IsProducerMethod(method, out var index)
-            && method.Parameters[0].Type.SpecialType == SpecialType.System_Object)
-        {
-            if (index == 0 && method.TypeArguments.Length == 1)
-            {
-                typeArgument = method.TypeArguments[0];
-                return true;
-            }
-
-            if (index == -1 && method.ContainingType.IsGenericType && method.ContainingType.TypeArguments.Length == 1)
-            {
-                typeArgument = method.ContainingType.TypeArguments[0];
-                return true;
-            }
-        }
-
-        typeArgument = null;
+        index = -1;
         return false;
     }
 
-    /// <summary>Determines whether the current value has message contract.</summary>
-    /// <param name="typeArgument">The type argument.</param>
-    /// <param name="contractType">The runtime contract type used by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Resolves a concrete message contract from a class, interface, or singly constrained type parameter.</summary>
+    /// <param name="typeArgument">The producer's message type.</param>
+    /// <param name="contractType">The class or interface that defines the message contract.</param>
+    /// <returns><see langword="true" /> when a contract type can be resolved.</returns>
     public static bool HasMessageContract(this ITypeSymbol typeArgument, [NotNullWhen(true)] out ITypeSymbol? contractType)
     {
         if (typeArgument.TypeKind.IsClassOrInterface())
@@ -122,10 +99,10 @@ public static class CommonExpressions
         return false;
     }
 
-    /// <summary>Determines whether immutable array.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <param name="typeArgument">Receives the type argument produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether a symbol represents <see cref="ImmutableArray{T}" />.</summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <param name="typeArgument">The immutable array element type.</param>
+    /// <returns><see langword="true" /> for a closed <see cref="ImmutableArray{T}" /> type.</returns>
     public static bool IsImmutableArray(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
     {
         if (type.TypeKind == TypeKind.Struct &&
@@ -143,10 +120,10 @@ public static class CommonExpressions
         return false;
     }
 
-    /// <summary>Determines whether collection.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <param name="typeArgument">Receives the type argument produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether a symbol represents <see cref="ICollection{T}" />.</summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <param name="typeArgument">The collection element type.</param>
+    /// <returns><see langword="true" /> for a closed <see cref="ICollection{T}" /> type.</returns>
     public static bool IsCollection(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
     {
         if (type.TypeKind == TypeKind.Interface &&
@@ -164,10 +141,10 @@ public static class CommonExpressions
         return false;
     }
 
-    /// <summary>Determines whether enumerable.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <param name="typeArgument">Receives the type argument produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether a symbol represents <see cref="IEnumerable{T}" />.</summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <param name="typeArgument">The enumerable element type.</param>
+    /// <returns><see langword="true" /> for a closed <see cref="IEnumerable{T}" /> type.</returns>
     public static bool IsEnumerable(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
     {
         if (type.TypeKind == TypeKind.Interface &&
@@ -185,10 +162,10 @@ public static class CommonExpressions
         return false;
     }
 
-    /// <summary>Determines whether list.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <param name="typeArgument">Receives the type argument produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Recognizes mutable and read-only generic list shapes.</summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <param name="typeArgument">The list element type.</param>
+    /// <returns><see langword="true" /> for <see cref="List{T}" />, <see cref="IList{T}" />, or <see cref="IReadOnlyList{T}" />.</returns>
     public static bool IsList(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
     {
         if ((type.TypeKind == TypeKind.Class && type.Name == "List"
@@ -207,26 +184,30 @@ public static class CommonExpressions
         return false;
     }
 
-    /// <summary>Gets contract properties.</summary>
-    /// <param name="contractType">The runtime contract type used by the operation.</param>
-    /// <returns>The contract properties.</returns>
+    /// <summary>Gets serialized properties declared by a contract and its inherited interfaces.</summary>
+    /// <param name="contractType">The message contract.</param>
+    /// <returns>Readable public instance properties, de-duplicated by exact name.</returns>
     public static List<IPropertySymbol> GetContractProperties(this ITypeSymbol contractType)
     {
         var contractTypes = new List<ITypeSymbol> { contractType };
 
         contractTypes.AddRange(contractType.AllInterfaces);
 
-        return contractTypes.SelectMany(i => i.GetMembers().OfType<IPropertySymbol>().Where(x => x.DeclaredAccessibility == Accessibility.Public))
+        return contractTypes.SelectMany(i => i.GetMembers().OfType<IPropertySymbol>().Where(property =>
+                property.DeclaredAccessibility == Accessibility.Public
+                && !property.IsStatic
+                && property.GetMethod != null
+                && property.Parameters.IsEmpty))
             .GroupBy(property => property.Name, StringComparer.Ordinal)
             .Select(group => group.First())
             .ToList();
     }
 
-    /// <summary>Determines whether dictionary.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <param name="keyType">The runtime key type used by the operation.</param>
-    /// <param name="valueType">The runtime value type used by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Recognizes mutable and read-only generic dictionary shapes.</summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <param name="keyType">The dictionary key type.</param>
+    /// <param name="valueType">The dictionary value type.</param>
+    /// <returns><see langword="true" /> for a supported two-argument dictionary type.</returns>
     public static bool IsDictionary(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? keyType,
         [NotNullWhen(true)] out ITypeSymbol? valueType)
     {
@@ -248,16 +229,14 @@ public static class CommonExpressions
         return false;
     }
 
-    /// <summary>Determines whether nullable.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <param name="typeArgument">Receives the type argument produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Extracts the value type from <see cref="Nullable{T}" />.</summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <param name="typeArgument">The underlying value type.</param>
+    /// <returns><see langword="true" /> when <paramref name="type" /> is nullable.</returns>
     public static bool IsNullable(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
     {
-        if (type.TypeKind == TypeKind.Struct &&
-            type.Name == "Nullable" &&
-            type.ContainingNamespace.Name == "System" &&
-            type is INamedTypeSymbol nullableType &&
+        if (type is INamedTypeSymbol nullableType &&
+            nullableType.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T &&
             nullableType.IsGenericType &&
             nullableType.TypeArguments.Length == 1)
         {
@@ -269,10 +248,10 @@ public static class CommonExpressions
         return false;
     }
 
-    /// <summary>Determines whether array.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <param name="elementType">The runtime element type used by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Extracts the element type from an array symbol.</summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <param name="elementType">The array element type.</param>
+    /// <returns><see langword="true" /> when <paramref name="type" /> is an array.</returns>
     public static bool IsArray(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? elementType)
     {
         if (type.TypeKind == TypeKind.Array &&
@@ -286,10 +265,10 @@ public static class CommonExpressions
         return false;
     }
 
-    /// <summary>Determines whether in var.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <param name="inVarType">The runtime in var type used by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Extracts the value type represented by an initializer variable.</summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <param name="inVarType">The initializer variable's value type.</param>
+    /// <returns><see langword="true" /> when the type implements the initializer-variable contract.</returns>
     public static bool IsInVar(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? inVarType)
     {
         if (type.TypeKind == TypeKind.Class
@@ -311,21 +290,21 @@ public static class CommonExpressions
         return false;
     }
 
-    /// <summary>Determines whether the method returns a task-like value.</summary>
-    /// <param name="method">The method.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether a producer method returns <see cref="Task" /> or <see cref="Task{TResult}" />.</summary>
+    /// <param name="method">The method to inspect.</param>
+    /// <returns><see langword="true" /> when its return type is a task.</returns>
     public static bool ReturnsTask(this IMethodSymbol method)
     {
         return method.ReturnType.Name == nameof(Task) && method.ReturnType.ContainingNamespace.ToString() == TaskNamespace;
     }
 
-    /// <summary>Gets all interfaces.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <returns>The all interfaces.</returns>
+    /// <summary>Enumerates a type's interface identity followed by all inherited interfaces.</summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <returns>The interface itself when applicable and every interface it inherits.</returns>
     public static IEnumerable<INamedTypeSymbol> GetAllInterfaces(this ITypeSymbol type)
     {
         ImmutableArray<INamedTypeSymbol> allInterfaces = type.AllInterfaces;
-        if (type is INamedTypeSymbol namedType && namedType.TypeKind.IsClassOrInterface() && !allInterfaces.Contains(namedType))
+        if (type is INamedTypeSymbol { TypeKind: TypeKind.Interface } namedType)
         {
             var result = new List<INamedTypeSymbol>(allInterfaces.Length + 1) { namedType };
             result.AddRange(allInterfaces);
@@ -335,9 +314,9 @@ public static class CommonExpressions
         return allInterfaces;
     }
 
-    /// <summary>Return the type, and any base types.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <returns>The all types.</returns>
+    /// <summary>Enumerates a type followed by its base-type chain.</summary>
+    /// <param name="type">The first type in the chain.</param>
+    /// <returns>The type and each successive base type.</returns>
     public static IEnumerable<ITypeSymbol> GetAllTypes(this ITypeSymbol type)
     {
         var current = type;
@@ -348,36 +327,36 @@ public static class CommonExpressions
         }
     }
 
-    /// <summary>Determines whether class or interface.</summary>
-    /// <param name="typeKind">The type kind.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether a Roslyn type kind can define a structural message contract.</summary>
+    /// <param name="typeKind">The type kind to inspect.</param>
+    /// <returns><see langword="true" /> for classes and interfaces.</returns>
     public static bool IsClassOrInterface(this TypeKind typeKind)
     {
         return typeKind == TypeKind.Interface || typeKind == TypeKind.Class;
     }
 
-    /// <summary>Determines whether the type implements the supplied interface.</summary>
-    /// <param name="symbol">The symbol.</param>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether a type implements an exact interface symbol.</summary>
+    /// <param name="symbol">The candidate implementation.</param>
+    /// <param name="type">The interface to match.</param>
+    /// <returns><see langword="true" /> when the interface is implemented.</returns>
     public static bool ImplementsInterface(this ITypeSymbol symbol, ITypeSymbol type)
     {
         return symbol.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, type));
     }
 
-    /// <summary>Determines whether the type inherits from the supplied type.</summary>
-    /// <param name="symbol">The symbol.</param>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether a type is or derives from an exact type symbol.</summary>
+    /// <param name="symbol">The candidate derived type.</param>
+    /// <param name="type">The required base type.</param>
+    /// <returns><see langword="true" /> when the type occurs in the base-type chain.</returns>
     public static bool InheritsFromType(this ITypeSymbol symbol, ITypeSymbol type)
     {
         return GetAllTypes(symbol).Any(x => SymbolEqualityComparer.Default.Equals(x, type));
     }
 
-    /// <summary>Determines whether the type implements the supplied type.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <param name="otherType">The runtime other type used by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether a type is, derives from, or implements an exact type symbol.</summary>
+    /// <param name="type">The candidate type.</param>
+    /// <param name="otherType">The required base type or interface.</param>
+    /// <returns><see langword="true" /> when the required type is present.</returns>
     public static bool ImplementsType(this ITypeSymbol type, ITypeSymbol otherType)
     {
         IEnumerable<ITypeSymbol> types = GetAllTypes(type);

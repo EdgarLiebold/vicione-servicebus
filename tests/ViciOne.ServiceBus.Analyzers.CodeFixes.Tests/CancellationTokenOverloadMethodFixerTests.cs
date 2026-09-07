@@ -167,6 +167,38 @@ namespace ConsoleApplication1
         await AssertFixedSourceAsync(source, expected);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CANCELLATION-TOKEN-CODEFIX", "named-arguments-remain-valid")]
+    public async Task NamedArgumentFix_AddsANamedCancellationTokenAsync()
+    {
+        var source = Prefix + @"
+namespace ConsoleApplication1
+{
+    class Consumer : IConsumer<SubmitOrder>
+    {
+        public Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
+        {
+            return Task.Delay(millisecondsDelay: 10);
+        }
+    }
+}
+";
+        var expected = Prefix + @"
+namespace ConsoleApplication1
+{
+    class Consumer : IConsumer<SubmitOrder>
+    {
+        public Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
+        {
+            return Task.Delay(millisecondsDelay: 10, cancellationToken: context.CancellationToken);
+        }
+    }
+}
+";
+
+        await AssertFixedSourceAsync(source, expected);
+    }
+
     private static string Prefix =>
         ServiceBusCodeFixFixture.Usings + ServiceBusCodeFixFixture.SimpleMessageContracts;
 

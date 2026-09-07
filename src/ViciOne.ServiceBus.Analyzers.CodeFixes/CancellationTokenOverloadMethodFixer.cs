@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Composition;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -13,25 +14,25 @@ using static ViciOne.ServiceBus.Analyzers.CancellationTokenOverloadMethodAnalyze
 
 namespace ViciOne.ServiceBus.Analyzers;
 
-/// <summary>Applies source-code fixes for cancellation token overload method.</summary>
+/// <summary>Forwards an available pipeline cancellation token to a cancellable overload.</summary>
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 [Shared]
-public class CancellationTokenOverloadMethodFixer :
+public sealed class CancellationTokenOverloadMethodFixer :
     CodeFixProvider
 {
-    /// <summary>Gets the fixable diagnostic ids.</summary>
+    /// <summary>Gets the cancellation-forwarding diagnostic fixed by this provider.</summary>
     public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(CancellationTokenOverloadMethodRuleId);
 
-    /// <summary>Gets fix all provider.</summary>
-    /// <returns>The fix all provider.</returns>
+    /// <summary>Gets the batch provider used for solution-wide cancellation forwarding.</summary>
+    /// <returns>The standard batch fix-all provider.</returns>
     public override FixAllProvider GetFixAllProvider()
     {
         return WellKnownFixAllProviders.BatchFixer;
     }
 
-    /// <summary>Registers code fixes.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Registers one code action for each cancellation token visible at the invocation.</summary>
+    /// <param name="context">The code-fix registration context.</param>
+    /// <returns>A task that completes after registration.</returns>
     public override async Task RegisterCodeFixesAsync(CodeFixContext context)
     {
         var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
@@ -41,21 +42,26 @@ public class CancellationTokenOverloadMethodFixer :
 
         if (nodeToFix.IsKind(SyntaxKind.InvocationExpression))
         {
-            if (!int.TryParse(context.Diagnostics[0].Properties[ParameterIndex], NumberStyles.None,
+            var diagnostic = context.Diagnostics.FirstOrDefault();
+            if (diagnostic == null)
+                return;
+
+            if (!diagnostic.Properties.TryGetValue(ParameterIndex, out var parameterIndexText)
+                || !int.TryParse(parameterIndexText, NumberStyles.None,
                     CultureInfo.InvariantCulture, out var parameterIndex))
                 return;
 
-            if (!context.Diagnostics[0].Properties.TryGetValue(ParameterName, out var parameterName)
+            if (!diagnostic.Properties.TryGetValue(ParameterName, out var parameterName)
                 || parameterName == null)
                 return;
 
-            if (!context.Diagnostics[0].Properties.TryGetValue(CancellationTokens, out var cancellationTokens)
+            if (!diagnostic.Properties.TryGetValue(CancellationTokens, out var cancellationTokens)
                 || cancellationTokens == null)
                 return;
 
             foreach (var cancellationToken in cancellationTokens.Split(','))
             {
-                var title = $"Forward the '{cancellationToken}' parameter to the methods";
+                var title = $"Forward '{cancellationToken}' to the cancellable overload";
                 var codeAction = CodeAction.Create(
                     title,
                     ct => FixInvocationAsync(context.Document, (InvocationExpressionSyntax)nodeToFix, parameterIndex, parameterName, cancellationToken, ct),
@@ -74,16 +80,17 @@ public class CancellationTokenOverloadMethodFixer :
 
         var expression = SyntaxFactory.ParseExpression(cancellationTokenExpression);
 
-        if (index > nodeToFix.ArgumentList.Arguments.Count)
+        var arguments = nodeToFix.ArgumentList.Arguments;
+        if (index > arguments.Count || arguments.Any(argument => argument.NameColon != null))
         {
             SeparatedSyntaxList<ArgumentSyntax> newArguments =
-                nodeToFix.ArgumentList.Arguments.Add((ArgumentSyntax)generator.Argument(parameterName, RefKind.None, expression));
+                arguments.Add((ArgumentSyntax)generator.Argument(parameterName, RefKind.None, expression));
             editor.ReplaceNode(nodeToFix.ArgumentList, nodeToFix.ArgumentList.WithArguments(newArguments));
         }
         else
         {
             SeparatedSyntaxList<ArgumentSyntax> newArguments =
-                nodeToFix.ArgumentList.Arguments.Insert(index, (ArgumentSyntax)generator.Argument(expression));
+                arguments.Insert(index, (ArgumentSyntax)generator.Argument(expression));
             editor.ReplaceNode(nodeToFix.ArgumentList, nodeToFix.ArgumentList.WithArguments(newArguments));
         }
 

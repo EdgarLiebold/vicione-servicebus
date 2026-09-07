@@ -56,6 +56,82 @@ public sealed class MessageContractCodeFixScenarioTests
             actualAdditions.OrderBy(initializer => initializer.Key, StringComparer.Ordinal));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-CONTRACT-CODEFIX", "inferred-identifier-is-preserved")]
+    public async Task MissingPropertiesFix_PreservesAnInferredIdentifierInitializerAsync()
+    {
+        var source = ServiceBusCodeFixFixture.Usings + @"
+namespace ConsoleApplication1
+{
+    public interface Order
+    {
+        Guid Id { get; }
+        string CustomerId { get; }
+    }
+
+    class Program
+    {
+        static async Task Main()
+        {
+            var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
+            var id = Guid.Empty;
+            await bus.PublishAsync<Order>(/* VSB_TARGET */ new { id });
+        }
+    }
+}
+";
+
+        var fixedSource = await RoslynTestHost.ApplyAllFixesAsync(
+            source,
+            new global::ViciOne.ServiceBus.Analyzers.MessageContractAnalyzer(),
+            new global::ViciOne.ServiceBus.Analyzers.MessageContractCodeFixProvider(),
+            ServiceBusCodeFixFixture.ReferenceRoots,
+            TestContext.Current.CancellationToken);
+        var initializers = ReadLeafInitializers(fixedSource);
+
+        Assert.Equal("id", initializers["id"]);
+        Assert.Equal("default(string)", initializers["CustomerId"]);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-CONTRACT-CODEFIX", "qualified-custom-value-type")]
+    public async Task MissingPropertiesFix_QualifiesACustomValueTypeOutsideTheCurrentNamespaceAsync()
+    {
+        var source = ServiceBusCodeFixFixture.Usings + @"
+namespace Contracts
+{
+    public readonly record struct ExternalId(Guid Value);
+
+    public interface Message
+    {
+        ExternalId Id { get; }
+    }
+}
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        static async Task Main()
+        {
+            var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
+            await bus.PublishAsync<Contracts.Message>(/* VSB_TARGET */ new { });
+        }
+    }
+}
+";
+
+        var fixedSource = await RoslynTestHost.ApplyAllFixesAsync(
+            source,
+            new global::ViciOne.ServiceBus.Analyzers.MessageContractAnalyzer(),
+            new global::ViciOne.ServiceBus.Analyzers.MessageContractCodeFixProvider(),
+            ServiceBusCodeFixFixture.ReferenceRoots,
+            TestContext.Current.CancellationToken);
+        var initializers = ReadLeafInitializers(fixedSource);
+
+        Assert.Equal("default(Contracts.ExternalId)", initializers["Id"]);
+    }
+
     private static IReadOnlyDictionary<string, string> ReadLeafInitializers(string source)
     {
         var markerIndex = source.IndexOf(MessageContractSourceFactory.TargetMarker, StringComparison.Ordinal);

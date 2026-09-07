@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
 
-namespace ViciOne.ServiceBus.Analyzers.Helpers;
+namespace ViciOne.ServiceBus.Analyzers.Internals;
 
 static class OperationExtensions
 {
@@ -36,7 +36,10 @@ static class OperationExtensions
     public static List<NameAndType> GetParameters(this IOperation operation, CancellationToken cancellationToken)
     {
         var result = new List<NameAndType>();
-        var semanticModel = operation.SemanticModel!;
+        var semanticModel = operation.SemanticModel;
+        if (semanticModel == null)
+            return result;
+
         var node = operation.Syntax;
 
         while (node != null)
@@ -50,7 +53,7 @@ static class OperationExtensions
                             var property = node.Ancestors().OfType<PropertyDeclarationSyntax>().FirstOrDefault();
                             if (property != null)
                             {
-                                var symbol = operation.SemanticModel.GetDeclaredSymbol(property, cancellationToken);
+                                var symbol = semanticModel.GetDeclaredSymbol(property, cancellationToken);
                                 if (symbol != null)
                                     result.Add(new NameAndType("value", symbol.Type));
                             }
@@ -109,11 +112,13 @@ static class OperationExtensions
         if (memberDeclarationSyntax == null)
             return false;
 
-        var symbol = operation.SemanticModel!.GetDeclaredSymbol(memberDeclarationSyntax, cancellationToken);
+        var semanticModel = operation.SemanticModel;
+        if (semanticModel == null)
+            return false;
+
+        var symbol = semanticModel.GetDeclaredSymbol(memberDeclarationSyntax, cancellationToken);
         return symbol is { IsStatic: true };
     }
-
-
     [StructLayout(LayoutKind.Auto)]
     internal readonly struct NameAndType
     {

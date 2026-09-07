@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
+namespace ViciOne.ServiceBus.Analyzers.Rules;
 
-namespace ViciOne.ServiceBus.Analyzers.V5;
-
-internal static class AnalyzerSymbolFacts
+internal static class ServiceBusSymbolFacts
 {
     private const string AbstractionsAssemblyName = "ViciOne.ServiceBus.Abstractions";
     private static readonly string[] s_consumerDefinitionMetadataNames =

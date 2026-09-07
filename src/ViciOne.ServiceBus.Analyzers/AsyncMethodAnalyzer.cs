@@ -7,12 +7,12 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace ViciOne.ServiceBus.Analyzers;
 
-/// <summary>Analyzes source code for async method.</summary>
+/// <summary>Reports unobserved asynchronous message-production calls.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class AsyncMethodAnalyzer :
+public sealed class AsyncMethodAnalyzer :
     DiagnosticAnalyzer
 {
-    /// <summary>Exposes the missing await rule id used by the containing type.</summary>
+    /// <summary>Identifies producer tasks that are neither awaited nor captured.</summary>
     public const string MissingAwaitRuleId = "VOSB1001";
 
     const string Category = "Usage";
@@ -23,11 +23,11 @@ public class AsyncMethodAnalyzer :
         Category, DiagnosticSeverity.Warning, true,
         "ViciOne.ServiceBus method is not awaited or captured.");
 
-    /// <summary>Gets the supported diagnostics.</summary>
+    /// <summary>Gets the unobserved-producer-task diagnostic.</summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(MissingAwaitRule);
 
-    /// <summary>Initializes the target component.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Registers invocation analysis for non-generated source.</summary>
+    /// <param name="context">The analyzer registration context.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context == null)

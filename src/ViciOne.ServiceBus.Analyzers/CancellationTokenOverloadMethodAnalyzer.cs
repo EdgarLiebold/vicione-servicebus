@@ -9,25 +9,25 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
-using ViciOne.ServiceBus.Analyzers.Helpers;
+using ViciOne.ServiceBus.Analyzers.Internals;
 
 namespace ViciOne.ServiceBus.Analyzers;
 
-/// <summary>Analyzes source code for cancellation token overload method.</summary>
+/// <summary>Reports cancellable calls that omit an available pipeline cancellation token.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class CancellationTokenOverloadMethodAnalyzer :
+public sealed class CancellationTokenOverloadMethodAnalyzer :
     DiagnosticAnalyzer
 {
-    /// <summary>Exposes the cancellation token overload method rule id used by the containing type.</summary>
+    /// <summary>Identifies diagnostics for calls that can forward a pipeline cancellation token.</summary>
     public const string CancellationTokenOverloadMethodRuleId = "VOSB2001";
 
     // Diagnostic property keys. The code fix reads them from its own assembly, so they are part of
     // the contract between the two.
-    /// <summary>Exposes the parameter index used by the containing type.</summary>
+    /// <summary>Names the diagnostic property containing the cancellation-token parameter index.</summary>
     public const string ParameterIndex = "ParameterIndex";
-    /// <summary>Exposes the parameter name used by the containing type.</summary>
+    /// <summary>Names the diagnostic property containing the cancellation-token parameter name.</summary>
     public const string ParameterName = "ParameterName";
-    /// <summary>Exposes the cancellation tokens used by the containing type.</summary>
+    /// <summary>Names the diagnostic property containing the available cancellation-token expressions.</summary>
     public const string CancellationTokens = "CancellationTokens";
 
     const string Category = "Reliability";
@@ -38,11 +38,11 @@ public class CancellationTokenOverloadMethodAnalyzer :
         Category, DiagnosticSeverity.Info, true,
         "Context.CancellationToken can be passed in method with overload.");
 
-    /// <summary>Gets the supported diagnostics.</summary>
+    /// <summary>Gets the cancellation-forwarding diagnostic supported by this analyzer.</summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(CancellationTokenOverloadMethodRule);
 
-    /// <summary>Initializes the target component.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Registers invocation analysis for each compilation.</summary>
+    /// <param name="context">The analyzer registration context.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context == null)
@@ -53,7 +53,7 @@ public class CancellationTokenOverloadMethodAnalyzer :
         context.RegisterCompilationStartAction(AnalyzeCompilationStart);
     }
 
-    void AnalyzeCompilationStart(CompilationStartAnalysisContext context)
+    static void AnalyzeCompilationStart(CompilationStartAnalysisContext context)
     {
         var cancellationTokenSymbol = GetBestTypeByMetadataName(context.Compilation, "System.Threading.CancellationToken");
         var pipeContextTypeSymbol = GetBestTypeByMetadataName(context.Compilation, "ViciOne.ServiceBus.Advanced.PipeContext");
@@ -83,7 +83,7 @@ public class CancellationTokenOverloadMethodAnalyzer :
                 return;
 
             var availableCancellationTokens = FindCancellationTokens(invocation, cancellationTokenSymbol, pipeContextTypeSymbol,
-                context.CancellationToken, membersByType);
+                analysisContext.CancellationToken, membersByType);
 
             if (!availableCancellationTokens.Any())
                 return;
@@ -187,38 +187,53 @@ public class CancellationTokenOverloadMethodAnalyzer :
         }
     }
 
-    static IMethodSymbol? FindOverloadWithAdditionalParameterOfType(IMethodSymbol methodSymbol, params ITypeSymbol?[] additionalParameterTypes)
+    static IMethodSymbol? FindOverloadWithAdditionalParameterOfType(IMethodSymbol methodSymbol, ITypeSymbol additionalParameterType)
     {
-        additionalParameterTypes = additionalParameterTypes.Where(type => type != null).ToArray();
-        if (additionalParameterTypes.Length == 0)
-            return null;
-
-        ImmutableArray<ISymbol> members;
-
-        members = methodSymbol.ContainingType.GetMembers(methodSymbol.Name);
+        methodSymbol = methodSymbol.OriginalDefinition;
+        ImmutableArray<ISymbol> members = methodSymbol.ContainingType.GetMembers(methodSymbol.Name);
 
         return members.OfType<IMethodSymbol>()
-            .FirstOrDefault(member => HasSimilarParameters(methodSymbol, member, additionalParameterTypes));
+            .FirstOrDefault(member => HasSameParametersPlus(methodSymbol, member, additionalParameterType));
     }
 
-    static bool HasSimilarParameters(IMethodSymbol methodSymbol, IMethodSymbol otherMethod, params ITypeSymbol?[] additionalParameterTypes)
+    static bool HasSameParametersPlus(IMethodSymbol method, IMethodSymbol candidate, ITypeSymbol additionalParameterType)
     {
-        if (SymbolEqualityComparer.Default.Equals(methodSymbol, otherMethod))
+        if (SymbolEqualityComparer.Default.Equals(method, candidate)
+            || method.Arity != candidate.Arity
+            || candidate.Parameters.Length != method.Parameters.Length + 1)
             return false;
 
-        List<ITypeSymbol>? methodParameters = methodSymbol.Parameters.Select(p => p.Type).ToList();
-        List<ITypeSymbol>? otherMethodParameters = otherMethod.Parameters.Select(p => p.Type).ToList();
+        for (var addedIndex = 0; addedIndex < candidate.Parameters.Length; addedIndex++)
+        {
+            var addedParameter = candidate.Parameters[addedIndex];
+            if (addedParameter.RefKind != RefKind.None
+                || !SymbolEqualityComparer.Default.Equals(addedParameter.Type, additionalParameterType))
+                continue;
 
-        if (otherMethodParameters.Count - methodParameters.Count != additionalParameterTypes.Length)
-            return false;
+            var matches = true;
+            for (var sourceIndex = 0; sourceIndex < method.Parameters.Length; sourceIndex++)
+            {
+                var candidateIndex = sourceIndex < addedIndex ? sourceIndex : sourceIndex + 1;
+                if (!ParametersMatch(method.Parameters[sourceIndex], candidate.Parameters[candidateIndex]))
+                {
+                    matches = false;
+                    break;
+                }
+            }
 
-        foreach (var param in methodParameters)
-            otherMethodParameters.Remove(param);
+            if (matches)
+                return true;
+        }
 
-        foreach (var param in additionalParameterTypes)
-            otherMethodParameters.Remove(param!);
+        return false;
 
-        return !otherMethodParameters.Any();
+        static bool ParametersMatch(IParameterSymbol source, IParameterSymbol candidateParameter)
+        {
+            return source.RefKind == candidateParameter.RefKind
+                && source.IsParams == candidateParameter.IsParams
+                && string.Equals(source.Name, candidateParameter.Name, StringComparison.Ordinal)
+                && SymbolEqualityComparer.Default.Equals(source.Type, candidateParameter.Type);
+        }
     }
 
     static SyntaxNode? GetInvocationMethodNameNode(SyntaxNode invocationNode)
@@ -359,7 +374,7 @@ public class CancellationTokenOverloadMethodAnalyzer :
 
         static bool IsSymbolAccessibleFromOperation(ISymbol symbol, IOperation operation)
         {
-            return operation.SemanticModel!.IsAccessible(operation.Syntax.Span.Start, symbol);
+            return operation.SemanticModel?.IsAccessible(operation.Syntax.Span.Start, symbol) == true;
         }
     }
 
@@ -369,7 +384,7 @@ public class CancellationTokenOverloadMethodAnalyzer :
         return membersByType.GetOrAdd(symbol, _ =>
         {
             // Special framework types cannot expose a nested service-bus cancellation token path.
-            if ((int)symbol.SpecialType >= 1 && (int)symbol.SpecialType <= 45)
+            if (symbol.SpecialType != SpecialType.None)
                 return [];
 
             var result = new HashSet<ISymbol>(SymbolEqualityComparer.Default);
@@ -410,11 +425,11 @@ public class CancellationTokenOverloadMethodAnalyzer :
 
     enum SymbolVisibility
     {
-        /// <summary>Indicates public.</summary>
+        /// <summary>The symbol is visible to every referencing assembly.</summary>
         Public,
-        /// <summary>Indicates internal.</summary>
+        /// <summary>The symbol is visible within its assembly or to a declared friend assembly.</summary>
         Internal,
-        /// <summary>Indicates private.</summary>
+        /// <summary>The symbol cannot be selected through a metadata-name lookup from another source context.</summary>
         Private,
     }
 }

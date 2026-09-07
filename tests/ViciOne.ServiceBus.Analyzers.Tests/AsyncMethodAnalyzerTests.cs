@@ -192,6 +192,40 @@ namespace ConsoleApplication1
         Assert.Empty(actual);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASYNC-METHOD-ANALYZER", "lookalike-producer-is-excluded")]
+    public async Task SourceDefinedLookalikeProducer_DoesNotReportAsync()
+    {
+        var source = ServiceBusAnalyzerFixture.Usings + @"
+namespace ViciOne.ServiceBus.Advanced
+{
+    public static class ForwardExtensions
+    {
+        public static Task ForwardAsync() => Task.CompletedTask;
+    }
+}
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        static void Main()
+        {
+            ViciOne.ServiceBus.Advanced.ForwardExtensions.ForwardAsync();
+        }
+    }
+}
+";
+
+        var actual = await RoslynTestHost.AnalyzeAsync(
+            source,
+            new AsyncMethodAnalyzer(),
+            ServiceBusAnalyzerFixture.ReferenceRoots,
+            TestContext.Current.CancellationToken);
+
+        Assert.Empty(actual);
+    }
+
     private static async Task AssertSingleDiagnosticAsync(
         string source,
         string message,
