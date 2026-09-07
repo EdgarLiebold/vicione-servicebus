@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.AmazonS3.MessageData;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
-namespace ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.AmazonS3.MessageData;
+namespace ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.MessageData;
 
 public sealed class AmazonS3MessageDataRepositoryTests
 {
@@ -30,8 +30,9 @@ public sealed class AmazonS3MessageDataRepositoryTests
         using var actual = new MemoryStream();
         await stored.CopyToAsync(actual, cancellationToken);
 
-        Assert.Equal("urn", address.Scheme);
-        Assert.StartsWith("urn:file:", address.OriginalString, StringComparison.Ordinal);
+        Assert.Equal("s3", address.Scheme);
+        Assert.Equal(fixture.BucketName, address.Host);
+        Assert.False(string.IsNullOrWhiteSpace(address.AbsolutePath.TrimStart('/')));
         Assert.Equal(expected, actual.ToArray());
     }
 

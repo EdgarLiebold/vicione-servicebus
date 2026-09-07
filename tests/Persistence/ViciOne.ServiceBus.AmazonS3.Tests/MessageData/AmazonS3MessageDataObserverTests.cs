@@ -1,3 +1,4 @@
+using System.Net;
 using System.Reflection;
 using global::Amazon.S3;
 using global::Amazon.S3.Model;
@@ -6,7 +7,7 @@ using ViciOne.ServiceBus.AmazonS3.MessageData;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
-namespace ViciOne.ServiceBus.AmazonS3.Tests.AmazonS3.MessageData;
+namespace ViciOne.ServiceBus.AmazonS3.Tests.MessageData;
 
 public sealed class AmazonS3MessageDataObserverTests
 {
@@ -53,9 +54,11 @@ public sealed class AmazonS3MessageDataObserverTests
         await Assert.ThrowsAsync<ArgumentNullException>(
             () => repository.PostStartAsync(null!, Task.FromResult<BusReady>(null!)));
         await Assert.ThrowsAsync<ArgumentNullException>(() => repository.PostStartAsync(bus, null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.StartFaultedAsync(null!, failure));
         await Assert.ThrowsAsync<ArgumentNullException>(() => repository.StartFaultedAsync(bus, null!));
         await Assert.ThrowsAsync<ArgumentNullException>(() => repository.PreStopAsync(null!));
         await Assert.ThrowsAsync<ArgumentNullException>(() => repository.PostStopAsync(null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.StopFaultedAsync(null!, failure));
         await Assert.ThrowsAsync<ArgumentNullException>(() => repository.StopFaultedAsync(bus, null!));
     }
 
@@ -117,6 +120,7 @@ public sealed class AmazonS3MessageDataObserverTests
         PutLifecycleConfigurationRequest request = Assert.IsType<PutLifecycleConfigurationRequest>(proxy.PutRequest);
         Assert.Equal(cancellationToken, proxy.ObservedCancellationToken);
         LifecycleRule actualForeign = Assert.Single(request.Configuration.Rules, rule => rule.Id == foreign.Id);
+        Assert.Same(foreign, actualForeign);
         Assert.Equal(365, actualForeign.Expiration.Days);
         Assert.Equal("caller/", Assert.IsType<LifecyclePrefixPredicate>(actualForeign.Filter.LifecycleFilterPredicate).Prefix);
         LifecycleTransition actualForeignTransition = Assert.Single(actualForeign.Transitions);
@@ -125,9 +129,8 @@ public sealed class AmazonS3MessageDataObserverTests
         LifecycleRule actualLegacyForeign = Assert.Single(
             request.Configuration.Rules,
             rule => rule.Id == legacyForeign.Id);
-        Assert.Equal(
-            "legacy/",
-            Assert.IsType<LifecyclePrefixPredicate>(actualLegacyForeign.Filter.LifecycleFilterPredicate).Prefix);
+        Assert.Same(legacyForeign, actualLegacyForeign);
+        Assert.Equal("legacy/", typeof(LifecycleRule).GetProperty("Prefix")!.GetValue(actualLegacyForeign));
         Assert.Equal(180, actualLegacyForeign.Expiration.Days);
         LifecycleRule actualOwned = Assert.Single(
             request.Configuration.Rules,
@@ -142,6 +145,114 @@ public sealed class AmazonS3MessageDataObserverTests
             string.Empty,
             Assert.IsType<LifecyclePrefixPredicate>(actualOwned.Filter.LifecycleFilterPredicate).Prefix);
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-S3-LIFECYCLE", "missing-bucket-and-lifecycle-are-created")]
+    public async Task EnsureReady_CreatesMissingBucketAndLifecycleRuleAsync()
+    {
+        IAmazonS3 client = DispatchProxy.Create<IAmazonS3, LifecycleS3DispatchProxy>();
+        var proxy = (LifecycleS3DispatchProxy)(object)client;
+        proxy.BucketAclFailure = S3Failure(HttpStatusCode.NotFound, "NoSuchBucket");
+        proxy.LifecycleFailure = S3Failure(HttpStatusCode.NotFound, "NoSuchLifecycleConfiguration");
+        var repository = new AmazonS3MessageDataRepository(
+            client,
+            new AmazonS3MessageDataRepositoryOptions("missing-message-data", lifecycleExpirationDays: 7));
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        await repository.EnsureReadyAsync(cancellationToken);
+
+        Assert.Equal("missing-message-data", proxy.PutBucketRequest?.BucketName);
+        Assert.Equal("eu-central-1", proxy.PutBucketRequest?.BucketRegionName);
+        PutLifecycleConfigurationRequest lifecycleRequest = Assert.IsType<PutLifecycleConfigurationRequest>(
+            proxy.PutRequest);
+        LifecycleRule owned = Assert.Single(lifecycleRequest.Configuration.Rules);
+        Assert.Equal(AmazonS3MessageDataRepository.LifecycleRuleId, owned.Id);
+        Assert.Equal(7, owned.Expiration.Days);
+        Assert.Equal(LifecycleRuleStatus.Enabled, owned.Status);
+        Assert.Equal(
+            string.Empty,
+            Assert.IsType<LifecyclePrefixPredicate>(owned.Filter.LifecycleFilterPredicate).Prefix);
+        Assert.Equal(cancellationToken, proxy.ObservedCancellationToken);
+    }
+
+    [Theory]
+    [InlineData(HttpStatusCode.Forbidden, "AccessDenied")]
+    [InlineData(HttpStatusCode.MovedPermanently, "PermanentRedirect")]
+    [RequirementCoverage("REQ-VSB-AWS-S3-LIFECYCLE", "inaccessible-existing-bucket-and-current-rule-are-no-op")]
+    public async Task EnsureReady_TreatsAnInaccessibleBucketWithCurrentRuleAsReadyAsync(
+        HttpStatusCode statusCode,
+        string errorCode)
+    {
+        LifecycleRule current = CurrentOwnedRule(14);
+        IAmazonS3 client = DispatchProxy.Create<IAmazonS3, LifecycleS3DispatchProxy>();
+        var proxy = (LifecycleS3DispatchProxy)(object)client;
+        proxy.BucketAclFailure = S3Failure(statusCode, errorCode);
+        proxy.Rules = [current];
+        var repository = new AmazonS3MessageDataRepository(
+            client,
+            new AmazonS3MessageDataRepositoryOptions("existing-message-data", lifecycleExpirationDays: 14));
+
+        await repository.EnsureReadyAsync(TestContext.Current.CancellationToken);
+
+        Assert.Null(proxy.PutBucketRequest);
+        Assert.Null(proxy.PutRequest);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-S3-STARTUP", "concurrent-idempotent-bucket-creation-is-accepted")]
+    public async Task EnsureReady_AcceptsConcurrentCreationOfTheConfiguredBucketAsync()
+    {
+        IAmazonS3 client = DispatchProxy.Create<IAmazonS3, LifecycleS3DispatchProxy>();
+        var proxy = (LifecycleS3DispatchProxy)(object)client;
+        proxy.BucketAclFailure = S3Failure(HttpStatusCode.NotFound, "NoSuchBucket");
+        proxy.PutBucketFailure = S3Failure(HttpStatusCode.Conflict, "BucketAlreadyOwnedByYou");
+        var repository = new AmazonS3MessageDataRepository(
+            client,
+            new AmazonS3MessageDataRepositoryOptions("concurrent-message-data"));
+
+        await repository.EnsureReadyAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal("concurrent-message-data", proxy.PutBucketRequest?.BucketName);
+        Assert.Null(proxy.PutRequest);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-S3-STARTUP", "bucket-creation-requires-client-region")]
+    public async Task EnsureReady_RequiresAClientRegionBeforeCreatingABucketAsync()
+    {
+        IAmazonS3 client = DispatchProxy.Create<IAmazonS3, LifecycleS3DispatchProxy>();
+        var proxy = (LifecycleS3DispatchProxy)(object)client;
+        proxy.BucketAclFailure = S3Failure(HttpStatusCode.NotFound, "NoSuchBucket");
+        proxy.ClientConfiguration = new AmazonS3Config();
+        var repository = new AmazonS3MessageDataRepository(
+            client,
+            new AmazonS3MessageDataRepositoryOptions("regionless-message-data"));
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => repository.EnsureReadyAsync(TestContext.Current.CancellationToken));
+
+        Assert.Contains("authentication region", exception.Message, StringComparison.Ordinal);
+        Assert.Null(proxy.PutBucketRequest);
+    }
+
+    private static AmazonS3Exception S3Failure(HttpStatusCode statusCode, string errorCode) =>
+        new("simulated Amazon S3 failure")
+        {
+            StatusCode = statusCode,
+            ErrorCode = errorCode,
+        };
+
+    private static LifecycleRule CurrentOwnedRule(int expirationDays) =>
+        new()
+        {
+            Id = AmazonS3MessageDataRepository.LifecycleRuleId,
+            Status = LifecycleRuleStatus.Enabled,
+            Filter = new LifecycleFilter
+            {
+                LifecycleFilterPredicate = new LifecyclePrefixPredicate { Prefix = string.Empty },
+            },
+            Expiration = new LifecycleRuleExpiration { Days = expirationDays },
+        };
 
     private class NoOpDispatchProxy : DispatchProxy
     {
@@ -165,6 +276,19 @@ public sealed class AmazonS3MessageDataObserverTests
 
     private class LifecycleS3DispatchProxy : DispatchProxy
     {
+        public Exception? BucketAclFailure { get; set; }
+
+        public AmazonS3Config ClientConfiguration { get; set; } = new()
+        {
+            AuthenticationRegion = "eu-central-1",
+        };
+
+        public Exception? LifecycleFailure { get; set; }
+
+        public PutBucketRequest? PutBucketRequest { get; private set; }
+
+        public Exception? PutBucketFailure { get; set; }
+
         public IReadOnlyList<LifecycleRule> Rules { get; set; } = [];
 
         public PutLifecycleConfigurationRequest? PutRequest { get; private set; }
@@ -175,15 +299,27 @@ public sealed class AmazonS3MessageDataObserverTests
         {
             switch (targetMethod?.Name)
             {
+                case "get_Config":
+                    return ClientConfiguration;
                 case nameof(IAmazonS3.GetBucketAclAsync):
                     ObservedCancellationToken = Assert.IsType<CancellationToken>(args![1]);
+                    if (BucketAclFailure is not null)
+                        return Task.FromException<GetBucketAclResponse>(BucketAclFailure);
                     return Task.FromResult(new GetBucketAclResponse());
+                case nameof(IAmazonS3.PutBucketAsync):
+                    PutBucketRequest = Assert.IsType<PutBucketRequest>(args![0]);
+                    ObservedCancellationToken = Assert.IsType<CancellationToken>(args[1]);
+                    if (PutBucketFailure is not null)
+                        return Task.FromException<PutBucketResponse>(PutBucketFailure);
+                    return Task.FromResult(new PutBucketResponse());
                 case nameof(IAmazonS3.GetLifecycleConfigurationAsync):
                     ObservedCancellationToken = Assert.IsType<CancellationToken>(args![1]);
+                    if (LifecycleFailure is not null)
+                        return Task.FromException<GetLifecycleConfigurationResponse>(LifecycleFailure);
                     return Task.FromResult(
                         new GetLifecycleConfigurationResponse
                         {
-                            Configuration = new LifecycleConfiguration { Rules = Rules.ToList() },
+                            Configuration = new LifecycleConfiguration { Rules = [.. Rules] },
                         });
                 case nameof(IAmazonS3.PutLifecycleConfigurationAsync):
                     PutRequest = Assert.IsType<PutLifecycleConfigurationRequest>(args![0]);

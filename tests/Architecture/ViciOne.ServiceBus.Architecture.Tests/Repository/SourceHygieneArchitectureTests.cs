@@ -19,13 +19,8 @@ public sealed partial class SourceHygieneArchitectureTests
         "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
     };
 
-    private static readonly IReadOnlySet<string> ReviewedCompilerDirectives = new HashSet<string>(StringComparer.Ordinal)
-    {
-        "src/Persistence/ViciOne.ServiceBus.AmazonS3/AmazonS3/MessageData/AmazonS3MessageDataRepository.cs|"
-            + "#pragma warning disable CS0618 // Reading the deprecated SDK property is required to preserve an existing rule while rewriting it with Filter.",
-        "src/Persistence/ViciOne.ServiceBus.AmazonS3/AmazonS3/MessageData/AmazonS3MessageDataRepository.cs|"
-            + "#pragma warning restore CS0618",
-    };
+    private static readonly IReadOnlySet<string> ReviewedCompilerDirectives =
+        new HashSet<string>(StringComparer.Ordinal);
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SOURCE-DIRECTIVES", "only-feature-preserving-compiler-directives")]

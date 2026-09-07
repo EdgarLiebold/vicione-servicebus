@@ -8,15 +8,19 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Observers;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AmazonS3.MessageData;
+
 /// <summary>Stores message payloads in one caller-owned Amazon S3 bucket.</summary>
 public sealed class AmazonS3MessageDataRepository :
     IMessageDataRepository,
     IBusObserver
 {
-    internal const string LifecycleRuleId = "s3-messagedata-rule";
+    internal const string LifecycleRuleId = "vicione-servicebus-message-data-expiration";
 
     private readonly IAmazonS3 _client;
     private readonly AmazonS3MessageDataRepositoryOptions _options;
@@ -104,7 +108,7 @@ public sealed class AmazonS3MessageDataRepository :
     }
 
     /// <summary>Opens a readable stream for the Amazon S3 object identified by a message-data address.</summary>
-    /// <param name="address">An absolute <c>urn:file</c> address containing the repository object key.</param>
+    /// <param name="address">An absolute <c>s3</c> URI containing the configured bucket and repository object key.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task whose result is the readable object stream returned by Amazon S3.</returns>
     public async Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default)
@@ -121,7 +125,7 @@ public sealed class AmazonS3MessageDataRepository :
     /// <param name="stream">The readable payload stream to upload.</param>
     /// <param name="timeToLive">An optional positive whole-day retention period that must match the configured bucket lifecycle expiration.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task whose result is the generated <c>urn:file</c> address of the uploaded object.</returns>
+    /// <returns>A task whose result is the generated <c>s3</c> URI of the uploaded object.</returns>
     public async Task<Uri> PutAsync(
         Stream stream,
         TimeSpan? timeToLive = null,
@@ -139,7 +143,7 @@ public sealed class AmazonS3MessageDataRepository :
             .UploadAsync(stream, _options.BucketName, objectKey, cancellationToken)
             .ConfigureAwait(false);
 
-        return new Uri($"urn:file:{objectKey}", UriKind.Absolute);
+        return new Uri($"s3://{_options.BucketName}/{objectKey}", UriKind.Absolute);
     }
 
     internal async Task EnsureReadyAsync(CancellationToken cancellationToken)
@@ -183,9 +187,7 @@ public sealed class AmazonS3MessageDataRepository :
                     cancellationToken)
                 .ConfigureAwait(false);
 
-            rules = response.Configuration?.Rules?
-                .Select(NormalizeRuleForWrite)
-                .ToList() ?? [];
+            rules = response.Configuration?.Rules?.ToList() ?? [];
         }
         catch (AmazonS3Exception exception) when (
             exception.StatusCode == HttpStatusCode.NotFound ||
@@ -194,9 +196,10 @@ public sealed class AmazonS3MessageDataRepository :
             rules = [];
         }
 
-        LifecycleRule[] ownedRules = rules
-            .Where(rule => string.Equals(rule.Id, LifecycleRuleId, StringComparison.Ordinal))
-            .ToArray();
+        LifecycleRule[] ownedRules =
+        [
+            .. rules.Where(rule => string.Equals(rule.Id, LifecycleRuleId, StringComparison.Ordinal)),
+        ];
 
         if (ownedRules.Length == 1 && IsCurrentOwnedRule(ownedRules[0], expirationDays))
             return;
@@ -269,57 +272,34 @@ public sealed class AmazonS3MessageDataRepository :
         }
     }
 
-    private static LifecycleRule NormalizeRuleForWrite(LifecycleRule source)
-    {
-        LifecycleFilter? filter = source.Filter;
-        if (filter is null)
-        {
-            // Prefix is the AWS SDK's only representation of lifecycle rules returned in the older wire format.
-#pragma warning disable CS0618 // Reading the deprecated SDK property is required to preserve an existing rule while rewriting it with Filter.
-            string prefix = source.Prefix ?? string.Empty;
-#pragma warning restore CS0618
-            filter = new LifecycleFilter
-            {
-                LifecycleFilterPredicate = new LifecyclePrefixPredicate { Prefix = prefix },
-            };
-        }
-
-        return new LifecycleRule
-        {
-            AbortIncompleteMultipartUpload = source.AbortIncompleteMultipartUpload,
-            Expiration = source.Expiration,
-            Filter = filter,
-            Id = source.Id,
-            NoncurrentVersionExpiration = source.NoncurrentVersionExpiration,
-            NoncurrentVersionTransitions = source.NoncurrentVersionTransitions,
-            Status = source.Status,
-            Transitions = source.Transitions,
-        };
-    }
-
     private string ClientRegion() =>
         _client.Config.AuthenticationRegion ??
         _client.Config.RegionEndpoint?.SystemName ??
         throw new InvalidOperationException(
             "The Amazon S3 client must own an authentication region before the repository can create a bucket.");
 
-    private static string ParseObjectKey(Uri address)
+    private string ParseObjectKey(Uri address)
     {
         ArgumentNullException.ThrowIfNull(address);
-        if (!address.IsAbsoluteUri || !address.Scheme.Equals("urn", StringComparison.OrdinalIgnoreCase))
-            throw new ArgumentException("The message-data address must be an absolute urn:file URI.", nameof(address));
+        if (!address.IsAbsoluteUri ||
+            !address.Scheme.Equals("s3", StringComparison.OrdinalIgnoreCase) ||
+            !address.IdnHost.Equals(_options.BucketName, StringComparison.Ordinal) ||
+            !address.IsDefaultPort ||
+            address.UserInfo.Length != 0 ||
+            address.Query.Length != 0 ||
+            address.Fragment.Length != 0)
+        {
+            throw new ArgumentException(
+                "The message-data address must be an absolute s3 URI for the configured bucket.",
+                nameof(address));
+        }
 
-        const string prefix = "urn:file:";
-        string original = address.OriginalString;
-        if (!original.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-            throw new ArgumentException("The message-data address must use the urn:file namespace.", nameof(address));
-
-        string objectKey = original[prefix.Length..];
+        string objectKey = address.GetComponents(UriComponents.Path, UriFormat.Unescaped);
         if (objectKey.Length == 0 ||
             objectKey.Any(character => !char.IsAsciiLetterOrDigit(character) && character is not '-' and not '_'))
         {
             throw new ArgumentException(
-                "The urn:file object key must contain only ASCII letters, digits, '-' or '_'.",
+                "The S3 object key must contain only ASCII letters, digits, '-' or '_'.",
                 nameof(address));
         }
 

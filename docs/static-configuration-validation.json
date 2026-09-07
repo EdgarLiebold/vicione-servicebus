@@ -39,11 +39,11 @@
     },
     {
       "type": "AmazonS3MessageDataRepositoryOptions",
-      "source": "src/Persistence/ViciOne.ServiceBus.AmazonS3/AmazonS3/MessageData/AmazonS3MessageDataRepositoryOptions.cs",
+      "source": "src/Persistence/ViciOne.ServiceBus.AmazonS3/MessageData/AmazonS3MessageDataRepositoryOptions.cs",
       "boundary": "construction",
       "invariantCount": 2,
-      "negativeTest": { "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/AmazonS3/MessageData/AmazonS3MessageDataConfigurationTests.cs", "method": "Options_EnforceBucketAndRetentionBoundaries" },
-      "positiveTest": { "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/AmazonS3/MessageData/AmazonS3MessageDataConfigurationTests.cs", "method": "Options_EnforceBucketAndRetentionBoundaries" }
+      "negativeTest": { "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/MessageData/AmazonS3MessageDataConfigurationTests.cs", "method": "Options_EnforceBucketAndRetentionBoundaries" },
+      "positiveTest": { "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/MessageData/AmazonS3MessageDataConfigurationTests.cs", "method": "Options_EnforceBucketAndRetentionBoundaries" }
     },
     {
       "type": "AmazonSqsClientContextCacheOptions",

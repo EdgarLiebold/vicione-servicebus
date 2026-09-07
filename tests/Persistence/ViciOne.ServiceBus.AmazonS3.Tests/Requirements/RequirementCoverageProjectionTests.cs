@@ -10,6 +10,7 @@ public sealed class RequirementCoverageProjectionTests
         "ViciOne.ServiceBus.AmazonS3.Tests.Requirements.AmazonS3Requirements.json";
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-S3-REQUIREMENT-PROJECTION", "compiled-metadata-matches-projection")]
     public void AmazonS3Requirements_MatchCompiledRequirementMetadata()
     {
         Assembly assembly = typeof(RequirementCoverageProjectionTests).Assembly;

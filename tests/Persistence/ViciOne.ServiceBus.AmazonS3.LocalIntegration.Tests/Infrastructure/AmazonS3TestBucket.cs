@@ -38,7 +38,7 @@ internal sealed class AmazonS3TestBucket : IAsyncDisposable
             MaxErrorRetry = 0,
         };
 
-        string prefix = new(purpose.ToLowerInvariant().Where(char.IsAsciiLetterOrDigit).ToArray());
+        string prefix = string.Concat(purpose.ToLowerInvariant().Where(char.IsAsciiLetterOrDigit));
         if (prefix.Length == 0)
             prefix = "test";
         if (prefix.Length > 20)

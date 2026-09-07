@@ -15,7 +15,7 @@
     <PackageId>ViciOne.ServiceBus.AmazonS3</PackageId>
     <Title>ViciOne.ServiceBus.AmazonS3</Title>
     <PackageTags>ViciOne.ServiceBus;S3;Storage;ServiceBus</PackageTags>
-    <Description>ViciOne.ServiceBus S3 Storage persistence support; $(Description)</Description>
+    <Description>Amazon S3 message-data persistence for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>

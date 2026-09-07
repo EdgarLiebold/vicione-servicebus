@@ -4953,8 +4953,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.ActiveMqBusFactoryConfigurato
 ASSEMBLY ViciOne.ServiceBus.AmazonS3 VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.AmazonS3.AmazonS3ClientExtensions [static]
   METHOD public static ViciOne.ServiceBus.AmazonS3.MessageData.AmazonS3MessageDataRepository CreateMessageDataRepository(Amazon.S3.IAmazonS3 client, ViciOne.ServiceBus.AmazonS3.MessageData.AmazonS3MessageDataRepositoryOptions options)
-TYPE class public ViciOne.ServiceBus.AmazonS3.AmazonS3MessageDataRepositorySelectorExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository AmazonS3(ViciOne.ServiceBus.Configuration.IMessageDataRepositorySelector selector, Amazon.S3.IAmazonS3 client, ViciOne.ServiceBus.AmazonS3.MessageData.AmazonS3MessageDataRepositoryOptions options)
 TYPE class public ViciOne.ServiceBus.AmazonS3.MessageData.AmazonS3MessageDataRepository [sealed]
   CTOR public ViciOne.ServiceBus.AmazonS3.MessageData.AmazonS3MessageDataRepository(Amazon.S3.IAmazonS3 client, ViciOne.ServiceBus.AmazonS3.MessageData.AmazonS3MessageDataRepositoryOptions options)
   METHOD public virtual System.Threading.Tasks.Task PostStartAsync(ViciOne.ServiceBus.IBus bus, System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Observers.BusReady> busReady)
@@ -4971,6 +4969,8 @@ TYPE class public ViciOne.ServiceBus.AmazonS3.MessageData.AmazonS3MessageDataRep
   CTOR public ViciOne.ServiceBus.AmazonS3.MessageData.AmazonS3MessageDataRepositoryOptions(System.String bucketName, System.Nullable<System.Int32> lifecycleExpirationDays = null)
   PROPERTY System.Nullable<System.Int32> LifecycleExpirationDays { public-get;  }
   PROPERTY System.String BucketName { public-get;  }
+TYPE class public ViciOne.ServiceBus.AmazonS3.MessageDataRepositorySelectorExtensions [static]
+  METHOD public static ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository UseAmazonS3(ViciOne.ServiceBus.Configuration.IMessageDataRepositorySelector selector, Amazon.S3.IAmazonS3 client, ViciOne.ServiceBus.AmazonS3.MessageData.AmazonS3MessageDataRepositoryOptions options)
 
 ASSEMBLY ViciOne.ServiceBus.AmazonSqs VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.AmazonSqs.AmazonSqsBusFactory [static]
