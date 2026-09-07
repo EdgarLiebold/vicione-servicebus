@@ -2,9 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced.Observers;
 
-/// <summary>Defines the operations required by receive transport event.</summary>
+/// <summary>Provides the input address associated with a receive-transport lifecycle notification.</summary>
 public interface ReceiveTransportEvent
 {
-    /// <summary>The input address of the receive endpoint.</summary>
+    /// <summary>Gets the receive transport's input address.</summary>
     Uri InputAddress { get; }
 }

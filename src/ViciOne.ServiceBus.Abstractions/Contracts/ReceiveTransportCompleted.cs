@@ -1,12 +1,12 @@
 namespace ViciOne.ServiceBus.Advanced.Observers;
 
-/// <summary>Defines the operations required by receive transport completed.</summary>
+/// <summary>Describes the final delivery counters of a completed receive transport.</summary>
 public interface ReceiveTransportCompleted :
     ReceiveTransportEvent
 {
-    /// <summary>The number of messages delivered to the receive endpoint.</summary>
+    /// <summary>Gets the number of deliveries accepted by the transport.</summary>
     long DeliveryCount { get; }
 
-    /// <summary>The maximum concurrent messages delivery to the receive endpoint.</summary>
+    /// <summary>Gets the deliveries still executing when transport completion was observed.</summary>
     long ConcurrentDeliveryCount { get; }
 }

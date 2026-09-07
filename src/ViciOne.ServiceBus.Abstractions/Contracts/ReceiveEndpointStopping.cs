@@ -1,9 +1,9 @@
 namespace ViciOne.ServiceBus.Advanced.Observers;
 
-/// <summary>Defines the operations required by receive endpoint stopping.</summary>
+/// <summary>Describes a receive endpoint that is stopping or being removed.</summary>
 public interface ReceiveEndpointStopping :
     ReceiveEndpointEvent
 {
-    /// <summary>Gets the removed.</summary>
+    /// <summary>Gets whether the endpoint is being removed from its host.</summary>
     bool Removed { get; }
 }

@@ -2,24 +2,24 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>An exception information that is serializable.</summary>
+/// <summary>Describes a serialization-safe snapshot of an exception.</summary>
 public interface ExceptionInfo
 {
-    /// <summary>The type name of the exception.</summary>
+    /// <summary>Gets the reported exception type name.</summary>
     string ExceptionType { get; }
 
-    /// <summary>The inner exception if present (also converted to ExceptionInfo).</summary>
+    /// <summary>Gets the next exception in the bounded inner-exception chain, when present.</summary>
     ExceptionInfo? InnerException { get; }
 
-    /// <summary>The stack trace of the exception site.</summary>
+    /// <summary>Gets the captured stack trace.</summary>
     string StackTrace { get; }
 
-    /// <summary>The exception message.</summary>
+    /// <summary>Gets the captured exception message.</summary>
     string Message { get; }
 
-    /// <summary>The exception source.</summary>
+    /// <summary>Gets the captured exception source.</summary>
     string Source { get; }
 
-    /// <summary>Gets the data.</summary>
+    /// <summary>Gets the serialization-safe diagnostic entries, when any were captured.</summary>
     IDictionary<string, object>? Data { get; }
 }

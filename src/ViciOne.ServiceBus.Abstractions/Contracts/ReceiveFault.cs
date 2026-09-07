@@ -1,9 +1,9 @@
 namespace ViciOne.ServiceBus;
 
-/// <summary>Published when a message fails to deserialize at the endpoint.</summary>
+/// <summary>Describes a fault produced when an incoming envelope cannot be deserialized or consumed.</summary>
 public interface ReceiveFault :
     Fault
 {
-    /// <summary>The specified content type of the message by the transport.</summary>
+    /// <summary>Gets the content type declared by the incoming envelope, when supplied.</summary>
     string? ContentType { get; }
 }

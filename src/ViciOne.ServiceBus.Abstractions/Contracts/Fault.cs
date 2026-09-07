@@ -2,37 +2,36 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>A faulted message, published when a message consumer fails to process the message.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Describes the fault produced when a consumer cannot process a message.</summary>
+/// <typeparam name="T">The faulted message contract type.</typeparam>
 public interface Fault<out T> :
     Fault
 {
-    /// <summary>The message that faulted.</summary>
+    /// <summary>Gets the message whose consumption failed.</summary>
     T Message { get; }
 }
 
 
 /// <summary>
-/// Published (or sent, if part of a request/response conversation) when a fault occurs during message
-/// processing.
+/// Describes fault metadata published after message processing fails, or returned directly for a request.
 /// </summary>
 public interface Fault
 {
-    /// <summary>Identifies the fault that was generated.</summary>
+    /// <summary>Gets the unique identifier assigned to the fault.</summary>
     Guid FaultId { get; }
 
-    /// <summary>The messageId that faulted.</summary>
+    /// <summary>Gets the identifier of the failed message, when the incoming envelope supplied one.</summary>
     Guid? FaultedMessageId { get; }
 
-    /// <summary>When the fault was produced.</summary>
+    /// <summary>Gets the UTC time at which the fault was created.</summary>
     DateTimeOffset Timestamp { get; }
 
-    /// <summary>The exception information that occurred.</summary>
+    /// <summary>Gets the bounded exception snapshots associated with the failure.</summary>
     ExceptionInfo[] Exceptions { get; }
 
-    /// <summary>The host information was the fault occurred.</summary>
+    /// <summary>Gets information about the host that observed the failure.</summary>
     HostInfo Host { get; }
 
-    /// <summary>The faulted message supported types, from the original message envelope.</summary>
+    /// <summary>Gets the message type identifiers declared by the failed envelope.</summary>
     string[] FaultMessageTypes { get; }
 }

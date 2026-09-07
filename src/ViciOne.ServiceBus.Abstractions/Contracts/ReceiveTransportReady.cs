@@ -1,9 +1,9 @@
 namespace ViciOne.ServiceBus.Advanced.Observers;
 
-/// <summary>Defines the operations required by receive transport ready.</summary>
+/// <summary>Describes a receive transport that is available to accept deliveries.</summary>
 public interface ReceiveTransportReady :
     ReceiveTransportEvent
 {
-    /// <summary>If true, the receive transport is actually ready, versus "fake-ready" for endpoints which do not auto-start.</summary>
+    /// <summary>Gets whether the readiness notification follows transport startup.</summary>
     bool IsStarted { get; }
 }

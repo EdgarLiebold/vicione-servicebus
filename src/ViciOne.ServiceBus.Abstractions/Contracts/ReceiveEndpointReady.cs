@@ -1,9 +1,9 @@
 namespace ViciOne.ServiceBus.Advanced.Observers;
 
-/// <summary>Defines the operations required by receive endpoint ready.</summary>
+/// <summary>Describes a receive endpoint that is available to observers.</summary>
 public interface ReceiveEndpointReady :
     ReceiveEndpointEvent
 {
-    /// <summary>If true, the receive endpoint is actually ready, versus "fake-ready" for endpoints which do not auto-start.</summary>
+    /// <summary>Gets whether the readiness notification follows endpoint startup.</summary>
     bool IsStarted { get; }
 }

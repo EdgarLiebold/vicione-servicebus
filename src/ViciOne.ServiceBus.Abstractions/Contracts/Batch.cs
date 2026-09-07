@@ -3,25 +3,25 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>A batch of messages which are delivered to a consumer all at once.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Provides the ordered consume contexts delivered to a batch consumer as one unit.</summary>
+/// <typeparam name="T">The message contract type.</typeparam>
 public interface Batch<out T> :
     IEnumerable<ConsumeContext<T>>
     where T : class
 {
-    /// <summary>Gets the mode.</summary>
+    /// <summary>Gets the condition that completed the batch.</summary>
     BatchCompletionMode Mode { get; }
 
-    /// <summary>When the first message in this batch was received.</summary>
+    /// <summary>Gets when the first message in the batch was received.</summary>
     DateTimeOffset FirstMessageReceived { get; }
 
-    /// <summary>When the last message in this batch was received.</summary>
+    /// <summary>Gets when the last message in the batch was received.</summary>
     DateTimeOffset LastMessageReceived { get; }
 
-    /// <summary>Returns the message at the specified index.</summary>
-    /// <param name="index">The index.</param>
+    /// <summary>Gets the consume context at the specified zero-based index.</summary>
+    /// <param name="index">The zero-based index of the consume context.</param>
     ConsumeContext<T> this[int index] { get; }
 
-    /// <summary>The number of messages in this batch.</summary>
+    /// <summary>Gets the number of consume contexts in the batch.</summary>
     int Length { get; }
 }

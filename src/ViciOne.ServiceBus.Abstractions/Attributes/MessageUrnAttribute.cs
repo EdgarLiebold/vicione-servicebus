@@ -2,36 +2,32 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Specify the message type name for this message type.</summary>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-public class MessageUrnAttribute :
+/// <summary>Declares the absolute URN used to identify the annotated message contract.</summary>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = true)]
+public sealed class MessageUrnAttribute :
     Attribute
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="urn">The urn.</param>
-    /// <param name="useDefaultPrefix">Prefixes with default scheme and namespace if true.</param>
+    /// <summary>Initializes the attribute with a message-contract URN.</summary>
+    /// <param name="urn">The non-empty URN value, without the default <c>urn:message:</c> prefix.</param>
+    /// <param name="useDefaultPrefix"><see langword="true"/> to prepend the default prefix; <see langword="false"/> to require an absolute URI.</param>
     public MessageUrnAttribute(string urn, bool useDefaultPrefix = true)
     {
-        if (urn == null)
-            throw new ArgumentNullException(nameof(urn));
+        ArgumentException.ThrowIfNullOrWhiteSpace(urn);
 
-        if (string.IsNullOrWhiteSpace(urn))
-            throw new ArgumentException("Value cannot be empty or whitespace only string.", nameof(urn));
-
-        if (urn.StartsWith(MessageUrn.Prefix))
+        if (urn.StartsWith(MessageUrn.Prefix, StringComparison.OrdinalIgnoreCase))
             throw new ArgumentException($"Value should not contain the default prefix '{MessageUrn.Prefix}'.", nameof(urn));
 
         Urn = FormatUrn(urn, useDefaultPrefix);
     }
 
-    /// <summary>Gets the urn.</summary>
+    /// <summary>Gets the absolute message-contract URN.</summary>
     public Uri Urn { get; }
 
     static Uri FormatUrn(string urn, bool useDefaultPrefix)
     {
-        var fullValue = useDefaultPrefix ? MessageUrn.Prefix + urn : urn;
+        string fullValue = useDefaultPrefix ? MessageUrn.Prefix + urn : urn;
 
-        if (Uri.TryCreate(fullValue, UriKind.Absolute, out var uri))
+        if (Uri.TryCreate(fullValue, UriKind.Absolute, out Uri? uri))
             return uri;
 
         throw new UriFormatException($"Invalid URN: {fullValue}");

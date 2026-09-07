@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>The reason this batch was made ready for consumption.</summary>
+/// <summary>Specifies the condition that completed a batch for delivery.</summary>
 public enum BatchCompletionMode
 {
     /// <summary>The time limit for receiving messages in the batch was reached.</summary>
@@ -9,6 +9,6 @@ public enum BatchCompletionMode
     /// <summary>The maximum number of messages in the batch was reached.</summary>
     Size = 1,
 
-    /// <summary>A batch was forced, likely due to a previously faulted message being retried.</summary>
+    /// <summary>Delivery was forced before the configured time or size limit was reached.</summary>
     Forced = 2
 }

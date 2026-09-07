@@ -1,11 +1,11 @@
 namespace ViciOne.ServiceBus.Advanced.Observers;
 
-/// <summary>Defines the operations required by bus ready.</summary>
+/// <summary>Describes a bus and its host after startup has completed.</summary>
 public interface BusReady
 {
-    /// <summary>Gets the bus.</summary>
+    /// <summary>Gets the bus that reached readiness.</summary>
     IBus Bus { get; }
 
-    /// <summary>Gets the host.</summary>
+    /// <summary>Gets the associated host-readiness snapshot.</summary>
     HostReady Host { get; }
 }

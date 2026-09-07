@@ -2,12 +2,12 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced.Observers;
 
-/// <summary>Defines the operations required by receive endpoint event.</summary>
+/// <summary>Provides the endpoint and address associated with a receive-endpoint lifecycle notification.</summary>
 public interface ReceiveEndpointEvent
 {
-    /// <summary>The input address of the receive endpoint.</summary>
+    /// <summary>Gets the receive endpoint's input address.</summary>
     Uri InputAddress { get; }
 
-    /// <summary>The receive endpoint upon which the event occurred.</summary>
+    /// <summary>Gets the receive endpoint associated with the notification.</summary>
     IReceiveEndpoint ReceiveEndpoint { get; }
 }

@@ -3,11 +3,10 @@ using System;
 namespace ViciOne.ServiceBus;
 
 /// <summary>
-/// When added to a consuming type (consumer, saga, activity, etc), prevents
-/// ViciOne.ServiceBus from configuring endpoint for it when ConfigureEndpoints called.
+/// Excludes the annotated consumer, saga, or activity from automatic receive-endpoint configuration.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-public class ExcludeFromConfigureEndpointsAttribute :
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = true)]
+public sealed class ExcludeFromConfigureEndpointsAttribute :
     Attribute
 {
 }

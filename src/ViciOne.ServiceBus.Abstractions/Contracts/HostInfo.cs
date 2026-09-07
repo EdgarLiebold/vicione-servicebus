@@ -1,32 +1,29 @@
 namespace ViciOne.ServiceBus;
 
-/// <summary>
-/// The host where an event or otherwise was produced
-/// a routing slip.
-/// </summary>
+/// <summary>Describes the process and runtime that emitted a message or diagnostic event.</summary>
 public interface HostInfo
 {
-    /// <summary>The machine name (or role instance name) of the local machine.</summary>
+    /// <summary>Gets the machine or role-instance name of the host.</summary>
     string? MachineName { get; }
 
-    /// <summary>The process name hosting the routing slip activity.</summary>
+    /// <summary>Gets the name of the hosting process.</summary>
     string? ProcessName { get; }
 
-    /// <summary>The processId of the hosting process.</summary>
+    /// <summary>Gets the identifier of the hosting process.</summary>
     int ProcessId { get; }
 
-    /// <summary>The assembly where the exception occurred.</summary>
+    /// <summary>Gets the entry assembly name.</summary>
     string? Assembly { get; }
 
-    /// <summary>The assembly version.</summary>
+    /// <summary>Gets the entry assembly version.</summary>
     string? AssemblyVersion { get; }
 
-    /// <summary>The .NET framework version.</summary>
+    /// <summary>Gets the .NET runtime version reported by the host.</summary>
     string? FrameworkVersion { get; }
 
-    /// <summary>The version of ViciOne.ServiceBus used by the process.</summary>
+    /// <summary>Gets the ViciOne.ServiceBus version loaded by the process.</summary>
     string? ViciOneServiceBusVersion { get; }
 
-    /// <summary>The operating system version hosting the application.</summary>
+    /// <summary>Gets the operating-system description reported by the host.</summary>
     string? OperatingSystemVersion { get; }
 }

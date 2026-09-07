@@ -2,21 +2,19 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>
-/// Specify the EntityName used for the Fault version of this message contract, overriding the configured <see cref="IEntityNameFormatter" />
-/// if configured.
-/// </summary>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-public class FaultEntityNameAttribute :
+/// <summary>Overrides the broker entity name used for faults of the annotated message contract.</summary>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = true)]
+public sealed class FaultEntityNameAttribute :
     Attribute
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="entityName">The entity name to use for the faulted message type.</param>
+    /// <summary>Initializes the attribute with the specified fault entity name.</summary>
+    /// <param name="entityName">The non-empty entity name to use for faults of the message contract.</param>
     public FaultEntityNameAttribute(string entityName)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(entityName);
         EntityName = entityName;
     }
 
-    /// <summary>Gets the entity name.</summary>
+    /// <summary>Gets the declared fault entity name.</summary>
     public string EntityName { get; }
 }

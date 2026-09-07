@@ -5,12 +5,14 @@ namespace ViciOne.ServiceBus.Abstractions.Tests.Attributes;
 
 public sealed class MessageUrnAttributeTests
 {
-    [Fact]
+    [Theory]
+    [InlineData("urn:message:Orders")]
+    [InlineData("URN:MESSAGE:Orders")]
     [RequirementCoverage("REQ-VSB-MESSAGE-URN-ATTRIBUTE-VALIDATION", "default-prefix-rejected")]
-    public void Constructor_DefaultPrefixValue_IsRejected()
+    public void Constructor_DefaultPrefixValue_IsRejected(string value)
     {
         var exception = Assert.Throws<ArgumentException>(
-            () => new MessageUrnAttribute("urn:message:Orders"));
+            () => new MessageUrnAttribute(value));
 
         Assert.Equal("urn", exception.ParamName);
         Assert.Contains("should not contain the default prefix 'urn:message:'", exception.Message, StringComparison.Ordinal);
@@ -25,7 +27,6 @@ public sealed class MessageUrnAttributeTests
         var exception = Assert.Throws<ArgumentException>(() => new MessageUrnAttribute(value));
 
         Assert.Equal("urn", exception.ParamName);
-        Assert.Contains("cannot be empty or whitespace", exception.Message, StringComparison.Ordinal);
     }
 
     [Fact]

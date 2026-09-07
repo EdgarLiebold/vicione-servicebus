@@ -13,29 +13,29 @@ public readonly record struct MessageContractIdentity
 {
     private const string VersionSeparator = ";v=";
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="name">The name.</param>
-    /// <param name="majorVersion">The major version.</param>
+    /// <summary>Initializes an identity from a stable contract name and major wire version.</summary>
+    /// <param name="name">The stable, deployment-independent contract name.</param>
+    /// <param name="majorVersion">The positive major version of the wire contract.</param>
     public MessageContractIdentity(string name, int majorVersion)
     {
         Name = ValidateName(name);
         MajorVersion = ValidateMajorVersion(majorVersion);
     }
 
-    /// <summary>Gets the name.</summary>
+    /// <summary>Gets the stable, deployment-independent contract name.</summary>
     public string Name { get; }
 
-    /// <summary>Gets the major version.</summary>
+    /// <summary>Gets the major version of the wire contract.</summary>
     public int MajorVersion { get; }
 
-    /// <summary>Returns the string representation of this instance.</summary>
-    /// <returns>The converted string.</returns>
+    /// <summary>Formats the canonical durable representation <c>&lt;name&gt;;v=&lt;major&gt;</c>.</summary>
+    /// <returns>The canonical durable representation.</returns>
     public override string ToString()
         => string.Concat(Name, VersionSeparator, MajorVersion.ToString(CultureInfo.InvariantCulture));
 
-    /// <summary>Parses the supplied representation.</summary>
-    /// <param name="value">The value to process.</param>
-    /// <returns>The parsed value.</returns>
+    /// <summary>Parses a canonical durable contract identity.</summary>
+    /// <param name="value">The canonical <c>&lt;name&gt;;v=&lt;major&gt;</c> representation.</param>
+    /// <returns>The parsed contract identity.</returns>
     public static MessageContractIdentity Parse(string value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(value);
@@ -54,10 +54,10 @@ public readonly record struct MessageContractIdentity
         return new MessageContractIdentity(value[..separator], majorVersion);
     }
 
-    /// <summary>Attempts to parse the supplied representation.</summary>
-    /// <param name="value">The value to process.</param>
-    /// <param name="identity">Receives the identity produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Attempts to parse a canonical durable contract identity.</summary>
+    /// <param name="value">The candidate <c>&lt;name&gt;;v=&lt;major&gt;</c> representation.</param>
+    /// <param name="identity">Receives the parsed identity when the value is valid.</param>
+    /// <returns><see langword="true" /> when <paramref name="value" /> is canonical and valid; otherwise, <see langword="false" />.</returns>
     public static bool TryParse(string? value, out MessageContractIdentity identity)
     {
         identity = default;

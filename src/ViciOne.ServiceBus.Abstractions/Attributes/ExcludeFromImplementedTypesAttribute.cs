@@ -3,11 +3,10 @@ using System;
 namespace ViciOne.ServiceBus;
 
 /// <summary>
-/// Typically added to base messages types, such as IMessage, IEvent, etc.
-/// so that scoped filters are not created on the message type.
+/// Prevents send and publish pipeline specifications from being created for the annotated implemented message contract.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-public class ExcludeFromImplementedTypesAttribute :
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = true)]
+public sealed class ExcludeFromImplementedTypesAttribute :
     Attribute
 {
 }

@@ -6,9 +6,9 @@ namespace ViciOne.ServiceBus;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
 public sealed class MessageContractAttribute : Attribute
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="name">The name.</param>
-    /// <param name="majorVersion">The major version.</param>
+    /// <summary>Initializes the attribute with a stable contract name and major wire version.</summary>
+    /// <param name="name">The stable, deployment-independent contract name.</param>
+    /// <param name="majorVersion">The positive major version of the wire contract.</param>
     public MessageContractAttribute(string name, int majorVersion = 1)
     {
         var identity = new MessageContractIdentity(name, majorVersion);
@@ -16,9 +16,9 @@ public sealed class MessageContractAttribute : Attribute
         MajorVersion = identity.MajorVersion;
     }
 
-    /// <summary>Gets the name.</summary>
+    /// <summary>Gets the stable, deployment-independent contract name.</summary>
     public string Name { get; }
 
-    /// <summary>Gets the major version.</summary>
+    /// <summary>Gets the major version of the wire contract.</summary>
     public int MajorVersion { get; }
 }

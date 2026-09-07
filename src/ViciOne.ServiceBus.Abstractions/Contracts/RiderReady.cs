@@ -1,8 +1,8 @@
 namespace ViciOne.ServiceBus.Advanced.Observers;
 
-/// <summary>Defines the operations required by rider ready.</summary>
+/// <summary>Describes a transport rider that completed startup with its host.</summary>
 public interface RiderReady
 {
-    /// <summary>Gets the name.</summary>
+    /// <summary>Gets the rider's registration name.</summary>
     string Name { get; }
 }
