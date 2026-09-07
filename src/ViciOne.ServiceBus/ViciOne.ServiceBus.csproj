@@ -35,13 +35,9 @@
     <Compile Remove="Courier/**/*.cs" />
     <Compile Remove="Initializers/PropertyConverters/StatePropertyConverter.cs" />
     <Compile Remove="Initializers/TypeConverters/StateTypeConverter.cs" />
-    <Compile Remove="Mediator/**/*.cs" />
     <Compile Remove="Configuration/DependencyInjection/InMemorySagaRepositoryRegistrationExtensions.cs" />
     <Compile Remove="Configuration/CourierHostConfiguratorExtensions.cs" />
     <Compile Remove="Configuration/RoutingSlipConfigurator.cs" />
-    <Compile Remove="Configuration/MediatorConfigurationExtensions.cs" />
-    <Compile Remove="Configuration/MediatorConfiguration.cs" />
-    <Compile Remove="Configuration/IMediatorConfigurator.cs" />
     <Compile Remove="Configuration/SagaExtensions.cs" />
     <Compile Remove="Configuration/SagaStateMachineReceiveEndpointExtensions.cs" />
     <Compile Remove="Consumers/Configuration/CompensateActivityHostConfigurator.cs" />
@@ -65,12 +61,6 @@
     <Compile Remove="DependencyInjection/Configuration/InMemorySagaRepositoryRegistrationProvider.cs" />
     <Compile Remove="DependencyInjection/Configuration/RegistrationServiceCollectionExtensions.cs" />
     <Compile Remove="DependencyInjection/Configuration/SagaRepositoryRegistrationProvider.cs" />
-    <Compile Remove="DependencyInjection/Configuration/ServiceCollectionMediatorConfigurator.cs" />
-    <Compile Remove="DependencyInjection/Configuration/DependencyInjectionMediatorContainerRegistrar.cs" />
-    <Compile Remove="DependencyInjection/Configuration/MediatorRegistrationContext.cs" />
-    <Compile Remove="DependencyInjection/ScopedMediator.cs" />
-    <Compile Remove="Configuration/DependencyInjection/IMediatorRegistrationContext.cs" />
-    <Compile Remove="Configuration/DependencyInjection/IMediatorRegistrationConfigurator.cs" />
     <Compile Remove="DependencyInjection/DependencyInjectionLoadSagaRepository.cs" />
     <Compile Remove="DependencyInjection/DependencyInjectionQuerySagaRepository.cs" />
     <Compile Remove="DependencyInjection/DependencyInjectionSagaRepository.cs" />

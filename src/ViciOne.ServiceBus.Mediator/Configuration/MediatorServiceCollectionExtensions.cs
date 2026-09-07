@@ -9,10 +9,10 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class MediatorServiceCollectionExtensions
 {
     /// <summary>Adds the mediator with the specified base address.</summary>
-    /// <param name="services">The dependency-injection service collection.</param>
-    /// <param name="baseAddress">The base address.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The service collection produced by the operation.</returns>
+    /// <param name="services">The service collection that receives mediator services.</param>
+    /// <param name="baseAddress">The loopback address used as the root for mediator endpoints.</param>
+    /// <param name="configure">The callback that registers mediator handlers and pipelines.</param>
+    /// <returns>The same service collection for continued registration.</returns>
     public static IServiceCollection AddMediator(this IServiceCollection services, Uri? baseAddress,
         Action<IMediatorRegistrationConfigurator>? configure = null)
     {
@@ -33,9 +33,9 @@ public static class MediatorServiceCollectionExtensions
     }
 
     /// <summary>Adds the mediator using its default loopback base address.</summary>
-    /// <param name="services">The dependency-injection service collection.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The service collection produced by the operation.</returns>
+    /// <param name="services">The service collection that receives mediator services.</param>
+    /// <param name="configure">The callback that registers mediator handlers and pipelines.</param>
+    /// <returns>The same service collection for continued registration.</returns>
     public static IServiceCollection AddMediator(this IServiceCollection services,
         Action<IMediatorRegistrationConfigurator>? configure = null) =>
         services.AddMediator(null, configure);

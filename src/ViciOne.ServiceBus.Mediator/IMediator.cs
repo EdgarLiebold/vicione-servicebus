@@ -1,6 +1,8 @@
+using System;
+
 namespace ViciOne.ServiceBus.Mediator;
 
-/// <summary>Defines the operations required by mediator.</summary>
+/// <summary>Dispatches commands, events, and requests to handlers within the current process.</summary>
 public interface IMediator :
     ISendEndpoint,
     IPublishEndpoint,
@@ -9,6 +11,7 @@ public interface IMediator :
     IConsumePipeConnector,
     IRequestPipeConnector,
     IConsumeObserverConnector,
-    IConsumeMessageObserverConnector
+    IConsumeMessageObserverConnector,
+    IAsyncDisposable
 {
 }

@@ -3,7 +3,7 @@ using ViciOne.ServiceBus.Contracts.JobService;
 
 namespace ViciOne.ServiceBus.JobService.Messages;
 
-/// <summary>Provides the serializable event emitted when a job enters execution.</summary>
+/// <summary>Provides the concrete representation used to deserialize an untyped job-started event.</summary>
 internal sealed class JobStartedEvent :
     JobStarted
 {

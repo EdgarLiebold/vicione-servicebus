@@ -142,7 +142,6 @@ internal sealed class JobStateMachine :
         During(StartingJobAttempt, Started,
             When(AttemptStarted, context => context.Saga.AttemptId == context.Message.AttemptId)
                 .Then(context => context.Saga.Started = context.Message.Timestamp)
-                .PublishJobStarted()
                 .TransitionTo(Started));
 
         During(StartingJobAttempt, Started,
@@ -151,6 +150,7 @@ internal sealed class JobStateMachine :
                 {
                     context.Saga.Completed = context.Message.Timestamp;
                     context.Saga.Duration = context.Message.Duration;
+                    ApplyCheckpointUpdate(context.Saga, context.Message.CheckpointChanged, context.Message.Checkpoint);
                 })
                 .NotifyJobCompleted()
                 .TransitionTo(Completed));
@@ -163,6 +163,7 @@ internal sealed class JobStateMachine :
 
                     context.Saga.Faulted = context.Message.Timestamp;
                     context.Saga.Reason = context.Message.Exceptions?.Message ?? "Job Attempt Faulted (unknown reason)";
+                    ApplyCheckpointUpdate(context.Saga, context.Message.CheckpointChanged, context.Message.Checkpoint);
                 })
                 .IfElse(context => context.Message.RetryDelay.HasValue,
                     retry => retry
@@ -191,11 +192,11 @@ internal sealed class JobStateMachine :
 
         During(Completed,
             When(AttemptCompleted, context => context.Saga.AttemptId == context.Message.AttemptId)
+                .Then(context => ApplyCheckpointUpdate(context.Saga, context.Message.CheckpointChanged, context.Message.Checkpoint))
                 .FinalizeJobAttempts()
                 .NotifyJobCompleted(),
             When(AttemptStarted, context => context.Saga.AttemptId == context.Message.AttemptId)
-                .Then(context => context.Saga.Started = context.Message.Timestamp)
-                .PublishJobStarted(),
+                .Then(context => context.Saga.Started = context.Message.Timestamp),
             When(JobCompleted)
                 .IfElse(context => context.IsScheduledJob(),
                     scheduled => scheduled
@@ -218,14 +219,15 @@ internal sealed class JobStateMachine :
 
         During(Faulted,
             When(AttemptFaulted, context => context.Saga.AttemptId == context.Message.AttemptId)
+                .Then(context => ApplyCheckpointUpdate(context.Saga, context.Message.CheckpointChanged, context.Message.Checkpoint))
                 .NotifyJobFaulted(),
             When(AttemptStarted, context => context.Saga.AttemptId == context.Message.AttemptId)
-                .Then(context => context.Saga.Started = context.Message.Timestamp)
-                .PublishJobStarted());
+                .Then(context => context.Saga.Started = context.Message.Timestamp));
 
 
         During(StartingJobAttempt, Started,
             When(AttemptCanceled, context => context.Saga.AttemptId == context.Message.AttemptId)
+                .Then(context => ApplyCheckpointUpdate(context.Saga, context.Message.CheckpointChanged, context.Message.Checkpoint))
                 .IfElse(context => string.Equals(context.Message.Reason, JobCancellationReasons.Shutdown, StringComparison.Ordinal),
                     shutdown => shutdown
                         .Then(context => context.Saga.Reason = context.Message.GetCancellationReason())
@@ -274,12 +276,7 @@ internal sealed class JobStateMachine :
                 .Then(context =>
                 {
                     if (context.Saga.AttemptId == context.Message.AttemptId)
-                    {
-                        context.Saga.Checkpoint = context.Message.Checkpoint?.ToDictionary(
-                            static pair => pair.Key,
-                            static pair => pair.Value,
-                            StringComparer.OrdinalIgnoreCase);
-                    }
+                        ReplaceCheckpoint(context.Saga, context.Message.Checkpoint);
                 }));
 
         DuringAny(
@@ -414,6 +411,23 @@ internal sealed class JobStateMachine :
         WhenEnter(WaitingToRetry, x => x.SendJobSlotReleased(JobSlotDisposition.Faulted));
 
         SetCompletedWhenFinalized();
+    }
+
+    static void ApplyCheckpointUpdate(
+        JobSaga saga,
+        bool checkpointChanged,
+        IReadOnlyDictionary<string, object>? checkpoint)
+    {
+        if (checkpointChanged)
+            ReplaceCheckpoint(saga, checkpoint);
+    }
+
+    static void ReplaceCheckpoint(JobSaga saga, IReadOnlyDictionary<string, object>? checkpoint)
+    {
+        saga.Checkpoint = checkpoint?.ToDictionary(
+            static pair => pair.Key,
+            static pair => pair.Value,
+            StringComparer.OrdinalIgnoreCase);
     }
 
     /// <summary>Maps an internal state-machine state to the stable lifecycle contract returned to callers.</summary>
@@ -823,17 +837,6 @@ static class JobStateMachineBehaviorExtensions
                     ? JobSlotDisposition.Suspect
                     : disposition
             });
-    }
-
-    public static EventActivityBinder<JobSaga, JobAttemptStarted> PublishJobStarted(this EventActivityBinder<JobSaga, JobAttemptStarted> binder)
-    {
-        return binder.Publish<JobSaga, JobAttemptStarted, JobStarted>(context => new JobStartedEvent
-        {
-            JobId = context.Saga.CorrelationId,
-            AttemptId = context.Message.AttemptId,
-            RetryAttempt = context.Message.RetryAttempt,
-            Timestamp = context.Message.Timestamp
-        });
     }
 
     public static EventActivityBinder<JobSaga, JobAttemptCompleted> NotifyJobCompleted(this EventActivityBinder<JobSaga, JobAttemptCompleted> binder)

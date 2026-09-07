@@ -9,18 +9,18 @@ using ViciOne.ServiceBus.Mediator;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures service collection mediator.</summary>
-public class ServiceCollectionMediatorConfigurator :
+/// <summary>Registers mediator runtime services and materializes its handler configuration.</summary>
+internal sealed class ServiceCollectionMediatorConfigurator :
     RegistrationConfigurator,
     IMediatorRegistrationConfigurator
 {
-    Action<IMediatorRegistrationContext, IMediatorConfigurator> _configure = null!;
+    Action<IMediatorRegistrationContext, IMediatorConfigurator>? _configure;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="collection">The collection.</param>
-    /// <param name="baseAddress">The base address.</param>
+    /// <summary>Initializes mediator registration for a service collection.</summary>
+    /// <param name="collection">The service collection that receives mediator services.</param>
+    /// <param name="baseAddress">The loopback address used as the root for mediator endpoints.</param>
     public ServiceCollectionMediatorConfigurator(IServiceCollection collection, Uri? baseAddress)
-        : base(collection, new DependencyInjectionMediatorContainerRegistrar(collection))
+        : base(collection, new MediatorContainerRegistrar(collection))
     {
         IMediatorRegistrationContext CreateRegistrationContext(IServiceProvider provider)
         {
@@ -35,8 +35,8 @@ public class ServiceCollectionMediatorConfigurator :
         AddViciOneServiceBusComponents(collection);
     }
 
-    /// <summary>Configures mediator.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Stores the callback that configures the materialized mediator pipeline.</summary>
+    /// <param name="configure">The callback that receives resolved registrations and the mediator configurator.</param>
     public void ConfigureMediator(Action<IMediatorRegistrationContext, IMediatorConfigurator> configure)
     {
         if (configure == null)

@@ -12,8 +12,8 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Mediator;
 
-/// <summary>Sends messages directly to the <see cref="IReceivePipe" />, without serialization.</summary>
-public class ViciOneServiceBusMediator :
+/// <summary>Dispatches messages directly through in-process receive pipelines without a transport broker.</summary>
+internal sealed class InProcessMediator :
     IMediator,
     Advanced.IAdvancedSendEndpoint,
     Advanced.IAdvancedPublishEndpoint,
@@ -24,28 +24,15 @@ public class ViciOneServiceBusMediator :
     readonly MediatorSendEndpoint _endpoint;
     readonly IReceivePipeDispatcher _responseDispatcher;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="configuration">The callback used to configure the component.</param>
-    /// <param name="dispatcher">The dispatcher.</param>
-    /// <param name="responseConfiguration">The response configuration.</param>
-    /// <param name="responseDispatcher">The response dispatcher.</param>
-    /// <param name="limits">The limits.</param>
-    public ViciOneServiceBusMediator(ILogContext logContext, IReceiveEndpointConfiguration configuration, IReceivePipeDispatcher dispatcher,
-        IReceiveEndpointConfiguration responseConfiguration, IReceivePipeDispatcher responseDispatcher, MessageLimits limits)
-        : this(logContext, configuration, dispatcher, responseConfiguration, responseDispatcher, limits, TimeProvider.System)
-    {
-    }
-
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="configuration">The callback used to configure the component.</param>
-    /// <param name="dispatcher">The dispatcher.</param>
-    /// <param name="responseConfiguration">The response configuration.</param>
-    /// <param name="responseDispatcher">The response dispatcher.</param>
-    /// <param name="limits">The limits.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
-    public ViciOneServiceBusMediator(
+    /// <summary>Initializes dispatch, response routing, request deadlines, and message limits.</summary>
+    /// <param name="logContext">The log context inherited by mediator operations.</param>
+    /// <param name="configuration">The primary mediator endpoint configuration.</param>
+    /// <param name="dispatcher">The primary message dispatcher.</param>
+    /// <param name="responseConfiguration">The request-response endpoint configuration.</param>
+    /// <param name="responseDispatcher">The response message dispatcher.</param>
+    /// <param name="limits">The enforced mediator message limits.</param>
+    /// <param name="timeProvider">The time source used for request deadlines.</param>
+    public InProcessMediator(
         ILogContext? logContext,
         IReceiveEndpointConfiguration configuration,
         IReceivePipeDispatcher dispatcher,
@@ -54,9 +41,12 @@ public class ViciOneServiceBusMediator :
         MessageLimits limits,
         TimeProvider timeProvider)
     {
+        ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentNullException.ThrowIfNull(dispatcher);
+        ArgumentNullException.ThrowIfNull(responseConfiguration);
+        ArgumentNullException.ThrowIfNull(responseDispatcher);
         ArgumentNullException.ThrowIfNull(limits);
-        if (timeProvider == null)
-            throw new ArgumentNullException(nameof(timeProvider));
+        ArgumentNullException.ThrowIfNull(timeProvider);
 
         _responseDispatcher = responseDispatcher;
         _dispatcher = dispatcher;

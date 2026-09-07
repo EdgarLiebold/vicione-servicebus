@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ViciOne.ServiceBus.Contracts.JobService;
 
 namespace ViciOne.ServiceBus.JobService.Messages;
@@ -11,4 +12,6 @@ internal sealed class JobAttemptCanceledEvent :
     public Guid AttemptId { get; set; }
     public DateTimeOffset Timestamp { get; set; }
     public string Reason { get; set; } = null!;
+    public bool CheckpointChanged { get; set; }
+    public IReadOnlyDictionary<string, object>? Checkpoint { get; set; }
 }

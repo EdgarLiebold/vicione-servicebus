@@ -4,43 +4,41 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Mediator;
 
 /// <summary>
-/// A Mediator request handler base class that provides a simplified overridable method with
-/// a Task (void) return type.
+/// Adapts a mediator request consumer to a message-and-cancellation-token handler.
 /// </summary>
 /// <typeparam name="TRequest">The request type.</typeparam>
 public abstract class MediatorRequestHandler<TRequest> :
     IConsumer<TRequest>
     where TRequest : class
 {
-    /// <summary>Consumes the message provided by the context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Passes the consumed request to <see cref="HandleAsync" />.</summary>
+    /// <param name="context">The request delivery context.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ConsumeAsync(ConsumeContext<TRequest> context)
     {
         return HandleAsync(context.Message, context.CancellationToken);
     }
 
-    /// <summary>Handles the supplied message or context.</summary>
-    /// <param name="request">The request.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Handles a mediator request that does not produce a response.</summary>
+    /// <param name="request">The request message.</param>
+    /// <param name="cancellationToken">The token that cancels request handling.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     protected abstract Task HandleAsync(TRequest request, CancellationToken cancellationToken);
 }
 
 
 /// <summary>
-/// A Mediator request handler base class that provides a simplified overridable method with
-/// a Task&lt;<typeparamref name="TResponse"/>&gt; return type.
+/// Adapts a mediator request consumer to a typed request-response handler.
 /// </summary>
 /// <typeparam name="TRequest">The request type.</typeparam>
 /// <typeparam name="TResponse">The response type.</typeparam>
 public abstract class MediatorRequestHandler<TRequest, TResponse> :
     IConsumer<TRequest>
-    where TRequest : class, Request<TResponse>
+    where TRequest : class, IRequest<TResponse>
     where TResponse : class
 {
-    /// <summary>Consumes the message provided by the context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Handles the consumed request and sends the returned response.</summary>
+    /// <param name="context">The request delivery context.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ConsumeAsync(ConsumeContext<TRequest> context)
     {
@@ -49,9 +47,9 @@ public abstract class MediatorRequestHandler<TRequest, TResponse> :
         await context.RespondAsync(response).ConfigureAwait(false);
     }
 
-    /// <summary>Handles the supplied message or context.</summary>
-    /// <param name="request">The request.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the handle outcome.</returns>
+    /// <summary>Handles a mediator request and creates its response.</summary>
+    /// <param name="request">The request message.</param>
+    /// <param name="cancellationToken">The token that cancels request handling.</param>
+    /// <returns>A task that produces the response message.</returns>
     protected abstract Task<TResponse> HandleAsync(TRequest request, CancellationToken cancellationToken);
 }

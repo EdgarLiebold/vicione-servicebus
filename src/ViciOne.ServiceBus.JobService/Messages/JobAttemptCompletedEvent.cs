@@ -15,4 +15,6 @@ internal sealed class JobAttemptCompletedEvent :
     public TimeSpan Duration { get; set; }
     public IReadOnlyDictionary<string, object>? InstanceProperties { get; set; }
     public IReadOnlyDictionary<string, object>? JobTypeProperties { get; set; }
+    public bool CheckpointChanged { get; set; }
+    public IReadOnlyDictionary<string, object>? Checkpoint { get; set; }
 }

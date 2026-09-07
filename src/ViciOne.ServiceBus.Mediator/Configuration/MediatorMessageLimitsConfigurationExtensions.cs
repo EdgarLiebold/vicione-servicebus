@@ -7,8 +7,8 @@ namespace ViciOne.ServiceBus.Configuration;
 public static class MediatorMessageLimitsConfigurationExtensions
 {
     /// <summary>Assigns explicit limits to a dependency-injected mediator.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="limits">The limits.</param>
+    /// <param name="configurator">The dependency-injection mediator registration.</param>
+    /// <param name="limits">The maximum body size, envelope size, and JSON depth.</param>
     /// <returns>The registration block for continued configuration.</returns>
     public static IMediatorRegistrationConfigurator Limits(
         this IMediatorRegistrationConfigurator configurator,
@@ -29,8 +29,8 @@ public static class MediatorMessageLimitsConfigurationExtensions
     }
 
     /// <summary>Assigns explicit limits to a directly-created mediator.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="limits">The limits.</param>
+    /// <param name="configurator">The directly created mediator configuration.</param>
+    /// <param name="limits">The maximum body size, envelope size, and JSON depth.</param>
     public static void Limits(this IMediatorConfigurator configurator, MessageLimits limits)
     {
         ArgumentNullException.ThrowIfNull(configurator);

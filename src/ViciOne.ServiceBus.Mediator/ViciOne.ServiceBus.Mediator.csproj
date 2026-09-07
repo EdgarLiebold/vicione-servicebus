@@ -10,17 +10,4 @@
     <ProjectReference Include="../ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Include="../ViciOne.ServiceBus.Abstractions/Mediator/**/*.cs" Link="Mediator/Abstractions/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus/Mediator/**/*.cs" Link="Mediator/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../ViciOne.ServiceBus/Configuration/IMediatorConfigurator.cs" Link="Configuration/IMediatorConfigurator.cs" />
-    <Compile Include="../ViciOne.ServiceBus/Configuration/MediatorConfiguration.cs" Link="Configuration/MediatorConfiguration.cs" />
-    <Compile Include="../ViciOne.ServiceBus/Configuration/MediatorConfigurationExtensions.cs" Link="Configuration/MediatorConfigurationExtensions.cs" />
-    <Compile Include="../ViciOne.ServiceBus/Configuration/DependencyInjection/IMediatorRegistrationConfigurator.cs" Link="Configuration/DependencyInjection/IMediatorRegistrationConfigurator.cs" />
-    <Compile Include="../ViciOne.ServiceBus/Configuration/DependencyInjection/IMediatorRegistrationContext.cs" Link="Configuration/DependencyInjection/IMediatorRegistrationContext.cs" />
-    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/DependencyInjectionMediatorContainerRegistrar.cs" Link="DependencyInjection/Configuration/DependencyInjectionMediatorContainerRegistrar.cs" />
-    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/MediatorRegistrationContext.cs" Link="DependencyInjection/Configuration/MediatorRegistrationContext.cs" />
-    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/ServiceCollectionMediatorConfigurator.cs" Link="DependencyInjection/Configuration/ServiceCollectionMediatorConfigurator.cs" />
-    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/ScopedMediator.cs" Link="DependencyInjection/ScopedMediator.cs" />
-  </ItemGroup>
 </Project>

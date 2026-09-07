@@ -5,10 +5,10 @@ using ViciOne.ServiceBus;
 namespace ViciOneServiceBusBenchmark.RequestResponse;
 
 public interface IRequestResponseTransport :
-    IDisposable
+    IAsyncDisposable
 {
     Task<IRequestClient<T>> GetRequestClientAsync<T>(TimeSpan settingsRequestTimeout)
         where T : class;
 
-    void GetBusControl(Action<IReceiveEndpointConfigurator> callback);
+    Task StartAsync(Action<IReceiveEndpointConfigurator> configureReceiveEndpoint, CancellationToken cancellationToken = default);
 }

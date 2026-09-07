@@ -3,36 +3,36 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Mediator.Contexts;
 
-/// <summary>Carries state for mediator client factory operations.</summary>
-public class MediatorClientFactoryContext :
+/// <summary>Connects request clients to the mediator request and response endpoints.</summary>
+internal sealed class MediatorClientFactoryContext :
     ClientFactoryContext
 {
     readonly IConsumePipe _connector;
-    readonly ISendEndpoint _endpoint;
+    readonly MediatorSendEndpoint _endpoint;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="endpoint">The endpoint.</param>
-    /// <param name="connector">The connector.</param>
-    /// <param name="responseAddress">The response address.</param>
-    /// <param name="defaultTimeout">The default timeout.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <summary>Initializes request-client routing for an in-process mediator.</summary>
+    /// <param name="endpoint">The mediator send endpoint.</param>
+    /// <param name="connector">The response consume-pipe connector.</param>
+    /// <param name="responseAddress">The mediator response endpoint address.</param>
+    /// <param name="defaultTimeout">The default request timeout.</param>
+    /// <param name="timeProvider">The time source used for request deadlines.</param>
     public MediatorClientFactoryContext(
-        ISendEndpoint endpoint,
+        MediatorSendEndpoint endpoint,
         IConsumePipe connector,
         Uri responseAddress,
         RequestTimeout defaultTimeout = default,
         TimeProvider? timeProvider = null)
     {
-        _endpoint = endpoint;
-        _connector = connector;
+        _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
+        _connector = connector ?? throw new ArgumentNullException(nameof(connector));
 
-        ResponseAddress = responseAddress;
+        ResponseAddress = responseAddress ?? throw new ArgumentNullException(nameof(responseAddress));
         DefaultTimeout = defaultTimeout.Or(RequestTimeout.Default);
         TimeProvider = timeProvider ?? TimeProvider.System;
     }
 
     /// <summary>Connects consume pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The response message contract.</typeparam>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
@@ -42,7 +42,7 @@ public class MediatorClientFactoryContext :
     }
 
     /// <summary>Connects consume pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The response message contract.</typeparam>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="options">The options that control the operation.</param>
     /// <returns>A handle that disconnects the registration.</returns>
@@ -53,7 +53,7 @@ public class MediatorClientFactoryContext :
     }
 
     /// <summary>Connects request pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The response message contract.</typeparam>
     /// <param name="requestId">The request id.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <returns>A handle that disconnects the registration.</returns>
@@ -67,7 +67,7 @@ public class MediatorClientFactoryContext :
     public Uri ResponseAddress { get; }
 
     /// <summary>Gets request endpoint.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The request message contract.</typeparam>
     /// <param name="consumeContext">The consume context.</param>
     /// <returns>The request endpoint.</returns>
     public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
@@ -77,14 +77,14 @@ public class MediatorClientFactoryContext :
     }
 
     /// <summary>Gets request endpoint.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The request message contract.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
     /// <param name="consumeContext">The consume context.</param>
     /// <returns>The request endpoint.</returns>
     public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
         where T : class
     {
-        return new MediatorRequestSendEndpoint<T>(_endpoint, consumeContext);
+        return new MediatorRequestSendEndpoint<T>(_endpoint.GetSendEndpoint(destinationAddress), consumeContext);
     }
 
     /// <summary>Gets the default timeout.</summary>

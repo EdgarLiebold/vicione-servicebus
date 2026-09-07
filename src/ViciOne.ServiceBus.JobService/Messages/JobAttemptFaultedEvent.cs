@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ViciOne.ServiceBus.Contracts.JobService;
 
 namespace ViciOne.ServiceBus.JobService.Messages;
@@ -13,4 +14,6 @@ internal sealed class JobAttemptFaultedEvent :
     public TimeSpan? RetryDelay { get; set; }
     public DateTimeOffset Timestamp { get; set; }
     public ExceptionInfo Exceptions { get; set; } = null!;
+    public bool CheckpointChanged { get; set; }
+    public IReadOnlyDictionary<string, object>? Checkpoint { get; set; }
 }

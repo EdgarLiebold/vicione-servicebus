@@ -3,15 +3,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Carries state for mediator registration operations.</summary>
-public class MediatorRegistrationContext :
+/// <summary>Adapts container registrations and scoped consume context ownership for mediator configuration.</summary>
+internal sealed class MediatorRegistrationContext :
     IMediatorRegistrationContext,
     ISetScopedConsumeContext
 {
     readonly RegistrationContext _registration;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="registration">The registration.</param>
+    /// <summary>Initializes the context over a resolved container registration.</summary>
+    /// <param name="registration">The registration context that resolves and configures handlers.</param>
     public MediatorRegistrationContext(RegistrationContext registration)
     {
         _registration = registration;

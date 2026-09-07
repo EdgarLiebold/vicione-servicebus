@@ -8,20 +8,20 @@ using ViciOne.ServiceBus.Mediator;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Registers dependency injection mediator container components with dependency injection.</summary>
-public class DependencyInjectionMediatorContainerRegistrar :
+/// <summary>Stores mediator registrations and creates scoped client factories from the service provider.</summary>
+internal sealed class MediatorContainerRegistrar :
     DependencyInjectionContainerRegistrar
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="collection">The collection.</param>
-    public DependencyInjectionMediatorContainerRegistrar(IServiceCollection collection)
+    /// <summary>Initializes a registrar backed by the mediator service collection.</summary>
+    /// <param name="collection">The service collection that owns mediator registrations.</param>
+    public MediatorContainerRegistrar(IServiceCollection collection)
         : base(collection)
     {
     }
 
-    /// <summary>Gets registrations.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <returns>The registrations.</returns>
+    /// <summary>Returns registrations already materialized in the service collection.</summary>
+    /// <typeparam name="T">The registered mediator component type.</typeparam>
+    /// <returns>The matching registered components.</returns>
     public override IEnumerable<T> GetRegistrations<T>()
     {
         return Collection.Where(x => x.ServiceType == typeof(Bind<IMediator, T>))
@@ -29,26 +29,26 @@ public class DependencyInjectionMediatorContainerRegistrar :
             .Select(x => x.Value);
     }
 
-    /// <summary>Gets registrations.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
-    /// <returns>The registrations.</returns>
+    /// <summary>Resolves registrations from a built service provider.</summary>
+    /// <typeparam name="T">The registered mediator component type.</typeparam>
+    /// <param name="provider">The service provider that resolves registrations.</param>
+    /// <returns>The matching registered components.</returns>
     public override IEnumerable<T> GetRegistrations<T>(IServiceProvider provider)
     {
         return (provider.GetService<IEnumerable<Bind<IMediator, T>>>() ?? []).Select(x => x.Value);
     }
 
-    /// <summary>Adds registration to the configuration.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="value">The value to process.</param>
+    /// <summary>Adds a mediator-owned singleton registration.</summary>
+    /// <typeparam name="T">The registered mediator component type.</typeparam>
+    /// <param name="value">The component instance to register.</param>
     protected override void AddRegistration<T>(T value)
     {
         Collection.Add(ServiceDescriptor.Singleton(Bind<IMediator>.Create(value)));
     }
 
-    /// <summary>Gets scoped bus context.</summary>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
-    /// <returns>The scoped bus context.</returns>
+    /// <summary>Creates the client factory for the current mediator scope.</summary>
+    /// <param name="provider">The current scoped service provider.</param>
+    /// <returns>A client factory bound to the current consume context when one exists.</returns>
     protected override IScopedClientFactory GetScopedBusContext(IServiceProvider provider)
     {
         var clientFactory = provider.GetRequiredService<IScopedMediator>();

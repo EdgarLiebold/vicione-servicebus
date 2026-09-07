@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Mediator;
@@ -22,12 +23,16 @@ public class MediatorRequestResponseTransport :
         return Task.FromResult(_mediator.CreateRequestClient<T>(settingsRequestTimeout));
     }
 
-    public void GetBusControl(Action<IReceiveEndpointConfigurator> callback)
+    public Task StartAsync(Action<IReceiveEndpointConfigurator> configureReceiveEndpoint, CancellationToken cancellationToken = default)
     {
-        _mediator = Bus.Factory.CreateMediator(callback);
+        cancellationToken.ThrowIfCancellationRequested();
+        _mediator = Bus.Factory.CreateMediator(configureReceiveEndpoint);
+        return Task.CompletedTask;
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
+        if (_mediator is not null)
+            await _mediator.DisposeAsync().ConfigureAwait(false);
     }
 }

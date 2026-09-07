@@ -15,13 +15,13 @@ public static class MediatorRequestExtensions
     /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="cancellationToken">The token that cancels the request.</param>
     /// <returns>A task that produces the response message.</returns>
-    public static async Task<T> SendRequestAsync<T>(this IMediator mediator, Request<T> request, RequestTimeout timeout = default,
+    public static async Task<T> SendRequestAsync<T>(this IMediator mediator, IRequest<T> request, RequestTimeout timeout = default,
         CancellationToken cancellationToken = default)
         where T : class
     {
         try
         {
-            using RequestHandle<Request<T>> handle = mediator.CreateRequest(request, timeout, cancellationToken);
+            using RequestHandle<IRequest<T>> handle = mediator.CreateRequest(request, timeout, cancellationToken);
 
             Response<T> response = await handle.GetResponseAsync<T>(cancellationToken: cancellationToken).ConfigureAwait(false);
 

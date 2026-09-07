@@ -5,8 +5,8 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Mediator.Contexts;
 
-/// <summary>Provides an endpoint for mediator publish send.</summary>
-public class MediatorPublishSendEndpoint :
+/// <summary>Applies publish semantics and observers before dispatching through a mediator send endpoint.</summary>
+internal sealed class MediatorPublishSendEndpoint :
     SendEndpointProxy,
     IPublishObserverConnector
 {
@@ -33,15 +33,13 @@ public class MediatorPublishSendEndpoint :
     }
 
     /// <summary>Gets pipe proxy.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The published message contract.</typeparam>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <returns>The pipe proxy.</returns>
     protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>>? pipe = default)
     {
         return new PublishPipeAdapter<T>(_publishPipe, pipe);
     }
-
-
     class PublishPipeAdapter<T> :
         IPipe<SendContext<T>>
         where T : class

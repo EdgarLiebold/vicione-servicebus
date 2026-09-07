@@ -2,7 +2,7 @@ using System.Text.Json;
 
 namespace ViciOne.ServiceBus.Mediator.Contexts;
 
-/// <summary>Measures the mediator's canonical JSON application body without retaining a second message copy.</summary>
+/// <summary>Measures the mediator's canonical JSON body through a bounded counting stream.</summary>
 static class MediatorMessageBodySizer
 {
     public static async Task<long> MeasureAsync<T>(

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus;
 
@@ -25,7 +26,7 @@ public class RabbitMqRequestResponseTransport :
         return _clientFactory.CreateRequestClient<T>(_targetEndpointAddress, settingsRequestTimeout);
     }
 
-    public void GetBusControl(Action<IReceiveEndpointConfigurator> callback)
+    public async Task StartAsync(Action<IReceiveEndpointConfigurator> configureReceiveEndpoint, CancellationToken cancellationToken = default)
     {
         _busControl = Bus.Factory.CreateUsingRabbitMq(x =>
         {
@@ -38,19 +39,20 @@ public class RabbitMqRequestResponseTransport :
                 e.Durable = _settings.Durable;
                 e.PrefetchCount = _settings.PrefetchCount;
 
-                callback(e);
+                configureReceiveEndpoint(e);
 
                 _targetEndpointAddress = e.InputAddress;
             });
         });
 
-        _busControl.Start();
+        await _busControl.StartAsync(cancellationToken).ConfigureAwait(false);
 
         _clientFactory = _busControl.CreateReplyToClientFactory();
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        _busControl.Stop();
+        if (_busControl is not null)
+            await _busControl.StopAsync().ConfigureAwait(false);
     }
 }

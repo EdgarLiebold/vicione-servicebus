@@ -1,7 +1,7 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Stores and validates mediator configuration.</summary>
-public class MediatorConfiguration :
+/// <summary>Builds the mediator receive pipeline and binds its observers to the in-memory host.</summary>
+internal sealed class MediatorConfiguration :
     ReceivePipeDispatcherConfiguration,
     IMediatorConfigurator,
     IMessageLimitsConfigurator
@@ -9,8 +9,8 @@ public class MediatorConfiguration :
     readonly IHostConfiguration _hostConfiguration;
 
     /// <summary>Initializes a new instance.</summary>
-    /// <param name="hostConfiguration">The host configuration.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration.</param>
+    /// <param name="hostConfiguration">The in-memory host shared by both mediator endpoints.</param>
+    /// <param name="endpointConfiguration">The endpoint whose receive pipeline is configured.</param>
     public MediatorConfiguration(IHostConfiguration hostConfiguration, IReceiveEndpointConfiguration endpointConfiguration)
         : base(hostConfiguration, endpointConfiguration)
     {

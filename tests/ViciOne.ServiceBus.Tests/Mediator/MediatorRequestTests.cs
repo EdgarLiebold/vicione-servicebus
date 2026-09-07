@@ -168,9 +168,9 @@ public sealed class MediatorRequestTests
             .GetValidatedOptions()
             .OperationTimeout!.Value;
 
-    private sealed record UserFromEmail(string Email) : Request<User>;
+    private sealed record UserFromEmail(string Email) : IRequest<User>;
 
-    private sealed record UserFromUsername(string Username) : Request<User>;
+    private sealed record UserFromUsername(string Username) : IRequest<User>;
 
     private sealed record User(int Id, string Username, string Email);
 

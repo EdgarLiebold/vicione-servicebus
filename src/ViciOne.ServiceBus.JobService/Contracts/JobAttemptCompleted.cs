@@ -20,4 +20,8 @@ public interface JobAttemptCompleted
     IReadOnlyDictionary<string, object>? InstanceProperties { get; }
     /// <summary>Gets the metadata shared by the job type.</summary>
     IReadOnlyDictionary<string, object>? JobTypeProperties { get; }
+    /// <summary>Gets whether this attempt replaces or clears the persisted checkpoint.</summary>
+    bool CheckpointChanged { get; }
+    /// <summary>Gets the replacement checkpoint, or <see langword="null" /> when the checkpoint is cleared.</summary>
+    IReadOnlyDictionary<string, object>? Checkpoint { get; }
 }

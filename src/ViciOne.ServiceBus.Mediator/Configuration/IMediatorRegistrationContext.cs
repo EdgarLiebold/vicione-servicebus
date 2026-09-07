@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Exposes state for mediator registration operations.</summary>
+/// <summary>Provides registered handlers and scoped dependencies while configuring mediator pipelines.</summary>
 public interface IMediatorRegistrationContext :
     IRegistrationContext
 {

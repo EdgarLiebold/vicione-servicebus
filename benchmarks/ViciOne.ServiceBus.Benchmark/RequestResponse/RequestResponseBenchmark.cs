@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus;
-using ViciOne.ServiceBus.Util;
 
 namespace ViciOneServiceBusBenchmark.RequestResponse;
 
@@ -27,16 +26,16 @@ public class RequestResponseBenchmark
             throw new ArgumentException("The clients must be a factor of message count");
     }
 
-    public void Run(CancellationToken cancellationToken = default)
+    public async Task RunAsync(CancellationToken cancellationToken = default)
     {
         _capture = new MessageMetricCapture(_settings.MessageCount);
 
-        _transport.GetBusControl(ConfigureReceiveEndpoint);
+        await _transport.StartAsync(ConfigureReceiveEndpoint, cancellationToken).ConfigureAwait(false);
         try
         {
             Console.WriteLine("Running Request Response Benchmark");
 
-            TaskBlocking.Wait(RunBenchmarkAsync, cancellationToken);
+            await RunBenchmarkAsync().WaitAsync(cancellationToken).ConfigureAwait(false);
 
             Console.WriteLine("Message Count: {0}", _settings.MessageCount);
             Console.WriteLine("Clients: {0}", _settings.Clients);
@@ -66,7 +65,7 @@ public class RequestResponseBenchmark
         }
         finally
         {
-            _transport.Dispose();
+            await _transport.DisposeAsync().ConfigureAwait(false);
         }
     }
 

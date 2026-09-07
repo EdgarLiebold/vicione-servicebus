@@ -77,7 +77,7 @@ class Program
 
             if (optionSet.Benchmark.HasFlag(ProgramOptionSet.BenchmarkOptions.Rpc))
             {
-                RunRequestResponseBenchmark(optionSet);
+                await RunRequestResponseBenchmarkAsync(optionSet);
                 executedBenchmarks++;
             }
 
@@ -188,7 +188,7 @@ class Program
         await benchmark.RunAsync();
     }
 
-    static void RunRequestResponseBenchmark(ProgramOptionSet optionSet)
+    static async Task RunRequestResponseBenchmarkAsync(ProgramOptionSet optionSet)
     {
         var requestResponseOptionSet = new RequestResponseOptionSet();
 
@@ -230,7 +230,7 @@ class Program
 
         var benchmark = new RequestResponseBenchmark(transport, settings);
 
-        benchmark.Run();
+        await benchmark.RunAsync().ConfigureAwait(false);
     }
 
     static async Task RunBusOutboxBenchmarkAsync(ProgramOptionSet optionSet)

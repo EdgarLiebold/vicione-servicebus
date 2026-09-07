@@ -8,15 +8,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
-/// <summary>Mediates scoped messages within the current process.</summary>
-public class ScopedMediator :
+/// <summary>Preserves the current dependency-injection scope across in-process dispatch operations.</summary>
+internal sealed class ScopedMediator :
     SendEndpointProxy,
     IScopedMediator,
     Advanced.IAdvancedPublishEndpoint
 {
     readonly IMediator _mediator;
     readonly IServiceProvider _provider;
-    IClientFactory _clientFactory = null!;
+    ClientFactory? _clientFactory;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="mediator">The mediator.</param>
@@ -28,7 +28,14 @@ public class ScopedMediator :
         _provider = provider;
     }
 
-    IClientFactory ClientFactory => _clientFactory ??= new ClientFactory(new ScopedClientFactoryContext(_mediator, _provider));
+    ClientFactory ClientFactory => _clientFactory ??= new ClientFactory(new ScopedClientFactoryContext(_mediator, _provider));
+
+    /// <summary>Releases request clients created for this scope without disposing the singleton mediator.</summary>
+    /// <returns>A task that represents scoped client cleanup.</returns>
+    public ValueTask DisposeAsync()
+    {
+        return _clientFactory?.DisposeAsync() ?? default;
+    }
 
     /// <summary>Connects publish observer.</summary>
     /// <param name="observer">The observer to connect.</param>

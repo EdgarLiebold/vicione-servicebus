@@ -27,6 +27,43 @@ public sealed class MediatorDispatchTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-DISPATCH", "direct-configuration-invoked-once")]
+    public async Task DirectMediatorConfiguration_IsInvokedExactlyOnceAsync()
+    {
+        var invocations = 0;
+
+        await using IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        {
+            Interlocked.Increment(ref invocations);
+            configuration.Limits(MessageLimits.Conservative);
+        });
+
+        Assert.Equal(1, Volatile.Read(ref invocations));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MEDIATOR-DISPATCH", "custom-request-address-preserved")]
+    public async Task CustomRequestEndpoint_PreservesItsLogicalDestinationAsync()
+    {
+        await using IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.Handler<AddressedRequest>(context =>
+                context.RespondAsync(new AddressedResponse(context.DestinationAddress)));
+        });
+        var logicalAddress = new Uri("loopback://localhost/logical-request-target");
+        IRequestClient<AddressedRequest> client = mediator.CreateRequestClient<AddressedRequest>(logicalAddress);
+
+        Response<AddressedResponse> response = await client.GetResponseAsync<AddressedResponse>(
+            new AddressedRequest(NewId.NextGuid()),
+            TestContext.Current.CancellationToken).WaitAsync(
+            OperationTimeout(),
+            TestContext.Current.CancellationToken);
+
+        Assert.Equal(logicalAddress, response.Message.DestinationAddress);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-LIMITS-MEDIATOR", "serialized-body-rejected-before-handler")]
     public async Task OversizedSerializedBody_IsRejectedBeforeMediatorDispatchAsync()
     {
@@ -313,6 +350,10 @@ public sealed class MediatorDispatchTests
     private sealed record RequestMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
 
     private sealed record ResponseMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    private sealed record AddressedRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    private sealed record AddressedResponse(Uri? DestinationAddress);
 
     private sealed class MediatorDispatchException(string message) : Exception(message);
 

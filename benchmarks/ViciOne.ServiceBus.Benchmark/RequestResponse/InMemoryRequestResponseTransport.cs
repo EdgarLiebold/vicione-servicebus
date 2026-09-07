@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus;
 
@@ -21,7 +22,7 @@ public class InMemoryRequestResponseTransport :
         _settings = settings;
     }
 
-    public void GetBusControl(Action<IReceiveEndpointConfigurator> callback)
+    public async Task StartAsync(Action<IReceiveEndpointConfigurator> configureReceiveEndpoint, CancellationToken cancellationToken = default)
     {
         _busControl = Bus.Factory.CreateUsingInMemory(x =>
         {
@@ -30,12 +31,12 @@ public class InMemoryRequestResponseTransport :
 
             x.ReceiveEndpoint("rpc_consumer", e =>
             {
-                callback(e);
+                configureReceiveEndpoint(e);
                 _targetEndpointAddress = e.InputAddress;
             });
         });
 
-        _busControl.Start();
+        await _busControl.StartAsync(cancellationToken).ConfigureAwait(false);
 
         _clientFactory = _busControl.CreateReplyToClientFactory();
     }
@@ -46,8 +47,9 @@ public class InMemoryRequestResponseTransport :
         return _clientFactory.CreateRequestClient<T>(_targetEndpointAddress, settingsRequestTimeout);
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        _busControl.Stop();
+        if (_busControl is not null)
+            await _busControl.StopAsync().ConfigureAwait(false);
     }
 }

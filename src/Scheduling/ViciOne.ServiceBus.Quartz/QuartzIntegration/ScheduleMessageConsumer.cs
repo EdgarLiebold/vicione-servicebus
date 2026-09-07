@@ -93,7 +93,7 @@ public class ScheduleMessageConsumer :
 
         var tz = TimeZoneInfo.Local;
         if (!string.IsNullOrWhiteSpace(schedule.TimeZoneId) && schedule.TimeZoneId != tz.Id)
-            tz = JobService.Scheduling.TimeZoneUtil.FindTimeZoneById(schedule.TimeZoneId, _timeZoneResolver);
+            tz = ResolveTimeZone(schedule.TimeZoneId, _timeZoneResolver);
 
         var triggerBuilder = TriggerBuilder.Create()
             .ForJob(jobKey)
@@ -129,6 +129,42 @@ public class ScheduleMessageConsumer :
         await scheduler.ScheduleJob(trigger, new ScheduleJobOptions(), context.CancellationToken).ConfigureAwait(false);
 
         LogContext.Debug?.Log("Scheduled: {Key} {Schedule}", triggerKey, trigger.NextFireTimeUtc);
+    }
+
+    static TimeZoneInfo ResolveTimeZone(string id, Func<string, TimeZoneInfo?>? customResolver)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        if (TryFindSystemTimeZone(id, out TimeZoneInfo? timeZone, out Exception? platformFailure))
+            return timeZone;
+
+        if (TimeZoneInfo.TryConvertIanaIdToWindowsId(id, out string? windowsId)
+            && TryFindSystemTimeZone(windowsId, out timeZone, out _))
+            return timeZone;
+
+        if (TimeZoneInfo.TryConvertWindowsIdToIanaId(id, out string? ianaId)
+            && TryFindSystemTimeZone(ianaId, out timeZone, out _))
+            return timeZone;
+
+        return customResolver?.Invoke(id) ?? throw new TimeZoneNotFoundException(
+            $"The time zone '{id}' could not be resolved by the platform, identifier conversion, or the configured resolver.",
+            platformFailure);
+    }
+
+    static bool TryFindSystemTimeZone(string id, out TimeZoneInfo timeZone, out Exception? failure)
+    {
+        try
+        {
+            timeZone = TimeZoneInfo.FindSystemTimeZoneById(id);
+            failure = null;
+            return true;
+        }
+        catch (Exception exception) when (exception is TimeZoneNotFoundException or InvalidTimeZoneException)
+        {
+            timeZone = null!;
+            failure = exception;
+            return false;
+        }
     }
 
     static ITrigger PopulateTrigger(ConsumeContext context, TriggerBuilder<IJob> builder, MessageBody messageBody, Uri destination,

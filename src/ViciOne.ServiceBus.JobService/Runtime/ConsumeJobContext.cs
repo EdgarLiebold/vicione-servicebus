@@ -28,6 +28,8 @@ internal sealed class ConsumeJobContext<TJob> :
     readonly long _startedAt;
     readonly TimeProvider _timeProvider;
     string? _cancellationReason;
+    IReadOnlyDictionary<string, object>? _checkpoint;
+    bool _checkpointChanged;
     JobProgressBuffer? _updateBuffer;
 
     /// <summary>Creates an execution context for one admitted job attempt.</summary>
@@ -69,35 +71,35 @@ internal sealed class ConsumeJobContext<TJob> :
         _startedAt = _timeProvider.GetTimestamp();
     }
 
-    /// <summary>Gets the cancellation token.</summary>
+    /// <summary>Gets the token canceled by the job timeout or an explicit attempt cancellation.</summary>
     public override CancellationToken CancellationToken => _source.Token;
 
-    /// <summary>Gets the message.</summary>
+    /// <summary>Gets the job payload delivered to the consumer.</summary>
     public TJob Message => Job;
 
-    /// <summary>Reports that notify has been consumed.</summary>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Forwards successful consumption to the underlying transport observers.</summary>
+    /// <param name="duration">The time spent executing the job consumer.</param>
+    /// <param name="consumerType">The consumer type reported to observers.</param>
+    /// <param name="cancellationToken">The token that cancels observer notification.</param>
+    /// <returns>A task that completes when all observers have been notified.</returns>
     public Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
         return _context.NotifyConsumedAsync(_context, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Reports that notify has faulted.</summary>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Forwards a consumer failure to the underlying transport observers.</summary>
+    /// <param name="duration">The time spent executing the job consumer.</param>
+    /// <param name="consumerType">The consumer type reported to observers.</param>
+    /// <param name="exception">The exception raised by the consumer.</param>
+    /// <param name="cancellationToken">The token that cancels observer notification.</param>
+    /// <returns>A task that completes when all observers have been notified.</returns>
     public Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
         return _context.NotifyFaultedAsync(_context, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Releases the resources owned by this instance.</summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Flushes buffered progress before releasing the attempt cancellation source.</summary>
+    /// <returns>A task that completes after pending progress has been published.</returns>
     public async ValueTask DisposeAsync()
     {
         try
@@ -111,9 +113,9 @@ internal sealed class ConsumeJobContext<TJob> :
         }
     }
 
-    /// <summary>Notifies registered observers about canceled.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Flushes pending progress and publishes cancellation with the attempt's final checkpoint update.</summary>
+    /// <param name="cancellationToken">The token that cancels publication.</param>
+    /// <returns>A task that completes when cancellation has been published.</returns>
     public async Task NotifyCanceledAsync(CancellationToken cancellationToken = default)
     {
         LogContext.Debug?.Log("Job Canceled: {JobId} {AttemptId} ({RetryAttempt}) {Reason}", JobId, AttemptId, RetryAttempt, _cancellationReason);
@@ -126,11 +128,13 @@ internal sealed class ConsumeJobContext<TJob> :
             JobId = JobId,
             AttemptId = AttemptId,
             Timestamp = UtcNow,
-            Reason = string.IsNullOrWhiteSpace(_cancellationReason) ? JobCancellationReasons.ConsumerInitiated : _cancellationReason!
+            Reason = string.IsNullOrWhiteSpace(_cancellationReason) ? JobCancellationReasons.ConsumerInitiated : _cancellationReason!,
+            CheckpointChanged = _checkpointChanged,
+            Checkpoint = _checkpoint
         }, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Notifies registered observers about started.</summary>
+    /// <summary>Publishes attempt and typed job-started events before consumer execution begins.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task NotifyStartedAsync(CancellationToken cancellationToken = default)
@@ -160,7 +164,7 @@ internal sealed class ConsumeJobContext<TJob> :
         }, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Reports that notify has completed.</summary>
+    /// <summary>Flushes pending progress updates and publishes successful attempt completion.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task NotifyCompletedAsync(CancellationToken cancellationToken = default)
@@ -178,7 +182,9 @@ internal sealed class ConsumeJobContext<TJob> :
             Timestamp = UtcNow,
             Duration = ElapsedTime,
             InstanceProperties = _jobOptions.InstancePropertyValues,
-            JobTypeProperties = _jobOptions.JobTypePropertyValues
+            JobTypeProperties = _jobOptions.JobTypePropertyValues,
+            CheckpointChanged = _checkpointChanged,
+            Checkpoint = _checkpoint
         }, cancellationToken).ConfigureAwait(false);
     }
 
@@ -192,11 +198,11 @@ internal sealed class ConsumeJobContext<TJob> :
         return NotifyAsync(progress, cancellationToken);
     }
 
-    /// <summary>Reports that notify has faulted.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="delay">The delay before the operation is attempted.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Flushes pending progress and publishes failure with retry timing and the final checkpoint update.</summary>
+    /// <param name="exception">The exception raised while executing the attempt.</param>
+    /// <param name="delay">The optional delay before the next attempt.</param>
+    /// <param name="cancellationToken">The token that cancels publication.</param>
+    /// <returns>A task that completes when the failure has been published.</returns>
     public async Task NotifyFaultedAsync(Exception exception, TimeSpan? delay, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(exception);
@@ -213,24 +219,26 @@ internal sealed class ConsumeJobContext<TJob> :
             RetryAttempt = RetryAttempt,
             RetryDelay = delay,
             Timestamp = UtcNow,
-            Exceptions = new FaultExceptionInfo(exception)
+            Exceptions = new FaultExceptionInfo(exception),
+            CheckpointChanged = _checkpointChanged,
+            Checkpoint = _checkpoint
         }, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Gets the job id.</summary>
+    /// <summary>Gets the stable identifier shared by every attempt of the job.</summary>
     public Guid JobId { get; }
-    /// <summary>Gets the attempt id.</summary>
+    /// <summary>Gets the generation identifier of this execution attempt.</summary>
     public Guid AttemptId { get; }
-    /// <summary>Gets the retry attempt.</summary>
+    /// <summary>Gets the zero-based retry number of this attempt.</summary>
     public int RetryAttempt { get; }
     /// <summary>Gets the last progress value carried by this instance.</summary>
     public long? LastProgressValue { get; }
-    /// <summary>Gets the last progress limit.</summary>
+    /// <summary>Gets the optional limit associated with the restored progress value.</summary>
     public long? LastProgressLimit { get; }
-    /// <summary>Gets the job.</summary>
+    /// <summary>Gets the deserialized job payload.</summary>
     public TJob Job { get; }
 
-    /// <summary>Gets the elapsed time.</summary>
+    /// <summary>Gets the elapsed time measured by the configured time provider.</summary>
     public TimeSpan ElapsedTime => _timeProvider.GetElapsedTime(_startedAt);
 
     /// <summary>Queues the latest job progress for bounded, ordered publication.</summary>
@@ -253,11 +261,14 @@ internal sealed class ConsumeJobContext<TJob> :
     public Task SaveCheckpointAsync<TCheckpoint>(TCheckpoint? checkpoint, CancellationToken cancellationToken = default)
         where TCheckpoint : class
     {
+        _checkpoint = checkpoint != null ? _context.Advanced().ToDictionary(checkpoint) : null;
+        _checkpointChanged = true;
+
         return NotifyAsync<SaveJobCheckpoint>(new SaveJobCheckpointCommand
         {
             JobId = JobId,
             AttemptId = AttemptId,
-            Checkpoint = checkpoint != null ? _context.Advanced().ToDictionary(checkpoint) : null
+            Checkpoint = _checkpoint
         }, cancellationToken);
     }
 
@@ -304,7 +315,7 @@ internal sealed class ConsumeJobContext<TJob> :
     }
 
     /// <summary>Cancels the attempt and records the reason reported by its consumer pipeline.</summary>
-    /// <param name="reason">The reason.</param>
+    /// <param name="reason">The reason propagated with the cancellation event.</param>
     internal void Cancel(string? reason)
     {
         _cancellationReason = reason;

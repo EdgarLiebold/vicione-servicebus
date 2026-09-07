@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.Events;
 using ViciOne.ServiceBus.JobService;
@@ -131,6 +132,73 @@ public sealed class JobAttemptGenerationTests
     }
 
     [Theory]
+    [InlineData(TerminalAttemptEvent.Completed, CheckpointUpdate.Preserve)]
+    [InlineData(TerminalAttemptEvent.Completed, CheckpointUpdate.Replace)]
+    [InlineData(TerminalAttemptEvent.Completed, CheckpointUpdate.Clear)]
+    [InlineData(TerminalAttemptEvent.Faulted, CheckpointUpdate.Preserve)]
+    [InlineData(TerminalAttemptEvent.Faulted, CheckpointUpdate.Replace)]
+    [InlineData(TerminalAttemptEvent.Faulted, CheckpointUpdate.Clear)]
+    [InlineData(TerminalAttemptEvent.Canceled, CheckpointUpdate.Preserve)]
+    [InlineData(TerminalAttemptEvent.Canceled, CheckpointUpdate.Replace)]
+    [InlineData(TerminalAttemptEvent.Canceled, CheckpointUpdate.Clear)]
+    [RequirementCoverage("REQ-VSB-JOB-CHECKPOINT", "terminal-attempt-events-atomically-apply-every-checkpoint-update")]
+    public async Task TerminalAttemptEvent_AppliesTheCompleteCheckpointUpdateContractAsync(
+        TerminalAttemptEvent terminalEvent,
+        CheckpointUpdate update)
+    {
+        var machine = new JobStateMachine();
+        var saga = CreateStartedSaga(lastProgressSequenceNumber: 7);
+        var original = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["stage"] = "original",
+        };
+        saga.Checkpoint = original;
+        var replacement = new Dictionary<string, object>
+        {
+            ["Stage"] = "replacement",
+        };
+        var outgoingMessages = new OutgoingMessageRecorder();
+        await SetStateAsync(machine, saga, machine.Started);
+
+        await RaiseTerminalAsync(
+            machine,
+            saga,
+            terminalEvent,
+            checkpointChanged: update is not CheckpointUpdate.Preserve,
+            checkpoint: update is CheckpointUpdate.Clear ? null : replacement,
+            outgoingMessages);
+
+        switch (update)
+        {
+            case CheckpointUpdate.Preserve:
+                Assert.Same(original, saga.Checkpoint);
+                Assert.Equal("original", saga.Checkpoint?["STAGE"]);
+                break;
+            case CheckpointUpdate.Replace:
+                Assert.NotSame(replacement, saga.Checkpoint);
+                Assert.Equal("replacement", saga.Checkpoint?["stage"]);
+                replacement["Stage"] = "mutated after delivery";
+                Assert.Equal("replacement", saga.Checkpoint?["stage"]);
+                break;
+            case CheckpointUpdate.Clear:
+                Assert.Null(saga.Checkpoint);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(update), update, null);
+        }
+
+        State expectedState = terminalEvent switch
+        {
+            TerminalAttemptEvent.Completed => machine.Completed,
+            TerminalAttemptEvent.Faulted => machine.Faulted,
+            TerminalAttemptEvent.Canceled => machine.Canceled,
+            _ => throw new ArgumentOutOfRangeException(nameof(terminalEvent), terminalEvent, null),
+        };
+        Assert.True(machine.Accessor.GetStateExpression(expectedState).Compile()(saga));
+        Assert.NotEmpty(outgoingMessages.Messages);
+    }
+
+    [Theory]
     [InlineData(JobSagaState.WaitingToRetry, JobLifecycleStatus.WaitingToRetry)]
     [InlineData(JobSagaState.WaitingForSlot, JobLifecycleStatus.WaitingForSlot)]
     [InlineData(JobSagaState.StartingJobAttempt, JobLifecycleStatus.Starting)]
@@ -236,13 +304,71 @@ public sealed class JobAttemptGenerationTests
             _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null),
         };
 
-    private static async Task RaiseAsync<T>(JobStateMachine machine, JobSaga saga, Event<T> @event, T message)
+    private static Task RaiseTerminalAsync(
+        JobStateMachine machine,
+        JobSaga saga,
+        TerminalAttemptEvent terminalEvent,
+        bool checkpointChanged,
+        IReadOnlyDictionary<string, object>? checkpoint,
+        OutgoingMessageRecorder outgoingMessages) =>
+        terminalEvent switch
+        {
+            TerminalAttemptEvent.Completed => RaiseAsync(machine, saga, machine.AttemptCompleted, (JobAttemptCompleted)new JobAttemptCompletedEvent
+            {
+                JobId = saga.CorrelationId,
+                AttemptId = saga.AttemptId,
+                RetryAttempt = saga.RetryAttempt,
+                Timestamp = new DateTime(2026, 8, 15, 8, 2, 0, DateTimeKind.Utc),
+                Duration = TimeSpan.FromMinutes(1),
+                CheckpointChanged = checkpointChanged,
+                Checkpoint = checkpoint,
+            }, outgoingMessages),
+            TerminalAttemptEvent.Faulted => RaiseAsync(machine, saga, machine.AttemptFaulted, (JobAttemptFaulted)new JobAttemptFaultedEvent
+            {
+                JobId = saga.CorrelationId,
+                AttemptId = saga.AttemptId,
+                RetryAttempt = saga.RetryAttempt,
+                Timestamp = new DateTime(2026, 8, 15, 8, 2, 0, DateTimeKind.Utc),
+                Exceptions = new FaultExceptionInfo(new InvalidOperationException("attempt failed")),
+                CheckpointChanged = checkpointChanged,
+                Checkpoint = checkpoint,
+            }, outgoingMessages),
+            TerminalAttemptEvent.Canceled => RaiseAsync(machine, saga, machine.AttemptCanceled, (JobAttemptCanceled)new JobAttemptCanceledEvent
+            {
+                JobId = saga.CorrelationId,
+                AttemptId = saga.AttemptId,
+                Timestamp = new DateTime(2026, 8, 15, 8, 2, 0, DateTimeKind.Utc),
+                Reason = "cancellation requested",
+                CheckpointChanged = checkpointChanged,
+                Checkpoint = checkpoint,
+            }, outgoingMessages),
+            _ => throw new ArgumentOutOfRangeException(nameof(terminalEvent), terminalEvent, null),
+        };
+
+    private static async Task RaiseAsync<T>(
+        JobStateMachine machine,
+        JobSaga saga,
+        Event<T> @event,
+        T message,
+        OutgoingMessageRecorder? outgoingMessages = null)
         where T : class
     {
-        ConsumeContext<T> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
+        ConsumeContext<T> consumeContext = InMemoryOutboxTestContextFactory.Create(
+            message,
+            outgoingMessages: outgoingMessages);
         var instance = new SagaInstance<JobSaga>(saga);
         await instance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<JobSaga, T>(consumeContext, instance);
+        if (outgoingMessages is not null)
+        {
+            var settings = new JobServiceOptions
+            {
+                JobAttemptSagaEndpointAddress = new Uri("loopback://localhost/job-attempt-saga"),
+                JobSagaEndpointAddress = new Uri("loopback://localhost/job-saga"),
+                JobTypeSagaEndpointAddress = new Uri("loopback://localhost/job-type-saga"),
+            };
+            sagaContext.AddOrUpdatePayload<JobSagaSettings>(() => settings, _ => settings);
+        }
         BehaviorContext<JobSaga, T> behaviorContext =
             new ViciOneServiceBusStateMachine<JobSaga>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 
@@ -318,6 +444,20 @@ public sealed class JobAttemptGenerationTests
         Faulted,
         Canceled,
         StartFaulted,
+    }
+
+    public enum TerminalAttemptEvent
+    {
+        Completed,
+        Faulted,
+        Canceled,
+    }
+
+    public enum CheckpointUpdate
+    {
+        Preserve,
+        Replace,
+        Clear,
     }
 
     public sealed record StateSetupMessage;

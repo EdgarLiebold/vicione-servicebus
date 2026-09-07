@@ -51,13 +51,13 @@ public sealed class InboundMessageLimitsArchitectureTests
     [RequirementCoverage("REQ-VSB-INBOUND-MESSAGE-LIMITS", "mediator")]
     public void MediatorReceivePath_RejectsOversizedBodiesBeforeDispatch()
     {
-        string sendEndpoint = Read("src/ViciOne.ServiceBus/Mediator/Contexts/MediatorSendEndpoint.cs");
+        string sendEndpoint = Read("src/ViciOne.ServiceBus.Mediator/Contexts/MediatorSendEndpoint.cs");
         int measure = sendEndpoint.IndexOf("MediatorMessageBodySizer.MeasureAsync", StringComparison.Ordinal);
         int dispatch = sendEndpoint.IndexOf("_dispatcher.DispatchAsync", StringComparison.Ordinal);
         Assert.True(measure >= 0 && dispatch > measure,
             "Mediator body measurement must complete before the receive dispatcher can observe the message.");
 
-        string sizer = Read("src/ViciOne.ServiceBus/Mediator/Contexts/MediatorMessageBodySizer.cs");
+        string sizer = Read("src/ViciOne.ServiceBus.Mediator/Contexts/MediatorMessageBodySizer.cs");
         Assert.Contains("new MessageTooLargeException(actualBytes, _maximumBytes, _inputAddress)", sizer, StringComparison.Ordinal);
     }
 

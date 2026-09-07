@@ -1,5 +1,4 @@
 using System;
-using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
 using ViciOne.ServiceBus.Mediator;
 
@@ -9,11 +8,10 @@ namespace ViciOne.ServiceBus.Configuration;
 public static class MediatorConfigurationExtensions
 {
     /// <summary>
-    /// Create a mediator, which sends messages to consumers, handlers, and sagas. Messages are dispatched to the consumers asynchronously.
-    /// Consumers are not directly coupled to the sender. Can be used entirely in-memory without a broker.
+    /// Creates an in-process mediator that dispatches messages asynchronously without a transport broker.
     /// </summary>
-    /// <param name="selector">The selector.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="selector">The bus factory entry point.</param>
+    /// <param name="configure">The callback that configures mediator limits and handlers.</param>
     /// <returns>The created mediator.</returns>
     /// <exception cref="ArgumentNullException">Thrown when a required argument is <see langword="null" />.</exception>
     public static IMediator CreateMediator(this IBusFactorySelector selector, Action<IMediatorConfigurator> configure)
@@ -22,12 +20,11 @@ public static class MediatorConfigurationExtensions
     }
 
     /// <summary>
-    /// Create a mediator, which sends messages to consumers, handlers, and sagas. Messages are dispatched to the consumers asynchronously.
-    /// Consumers are not directly coupled to the sender. Can be used entirely in-memory without a broker.
+    /// Creates an in-process mediator at the specified loopback base address.
     /// </summary>
-    /// <param name="selector">The selector.</param>
-    /// <param name="baseAddress">The base address.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <param name="selector">The bus factory entry point.</param>
+    /// <param name="baseAddress">The loopback address used as the root for mediator endpoints.</param>
+    /// <param name="configure">The callback that configures mediator limits and handlers.</param>
     /// <returns>The created mediator.</returns>
     /// <exception cref="ArgumentNullException">Thrown when a required argument is <see langword="null" />.</exception>
     public static IMediator CreateMediator(this IBusFactorySelector selector, Uri? baseAddress, Action<IMediatorConfigurator> configure)
@@ -35,11 +32,11 @@ public static class MediatorConfigurationExtensions
         return CreateMediator(selector, baseAddress, configure, TimeProvider.System);
     }
 
-    /// <summary>Create a mediator using an explicit standard .NET time source for request deadlines.</summary>
-    /// <param name="selector">The selector.</param>
-    /// <param name="baseAddress">The base address.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <summary>Creates an in-process mediator with an explicit time source for request deadlines.</summary>
+    /// <param name="selector">The bus factory entry point.</param>
+    /// <param name="baseAddress">The loopback address used as the root for mediator endpoints.</param>
+    /// <param name="configure">The callback that configures mediator limits and handlers.</param>
+    /// <param name="timeProvider">The time source used for request deadlines.</param>
     /// <returns>The created mediator.</returns>
     public static IMediator CreateMediator(
         this IBusFactorySelector selector,
@@ -47,10 +44,9 @@ public static class MediatorConfigurationExtensions
         Action<IMediatorConfigurator> configure,
         TimeProvider timeProvider)
     {
-        if (configure == null)
-            throw new ArgumentNullException(nameof(configure));
-        if (timeProvider == null)
-            throw new ArgumentNullException(nameof(timeProvider));
+        ArgumentNullException.ThrowIfNull(selector);
+        ArgumentNullException.ThrowIfNull(configure);
+        ArgumentNullException.ThrowIfNull(timeProvider);
 
         baseAddress ??= new Uri("loopback://localhost/");
         var topologyConfiguration = new InMemoryTopologyConfiguration(InMemoryBus.CreateMessageTopology());
@@ -71,16 +67,16 @@ public static class MediatorConfigurationExtensions
 
         var mediatorDispatcher = configurator.Build();
 
-        var responseEndpointConfiguration = busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration("response");
+        IInMemoryEndpointConfiguration responsePipelineConfiguration =
+            InMemoryEndpointConfiguration.CreateChildConfiguration(endpointConfiguration);
+        var responseEndpointConfiguration = busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration(
+            "response",
+            responsePipelineConfiguration);
         var responseConfigurator = new ReceivePipeDispatcherConfiguration(busConfiguration.HostConfiguration, responseEndpointConfiguration);
-
-        configurator = new MediatorConfiguration(busConfiguration.HostConfiguration, responseEndpointConfiguration);
-
-        configure(configurator);
 
         var responseDispatcher = responseConfigurator.Build();
 
-        return new ViciOneServiceBusMediator(
+        return new InProcessMediator(
             LogContext.Current,
             endpointConfiguration,
             mediatorDispatcher,

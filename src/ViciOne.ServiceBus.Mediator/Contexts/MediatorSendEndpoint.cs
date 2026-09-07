@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,8 +13,8 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Mediator.Contexts;
 
-/// <summary>Provides an endpoint for mediator send.</summary>
-public class MediatorSendEndpoint :
+/// <summary>Measures and dispatches messages through the mediator receive pipeline.</summary>
+internal sealed class MediatorSendEndpoint :
     ITransportSendEndpoint,
     IPublishEndpointProvider,
     ISendEndpointProvider,
@@ -21,17 +22,18 @@ public class MediatorSendEndpoint :
 {
     readonly Uri _destinationAddress;
     readonly IReceivePipeDispatcher _dispatcher;
-    readonly ILogContext? _logContext = null!;
+    readonly ILogContext? _logContext;
     readonly IObjectDeserializer _objectDeserializer;
     readonly JsonSerializerOptions _bodySerializerOptions;
+    readonly ConcurrentDictionary<Uri, ISendEndpoint> _logicalEndpoints = new();
     readonly MessageLimits _messageLimits;
     readonly MediatorPublishSendEndpoint _publishSendEndpoint;
     readonly IPublishTopologyConfigurator _publishTopology;
     readonly ReceiveObservable _receiveObservers;
     readonly SendObservable _sendObservers;
     readonly ISendPipe _sendPipe;
-    readonly Uri _sourceAddress = null!;
-    readonly MediatorSendEndpoint _sourceEndpoint = null!;
+    readonly Uri? _sourceAddress;
+    readonly MediatorSendEndpoint? _sourceEndpoint;
 
     MediatorSendEndpoint(
         IReceiveEndpointConfiguration configuration,
@@ -59,14 +61,14 @@ public class MediatorSendEndpoint :
         _publishSendEndpoint = new MediatorPublishSendEndpoint(this, configuration.Publish.CreatePipe());
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="configuration">The callback used to configure the component.</param>
-    /// <param name="dispatcher">The dispatcher.</param>
-    /// <param name="logContext">The log context.</param>
-    /// <param name="sendObservers">The send observers.</param>
-    /// <param name="sourceConfiguration">The source configuration.</param>
-    /// <param name="sourceDispatcher">The source dispatcher.</param>
-    /// <param name="messageLimits">The message limits.</param>
+    /// <summary>Initializes the primary mediator endpoint and its request-response source endpoint.</summary>
+    /// <param name="configuration">The primary mediator endpoint configuration.</param>
+    /// <param name="dispatcher">The primary receive dispatcher.</param>
+    /// <param name="logContext">The log context inherited by dispatch operations.</param>
+    /// <param name="sendObservers">The observers notified around every send.</param>
+    /// <param name="sourceConfiguration">The response endpoint configuration.</param>
+    /// <param name="sourceDispatcher">The response receive dispatcher.</param>
+    /// <param name="messageLimits">The message limits enforced before dispatch.</param>
     public MediatorSendEndpoint(IReceiveEndpointConfiguration configuration, IReceivePipeDispatcher dispatcher, ILogContext? logContext,
         SendObservable sendObservers, IReceiveEndpointConfiguration sourceConfiguration, IReceivePipeDispatcher sourceDispatcher,
         MessageLimits messageLimits)
@@ -86,23 +88,43 @@ public class MediatorSendEndpoint :
 
     IMessageRouteTable IMessageRouteProvider.MessageRoutes => MessageRouteTable.Empty;
 
-    /// <summary>Gets publish send endpoint.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <summary>Returns the mediator endpoint with publish semantics.</summary>
+    /// <typeparam name="T">The published message contract.</typeparam>
+    /// <param name="cancellationToken">The token that cancels endpoint resolution.</param>
+    /// <returns>A task containing the publish send endpoint.</returns>
     public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); return Task.FromResult<ISendEndpoint>(_publishSendEndpoint);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<ISendEndpoint>(cancellationToken);
+
+        return Task.FromResult<ISendEndpoint>(_publishSendEndpoint);
     }
 
-    /// <summary>Gets send endpoint.</summary>
-    /// <param name="address">The address.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <summary>Resolves one of the mediator's local send endpoints.</summary>
+    /// <param name="address">The primary or response mediator endpoint address.</param>
+    /// <param name="cancellationToken">The token that cancels endpoint resolution.</param>
+    /// <returns>A task containing the matching local endpoint.</returns>
     public Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); return Task.FromResult<ISendEndpoint>(address.Equals(_sourceAddress) ? _sourceEndpoint : this);
+        ArgumentNullException.ThrowIfNull(address);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<ISendEndpoint>(cancellationToken);
+
+        return Task.FromResult(GetSendEndpoint(address));
+    }
+
+    internal ISendEndpoint GetSendEndpoint(Uri address)
+    {
+        ArgumentNullException.ThrowIfNull(address);
+
+        if (address.Equals(_destinationAddress))
+            return this;
+        if (_sourceEndpoint is not null && address.Equals(_sourceAddress))
+            return _sourceEndpoint;
+
+        return _logicalEndpoints.GetOrAdd(address, static (destination, endpoint) =>
+            new AddressedMediatorSendEndpoint(endpoint, destination), this);
     }
 
     /// <summary>Connects send observer.</summary>
@@ -114,7 +136,7 @@ public class MediatorSendEndpoint :
     }
 
     /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -128,7 +150,7 @@ public class MediatorSendEndpoint :
     }
 
     /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="message">The message to process.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -174,7 +196,7 @@ public class MediatorSendEndpoint :
     }
 
     /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="message">The message to process.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -226,7 +248,7 @@ public class MediatorSendEndpoint :
     }
 
     /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract initialized from <paramref name="values" />.</typeparam>
     /// <param name="values">The values.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -243,7 +265,7 @@ public class MediatorSendEndpoint :
     }
 
     /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract initialized from <paramref name="values" />.</typeparam>
     /// <param name="values">The values.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -261,7 +283,7 @@ public class MediatorSendEndpoint :
     }
 
     /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract initialized from <paramref name="values" />.</typeparam>
     /// <param name="values">The values.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
@@ -281,7 +303,7 @@ public class MediatorSendEndpoint :
     }
 
     /// <summary>Creates send context.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The message contract.</typeparam>
     /// <param name="message">The message to process.</param>
     /// <param name="pipe">The pipeline stages to apply.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>

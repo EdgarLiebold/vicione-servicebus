@@ -23,7 +23,6 @@
     <Compile Remove="Configuration/DependencyInjection/Configuration/SagaEndpointDefinition.cs" />
     <Compile Remove="Configuration/DependencyInjection/ISagaDefinition.cs" />
     <Compile Remove="Configuration/DependencyInjection/SagaDefinition.cs" />
-    <Compile Remove="Mediator/**/*.cs" />
     <Compile Remove="Courier/**/*.cs" />
     <Compile Remove="Exceptions/RoutingSlip*.cs" />
     <Compile Remove="Configuration/Consumers/ICompensateActivityConfigurator.cs" />

@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Initializers;
+using ViciOne.ServiceBus.Architecture.Tests.Build;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.EntityFrameworkCore;
@@ -34,6 +35,18 @@ public sealed class CapabilityPackageArchitectureTests
         AssertAssembly("ViciOne.ServiceBus.JobService", typeof(IJobConsumer<>), typeof(JobContext<>));
         AssertAssembly("ViciOne.ServiceBus.Mediator", typeof(IMediator));
         AssertAssembly("ViciOne.ServiceBus.Initializers", typeof(InVar), typeof(AdvancedMessageInitializerExtensions));
+        AssertProjectOwnsAllCompiledSources("src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj");
+
+        Assembly mediatorAssembly = typeof(IMediator).Assembly;
+        string[] exposedMediatorInternals = mediatorAssembly.GetExportedTypes()
+            .Where(static type => type.Namespace is "ViciOne.ServiceBus.Mediator.Contexts" or "ViciOne.ServiceBus.DependencyInjection"
+                || type.Name is "MediatorConfiguration"
+                    or "MediatorRegistrationContext"
+                    or "ServiceCollectionMediatorConfigurator")
+            .Select(static type => type.FullName!)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        Assert.Empty(exposedMediatorInternals);
 
         Assembly[] capabilityAssemblies =
         [
@@ -122,6 +135,22 @@ public sealed class CapabilityPackageArchitectureTests
     private static void AssertAssembly(string expectedAssemblyName, params Type[] types)
     {
         Assert.All(types, type => Assert.Equal(expectedAssemblyName, type.Assembly.GetName().Name));
+    }
+
+    private static void AssertProjectOwnsAllCompiledSources(string project)
+    {
+        string projectPath = Path.Combine(RepositoryLayout.Root, project);
+        string projectDirectory = Path.GetDirectoryName(projectPath)
+            ?? throw new InvalidOperationException($"Project path '{projectPath}' has no directory.");
+        string ownedPrefix = projectDirectory + Path.DirectorySeparatorChar;
+        string[] externalSources = MsBuildEvaluation.ItemMetadata(projectPath, "Compile", "FullPath")
+            .Select(Path.GetFullPath)
+            .Where(source => !source.StartsWith(ownedPrefix, RepositoryLayout.PathComparison))
+            .Select(RepositoryLayout.RelativeToRoot)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(externalSources);
     }
 
     private static void AssertProductReferences(string project, params string[] expected)
