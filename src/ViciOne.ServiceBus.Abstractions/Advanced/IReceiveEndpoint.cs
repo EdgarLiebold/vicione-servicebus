@@ -24,7 +24,7 @@ public interface IReceiveEndpoint :
     /// <summary>Starts the receive endpoint.</summary>
     /// <param name="cancellationToken">The token that cancels endpoint startup.</param>
     /// <returns>A handle that exposes endpoint readiness and controls its lifetime.</returns>
-    ReceiveEndpointHandle Start(CancellationToken cancellationToken = default);
+    IReceiveEndpointHandle Start(CancellationToken cancellationToken = default);
 
     /// <summary>Stops the receive endpoint and releases its transport resources.</summary>
     /// <param name="cancellationToken">The token that cancels the stop operation.</param>

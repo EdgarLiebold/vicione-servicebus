@@ -91,7 +91,7 @@ public sealed class ReceiveEndpoint :
     /// <summary>Starts the receive transport.</summary>
     /// <param name="cancellationToken">The token that cancels endpoint startup.</param>
     /// <returns>A handle that exposes readiness and controls the started endpoint.</returns>
-    public ReceiveEndpointHandle Start(CancellationToken cancellationToken)
+    public IReceiveEndpointHandle Start(CancellationToken cancellationToken)
     {
         _lifecycleGate.Wait(cancellationToken);
         try
@@ -104,7 +104,7 @@ public sealed class ReceiveEndpoint :
         }
     }
 
-    ReceiveEndpointHandle StartTransport(CancellationToken cancellationToken)
+    IReceiveEndpointHandle StartTransport(CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_context.LogContext);
 
@@ -318,7 +318,7 @@ public sealed class ReceiveEndpoint :
         }
     }
 
-    async Task<ReceiveEndpointHandle> IRestartableReceiveEndpoint.RestartAsync(CancellationToken cancellationToken)
+    async Task<IReceiveEndpointHandle> IRestartableReceiveEndpoint.RestartAsync(CancellationToken cancellationToken)
     {
         await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
@@ -395,7 +395,7 @@ public sealed class ReceiveEndpoint :
 
         public Task StoppingAsync(ReceiveEndpointStopping stopping)
         {
-            return Task.CompletedTask;
+            return _handles.ForEachAsync(static x => x.SetStoppedAsync());
         }
 
         Task IReceiveEndpointObserver.CompletedAsync(ReceiveEndpointCompleted completed)
@@ -416,7 +416,7 @@ public sealed class ReceiveEndpoint :
 
 
     sealed class EndpointHandle :
-        ReceiveEndpointHandle
+        IReceiveEndpointHandle
     {
         readonly CancellationToken _cancellationToken;
         readonly ReceiveEndpoint _endpoint;
@@ -444,7 +444,7 @@ public sealed class ReceiveEndpoint :
             ?? throw new InvalidOperationException("The receive transport has not been started.");
         public Task<ReceiveEndpointReady> Ready => _ready.Task;
 
-        Task ReceiveEndpointHandle.StopAsync(CancellationToken cancellationToken)
+        Task IReceiveEndpointHandle.StopAsync(CancellationToken cancellationToken)
         {
             return _endpoint.StopAsync(cancellationToken);
         }
@@ -485,6 +485,16 @@ public sealed class ReceiveEndpoint :
             _registration.Dispose();
 
             _ready.TrySetException(faulted.Exception);
+
+            return Task.CompletedTask;
+        }
+
+        public Task SetStoppedAsync()
+        {
+            _handle.Disconnect();
+            _registration.Dispose();
+
+            _ready.TrySetCanceled();
 
             return Task.CompletedTask;
         }

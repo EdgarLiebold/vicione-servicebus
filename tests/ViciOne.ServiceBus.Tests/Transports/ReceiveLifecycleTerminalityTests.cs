@@ -63,6 +63,24 @@ public sealed class ReceiveLifecycleTerminalityTests
         Assert.Equal(1, context.ResetCount);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-ENDPOINT-LIFETIME", "stop-terminalizes-pending-handle-readiness")]
+    public async Task StopBeforeReady_CancelsHandleReadinessAndRejectsLateReadinessAsync()
+    {
+        var transport = new ScriptedReceiveTransport();
+        var endpoint = new ReceiveEndpoint(transport, new TestReceiveEndpointContext());
+        IReceiveEndpointHandle handle = endpoint.Start(CancellationToken.None);
+
+        await handle.StopAsync(TestContext.Current.CancellationToken);
+
+        Assert.True(handle.Ready.IsCanceled);
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => handle.Ready);
+        Assert.Equal(CancellationToken.None, exception.CancellationToken);
+
+        await transport.NotifyReadyAsync().WaitAsync(TestContext.Current.CancellationToken);
+        Assert.True(handle.Ready.IsCanceled);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -98,7 +116,7 @@ public sealed class ReceiveLifecycleTerminalityTests
         Assert.Equal(ReceiveEndpoint.State.Faulted, endpoint.CurrentState);
         Assert.Contains(expected.Message, endpoint.Message, StringComparison.Ordinal);
 
-        ReceiveEndpointHandle handle = endpoint.Start(CancellationToken.None);
+        IReceiveEndpointHandle handle = endpoint.Start(CancellationToken.None);
         await transport.NotifyReadyAsync().WaitAsync(TestContext.Current.CancellationToken);
         ReceiveEndpointReady ready = await handle.Ready.WaitAsync(TestContext.Current.CancellationToken);
 
@@ -122,7 +140,7 @@ public sealed class ReceiveLifecycleTerminalityTests
         Assert.Equal(0, transport.StartCount);
         Assert.Equal(ReceiveEndpoint.State.Initial, endpoint.CurrentState);
 
-        ReceiveEndpointHandle handle = endpoint.Start(CancellationToken.None);
+        IReceiveEndpointHandle handle = endpoint.Start(CancellationToken.None);
         await transport.NotifyReadyAsync().WaitAsync(TestContext.Current.CancellationToken);
         Assert.Equal(InputAddress, (await handle.Ready.WaitAsync(TestContext.Current.CancellationToken)).InputAddress);
         Assert.Equal(1, transport.StartCount);
@@ -134,7 +152,7 @@ public sealed class ReceiveLifecycleTerminalityTests
     {
         var transport = new ScriptedReceiveTransport();
         var endpoint = new ReceiveEndpoint(transport, new TestReceiveEndpointContext());
-        ReceiveEndpointHandle handle = endpoint.Start(CancellationToken.None);
+        IReceiveEndpointHandle handle = endpoint.Start(CancellationToken.None);
         var transient = new ExpectedTransportException("transient");
         var terminal = new ExpectedTransportException("terminal");
 
@@ -155,7 +173,7 @@ public sealed class ReceiveLifecycleTerminalityTests
         using var cancellation = new CancellationTokenSource();
         var transport = new ScriptedReceiveTransport();
         var endpoint = new ReceiveEndpoint(transport, new TestReceiveEndpointContext());
-        ReceiveEndpointHandle handle = endpoint.Start(cancellation.Token);
+        IReceiveEndpointHandle handle = endpoint.Start(cancellation.Token);
 
         cancellation.Cancel();
         Assert.True(handle.Ready.IsCanceled);
@@ -633,7 +651,7 @@ public sealed class ReceiveLifecycleTerminalityTests
         public Uri InputAddress => ReceiveLifecycleTerminalityTests.InputAddress;
         public Task<ReceiveEndpointReady> Started => Task.FromResult<ReceiveEndpointReady>(
             new StubReceiveEndpointReady(this));
-        public ReceiveEndpointHandle Start(CancellationToken cancellationToken) { cancellationToken.ThrowIfCancellationRequested(); throw new NotSupportedException(); }
+        public IReceiveEndpointHandle Start(CancellationToken cancellationToken) { cancellationToken.ThrowIfCancellationRequested(); throw new NotSupportedException(); }
         public bool IsStarted() => true;
         public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer) => new EmptyConnectHandle();
         public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe) where T : class => new EmptyConnectHandle();

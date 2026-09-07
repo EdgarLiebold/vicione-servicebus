@@ -5,31 +5,31 @@ using ViciOne.ServiceBus.Events;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>Controls the lifetime of start host.</summary>
-public class StartHostHandle :
-    HostHandle
+/// <summary>Aggregates the readiness and lifetime of the endpoints and riders started by a transport host.</summary>
+internal sealed class StartHostHandle :
+    IHostHandle
 {
     readonly HostReceiveEndpointHandle[] _handles;
     readonly BaseHost _host;
     readonly HostRiderHandle[] _riderHandles;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="host">The host.</param>
-    /// <param name="handles">The handles.</param>
-    /// <param name="riderHandles">The rider handles.</param>
-    public StartHostHandle(BaseHost host, HostReceiveEndpointHandle[] handles, HostRiderHandle[] riderHandles)
+    /// <summary>Creates a handle for one started generation of a transport host.</summary>
+    /// <param name="host">The host controlled by this handle.</param>
+    /// <param name="handles">The receive-endpoint handles whose readiness is aggregated.</param>
+    /// <param name="riderHandles">The rider handles whose readiness is aggregated.</param>
+    internal StartHostHandle(BaseHost host, HostReceiveEndpointHandle[] handles, HostRiderHandle[] riderHandles)
     {
         _host = host;
         _handles = handles;
         _riderHandles = riderHandles;
     }
 
-    Task<HostReady> HostHandle.Ready
+    Task<HostReady> IHostHandle.Ready
     {
         get { return ReadyOrNotAsync(_handles.Select(x => x.Ready).ToArray(), _riderHandles.Select(x => x.Ready).ToArray()); }
     }
 
-    Task HostHandle.StopAsync(CancellationToken cancellationToken)
+    Task IHostHandle.StopAsync(CancellationToken cancellationToken)
     {
         return _host.StopAsync(cancellationToken);
     }

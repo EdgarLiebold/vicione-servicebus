@@ -13,5 +13,5 @@ internal interface IRestartableReceiveEndpoint :
     ILogContext LogContext { get; }
 
     Task PauseAsync(CancellationToken cancellationToken);
-    Task<ReceiveEndpointHandle> RestartAsync(CancellationToken cancellationToken);
+    Task<IReceiveEndpointHandle> RestartAsync(CancellationToken cancellationToken);
 }

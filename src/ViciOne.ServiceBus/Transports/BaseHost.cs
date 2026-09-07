@@ -7,16 +7,16 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>Represents the host for base.</summary>
+/// <summary>Provides shared endpoint, rider, lifecycle, health, and diagnostics orchestration for a transport host.</summary>
 public abstract class BaseHost :
     IHost
 {
     readonly IHostConfiguration _hostConfiguration;
-    HostHandle? _handle;
+    IHostHandle? _handle;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="hostConfiguration">The host configuration.</param>
-    /// <param name="busTopology">The bus topology.</param>
+    /// <summary>Creates a transport host from its configuration and topology.</summary>
+    /// <param name="hostConfiguration">The configuration shared by the host's endpoints and observers.</param>
+    /// <param name="busTopology">The topology exposed by the host.</param>
     protected BaseHost(IHostConfiguration hostConfiguration, IBusTopology busTopology)
     {
         _hostConfiguration = hostConfiguration;
@@ -26,28 +26,28 @@ public abstract class BaseHost :
         Riders = new RiderCollection();
     }
 
-    /// <summary>Gets the receive endpoints.</summary>
+    /// <summary>Gets the collection that owns the host's receive endpoints.</summary>
     protected IReceiveEndpointCollection ReceiveEndpoints { get; }
     RiderCollection Riders { get; }
 
-    /// <summary>Gets the address.</summary>
+    /// <summary>Gets the transport address represented by this host.</summary>
     public Uri Address => _hostConfiguration.HostAddress;
 
-    /// <summary>Gets the topology.</summary>
+    /// <summary>Gets the bus topology associated with this host.</summary>
     public IBusTopology Topology { get; }
 
-    /// <summary>Connects receive endpoint.</summary>
-    /// <param name="definition">The definition.</param>
-    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
-    /// <param name="configureEndpoint">The configure endpoint.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <summary>Connects a receive endpoint described by an endpoint definition.</summary>
+    /// <param name="definition">The definition that supplies endpoint identity and settings.</param>
+    /// <param name="endpointNameFormatter">The formatter used to derive the endpoint name, or <see langword="null" /> to use the configured default.</param>
+    /// <param name="configureEndpoint">An optional callback that further configures the endpoint.</param>
+    /// <returns>A handle that controls the endpoint registration and exposes its readiness.</returns>
     public abstract HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null);
 
-    /// <summary>Connects receive endpoint.</summary>
-    /// <param name="queueName">The queue name.</param>
-    /// <param name="configureEndpoint">The configure endpoint.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <summary>Connects a receive endpoint for a transport queue.</summary>
+    /// <param name="queueName">The transport queue name.</param>
+    /// <param name="configureEndpoint">An optional callback that further configures the endpoint.</param>
+    /// <returns>A handle that controls the endpoint registration and exposes its readiness.</returns>
     public abstract HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null);
 
     ConnectHandle IConsumeMessageObserverConnector.ConnectConsumeMessageObserver<T>(IConsumeMessageObserver<T> observer)
@@ -70,8 +70,8 @@ public abstract class BaseHost :
         return ReceiveEndpoints.ConnectReceiveEndpointObserver(observer);
     }
 
-    /// <summary>Connects endpoint configuration observer.</summary>
-    /// <param name="observer">The observer to connect.</param>
+    /// <summary>Subscribes an observer to endpoint-configuration events.</summary>
+    /// <param name="observer">The observer that receives configuration events.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectEndpointConfigurationObserver(IEndpointConfigurationObserver observer)
     {
@@ -88,10 +88,10 @@ public abstract class BaseHost :
         return _hostConfiguration.ConnectSendObserver(observer);
     }
 
-    /// <summary>Starts the configured component.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The host handle produced by the operation.</returns>
-    public HostHandle Start(CancellationToken cancellationToken)
+    /// <summary>Starts the host's endpoints and riders, or returns the handle for the active generation.</summary>
+    /// <param name="cancellationToken">The token that cancels startup.</param>
+    /// <returns>A handle that exposes aggregate readiness and controls the active host generation.</returns>
+    public IHostHandle Start(CancellationToken cancellationToken)
     {
         if (_handle != null)
         {
@@ -114,34 +114,34 @@ public abstract class BaseHost :
         return _handle;
     }
 
-    /// <summary>Adds receive endpoint to the configuration.</summary>
-    /// <param name="endpointName">The endpoint name.</param>
-    /// <param name="receiveEndpoint">The receive endpoint.</param>
+    /// <summary>Adds a configured receive endpoint to this host.</summary>
+    /// <param name="endpointName">The name used to identify the endpoint within the host.</param>
+    /// <param name="receiveEndpoint">The endpoint owned by the host.</param>
     public void AddReceiveEndpoint(string endpointName, ReceiveEndpoint receiveEndpoint)
     {
         ReceiveEndpoints.Add(endpointName, receiveEndpoint);
     }
 
-    /// <summary>Gets rider.</summary>
-    /// <param name="name">The name.</param>
-    /// <returns>The rider.</returns>
+    /// <summary>Gets a rider registered with this host.</summary>
+    /// <param name="name">The rider's registration name.</param>
+    /// <returns>The registered rider.</returns>
     public IRider GetRider(string name)
     {
         return Riders.Get(name);
     }
 
-    /// <summary>Adds rider to the configuration.</summary>
-    /// <param name="name">The name.</param>
-    /// <param name="riderControl">The rider control.</param>
+    /// <summary>Adds a rider controlled by this host.</summary>
+    /// <param name="name">The rider's unique registration name.</param>
+    /// <param name="riderControl">The rider lifecycle controller.</param>
     public void AddRider(string name, IRiderControl riderControl)
     {
         Riders.Add(name, riderControl);
     }
 
-    /// <summary>Checks health.</summary>
-    /// <param name="busState">The bus state.</param>
-    /// <param name="healthMessage">The health message.</param>
-    /// <returns>The bus health result produced by the operation.</returns>
+    /// <summary>Combines the bus lifecycle state with endpoint and rider health observations.</summary>
+    /// <param name="busState">The current bus lifecycle state.</param>
+    /// <param name="healthMessage">The diagnostic associated with the bus state.</param>
+    /// <returns>The aggregate bus health result.</returns>
     public BusHealthResult CheckHealth(BusState busState, string healthMessage)
     {
         EndpointHealthResult[] results = ReceiveEndpoints.CheckEndpointHealth()
@@ -177,9 +177,9 @@ public abstract class BaseHost :
         ReceiveEndpoints.Probe(scope);
     }
 
-    /// <summary>Stops the configured component.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Stops the current rider and endpoint generation and releases the host's active agents.</summary>
+    /// <param name="cancellationToken">The token that cancels shutdown.</param>
+    /// <returns>A task that completes after the active host generation has stopped.</returns>
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         LogContext.Current = _hostConfiguration.LogContext;
@@ -197,12 +197,12 @@ public abstract class BaseHost :
         _handle = null;
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Adds transport-specific diagnostic information to a probe.</summary>
+    /// <param name="context">The probe context that receives the diagnostics.</param>
     protected abstract void Probe(ProbeContext context);
 
-    /// <summary>Gets agent handles.</summary>
-    /// <returns>The agent handles.</returns>
+    /// <summary>Gets the active transport agents that must stop with the host.</summary>
+    /// <returns>The active transport agents.</returns>
     protected virtual IAgent[] GetAgentHandles()
     {
         return new IAgent[0];

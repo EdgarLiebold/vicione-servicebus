@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>Controls the lifetime of host.</summary>
-public interface HostHandle
+/// <summary>Exposes readiness and lifetime control for a started transport host.</summary>
+public interface IHostHandle
 {
-    /// <summary>A task which can be awaited to know when the host is ready.</summary>
+    /// <summary>Gets a task that completes when every endpoint and rider owned by the host is ready.</summary>
     Task<HostReady> Ready { get; }
 
     /// <summary>Stops the host and releases its transport resources.</summary>

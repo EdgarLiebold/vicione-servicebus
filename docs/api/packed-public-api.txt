@@ -523,9 +523,12 @@ TYPE interface public ViciOne.ServiceBus.Advanced.IPublishEndpointProvider
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint> GetPublishSendEndpointAsync<T>(System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Advanced.IReceiveEndpoint
   METHOD public abstract System.Threading.Tasks.Task StopAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract ViciOne.ServiceBus.Advanced.ReceiveEndpointHandle Start(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract ViciOne.ServiceBus.Advanced.IReceiveEndpointHandle Start(System.Threading.CancellationToken cancellationToken = null)
   PROPERTY System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointReady> Started { public-get;  }
   PROPERTY System.Uri InputAddress { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Advanced.IReceiveEndpointHandle
+  METHOD public abstract System.Threading.Tasks.Task StopAsync(System.Threading.CancellationToken cancellationToken = null)
+  PROPERTY System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointReady> Ready { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Advanced.IRecurringMessageScheduler
   METHOD public abstract System.Threading.Tasks.Task CancelScheduledRecurringSendAsync(System.String scheduleId, System.String scheduleGroup, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task PauseScheduledRecurringSendAsync(System.String scheduleId, System.String scheduleGroup, System.Threading.CancellationToken cancellationToken = null)
@@ -1005,9 +1008,6 @@ TYPE class public ViciOne.ServiceBus.Advanced.ReceiveContextExtensions [static]
   METHOD public static System.Uri GetResponseAddress(ViciOne.ServiceBus.Advanced.ReceiveContext context)
   METHOD public static System.Uri GetSourceAddress(ViciOne.ServiceBus.Advanced.Headers headers)
   METHOD public static System.Uri GetSourceAddress(ViciOne.ServiceBus.Advanced.ReceiveContext context)
-TYPE interface public ViciOne.ServiceBus.Advanced.ReceiveEndpointHandle
-  METHOD public abstract System.Threading.Tasks.Task StopAsync(System.Threading.CancellationToken cancellationToken = null)
-  PROPERTY System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointReady> Ready { public-get;  }
 TYPE enum public ViciOne.ServiceBus.Advanced.Registration.ConsumerConcurrencyMode
   FIELD public System.Int32 value__
   FIELD public const ViciOne.ServiceBus.Advanced.Registration.ConsumerConcurrencyMode Parallel = 0
@@ -20925,7 +20925,7 @@ TYPE class public ViciOne.ServiceBus.Transports.BaseHost [abstract]
   METHOD public virtual System.Void AddRider(System.String name, ViciOne.ServiceBus.Transports.IRiderControl riderControl)
   METHOD public virtual ViciOne.ServiceBus.Advanced.BusHealthResult CheckHealth(ViciOne.ServiceBus.Transports.BusState busState, System.String healthMessage)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectEndpointConfigurationObserver(ViciOne.ServiceBus.Configuration.IEndpointConfigurationObserver observer)
-  METHOD public virtual ViciOne.ServiceBus.Transports.HostHandle Start(System.Threading.CancellationToken cancellationToken)
+  METHOD public virtual ViciOne.ServiceBus.Transports.IHostHandle Start(System.Threading.CancellationToken cancellationToken)
   METHOD public virtual ViciOne.ServiceBus.Transports.IRider GetRider(System.String name)
   PROPERTY System.Uri Address { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Topology.IBusTopology Topology { public-get;  }
@@ -21245,9 +21245,6 @@ TYPE delegate public ViciOne.ServiceBus.Transports.Fabric.ZeroActiveHandler [sea
 TYPE class public ViciOne.ServiceBus.Transports.HostConfigurationRetryExtensions [static]
   METHOD public static System.Threading.Tasks.Task RetryAsync(ViciOne.ServiceBus.Configuration.IHostConfiguration hostConfiguration, System.Func<System.Threading.Tasks.Task> factory, System.Threading.CancellationToken stoppingToken, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static System.Threading.Tasks.Task RetryAsync(ViciOne.ServiceBus.Configuration.IHostConfiguration hostConfiguration, System.Func<System.Threading.Tasks.Task> factory, System.TimeProvider timeProvider, System.Threading.CancellationToken stoppingToken, System.Threading.CancellationToken cancellationToken = null)
-TYPE interface public ViciOne.ServiceBus.Transports.HostHandle
-  METHOD public abstract System.Threading.Tasks.Task StopAsync(System.Threading.CancellationToken cancellationToken = null)
-  PROPERTY System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Observers.HostReady> Ready { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Transports.IBusInstance
   METHOD public abstract System.Void Connect<TRider>(ViciOne.ServiceBus.Transports.IRiderControl riderControl)
   METHOD public abstract TRider GetRider<TRider>()
@@ -21269,11 +21266,14 @@ TYPE interface public ViciOne.ServiceBus.Transports.IHost
   METHOD public abstract System.Void AddReceiveEndpoint(System.String endpointName, ViciOne.ServiceBus.Transports.ReceiveEndpoint receiveEndpoint)
   METHOD public abstract System.Void AddRider(System.String name, ViciOne.ServiceBus.Transports.IRiderControl riderControl)
   METHOD public abstract ViciOne.ServiceBus.Advanced.BusHealthResult CheckHealth(ViciOne.ServiceBus.Transports.BusState busState, System.String healthMessage)
-  METHOD public abstract ViciOne.ServiceBus.Transports.HostHandle Start(System.Threading.CancellationToken cancellationToken)
+  METHOD public abstract ViciOne.ServiceBus.Transports.IHostHandle Start(System.Threading.CancellationToken cancellationToken)
   METHOD public abstract ViciOne.ServiceBus.Transports.IRider GetRider(System.String name)
   PROPERTY System.Uri Address { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Topology.IBusTopology Topology { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Transports.IHost<TEndpointConfigurator>
+TYPE interface public ViciOne.ServiceBus.Transports.IHostHandle
+  METHOD public abstract System.Threading.Tasks.Task StopAsync(System.Threading.CancellationToken cancellationToken = null)
+  PROPERTY System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Observers.HostReady> Ready { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Transports.IMessagePartitionKeyFormatter<TMessage>
   METHOD public abstract System.String FormatPartitionKey(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
 TYPE interface public ViciOne.ServiceBus.Transports.IMessageRoutingKeyFormatter<TMessage>
@@ -21365,7 +21365,7 @@ TYPE class public ViciOne.ServiceBus.Transports.ReceiveEndpoint [sealed]
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectReceiveObserver(ViciOne.ServiceBus.Advanced.Observers.IReceiveObserver observer)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectRequestPipe<T>(System.Guid requestId, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver observer)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ReceiveEndpointHandle Start(System.Threading.CancellationToken cancellationToken)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.IReceiveEndpointHandle Start(System.Threading.CancellationToken cancellationToken)
   PROPERTY System.Boolean IsBusEndpoint { public-get;  }
   PROPERTY System.String Message { public-get;  }
   PROPERTY System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Observers.ReceiveEndpointReady> Started { public-get;  }
@@ -21584,8 +21584,6 @@ TYPE interface public ViciOne.ServiceBus.Transports.SendTransportContext<TContex
   METHOD public abstract System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Advanced.Middleware.IAgent> GetAgentHandles()
   METHOD public abstract System.Threading.Tasks.Task SendAsync<T>(TContext transportContext, ViciOne.ServiceBus.Advanced.SendContext<T> sendContext, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SendContext<T>> CreateSendContextAsync<T>(TContext context, T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.Transports.StartHostHandle
-  CTOR public ViciOne.ServiceBus.Transports.StartHostHandle(ViciOne.ServiceBus.Transports.BaseHost host, ViciOne.ServiceBus.Advanced.HostReceiveEndpointHandle[] handles, ViciOne.ServiceBus.Transports.HostRiderHandle[] riderHandles)
 TYPE class public ViciOne.ServiceBus.Transports.TransportBusInstance<TEndpointConfigurator>
   CTOR public ViciOne.ServiceBus.Transports.TransportBusInstance<TEndpointConfigurator>(ViciOne.ServiceBus.IBusControl busControl, ViciOne.ServiceBus.Transports.IHost<TEndpointConfigurator> host, ViciOne.ServiceBus.Configuration.IHostConfiguration hostConfiguration, ViciOne.ServiceBus.Configuration.IBusRegistrationContext busRegistrationContext)
   METHOD public virtual System.Void Connect<TRider>(ViciOne.ServiceBus.Transports.IRiderControl riderControl)

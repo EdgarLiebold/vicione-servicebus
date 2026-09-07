@@ -151,7 +151,7 @@ public sealed class KillSwitchTestDriver
             return failure is null ? Task.CompletedTask : Task.FromException(failure);
         }
 
-        public Task<ReceiveEndpointHandle> RestartAsync(CancellationToken cancellationToken)
+        public Task<IReceiveEndpointHandle> RestartAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             Exception? failure;
@@ -168,9 +168,9 @@ public sealed class KillSwitchTestDriver
 
             changed.TrySetResult(true);
             if (failure is not null)
-                return Task.FromException<ReceiveEndpointHandle>(failure);
+                return Task.FromException<IReceiveEndpointHandle>(failure);
 
-            return Task.FromResult<ReceiveEndpointHandle>(new ReadyHandle());
+            return Task.FromResult<IReceiveEndpointHandle>(new ReadyHandle());
         }
 
         public void EnqueuePauseFailure(Exception exception)
@@ -226,7 +226,7 @@ public sealed class KillSwitchTestDriver
         }
     }
 
-    private sealed class ReadyHandle : ReceiveEndpointHandle
+    private sealed class ReadyHandle : IReceiveEndpointHandle
     {
         public Task<ReceiveEndpointReady> Ready { get; } = Task.FromResult<ReceiveEndpointReady>(new ReadyEvent());
 

@@ -318,7 +318,7 @@ internal sealed class KillSwitch :
                 try
                 {
                     SetOwnLogContext();
-                    ReceiveEndpointHandle handle = await endpoint.RestartAsync(cancellationToken).ConfigureAwait(false);
+                    IReceiveEndpointHandle handle = await endpoint.RestartAsync(cancellationToken).ConfigureAwait(false);
                     await handle.Ready.WaitAsync(cancellationToken).ConfigureAwait(false);
                     SetVerifyingRecovery();
                     return;
@@ -444,19 +444,19 @@ internal sealed class KillSwitch :
 
 internal enum KillSwitchState
 {
-    /// <summary>Indicates initial.</summary>
+    /// <summary>No receive endpoint has been attached.</summary>
     Initial,
-    /// <summary>Indicates running.</summary>
+    /// <summary>The endpoint is running and failures are tracked within the configured window.</summary>
     Running,
-    /// <summary>Indicates stopping.</summary>
+    /// <summary>The endpoint is being paused after the failure threshold was reached.</summary>
     Stopping,
-    /// <summary>Indicates paused.</summary>
+    /// <summary>The endpoint is paused for the configured restart delay.</summary>
     Paused,
-    /// <summary>Indicates starting.</summary>
+    /// <summary>The endpoint transport is being restarted.</summary>
     Starting,
-    /// <summary>Indicates verifying recovery.</summary>
+    /// <summary>The restarted endpoint must complete the configured number of successful attempts.</summary>
     VerifyingRecovery,
-    /// <summary>Indicates terminated.</summary>
+    /// <summary>The endpoint was stopped permanently and no recovery remains active.</summary>
     Terminated
 }
 

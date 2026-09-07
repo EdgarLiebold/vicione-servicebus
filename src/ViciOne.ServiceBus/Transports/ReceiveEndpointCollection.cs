@@ -177,7 +177,7 @@ public sealed class ReceiveEndpointCollection :
         readonly ReceiveEndpoint _endpoint;
         readonly Action _remove;
 
-        ReceiveEndpointHandle? _endpointHandle;
+        IReceiveEndpointHandle? _endpointHandle;
 
         public Handle(ReceiveEndpoint endpoint, Action remove)
         {

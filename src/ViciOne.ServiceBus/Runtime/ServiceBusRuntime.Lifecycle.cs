@@ -152,11 +152,11 @@ internal sealed partial class ServiceBusRuntime
         readonly ServiceBusRuntime _bus;
         readonly IBusObserver _busObserver;
         readonly IHost _host;
-        readonly HostHandle _hostHandle;
+        readonly IHostHandle _hostHandle;
         readonly ILogContext _logContext;
         bool _stopped;
 
-        public BusLifecycleHandle(IHost host, HostHandle hostHandle, ServiceBusRuntime bus, IBusObserver busObserver, ILogContext logContext)
+        public BusLifecycleHandle(IHost host, IHostHandle hostHandle, ServiceBusRuntime bus, IBusObserver busObserver, ILogContext logContext)
         {
             _host = host;
             _bus = bus;
