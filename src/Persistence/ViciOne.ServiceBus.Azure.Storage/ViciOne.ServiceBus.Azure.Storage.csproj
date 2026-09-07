@@ -14,17 +14,12 @@
     <PackageId>ViciOne.ServiceBus.Azure.Storage</PackageId>
     <Title>ViciOne.ServiceBus.Azure.Storage</Title>
     <PackageTags>ViciOne.ServiceBus;Azure;Storage;ServiceBus</PackageTags>
-    <Description>ViciOne.ServiceBus Azure Storage persistence support; $(Description)</Description>
+    <Description>Azure Blob Storage message-data persistence for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Identity" />
     <PackageReference Include="Azure.Storage.Blobs" />
     <ProjectReference Include="..\..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="AzureStorage" />
   </ItemGroup>
 
 </Project>

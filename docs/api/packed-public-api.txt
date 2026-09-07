@@ -5805,17 +5805,11 @@ TYPE class public ViciOne.ServiceBus.Configuration.AmazonSqsBusFactoryConfigurat
   METHOD public static ViciOne.ServiceBus.IBusControl CreateUsingAmazonSqs(ViciOne.ServiceBus.Configuration.IBusFactorySelector selector, System.Action<ViciOne.ServiceBus.AmazonSqs.IAmazonSqsBusFactoryConfigurator> configure)
 
 ASSEMBLY ViciOne.ServiceBus.Azure.Storage VERSION=1.0.0.0
-TYPE class public ViciOne.ServiceBus.Azure.Storage.AzureStorageConfigurationExtensions [static]
-  METHOD public static ViciOne.ServiceBus.AzureStorage.MessageData.AzureStorageMessageDataRepository CreateMessageDataRepository(Azure.Storage.Blobs.BlobServiceClient client, System.String containerName, System.Boolean compress = false)
-TYPE class public ViciOne.ServiceBus.Azure.Storage.MessageDataRepositorySelectorExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository AzureStorage(ViciOne.ServiceBus.Configuration.IMessageDataRepositorySelector selector, System.String connectionString, System.String containerName = null, System.Boolean compress = false)
-TYPE class public ViciOne.ServiceBus.AzureStorage.MessageData.AzureStorageMessageDataRepository
-  CTOR public ViciOne.ServiceBus.AzureStorage.MessageData.AzureStorageMessageDataRepository(Azure.Storage.Blobs.BlobServiceClient client, System.String containerName, System.Boolean compress = false, System.TimeProvider timeProvider = null)
-  CTOR public ViciOne.ServiceBus.AzureStorage.MessageData.AzureStorageMessageDataRepository(Azure.Storage.Blobs.BlobServiceClient client, System.String containerName, ViciOne.ServiceBus.AzureStorage.MessageData.IBlobNameGenerator nameGenerator, System.Boolean compress = false, System.TimeProvider timeProvider = null)
-  CTOR public ViciOne.ServiceBus.AzureStorage.MessageData.AzureStorageMessageDataRepository(System.String connectionString, System.String containerName, System.Boolean compress = false, System.TimeProvider timeProvider = null)
-  CTOR public ViciOne.ServiceBus.AzureStorage.MessageData.AzureStorageMessageDataRepository(System.Uri serviceUri, System.String containerName, System.String accountName, System.String accountKey, System.Boolean compress = false, System.TimeProvider timeProvider = null)
-  CTOR public ViciOne.ServiceBus.AzureStorage.MessageData.AzureStorageMessageDataRepository(System.Uri serviceUri, System.String containerName, System.String signature, System.Boolean compress = false, System.TimeProvider timeProvider = null)
-  CTOR public ViciOne.ServiceBus.AzureStorage.MessageData.AzureStorageMessageDataRepository(System.Uri serviceUri, System.String containerName, System.String tenantId, System.String clientId, System.String clientSecret, System.Boolean compress = false, System.TimeProvider timeProvider = null)
+TYPE class public ViciOne.ServiceBus.Azure.Storage.BlobServiceClientExtensions [static]
+  METHOD public static ViciOne.ServiceBus.Azure.Storage.MessageData.AzureBlobMessageDataRepository CreateMessageDataRepository(Azure.Storage.Blobs.BlobServiceClient client, System.String containerName, System.Boolean compress = false, System.TimeProvider timeProvider = null)
+TYPE class public ViciOne.ServiceBus.Azure.Storage.MessageData.AzureBlobMessageDataRepository [sealed]
+  CTOR public ViciOne.ServiceBus.Azure.Storage.MessageData.AzureBlobMessageDataRepository(Azure.Storage.Blobs.BlobContainerClient containerClient, System.Boolean compress = false, System.TimeProvider timeProvider = null)
+  CTOR public ViciOne.ServiceBus.Azure.Storage.MessageData.AzureBlobMessageDataRepository(Azure.Storage.Blobs.BlobContainerClient containerClient, ViciOne.ServiceBus.Azure.Storage.MessageData.IBlobNameGenerator blobNameGenerator, System.Boolean compress = false, System.TimeProvider timeProvider = null)
   METHOD public virtual System.Threading.Tasks.Task PostStartAsync(ViciOne.ServiceBus.IBus bus, System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Observers.BusReady> busReady)
   METHOD public virtual System.Threading.Tasks.Task PostStopAsync(ViciOne.ServiceBus.IBus bus)
   METHOD public virtual System.Threading.Tasks.Task PreStartAsync(ViciOne.ServiceBus.IBus bus)
@@ -5826,11 +5820,13 @@ TYPE class public ViciOne.ServiceBus.AzureStorage.MessageData.AzureStorageMessag
   METHOD public virtual System.Threading.Tasks.Task<System.Uri> PutAsync(System.IO.Stream stream, System.Nullable<System.TimeSpan> timeToLive = null, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Void CreateFaulted(System.Exception exception)
   METHOD public virtual System.Void PostCreate(ViciOne.ServiceBus.IBus bus)
-TYPE interface public ViciOne.ServiceBus.AzureStorage.MessageData.IBlobNameGenerator
+TYPE interface public ViciOne.ServiceBus.Azure.Storage.MessageData.IBlobNameGenerator
   METHOD public abstract System.String GenerateBlobName()
-TYPE class public ViciOne.ServiceBus.AzureStorage.MessageData.NewIdBlobNameGenerator
-  CTOR public ViciOne.ServiceBus.AzureStorage.MessageData.NewIdBlobNameGenerator()
+TYPE class public ViciOne.ServiceBus.Azure.Storage.MessageData.NewIdBlobNameGenerator [sealed]
+  CTOR public ViciOne.ServiceBus.Azure.Storage.MessageData.NewIdBlobNameGenerator()
   METHOD public virtual System.String GenerateBlobName()
+TYPE class public ViciOne.ServiceBus.Azure.Storage.MessageDataRepositorySelectorExtensions [static]
+  METHOD public static ViciOne.ServiceBus.Advanced.Serialization.IMessageDataRepository UseAzureBlobStorage(ViciOne.ServiceBus.Configuration.IMessageDataRepositorySelector selector, System.String connectionString, System.String containerName = "message-data", System.Boolean compress = false)
 
 ASSEMBLY ViciOne.ServiceBus.Azure.Table VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.Azure.Table.AzureTableJobServiceConfigurationExtensions [static]

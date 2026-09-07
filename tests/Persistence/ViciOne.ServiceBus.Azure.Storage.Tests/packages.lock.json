@@ -285,7 +285,6 @@
       "vicione.servicebus.azure.storage": {
         "type": "Project",
         "dependencies": {
-          "Azure.Identity": "[1.21.0, )",
           "Azure.Storage.Blobs": "[12.29.2, )",
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
@@ -297,15 +296,6 @@
           "Microsoft.Extensions.Configuration.Binder": "[10.0.11, )",
           "Microsoft.Extensions.Configuration.Json": "[10.0.11, )",
           "Microsoft.Extensions.Configuration.UserSecrets": "[10.0.11, )"
-        }
-      },
-      "Azure.Identity": {
-        "type": "CentralTransitive",
-        "requested": "[1.21.0, )",
-        "resolved": "1.21.0",
-        "contentHash": "GeFv8sGwRKvDKwI2WFy8r0mhmlxEVZg24Sit2NogTjiSO8RVjllWM65OT6e1sKjOvG8V74y7hAbaELUUPjZQSw==",
-        "dependencies": {
-          "Azure.Core": "1.53.0"
         }
       },
       "Azure.Storage.Blobs": {
