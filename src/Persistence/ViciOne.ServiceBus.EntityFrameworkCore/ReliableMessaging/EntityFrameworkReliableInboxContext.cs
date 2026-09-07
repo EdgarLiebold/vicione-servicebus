@@ -23,7 +23,10 @@ internal sealed class EntityFrameworkReliableInboxContext<TBus, TDbContext, TMes
         ReliableInboxRecord inbox,
         EntityFrameworkScopedBusContext<TBus, TDbContext> outbox,
         TimeProvider timeProvider)
-        : base(context, options, provider)
+        : base(
+            context ?? throw new ArgumentNullException(nameof(context)),
+            options ?? throw new ArgumentNullException(nameof(options)),
+            provider ?? throw new ArgumentNullException(nameof(provider)))
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _inbox = inbox ?? throw new ArgumentNullException(nameof(inbox));
@@ -45,7 +48,8 @@ internal sealed class EntityFrameworkReliableInboxContext<TBus, TDbContext, TMes
 
     public override async Task SetConsumedAsync(CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken operationCancellationToken = ResolveOperationCancellationToken(cancellationToken);
+        operationCancellationToken.ThrowIfCancellationRequested();
         _inbox.Status = ReliableInboxStatus.Consumed;
         _inbox.CompletedAt = _timeProvider.GetUtcNow().UtcDateTime;
         _inbox.DueAt = null;
@@ -57,34 +61,48 @@ internal sealed class EntityFrameworkReliableInboxContext<TBus, TDbContext, TMes
 
         // The scoped outbox owns SaveChanges so business state, the consumed fence and every outgoing intent are
         // persisted by this DbContext while the enclosing provider transaction is still active.
-        await _outbox.CommitAsync(cancellationToken).ConfigureAwait(false);
+        await _outbox.CommitAsync(operationCancellationToken).ConfigureAwait(false);
     }
 
     public override Task SetDeliveredAsync(CancellationToken cancellationToken = default) =>
-        cancellationToken.IsCancellationRequested
-            ? Task.FromCanceled(cancellationToken)
-            : Task.CompletedTask;
+        CompletedOrCanceledAsync(ResolveOperationCancellationToken(cancellationToken));
 
-    public override Task<List<OutboxMessageContext>> LoadOutboxMessagesAsync(CancellationToken cancellationToken = default) =>
-        cancellationToken.IsCancellationRequested
-            ? Task.FromCanceled<List<OutboxMessageContext>>(cancellationToken)
+    public override Task<List<OutboxMessageContext>> LoadOutboxMessagesAsync(CancellationToken cancellationToken = default)
+    {
+        CancellationToken operationCancellationToken = ResolveOperationCancellationToken(cancellationToken);
+        return operationCancellationToken.IsCancellationRequested
+            ? Task.FromCanceled<List<OutboxMessageContext>>(operationCancellationToken)
             : Task.FromResult(new List<OutboxMessageContext>());
+    }
 
     public override Task NotifyOutboxMessageDeliveredAsync(
         OutboxMessageContext message,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(message);
-        return cancellationToken.IsCancellationRequested
-            ? Task.FromCanceled(cancellationToken)
-            : Task.CompletedTask;
+        return CompletedOrCanceledAsync(ResolveOperationCancellationToken(cancellationToken));
     }
 
     public override Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default) =>
+        CompletedOrCanceledAsync(ResolveOperationCancellationToken(cancellationToken));
+
+    public override Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        CancellationToken operationCancellationToken = cancellationToken.CanBeCanceled
+            ? cancellationToken
+            : context.CancellationToken.CanBeCanceled
+                ? context.CancellationToken
+                : CancellationToken;
+        return _outbox.AddSendAsync(context, operationCancellationToken);
+    }
+
+    static Task CompletedOrCanceledAsync(CancellationToken cancellationToken) =>
         cancellationToken.IsCancellationRequested
             ? Task.FromCanceled(cancellationToken)
             : Task.CompletedTask;
 
-    public override Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
-        where T : class => _outbox.AddSendAsync(context, cancellationToken);
+    CancellationToken ResolveOperationCancellationToken(CancellationToken cancellationToken) =>
+        cancellationToken.CanBeCanceled ? cancellationToken : CancellationToken;
 }

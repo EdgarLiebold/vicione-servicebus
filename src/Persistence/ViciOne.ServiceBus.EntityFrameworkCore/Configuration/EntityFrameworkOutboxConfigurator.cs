@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>Configures EF Core inbox deduplication and optional transactional-outbox delivery for a bus.</summary>
 /// <typeparam name="TBus">The bus type.</typeparam>
 /// <typeparam name="TDbContext">The db context type.</typeparam>
-public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
+internal sealed class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
     IEntityFrameworkOutboxConfigurator
     where TBus : class, IBus
     where TDbContext : DbContext
@@ -36,15 +36,18 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
     /// <summary>Gets or sets how long delivered inbox rows remain available for duplicate detection.</summary>
     public TimeSpan DuplicateDetectionWindow { get; set; } = TimeSpan.FromMinutes(30);
 
-    /// <summary>Sets the isolation level used by inbox and outbox transactions.</summary>
+    /// <summary>Gets or sets the isolation level used by inbox and outbox transactions.</summary>
     public IsolationLevel IsolationLevel
     {
+        get => _isolationLevel;
         set => _isolationLevel = value;
     }
 
-    /// <summary>Sets the provider-specific SQL used to acquire inbox and outbox locks.</summary>
+    /// <summary>Gets or sets the provider-specific SQL used to acquire inbox and outbox locks.</summary>
     public ILockStatementProvider LockStatementProvider
     {
+        get => _lockStatementProvider
+            ?? throw new InvalidOperationException("A relational lock-statement provider has not been selected.");
         set => _lockStatementProvider = value ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "LockStatementProvider must not be null", "Correct the named configuration before starting the host"));
     }
 
@@ -65,7 +68,7 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
 
     /// <summary>Enables the transactional bus outbox for sends and publishes made outside a receive pipeline.</summary>
     /// <param name="configure">An optional callback that customizes delivery of persisted outbox messages.</param>
-    public virtual void EnableTransactionalOutbox(Action<IEntityFrameworkBusOutboxConfigurator>? configure = null)
+    public void EnableTransactionalOutbox(Action<IEntityFrameworkBusOutboxConfigurator>? configure = null)
     {
         if (_useBusOutbox)
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "The Entity Framework bus outbox may only be configured once.", "Correct the named configuration before starting the host"));
@@ -76,7 +79,7 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
 
     /// <summary>Applies the callback, validates the relational settings, and registers the configured services.</summary>
     /// <param name="configure">An optional callback that customizes inbox and outbox persistence.</param>
-    public virtual void Configure(Action<IEntityFrameworkOutboxConfigurator>? configure)
+    public void Configure(Action<IEntityFrameworkOutboxConfigurator>? configure)
     {
         configure?.Invoke(this);
 
@@ -141,6 +144,8 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
     {
         if (_lockStatementProvider == null)
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "A relational provider must be selected explicitly for the Entity Framework outbox.", "Correct the named configuration before starting the host"));
+        if (!Enum.IsDefined(_isolationLevel))
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "IsolationLevel must be a defined value.", "Correct the named configuration before starting the host"));
         if (DuplicateDetectionWindow <= TimeSpan.Zero)
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "DuplicateDetectionWindow must be greater than zero.", "Correct the named configuration before starting the host"));
         if (QueryDelay <= TimeSpan.Zero)

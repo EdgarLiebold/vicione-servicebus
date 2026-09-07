@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Converts a reference-type property to and from JSON for relational persistence.</summary>
 /// <typeparam name="T">The reference type converted to JSON.</typeparam>
-public class JsonValueConverter<T> :
+internal sealed class JsonValueConverter<T> :
     ValueConverter<T, string>
     where T : class?
 {

@@ -128,7 +128,7 @@
     },
     {
       "type": "EntityFrameworkOutboxOptions<TDbContext>",
-      "source": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkOutboxOptions.cs",
+      "source": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxOptions.cs",
       "boundary": "host-start",
       "registrationSource": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurator.cs",
       "invariantCount": 2,

@@ -222,6 +222,7 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
             }
             catch (Exception exception)
             {
+                RecordTerminalAttempt(outboxState);
                 Quarantine(outboxState, message, OutboxFailureKind.InvariantViolation,
                     $"Persisted outbox metadata could not be deserialized: {DescribeFailure(exception)}");
                 _logger.LogError(exception,
@@ -233,6 +234,7 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
 
             if (message.DestinationAddress == null)
             {
+                RecordTerminalAttempt(outboxState);
                 Quarantine(outboxState, message, OutboxFailureKind.InvariantViolation,
                     "Persisted outbox message has no DestinationAddress.");
                 saveChanges = true;
@@ -324,14 +326,9 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
 
     internal void ApplyDeliveryFailure(OutboxState state, OutboxMessage message, Exception exception)
     {
-        var failureKind = Classify(exception);
-        if (failureKind == TransportSendFailureKind.Permanent)
-        {
-            Quarantine(state, message, OutboxFailureKind.Permanent, DescribeFailure(exception));
-            _logger.LogError(exception, "Outbox message quarantined after permanent send failure: {BusKey} {OutboxId} {SequenceNumber}",
-                _busKey, state.OutboxId, message.SequenceNumber);
-            return;
-        }
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(exception);
 
         if (state.DeliveryAttempts < 0 || state.DeliveryAttempts == int.MaxValue)
         {
@@ -341,9 +338,18 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
         }
 
         int attempt = state.DeliveryAttempts + 1;
+        state.DeliveryAttempts = attempt;
+        var failureKind = Classify(exception);
+        if (failureKind == TransportSendFailureKind.Permanent)
+        {
+            Quarantine(state, message, OutboxFailureKind.Permanent, DescribeFailure(exception));
+            _logger.LogError(exception, "Outbox message quarantined after permanent send failure: {BusKey} {OutboxId} {SequenceNumber}",
+                _busKey, state.OutboxId, message.SequenceNumber);
+            return;
+        }
+
         if (attempt >= _options.MaximumDeliveryAttempts)
         {
-            state.DeliveryAttempts = attempt;
             Quarantine(state, message, OutboxFailureKind.RetryLimitExceeded, DescribeFailure(exception));
             _logger.LogError(exception, "Outbox message quarantined after {Attempts} attempts: {BusKey} {OutboxId} {SequenceNumber}", attempt,
                 _busKey, state.OutboxId, message.SequenceNumber);
@@ -353,13 +359,12 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
         var delay = CalculateRetryDelay(attempt);
         var now = _timeProvider.GetUtcNow();
         state.Status = OutboxDeliveryStatus.RetryScheduled;
-        state.DeliveryAttempts = attempt;
         state.NextDeliveryTime = (now + delay).UtcDateTime;
         state.LastFailureKind = failureKind == TransportSendFailureKind.Transient
             ? OutboxFailureKind.Transient
             : OutboxFailureKind.Unclassified;
         state.LastFailureTime = now.UtcDateTime;
-        state.LastFailure = Truncate(exception.ToString(), 2048);
+        state.LastFailure = Truncate(DescribeFailure(exception), 2048);
         state.FailedSequenceNumber = message.SequenceNumber;
         state.FailedMessageId = message.MessageId;
 
@@ -370,6 +375,7 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
 
     internal TransportSendFailureKind Classify(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
         foreach (var classifier in _failureClassifiers)
         {
             try
@@ -411,6 +417,12 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
         state.LastFailure = Truncate(reason, 2048);
         state.FailedSequenceNumber = message.SequenceNumber;
         state.FailedMessageId = message.MessageId;
+    }
+
+    static void RecordTerminalAttempt(OutboxState state)
+    {
+        if (state.DeliveryAttempts is >= 0 and < int.MaxValue)
+            state.DeliveryAttempts++;
     }
 
     static void ResetFailure(OutboxState state)

@@ -14,7 +14,7 @@ public class SqlLockStatementProvider :
     ILockStatementProvider
 {
     readonly ILockStatementFormatter _formatter;
-    readonly ConditionalWeakTable<IModel, ConcurrentDictionary<LockStatementCacheKey, SchemaTableColumnTrio>> _modelMappings;
+    readonly ConditionalWeakTable<IModel, ConcurrentDictionary<LockStatementCacheKey, RelationalMapping>> _modelMappings;
 
     /// <summary>Initializes the lock-statement provider with an explicit fallback schema.</summary>
     /// <param name="defaultSchema">The schema used when an entity mapping does not specify one.</param>
@@ -28,7 +28,7 @@ public class SqlLockStatementProvider :
 
         DefaultSchema = defaultSchema;
         _formatter = formatter;
-        _modelMappings = new ConditionalWeakTable<IModel, ConcurrentDictionary<LockStatementCacheKey, SchemaTableColumnTrio>>();
+        _modelMappings = new ConditionalWeakTable<IModel, ConcurrentDictionary<LockStatementCacheKey, RelationalMapping>>();
     }
 
     /// <summary>Initializes the lock-statement provider without a fallback schema.</summary>
@@ -38,7 +38,7 @@ public class SqlLockStatementProvider :
         ArgumentNullException.ThrowIfNull(formatter);
 
         _formatter = formatter;
-        _modelMappings = new ConditionalWeakTable<IModel, ConcurrentDictionary<LockStatementCacheKey, SchemaTableColumnTrio>>();
+        _modelMappings = new ConditionalWeakTable<IModel, ConcurrentDictionary<LockStatementCacheKey, RelationalMapping>>();
         DefaultSchema = string.Empty;
     }
 
@@ -70,14 +70,14 @@ public class SqlLockStatementProvider :
     /// <returns>Parameterized provider-specific SQL.</returns>
     public virtual string GetOutboxStatement(DbContext context)
     {
-        var schemaTableTrio = GetSchemaAndTableNameAndColumnName(context, typeof(OutboxState),
+        RelationalMapping mapping = GetMapping(context, typeof(OutboxState),
             nameof(OutboxState.Created), nameof(OutboxState.OutboxId), nameof(OutboxState.BusKey), nameof(OutboxState.Status),
             nameof(OutboxState.NextDeliveryTime));
 
         var sb = new StringBuilder(256);
-        _formatter.CreateOutboxStatement(sb, schemaTableTrio.Schema, schemaTableTrio.Table,
-            schemaTableTrio.ColumnNames[0], schemaTableTrio.ColumnNames[1], schemaTableTrio.ColumnNames[2], schemaTableTrio.ColumnNames[3],
-            schemaTableTrio.ColumnNames[4]);
+        _formatter.CreateOutboxStatement(sb, mapping.Schema, mapping.Table,
+            mapping.ColumnNames[0], mapping.ColumnNames[1], mapping.ColumnNames[2], mapping.ColumnNames[3],
+            mapping.ColumnNames[4]);
 
         return sb.ToString();
     }
@@ -87,7 +87,7 @@ public class SqlLockStatementProvider :
     /// <returns>Provider-specific SQL that reports whether ownership was acquired.</returns>
     public virtual string GetInboxCleanupLockStatement(DbContext context)
     {
-        var mapping = GetSchemaAndTableNameAndColumnName(context, typeof(InboxState), nameof(InboxState.Delivered));
+        RelationalMapping mapping = GetMapping(context, typeof(InboxState), nameof(InboxState.Delivered));
         var sb = new StringBuilder(192);
         _formatter.CreateInboxCleanupLockStatement(sb, mapping.Schema, mapping.Table);
         return sb.ToString();
@@ -96,20 +96,20 @@ public class SqlLockStatementProvider :
     string FormatLockStatement<T>(DbContext context, params string[] propertyNames)
         where T : class
     {
-        var schemaTableTrio = GetSchemaAndTableNameAndColumnName(context, typeof(T), propertyNames);
+        RelationalMapping mapping = GetMapping(context, typeof(T), propertyNames);
 
         var sb = new StringBuilder(128);
-        _formatter.Create(sb, schemaTableTrio.Schema, schemaTableTrio.Table);
+        _formatter.Create(sb, mapping.Schema, mapping.Table);
 
         for (var i = 0; i < propertyNames.Length; i++)
-            _formatter.AppendColumn(sb, i, schemaTableTrio.ColumnNames[i]);
+            _formatter.AppendColumn(sb, i, mapping.ColumnNames[i]);
 
         _formatter.Complete(sb);
 
         return sb.ToString();
     }
 
-    SchemaTableColumnTrio GetSchemaAndTableNameAndColumnName(DbContext context, Type type, params string[] propertyNames)
+    RelationalMapping GetMapping(DbContext context, Type type, params string[] propertyNames)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(type);
@@ -124,13 +124,13 @@ public class SqlLockStatementProvider :
 
         IModel model = context.Model;
         var cache = _modelMappings.GetValue(model,
-            static _ => new ConcurrentDictionary<LockStatementCacheKey, SchemaTableColumnTrio>());
+            static _ => new ConcurrentDictionary<LockStatementCacheKey, RelationalMapping>());
         var key = new LockStatementCacheKey(type, string.Join('\u001f', requestedProperties));
 
         return cache.GetOrAdd(key, _ => ResolveMapping(model, type, requestedProperties));
     }
 
-    SchemaTableColumnTrio ResolveMapping(IModel model, Type type, IReadOnlyList<string> propertyNames)
+    RelationalMapping ResolveMapping(IModel model, Type type, IReadOnlyList<string> propertyNames)
     {
         var entityType = model.FindEntityType(type)
             ?? throw new InvalidOperationException($"Entity type not found: {TypeCache.GetShortName(type)}");
@@ -138,7 +138,7 @@ public class SqlLockStatementProvider :
         var schema = entityType.GetSchema();
         var tableName = entityType.GetTableName();
         if (string.IsNullOrWhiteSpace(tableName))
-            throw new ViciOneServiceBusException($"Unable to determine saga table name: {TypeCache.GetShortName(type)} (using model metadata).");
+            throw new ViciOneServiceBusException($"Unable to determine entity table name: {TypeCache.GetShortName(type)} (using model metadata).");
 
         var storeObjectIdentifier = StoreObjectIdentifier.Table(tableName, schema);
         var columnNames = new string[propertyNames.Count];
@@ -157,31 +157,23 @@ public class SqlLockStatementProvider :
             columnNames[i] = columnName;
         }
 
-        return new SchemaTableColumnTrio(schema ?? DefaultSchema, tableName, columnNames);
+        return new RelationalMapping(schema ?? DefaultSchema, tableName, columnNames);
     }
 
 
     readonly record struct LockStatementCacheKey(Type EntityType, string PropertyKey);
 
-    /// <summary>Contains the resolved schema, table, and ordered predicate columns for one statement.</summary>
-    protected readonly struct SchemaTableColumnTrio
+    readonly struct RelationalMapping
     {
-        /// <summary>Initializes a resolved saga table mapping in primary-key parameter order.</summary>
-        /// <param name="schema">The resolved or fallback schema.</param>
-        /// <param name="table">The mapped table name.</param>
-        /// <param name="columnNames">The mapped column names in parameter order.</param>
-        public SchemaTableColumnTrio(string schema, string table, string[] columnNames)
+        public RelationalMapping(string schema, string table, string[] columnNames)
         {
             Schema = schema;
             Table = table;
             ColumnNames = columnNames;
         }
 
-        /// <summary>The resolved or fallback schema.</summary>
         public readonly string Schema;
-        /// <summary>The mapped table name.</summary>
         public readonly string Table;
-        /// <summary>The mapped column names in parameter order.</summary>
         public readonly string[] ColumnNames;
     }
 }

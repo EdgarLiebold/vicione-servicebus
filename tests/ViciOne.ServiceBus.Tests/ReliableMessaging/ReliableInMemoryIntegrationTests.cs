@@ -55,11 +55,11 @@ public sealed class ReliableInMemoryIntegrationTests
     }
 
     [Theory]
-    [InlineData(false, 1)]
-    [InlineData(true, 2)]
+    [InlineData(0, 1)]
+    [InlineData(1, 2)]
     [RequirementCoverage("REQ-VSB-RELIABLE-CONSUMER", "outbox-exactly-once-across-success-and-first-attempt-retry")]
     public async Task ConsumerOutbox_PublishesBothScopedEventsExactlyOnceWithTheirRoutingKeysAsync(
-        bool failFirstAttempt,
+        int failuresBeforeSuccess,
         int expectedAttempts)
     {
         TimeSpan timeout = OperationTimeout();
@@ -82,7 +82,7 @@ public sealed class ReliableInMemoryIntegrationTests
         try
         {
             await harness.Bus.PublishAsync(
-                new ReliableCommand(messageId, failFirstAttempt),
+                new ReliableCommand(messageId, failuresBeforeSuccess),
                 context => context.MessageId = messageId,
                 cancellationToken);
             await observation.BothEvents.Task.WaitAsync(timeout, cancellationToken);
@@ -103,6 +103,55 @@ public sealed class ReliableInMemoryIntegrationTests
         Assert.Equal(2, events.Length);
         Assert.Single(events, message => message.Text == "First");
         Assert.Single(events, message => message.Text == "Second");
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-INBOX", "repeated-failures-advance-attempts-and-reach-quarantine")]
+    public async Task ConsumerInbox_RepeatedFailuresAdvanceAttemptsAndReachQuarantineAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observation = new ReliableObservation();
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(observation)
+            .AddScoped<IReliablePublisher, ReliablePublisher>()
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                ConfigureReliableMessaging(configuration);
+                configuration.AddConsumer<ReliableConsumer, ReliableConsumerDefinition>();
+                configuration.AddConsumer<ReliableEventConsumer>();
+            })
+            .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: cancellationToken)
+            .WaitAsync(timeout, cancellationToken);
+        Guid messageId = NewId.NextGuid();
+
+        try
+        {
+            await harness.Bus.PublishAsync(
+                new ReliableCommand(messageId, int.MaxValue),
+                context => context.MessageId = messageId,
+                cancellationToken);
+            await harness.InactivityTask.WaitAsync(timeout, cancellationToken);
+
+            IInboxStore<IBus> inbox = provider.GetRequiredService<IInboxStore<IBus>>();
+            ReliableInboxQuarantineEntry quarantined = Assert.Single((await inbox.GetQuarantineAsync(
+                new ReliableInboxQuarantineQuery { PageSize = 1 },
+                cancellationToken)).Entries);
+            Assert.Equal(messageId, quarantined.Key.MessageId);
+            Assert.Equal(ReliableInboxStatus.Quarantined, quarantined.Status);
+            Assert.Equal(3, quarantined.Attempts);
+            Assert.Contains(nameof(ExpectedReliableException), quarantined.FailureType, StringComparison.Ordinal);
+        }
+        finally
+        {
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+
+        Assert.Equal(3, observation.ConsumerAttempts);
+        Assert.Empty(observation.Events);
+        Assert.Empty(harness.Published.Select<Fault<ReliableCommand>>(SnapshotOnlyToken()));
     }
 
     [Theory]
@@ -282,7 +331,7 @@ public sealed class ReliableInMemoryIntegrationTests
         }
     }
 
-    public sealed record ReliableCommand(Guid MessageId, bool FailFirstAttempt);
+    public sealed record ReliableCommand(Guid MessageId, int FailuresBeforeSuccess);
 
     public sealed record ReliableEvent(Guid MessageId, string Text);
 
@@ -310,8 +359,8 @@ public sealed class ReliableInMemoryIntegrationTests
                 new ReliableEvent(context.Message.MessageId, "First"),
                 publish => publish.SetRoutingKey("alpha"));
             await publisher.PublishSecondAsync(context.Message.MessageId, context.CancellationToken);
-            if (context.Message.FailFirstAttempt && attempt == 1)
-                throw new ExpectedReliableException("first consumer attempt");
+            if (attempt <= context.Message.FailuresBeforeSuccess)
+                throw new ExpectedReliableException("expected consumer failure");
         }
     }
 

@@ -4,7 +4,7 @@ using System.Text;
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Builds PostgreSQL row-lock, outbox-claim, and advisory-lock SQL.</summary>
-public class PostgresLockStatementFormatter :
+internal sealed class PostgresLockStatementFormatter :
     ILockStatementFormatter
 {
     /// <summary>Starts a quoted PostgreSQL row query and includes <c>xmin</c> for concurrency tracking.</summary>

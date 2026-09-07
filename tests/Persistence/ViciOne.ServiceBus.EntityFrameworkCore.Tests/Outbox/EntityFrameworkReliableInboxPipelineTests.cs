@@ -17,7 +17,7 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
     {
         await using ReliableInboxFixture fixture = await ReliableInboxFixture.CreateAsync();
         Guid messageId = Guid.NewGuid();
-        var command = new ReliableInboxCommand(Guid.NewGuid(), FailFirstAttempt: false);
+        var command = new ReliableInboxCommand(Guid.NewGuid(), FailuresBeforeSuccess: 0);
 
         await fixture.Harness.Bus.PublishAsync(
             command,
@@ -58,7 +58,7 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
     {
         await using ReliableInboxFixture fixture = await ReliableInboxFixture.CreateAsync();
         Guid messageId = Guid.NewGuid();
-        var command = new ReliableInboxCommand(Guid.NewGuid(), FailFirstAttempt: true);
+        var command = new ReliableInboxCommand(Guid.NewGuid(), FailuresBeforeSuccess: 1);
 
         await fixture.Harness.Bus.PublishAsync(
             command,
@@ -94,7 +94,39 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
         Assert.Equal(1, fixture.Events.Count);
     }
 
-    public sealed record ReliableInboxCommand(Guid CorrelationId, bool FailFirstAttempt);
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX-PIPELINE", "repeated-failures-advance-attempts-and-reach-quarantine")]
+    public async Task RepeatedConsumerFailure_AdvancesEveryAttemptAndQuarantinesAtTheConfiguredLimitAsync()
+    {
+        await using ReliableInboxFixture fixture = await ReliableInboxFixture.CreateAsync();
+        Guid messageId = Guid.NewGuid();
+        var command = new ReliableInboxCommand(Guid.NewGuid(), FailuresBeforeSuccess: int.MaxValue);
+
+        await fixture.Harness.Bus.PublishAsync(
+            command,
+            send => send.MessageId = messageId,
+            fixture.CancellationToken);
+        await fixture.Attempts.FirstFailure.Task.WaitAsync(fixture.Timeout, fixture.CancellationToken);
+
+        ReliableInboxRecord quarantined = await fixture.WaitForInboxAsync(
+            messageId,
+            ReliableInboxStatus.Quarantined,
+            fixture.CancellationToken);
+
+        Assert.Equal(3, quarantined.Attempts);
+        Assert.Null(quarantined.DueAt);
+        Assert.Null(quarantined.LeaseToken);
+        Assert.Null(quarantined.LeaseExpiresAt);
+        Assert.NotNull(quarantined.FailedAt);
+        Assert.NotNull(quarantined.QuarantinedAt);
+        Assert.Contains(nameof(ExpectedConsumerFailure), quarantined.FailureType, StringComparison.Ordinal);
+        Assert.Equal(3, fixture.Attempts.Count);
+        Assert.Equal(0, fixture.Events.Count);
+        await using ReliableInboxDbContext verification = fixture.CreateContext();
+        Assert.Empty(await verification.BusinessRecords.ToListAsync(fixture.CancellationToken));
+    }
+
+    public sealed record ReliableInboxCommand(Guid CorrelationId, int FailuresBeforeSuccess);
 
     public sealed record ReliableInboxEvent(Guid CorrelationId);
 
@@ -114,9 +146,10 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
                 new ReliableInboxEvent(context.Message.CorrelationId),
                 context.CancellationToken);
 
-            if (context.Message.FailFirstAttempt && attempt == 1)
+            if (attempt <= context.Message.FailuresBeforeSuccess)
             {
-                attempts.FirstFailure.TrySetResult();
+                if (attempt == 1)
+                    attempts.FirstFailure.TrySetResult();
                 throw new ExpectedConsumerFailure();
             }
         }
@@ -304,17 +337,22 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
             CancellationToken cancellationToken)
         {
             DateTimeOffset deadline = DateTimeOffset.UtcNow + Timeout;
+            ReliableInboxRecord? lastObserved = null;
             while (DateTimeOffset.UtcNow < deadline)
             {
                 await using ReliableInboxDbContext db = CreateContext();
-                ReliableInboxRecord? row = await db.Set<ReliableInboxRecord>().AsNoTracking()
+                lastObserved = await db.Set<ReliableInboxRecord>().AsNoTracking()
                     .SingleOrDefaultAsync(item => item.MessageId == messageId, cancellationToken);
-                if (row?.Status == status)
-                    return row;
+                if (lastObserved?.Status == status)
+                    return lastObserved;
                 await Task.Delay(TimeSpan.FromMilliseconds(20), cancellationToken);
             }
 
-            throw new TimeoutException($"Inbox '{messageId}' did not reach '{status}'.");
+            string observed = lastObserved is null
+                ? "no persisted row"
+                : $"status '{lastObserved.Status}', attempts {lastObserved.Attempts}, due '{lastObserved.DueAt:O}'";
+            throw new TimeoutException(
+                $"Inbox '{messageId}' did not reach '{status}'; last observed {observed}; consumer attempts {Attempts.Count}.");
         }
 
         public async ValueTask DisposeAsync()

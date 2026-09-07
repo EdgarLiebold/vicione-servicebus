@@ -55,10 +55,8 @@ public static class EntityFrameworkOutboxConfigurationExtensions
         Action<IOutboxOptionsConfigurator>? configure = null)
         where TDbContext : DbContext
     {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(context);
 
         var observer = new OutboxConsumePipeSpecificationObserver<TDbContext>(configurator, context);
 
@@ -113,6 +111,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// <param name="callback">Optional, to customize all three entity model builders.</param>
     public static void AddTransactionalOutboxEntities(this ModelBuilder modelBuilder, Action<EntityTypeBuilder>? callback = null)
     {
+        ArgumentNullException.ThrowIfNull(modelBuilder);
         modelBuilder.AddInboxStateEntity(callback);
         modelBuilder.AddOutboxStateEntity(callback);
         modelBuilder.AddOutboxMessageEntity(callback);
@@ -123,6 +122,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// <param name="callback">Optional, to customize the entity model builder.</param>
     public static void AddInboxStateEntity(this ModelBuilder modelBuilder, Action<EntityTypeBuilder<InboxState>>? callback = null)
     {
+        ArgumentNullException.ThrowIfNull(modelBuilder);
         EntityTypeBuilder<InboxState> inbox = modelBuilder.Entity<InboxState>();
 
         inbox.ConfigureInboxStateEntity();
@@ -134,6 +134,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// <param name="inbox">The model builder.</param>
     public static void ConfigureInboxStateEntity(this EntityTypeBuilder<InboxState> inbox)
     {
+        ArgumentNullException.ThrowIfNull(inbox);
         inbox.OptOutOfEntityFrameworkConventions();
 
         inbox.Property(p => p.Id);
@@ -168,6 +169,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// <param name="callback">Optional, to customize the entity model builder.</param>
     public static void AddOutboxStateEntity(this ModelBuilder modelBuilder, Action<EntityTypeBuilder<OutboxState>>? callback = null)
     {
+        ArgumentNullException.ThrowIfNull(modelBuilder);
         EntityTypeBuilder<OutboxState> outbox = modelBuilder.Entity<OutboxState>();
 
         outbox.ConfigureOutboxStateEntity();
@@ -179,6 +181,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// <param name="outbox">The model builder.</param>
     public static void ConfigureOutboxStateEntity(this EntityTypeBuilder<OutboxState> outbox)
     {
+        ArgumentNullException.ThrowIfNull(outbox);
         outbox.OptOutOfEntityFrameworkConventions();
 
         outbox.Property(p => p.OutboxId);
@@ -215,6 +218,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// <param name="callback">Optional, to customize the entity model builder.</param>
     public static void AddOutboxMessageEntity(this ModelBuilder modelBuilder, Action<EntityTypeBuilder<OutboxMessage>>? callback = null)
     {
+        ArgumentNullException.ThrowIfNull(modelBuilder);
         EntityTypeBuilder<OutboxMessage> outbox = modelBuilder.Entity<OutboxMessage>();
 
         outbox.ConfigureOutboxMessageEntity();
@@ -226,6 +230,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// <param name="outbox">The model builder.</param>
     public static void ConfigureOutboxMessageEntity(this EntityTypeBuilder<OutboxMessage> outbox)
     {
+        ArgumentNullException.ThrowIfNull(outbox);
         outbox.OptOutOfEntityFrameworkConventions();
 
         outbox.Property(p => p.SequenceNumber);
@@ -297,6 +302,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// <param name="builder">The EntityTypeBuilder instance to configure.</param>
     internal static void OptOutOfEntityFrameworkConventions(this EntityTypeBuilder builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
         foreach (var properties in builder.Metadata.GetProperties())
             properties.SetMaxLength(null);
     }

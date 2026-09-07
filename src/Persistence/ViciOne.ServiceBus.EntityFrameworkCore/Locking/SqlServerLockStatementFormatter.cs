@@ -4,7 +4,7 @@ using System.Text;
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Builds SQL Server row-lock, outbox-claim, and application-lock SQL.</summary>
-public class SqlServerLockStatementFormatter :
+internal sealed class SqlServerLockStatementFormatter :
     ILockStatementFormatter
 {
     readonly bool _serializable;

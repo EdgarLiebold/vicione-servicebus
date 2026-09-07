@@ -38,19 +38,23 @@ internal sealed class InMemoryReliableInboxContextFactory<TBus> :
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(next);
+        CancellationToken operationCancellationToken = cancellationToken.CanBeCanceled
+            ? cancellationToken
+            : context.CancellationToken;
+        operationCancellationToken.ThrowIfCancellationRequested();
         Guid messageId = context.GetOriginalMessageId()
             ?? throw new MessageException(typeof(T), "MessageId required to use reliable messaging");
         var key = new ReliableInboxKey(messageId, options.ConsumerId).Validate();
 
         while (true)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            operationCancellationToken.ThrowIfCancellationRequested();
             DateTimeOffset now = _timeProvider.GetUtcNow();
             ReliableInboxAcquireResult acquisition = await _store.AcquireAsync(
                 key,
                 now,
                 _policy.LeaseDuration,
-                cancellationToken).ConfigureAwait(false);
+                operationCancellationToken).ConfigureAwait(false);
 
             if (acquisition.Disposition is ReliableInboxAcquireDisposition.AlreadyConsumed
                 or ReliableInboxAcquireDisposition.Unavailable)
@@ -61,7 +65,7 @@ internal sealed class InMemoryReliableInboxContextFactory<TBus> :
             if (acquisition.Disposition is ReliableInboxAcquireDisposition.Busy
                 or ReliableInboxAcquireDisposition.NotDue)
             {
-                await Task.Delay(_policy.PollInterval, _timeProvider, cancellationToken).ConfigureAwait(false);
+                await Task.Delay(_policy.PollInterval, _timeProvider, operationCancellationToken).ConfigureAwait(false);
                 continue;
             }
 
@@ -83,7 +87,7 @@ internal sealed class InMemoryReliableInboxContextFactory<TBus> :
                 await next.SendAsync(reliableContext).ConfigureAwait(false);
                 return;
             }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            catch (OperationCanceledException) when (operationCancellationToken.IsCancellationRequested)
             {
                 throw;
             }

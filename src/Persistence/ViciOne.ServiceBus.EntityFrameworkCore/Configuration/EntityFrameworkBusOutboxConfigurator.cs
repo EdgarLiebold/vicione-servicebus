@@ -15,7 +15,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>Registers and configures an Entity Framework Core transactional outbox for a bus and DbContext.</summary>
 /// <typeparam name="TBus">The bus type.</typeparam>
 /// <typeparam name="TDbContext">The db context type.</typeparam>
-public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
+internal sealed class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
     IEntityFrameworkBusOutboxConfigurator
     where TBus : class, IBus
     where TDbContext : DbContext
@@ -31,7 +31,7 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
     internal EntityFrameworkBusOutboxConfigurator(IServiceCollection services,
         EntityFrameworkOutboxConfigurator<TBus, TDbContext> outboxConfigurator)
     {
-        _outboxConfigurator = outboxConfigurator;
+        _outboxConfigurator = outboxConfigurator ?? throw new ArgumentNullException(nameof(outboxConfigurator));
         _services = services ?? throw new ArgumentNullException(nameof(services));
     }
 

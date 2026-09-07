@@ -25,6 +25,8 @@ public static class EntityFrameworkMessageJournalConfigurationExtensions
         where TDbContext : DbContext
     {
         ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(contextOptions);
+        ArgumentNullException.ThrowIfNull(storeLimits);
         return configurator.UseStore(new EntityFrameworkMessageJournalStore(
             contextOptions,
             tableName,
@@ -54,6 +56,10 @@ public static class EntityFrameworkMessageJournalConfigurationExtensions
         string? schemaName = null)
     {
         ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(contextOptions);
+        ArgumentNullException.ThrowIfNull(policy);
+        ArgumentNullException.ThrowIfNull(storeLimits);
+        ArgumentNullException.ThrowIfNull(journalOptions);
         var store = new EntityFrameworkMessageJournalStore(
             contextOptions,
             tableName,

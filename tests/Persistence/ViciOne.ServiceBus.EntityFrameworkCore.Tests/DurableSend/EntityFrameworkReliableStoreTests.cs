@@ -343,6 +343,49 @@ public sealed class EntityFrameworkReliableStoreTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX", "concurrent-first-acquisition-has-one-owner")]
+    public async Task Inbox_ConcurrentFirstAcquisitionProducesExactlyOneLeaseAsync()
+    {
+        const int contenderCount = 32;
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(cancellationToken);
+        IInboxStore<ITestBus> store = Assert.IsAssignableFrom<IInboxStore<ITestBus>>(
+            database.CreateStore<ITestBus>("inbox-concurrent", new RecordingValidator()));
+        var key = new ReliableInboxKey(GuidFrom(55), GuidFrom(56));
+        var start = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task<ReliableInboxAcquireResult>[] contenders = Enumerable.Range(0, contenderCount)
+            .Select(async _ =>
+            {
+                await start.Task.WaitAsync(cancellationToken);
+                return await store.AcquireAsync(key, Epoch, TimeSpan.FromMinutes(1), cancellationToken);
+            })
+            .ToArray();
+
+        start.SetResult();
+        ReliableInboxAcquireResult[] results = await Task.WhenAll(contenders);
+
+        ReliableInboxAcquireResult acquired = Assert.Single(
+            results,
+            result => result.Disposition == ReliableInboxAcquireDisposition.Acquired);
+        Assert.NotNull(acquired.Lease);
+        Assert.Equal(1, acquired.Attempt);
+        Assert.Equal(
+            contenderCount - 1,
+            results.Count(result => result.Disposition == ReliableInboxAcquireDisposition.Busy));
+        Assert.All(results, result => Assert.Equal(1, result.Attempt));
+
+        await using DurableDbContext persisted = database.Factory.CreateDbContext();
+        ReliableInboxRecord row = await persisted.Set<ReliableInboxRecord>().AsNoTracking().SingleAsync(
+            candidate => candidate.StoreKey == "inbox-concurrent"
+                && candidate.MessageId == key.MessageId
+                && candidate.ConsumerId == key.ConsumerId,
+            cancellationToken);
+        Assert.Equal(ReliableInboxStatus.Processing, row.Status);
+        Assert.Equal(1, row.Attempts);
+        Assert.Equal(acquired.Lease!.Value.Token, row.LeaseToken);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-DURABLE-CAPACITY", "concurrent-conditional-ledger-admission")]
     public async Task Store_ConcurrentAdmissionsCannotOvershootTheHardLedgerAsync()
     {

@@ -18,7 +18,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// The ownership lock is transaction-bound so process death releases it automatically.
 /// </summary>
 /// <typeparam name="TDbContext">The db context type.</typeparam>
-public sealed class InboxCleanupService<TDbContext> : BackgroundService
+internal sealed class InboxCleanupService<TDbContext> : BackgroundService
     where TDbContext : DbContext
 {
     readonly IsolationLevel _isolationLevel;

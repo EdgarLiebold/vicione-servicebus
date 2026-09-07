@@ -13,6 +13,7 @@ public static class ValueConversionExtensions
     public static PropertyBuilder<T> HasJsonConversion<T>(this PropertyBuilder<T> builder)
         where T : class?
     {
+        ArgumentNullException.ThrowIfNull(builder);
         var converter = new JsonValueConverter<T>();
         var comparer = new JsonValueComparer<T>();
 

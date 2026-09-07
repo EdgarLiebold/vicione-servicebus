@@ -55,6 +55,28 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-CAPACITY", "transactional-outbox-counts-payload-and-metadata")]
+    public async Task StagedMessage_AccountsForPayloadAndMetadataAgainstTheCapacityLimitAsync()
+    {
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        MessageSendContext<OutboxProbe> sendContext = CreateSendContext(Guid.NewGuid(), 1);
+        sendContext.Headers.Set("x-capacity-probe", new string('x', 128));
+
+        await context.AddSendAsync(sendContext, TestContext.Current.CancellationToken);
+
+        DurableSendRecord message = Assert.Single(fixture.DbContext.Set<DurableSendRecord>().Local);
+        DurableSendCapacityState capacity = Assert.Single(fixture.DbContext.Set<DurableSendCapacityState>().Local);
+        byte[] metadata = Assert.IsType<byte[]>(message.Metadata);
+        long expectedStorageSize = checked(message.Body.LongLength + metadata.LongLength);
+        Assert.NotEmpty(metadata);
+        Assert.Equal(expectedStorageSize, message.StorageSize);
+        Assert.Equal((1, expectedStorageSize), (capacity.StoredCount, capacity.StoredBytes));
+
+        await context.AbortAsync(TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "abort-detaches-only-session-intent")]
     public async Task Abort_DetachesOnlyTheSessionOutboxAndRetainsBusinessChangesAsync()
     {

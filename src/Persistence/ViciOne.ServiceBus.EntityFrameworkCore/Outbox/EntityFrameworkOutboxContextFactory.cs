@@ -12,7 +12,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Creates receive-side EF Core inbox/outbox transactions with provider-specific row locking.</summary>
 /// <typeparam name="TDbContext">The db context type.</typeparam>
-public class EntityFrameworkOutboxContextFactory<TDbContext> :
+internal sealed class EntityFrameworkOutboxContextFactory<TDbContext> :
     IOutboxContextFactory<TDbContext>
     where TDbContext : DbContext
 {
@@ -31,11 +31,16 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
     public EntityFrameworkOutboxContextFactory(TDbContext dbContext, IServiceProvider provider, IOptions<EntityFrameworkOutboxOptions<TDbContext>> options,
         TimeProvider timeProvider)
     {
-        _dbContext = dbContext;
-        _provider = provider;
+        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
-        _lockStatementProvider = options.Value.LockStatementProvider;
-        _isolationLevel = options.Value.IsolationLevel;
+        EntityFrameworkOutboxOptions<TDbContext> value =
+            (options ?? throw new ArgumentNullException(nameof(options))).Value;
+        _lockStatementProvider = value.LockStatementProvider
+            ?? throw new ArgumentException("A lock-statement provider is required.", nameof(options));
+        _isolationLevel = Enum.IsDefined(value.IsolationLevel)
+            ? value.IsolationLevel
+            : throw new ArgumentOutOfRangeException(nameof(options), value.IsolationLevel, "The transaction isolation level is undefined.");
     }
 
     /// <summary>Runs the receive pipeline within a transaction locked by message and consumer identity.</summary>
@@ -48,6 +53,13 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
     public async Task SendAsync<T>(ConsumeContext<T> context, OutboxConsumeOptions options, IPipe<OutboxConsumeContext<T>> next, CancellationToken cancellationToken = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(next);
+        CancellationToken operationCancellationToken = cancellationToken.CanBeCanceled
+            ? cancellationToken
+            : context.CancellationToken;
+        operationCancellationToken.ThrowIfCancellationRequested();
         var messageId = context.GetOriginalMessageId() ?? throw new MessageException(typeof(T), "MessageId required to use the outbox");
         var updateDeliveryCount = true;
 
@@ -66,7 +78,7 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
 
             long startedAt = _timeProvider.GetTimestamp();
 
-            await using var transaction = await _dbContext.Database.BeginTransactionAsync(_isolationLevel, context.CancellationToken)
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync(_isolationLevel, operationCancellationToken)
                 .ConfigureAwait(false);
 
             try
@@ -74,7 +86,7 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
                 List<InboxState> inboxStateList = await _dbContext.Set<InboxState>()
                     .FromSqlRaw(_lockStatement, messageId, options.ConsumerId)
                     .AsTracking()
-                    .ToListAsync(context.CancellationToken).ConfigureAwait(false);
+                    .ToListAsync(operationCancellationToken).ConfigureAwait(false);
                 var inboxState = inboxStateList.SingleOrDefault();
 
                 bool continueProcessing;
@@ -90,8 +102,8 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
                         ReceiveCount = 1
                     };
 
-                    await _dbContext.AddAsync(inboxState, context.CancellationToken).ConfigureAwait(false);
-                    await _dbContext.SaveChangesAsync(context.CancellationToken).ConfigureAwait(false);
+                    await _dbContext.AddAsync(inboxState, operationCancellationToken).ConfigureAwait(false);
+                    await _dbContext.SaveChangesAsync(operationCancellationToken).ConfigureAwait(false);
 
                     continueProcessing = true;
                 }
@@ -102,7 +114,7 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
                         inboxState.ReceiveCount++;
 
                     _dbContext.Update(inboxState);
-                    await _dbContext.SaveChangesAsync(context.CancellationToken).ConfigureAwait(false);
+                    await _dbContext.SaveChangesAsync(operationCancellationToken).ConfigureAwait(false);
 
                     var outboxContext = new DbContextOutboxConsumeContext<TDbContext, T>(context, options, _provider, _dbContext, transaction, inboxState,
                         _timeProvider);
@@ -111,11 +123,15 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
 
                     try
                     {
-                        await _dbContext.SaveChangesAsync(context.CancellationToken).ConfigureAwait(false);
+                        await _dbContext.SaveChangesAsync(operationCancellationToken).ConfigureAwait(false);
                     }
                     catch (Exception exception)
                     {
-                        await context.NotifyFaultedAsync(_timeProvider.GetElapsedTime(startedAt), TypeCache<T>.ShortName, exception, cancellationToken: cancellationToken).ConfigureAwait(false);
+                        await context.NotifyFaultedAsync(
+                            _timeProvider.GetElapsedTime(startedAt),
+                            TypeCache<T>.ShortName,
+                            exception,
+                            cancellationToken: operationCancellationToken).ConfigureAwait(false);
 
                         throw;
                     }
@@ -125,11 +141,15 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
 
                 try
                 {
-                    await transaction.CommitAsync(context.CancellationToken).ConfigureAwait(false);
+                    await transaction.CommitAsync(operationCancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {
-                    await context.NotifyFaultedAsync(_timeProvider.GetElapsedTime(startedAt), TypeCache<T>.ShortName, exception, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await context.NotifyFaultedAsync(
+                        _timeProvider.GetElapsedTime(startedAt),
+                        TypeCache<T>.ShortName,
+                        exception,
+                        cancellationToken: operationCancellationToken).ConfigureAwait(false);
 
                     throw;
                 }
@@ -144,6 +164,7 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
                 }
                 catch (Exception)
                 {
+                    // Rollback is best effort because the original transaction or pipeline failure is authoritative.
                 }
 
                 throw;
@@ -158,7 +179,7 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
                     _dbContext,
                     executionStrategy,
                     ExecuteAsync,
-                    context.CancellationToken)
+                    operationCancellationToken)
                 .ConfigureAwait(false);
             updateDeliveryCount = false;
         }
@@ -168,6 +189,7 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
     /// <param name="context">The probe context to populate.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         var scope = context.CreateFilterScope("outboxContextFactory");
         scope.Add("provider", "entityFrameworkCore");
     }

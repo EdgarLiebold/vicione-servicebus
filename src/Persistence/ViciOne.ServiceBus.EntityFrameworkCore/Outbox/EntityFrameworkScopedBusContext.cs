@@ -86,9 +86,10 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
                 throw new MessageException(typeof(T), "The SendContext MessageId must be present");
             Uri destination = context.DestinationAddress
                 ?? throw new MessageException(typeof(T), "The SendContext DestinationAddress must be present");
-            byte[] body = context.Serializer.GetMessageBody(context).GetBytes();
-            string contentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString();
             DateTimeOffset now = _timeProvider.GetUtcNow();
+            byte[] body = context.Serializer.GetMessageBody(context).GetBytes();
+            byte[] metadata = ReliableEnvelopeMetadataCodec.Capture(context, now).ToArray();
+            string contentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString();
             Guid id = context.MessageId.Value;
             var record = new DurableSendRecord
             {
@@ -99,10 +100,10 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
                 DestinationAddress = destination.AbsoluteUri,
                 ContentType = contentType,
                 Body = body,
-                Metadata = ReliableEnvelopeMetadataCodec.Capture(context, now).ToArray(),
+                Metadata = metadata,
                 MessageId = context.MessageId,
                 CorrelationId = context.CorrelationId,
-                StorageSize = body.LongLength,
+                StorageSize = checked(body.LongLength + metadata.LongLength),
                 Status = DurableSendStatus.Pending,
                 EnqueuedAt = now.UtcDateTime,
                 DueAt = context.Delay.HasValue ? (now + context.Delay.Value).UtcDateTime : null,

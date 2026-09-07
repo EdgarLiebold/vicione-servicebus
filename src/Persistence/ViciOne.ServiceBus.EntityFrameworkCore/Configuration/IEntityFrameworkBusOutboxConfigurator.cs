@@ -6,8 +6,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 public interface IEntityFrameworkBusOutboxConfigurator :
     IBusOutboxConfigurator
 {
-    /// <summary>Sets the maximum number of persisted messages sent from one outbox row per delivery pass.</summary>
-    int MessageDeliveryLimit { set; }
+    /// <summary>Gets or sets the maximum number of persisted messages sent from one outbox row per delivery pass.</summary>
+    int MessageDeliveryLimit { get; set; }
     /// <summary>Gets or sets the timeout applied to each individual transport send.</summary>
     TimeSpan MessageDeliveryTimeout { get; set; }
     /// <summary>Gets or sets the number of failed attempts after which an outbox row is quarantined.</summary>

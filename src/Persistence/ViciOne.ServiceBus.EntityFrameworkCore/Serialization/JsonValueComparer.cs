@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Provides EF Core snapshots, hashes, and equality for a JSON-converted reference type.</summary>
 /// <typeparam name="T">The reference type converted to JSON.</typeparam>
-public class JsonValueComparer<T> :
+internal sealed class JsonValueComparer<T> :
     ValueComparer<T>
     where T : class?
 {

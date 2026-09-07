@@ -519,8 +519,21 @@ internal sealed class EntityFrameworkReliableStore<TBus, TDbContext> :
                 LeaseToken = lease.Token,
                 LeaseExpiresAt = lease.ExpiresAt.UtcDateTime,
             });
-            await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (DbUpdateException)
+            {
+                await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+                db.ChangeTracker.Clear();
+                if (!await InboxExistsAsync(key, cancellationToken).ConfigureAwait(false))
+                    throw;
+
+                return await AcquireAsync(key, now, leaseDuration, cancellationToken).ConfigureAwait(false);
+            }
+
             return new ReliableInboxAcquireResult(key, ReliableInboxAcquireDisposition.Acquired, lease, 1);
         }
 
@@ -781,6 +794,14 @@ internal sealed class EntityFrameworkReliableStore<TBus, TDbContext> :
         => await db.Set<DurableSendRecord>().AsNoTracking().AnyAsync(
             x => x.StoreKey == _storeKey && x.Id == id.Value,
             cancellationToken).ConfigureAwait(false);
+
+    async Task<bool> InboxExistsAsync(ReliableInboxKey key, CancellationToken cancellationToken)
+    {
+        await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
+        return await db.Set<ReliableInboxRecord>().AsNoTracking().AnyAsync(
+            x => x.StoreKey == _storeKey && x.MessageId == key.MessageId && x.ConsumerId == key.ConsumerId,
+            cancellationToken).ConfigureAwait(false);
+    }
 
     async Task EnsureInitializedAsync(CancellationToken cancellationToken)
     {

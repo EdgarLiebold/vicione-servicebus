@@ -7,7 +7,7 @@ using ViciOne.ServiceBus.Providers.Persistence;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-internal class EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext> :
+internal sealed class EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext> :
     EntityFrameworkScopedBusContext<TBus, TDbContext>
     where TBus : class, IBus
     where TDbContext : DbContext
@@ -22,10 +22,10 @@ internal class EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext> :
         BusPersistenceIdentity<TBus> persistenceIdentity)
         : base(bus, dbContext, notification, clientFactory, provider, timeProvider, persistenceIdentity)
     {
-        _bus = bus;
-        _clientFactory = clientFactory;
-        _provider = provider;
-        _consumeContext = consumeContext;
+        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+        _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
+        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        _consumeContext = consumeContext ?? throw new ArgumentNullException(nameof(consumeContext));
     }
 
     protected override IPublishEndpointProvider GetPublishEndpointProvider()

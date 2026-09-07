@@ -13,6 +13,8 @@ public static class EntityFrameworkReliableMessagingModelExtensions
     public static ModelBuilder AddViciOneReliableMessaging(this ModelBuilder modelBuilder, string? schema = null)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
+        if (schema is not null)
+            ArgumentException.ThrowIfNullOrWhiteSpace(schema);
 
         var record = modelBuilder.Entity<DurableSendRecord>();
         record.ToTable("vicione_outbox", schema);

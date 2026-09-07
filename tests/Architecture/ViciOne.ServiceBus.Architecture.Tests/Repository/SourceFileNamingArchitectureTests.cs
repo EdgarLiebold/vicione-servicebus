@@ -22,9 +22,6 @@ public sealed class SourceFileNamingArchitectureTests
     private static readonly IReadOnlyDictionary<string, IReadOnlySet<string>> ReviewedCohesiveMultiTypeFiles =
         new Dictionary<string, IReadOnlySet<string>>(StringComparer.Ordinal)
         {
-            ["src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/DurableSend/EntityFrameworkDurableSendEntities.cs"] = Types(
-                "internal class DurableSendRecord`0", "internal class DurableSendCapacityState`0",
-                "internal class ReliableInboxRecord`0", "internal class ReliableRecurringScheduleRecord`0"),
             ["src/Transports/ViciOne.ServiceBus.ActiveMq/Configuration/ActiveMqTransportOptions.cs"] = Types(
                 "public enum ActiveMqTransportProtocol`0", "public class ActiveMqTransportOptions`0"),
             ["src/ViciOne.ServiceBus.Abstractions/DurableSend/DurableSendOperationResult.cs"] = Types(
@@ -200,6 +197,49 @@ public sealed class SourceFileNamingArchitectureTests
             .ToArray();
 
         Assert.Empty(violations);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "entity-framework-source-is-grouped-by-current-responsibility")]
+    public void EntityFrameworkProject_UsesOnlyCurrentResponsibilityFolders()
+    {
+        string projectRoot = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "Persistence",
+            "ViciOne.ServiceBus.EntityFrameworkCore");
+        string[] expectedDirectories =
+        [
+            "Configuration",
+            "Infrastructure",
+            "Locking",
+            "MessageJournal",
+            "Outbox",
+            "ReliableMessaging",
+            "Serialization",
+        ];
+        string[] expectedRootFiles =
+        [
+            "ApiSurfaceGlobalUsings.cs",
+            "GlobalUsings.cs",
+            "ViciOne.ServiceBus.EntityFrameworkCore.csproj",
+            "ViciOne.ServiceBus.EntityFrameworkCore.csproj.DotSettings",
+            "packages.lock.json",
+        ];
+
+        string[] actualDirectories = Directory.EnumerateDirectories(projectRoot)
+            .Select(Path.GetFileName)
+            .OfType<string>()
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        string[] actualRootFiles = Directory.EnumerateFiles(projectRoot)
+            .Select(Path.GetFileName)
+            .OfType<string>()
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(expectedDirectories, actualDirectories);
+        Assert.Equal(expectedRootFiles, actualRootFiles);
     }
 
     [Fact]

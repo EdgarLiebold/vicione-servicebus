@@ -26,6 +26,7 @@ public sealed class MessageJournalMapping : IEntityTypeConfiguration<MessageJour
     /// <param name="builder">The journal-record entity builder.</param>
     public void Configure(EntityTypeBuilder<MessageJournalRecord> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
         if (_schemaName is null)
             builder.ToTable(_tableName);
         else

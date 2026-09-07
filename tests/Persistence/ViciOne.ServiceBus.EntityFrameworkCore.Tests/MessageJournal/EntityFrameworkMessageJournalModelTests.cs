@@ -87,6 +87,203 @@ public sealed class EntityFrameworkMessageJournalModelTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-CONFIGURATION", "provider-selection-rejects-every-missing-required-argument")]
+    public void BusBlockProviderSelection_RejectsEveryMissingRequiredArgument()
+    {
+        DbContextOptions<JournalProbeContext> options = new DbContextOptionsBuilder<JournalProbeContext>()
+            .UseSqlite("Data Source=:memory:")
+            .Options;
+        var limits = new MessageJournalStoreLimits(4096, 25, TimeSpan.FromDays(2));
+        var configurator = new RecordingJournalConfigurator();
+
+        ArgumentNullException missingConfigurator = Assert.Throws<ArgumentNullException>(() =>
+            EntityFrameworkMessageJournalConfigurationExtensions.UseEntityFramework<JournalProbeContext>(
+                null!,
+                options,
+                "MessageJournal",
+                limits));
+        ArgumentNullException missingOptions = Assert.Throws<ArgumentNullException>(() =>
+            configurator.UseEntityFramework<JournalProbeContext>(
+                null!,
+                "MessageJournal",
+                limits));
+        ArgumentNullException missingLimits = Assert.Throws<ArgumentNullException>(() =>
+            configurator.UseEntityFramework(
+                options,
+                "MessageJournal",
+                null!));
+
+        Assert.Equal("configurator", missingConfigurator.ParamName);
+        Assert.Equal("contextOptions", missingOptions.ParamName);
+        Assert.Equal("storeLimits", missingLimits.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-CONFIGURATION", "direct-connection-rejects-every-missing-required-argument")]
+    public void DirectConnection_RejectsEveryMissingRequiredArgument()
+    {
+        DbContextOptions options = new DbContextOptionsBuilder()
+            .UseSqlite("Data Source=:memory:")
+            .Options;
+        var limits = new MessageJournalStoreLimits(4096, 25, TimeSpan.FromDays(2));
+        var policy = new ExcludingPolicy();
+        MessageJournalOptions journalOptions = MessageJournalOptions.ContinueMessageFlow(
+            TimeSpan.FromSeconds(1),
+            TimeProvider.System);
+
+        ArgumentNullException missingConfigurator = Assert.Throws<ArgumentNullException>(() =>
+            EntityFrameworkMessageJournalConfigurationExtensions.UseEntityFrameworkCoreMessageJournal(
+                null!,
+                options,
+                "MessageJournal",
+                policy,
+                limits,
+                journalOptions));
+        ArgumentNullException missingOptions = Assert.Throws<ArgumentNullException>(() =>
+            global::ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingInMemory(configurator =>
+                configurator.UseEntityFrameworkCoreMessageJournal(
+                    null!,
+                    "MessageJournal",
+                    policy,
+                    limits,
+                    journalOptions)));
+        ArgumentNullException missingPolicy = Assert.Throws<ArgumentNullException>(() =>
+            global::ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingInMemory(configurator =>
+                configurator.UseEntityFrameworkCoreMessageJournal(
+                    options,
+                    "MessageJournal",
+                    null!,
+                    limits,
+                    journalOptions)));
+        ArgumentNullException missingLimits = Assert.Throws<ArgumentNullException>(() =>
+            global::ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingInMemory(configurator =>
+                configurator.UseEntityFrameworkCoreMessageJournal(
+                    options,
+                    "MessageJournal",
+                    policy,
+                    null!,
+                    journalOptions)));
+        ArgumentNullException missingJournalOptions = Assert.Throws<ArgumentNullException>(() =>
+            global::ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingInMemory(configurator =>
+                configurator.UseEntityFrameworkCoreMessageJournal(
+                    options,
+                    "MessageJournal",
+                    policy,
+                    limits,
+                    null!)));
+
+        Assert.Equal("configurator", missingConfigurator.ParamName);
+        Assert.Equal("contextOptions", missingOptions.ParamName);
+        Assert.Equal("policy", missingPolicy.ParamName);
+        Assert.Equal("storeLimits", missingLimits.ParamName);
+        Assert.Equal("journalOptions", missingJournalOptions.ParamName);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("\t")]
+    [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-CONFIGURATION", "relational-identifiers-reject-whitespace")]
+    public void RelationalIdentifiers_RejectWhitespace(string invalidIdentifier)
+    {
+        DbContextOptions<JournalProbeContext> options = new DbContextOptionsBuilder<JournalProbeContext>()
+            .UseSqlite("Data Source=:memory:")
+            .Options;
+        DbContextOptions<MessageJournalDbContext> journalContextOptions =
+            new DbContextOptionsBuilder<MessageJournalDbContext>()
+                .UseSqlite("Data Source=:memory:")
+                .Options;
+        var limits = new MessageJournalStoreLimits(4096, 25, TimeSpan.FromDays(2));
+        var configurator = new RecordingJournalConfigurator();
+        var policy = new ExcludingPolicy();
+        MessageJournalOptions journalOptions = MessageJournalOptions.ContinueMessageFlow(
+            TimeSpan.FromSeconds(1),
+            TimeProvider.System);
+
+        ArgumentException extensionTable = Assert.Throws<ArgumentException>(() =>
+            configurator.UseEntityFramework(options, invalidIdentifier, limits));
+        ArgumentException extensionSchema = Assert.Throws<ArgumentException>(() =>
+            configurator.UseEntityFramework(options, "MessageJournal", limits, invalidIdentifier));
+        ArgumentException directTable = Assert.Throws<ArgumentException>(() =>
+            global::ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingInMemory(bus =>
+                bus.UseEntityFrameworkCoreMessageJournal(
+                    options,
+                    invalidIdentifier,
+                    policy,
+                    limits,
+                    journalOptions)));
+        ArgumentException directSchema = Assert.Throws<ArgumentException>(() =>
+            global::ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingInMemory(bus =>
+                bus.UseEntityFrameworkCoreMessageJournal(
+                    options,
+                    "MessageJournal",
+                    policy,
+                    limits,
+                    journalOptions,
+                    invalidIdentifier)));
+        ArgumentException storeTable = Assert.Throws<ArgumentException>(() =>
+            new EntityFrameworkMessageJournalStore(options, invalidIdentifier, limits));
+        ArgumentException storeSchema = Assert.Throws<ArgumentException>(() =>
+            new EntityFrameworkMessageJournalStore(options, "MessageJournal", limits, invalidIdentifier));
+        ArgumentException contextTable = Assert.Throws<ArgumentException>(() =>
+            new MessageJournalDbContext(journalContextOptions, invalidIdentifier));
+        ArgumentException contextSchema = Assert.Throws<ArgumentException>(() =>
+            new MessageJournalDbContext(journalContextOptions, "MessageJournal", invalidIdentifier));
+        ArgumentException mappingTable = Assert.Throws<ArgumentException>(() =>
+            new MessageJournalMapping(invalidIdentifier));
+        ArgumentException mappingSchema = Assert.Throws<ArgumentException>(() =>
+            new MessageJournalMapping("MessageJournal", invalidIdentifier));
+
+        Assert.Equal("tableName", extensionTable.ParamName);
+        Assert.Equal("schemaName", extensionSchema.ParamName);
+        Assert.Equal("tableName", directTable.ParamName);
+        Assert.Equal("schemaName", directSchema.ParamName);
+        Assert.Equal("tableName", storeTable.ParamName);
+        Assert.Equal("schemaName", storeSchema.ParamName);
+        Assert.Equal("tableName", contextTable.ParamName);
+        Assert.Equal("schemaName", contextSchema.ParamName);
+        Assert.Equal("tableName", mappingTable.ParamName);
+        Assert.Equal("schemaName", mappingSchema.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-MAPPING", "mapping-boundaries-reject-null-builders")]
+    public void MappingBoundaries_RejectNullBuilders()
+    {
+        var mapping = new MessageJournalMapping("MessageJournal");
+        var cacheKeyFactory = new MessageJournalModelCacheKeyFactory();
+
+        ArgumentNullException reliableModel = Assert.Throws<ArgumentNullException>(() =>
+            EntityFrameworkReliableMessagingModelExtensions.AddViciOneReliableMessaging(null!));
+        ArgumentNullException journalMapping = Assert.Throws<ArgumentNullException>(() =>
+            mapping.Configure(null!));
+        ArgumentNullException cacheContext = Assert.Throws<ArgumentNullException>(() =>
+            cacheKeyFactory.Create(null!, designTime: false));
+        ArgumentNullException conversionBuilder = Assert.Throws<ArgumentNullException>(() =>
+            ValueConversionExtensions.HasJsonConversion<string>(null!));
+
+        Assert.Equal("modelBuilder", reliableModel.ParamName);
+        Assert.Equal("builder", journalMapping.ParamName);
+        Assert.Equal("context", cacheContext.ParamName);
+        Assert.Equal("builder", conversionBuilder.ParamName);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("\t")]
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-MODEL", "reliable-schema-rejects-whitespace")]
+    public void ReliableMessagingModel_RejectsWhitespaceSchema(string invalidSchema)
+    {
+        var builder = new ModelBuilder();
+
+        ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            builder.AddViciOneReliableMessaging(invalidSchema));
+
+        Assert.Equal("schema", exception.ParamName);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-MAPPING", "record-serialization-is-runtime-ready")]
     public void RecordConversion_SerializesTheSanitizedCollectionsWithoutAmbientJsonConfiguration()
     {
@@ -105,6 +302,13 @@ public sealed class EntityFrameworkMessageJournalModelTests
     }
 
     sealed class JournalProbeContext(DbContextOptions<JournalProbeContext> options) : DbContext(options);
+
+    sealed class ExcludingPolicy : IMessageJournalPolicy
+    {
+        public ValueTask<MessageJournalProjection?> ProjectAsync(
+            MessageJournalCapture capture,
+            CancellationToken cancellationToken) => ValueTask.FromResult<MessageJournalProjection?>(null);
+    }
 
     sealed class RecordingJournalConfigurator : IMessageJournalConfigurator
     {

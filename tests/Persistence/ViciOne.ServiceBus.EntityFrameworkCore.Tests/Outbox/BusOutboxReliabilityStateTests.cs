@@ -60,6 +60,41 @@ public sealed class BusOutboxReliabilityStateTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-RETRY", "permanent-failure-counts-terminal-attempt")]
+    public void PermanentFailure_CountsTheTerminalDeliveryAttempt()
+    {
+        using ServiceProvider provider = CreateProvider();
+        var service = CreateService(provider, classifiers: [new PermanentClassifier()]);
+        var state = CreateState();
+        state.DeliveryAttempts = 4;
+        var message = CreateMessage(state.OutboxId, 25);
+
+        service.ApplyDeliveryFailure(state, message, new TestTransportException());
+
+        Assert.Equal(OutboxDeliveryStatus.Quarantined, state.Status);
+        Assert.Equal(5, state.DeliveryAttempts);
+        Assert.Equal(OutboxFailureKind.Permanent, state.LastFailureKind);
+        Assert.Equal(message.SequenceNumber, state.FailedSequenceNumber);
+        Assert.Equal(message.MessageId, state.FailedMessageId);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-RETRY", "failure-description-cannot-break-state-persistence")]
+    public void FaultingExceptionDescription_CannotPreventBoundedFailurePersistence()
+    {
+        using ServiceProvider provider = CreateProvider();
+        var service = CreateService(provider);
+        var state = CreateState();
+        var message = CreateMessage(state.OutboxId, 27);
+
+        service.ApplyDeliveryFailure(state, message, new FaultingDescriptionException());
+
+        Assert.Equal(OutboxDeliveryStatus.RetryScheduled, state.Status);
+        Assert.Equal(1, state.DeliveryAttempts);
+        Assert.Contains(nameof(FaultingDescriptionException), state.LastFailure, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-RETRY", "corrupt-attempt-count-is-quarantined")]
     public void CorruptAttemptCount_IsQuarantinedInsteadOfOverflowingIntoAnOperationalLoop()
     {
@@ -140,6 +175,7 @@ public sealed class BusOutboxReliabilityStateTests
         OutboxState persisted = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
         Assert.Equal(0, delivered);
         Assert.Equal(OutboxDeliveryStatus.Quarantined, persisted.Status);
+        Assert.Equal(1, persisted.DeliveryAttempts);
         Assert.Equal(OutboxFailureKind.InvariantViolation, persisted.LastFailureKind);
         Assert.Null(persisted.Delivered);
         Assert.Single(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
@@ -166,6 +202,7 @@ public sealed class BusOutboxReliabilityStateTests
         OutboxState persisted = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
         Assert.Equal(0, delivered);
         Assert.Equal(OutboxDeliveryStatus.Quarantined, persisted.Status);
+        Assert.Equal(1, persisted.DeliveryAttempts);
         Assert.Equal(OutboxFailureKind.InvariantViolation, persisted.LastFailureKind);
         Assert.Contains("metadata", persisted.LastFailure, StringComparison.OrdinalIgnoreCase);
         Assert.Single(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
@@ -266,6 +303,11 @@ public sealed class BusOutboxReliabilityStateTests
     private sealed record DeliveryProbe;
     private sealed class TestTransportException : Exception;
 
+    private sealed class FaultingDescriptionException : Exception
+    {
+        public override string ToString() => throw new InvalidOperationException("Description unavailable.");
+    }
+
     private sealed class ThrowingClassifier : ITransportSendFailureClassifier
     {
         public bool TryClassify(Exception exception, out TransportSendFailureKind failureKind)
@@ -286,7 +328,11 @@ public sealed class BusOutboxReliabilityStateTests
 
     private sealed class RecordingNotification : IBusOutboxNotification<EntityFrameworkBusOutboxScope<IBus, DeliveryDbContext>>
     {
-        public Task WaitForDeliveryAsync(CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task WaitForDeliveryAsync(CancellationToken cancellationToken) =>
+            cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled(cancellationToken)
+                : Task.CompletedTask;
+
         public void Delivered()
         {
         }

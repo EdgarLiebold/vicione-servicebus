@@ -4,7 +4,7 @@ using System.Text;
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Builds SQLite selection SQL used while the caller holds a serializable transaction.</summary>
-public class SqliteLockStatementFormatter :
+internal sealed class SqliteLockStatementFormatter :
     ILockStatementFormatter
 {
     /// <summary>Starts a quoted SQLite row query.</summary>

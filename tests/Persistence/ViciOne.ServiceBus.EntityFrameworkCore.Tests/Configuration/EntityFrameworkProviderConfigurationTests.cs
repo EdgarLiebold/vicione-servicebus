@@ -194,6 +194,22 @@ public sealed class EntityFrameworkProviderConfigurationTests
         Assert.Contains("explicitly", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-CONFIGURATION", "undefined-isolation-level-fails-at-registration")]
+    public void OutboxConfiguration_RejectsAnUndefinedIsolationLevelAtRegistration()
+    {
+        ConfigurationException exception = Assert.Throws<ConfigurationException>(() =>
+            new ServiceCollection().AddViciOneServiceBus(configuration =>
+                configuration.ConfigureEntityFrameworkTransactionalStore<ConfigurationDbContext>(outbox =>
+                {
+                    outbox.UseSqlite();
+                    outbox.IsolationLevel = (IsolationLevel)int.MaxValue;
+                })));
+
+        Assert.Contains(nameof(IEntityFrameworkOutboxConfigurator.IsolationLevel), exception.Message, StringComparison.Ordinal);
+        Assert.Contains("defined", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     [Theory]
     [InlineData(false, false)]
     [InlineData(false, true)]
@@ -273,6 +289,18 @@ public sealed class EntityFrameworkProviderConfigurationTests
             ?? throw new InvalidOperationException("The registration callback did not expose the outbox configurator.");
         IEntityFrameworkBusOutboxConfigurator registeredBusOutbox = capturedBusOutbox
             ?? throw new InvalidOperationException("The registration callback did not expose the bus-outbox configurator.");
+        Assert.IsType<PostgresLockStatementProvider>(registeredOutbox.LockStatementProvider);
+        Assert.Equal(IsolationLevel.ReadCommitted, registeredOutbox.IsolationLevel);
+        Assert.Equal(TimeSpan.FromMinutes(17), registeredOutbox.DuplicateDetectionWindow);
+        Assert.Equal(TimeSpan.FromSeconds(3), registeredOutbox.QueryDelay);
+        Assert.Equal(41, registeredOutbox.QueryMessageLimit);
+        Assert.Equal(TimeSpan.FromSeconds(7), registeredOutbox.QueryTimeout);
+        Assert.Equal(13, registeredBusOutbox.MessageDeliveryLimit);
+        Assert.Equal(TimeSpan.FromSeconds(11), registeredBusOutbox.MessageDeliveryTimeout);
+        Assert.Equal(7, registeredBusOutbox.MaximumDeliveryAttempts);
+        Assert.Equal(TimeSpan.FromSeconds(2), registeredBusOutbox.InitialDeliveryRetryDelay);
+        Assert.Equal(TimeSpan.FromSeconds(19), registeredBusOutbox.MaximumDeliveryRetryDelay);
+
         registeredOutbox.UseSqlServer();
         registeredOutbox.DuplicateDetectionWindow = TimeSpan.FromHours(1);
         registeredOutbox.QueryDelay = TimeSpan.FromMinutes(1);
@@ -375,9 +403,18 @@ public sealed class EntityFrameworkProviderConfigurationTests
         public ILockStatementProvider? Provider { get; private set; }
         public IsolationLevel Isolation { get; private set; }
 
-        public TimeSpan DuplicateDetectionWindow { private get; set; }
-        public IsolationLevel IsolationLevel { set => Isolation = value; }
-        public ILockStatementProvider LockStatementProvider { set => Provider = value; }
+        public TimeSpan DuplicateDetectionWindow { get; set; }
+        public IsolationLevel IsolationLevel
+        {
+            get => Isolation;
+            set => Isolation = value;
+        }
+
+        public ILockStatementProvider LockStatementProvider
+        {
+            get => Provider ?? throw new InvalidOperationException("No lock-statement provider was selected.");
+            set => Provider = value;
+        }
         public TimeSpan QueryDelay { get; set; }
         public int QueryMessageLimit { get; set; }
         public TimeSpan QueryTimeout { get; set; }
