@@ -57,11 +57,11 @@ public sealed class MessagePackSerializerBoundaryTests
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-ARCHITECTURE", "owner-qualified-by-namespace")]
     public void Scanner_DoesNotExcludeAnOwnerSimpleNameInAnotherNamespace()
     {
-        using var assembly = Emit(ForeignNamespace, "InternalMessagePackResolver", ReferenceShape.DirectCall);
+        using var assembly = Emit(ForeignNamespace, "MessagePackSerializationRuntime", ReferenceShape.DirectCall);
 
         var references = MessagePackSerializerReferenceScanner.FindReferences(assembly);
 
-        Assert.Equal([$"{ForeignNamespace}.InternalMessagePackResolver.Run"], references);
+        Assert.Equal([$"{ForeignNamespace}.MessagePackSerializationRuntime.Run"], references);
     }
 
     [Fact]

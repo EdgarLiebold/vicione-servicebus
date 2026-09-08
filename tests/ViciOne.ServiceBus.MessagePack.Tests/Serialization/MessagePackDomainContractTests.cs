@@ -47,7 +47,7 @@ public sealed class MessagePackDomainContractTests
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-JOBS", "nested-interface-job-payload")]
     public async Task JobPayload_RoundTripsThroughDictionaryAndRestoresNestedInterfacesAsync()
     {
-        var jobInitialization = await MessageInitializerCache<ConvertVideo>.InitializeAsync(
+        var jobInitialization = await MessageInitializerCache<IConvertVideo>.InitializeAsync(
             new
             {
                 Path = "input.mp4",
@@ -57,7 +57,7 @@ public sealed class MessagePackDomainContractTests
                 Details = new[] { new { Value = "first" }, new { Value = "second" } },
             },
             TestContext.Current.CancellationToken);
-        ConvertVideo job = jobInitialization.Message;
+        IConvertVideo job = jobInitialization.Message;
         var jobRoundTrip = MessagePackRoundTrip.ExecuteWithContext(job);
         var command = new StartJobCommand
         {
@@ -69,7 +69,7 @@ public sealed class MessagePackDomainContractTests
         StartJob commandContract = command;
 
         var commandRoundTrip = MessagePackRoundTrip.ExecuteWithContext(commandContract);
-        var restoredJob = commandRoundTrip.Context.DeserializeObject<ConvertVideo>(commandRoundTrip.Message.Job);
+        var restoredJob = commandRoundTrip.Context.DeserializeObject<IConvertVideo>(commandRoundTrip.Message.Job);
 
         Assert.NotNull(restoredJob);
         Assert.Equal("input.mp4", restoredJob.Path);
@@ -107,12 +107,12 @@ public sealed class MessagePackDomainContractTests
         Assert.Contains(exception.GetType().FullName!, restored.ExceptionType, StringComparison.Ordinal);
     }
 
-    public interface VideoDetail
+    public interface IVideoDetail
     {
         string Value { get; set; }
     }
 
-    public interface ConvertVideo
+    public interface IConvertVideo
     {
         string GroupId { get; }
 
@@ -122,7 +122,7 @@ public sealed class MessagePackDomainContractTests
 
         string Path { get; }
 
-        IList<VideoDetail> Details { get; }
+        IList<IVideoDetail> Details { get; }
     }
 
     private sealed class NonSerializableException(string message) : Exception(message);

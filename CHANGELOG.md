@@ -25,6 +25,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- MessagePack serialization now has symmetric bus and receive-endpoint configuration, isolated
+  forwarding snapshots, payload-admission-safe byte handling, normalized byte, Base64 and object
+  payload overlays, and System.Text.Json-equivalent case-insensitive recursive overlay semantics.
+  Its internal runtime, forwarding serializer, formatter invokers, serializer context, files,
+  comments, and source-owned xUnit/MTP contract suite were aligned around their actual
+  responsibilities without adding a compatibility shim or test-only product instrumentation.
 - Repository builds now follow the current stable .NET 10 patch channel instead of pinning one SDK or
   runtime patch. All direct dependencies and lock files were reassessed and refreshed; Quartz 4 is
   adopted through its `ValueTask` job lifecycle and builder-owned job factory. The former

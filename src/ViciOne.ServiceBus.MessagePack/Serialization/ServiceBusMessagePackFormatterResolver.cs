@@ -13,9 +13,11 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.MessagePack.Serialization;
 
+/// <summary>Resolves ViciOne interface contracts to their MessagePack wire formatters.</summary>
 internal sealed class ServiceBusMessagePackFormatterResolver :
     IFormatterResolver
 {
+    /// <summary>Gets the shared stateless resolver.</summary>
     public static ServiceBusMessagePackFormatterResolver Instance { get; } = new();
 
     readonly Dictionary<Type, Type> _mappedNonGenericTypes;
@@ -57,6 +59,9 @@ internal sealed class ServiceBusMessagePackFormatterResolver :
         _cachedFormatters = new ConcurrentDictionary<Type, Lazy<IMessagePackFormatter>>();
     }
 
+    /// <summary>Gets the owned formatter for a contract, or defers unsupported concrete types to the next resolver.</summary>
+    /// <typeparam name="T">The requested contract.</typeparam>
+    /// <returns>The mapped or interface formatter, or <see langword="null" /> when this resolver does not own the type.</returns>
     public IMessagePackFormatter<T>? GetFormatter<T>()
     {
         var contractType = typeof(T);
@@ -89,28 +94,28 @@ internal sealed class ServiceBusMessagePackFormatterResolver :
             ?? throw new InvalidOperationException($"Failed to create an instance of '{formatterType}'.");
     }
 
-    bool TryGetMappedType(Type originType, [NotNullWhen(true)] out Type? mappedTargetType)
+    bool TryGetMappedType(Type contractType, [NotNullWhen(true)] out Type? formatterType)
     {
-        return !originType.IsGenericType || originType.IsGenericTypeDefinition
-            ? TryGetNonGenericMappedType(originType, out mappedTargetType)
-            : TryGetOpenGenericMappedType(originType, out mappedTargetType);
+        return !contractType.IsGenericType || contractType.IsGenericTypeDefinition
+            ? TryGetNonGenericMappedType(contractType, out formatterType)
+            : TryGetOpenGenericMappedType(contractType, out formatterType);
     }
 
-    bool TryGetNonGenericMappedType(Type originType, out Type? mappedTargetType)
+    bool TryGetNonGenericMappedType(Type contractType, out Type? formatterType)
     {
-        return _mappedNonGenericTypes.TryGetValue(originType, out mappedTargetType);
+        return _mappedNonGenericTypes.TryGetValue(contractType, out formatterType);
     }
 
-    bool TryGetOpenGenericMappedType(Type originType, out Type? mappedTargetType)
+    bool TryGetOpenGenericMappedType(Type contractType, out Type? formatterType)
     {
-        var genericTypeDefinition = originType.GetGenericTypeDefinition();
+        var genericTypeDefinition = contractType.GetGenericTypeDefinition();
         if (!_mappedGenericTypes.TryGetValue(genericTypeDefinition, out Type? openGenericMappedType))
         {
-            mappedTargetType = null;
+            formatterType = null;
             return false;
         }
 
-        mappedTargetType = openGenericMappedType.MakeGenericType(originType.GenericTypeArguments);
+        formatterType = openGenericMappedType.MakeGenericType(contractType.GenericTypeArguments);
         return true;
     }
 }

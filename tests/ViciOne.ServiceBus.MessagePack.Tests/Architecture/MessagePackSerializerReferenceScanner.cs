@@ -7,10 +7,10 @@ namespace ViciOne.ServiceBus.MessagePack.Tests.Architecture;
 
 internal static class MessagePackSerializerReferenceScanner
 {
-    internal const string OwnerType = "ViciOne.ServiceBus.MessagePack.Serialization.InternalMessagePackResolver";
+    internal const string OwnerType = "ViciOne.ServiceBus.MessagePack.Serialization.MessagePackSerializationRuntime";
     internal const string SerializerType = "MessagePack.MessagePackSerializer";
 
-    private static readonly IReadOnlyDictionary<ushort, OpCode> OpCodesByValue = typeof(OpCodes)
+    private static readonly Dictionary<ushort, OpCode> OpCodesByValue = typeof(OpCodes)
         .GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
         .Where(field => field.FieldType == typeof(OpCode))
         .Select(field => (OpCode)field.GetValue(null)!)

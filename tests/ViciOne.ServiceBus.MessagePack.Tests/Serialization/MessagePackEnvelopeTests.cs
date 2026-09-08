@@ -27,7 +27,7 @@ public sealed class MessagePackEnvelopeTests
         var cloneBytes = Assert.IsType<byte[]>(clone.Message);
         sourceBytes[0] ^= 0xFF;
 
-        Assert.True(clone.IsMessageNativeMessagePackSerialized);
+        Assert.True(clone.IsNativeMessagePackPayload);
         Assert.NotSame(sourceBytes, cloneBytes);
         Assert.Equal(expectedBytes, cloneBytes);
         var roundTrip = MessagePackSerializer.Deserialize<Order>(
@@ -61,7 +61,7 @@ public sealed class MessagePackEnvelopeTests
     {
         var source = new MessagePackEnvelope(Foreign(new Order { Id = 27, Customer = "Frank" }))
         {
-            IsMessageNativeMessagePackSerialized = false,
+            IsNativeMessagePackPayload = false,
             Message = MessagePackSerializer.Serialize(
                 new Dictionary<string, object> { ["id"] = 27 },
                 ExternalOracleOptions,
@@ -71,7 +71,7 @@ public sealed class MessagePackEnvelopeTests
 
         var clone = new MessagePackEnvelope(source);
 
-        Assert.False(clone.IsMessageNativeMessagePackSerialized);
+        Assert.False(clone.IsNativeMessagePackPayload);
         Assert.Equal(sourceBytes, Assert.IsType<byte[]>(clone.Message));
         Assert.NotSame(sourceBytes, clone.Message);
     }
@@ -82,7 +82,7 @@ public sealed class MessagePackEnvelopeTests
     {
         var clone = new MessagePackEnvelope(Foreign(new Order { Id = 27, Customer = "Frank" }));
 
-        Assert.True(clone.IsMessageNativeMessagePackSerialized);
+        Assert.True(clone.IsNativeMessagePackPayload);
         var roundTrip = MessagePackSerializer.Deserialize<Order>(
             Assert.IsType<byte[]>(clone.Message),
             ExternalOracleOptions,
@@ -109,7 +109,7 @@ public sealed class MessagePackEnvelopeTests
         Assert.NotSame(source.Headers, clone.Headers);
     }
 
-    private static MessageEnvelope Foreign(object message) => new ForeignEnvelope(message);
+    private static ForeignEnvelope Foreign(object message) => new(message);
 
     private sealed class ForeignEnvelope(object message) : MessageEnvelope
     {

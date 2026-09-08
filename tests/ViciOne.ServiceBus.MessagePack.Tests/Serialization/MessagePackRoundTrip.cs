@@ -45,10 +45,3 @@ internal static class MessagePackRoundTrip
         return new RoundTripResult<T>(roundTripped, serializerContext, body.GetBytes(), requestId);
     }
 }
-
-internal sealed record RoundTripResult<T>(
-    T Message,
-    SerializerContext Context,
-    byte[] Bytes,
-    Guid RequestId)
-    where T : class;

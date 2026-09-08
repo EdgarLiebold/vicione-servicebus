@@ -19,13 +19,15 @@ public sealed class MessagePackMessageBodyTests
     public void EveryConcreteMessagePackMessageBody_IsInTheExplicitContractSet()
     {
         string expected = IdentityOf(typeof(MessagePackMessageBody<>));
-        string[] actual = typeof(MessagePackMessageBody<>).Assembly.GetTypes()
+        string[] actual =
+        [..
+            typeof(MessagePackMessageBody<>).Assembly.GetTypes()
             .Where(type => !type.IsInterface && !type.IsAbstract && typeof(MessageBody).IsAssignableFrom(type))
             .Select(Normalize)
             .Distinct()
             .Select(IdentityOf)
-            .Order(StringComparer.Ordinal)
-            .ToArray();
+            .Order(StringComparer.Ordinal),
+        ];
 
         Assert.Equal([expected], actual);
     }

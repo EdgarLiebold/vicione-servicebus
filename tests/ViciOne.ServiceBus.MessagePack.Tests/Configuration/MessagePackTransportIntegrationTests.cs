@@ -38,13 +38,15 @@ public sealed class MessagePackTransportIntegrationTests
     {
         var factory = new MessagePackSerializerFactory();
         var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        Task<IMessageSerializer>[] calls = Enumerable.Range(0, 16)
+        Task<IMessageSerializer>[] calls =
+        [..
+            Enumerable.Range(0, 16)
             .Select(_ => Task.Run(async () =>
             {
                 await release.Task.WaitAsync(TestContext.Current.CancellationToken);
                 return factory.CreateSerializer();
-            }, TestContext.Current.CancellationToken))
-            .ToArray();
+            }, TestContext.Current.CancellationToken)),
+        ];
 
         release.SetResult();
         IMessageSerializer[] serializers = await Task.WhenAll(calls);
@@ -143,9 +145,9 @@ public sealed class MessagePackTransportIntegrationTests
 
         try
         {
-            Task<ConsumeContext<InterfaceDispatchMessage>> received =
-                await harness.ConnectPublishHandlerAsync<InterfaceDispatchMessage>(_ => true, cancellationToken: TestContext.Current.CancellationToken);
-            await harness.Bus.PublishAsync<InterfaceDispatchMessage>(
+            Task<ConsumeContext<IDispatchMessage>> received =
+                await harness.ConnectPublishHandlerAsync<IDispatchMessage>(_ => true, cancellationToken: TestContext.Current.CancellationToken);
+            await harness.Bus.PublishAsync<IDispatchMessage>(
                 new { Value = "preserved" },
                 TestContext.Current.CancellationToken);
 
@@ -155,7 +157,7 @@ public sealed class MessagePackTransportIntegrationTests
 
             Assert.Equal("preserved", context.Message.Value);
             Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, context.Advanced().ReceiveContext.ContentType);
-            Assert.True(await harness.Consumed.AnyAsync<InterfaceDispatchMessage>(
+            Assert.True(await harness.Consumed.AnyAsync<IDispatchMessage>(
                 TestContext.Current.CancellationToken));
         }
         finally
@@ -486,7 +488,7 @@ public sealed class MessagePackTransportIntegrationTests
         }
     }
 
-    public interface InterfaceDispatchMessage
+    public interface IDispatchMessage
     {
         string Value { get; }
     }

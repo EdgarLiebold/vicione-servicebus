@@ -10,7 +10,7 @@ using ViciOne.ServiceBus.Serialization;
 namespace ViciOne.ServiceBus.MessagePack.Serialization;
 
 /// <summary>Exposes a decoded MessagePack envelope through the transport-neutral serializer context.</summary>
-internal sealed class MessagePackMessageSerializerContext :
+internal sealed class MessagePackSerializerContext :
     BaseSerializerContext
 {
     readonly MessagePackEnvelope _envelope;
@@ -20,7 +20,7 @@ internal sealed class MessagePackMessageSerializerContext :
     /// <param name="context">The envelope-backed message metadata context.</param>
     /// <param name="supportedMessageTypes">The contract URNs represented by the encoded message.</param>
     /// <param name="envelope">The decoded envelope containing a non-null encoded message.</param>
-    public MessagePackMessageSerializerContext(MessagePackMessageSerializer serializer, MessageContext context, string[] supportedMessageTypes,
+    public MessagePackSerializerContext(MessagePackMessageSerializer serializer, MessageContext context, string[] supportedMessageTypes,
         MessagePackEnvelope envelope)
         : base(
             serializer ?? throw new ArgumentNullException(nameof(serializer)),
@@ -66,13 +66,13 @@ internal sealed class MessagePackMessageSerializerContext :
                 return false;
             }
 
-            var messagePackSerializedObjectBuffer = MessagePackMessageSerializer.EnsureObjectBufferFormatIsByteArray(_envelope.Message!);
+            var messagePackSerializedObjectBuffer = MessagePackMessageSerializer.GetSerializedPayloadBytes(_envelope.Message!);
 
-            if (_envelope.IsMessageNativeMessagePackSerialized)
-                message = InternalMessagePackResolver.Deserialize(messageType, messagePackSerializedObjectBuffer);
+            if (_envelope.IsNativeMessagePackPayload)
+                message = MessagePackSerializationRuntime.Deserialize(messageType, messagePackSerializedObjectBuffer);
             else
             {
-                var messageAsDictionary = InternalMessagePackResolver
+                var messageAsDictionary = MessagePackSerializationRuntime
                     .Deserialize<Dictionary<string, object>>(messagePackSerializedObjectBuffer);
 
                 message = messageAsDictionary.Transform(messageType, ServiceBusMetadataJson.Options);
@@ -91,7 +91,7 @@ internal sealed class MessagePackMessageSerializerContext :
     /// <returns>A MessagePack body serializer containing a private copy of the envelope payload.</returns>
     public override IMessageSerializer GetMessageSerializer()
     {
-        return new MessagePackMessageBodySerializer(_envelope);
+        return new MessagePackForwardingSerializer(_envelope);
     }
 
     /// <summary>Creates a forwarding serializer that overlays a replacement contract onto an envelope.</summary>
@@ -103,9 +103,9 @@ internal sealed class MessagePackMessageSerializerContext :
     {
         ArgumentNullException.ThrowIfNull(envelope);
         ArgumentNullException.ThrowIfNull(message);
-        var messageEnvelopeSerializer = new MessagePackMessageBodySerializer(envelope);
+        var messageEnvelopeSerializer = new MessagePackForwardingSerializer(envelope);
 
-        messageEnvelopeSerializer.OverrideMessage(message);
+        messageEnvelopeSerializer.Overlay(message);
 
         return messageEnvelopeSerializer;
     }
@@ -120,7 +120,7 @@ internal sealed class MessagePackMessageSerializerContext :
         ArgumentNullException.ThrowIfNull(messageTypes);
         var messagePackEnvelope = new MessagePackEnvelope(this, message, messageTypes);
 
-        return new MessagePackMessageBodySerializer(messagePackEnvelope);
+        return new MessagePackForwardingSerializer(messagePackEnvelope);
     }
 
     /// <summary>Projects a message into a case-insensitive property dictionary used for payload overlays.</summary>

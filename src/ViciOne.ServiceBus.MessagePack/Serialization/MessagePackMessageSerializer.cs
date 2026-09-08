@@ -52,7 +52,7 @@ internal sealed class MessagePackMessageSerializer :
 
         var messageTypes = envelope.MessageType ?? [];
 
-        return new MessagePackMessageSerializerContext(this, messageContext, messageTypes, envelope);
+        return new MessagePackSerializerContext(this, messageContext, messageTypes, envelope);
     }
 
     /// <summary>Creates a message body from Base64-encoded MessagePack text.</summary>
@@ -86,16 +86,16 @@ internal sealed class MessagePackMessageSerializer :
     }
 
     /// <summary>Normalizes Base64 text, MessagePack bytes, or an arbitrary value to MessagePack bytes.</summary>
-    /// <param name="serializedObjectAsUnknownFormat">The Base64 text, byte array, or value to normalize.</param>
+    /// <param name="value">The Base64 text, byte array, or value to normalize.</param>
     /// <returns>The original byte array, decoded Base64 bytes, or newly serialized MessagePack bytes.</returns>
-    public static byte[] EnsureObjectBufferFormatIsByteArray(object serializedObjectAsUnknownFormat)
+    public static byte[] GetSerializedPayloadBytes(object value)
     {
-        ArgumentNullException.ThrowIfNull(serializedObjectAsUnknownFormat);
-        return serializedObjectAsUnknownFormat switch
+        ArgumentNullException.ThrowIfNull(value);
+        return value switch
         {
             string base64EncodedMessagePackBody => Convert.FromBase64String(base64EncodedMessagePackBody),
             byte[] messagePackBody => messagePackBody,
-            _ => InternalMessagePackResolver.Serialize(serializedObjectAsUnknownFormat)
+            _ => MessagePackSerializationRuntime.Serialize(value)
         };
     }
 
@@ -145,18 +145,21 @@ internal sealed class MessagePackMessageSerializer :
         if (value is T valueAsT)
             return valueAsT;
 
+        if (value is string textValue && string.IsNullOrWhiteSpace(textValue))
+            return defaultValue;
+
         if (value is string text
             && TypeConverterCache.TryGetTypeConverter<T, string>(out ITypeConverter<T, string>? typeConverter)
             && typeConverter.TryConvert(text, out var result))
             return result;
 
-        var messageSerializedBuffer = EnsureObjectBufferFormatIsByteArray(value);
+        var messageSerializedBuffer = GetSerializedPayloadBytes(value);
 
         return DeserializeMessageBuffer<T>(messageSerializedBuffer);
     }
 
     static T DeserializeMessageBuffer<T>(byte[] messageBuffer)
     {
-        return InternalMessagePackResolver.Deserialize<T>(messageBuffer);
+        return MessagePackSerializationRuntime.Deserialize<T>(messageBuffer);
     }
 }

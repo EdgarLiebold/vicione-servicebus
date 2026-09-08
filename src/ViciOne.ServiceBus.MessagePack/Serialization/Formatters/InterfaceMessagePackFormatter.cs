@@ -5,20 +5,12 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.MessagePack.Serialization.Formatters;
 
-delegate void SerializeDelegate<TInterface>(object formatter, ref MessagePackWriter writer, TInterface value,
-    MessagePackSerializerOptions options);
-
-
-delegate TInterface DeserializeDelegate<out TInterface>(object formatter, ref MessagePackReader reader,
-    MessagePackSerializerOptions options);
-
-
 /// <summary>
 /// Serializes an interface typed message through the formatter of its concrete type.
 /// <para>
 /// The invoker and the lookup of the concrete formatter are compiled once per concrete type and reached
 /// through delegates, rather than per serialize and deserialize call; see
-/// <see cref="ConcreteFormatterCache{TInterface}" /> for how the entries are bounded and why.
+/// <see cref="ConcreteFormatterInvokerCache{TInterface}" /> for how the entries are bounded and why.
 /// </para>
 /// </summary>
 /// <typeparam name="TInterface">The interface message contract being serialized.</typeparam>
@@ -30,10 +22,7 @@ internal sealed class InterfaceMessagePackFormatter<TInterface> :
     // One cache per closed interface type rather than per formatter instance: a compiled invoker is
     // valid for the whole process, and the resolver is free to hand out more than one formatter. The
     // entries are bounded by the lifetime of their key, not by this being static.
-    static readonly ConcreteFormatterCache<TInterface> _cache = new();
-
-    /// <summary>Gets the number of concrete-type invokers compiled for this closed interface contract.</summary>
-    internal static int CompiledInvokerCount => _cache.CompiledCount;
+    static readonly ConcreteFormatterInvokerCache<TInterface> _cache = new();
 
     /// <summary>Serializes an interface message using its runtime concrete type when available.</summary>
     /// <param name="writer">The MessagePack writer that receives the concrete message.</param>

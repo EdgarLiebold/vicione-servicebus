@@ -8,9 +8,9 @@ namespace ViciOne.ServiceBus.MessagePack.Serialization;
 /// <summary>
 /// Centralizes MessagePack serialization through the module's resolver chain and security options.
 /// </summary>
-static class InternalMessagePackResolver
+static class MessagePackSerializationRuntime
 {
-    static IFormatterResolver InternalResolverInstance { get; } =
+    static readonly IFormatterResolver _resolver =
         CompositeResolver.Create(NativeDateTimeResolver.Instance,
             ContractlessStandardResolverAllowPrivate.Instance,
             ServiceBusMessagePackFormatterResolver.Instance,
@@ -25,14 +25,22 @@ static class InternalMessagePackResolver
     /// </para>
     /// </summary>
     public static MessagePackSerializerOptions Options { get; } = MessagePackSerializerOptions.Standard
-        .WithResolver(InternalResolverInstance)
+        .WithResolver(_resolver)
         .WithSecurity(MessagePackSecurity.UntrustedData);
 
+    /// <summary>Serializes a value with the module's shared options.</summary>
+    /// <typeparam name="T">The declared value type.</typeparam>
+    /// <param name="value">The value to serialize.</param>
+    /// <returns>The encoded MessagePack bytes.</returns>
     public static byte[] Serialize<T>(T value)
     {
         return MessagePackSerializer.Serialize(value, Options);
     }
 
+    /// <summary>Serializes a runtime-typed value to a caller-owned buffer.</summary>
+    /// <param name="type">The declared runtime type.</param>
+    /// <param name="writer">The buffer that receives the encoded value.</param>
+    /// <param name="value">The value to serialize.</param>
     public static void Serialize(Type type, IBufferWriter<byte> writer, object? value)
     {
         ArgumentNullException.ThrowIfNull(type);
@@ -40,12 +48,20 @@ static class InternalMessagePackResolver
         MessagePackSerializer.Serialize(type, writer, value, Options);
     }
 
+    /// <summary>Serializes a value to a caller-owned buffer.</summary>
+    /// <typeparam name="T">The declared value type.</typeparam>
+    /// <param name="writer">The buffer that receives the encoded value.</param>
+    /// <param name="value">The value to serialize.</param>
     public static void Serialize<T>(IBufferWriter<byte> writer, T value)
     {
         ArgumentNullException.ThrowIfNull(writer);
         MessagePackSerializer.Serialize(writer, value, Options);
     }
 
+    /// <summary>Deserializes MessagePack bytes as the declared value type.</summary>
+    /// <typeparam name="T">The requested value type.</typeparam>
+    /// <param name="buffer">The MessagePack payload bytes.</param>
+    /// <returns>The decoded value.</returns>
     public static T Deserialize<T>(byte[] buffer)
     {
         ArgumentNullException.ThrowIfNull(buffer);

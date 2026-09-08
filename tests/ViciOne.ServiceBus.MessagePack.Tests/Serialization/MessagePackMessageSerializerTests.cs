@@ -1,8 +1,10 @@
 using System.Text;
 using ViciOne.ServiceBus.Advanced.Serialization;
+using ViciOne.ServiceBus.Introspection;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.MessageData.Values;
 using ViciOne.ServiceBus.MessagePack.Serialization;
+using ViciOne.ServiceBus.Operations;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -14,6 +16,33 @@ public sealed class MessagePackMessageSerializerTests
         "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
         "<order id=\"4711\"><customer name=\"Grüße &amp; Co\" />" +
         "<note><![CDATA[keep <this> verbatim]]></note></order>";
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-BODY", "base64-body-and-null-boundary")]
+    public void Base64Body_PreservesBytesAndRejectsMissingText()
+    {
+        byte[] expected = MessagePackSerializationRuntime.Serialize(new ScalarMessage { IntValue = 27 });
+        var serializer = new MessagePackMessageSerializer();
+
+        MessageBody body = serializer.GetMessageBody(Convert.ToBase64String(expected));
+
+        Assert.Equal(expected, body.GetBytes());
+        Assert.Equal("text", Assert.Throws<ArgumentNullException>(() => serializer.GetMessageBody(null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-DIAGNOSTICS", "provider-and-content-type")]
+    public void Probe_ReportsTheMessagePackProviderAndExactContentType()
+    {
+        var serializer = new MessagePackMessageSerializer();
+
+        IProbeResult result = serializer.GetProbeResult(TestContext.Current.CancellationToken);
+
+        IReadOnlyDictionary<string, object> scope = Assert.IsType<IReadOnlyDictionary<string, object>>(
+            Assert.Contains("messagepack", result.Results), exactMatch: false);
+        Assert.Equal(MessagePackMessageSerializer.MediaType, Assert.Contains("contentType", scope));
+        Assert.Equal("MessagePack", Assert.Contains("provider", scope));
+    }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-ENVELOPE", "metadata-and-body-roundtrip")]
@@ -53,7 +82,7 @@ public sealed class MessagePackMessageSerializerTests
         byte[] expected = [0x56, 0x34, 0xF3];
 
         var concrete = MessagePackRoundTrip.Execute(new BinaryMessage { Contents = expected });
-        BinaryContract contract = new BinaryContractImplementation { Contents = expected };
+        IBinaryContract contract = new BinaryContractImplementation { Contents = expected };
         var interfaceResult = MessagePackRoundTrip.Execute(contract);
 
         Assert.Equal(expected, concrete.Contents);
@@ -213,12 +242,12 @@ public sealed class MessagePackMessageSerializerTests
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-OBJECT-GRAPHS", "read-only-interface-collections")]
     public void ReadOnlyInterfaceCollections_RoundTripThroughTheirDeclaredContract()
     {
-        ValidationContract source = new ValidationMessage
+        IValidationContract source = new ValidationMessage
         {
             IsValid = false,
             Errors = new Dictionary<string, IReadOnlyList<string>>
             {
-                ["Name"] = new List<string> { "required", "too-long" },
+                ["Name"] = ["required", "too-long"],
             },
         };
 
@@ -299,7 +328,7 @@ public sealed class MessagePackMessageSerializerTests
         Assert.Equal(expected.OptionalDecimal, actual.OptionalDecimal);
     }
 
-    private sealed class BinaryContractImplementation : BinaryContract
+    private sealed class BinaryContractImplementation : IBinaryContract
     {
         public byte[] Contents { get; set; } = [];
     }

@@ -18,7 +18,7 @@ public sealed class InterfaceMessagePackFormatterTests
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-INTERFACES", "proxy-roundtrip")]
     public void InterfaceContract_RoundTripsAllAccessorShapes()
     {
-        PersonContract source = new PersonMessage
+        IPersonContract source = new PersonMessage
         {
             Id = 27,
             Name = "Frank",
@@ -33,37 +33,92 @@ public sealed class InterfaceMessagePackFormatterTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-INTERFACES", "null-roundtrip")]
+    public void InterfaceContract_RoundTripsNull()
+    {
+        var options = MessagePackSerializerOptions.Standard
+            .WithResolver(ContractlessStandardResolver.Instance)
+            .WithSecurity(MessagePackSecurity.UntrustedData);
+        var formatter = new InterfaceMessagePackFormatter<IPersonContract>();
+        var buffer = new ArrayBufferWriter<byte>();
+        var writer = new MessagePackWriter(buffer);
+
+        formatter.Serialize(ref writer, null!, options);
+        writer.Flush();
+        var reader = new MessagePackReader(buffer.WrittenMemory);
+        IPersonContract result = formatter.Deserialize(ref reader, options);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-INTERFACES", "declared-concrete-null-roundtrip")]
+    public void DeclaredConcreteMapping_RoundTripsNull()
+    {
+        byte[] bytes = SerializeMapped(null!);
+
+        IMappedContract result = DeserializeMapped(bytes);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-INTERFACES", "declared-concrete-runtime-type-guard")]
+    public void DeclaredConcreteMapping_RejectsAnotherImplementation()
+    {
+        var value = new AlternativeMappedContract { Value = "unsupported" };
+
+        MessagePackSerializationException exception = Assert.Throws<MessagePackSerializationException>(
+            () => SerializeMapped(value));
+
+        Assert.Contains(typeof(AlternativeMappedContract).ToString(), exception.Message, StringComparison.Ordinal);
+        Assert.Contains(typeof(MappedContract).ToString(), exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "same-type-compiled-once")]
     public void SameConcreteType_IsCompiledOnce()
     {
-        var cache = new ConcreteFormatterCache<ICached>();
+        var compilationCount = 0;
+        var cache = new ConcreteFormatterInvokerCache<ICached>(_ =>
+        {
+            Interlocked.Increment(ref compilationCount);
+            return EmptyInvoker;
+        });
 
         for (var index = 0; index < 100; index++)
         {
             _ = cache.Get(typeof(Cached));
         }
 
-        Assert.Equal(1, cache.CompiledCount);
+        Assert.Equal(1, compilationCount);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "concurrent-cold-cache")]
     public async Task ConcurrentColdCache_CompilesOneSharedEntryAsync()
     {
-        var cache = new ConcreteFormatterCache<ICached>();
+        var compilationCount = 0;
+        var cache = new ConcreteFormatterInvokerCache<ICached>(_ =>
+        {
+            Interlocked.Increment(ref compilationCount);
+            return EmptyInvoker;
+        });
         var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        Task<ConcreteFormatterAccess<ICached>>[] calls = Enumerable.Range(0, 16)
+        Task<ConcreteFormatterInvoker<ICached>>[] calls =
+        [..
+            Enumerable.Range(0, 16)
             .Select(_ => Task.Run(async () =>
             {
                 await release.Task.WaitAsync(TestContext.Current.CancellationToken);
                 return cache.Get(typeof(Cached));
-            }, TestContext.Current.CancellationToken))
-            .ToArray();
+            }, TestContext.Current.CancellationToken)),
+        ];
 
         release.SetResult();
-        ConcreteFormatterAccess<ICached>[] entries = await Task.WhenAll(calls);
+        ConcreteFormatterInvoker<ICached>[] entries = await Task.WhenAll(calls);
 
-        Assert.Equal(1, cache.CompiledCount);
+        Assert.Equal(1, compilationCount);
         Assert.All(entries, entry => Assert.Same(entries[0], entry));
     }
 
@@ -71,32 +126,44 @@ public sealed class InterfaceMessagePackFormatterTests
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "one-entry-per-concrete-type")]
     public void DifferentConcreteTypes_OwnDifferentCompiledEntries()
     {
-        var cache = new ConcreteFormatterCache<ICached>();
+        var compilationCount = 0;
+        var cache = new ConcreteFormatterInvokerCache<ICached>(_ =>
+        {
+            Interlocked.Increment(ref compilationCount);
+            return EmptyInvoker;
+        });
 
         _ = cache.Get(typeof(Cached));
         _ = cache.Get(typeof(AlsoCached));
         _ = cache.Get(typeof(Cached));
 
-        Assert.Equal(2, cache.CompiledCount);
+        Assert.Equal(2, compilationCount);
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "failed-compilation-is-not-counted")]
-    public void FailedCompilation_DoesNotIncreaseTheCompiledEntryCount()
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "failed-compilation-is-cached")]
+    public void FailedCompilation_IsCachedForTheConcreteType()
     {
-        var cache = new ConcreteFormatterCache<ICached>(_ => throw new InvalidOperationException("Rejected test formatter."));
+        var compilationCount = 0;
+        var cache = new ConcreteFormatterInvokerCache<ICached>(_ =>
+        {
+            Interlocked.Increment(ref compilationCount);
+            throw new InvalidOperationException("Rejected test formatter.");
+        });
 
-        var exception = Assert.Throws<InvalidOperationException>(() => cache.Get(typeof(Cached)));
+        var first = Assert.Throws<InvalidOperationException>(() => cache.Get(typeof(Cached)));
+        var second = Assert.Throws<InvalidOperationException>(() => cache.Get(typeof(Cached)));
 
-        Assert.Equal("Rejected test formatter.", exception.Message);
-        Assert.Equal(0, cache.CompiledCount);
+        Assert.Equal("Rejected test formatter.", first.Message);
+        Assert.Same(first, second);
+        Assert.Equal(1, compilationCount);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "weak-key")]
     public void Cache_DoesNotKeepItsOwnTypeKeyAlive()
     {
-        var cache = new ConcreteFormatterCache<ICached>(_ => EmptyAccess);
+        var cache = new ConcreteFormatterInvokerCache<ICached>(_ => EmptyInvoker);
         var reference = StoreWithoutCompiling(cache);
 
         Collect(reference);
@@ -147,19 +214,21 @@ public sealed class InterfaceMessagePackFormatterTests
     public async Task Resolver_ConcurrentCallsReturnOneSharedFormatterAsync()
     {
         var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        Task<IMessagePackFormatter<ResolverConcurrencyContract>?>[] calls = Enumerable.Range(0, 16)
+        Task<IMessagePackFormatter<IResolverConcurrencyContract>?>[] calls =
+        [..
+            Enumerable.Range(0, 16)
             .Select(_ => Task.Run(async () =>
             {
                 await release.Task.WaitAsync(TestContext.Current.CancellationToken);
                 return ServiceBusMessagePackFormatterResolver.Instance
-                    .GetFormatter<ResolverConcurrencyContract>();
-            }, TestContext.Current.CancellationToken))
-            .ToArray();
+                    .GetFormatter<IResolverConcurrencyContract>();
+            }, TestContext.Current.CancellationToken)),
+        ];
 
         release.SetResult();
-        IMessagePackFormatter<ResolverConcurrencyContract>?[] formatters = await Task.WhenAll(calls);
-        IMessagePackFormatter<ResolverConcurrencyContract> formatter = Assert.IsAssignableFrom<
-            IMessagePackFormatter<ResolverConcurrencyContract>>(formatters[0]);
+        IMessagePackFormatter<IResolverConcurrencyContract>?[] formatters = await Task.WhenAll(calls);
+        IMessagePackFormatter<IResolverConcurrencyContract> formatter = Assert.IsType<
+            IMessagePackFormatter<IResolverConcurrencyContract>>(formatters[0], exactMatch: false);
 
         Assert.All(formatters, candidate => Assert.Same(formatter, candidate));
     }
@@ -179,6 +248,29 @@ public sealed class InterfaceMessagePackFormatterTests
         return formatter.Deserialize(ref reader, options);
     }
 
+    private static byte[] SerializeMapped(IMappedContract source)
+    {
+        var options = MessagePackSerializerOptions.Standard
+            .WithResolver(ContractlessStandardResolver.Instance)
+            .WithSecurity(MessagePackSecurity.UntrustedData);
+        var formatter = new InterfaceConcreteMapFormatter<IMappedContract, MappedContract>();
+        var buffer = new ArrayBufferWriter<byte>();
+        var writer = new MessagePackWriter(buffer);
+        formatter.Serialize(ref writer, source, options);
+        writer.Flush();
+        return buffer.WrittenSpan.ToArray();
+    }
+
+    private static IMappedContract DeserializeMapped(byte[] bytes)
+    {
+        var options = MessagePackSerializerOptions.Standard
+            .WithResolver(ContractlessStandardResolver.Instance)
+            .WithSecurity(MessagePackSecurity.UntrustedData);
+        var formatter = new InterfaceConcreteMapFormatter<IMappedContract, MappedContract>();
+        var reader = new MessagePackReader(bytes);
+        return formatter.Deserialize(ref reader, options);
+    }
+
     private static void Collect(WeakReference reference)
     {
         for (var attempt = 0; attempt < 20 && reference.IsAlive; attempt++)
@@ -190,7 +282,7 @@ public sealed class InterfaceMessagePackFormatterTests
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static WeakReference StoreWithoutCompiling(ConcreteFormatterCache<ICached> cache)
+    private static WeakReference StoreWithoutCompiling(ConcreteFormatterInvokerCache<ICached> cache)
     {
         var type = EmitCollectibleImplementationType();
         _ = cache.Get(type);
@@ -237,7 +329,7 @@ public sealed class InterfaceMessagePackFormatterTests
         builder.DefineMethodOverride(getter, typeof(ICached).GetProperty(name)!.GetMethod!);
     }
 
-    private static readonly ConcreteFormatterAccess<ICached> EmptyAccess = new(null!, null!, null!);
+    private static readonly ConcreteFormatterInvoker<ICached> EmptyInvoker = new(null!, null!, null!);
 
     public interface ICached
     {
@@ -246,9 +338,24 @@ public sealed class InterfaceMessagePackFormatterTests
         string Name { get; }
     }
 
-    public interface ResolverConcurrencyContract
+    public interface IResolverConcurrencyContract
     {
         string Value { get; }
+    }
+
+    public interface IMappedContract
+    {
+        string Value { get; }
+    }
+
+    public sealed class MappedContract : IMappedContract
+    {
+        public string Value { get; set; } = string.Empty;
+    }
+
+    public sealed class AlternativeMappedContract : IMappedContract
+    {
+        public string Value { get; set; } = string.Empty;
     }
 
     public sealed class Cached : ICached

@@ -9116,6 +9116,7 @@ TYPE class public ViciOne.ServiceBus.Mediator.MediatorRequestHandler<TRequest> [
 ASSEMBLY ViciOne.ServiceBus.MessagePack VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.MessagePack.MessagePackConfigurationExtensions [static]
   METHOD public static System.Void UseMessagePackDeserializer(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, System.Boolean isDefault = false)
+  METHOD public static System.Void UseMessagePackDeserializer(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, System.Boolean isDefault = false)
   METHOD public static System.Void UseMessagePackSerializer(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, System.Boolean isDefault = true)
   METHOD public static System.Void UseMessagePackSerializer(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, System.Boolean isDefault = true)
 TYPE class public ViciOne.ServiceBus.MessagePack.MessagePackSerializerFactory [sealed]

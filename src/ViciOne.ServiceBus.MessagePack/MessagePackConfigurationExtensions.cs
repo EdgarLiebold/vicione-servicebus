@@ -47,4 +47,18 @@ public static class MessagePackConfigurationExtensions
         ArgumentNullException.ThrowIfNull(configurator);
         configurator.AddDeserializer(new MessagePackSerializerFactory(), isDefault);
     }
+
+    /// <summary>Registers MessagePack deserialization on one receive endpoint without adding an outgoing serializer.</summary>
+    /// <param name="configurator">The receive endpoint to configure.</param>
+    /// <param name="isDefault">
+    /// <see langword="true" /> to use MessagePack when an incoming message has no content type;
+    /// otherwise, <see langword="false" />.
+    /// </param>
+    public static void UseMessagePackDeserializer(
+        this IReceiveEndpointConfigurator configurator,
+        bool isDefault = false)
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        configurator.AddDeserializer(new MessagePackSerializerFactory(), isDefault);
+    }
 }

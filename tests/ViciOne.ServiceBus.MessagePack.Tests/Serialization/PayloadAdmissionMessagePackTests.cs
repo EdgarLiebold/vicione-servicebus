@@ -276,7 +276,7 @@ public sealed class PayloadAdmissionMessagePackTests
     private static int MeasureBodyLength(BoundaryPayload message)
     {
         var writer = new ArrayBufferWriter<byte>();
-        InternalMessagePackResolver.Serialize(typeof(BoundaryPayload), writer, message);
+        MessagePackSerializationRuntime.Serialize(writer, message);
         return writer.WrittenCount;
     }
 
@@ -294,7 +294,7 @@ public sealed class PayloadAdmissionMessagePackTests
             where T : class
         {
             Interlocked.Increment(ref _preSendCalls);
-            TransportSendContext transport = Assert.IsAssignableFrom<TransportSendContext>(context);
+            TransportSendContext transport = Assert.IsType<TransportSendContext>(context, exactMatch: false);
             BodyLength = transport.Body.GetBytes().LongLength;
             ApplicationSerializationReads = BoundaryPayload.SerializationReads;
             BoundaryPayload.StopCountingSerializationReads();

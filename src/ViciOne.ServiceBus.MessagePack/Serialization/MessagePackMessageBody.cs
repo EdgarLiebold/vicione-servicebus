@@ -14,9 +14,9 @@ internal sealed class MessagePackMessageBody<TMessage> :
     where TMessage : class
 {
     /// <summary>Gets the serialized byte length, materializing the lazy body when first accessed.</summary>
-    public long? Length => _lazyMessagePackSerializedObject.Value.Length;
+    public long? Length => _serializedBytes.Value.Length;
 
-    readonly Lazy<byte[]> _lazyMessagePackSerializedObject;
+    readonly Lazy<byte[]> _serializedBytes;
 
     /// <summary>Creates a lazy MessagePack transport envelope for a send context.</summary>
     /// <param name="context">The send context that supplies message content and transport metadata.</param>
@@ -24,16 +24,16 @@ internal sealed class MessagePackMessageBody<TMessage> :
     public MessagePackMessageBody(SendContext<TMessage> context, MessagePackEnvelope? envelope = null)
     {
         ArgumentNullException.ThrowIfNull(context);
-        _lazyMessagePackSerializedObject = new Lazy<byte[]>(() =>
+        _serializedBytes = new Lazy<byte[]>(() =>
         {
             if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
             {
                 var unboundedEnvelope = envelope ?? new MessagePackEnvelope(context, context.Message);
-                return InternalMessagePackResolver.Serialize(unboundedEnvelope);
+                return MessagePackSerializationRuntime.Serialize(unboundedEnvelope);
             }
 
             IPayloadSerializationBuffer bodyBuffer = admission.Runtime.CreateSerializedBodyBuffer();
-            if (envelope is { IsMessageNativeMessagePackSerialized: true, Message: byte[] serializedMessage })
+            if (envelope?.Message is byte[] serializedMessage)
             {
                 serializedMessage.AsSpan().CopyTo(bodyBuffer.GetSpan(serializedMessage.Length));
                 bodyBuffer.Advance(serializedMessage.Length);
@@ -42,7 +42,7 @@ internal sealed class MessagePackMessageBody<TMessage> :
             {
                 object? message = envelope?.Message ?? context.Message;
                 SerializeBounded(() =>
-                    InternalMessagePackResolver.Serialize(message?.GetType() ?? typeof(object), bodyBuffer, message));
+                    MessagePackSerializationRuntime.Serialize(message?.GetType() ?? typeof(object), bodyBuffer, message));
             }
 
             _ = admission.Runtime.EvaluateSerializedBody(bodyBuffer.WrittenMemory, admission.MessageDataOffloadObserved);
@@ -50,10 +50,13 @@ internal sealed class MessagePackMessageBody<TMessage> :
             byte[] boundedBody = bodyBuffer.WrittenMemory.ToArray();
             var envelopeToSerialize = envelope == null
                 ? new MessagePackEnvelope(context, boundedBody)
-                : new MessagePackEnvelope(envelope, boundedBody);
+                : new MessagePackEnvelope(
+                    envelope,
+                    boundedBody,
+                    envelope.IsNativeMessagePackPayload);
 
             IPayloadSerializationBuffer envelopeBuffer = admission.Runtime.CreateTransportEnvelopeBuffer();
-            SerializeBounded(() => InternalMessagePackResolver.Serialize(envelopeBuffer, envelopeToSerialize));
+            SerializeBounded(() => MessagePackSerializationRuntime.Serialize(envelopeBuffer, envelopeToSerialize));
             admission.Runtime.ValidateTransportEnvelope(envelopeBuffer.WrittenMemory);
 
             return envelopeBuffer.WrittenMemory.ToArray();
@@ -65,28 +68,28 @@ internal sealed class MessagePackMessageBody<TMessage> :
     public MessagePackMessageBody(TMessage message)
     {
         ArgumentNullException.ThrowIfNull(message);
-        _lazyMessagePackSerializedObject = new Lazy<byte[]>(() => InternalMessagePackResolver.Serialize(message));
+        _serializedBytes = new Lazy<byte[]>(() => MessagePackSerializationRuntime.Serialize(message));
     }
 
     /// <summary>Opens a non-writable stream over the serialized MessagePack bytes.</summary>
     /// <returns>A readable stream positioned at the beginning of the serialized body.</returns>
     public Stream GetStream()
     {
-        return new MemoryStream(_lazyMessagePackSerializedObject.Value, false);
+        return new MemoryStream(_serializedBytes.Value, false);
     }
 
     /// <summary>Gets the lazily serialized MessagePack byte array.</summary>
     /// <returns>The serialized body bytes retained by this instance.</returns>
     public byte[] GetBytes()
     {
-        return _lazyMessagePackSerializedObject.Value;
+        return _serializedBytes.Value;
     }
 
     /// <summary>Gets the serialized MessagePack bytes encoded as Base64 text.</summary>
     /// <returns>The Base64 representation of the serialized body.</returns>
     public string GetString()
     {
-        return Convert.ToBase64String(_lazyMessagePackSerializedObject.Value);
+        return Convert.ToBase64String(_serializedBytes.Value);
     }
 
     static void SerializeBounded(Action serialize)
@@ -99,7 +102,6 @@ internal sealed class MessagePackMessageBody<TMessage> :
             when (exception.InnerException is PayloadAdmissionException)
         {
             ExceptionDispatchInfo.Capture(exception.InnerException).Throw();
-            throw;
         }
     }
 }

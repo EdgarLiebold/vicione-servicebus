@@ -58,13 +58,6 @@ public sealed class SourceFileNamingArchitectureTests
             ["tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/TopologyContracts/AzureServiceBusTopologyContracts.cs"] = Types(
                 "public interface ExplicitTopologyContract`0", "public interface NamespaceTopologyContract`0",
                 "public interface ExcludedTopologyContract`0"),
-            ["tests/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackTestContracts.cs"] = Types(
-                "public interface BinaryContract`0", "public interface PersonContract`0", "public interface ContactContract`0",
-                "public class PersonMessage`0", "public class ContactMessage`0", "public class BinaryMessage`0",
-                "public class TemporalMessage`0", "public class ConstructorBoundMessage`0", "public class ScalarMessage`0",
-                "public class CollectionMessage`0", "public class NestedMessage`0", "public class EdgeShapeMessage`0",
-                "public enum ExampleState`0", "public class EmptyMessage`0", "public class ObjectGraphMessage`0",
-                "public interface ValidationContract`0", "public class ValidationMessage`0", "public class XmlPayloadMessage`0"),
             ["tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerDiscovery/ContainerDiscoveryTypes.cs"] = Types(
                 "public class DiscoveryMarker`0", "public record DiscoveryPing`0", "public record DiscoveryPong`0",
                 "public record PingReceived`0", "public record PingAcknowledged`0", "public record PingCompleted`0",

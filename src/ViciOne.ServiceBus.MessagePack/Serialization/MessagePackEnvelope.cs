@@ -35,7 +35,7 @@ internal sealed class MessagePackEnvelope :
     /// Gets or sets whether <see cref="Message" /> contains a natively serialized MessagePack payload
     /// rather than a MessagePack-encoded object dictionary that requires metadata projection.
     /// </summary>
-    public bool IsMessageNativeMessagePackSerialized { get; set; }
+    public bool IsNativeMessagePackPayload { get; set; }
     /// <summary>Gets or sets the encoded payload, normally as a byte array.</summary>
     public object? Message { get; set; }
     /// <summary>Gets or sets the instant after which the message is expired.</summary>
@@ -55,8 +55,8 @@ internal sealed class MessagePackEnvelope :
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(message);
         ApplyMetadata(EnvelopeMetadataProjection.From(context));
-        IsMessageNativeMessagePackSerialized = true;
-        Message = InternalMessagePackResolver.Serialize(message);
+        IsNativeMessagePackPayload = true;
+        Message = MessagePackSerializationRuntime.Serialize(message);
     }
 
     internal MessagePackEnvelope(SendContext context, byte[] serializedMessage)
@@ -64,7 +64,7 @@ internal sealed class MessagePackEnvelope :
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(serializedMessage);
         ApplyMetadata(EnvelopeMetadataProjection.From(context));
-        IsMessageNativeMessagePackSerialized = true;
+        IsNativeMessagePackPayload = true;
         Message = serializedMessage;
     }
 
@@ -77,37 +77,40 @@ internal sealed class MessagePackEnvelope :
 
         if (envelope is MessagePackEnvelope alreadyMessagePack)
         {
-            IsMessageNativeMessagePackSerialized = alreadyMessagePack.IsMessageNativeMessagePackSerialized;
+            IsNativeMessagePackPayload = alreadyMessagePack.IsNativeMessagePackPayload;
             Message = CopyPayload(alreadyMessagePack.Message);
         }
         else
         {
-            IsMessageNativeMessagePackSerialized = true;
-            Message = InternalMessagePackResolver.Serialize(envelope.Message);
+            IsNativeMessagePackPayload = true;
+            Message = MessagePackSerializationRuntime.Serialize(envelope.Message);
         }
     }
 
-    internal MessagePackEnvelope(MessageEnvelope envelope, byte[] serializedMessage)
+    internal MessagePackEnvelope(
+        MessageEnvelope envelope,
+        byte[] serializedMessage,
+        bool isNativeMessagePackPayload)
     {
         ArgumentNullException.ThrowIfNull(envelope);
         ArgumentNullException.ThrowIfNull(serializedMessage);
         ApplyMetadata(EnvelopeMetadataProjection.From(envelope));
-        IsMessageNativeMessagePackSerialized = true;
+        IsNativeMessagePackPayload = isNativeMessagePackPayload;
         Message = serializedMessage;
     }
 
     /// <summary>Captures message metadata and serializes a payload whose supported contract URNs are supplied explicitly.</summary>
     /// <param name="context">The message context that supplies envelope metadata.</param>
     /// <param name="message">The message to serialize.</param>
-    /// <param name="messageTypesNames">The supported message contract URNs.</param>
-    public MessagePackEnvelope(MessageContext context, object message, string[] messageTypesNames)
+    /// <param name="messageTypes">The supported message contract URNs.</param>
+    public MessagePackEnvelope(MessageContext context, object message, string[] messageTypes)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(message);
-        ArgumentNullException.ThrowIfNull(messageTypesNames);
-        ApplyMetadata(EnvelopeMetadataProjection.From(context, messageTypesNames));
-        IsMessageNativeMessagePackSerialized = true;
-        Message = InternalMessagePackResolver.Serialize(message);
+        ArgumentNullException.ThrowIfNull(messageTypes);
+        ApplyMetadata(EnvelopeMetadataProjection.From(context, messageTypes));
+        IsNativeMessagePackPayload = true;
+        Message = MessagePackSerializationRuntime.Serialize(message);
     }
 
     MessagePackEnvelope()

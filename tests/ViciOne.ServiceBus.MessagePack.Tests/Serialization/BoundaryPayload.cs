@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.MessagePack.Tests.Serialization;
 
 public sealed class BoundaryPayload
 {
-    private static readonly ConditionalWeakTable<BoundaryPayload, PayloadHolder> Payloads = new();
+    private static readonly ConditionalWeakTable<BoundaryPayload, PayloadHolder> Payloads = [];
     private static int _countSerializationReads;
     private static int _serializationReads;
 
