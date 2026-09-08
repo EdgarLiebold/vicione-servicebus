@@ -1,10 +1,12 @@
 using Amazon.DynamoDBv2.Model;
+using ViciOne.ServiceBus.DynamoDb;
 using ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.DynamoDb.Saga;
+using ViciOne.ServiceBus.Sagas;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
-namespace ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.DynamoDbIntegration.Saga;
+namespace ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.Saga;
 
 public sealed class DynamoDbSagaExpirationTests
 {
@@ -23,18 +25,18 @@ public sealed class DynamoDbSagaExpirationTests
         Guid secondId = Guid.NewGuid();
         Guid nonExpiringId = Guid.NewGuid();
 
-        using (var writer = new DynamoDbDatabaseContext<ExpiringSaga>(fixture.CreateContext(), expiringOptions))
+        using (var writer = new DynamoDbSagaStore<ExpiringSaga>(fixture.CreateContext(), expiringOptions))
         {
-            await writer.InsertAsync(new ExpiringSaga { CorrelationId = firstId }, cancellationToken);
+            await writer.CreateAsync(new ExpiringSaga { CorrelationId = firstId }, cancellationToken);
             timeProvider.UtcNow = timeProvider.UtcNow.AddMinutes(2);
-            await writer.InsertAsync(new ExpiringSaga { CorrelationId = secondId }, cancellationToken);
+            await writer.CreateAsync(new ExpiringSaga { CorrelationId = secondId }, cancellationToken);
         }
 
-        using (var writer = new DynamoDbDatabaseContext<ExpiringSaga>(
+        using (var writer = new DynamoDbSagaStore<ExpiringSaga>(
                    fixture.CreateContext(),
                    new DynamoDbSagaRepositoryOptions<ExpiringSaga>(fixture.TableName)))
         {
-            await writer.InsertAsync(new ExpiringSaga { CorrelationId = nonExpiringId }, cancellationToken);
+            await writer.CreateAsync(new ExpiringSaga { CorrelationId = nonExpiringId }, cancellationToken);
         }
 
         Dictionary<string, AttributeValue>[] rows = await fixture.ScanAsync(cancellationToken);
@@ -44,9 +46,9 @@ public sealed class DynamoDbSagaExpirationTests
         long expectedFirst = new DateTimeOffset(2032, 04, 05, 06, 12, 08, TimeSpan.Zero).ToUnixTimeSeconds();
         long expectedSecond = new DateTimeOffset(2032, 04, 05, 06, 14, 08, TimeSpan.Zero).ToUnixTimeSeconds();
 
-        Assert.Equal(expectedFirst.ToString(System.Globalization.CultureInfo.InvariantCulture), first[nameof(DynamoDbSaga.ExpirationEpochSeconds)].N);
-        Assert.Equal(expectedSecond.ToString(System.Globalization.CultureInfo.InvariantCulture), second[nameof(DynamoDbSaga.ExpirationEpochSeconds)].N);
-        Assert.DoesNotContain(nameof(DynamoDbSaga.ExpirationEpochSeconds), nonExpiring.Keys);
+        Assert.Equal(expectedFirst.ToString(System.Globalization.CultureInfo.InvariantCulture), first[nameof(DynamoDbSagaDocument.ExpirationEpochSeconds)].N);
+        Assert.Equal(expectedSecond.ToString(System.Globalization.CultureInfo.InvariantCulture), second[nameof(DynamoDbSagaDocument.ExpirationEpochSeconds)].N);
+        Assert.DoesNotContain(nameof(DynamoDbSagaDocument.ExpirationEpochSeconds), nonExpiring.Keys);
     }
 
     public sealed class ExpiringSaga : ISagaVersion

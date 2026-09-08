@@ -37,7 +37,7 @@ internal sealed class DynamoDbTestTable : IAsyncDisposable
             AuthenticationRegion = localStack.Region,
             MaxErrorRetry = 0,
         };
-        string normalizedPurpose = new(purpose.Where(char.IsAsciiLetterOrDigit).ToArray());
+        string normalizedPurpose = string.Concat(purpose.Where(char.IsAsciiLetterOrDigit));
         if (normalizedPurpose.Length == 0)
             normalizedPurpose = "test";
         if (normalizedPurpose.Length > 24)
@@ -92,7 +92,7 @@ internal sealed class DynamoDbTestTable : IAsyncDisposable
                 new ScanRequest { TableName = TableName, ConsistentRead = true },
                 cancellationToken)
             .WaitAsync(OperationTimeout, cancellationToken);
-        return (response.Items ?? []).ToArray();
+        return response.Items is null ? [] : [.. response.Items];
     }
 
     public async ValueTask DisposeAsync()

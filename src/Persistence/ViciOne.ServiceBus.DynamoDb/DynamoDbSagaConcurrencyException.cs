@@ -3,7 +3,7 @@ using System;
 namespace ViciOne.ServiceBus.DynamoDb;
 
 /// <summary>Indicates that an Amazon DynamoDB conditional write rejected a conflicting saga insert, update, or delete.</summary>
-public class DynamoDbSagaConcurrencyException :
+public sealed class DynamoDbSagaConcurrencyException :
     ConcurrencyException
 {
     /// <summary>Creates a concurrency exception for the conflicting saga identity.</summary>
@@ -22,11 +22,6 @@ public class DynamoDbSagaConcurrencyException :
     /// <param name="innerException">The conditional-write exception reported by Amazon DynamoDB.</param>
     public DynamoDbSagaConcurrencyException(string message, Type sagaType, Guid correlationId, Exception innerException)
         : base(message, sagaType, correlationId, innerException)
-    {
-    }
-
-    /// <summary>Creates an empty exception for serializers that require a parameterless constructor.</summary>
-    public DynamoDbSagaConcurrencyException()
     {
     }
 }

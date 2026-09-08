@@ -10,6 +10,7 @@ public sealed class RequirementCoverageProjectionTests
         "ViciOne.ServiceBus.DynamoDb.Tests.Requirements.DynamoDbRequirements.json";
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-REQUIREMENTS", "projection-matches-compiled-metadata")]
     public void DynamoDbRequirements_MatchCompiledRequirementMetadata()
     {
         Assembly assembly = typeof(RequirementCoverageProjectionTests).Assembly;

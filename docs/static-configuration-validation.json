@@ -117,9 +117,9 @@
       "type": "DynamoDbSagaRepositoryOptions<TSaga>",
       "source": "src/Persistence/ViciOne.ServiceBus.DynamoDb/DynamoDbSagaRepositoryOptions.cs",
       "boundary": "construction",
-      "invariantCount": 3,
-      "negativeTest": { "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryConfigurationTests.cs", "method": "InvalidAndMutableInput_IsRejectedOrFrozenBeforeRegistration" },
-      "positiveTest": { "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryConfigurationTests.cs", "method": "InvalidAndMutableInput_IsRejectedOrFrozenBeforeRegistration" }
+      "invariantCount": 4,
+      "negativeTest": { "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbSagaRepositoryConfigurationTests.cs", "method": "InvalidAndMutableInput_IsRejectedOrFrozenBeforeRegistration" },
+      "positiveTest": { "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbSagaRepositoryConfigurationTests.cs", "method": "InvalidAndMutableInput_IsRejectedOrFrozenBeforeRegistration" }
     },
     {
       "type": "EntityFrameworkOutboxOptions<TDbContext>",

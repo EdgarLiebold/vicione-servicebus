@@ -1,11 +1,13 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using ViciOne.ServiceBus.DynamoDb;
 using ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.DynamoDb.Saga;
+using ViciOne.ServiceBus.Sagas;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
-namespace ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.DynamoDbIntegration.Saga;
+namespace ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.Saga;
 
 public sealed class DynamoDbSagaConfigurationTests
 {
@@ -17,12 +19,12 @@ public sealed class DynamoDbSagaConfigurationTests
         await using DynamoDbTestTable fixture = await DynamoDbTestTable.CreateAsync("FrozenOptions", cancellationToken);
         var options = new DynamoDbSagaRepositoryOptions<ConfiguredSaga>(
             fixture.TableName,
-            expiration: null,
+            timeToLive: null,
             TimeProvider.System,
             consistentRead: true,
-            isEmptyStringValueEnabled: true,
-            retrieveDateTimeInUtc: true,
-            conversion: DynamoDBEntryConversion.V2);
+            allowEmptyStrings: true,
+            retrieveDateTimeAsUtc: true,
+            entryConversion: DynamoDBEntryConversion.V2);
 
         LoadConfig mutableLoad = options.CreateLoadConfig();
         mutableLoad.OverrideTableName = "foreign-table";
@@ -31,8 +33,8 @@ public sealed class DynamoDbSagaConfigurationTests
         mutableTarget.OverrideTableName = "foreign-target";
 
         Guid sagaId = Guid.NewGuid();
-        using var context = new DynamoDbDatabaseContext<ConfiguredSaga>(fixture.CreateContext(), options);
-        await context.InsertAsync(new ConfiguredSaga { CorrelationId = sagaId, Value = "persisted" }, cancellationToken);
+        using var context = new DynamoDbSagaStore<ConfiguredSaga>(fixture.CreateContext(), options);
+        await context.CreateAsync(new ConfiguredSaga { CorrelationId = sagaId, Value = "persisted" }, cancellationToken);
         ConfiguredSaga loaded = Assert.IsType<ConfiguredSaga>(await context.LoadAsync(sagaId, cancellationToken));
 
         LoadConfig effectiveLoad = options.CreateLoadConfig();

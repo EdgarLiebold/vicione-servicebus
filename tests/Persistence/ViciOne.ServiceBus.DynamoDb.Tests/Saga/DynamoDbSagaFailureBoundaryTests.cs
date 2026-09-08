@@ -6,18 +6,23 @@ using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using ViciOne.ServiceBus.DynamoDb.Saga;
+using ViciOne.ServiceBus.Saga;
+using ViciOne.ServiceBus.Sagas;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
-namespace ViciOne.ServiceBus.DynamoDb.Tests.DynamoDbIntegration.Saga;
+namespace ViciOne.ServiceBus.DynamoDb.Tests.Saga;
 
 public sealed class DynamoDbSagaFailureBoundaryTests
 {
     [Theory]
     [InlineData("null-payload")]
+    [InlineData("missing-payload")]
+    [InlineData("empty-payload")]
     [InlineData("foreign-payload-id")]
     [InlineData("foreign-row-key")]
+    [InlineData("foreign-entity-type")]
     [InlineData("version-mismatch")]
     [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-FAILURE", "corrupt-persisted-saga-never-masquerades-as-absent-or-valid")]
     public async Task CorruptPersistedSaga_FailsClosedAsync(string corruption)
@@ -25,7 +30,7 @@ public sealed class DynamoDbSagaFailureBoundaryTests
         Guid requestedId = Guid.NewGuid();
         Guid foreignId = Guid.NewGuid();
         var persisted = new TestSaga { CorrelationId = requestedId, Version = 7 };
-        var row = new DynamoDbSaga
+        var row = new DynamoDbSagaDocument
         {
             CorrelationId = requestedId.ToString("D"),
             VersionNumber = persisted.Version,
@@ -37,12 +42,21 @@ public sealed class DynamoDbSagaFailureBoundaryTests
             case "null-payload":
                 row.Properties = "null";
                 break;
+            case "missing-payload":
+                row.Properties = null!;
+                break;
+            case "empty-payload":
+                row.Properties = "   ";
+                break;
             case "foreign-payload-id":
                 persisted.CorrelationId = foreignId;
                 row.Properties = JsonSerializer.Serialize(persisted, ServiceBusMetadataJson.Options);
                 break;
             case "foreign-row-key":
                 row.CorrelationId = foreignId.ToString("D");
+                break;
+            case "foreign-entity-type":
+                row.EntityType = "FOREIGN";
                 break;
             case "version-mismatch":
                 row.VersionNumber++;
@@ -52,12 +66,34 @@ public sealed class DynamoDbSagaFailureBoundaryTests
         }
 
         IDynamoDBContext database = LoadedSagaContextProbe.Create(row);
-        using var context = new DynamoDbDatabaseContext<TestSaga>(database, new DynamoDbSagaRepositoryOptions<TestSaga>("valid-table"));
+        using var context = new DynamoDbSagaStore<TestSaga>(
+            database,
+            new DynamoDbSagaRepositoryOptions<TestSaga>("valid-table"));
 
         SerializationException actual = await Assert.ThrowsAsync<SerializationException>(
             () => context.LoadAsync(requestedId, TestContext.Current.CancellationToken));
 
         Assert.Contains(nameof(TestSaga), actual.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-FAILURE", "null-saga-state-is-rejected-before-provider-use")]
+    public async Task NullSagaState_IsRejectedBeforeProviderUseAsync()
+    {
+        DynamoDbContextProbe probe = DynamoDbContextProbe.Create(
+            new InvalidOperationException("The provider must not be called."));
+        using var context = new DynamoDbSagaStore<TestSaga>(
+            probe.Context,
+            new DynamoDbSagaRepositoryOptions<TestSaga>("valid-table"));
+
+        await Assert.ThrowsAsync<ArgumentNullException>(
+            () => context.CreateAsync(null!, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(
+            () => context.UpdateAsync(null!, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(
+            () => context.DeleteAsync(null!, CancellationToken.None));
+
+        Assert.Empty(probe.CancellationTokens);
     }
 
     [Fact]
@@ -67,13 +103,13 @@ public sealed class DynamoDbSagaFailureBoundaryTests
         var failure = new InvalidOperationException("provider failure");
         DynamoDbContextProbe probe = DynamoDbContextProbe.Create(failure);
         var options = new DynamoDbSagaRepositoryOptions<TestSaga>("valid-table");
-        using var context = new DynamoDbDatabaseContext<TestSaga>(probe.Context, options);
+        using var context = new DynamoDbSagaStore<TestSaga>(probe.Context, options);
         var saga = new TestSaga { CorrelationId = Guid.NewGuid(), Version = 7 };
 
         Exception load = await Assert.ThrowsAsync<InvalidOperationException>(
             () => context.LoadAsync(saga.CorrelationId, CancellationToken.None));
         Exception insert = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => context.InsertAsync(saga, CancellationToken.None));
+            () => context.CreateAsync(saga, CancellationToken.None));
         Exception update = await Assert.ThrowsAsync<InvalidOperationException>(
             () => context.UpdateAsync(saga, CancellationToken.None));
         Exception delete = await Assert.ThrowsAsync<InvalidOperationException>(
@@ -97,13 +133,13 @@ public sealed class DynamoDbSagaFailureBoundaryTests
         var failure = new OperationCanceledException("caller canceled", innerException: null, cancellation.Token);
         DynamoDbContextProbe probe = DynamoDbContextProbe.Create(failure);
         var options = new DynamoDbSagaRepositoryOptions<TestSaga>("valid-table");
-        using var context = new DynamoDbDatabaseContext<TestSaga>(probe.Context, options);
+        using var context = new DynamoDbSagaStore<TestSaga>(probe.Context, options);
         var saga = new TestSaga { CorrelationId = Guid.NewGuid(), Version = 11 };
 
         OperationCanceledException load = await Assert.ThrowsAsync<OperationCanceledException>(
             () => context.LoadAsync(saga.CorrelationId, cancellation.Token));
         OperationCanceledException insert = await Assert.ThrowsAsync<OperationCanceledException>(
-            () => context.InsertAsync(saga, cancellation.Token));
+            () => context.CreateAsync(saga, cancellation.Token));
         OperationCanceledException update = await Assert.ThrowsAsync<OperationCanceledException>(
             () => context.UpdateAsync(saga, cancellation.Token));
         OperationCanceledException delete = await Assert.ThrowsAsync<OperationCanceledException>(
@@ -124,7 +160,7 @@ public sealed class DynamoDbSagaFailureBoundaryTests
     {
         DynamoDbContextProbe probe = DynamoDbContextProbe.Create(new InvalidOperationException("must not be observed"));
         var options = new DynamoDbSagaRepositoryOptions<TestSaga>("valid-table");
-        using var context = new DynamoDbDatabaseContext<TestSaga>(probe.Context, options);
+        using var context = new DynamoDbSagaStore<TestSaga>(probe.Context, options);
         var saga = new TestSaga { CorrelationId = Guid.NewGuid(), Version = int.MaxValue };
 
         await Assert.ThrowsAsync<OverflowException>(() => context.UpdateAsync(saga, CancellationToken.None));
@@ -134,13 +170,30 @@ public sealed class DynamoDbSagaFailureBoundaryTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-LIFETIME", "owned-provider-context-is-disposed-exactly-once")]
+    public void SagaStore_DisposesOwnedProviderContextExactlyOnce()
+    {
+        DynamoDbContextProbe probe = DynamoDbContextProbe.Create(new InvalidOperationException("must not be observed"));
+        var store = new DynamoDbSagaStore<TestSaga>(
+            probe.Context,
+            new DynamoDbSagaRepositoryOptions<TestSaga>("valid-table"));
+
+        store.Dispose();
+        store.Dispose();
+
+        Assert.Equal(1, probe.DisposeCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-FAILURE", "failed-insert-never-returns-null-context")]
     public async Task InsertFailure_IsLoggedAndRethrownInsteadOfReturningANullSagaContextAsync()
     {
         var failure = new InvalidOperationException("insert failed");
-        var database = new FailingDatabaseContext(failure);
+        var database = new FailingSagaStore(failure);
         ConsumeContext<TestMessage> consumeContext = ConsumeContextProxy.Create(new TestMessage(), CancellationToken.None);
-        var repository = new DynamoDbSagaRepositoryContext<TestSaga, TestMessage>(database, consumeContext, null!);
+        ISagaConsumeContextFactory<IDynamoDbSagaStore<TestSaga>, TestSaga> factory =
+            new SagaConsumeContextFactory<IDynamoDbSagaStore<TestSaga>, TestSaga>();
+        var repository = new DynamoDbSagaRepositoryContext<TestSaga, TestMessage>(database, consumeContext, factory);
         var saga = new TestSaga { CorrelationId = Guid.NewGuid() };
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() => repository.InsertAsync(saga, TestContext.Current.CancellationToken));
@@ -158,20 +211,35 @@ public sealed class DynamoDbSagaFailureBoundaryTests
 
     public sealed record TestMessage;
 
-    private sealed class FailingDatabaseContext(Exception failure) : DatabaseContext<TestSaga>
+    private sealed class FailingSagaStore(Exception failure) : IDynamoDbSagaStore<TestSaga>
     {
         public int InsertCount { get; private set; }
 
-        public Task AddAsync(TestSaga instance, CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new NotSupportedException(); }
-        public Task InsertAsync(TestSaga instance, CancellationToken cancellationToken)
+        public Task CreateAsync(TestSaga instance, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); InsertCount++;
+            cancellationToken.ThrowIfCancellationRequested();
+            InsertCount++;
             return Task.FromException(failure);
         }
 
-        public Task<TestSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.DynamoDb.Tests.DynamoDbIntegration.Saga.DynamoDbSagaFailureBoundaryTests.TestSaga?>(cancellationToken); throw new NotSupportedException(); }
-        public Task UpdateAsync(TestSaga instance, CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new NotSupportedException(); }
-        public Task DeleteAsync(TestSaga instance, CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new NotSupportedException(); }
+        public Task<TestSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            throw new NotSupportedException();
+        }
+
+        public Task UpdateAsync(TestSaga instance, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            throw new NotSupportedException();
+        }
+
+        public Task DeleteAsync(TestSaga instance, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            throw new NotSupportedException();
+        }
+
         public void Dispose()
         {
         }
@@ -187,7 +255,7 @@ public sealed class DynamoDbSagaFailureBoundaryTests
         public static ConsumeContext<T> Create<T>(T message, CancellationToken cancellationToken)
             where T : class
         {
-            TestConsumeContext<T> context = DispatchProxy.Create<TestConsumeContext<T>, ConsumeContextProxy>();
+            ITestConsumeContext<T> context = DispatchProxy.Create<ITestConsumeContext<T>, ConsumeContextProxy>();
             var proxy = (ConsumeContextProxy)(object)context;
             proxy._message = message;
             proxy._cancellationToken = cancellationToken;
@@ -208,7 +276,7 @@ public sealed class DynamoDbSagaFailureBoundaryTests
         };
     }
 
-    private interface TestConsumeContext<out T> :
+    private interface ITestConsumeContext<out T> :
         ConsumeContext<T>,
         ConsumeContext
         where T : class;
@@ -242,7 +310,9 @@ public sealed class DynamoDbSagaFailureBoundaryTests
 
         public IDynamoDBContext Context { get; private set; } = null!;
 
-        public IReadOnlyList<CancellationToken> CancellationTokens => _cancellationTokens;
+        public List<CancellationToken> CancellationTokens => _cancellationTokens;
+
+        public int DisposeCount { get; private set; }
 
         public static DynamoDbContextProbe Create(Exception failure)
         {
@@ -270,11 +340,12 @@ public sealed class DynamoDbSagaFailureBoundaryTests
                     return _table;
                 case "LoadAsync":
                     CaptureCancellation(args);
-                    return Task.FromException<DynamoDbSaga>(_failure);
+                    return Task.FromException<DynamoDbSagaDocument>(_failure);
                 case "DeleteAsync":
                     CaptureCancellation(args);
                     return Task.FromException(_failure);
                 case "Dispose":
+                    DisposeCount++;
                     return null;
                 default:
                     throw new NotSupportedException(targetMethod.Name);
@@ -325,9 +396,9 @@ public sealed class DynamoDbSagaFailureBoundaryTests
 
     private class LoadedSagaContextProbe : DispatchProxy
     {
-        private DynamoDbSaga _row = null!;
+        private DynamoDbSagaDocument _row = null!;
 
-        public static IDynamoDBContext Create(DynamoDbSaga row)
+        public static IDynamoDBContext Create(DynamoDbSagaDocument row)
         {
             ArgumentNullException.ThrowIfNull(row);
 

@@ -1,20 +1,18 @@
 using System;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.DynamoDb;
 using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Sagas;
 
-namespace ViciOne.ServiceBus.Configuration;
+namespace ViciOne.ServiceBus.DynamoDb.Configuration;
 
 /// <summary>Applies one Amazon DynamoDB repository configuration to compatible versioned saga types.</summary>
-public class DynamoDbSagaRepositoryRegistrationProvider :
+internal sealed class DynamoDbSagaRepositoryRegistrationProvider(
+    Action<IDynamoDbSagaRepositoryConfigurator> configure) :
     ISagaRepositoryRegistrationProvider
 {
-    readonly Action<IDynamoDbSagaRepositoryConfigurator> _configure;
-
-    /// <summary>Creates a provider from the configuration callback applied to each compatible saga type.</summary>
-    /// <param name="configure">The Amazon DynamoDB repository configuration callback.</param>
-    public DynamoDbSagaRepositoryRegistrationProvider(Action<IDynamoDbSagaRepositoryConfigurator> configure)
-    {
-        _configure = configure ?? throw new ArgumentNullException(nameof(configure));
-    }
+    readonly Action<IDynamoDbSagaRepositoryConfigurator> _configure =
+        configure ?? throw new ArgumentNullException(nameof(configure));
 
     void ISagaRepositoryRegistrationProvider.Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
         where TSaga : class
@@ -29,35 +27,27 @@ public class DynamoDbSagaRepositoryRegistrationProvider :
     }
 
     /// <summary>Registers an Amazon DynamoDB repository for the specified versioned saga type.</summary>
-    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TSaga">The versioned saga state configured by the provider.</typeparam>
     /// <param name="configurator">The saga registration to update.</param>
-    protected virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
+    private void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
         where TSaga : class, ISagaVersion
     {
-        configurator.DynamoDbRepository(r => _configure(r));
+        configurator.UseDynamoDb(repository => _configure(repository));
     }
-
 
     interface IProxy
     {
-        public void Configure<T>(T provider)
-            where T : DynamoDbSagaRepositoryRegistrationProvider;
+        void Configure(DynamoDbSagaRepositoryRegistrationProvider provider);
     }
 
-
-    class Proxy<TSaga> :
+    private sealed class Proxy<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator) :
         IProxy
         where TSaga : class, ISagaVersion
     {
-        readonly ISagaRegistrationConfigurator<TSaga> _configurator;
+        readonly ISagaRegistrationConfigurator<TSaga> _configurator =
+            configurator ?? throw new ArgumentNullException(nameof(configurator));
 
-        public Proxy(ISagaRegistrationConfigurator<TSaga> configurator)
-        {
-            _configurator = configurator;
-        }
-
-        public void Configure<T>(T provider)
-            where T : DynamoDbSagaRepositoryRegistrationProvider
+        public void Configure(DynamoDbSagaRepositoryRegistrationProvider provider)
         {
             provider.Configure(_configurator);
         }

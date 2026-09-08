@@ -7559,92 +7559,35 @@ TYPE class public ViciOne.ServiceBus.RoutingSlipRequestFaultedException [sealed,
   PROPERTY ViciOne.ServiceBus.Courier.Contracts.RoutingSlipFaulted Faulted { public-get;  }
 
 ASSEMBLY ViciOne.ServiceBus.DynamoDb VERSION=1.0.0.0
-TYPE class public ViciOne.ServiceBus.Configuration.DynamoDbSagaRepositoryConfigurator<TSaga>
-  CTOR public ViciOne.ServiceBus.Configuration.DynamoDbSagaRepositoryConfigurator<TSaga>()
-  METHOD public System.Void Register(ViciOne.ServiceBus.Configuration.ISagaRepositoryRegistrationConfigurator<TSaga> configurator)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void ContextFactory(System.Func<Amazon.DynamoDBv2.DataModel.IDynamoDBContext> contextFactory)
-  METHOD public virtual System.Void ContextFactory(System.Func<System.IServiceProvider,Amazon.DynamoDBv2.DataModel.IDynamoDBContext> contextFactory)
-  PROPERTY Amazon.DynamoDBv2.DynamoDBEntryConversion Conversion { public-get; public-set; }
-  PROPERTY System.Boolean ConsistentRead { public-get; public-set; }
-  PROPERTY System.Boolean IsEmptyStringValueEnabled { public-get; public-set; }
-  PROPERTY System.Boolean RetrieveDateTimeInUtc { public-get; public-set; }
-  PROPERTY System.Nullable<System.TimeSpan> Expiration { public-get; public-set; }
-  PROPERTY System.String TableName { public-get; public-set; }
-  PROPERTY System.TimeProvider TimeProvider { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Configuration.DynamoDbSagaRepositoryRegistrationProvider
-  CTOR public ViciOne.ServiceBus.Configuration.DynamoDbSagaRepositoryRegistrationProvider(System.Action<ViciOne.ServiceBus.DynamoDb.IDynamoDbSagaRepositoryConfigurator> configure)
-  METHOD protected virtual System.Void Configure<TSaga>(ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> configurator)
-TYPE class public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaConcurrencyException [base=ViciOne.ServiceBus.ConcurrencyException]
-  CTOR public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaConcurrencyException()
+TYPE class public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaConcurrencyException [sealed,base=ViciOne.ServiceBus.ConcurrencyException]
   CTOR public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaConcurrencyException(System.String message, System.Type sagaType, System.Guid correlationId)
   CTOR public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaConcurrencyException(System.String message, System.Type sagaType, System.Guid correlationId, System.Exception innerException)
+TYPE class public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepository [static]
+  METHOD public static ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> Create<TSaga>(System.Func<Amazon.DynamoDBv2.DataModel.IDynamoDBContext> contextFactory, ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepositoryOptions<TSaga> options)
 TYPE class public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepositoryOptions<TSaga> [sealed]
-  CTOR public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepositoryOptions<TSaga>(System.String tableName, System.Nullable<System.TimeSpan> expiration = null)
-  CTOR public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepositoryOptions<TSaga>(System.String tableName, System.Nullable<System.TimeSpan> expiration, System.TimeProvider timeProvider, System.Boolean consistentRead = true, System.Boolean isEmptyStringValueEnabled = true, System.Boolean retrieveDateTimeInUtc = true, Amazon.DynamoDBv2.DynamoDBEntryConversion conversion = null)
-  METHOD public System.String FormatSagaKey(System.Guid correlationId)
-  PROPERTY Amazon.DynamoDBv2.DynamoDBEntryConversion Conversion { public-get;  }
+  CTOR public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepositoryOptions<TSaga>(System.String tableName, System.Nullable<System.TimeSpan> timeToLive = null)
+  CTOR public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepositoryOptions<TSaga>(System.String tableName, System.Nullable<System.TimeSpan> timeToLive, System.TimeProvider timeProvider, System.Boolean consistentRead = true, System.Boolean allowEmptyStrings = true, System.Boolean retrieveDateTimeAsUtc = true, Amazon.DynamoDBv2.DynamoDBEntryConversion entryConversion = null)
+  PROPERTY Amazon.DynamoDBv2.DynamoDBEntryConversion EntryConversion { public-get;  }
+  PROPERTY System.Boolean AllowEmptyStrings { public-get;  }
   PROPERTY System.Boolean ConsistentRead { public-get;  }
-  PROPERTY System.Boolean IsEmptyStringValueEnabled { public-get;  }
-  PROPERTY System.Boolean RetrieveDateTimeInUtc { public-get;  }
-  PROPERTY System.Nullable<System.TimeSpan> Expiration { public-get;  }
+  PROPERTY System.Boolean RetrieveDateTimeAsUtc { public-get;  }
+  PROPERTY System.Nullable<System.TimeSpan> TimeToLive { public-get;  }
   PROPERTY System.String TableName { public-get;  }
   PROPERTY System.TimeProvider TimeProvider { public-get;  }
 TYPE class public ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepositoryRegistrationExtensions [static]
-  METHOD public static System.Void SetDynamoDbSagaRepositoryProvider(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.DynamoDb.IDynamoDbSagaRepositoryConfigurator> configure)
-  METHOD public static ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<T> DynamoDbRepository<T>(ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<T> configurator, System.Action<ViciOne.ServiceBus.DynamoDb.IDynamoDbSagaRepositoryConfigurator<T>> configure = null)
+  METHOD public static System.Void UseDynamoDbForRegisteredSagas(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.DynamoDb.IDynamoDbSagaRepositoryConfigurator> configure)
+  METHOD public static ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> UseDynamoDb<TSaga>(ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> configurator, System.Action<ViciOne.ServiceBus.DynamoDb.IDynamoDbSagaRepositoryConfigurator<TSaga>> configure)
 TYPE interface public ViciOne.ServiceBus.DynamoDb.IDynamoDbSagaRepositoryConfigurator
-  METHOD public abstract System.Void ContextFactory(System.Func<Amazon.DynamoDBv2.DataModel.IDynamoDBContext> contextFactory)
-  METHOD public abstract System.Void ContextFactory(System.Func<System.IServiceProvider,Amazon.DynamoDBv2.DataModel.IDynamoDBContext> contextFactory)
-  PROPERTY Amazon.DynamoDBv2.DynamoDBEntryConversion Conversion {  public-set; }
+  METHOD public abstract System.Void UseContextFactory(System.Func<Amazon.DynamoDBv2.DataModel.IDynamoDBContext> contextFactory)
+  METHOD public abstract System.Void UseContextFactory(System.Func<System.IServiceProvider,Amazon.DynamoDBv2.DataModel.IDynamoDBContext> contextFactory)
+  PROPERTY Amazon.DynamoDBv2.DynamoDBEntryConversion EntryConversion {  public-set; }
+  PROPERTY System.Boolean AllowEmptyStrings {  public-set; }
   PROPERTY System.Boolean ConsistentRead {  public-set; }
-  PROPERTY System.Boolean IsEmptyStringValueEnabled {  public-set; }
-  PROPERTY System.Boolean RetrieveDateTimeInUtc {  public-set; }
-  PROPERTY System.Nullable<System.TimeSpan> Expiration {  public-set; }
+  PROPERTY System.Boolean RetrieveDateTimeAsUtc {  public-set; }
+  PROPERTY System.Nullable<System.TimeSpan> TimeToLive {  public-set; }
   PROPERTY System.String TableName {  public-set; }
   PROPERTY System.TimeProvider TimeProvider {  public-set; }
 TYPE interface public ViciOne.ServiceBus.DynamoDb.IDynamoDbSagaRepositoryConfigurator<TSaga>
-TYPE interface public ViciOne.ServiceBus.DynamoDb.Saga.DatabaseContext<TSaga>
-  METHOD public abstract System.Threading.Tasks.Task AddAsync(TSaga instance, System.Threading.CancellationToken cancellationToken)
-  METHOD public abstract System.Threading.Tasks.Task DeleteAsync(TSaga instance, System.Threading.CancellationToken cancellationToken)
-  METHOD public abstract System.Threading.Tasks.Task InsertAsync(TSaga instance, System.Threading.CancellationToken cancellationToken)
-  METHOD public abstract System.Threading.Tasks.Task UpdateAsync(TSaga instance, System.Threading.CancellationToken cancellationToken)
-  METHOD public abstract System.Threading.Tasks.Task<TSaga> LoadAsync(System.Guid correlationId, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.DynamoDb.Saga.DynamoDbDatabaseContext<TSaga>
-  CTOR public ViciOne.ServiceBus.DynamoDb.Saga.DynamoDbDatabaseContext<TSaga>(Amazon.DynamoDBv2.DataModel.IDynamoDBContext database, ViciOne.ServiceBus.DynamoDb.DynamoDbSagaRepositoryOptions<TSaga> options)
-  METHOD public virtual System.Threading.Tasks.Task AddAsync(TSaga instance, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task DeleteAsync(TSaga instance, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task InsertAsync(TSaga instance, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task UpdateAsync(TSaga instance, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task<TSaga> LoadAsync(System.Guid correlationId, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Void Dispose()
-TYPE class public ViciOne.ServiceBus.DynamoDb.Saga.DynamoDbSaga
-  CTOR public ViciOne.ServiceBus.DynamoDb.Saga.DynamoDbSaga()
-  FIELD public static readonly System.String DefaultEntityType
-  METHOD public Amazon.DynamoDBv2.DocumentModel.Document ToDocument()
-  PROPERTY System.Int32 VersionNumber { public-get; public-set; }
-  PROPERTY System.Nullable<System.Int64> ExpirationEpochSeconds { public-get; public-set; }
-  PROPERTY System.String CorrelationId { public-get; public-set; }
-  PROPERTY System.String EntityType { public-get; public-set; }
-  PROPERTY System.String Properties { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.DynamoDb.Saga.DynamoDbSagaRepository<TSaga> [static]
-  METHOD public static ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> Create(System.Func<Amazon.DynamoDBv2.DataModel.IDynamoDBContext> dynamoDbFactory, System.String tableName, System.Nullable<System.TimeSpan> expiration = null, System.TimeProvider timeProvider = null)
-TYPE class public ViciOne.ServiceBus.DynamoDb.Saga.DynamoDbSagaRepositoryContext<TSaga,TMessage> [base=ViciOne.ServiceBus.Context.ConsumeContextScope<TMessage>]
-  CTOR public ViciOne.ServiceBus.DynamoDb.Saga.DynamoDbSagaRepositoryContext<TSaga,TMessage>(ViciOne.ServiceBus.DynamoDb.Saga.DatabaseContext<TSaga> context, ViciOne.ServiceBus.ConsumeContext<TMessage> consumeContext, ViciOne.ServiceBus.Saga.ISagaConsumeContextFactory<ViciOne.ServiceBus.DynamoDb.Saga.DatabaseContext<TSaga>,TSaga> factory)
-  METHOD public virtual System.Threading.Tasks.Task DeleteAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task DiscardAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task SaveAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task UndoAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task UpdateAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,T>> CreateSagaConsumeContextAsync<T>(ViciOne.ServiceBus.ConsumeContext<T> consumeContext, TSaga instance, ViciOne.ServiceBus.Saga.SagaConsumeContextMode mode)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,TMessage>> AddAsync(TSaga instance, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,TMessage>> InsertAsync(TSaga instance, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,TMessage>> LoadAsync(System.Guid correlationId, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Dispose()
-TYPE class public ViciOne.ServiceBus.DynamoDb.Saga.DynamoDbSagaRepositoryContext<TSaga> [base=ViciOne.ServiceBus.Middleware.BasePipeContext]
-  CTOR public ViciOne.ServiceBus.DynamoDb.Saga.DynamoDbSagaRepositoryContext<TSaga>(ViciOne.ServiceBus.DynamoDb.Saga.DatabaseContext<TSaga> context, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task<TSaga> LoadAsync(System.Guid correlationId, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Dispose()
 
 ASSEMBLY ViciOne.ServiceBus.EntityFrameworkCore.Sagas VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkCoreJobServiceConfigurationExtensions [static]

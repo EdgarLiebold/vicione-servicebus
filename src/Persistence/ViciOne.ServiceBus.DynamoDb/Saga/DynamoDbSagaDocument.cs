@@ -5,16 +5,14 @@ using Amazon.DynamoDBv2.DocumentModel;
 
 namespace ViciOne.ServiceBus.DynamoDb.Saga;
 
-/// <summary>Represents the DynamoDB document used to persist a saga instance.</summary>
-public class DynamoDbSaga
+internal sealed class DynamoDbSagaDocument
 {
-    /// <summary>Gets the sort-key value that distinguishes saga documents from other entities in the same partition.</summary>
-    [DynamoDBIgnore] public static readonly string DefaultEntityType = "SAGA";
+    internal const string EntityTypeValue = "SAGA";
 
     /// <summary>Creates an empty persistence document with the saga sort-key discriminator.</summary>
-    public DynamoDbSaga()
+    public DynamoDbSagaDocument()
     {
-        EntityType = DefaultEntityType;
+        EntityType = EntityTypeValue;
     }
 
     /// <summary>Gets or sets the canonical saga correlation identifier stored as the partition key.</summary>
@@ -23,7 +21,7 @@ public class DynamoDbSaga
 
     /// <summary>Gets or sets the saga discriminator stored as the sort key.</summary>
     [DynamoDBRangeKey(AttributeName = "SK")]
-    public string EntityType { get; set; } = DefaultEntityType;
+    public string EntityType { get; set; } = EntityTypeValue;
 
     /// <summary>Gets or sets the optimistic concurrency version.</summary>
     public int VersionNumber { get; set; }
@@ -40,16 +38,23 @@ public class DynamoDbSaga
     {
         var attributes = new Dictionary<string, DynamoDBEntry>
         {
-            { "PK", new Primitive(CorrelationId) },
-            { "SK", new Primitive(DefaultEntityType) },
-            { nameof(VersionNumber), new Primitive(VersionNumber.ToString(CultureInfo.InvariantCulture), true) },
-            { nameof(Properties), new Primitive(Properties) }
+            ["PK"] = new Primitive(CorrelationId),
+            ["SK"] = new Primitive(EntityTypeValue),
+            [nameof(VersionNumber)] = new Primitive(
+                VersionNumber.ToString(CultureInfo.InvariantCulture),
+                true),
+            [nameof(Properties)] = new Primitive(Properties),
         };
 
         if (ExpirationEpochSeconds.HasValue)
-            attributes.Add(nameof(ExpirationEpochSeconds),
-                new Primitive(ExpirationEpochSeconds.Value.ToString(CultureInfo.InvariantCulture), true));
+        {
+            attributes.Add(
+                nameof(ExpirationEpochSeconds),
+                new Primitive(
+                    ExpirationEpochSeconds.Value.ToString(CultureInfo.InvariantCulture),
+                    true));
+        }
 
-        return new Document(attributes);
+        return [.. attributes];
     }
 }

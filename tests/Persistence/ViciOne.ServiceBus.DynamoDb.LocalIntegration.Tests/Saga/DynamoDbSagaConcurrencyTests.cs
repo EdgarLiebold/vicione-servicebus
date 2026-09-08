@@ -1,12 +1,17 @@
 using Amazon.DynamoDBv2.Model;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.DynamoDb;
 using ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.DynamoDb.Saga;
+using ViciOne.ServiceBus.Sagas;
+using ViciOne.ServiceBus.Sagas.Configuration;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
-namespace ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.DynamoDbIntegration.Saga;
+namespace ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.Saga;
 
 public sealed class DynamoDbSagaConcurrencyTests
 {
@@ -19,12 +24,12 @@ public sealed class DynamoDbSagaConcurrencyTests
         var options = new DynamoDbSagaRepositoryOptions<ConcurrentSaga>(fixture.TableName);
         Guid sagaId = Guid.NewGuid();
 
-        using (var seed = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options))
-            await seed.InsertAsync(new ConcurrentSaga { CorrelationId = sagaId, Value = "seed" }, cancellationToken);
+        using (var seed = new DynamoDbSagaStore<ConcurrentSaga>(fixture.CreateContext(), options))
+            await seed.CreateAsync(new ConcurrentSaga { CorrelationId = sagaId, Value = "seed" }, cancellationToken);
 
         ConcurrentSaga first;
         ConcurrentSaga second;
-        using (var loader = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options))
+        using (var loader = new DynamoDbSagaStore<ConcurrentSaga>(fixture.CreateContext(), options))
         {
             first = Assert.IsType<ConcurrentSaga>(await loader.LoadAsync(sagaId, cancellationToken));
             second = Assert.IsType<ConcurrentSaga>(await loader.LoadAsync(sagaId, cancellationToken));
@@ -32,8 +37,8 @@ public sealed class DynamoDbSagaConcurrencyTests
 
         first.Value = "first";
         second.Value = "second";
-        using var firstWriter = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options);
-        using var secondWriter = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options);
+        using var firstWriter = new DynamoDbSagaStore<ConcurrentSaga>(fixture.CreateContext(), options);
+        using var secondWriter = new DynamoDbSagaStore<ConcurrentSaga>(fixture.CreateContext(), options);
         Task<Exception?> firstAttempt = CaptureAsync(() => firstWriter.UpdateAsync(first, cancellationToken));
         Task<Exception?> secondAttempt = CaptureAsync(() => secondWriter.UpdateAsync(second, cancellationToken));
         Exception?[] outcomes = await Task.WhenAll(firstAttempt, secondAttempt);
@@ -47,7 +52,7 @@ public sealed class DynamoDbSagaConcurrencyTests
         Assert.Equal(0, losingInstance.Version);
         Assert.Equal(1, winningInstance.Version);
 
-        using var verifier = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options);
+        using var verifier = new DynamoDbSagaStore<ConcurrentSaga>(fixture.CreateContext(), options);
         ConcurrentSaga persisted = Assert.IsType<ConcurrentSaga>(await verifier.LoadAsync(sagaId, cancellationToken));
         Assert.Equal(1, persisted.Version);
         Assert.Equal(winningInstance.Value, persisted.Value);
@@ -63,17 +68,17 @@ public sealed class DynamoDbSagaConcurrencyTests
         var options = new DynamoDbSagaRepositoryOptions<ConcurrentSaga>(fixture.TableName);
         Guid sagaId = Guid.NewGuid();
 
-        using var context = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options);
-        await context.InsertAsync(new ConcurrentSaga { CorrelationId = sagaId, Value = "first" }, cancellationToken);
+        using var context = new DynamoDbSagaStore<ConcurrentSaga>(fixture.CreateContext(), options);
+        await context.CreateAsync(new ConcurrentSaga { CorrelationId = sagaId, Value = "first" }, cancellationToken);
         DynamoDbSagaConcurrencyException actual = await Assert.ThrowsAsync<DynamoDbSagaConcurrencyException>(
-            () => context.InsertAsync(new ConcurrentSaga { CorrelationId = sagaId, Value = "duplicate" }, cancellationToken));
+            () => context.CreateAsync(new ConcurrentSaga { CorrelationId = sagaId, Value = "duplicate" }, cancellationToken));
 
         Assert.Equal(sagaId, actual.CorrelationId);
         Assert.Equal(typeof(ConcurrentSaga), actual.SagaType);
         Assert.IsType<ConditionalCheckFailedException>(actual.InnerException);
         Dictionary<string, AttributeValue> persisted = Assert.Single(await fixture.ScanAsync(cancellationToken));
-        Assert.Contains("first", persisted[nameof(DynamoDbSaga.Properties)].S, StringComparison.Ordinal);
-        Assert.DoesNotContain("duplicate", persisted[nameof(DynamoDbSaga.Properties)].S, StringComparison.Ordinal);
+        Assert.Contains("first", persisted[nameof(DynamoDbSagaDocument.Properties)].S, StringComparison.Ordinal);
+        Assert.DoesNotContain("duplicate", persisted[nameof(DynamoDbSagaDocument.Properties)].S, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -85,8 +90,8 @@ public sealed class DynamoDbSagaConcurrencyTests
         var options = new DynamoDbSagaRepositoryOptions<ConcurrentSaga>(fixture.TableName);
         Guid sagaId = Guid.NewGuid();
 
-        using var context = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options);
-        await context.InsertAsync(new ConcurrentSaga { CorrelationId = sagaId, Value = "seed" }, cancellationToken);
+        using var context = new DynamoDbSagaStore<ConcurrentSaga>(fixture.CreateContext(), options);
+        await context.CreateAsync(new ConcurrentSaga { CorrelationId = sagaId, Value = "seed" }, cancellationToken);
         ConcurrentSaga stale = Assert.IsType<ConcurrentSaga>(await context.LoadAsync(sagaId, cancellationToken));
         ConcurrentSaga current = Assert.IsType<ConcurrentSaga>(await context.LoadAsync(sagaId, cancellationToken));
         current.Value = "newer";
@@ -119,10 +124,10 @@ public sealed class DynamoDbSagaConcurrencyTests
             {
                 configuration.SetTestTimeouts(fixture.OperationTimeout, fixture.OperationTimeout);
                 configuration.AddSagaStateMachine<ChoirStateMachine, ChoirSaga, ChoirSagaDefinition>()
-                    .DynamoDbRepository(repository =>
+                    .UseDynamoDb(repository =>
                     {
                         repository.TableName = fixture.TableName;
-                        repository.ContextFactory(fixture.CreateContext);
+                        repository.UseContextFactory(fixture.CreateContext);
                     });
             })
             .BuildServiceProvider(validateScopes: true);
@@ -149,17 +154,20 @@ public sealed class DynamoDbSagaConcurrencyTests
                     .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             }
 
-            var repository = (ILoadSagaRepository<ChoirSaga>)DynamoDbSagaRepository<ChoirSaga>
-                .Create(fixture.CreateContext, fixture.TableName);
+            var repository = (ILoadSagaRepository<ChoirSaga>)DynamoDbSagaRepository.Create(
+                fixture.CreateContext,
+                new DynamoDbSagaRepositoryOptions<ChoirSaga>(fixture.TableName));
             ChoirSaga persisted = Assert.IsType<ChoirSaga>(
                 await repository.LoadAsync(sagaId, TestContext.Current.CancellationToken));
             using var completed = new CancellationTokenSource();
             completed.Cancel();
-            ChoirVoiceRecorded[] published = harness.Published
-                .Select<ChoirVoiceRecorded>(completed.Token)
-                .Where(observed => observed.Context.Message.CorrelationId == sagaId)
-                .Select(observed => observed.Context.Message)
-                .ToArray();
+            ChoirVoiceRecorded[] published =
+            [
+                .. harness.Published
+                    .Select<ChoirVoiceRecorded>(completed.Token)
+                    .Where(observed => observed.Context.Message.CorrelationId == sagaId)
+                    .Select(observed => observed.Context.Message),
+            ];
 
             Assert.Equal(voices.Order(StringComparer.Ordinal), persisted.Voices.Order(StringComparer.Ordinal));
             Assert.Equal(voices.Order(StringComparer.Ordinal), published.Select(message => message.Voice).Order(StringComparer.Ordinal));

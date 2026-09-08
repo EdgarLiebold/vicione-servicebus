@@ -1,11 +1,16 @@
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.DynamoDb;
 using ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.DynamoDb.Saga;
+using ViciOne.ServiceBus.Sagas;
+using ViciOne.ServiceBus.Sagas.Configuration;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
-namespace ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.DynamoDbIntegration.Saga;
+namespace ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.Saga;
 
 public sealed class DynamoDbSagaPersistenceTests
 {
@@ -42,8 +47,9 @@ public sealed class DynamoDbSagaPersistenceTests
                     cancellationToken)
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            var repository = (ILoadSagaRepository<PersistentSaga>)DynamoDbSagaRepository<PersistentSaga>
-                .Create(fixture.CreateContext, fixture.TableName);
+            var repository = (ILoadSagaRepository<PersistentSaga>)DynamoDbSagaRepository.Create(
+                fixture.CreateContext,
+                new DynamoDbSagaRepositoryOptions<PersistentSaga>(fixture.TableName));
             PersistentSaga first = Assert.IsType<PersistentSaga>(
                 await repository.LoadAsync(firstId, TestContext.Current.CancellationToken));
             PersistentSaga second = Assert.IsType<PersistentSaga>(
@@ -83,14 +89,15 @@ public sealed class DynamoDbSagaPersistenceTests
                 .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Dictionary<string, Amazon.DynamoDBv2.Model.AttributeValue>[] rows = await fixture.ScanAsync(cancellationToken);
-            var repository = (ILoadSagaRepository<PersistentSaga>)DynamoDbSagaRepository<PersistentSaga>
-                .Create(fixture.CreateContext, fixture.TableName);
+            var repository = (ILoadSagaRepository<PersistentSaga>)DynamoDbSagaRepository.Create(
+                fixture.CreateContext,
+                new DynamoDbSagaRepositoryOptions<PersistentSaga>(fixture.TableName));
             PersistentSaga persisted = Assert.IsType<PersistentSaga>(
                 await repository.LoadAsync(sagaId, TestContext.Current.CancellationToken));
 
             Dictionary<string, Amazon.DynamoDBv2.Model.AttributeValue> row = Assert.Single(rows);
             Assert.Equal(sagaId.ToString("D"), row["PK"].S);
-            Assert.Equal(DynamoDbSaga.DefaultEntityType, row["SK"].S);
+            Assert.Equal(DynamoDbSagaDocument.EntityTypeValue, row["SK"].S);
             Assert.Equal(sagaId, started.Context.Message.CorrelationId);
             Assert.Equal(sagaId, persisted.CorrelationId);
             Assert.Equal("created", persisted.Name);
@@ -107,10 +114,10 @@ public sealed class DynamoDbSagaPersistenceTests
         {
             configuration.SetTestTimeouts(fixture.OperationTimeout, fixture.OperationTimeout);
             configuration.AddSaga<PersistentSaga, PersistentSagaDefinition>()
-                .DynamoDbRepository(repository =>
+                .UseDynamoDb(repository =>
                 {
                     repository.TableName = fixture.TableName;
-                    repository.ContextFactory(fixture.CreateContext);
+                    repository.UseContextFactory(fixture.CreateContext);
                 });
         })
         .BuildServiceProvider(validateScopes: true);
