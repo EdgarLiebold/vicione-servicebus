@@ -404,3 +404,40 @@ or empty source directory.
 - Packed API: 21,719 lines and SHA-256
   `c0214b238c825361c24efd3f09af78e4e1ce94fbce2f9393d0791b47d2662dba`.
 - Product/unit/local warning-level format verification and Git whitespace validation: passed.
+
+## Iteration 50
+
+Iteration 50 turns MessagePack into a self-contained serialization capability with an exact
+two-type public API. Registration extensions and the advanced factory occupy the package root;
+envelopes, bodies, serializer contexts, resolvers, and formatters are internal and live in matching
+folders and namespaces. Hidden global imports, the namespace suppression, empty directories, and
+optional Courier and Job Service product references are removed. Benchmarks use the public factory
+instead of requiring friend access to implementation types.
+
+Every product source and all owning tests were read before the code, comments, XML documentation,
+namespaces, type visibility, and physical layout were changed. No source-comment generator was used.
+Nested Job Service and Courier contracts retain their complete observed behavior through the generic
+interface formatter. Mutable `ContentType` values no longer escape as shared process state, and lazy
+resolver entries provide one formatter instance under concurrent first access.
+
+### Red/green and mutation evidence
+
+- The unchanged 60-test MessagePack profile was expanded to 68 tests covering the exact public API,
+  null ownership, optional dependency boundary, production resolver selection, concurrent factory
+  and formatter identity, independent content types, and nested Courier behavior.
+- Seven isolated mutations were killed: an implementation visibility leak, a missing extension null
+  guard, a shared mutable media type, an uncached interface formatter, trusted-data mode, a restored
+  Courier product dependency, and a removed production ServiceBus resolver.
+- Every mutation was manually restored before fresh sequential builds and final validation.
+
+### Full validation
+
+- MessagePack product, test, and benchmark Release builds: passed with 0 warnings and 0 errors.
+- MessagePack profile: 68 passed, 0 failed, 0 skipped.
+- Complete Unit/Architecture profile: 4,415 passed, 0 failed, 0 skipped.
+- Architecture and documentation profile: 237 passed, 0 failed, 0 skipped.
+- Fresh-package gate ran three times: 18 journeys, 30 packages, three executable isolated provider
+  consumers, and all 29 runtime package APIs passed the update run and both comparison runs.
+- Packed API: 21,659 lines and SHA-256
+  `e74772a4a6f79f19054df5987fc24d685551688fc95c28ef4d019dd303860215`.
+- Product, test, and benchmark format verification plus Git whitespace validation: passed.

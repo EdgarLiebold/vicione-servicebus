@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- This test assembly verifies the hardened internal option owner directly. The signed product
-       assembly can grant that narrow friendship only to an assembly signed with the same key. -->
   <Import Project="../../signing.props" />
 
   <PropertyGroup>

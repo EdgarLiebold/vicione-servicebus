@@ -1,14 +1,15 @@
 using MessagePack;
 using MessagePack.Formatters;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.MessageData.Values;
 using ViciOne.ServiceBus.Serialization.JsonConverters;
 
-namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
+namespace ViciOne.ServiceBus.MessagePack.Serialization.Formatters;
 
 /// <summary>Serializes message-data references and inline values through the shared reference envelope.</summary>
 /// <typeparam name="T">The value exposed by the message-data handle.</typeparam>
-public class MessageDataFormatter<T> :
+internal sealed class MessageDataFormatter<T> :
     IMessagePackFormatter<MessageData<T>?>
 {
     /// <summary>Writes the external address and, when present, the inline text or bytes of a message-data handle.</summary>
@@ -27,7 +28,6 @@ public class MessageDataFormatter<T> :
                 inlineMessageData.Set(reference);
         }
 
-        // Both serializers use the same reference envelope to preserve wire semantics.
         IMessagePackFormatter<SystemTextMessageDataReference> innerFormatter = options.Resolver.GetFormatterWithVerify<SystemTextMessageDataReference>();
 
         innerFormatter.Serialize(ref writer, reference, options);

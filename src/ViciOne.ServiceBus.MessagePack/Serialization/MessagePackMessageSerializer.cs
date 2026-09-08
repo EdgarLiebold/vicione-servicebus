@@ -2,32 +2,36 @@ using System;
 using System.Collections.Generic;
 using System.Net.Mime;
 using MessagePack;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Initializers.TypeConverters;
 using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Operations;
+using ViciOne.ServiceBus.Serialization;
 
-namespace ViciOne.ServiceBus.Serialization;
+namespace ViciOne.ServiceBus.MessagePack.Serialization;
 
 /// <summary>Serializes ViciOne transport envelopes and standalone values with MessagePack.</summary>
-public class MessagePackMessageSerializer :
+internal sealed class MessagePackMessageSerializer :
     IMessageSerializer,
     IMessageDeserializer,
     IObjectDeserializer
 {
-    const string ContentTypeHeaderValue = "application/vnd.vicione.servicebus+msgpack";
     const string ProviderKey = "MessagePack";
 
-    /// <summary>The media type used for ViciOne MessagePack transport envelopes.</summary>
-    public static readonly ContentType MessagePackContentType = new(ContentTypeHeaderValue);
+    internal const string MediaType = "application/vnd.vicione.servicebus+msgpack";
+    internal static ContentType MessagePackContentType => new(MediaType);
 
     /// <summary>Gets the media type produced and consumed by this serializer.</summary>
-    public ContentType ContentType => MessagePackContentType;
+    public ContentType ContentType => new(MediaType);
 
     /// <summary>Deserializes the received envelope and combines its serializer context with the transport context.</summary>
     /// <param name="receiveContext">The receive context that supplies the body and transport metadata.</param>
     /// <returns>A consume context backed by the decoded MessagePack envelope.</returns>
     public ConsumeContext Deserialize(ReceiveContext receiveContext)
     {
+        ArgumentNullException.ThrowIfNull(receiveContext);
         var serializerContext = Deserialize(receiveContext.Body, receiveContext.TransportHeaders, receiveContext.InputAddress);
         return new BodyConsumeContext(receiveContext, serializerContext);
     }
@@ -39,6 +43,8 @@ public class MessagePackMessageSerializer :
     /// <returns>A serializer context that exposes the envelope metadata and lazily decodes message contracts.</returns>
     public SerializerContext Deserialize(MessageBody body, Headers headers, Uri? destinationAddress = null)
     {
+        ArgumentNullException.ThrowIfNull(body);
+        ArgumentNullException.ThrowIfNull(headers);
         var messageBuffer = body.GetBytes();
         var envelope = DeserializeMessageBuffer<MessagePackEnvelope>(messageBuffer);
 
@@ -54,6 +60,7 @@ public class MessagePackMessageSerializer :
     /// <returns>A body that decodes the supplied Base64 text on access.</returns>
     public MessageBody GetMessageBody(string text)
     {
+        ArgumentNullException.ThrowIfNull(text);
         return new Base64MessageBody(text);
     }
 
@@ -64,6 +71,7 @@ public class MessagePackMessageSerializer :
     public MessageBody GetMessageBody<T>(SendContext<T> context)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
         return new MessagePackMessageBody<T>(context);
     }
 
@@ -71,6 +79,7 @@ public class MessagePackMessageSerializer :
     /// <param name="context">The probe context that receives the serializer details.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         var scope = context.CreateScope("messagepack");
         scope.Add("contentType", ContentType.MediaType);
         scope.Add("provider", ProviderKey);
@@ -81,6 +90,7 @@ public class MessagePackMessageSerializer :
     /// <returns>The original byte array, decoded Base64 bytes, or newly serialized MessagePack bytes.</returns>
     public static byte[] EnsureObjectBufferFormatIsByteArray(object serializedObjectAsUnknownFormat)
     {
+        ArgumentNullException.ThrowIfNull(serializedObjectAsUnknownFormat);
         return serializedObjectAsUnknownFormat switch
         {
             string base64EncodedMessagePackBody => Convert.FromBase64String(base64EncodedMessagePackBody),
@@ -99,7 +109,6 @@ public class MessagePackMessageSerializer :
     {
         if (value is Dictionary<string, object> objectByStringPairs)
         {
-            // Metadata-aware JSON projection resolves dictionary keys without MessagePack's case sensitivity.
             return objectByStringPairs.Transform<T>(ServiceBusMetadataJson.Options);
         }
 

@@ -2,12 +2,14 @@ using System;
 using System.IO;
 using System.Runtime.ExceptionServices;
 using MessagePack;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Serialization;
 
-namespace ViciOne.ServiceBus.Serialization;
+namespace ViciOne.ServiceBus.MessagePack.Serialization;
 
 /// <summary>Lazily serializes a message or transport envelope into MessagePack bytes.</summary>
 /// <typeparam name="TMessage">The message contract contained by the body.</typeparam>
-public class MessagePackMessageBody<TMessage> :
+internal sealed class MessagePackMessageBody<TMessage> :
     MessageBody
     where TMessage : class
 {
@@ -21,6 +23,7 @@ public class MessagePackMessageBody<TMessage> :
     /// <param name="envelope">An optional prebuilt envelope whose message body is replaced after payload admission.</param>
     public MessagePackMessageBody(SendContext<TMessage> context, MessagePackEnvelope? envelope = null)
     {
+        ArgumentNullException.ThrowIfNull(context);
         _lazyMessagePackSerializedObject = new Lazy<byte[]>(() =>
         {
             if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
@@ -61,6 +64,7 @@ public class MessagePackMessageBody<TMessage> :
     /// <param name="message">The message serialized when the body is first accessed.</param>
     public MessagePackMessageBody(TMessage message)
     {
+        ArgumentNullException.ThrowIfNull(message);
         _lazyMessagePackSerializedObject = new Lazy<byte[]>(() => InternalMessagePackResolver.Serialize(message));
     }
 
@@ -94,8 +98,6 @@ public class MessagePackMessageBody<TMessage> :
         catch (MessagePackSerializationException exception)
             when (exception.InnerException is PayloadAdmissionException)
         {
-            // MessagePack wraps formatter failures. Payload admission is a transport policy result,
-            // so preserve the original instance and stage instead of changing its public contract.
             ExceptionDispatchInfo.Capture(exception.InnerException).Throw();
             throw;
         }

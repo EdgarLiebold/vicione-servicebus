@@ -7,7 +7,8 @@ using MessagePack;
 using MessagePack.Formatters;
 using ViciOne.ServiceBus.Internals;
 
-namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
+namespace ViciOne.ServiceBus.MessagePack.Serialization.Formatters;
+
 /// <summary>
 /// Holds compiled delegates that resolve and invoke the formatter for one concrete implementation type.
 /// </summary>
@@ -65,6 +66,7 @@ sealed class ConcreteFormatterCache<TInterface>
 
     public ConcreteFormatterAccess<TInterface> Get(Type concreteType)
     {
+        ArgumentNullException.ThrowIfNull(concreteType);
         return _entries.TryGetValue(concreteType, out var entry)
             ? entry.Value
             : _entries.GetValue(concreteType, _createEntry).Value;

@@ -1,6 +1,8 @@
 using System;
 using BenchmarkDotNet.Attributes;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.MessagePack;
 using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.BenchmarkConsole;
@@ -8,7 +10,8 @@ namespace ViciOne.ServiceBus.BenchmarkConsole;
 [MemoryDiagnoser]
 public class SerializationBenchmark
 {
-    readonly MessagePackMessageSerializer _messagepackSerializer;
+    readonly IObjectDeserializer _messagePackObjectSerializer;
+    readonly IMessageSerializer _messagePackSerializer;
     readonly SystemTextJsonMessageSerializer _systemTextJsonSerializer;
     TypeToSerialize _serializationSubject = null!;
     MessageSendContext<TypeToSerialize> _sendContext = null!;
@@ -18,7 +21,9 @@ public class SerializationBenchmark
 
     public SerializationBenchmark()
     {
-        _messagepackSerializer = new MessagePackMessageSerializer();
+        var factory = new MessagePackSerializerFactory();
+        _messagePackSerializer = factory.CreateSerializer();
+        _messagePackObjectSerializer = (IObjectDeserializer)factory.CreateDeserializer();
         _systemTextJsonSerializer = CreateSystemTextJsonSerializer();
     }
 
@@ -51,7 +56,7 @@ public class SerializationBenchmark
     [Benchmark]
     public byte[] MessagePack_SerializeObject()
     {
-        var messageBody = _messagepackSerializer.SerializeObject(_serializationSubject);
+        var messageBody = _messagePackObjectSerializer.SerializeObject(_serializationSubject);
 
         return messageBody.GetBytes();
     }
@@ -63,7 +68,7 @@ public class SerializationBenchmark
     [Benchmark]
     public byte[] MessagePack_GetMessageBody()
     {
-        MessageBody messageBody = _messagepackSerializer.GetMessageBody(_sendContext);
+        MessageBody messageBody = _messagePackSerializer.GetMessageBody(_sendContext);
 
         return messageBody.GetBytes();
     }

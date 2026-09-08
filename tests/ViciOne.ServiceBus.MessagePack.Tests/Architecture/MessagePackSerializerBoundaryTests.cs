@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Reflection.Emit;
 using MessagePack;
-using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.MessagePack.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -15,7 +15,7 @@ public sealed class MessagePackSerializerBoundaryTests
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-ARCHITECTURE", "single-options-owner")]
     public void ProductAssembly_NamesSerializerOnlyInsideTheOptionsOwner()
     {
-        using var assembly = File.OpenRead(typeof(MessagePackMessageSerializer).Assembly.Location);
+        using var assembly = File.OpenRead(typeof(MessagePackSerializerFactory).Assembly.Location);
 
         var offenders = MessagePackSerializerReferenceScanner.FindReferences(assembly);
 
@@ -26,7 +26,7 @@ public sealed class MessagePackSerializerBoundaryTests
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-ARCHITECTURE", "scanner-positive-control")]
     public void Scanner_SeesTheRealOwnerWhenExclusionIsDisabled()
     {
-        using var assembly = File.OpenRead(typeof(MessagePackMessageSerializer).Assembly.Location);
+        using var assembly = File.OpenRead(typeof(MessagePackSerializerFactory).Assembly.Location);
 
         var references = MessagePackSerializerReferenceScanner.FindReferences(assembly, excludeOwner: false);
 

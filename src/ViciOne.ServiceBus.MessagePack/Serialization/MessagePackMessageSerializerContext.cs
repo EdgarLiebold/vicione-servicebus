@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using MessagePack;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Serialization;
 
-namespace ViciOne.ServiceBus.Serialization;
+namespace ViciOne.ServiceBus.MessagePack.Serialization;
 
 /// <summary>Exposes a decoded MessagePack envelope through the transport-neutral serializer context.</summary>
-public class MessagePackMessageSerializerContext :
+internal sealed class MessagePackMessageSerializerContext :
     BaseSerializerContext
 {
     readonly MessagePackEnvelope _envelope;
@@ -53,6 +56,8 @@ public class MessagePackMessageSerializerContext :
     /// <returns><see langword="true"/> when a non-null message was decoded; otherwise, <see langword="false"/>.</returns>
     public override bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message)
     {
+        ArgumentNullException.ThrowIfNull(messageType);
+
         try
         {
             if (!IsSupportedMessageType(messageType))
@@ -67,7 +72,6 @@ public class MessagePackMessageSerializerContext :
                 message = InternalMessagePackResolver.Deserialize(messageType, messagePackSerializedObjectBuffer);
             else
             {
-                // Object dictionaries use metadata-aware JSON projection to reconstruct their declared contract.
                 var messageAsDictionary = InternalMessagePackResolver
                     .Deserialize<Dictionary<string, object>>(messagePackSerializedObjectBuffer);
 
@@ -97,6 +101,8 @@ public class MessagePackMessageSerializerContext :
     /// <returns>A MessagePack body serializer for the updated envelope.</returns>
     public override IMessageSerializer GetMessageSerializer<T>(MessageEnvelope envelope, T message)
     {
+        ArgumentNullException.ThrowIfNull(envelope);
+        ArgumentNullException.ThrowIfNull(message);
         var messageEnvelopeSerializer = new MessagePackMessageBodySerializer(envelope);
 
         messageEnvelopeSerializer.OverrideMessage(message);
@@ -110,6 +116,8 @@ public class MessagePackMessageSerializerContext :
     /// <returns>A MessagePack body serializer for the new envelope.</returns>
     public override IMessageSerializer GetMessageSerializer(object message, string[] messageTypes)
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageTypes);
         var messagePackEnvelope = new MessagePackEnvelope(this, message, messageTypes);
 
         return new MessagePackMessageBodySerializer(messagePackEnvelope);
@@ -125,7 +133,6 @@ public class MessagePackMessageSerializerContext :
         if (message is null)
             return new Dictionary<string, object>(0, StringComparer.OrdinalIgnoreCase);
 
-        // Metadata-aware JSON projection supplies the case-insensitive object dictionary.
         return message.Transform<Dictionary<string, object>>(ServiceBusMetadataJson.Options)
             ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
     }

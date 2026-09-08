@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using MessagePack;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Serialization;
 
-namespace ViciOne.ServiceBus.Serialization;
+namespace ViciOne.ServiceBus.MessagePack.Serialization;
 
 /// <summary>Represents the MessagePack wire envelope and its transport metadata.</summary>
-public class MessagePackEnvelope :
+internal sealed class MessagePackEnvelope :
     MessageEnvelope
 {
     /// <summary>Gets or sets the message identifier encoded in the envelope.</summary>
@@ -50,6 +52,8 @@ public class MessagePackEnvelope :
     /// <param name="message">The message to serialize.</param>
     public MessagePackEnvelope(SendContext context, object message)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(message);
         ApplyMetadata(EnvelopeMetadataProjection.From(context));
         IsMessageNativeMessagePackSerialized = true;
         Message = InternalMessagePackResolver.Serialize(message);
@@ -57,21 +61,22 @@ public class MessagePackEnvelope :
 
     internal MessagePackEnvelope(SendContext context, byte[] serializedMessage)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(serializedMessage);
         ApplyMetadata(EnvelopeMetadataProjection.From(context));
         IsMessageNativeMessagePackSerialized = true;
-        Message = serializedMessage ?? throw new ArgumentNullException(nameof(serializedMessage));
+        Message = serializedMessage;
     }
 
     /// <summary>Creates a MessagePack envelope from another envelope without sharing mutable payload bytes.</summary>
     /// <param name="envelope">The source envelope and metadata.</param>
     public MessagePackEnvelope(MessageEnvelope envelope)
     {
+        ArgumentNullException.ThrowIfNull(envelope);
         ApplyMetadata(EnvelopeMetadataProjection.From(envelope));
 
         if (envelope is MessagePackEnvelope alreadyMessagePack)
         {
-            // A MessagePack envelope already carries encoded payload bytes and must not be encoded again.
-            // Copy the mutable array at the envelope boundary so clones cannot alter one another's payload.
             IsMessageNativeMessagePackSerialized = alreadyMessagePack.IsMessageNativeMessagePackSerialized;
             Message = CopyPayload(alreadyMessagePack.Message);
         }
@@ -80,14 +85,15 @@ public class MessagePackEnvelope :
             IsMessageNativeMessagePackSerialized = true;
             Message = InternalMessagePackResolver.Serialize(envelope.Message);
         }
-
     }
 
     internal MessagePackEnvelope(MessageEnvelope envelope, byte[] serializedMessage)
     {
+        ArgumentNullException.ThrowIfNull(envelope);
+        ArgumentNullException.ThrowIfNull(serializedMessage);
         ApplyMetadata(EnvelopeMetadataProjection.From(envelope));
         IsMessageNativeMessagePackSerialized = true;
-        Message = serializedMessage ?? throw new ArgumentNullException(nameof(serializedMessage));
+        Message = serializedMessage;
     }
 
     /// <summary>Captures message metadata and serializes a payload whose supported contract URNs are supplied explicitly.</summary>
@@ -96,12 +102,14 @@ public class MessagePackEnvelope :
     /// <param name="messageTypesNames">The supported message contract URNs.</param>
     public MessagePackEnvelope(MessageContext context, object message, string[] messageTypesNames)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageTypesNames);
         ApplyMetadata(EnvelopeMetadataProjection.From(context, messageTypesNames));
         IsMessageNativeMessagePackSerialized = true;
         Message = InternalMessagePackResolver.Serialize(message);
     }
 
-    /// <summary>Creates an empty envelope for MessagePack deserialization.</summary>
     MessagePackEnvelope()
     {
     }
@@ -109,6 +117,7 @@ public class MessagePackEnvelope :
     internal void Update<T>(SendContext<T> context)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
         ApplyMetadata(EnvelopeMetadataProjection.Overlay(this, context));
 
         if (MessageType != null)
@@ -133,12 +142,6 @@ public class MessagePackEnvelope :
         Host = metadata.Host;
     }
 
-    /// <summary>
-    /// Copies an encoded byte-array payload so two envelopes cannot mutate one another; non-array payload
-    /// representations are returned unchanged.
-    /// </summary>
-    /// <param name="message">The encoded payload representation.</param>
-    /// <returns>A cloned byte array when applicable; otherwise, the original value.</returns>
     static object? CopyPayload(object? message)
     {
         return message is byte[] bytes ? bytes.Clone() : message;

@@ -1,7 +1,14 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.Advanced.Middleware;
+using ViciOne.ServiceBus.Advanced.Observers;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Advanced.Serialization;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Diagnostics;
 using ViciOne.ServiceBus.InMemoryTransport;
+using ViciOne.ServiceBus.MessagePack.Serialization;
+using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -23,6 +30,43 @@ public sealed class MessagePackTransportIntegrationTests
 
         Assert.Same(serializer, deserializer);
         Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, factory.ContentType);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-CONFIGURATION", "concurrent-first-access-shares-serializer")]
+    public async Task Factory_ConcurrentFirstAccessCreatesOneSerializerAsync()
+    {
+        var factory = new MessagePackSerializerFactory();
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task<IMessageSerializer>[] calls = Enumerable.Range(0, 16)
+            .Select(_ => Task.Run(async () =>
+            {
+                await release.Task.WaitAsync(TestContext.Current.CancellationToken);
+                return factory.CreateSerializer();
+            }, TestContext.Current.CancellationToken))
+            .ToArray();
+
+        release.SetResult();
+        IMessageSerializer[] serializers = await Task.WhenAll(calls);
+
+        Assert.All(serializers, serializer => Assert.Same(serializers[0], serializer));
+        Assert.Same(serializers[0], factory.CreateDeserializer());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-CONFIGURATION", "content-type-descriptors-are-independent")]
+    public void Factory_ContentTypeDescriptorsAreIndependent()
+    {
+        var factory = new MessagePackSerializerFactory();
+        var first = factory.ContentType;
+        string expectedMediaType = first.MediaType;
+
+        first.MediaType = "application/vnd.vicione.mutated";
+        var second = factory.ContentType;
+
+        Assert.NotSame(first, second);
+        Assert.Equal(expectedMediaType, second.MediaType);
+        Assert.Equal(expectedMediaType, factory.CreateSerializer().ContentType.MediaType);
     }
 
     [Fact]

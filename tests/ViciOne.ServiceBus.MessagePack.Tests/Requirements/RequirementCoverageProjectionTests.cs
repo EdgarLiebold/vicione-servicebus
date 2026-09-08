@@ -10,6 +10,7 @@ public sealed class RequirementCoverageProjectionTests
         "ViciOne.ServiceBus.MessagePack.Tests.Requirements.MessagePackRequirements.json";
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-REQUIREMENTS", "projection-matches-compiled-metadata")]
     public void MessagePackRequirements_MatchCompiledRequirementMetadata()
     {
         var assembly = typeof(RequirementCoverageProjectionTests).Assembly;

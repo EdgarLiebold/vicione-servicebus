@@ -3,7 +3,7 @@ using MessagePack;
 using MessagePack.Formatters;
 using ViciOne.ServiceBus.Metadata;
 
-namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
+namespace ViciOne.ServiceBus.MessagePack.Serialization.Formatters;
 
 delegate void SerializeDelegate<TInterface>(object formatter, ref MessagePackWriter writer, TInterface value,
     MessagePackSerializerOptions options);
@@ -22,7 +22,7 @@ delegate TInterface DeserializeDelegate<out TInterface>(object formatter, ref Me
 /// </para>
 /// </summary>
 /// <typeparam name="TInterface">The interface message contract being serialized.</typeparam>
-public class InterfaceMessagePackFormatter<TInterface> :
+internal sealed class InterfaceMessagePackFormatter<TInterface> :
     IMessagePackFormatter<TInterface>
 {
     static readonly Type _declaredConcreteType = TypeMetadataCache.GetImplementationType(typeof(TInterface));
@@ -50,7 +50,7 @@ public class InterfaceMessagePackFormatter<TInterface> :
 
         var access = _cache.Get(concreteType);
 
-        access.Serialize(access.GetFormatter(options.Resolver), ref writer, value, options);
+        access.Serialize(access.GetFormatter(options.Resolver), ref writer, value!, options);
     }
 
     /// <summary>Deserializes the implementation type declared for the interface contract.</summary>

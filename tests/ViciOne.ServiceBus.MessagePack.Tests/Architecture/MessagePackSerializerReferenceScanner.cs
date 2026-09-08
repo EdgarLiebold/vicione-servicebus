@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.MessagePack.Tests.Architecture;
 
 internal static class MessagePackSerializerReferenceScanner
 {
-    internal const string OwnerType = "ViciOne.ServiceBus.Serialization.InternalMessagePackResolver";
+    internal const string OwnerType = "ViciOne.ServiceBus.MessagePack.Serialization.InternalMessagePackResolver";
     internal const string SerializerType = "MessagePack.MessagePackSerializer";
 
     private static readonly IReadOnlyDictionary<ushort, OpCode> OpCodesByValue = typeof(OpCodes)

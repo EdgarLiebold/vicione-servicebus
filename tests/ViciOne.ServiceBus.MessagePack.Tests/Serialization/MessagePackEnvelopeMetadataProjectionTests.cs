@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.MessagePack.Serialization;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Serialization;

@@ -179,3 +179,33 @@ and operations on a disappeared entity (404 with `ResourceNotFound`) map to
 `AzureTableSagaConcurrencyException`; a missing table or unrelated provider failure remains a
 general saga failure. Both SDK-boundary tests and a real Azurite test preserve the original
 `RequestFailedException` for retry and diagnosis.
+
+## Confirmed iteration-50 MessagePack findings
+
+The complete 1,244-line MessagePack product project and all seventeen owning test sources were read
+before implementation. The unchanged baseline passed 60 tests.
+
+1. Eight implementation-oriented types were exported from the transport-neutral serialization
+   namespace even though callers need only registration extensions and an advanced factory.
+2. Product and test global-using facades hid each file's dependency ownership, while a JetBrains
+   suppression preserved a physical folder/namespace mismatch.
+3. The serialization package directly referenced optional Courier and Job Service packages solely
+   to enumerate their concrete internal message implementations. Generic interface serialization
+   already supplies the same behavior without reversing those capability boundaries.
+4. The public static media-type instance was mutable process-global state. A caller could change it
+   and invalidate subsequent bus composition in the same process.
+5. Formatter creation used a check-then-create concurrent dictionary pattern, so simultaneous cold
+   access could return multiple formatter instances even though only one was eventually retained.
+6. Several serializer, envelope, body, probe, and configuration boundaries deferred null failures
+   into unrelated implementation calls instead of assigning them to the owning parameter.
+7. The requirement projection test was absent from its own manifest, and no exact export or optional
+   dependency contract prevented the old surface from returning.
+8. The benchmark assembly bypassed the public factory through a product `InternalsVisibleTo`
+   declaration, coupling shipped code metadata to a development-only consumer.
+
+The completed module exports exactly two sealed/static package-root types. Implementation types now
+live under matching `Serialization` and `Serialization.Formatters` folders and namespaces. Courier
+and Job Service references are absent from the product assembly, while real nested routing-slip and
+job contracts round-trip through the generic interface path. Media-type descriptors are independent,
+lazy formatter creation returns one instance under concurrent cold access, and benchmarks exercise
+the same public factory contract as application consumers.

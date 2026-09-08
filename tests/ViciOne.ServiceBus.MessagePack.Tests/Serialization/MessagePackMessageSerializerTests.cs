@@ -2,6 +2,7 @@ using System.Text;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.MessageData.Values;
+using ViciOne.ServiceBus.MessagePack.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -244,7 +245,7 @@ public sealed class MessagePackMessageSerializerTests
         Assert.Equal(XmlDocument, Encoding.UTF8.GetString(result.Bytes));
         Assert.DoesNotContain(
             "xml",
-            new ViciOne.ServiceBus.Serialization.MessagePackMessageSerializer().ContentType.MediaType,
+            new MessagePackMessageSerializer().ContentType.MediaType,
             StringComparison.OrdinalIgnoreCase);
     }
 

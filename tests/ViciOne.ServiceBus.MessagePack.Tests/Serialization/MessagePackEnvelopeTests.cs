@@ -1,5 +1,6 @@
 using MessagePack;
 using MessagePack.Resolvers;
+using ViciOne.ServiceBus.MessagePack.Serialization;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;

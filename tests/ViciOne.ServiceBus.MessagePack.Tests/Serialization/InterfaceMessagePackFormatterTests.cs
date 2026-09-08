@@ -3,8 +3,10 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using MessagePack;
+using MessagePack.Formatters;
 using MessagePack.Resolvers;
-using ViciOne.ServiceBus.Serialization.MessagePackFormatters;
+using ViciOne.ServiceBus.MessagePack.Serialization;
+using ViciOne.ServiceBus.MessagePack.Serialization.Formatters;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -140,6 +142,28 @@ public sealed class InterfaceMessagePackFormatterTests
         Assert.All(results, result => Assert.Equal("parallel", result.Name));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "resolver-concurrent-shared-instance")]
+    public async Task Resolver_ConcurrentCallsReturnOneSharedFormatterAsync()
+    {
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task<IMessagePackFormatter<ResolverConcurrencyContract>?>[] calls = Enumerable.Range(0, 16)
+            .Select(_ => Task.Run(async () =>
+            {
+                await release.Task.WaitAsync(TestContext.Current.CancellationToken);
+                return ServiceBusMessagePackFormatterResolver.Instance
+                    .GetFormatter<ResolverConcurrencyContract>();
+            }, TestContext.Current.CancellationToken))
+            .ToArray();
+
+        release.SetResult();
+        IMessagePackFormatter<ResolverConcurrencyContract>?[] formatters = await Task.WhenAll(calls);
+        IMessagePackFormatter<ResolverConcurrencyContract> formatter = Assert.IsAssignableFrom<
+            IMessagePackFormatter<ResolverConcurrencyContract>>(formatters[0]);
+
+        Assert.All(formatters, candidate => Assert.Same(formatter, candidate));
+    }
+
     private static ICached RoundTrip(ICached source)
     {
         var options = MessagePackSerializerOptions.Standard
@@ -220,6 +244,11 @@ public sealed class InterfaceMessagePackFormatterTests
         int Id { get; }
 
         string Name { get; }
+    }
+
+    public interface ResolverConcurrencyContract
+    {
+        string Value { get; }
     }
 
     public sealed class Cached : ICached

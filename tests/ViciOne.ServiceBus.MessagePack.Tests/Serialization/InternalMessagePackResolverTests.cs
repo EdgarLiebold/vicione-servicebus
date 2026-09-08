@@ -1,4 +1,9 @@
 using MessagePack;
+using MessagePack.Formatters;
+using ViciOne.ServiceBus.Courier.Contracts;
+using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.MessagePack.Serialization;
+using ViciOne.ServiceBus.MessagePack.Serialization.Formatters;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -7,6 +12,19 @@ namespace ViciOne.ServiceBus.MessagePack.Tests.Serialization;
 
 public sealed class InternalMessagePackResolverTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-RESOLVER", "servicebus-formatters-precede-contractless-fallback")]
+    public void Options_SelectServiceBusFormattersBeforeTheContractlessFallback()
+    {
+        IMessagePackFormatter<Fault>? faultFormatter =
+            InternalMessagePackResolver.Options.Resolver.GetFormatter<Fault>();
+        IMessagePackFormatter<RoutingSlip>? routingSlipFormatter =
+            InternalMessagePackResolver.Options.Resolver.GetFormatter<RoutingSlip>();
+
+        Assert.IsType<InterfaceConcreteMapFormatter<Fault, FaultEvent>>(faultFormatter);
+        Assert.IsType<InterfaceMessagePackFormatter<RoutingSlip>>(routingSlipFormatter);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-SECURITY", "untrusted-data-mode")]
     public void Options_UseUntrustedDataSecurity()

@@ -337,3 +337,31 @@ complete saga and bounded-journal feature set, and prove behavior against the re
 - Re-expose one provider implementation type: the exact exported-surface test must fail.
 - Discard a saga-specific formatter during registration: the two-saga DI contract must fail on the
   exact formatter instance without conflating registrations across saga types.
+
+## Iteration 50 outcome
+
+Make MessagePack a self-contained greenfield serialization capability: expose only composition and
+the advanced serializer factory, align namespaces and folders with the package, remove optional
+Courier and Job Service product dependencies without losing their contract behavior, and make
+mutable descriptors and concurrent resolver creation safe.
+
+## Iteration 50 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-MESSAGEPACK-PUBLIC-API` | exact two-type exported surface | MessagePack tests | complete reflection inventory of exported types |
+| `REQ-VSB-MESSAGEPACK-CONFIGURATION` | extension null ownership, shared concurrent serializer, independent media-type descriptors | MessagePack configuration tests | exact exceptions, reference identity, and mutation isolation |
+| `REQ-VSB-MESSAGEPACK-DEPENDENCIES` | no Courier or Job Service assembly dependency | MessagePack configuration and domain tests | assembly-reference exclusion plus retained nested Job and Courier round trips |
+| `REQ-VSB-MESSAGEPACK-RESOLVER` | production resolver chain selects ServiceBus mappings and generic interface formatters | MessagePack resolver tests | exact formatter types returned by the composed production options |
+| `REQ-VSB-MESSAGEPACK-FORMATTER-CACHE` | concurrent cold access returns one formatter instance | MessagePack formatter tests | sixteen synchronized callers observe one reference |
+| requirement projection completeness | projection gate is represented in the MessagePack manifest | MessagePack requirement tests | compiled metadata and embedded manifest are identical |
+
+## Iteration 50 mutation obligations
+
+- Re-expose an implementation envelope: the exact public-surface test must fail.
+- Remove a composition null guard: the extension-boundary test must report the wrong exception.
+- Return one mutable media-type descriptor: the isolation test and transport consumers must fail.
+- Bypass the formatter cache: the synchronized resolver identity test must fail.
+- Replace untrusted-data security with trusted-data mode: the security contract must fail.
+- Restore a Courier product mapping and dependency: the assembly-reference contract must fail.
+- Remove the ServiceBus resolver from the composed options: the production-chain selection test must fail.

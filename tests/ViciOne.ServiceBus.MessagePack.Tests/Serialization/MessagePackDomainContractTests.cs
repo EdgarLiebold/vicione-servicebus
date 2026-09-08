@@ -1,4 +1,7 @@
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Contracts.JobService;
+using ViciOne.ServiceBus.Courier;
+using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Events;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.JobService.Messages;
@@ -10,6 +13,36 @@ namespace ViciOne.ServiceBus.MessagePack.Tests.Serialization;
 
 public sealed class MessagePackDomainContractTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-COURIER", "nested-routing-slip-without-product-coupling")]
+    public void RoutingSlip_RoundTripsNestedContractsWithoutMessagePackDependingOnCourier()
+    {
+        Guid trackingNumber = Guid.Parse("735b5180-9212-4ce2-8647-2101a0c8640a");
+        var builder = new RoutingSlipBuilder(trackingNumber);
+        builder.AddActivity(
+            "convert-video",
+            new Uri("loopback://courier/convert-video"),
+            new { Path = "input.mp4" });
+        builder.AddVariable("tenant", "north");
+        builder.AddSubscription(
+            new Uri("loopback://courier/events"),
+            RoutingSlipEvents.Completed | RoutingSlipEvents.Faulted);
+        RoutingSlip source = builder.Build();
+
+        RoutingSlip result = MessagePackRoundTrip.Execute(source);
+
+        Assert.Equal(trackingNumber, result.TrackingNumber);
+        Assert.Equal(source.CreateTimestamp, result.CreateTimestamp);
+        Activity activity = Assert.Single(result.Itinerary);
+        Assert.Equal("convert-video", activity.Name);
+        Assert.Equal(new Uri("loopback://courier/convert-video"), activity.Address);
+        Assert.Equal("input.mp4", activity.Arguments["path"]);
+        Assert.Equal("north", result.Variables["tenant"]);
+        Subscription subscription = Assert.Single(result.Subscriptions);
+        Assert.Equal(new Uri("loopback://courier/events"), subscription.Address);
+        Assert.Equal(RoutingSlipEvents.Completed | RoutingSlipEvents.Faulted, subscription.Events);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-JOBS", "nested-interface-job-payload")]
     public async Task JobPayload_RoundTripsThroughDictionaryAndRestoresNestedInterfacesAsync()

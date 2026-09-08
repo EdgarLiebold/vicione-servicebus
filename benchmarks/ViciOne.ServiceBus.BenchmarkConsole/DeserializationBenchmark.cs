@@ -1,6 +1,9 @@
 using System;
 using BenchmarkDotNet.Attributes;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.MessagePack;
 using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.BenchmarkConsole;
@@ -8,7 +11,8 @@ namespace ViciOne.ServiceBus.BenchmarkConsole;
 [MemoryDiagnoser]
 public class DeserializationBenchmark
 {
-    readonly MessagePackMessageSerializer _messagepackSerializer;
+    readonly IMessageDeserializer _messagePackDeserializer;
+    readonly IMessageSerializer _messagePackSerializer;
     readonly SystemTextJsonMessageSerializer _systemTextJsonSerializer;
 
     MessageBody _messagePackMessageBody;
@@ -19,7 +23,9 @@ public class DeserializationBenchmark
 
     public DeserializationBenchmark()
     {
-        _messagepackSerializer = new MessagePackMessageSerializer();
+        var factory = new MessagePackSerializerFactory();
+        _messagePackSerializer = factory.CreateSerializer();
+        _messagePackDeserializer = factory.CreateDeserializer();
         _systemTextJsonSerializer = CreateSystemTextJsonSerializer();
     }
 
@@ -48,7 +54,7 @@ public class DeserializationBenchmark
 
         var sendContext = new MessageSendContext<TypeToDeserialize>(initialMessage);
 
-        _messagePackMessageBody = _messagepackSerializer.GetMessageBody(sendContext);
+        _messagePackMessageBody = _messagePackSerializer.GetMessageBody(sendContext);
         _systemTextJsonMessageBody = _systemTextJsonSerializer.GetMessageBody(sendContext);
 
         // Triggers any lazy serialization.
@@ -59,7 +65,7 @@ public class DeserializationBenchmark
     [Benchmark]
     public bool MessagePack_Deserialize()
     {
-        var serializerContext = _messagepackSerializer.Deserialize(_messagePackMessageBody, null, null);
+        var serializerContext = _messagePackDeserializer.Deserialize(_messagePackMessageBody, EmptyHeaders.Instance);
         return serializerContext.TryGetMessage<TypeToDeserialize>(out _);
     }
 
