@@ -130,3 +130,52 @@ The current dependency reference is `FastExpressionCompiler` 5.4.1, centrally ve
 owned only by core, sagas, and MessagePack. Remaining generic and historical documentation findings
 are intentionally carried into iteration 14 rather than being hidden by the bounded iteration-13
 verdict.
+
+## Confirmed iteration-49 Azure Table findings
+
+The complete 2,164-line Azure Table product project and both owning test projects were read
+file-by-file before implementation. The unchanged baseline passes 55 unit tests, 25 real Azurite
+tests, and warning-level Roslyn format verification.
+
+1. The package identity is `ViciOne.ServiceBus.Azure.Table`, while its public types are split across
+   `ViciOne.ServiceBus.Azure.Table`, `ViciOne.ServiceBus.AzureTable`, configuration, saga, and
+   message-journal namespaces. An extra physical `AzureTable/` directory repeats the capability
+   name below the project root.
+2. Repository contexts, converter machinery, storage records, ETag payloads, and DI implementation
+   types are public even though callers need only repository factories, key formatters, immutable
+   journal settings and stores, and composition extensions.
+3. Composition verbs use three incompatible legacy shapes: `AzureTableRepository`,
+   `SetAzureTableSagaRepositoryProvider`, and `UseAzureTableSagaRepository`. Configuration members
+   named `TableClientFactory` and `KeyFormatter` do not express an action.
+4. Saga repository methods omit several null and cancellation boundaries, contain compressed
+   multi-statement lines, and expose an `async` query-rejection method that never awaits. The owning
+   operation token must be explicit: the method token is checked before work, while provider I/O
+   uses the surrounding consume/load context token required by the repository lifetime.
+5. The property converters do not validate their inputs and contain unnecessarily indirect boxed
+   conversions. The implementation remains necessary because Azure Table has a narrow native value
+   set, while other saga properties require the existing stable serializer.
+6. The bounded message journal has strong transactional behavior, but its persistence record is an
+   accidental public API and its direct conversion boundary lacks complete argument validation.
+7. The product project contains historical package narrative and a JetBrains namespace suppression;
+   both exist only to accommodate the current inconsistent layout.
+8. Requirement-projection tests are not themselves represented in their requirement manifests, and
+   there is no exact exported-surface guard for this delivery package.
+
+The completed 2,582-line source review keeps only eleven intentional public types in the package
+namespace. Public composition APIs now use `UseAzureTable`, provider implementation types live in
+matching `Configuration`, `Infrastructure`, `MessageJournal`, and `Saga` namespaces and folders,
+and saga properties use an isolated `Saga_` storage prefix. Constructor, key, table-name, converter,
+message-journal, cancellation, and concurrency boundaries fail before unintended provider work.
+
+The first post-remediation Azurite run exposed a real composition defect that unit-only review did
+not: the three Job Service saga types shared one non-generic formatter registration, so the first
+formatter controlled all three repositories. A type-specific internal formatter provider now owns
+each `TSaga` registration. The unit contract resolves two saga types from one container and proves
+their provider and formatter identities remain distinct; the complete real-provider profile then
+passed all 27 cases.
+
+Azure Table concurrency is now a public typed contract. Duplicate inserts (409), stale ETags (412),
+and operations on a disappeared entity (404 with `ResourceNotFound`) map to
+`AzureTableSagaConcurrencyException`; a missing table or unrelated provider failure remains a
+general saga failure. Both SDK-boundary tests and a real Azurite test preserve the original
+`RequestFailedException` for retry and diagnosis.

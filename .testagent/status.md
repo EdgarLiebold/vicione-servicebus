@@ -365,3 +365,42 @@ publisher-confirmation branches, and the Amazon SQS renewal floor is identified 
 
 Generic XML documentation, empty elements, signature-order mismatches, and remaining historical
 narrative are still open and form the explicit next iteration; iteration 13 makes no final A+ claim.
+
+## Iteration 49
+
+Iteration 49 turns Azure Table into one coherent greenfield capability without removing saga,
+Job Service, futures, Courier, or bounded message-journal behavior. Eleven intentional public types
+now occupy `ViciOne.ServiceBus.Azure.Table`; all provider mechanics are internal and physically
+grouped by responsibility. Composition uses one `UseAzureTable` vocabulary, options and formatter
+contracts are explicit, and public concurrency failures retain provider error identity.
+
+Every product file and both owning test projects were read before the source, XML documentation,
+type names, namespaces, and physical layout were changed. No comment generator modified source.
+The package has no convenience directives, maintenance markers, dummy implementations, obsolete
+Azure SDK vocabulary, redundant capability directory, global-usings shim, JetBrains suppression,
+or empty source directory.
+
+### Red/green and mutation evidence
+
+- The first complete post-remediation Azurite profile failed four Job Service cases and revealed a
+  shared non-generic formatter registration; a type-specific formatter provider fixed the defect,
+  and a two-saga DI test prevents recurrence.
+- Seven isolated mutations were killed: omitted custom-key validation, disabled 412 mapping,
+  broadened journal ownership, omitted constructor null validation, leaked implementation
+  visibility, discarded saga-specific formatter binding, and disabled 409 save mapping.
+- Every mutation was manually restored before a fresh sequential rebuild and final validation.
+
+### Full validation
+
+- Azure Table product, unit, local-integration, architecture, and complete Unit-solution builds:
+  passed with 0 warnings and 0 errors.
+- Azure Table unit profile: 69 passed, 0 failed, 0 skipped.
+- Isolated real Azurite profile: 27 passed, 0 failed, 0 skipped; final run identity
+  `vicione-b1776357b998`.
+- Complete Unit/Architecture profile: 4,407 passed, 0 failed, 0 skipped.
+- Architecture and documentation profile: 237 passed, 0 failed, 0 skipped.
+- Fresh-package gate: 18 journeys, 30 packages, three executable isolated provider consumers, and
+  all 29 runtime package APIs passed.
+- Packed API: 21,719 lines and SHA-256
+  `c0214b238c825361c24efd3f09af78e4e1ce94fbce2f9393d0791b47d2662dba`.
+- Product/unit/local warning-level format verification and Git whitespace validation: passed.

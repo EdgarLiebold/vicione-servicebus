@@ -82,7 +82,7 @@
     },
     {
       "type": "AzureTableMessageJournalStoreOptions",
-      "source": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/MessageJournal/AzureTableMessageJournalStoreOptions.cs",
+      "source": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTableMessageJournalStoreOptions.cs",
       "boundary": "construction",
       "invariantCount": 3,
       "negativeTest": { "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/MessageJournal/AzureTableMessageJournalOptionsTests.cs", "method": "PartitionKey_RejectsEveryAzureUnsafeCharacter" },

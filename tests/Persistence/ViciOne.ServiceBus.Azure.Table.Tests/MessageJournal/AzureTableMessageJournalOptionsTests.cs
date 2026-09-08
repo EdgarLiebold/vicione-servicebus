@@ -1,6 +1,7 @@
 using System.Text.Json;
 using global::Azure.Data.Tables;
-using ViciOne.ServiceBus.AzureTable.MessageJournal;
+using ViciOne.ServiceBus.Azure.Table;
+using ViciOne.ServiceBus.Azure.Table.MessageJournal;
 using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.MessageJournal;
@@ -15,12 +16,12 @@ public sealed class AzureTableMessageJournalOptionsTests
     public void Capacity_AllowsTheAtomicMaximumAndRejectsOneMoreEntry()
     {
         var maximum = new MessageJournalStoreLimits(
-            AzureTableMessageJournalStoreOptions.MaximumBinaryPropertyBytes,
-            AzureTableMessageJournalStoreOptions.MaximumBatchBoundEntries,
+            AzureTableMessageJournalStoreOptions.MaximumPropertyBytes,
+            AzureTableMessageJournalStoreOptions.MaximumJournalEntriesPerPartition,
             TimeSpan.FromDays(1));
         var excessive = new MessageJournalStoreLimits(
-            AzureTableMessageJournalStoreOptions.MaximumBinaryPropertyBytes,
-            AzureTableMessageJournalStoreOptions.MaximumBatchBoundEntries + 1,
+            AzureTableMessageJournalStoreOptions.MaximumPropertyBytes,
+            AzureTableMessageJournalStoreOptions.MaximumJournalEntriesPerPartition + 1,
             TimeSpan.FromDays(1));
 
         var options = new AzureTableMessageJournalStoreOptions("journal", maximum);
@@ -29,6 +30,90 @@ public sealed class AzureTableMessageJournalOptionsTests
 
         Assert.Same(maximum, options.Limits);
         Assert.Equal("limits", failure.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-BOUNDARY", "options-store-and-entry-inputs-fail-fast")]
+    public async Task OptionsStoreAndEntryInputs_FailBeforeNetworkUseAsync()
+    {
+        MessageJournalStoreLimits limits = Limits();
+        var excessiveProperty = new MessageJournalStoreLimits(
+            AzureTableMessageJournalStoreOptions.MaximumPropertyBytes + 1,
+            10,
+            TimeSpan.FromDays(1));
+        TableClient table = CreateTableClient();
+        var options = new AzureTableMessageJournalStoreOptions("journal", limits);
+
+        Assert.Equal("partitionKey", Assert.Throws<ArgumentNullException>(() =>
+            new AzureTableMessageJournalStoreOptions(null!, limits)).ParamName);
+        Assert.Equal("partitionKey", Assert.Throws<ArgumentException>(() =>
+            new AzureTableMessageJournalStoreOptions(" ", limits)).ParamName);
+        Assert.Equal("limits", Assert.Throws<ArgumentNullException>(() =>
+            new AzureTableMessageJournalStoreOptions("journal", null!)).ParamName);
+        Assert.Equal("limits", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new AzureTableMessageJournalStoreOptions("journal", excessiveProperty)).ParamName);
+        Assert.Equal("table", Assert.Throws<ArgumentNullException>(() =>
+            new AzureTableMessageJournalStore(null!, options)).ParamName);
+        Assert.Equal("options", Assert.Throws<ArgumentNullException>(() =>
+            new AzureTableMessageJournalStore(table, null!)).ParamName);
+
+        var store = new AzureTableMessageJournalStore(table, options);
+        ArgumentNullException nullEntry = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await store.AppendAsync(null!, TestContext.Current.CancellationToken));
+        Assert.Equal("entry", nullEntry.ParamName);
+
+        MessageJournalEntry excessiveEntry = MessageJournalEntryTestFactory.Create(
+            Guid.Parse("018cc251-f400-7000-8000-000000000012"),
+            new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero),
+            body: new byte[limits.MaximumEntryBytes + 1]);
+        ArgumentOutOfRangeException excessiveFailure = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
+            await store.AppendAsync(excessiveEntry, TestContext.Current.CancellationToken));
+        Assert.Equal("entry", excessiveFailure.ParamName);
+
+        MessageJournalEntry preAzureTimestamp = MessageJournalEntryTestFactory.Create(
+            Guid.Parse("018cc251-f400-7000-8000-000000000014"),
+            new DateTimeOffset(1600, 12, 31, 23, 59, 59, TimeSpan.Zero));
+        ArgumentOutOfRangeException timestampFailure = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
+            await store.AppendAsync(preAzureTimestamp, TestContext.Current.CancellationToken));
+        Assert.Equal("entry", timestampFailure.ParamName);
+
+        var maximumPropertyStore = new AzureTableMessageJournalStore(
+            table,
+            new AzureTableMessageJournalStoreOptions(
+                "journal",
+                new MessageJournalStoreLimits(
+                    AzureTableMessageJournalStoreOptions.MaximumPropertyBytes,
+                    10,
+                    TimeSpan.FromDays(1))));
+        MessageJournalEntry oversizedSerializedProperty = MessageJournalEntryTestFactory.Create(
+            Guid.Parse("018cc251-f400-7000-8000-000000000015"),
+            new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero),
+            metadata: new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["value"] = new string('x', 32_768),
+            });
+        ArgumentOutOfRangeException propertyFailure = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
+            await maximumPropertyStore.AppendAsync(oversizedSerializedProperty, TestContext.Current.CancellationToken));
+        Assert.Equal(nameof(MessageJournalRecord.MetadataJson), propertyFailure.ParamName);
+
+        using var canceled = new CancellationTokenSource();
+        canceled.Cancel();
+        OperationCanceledException cancellation = await Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            await store.AppendAsync(
+                MessageJournalEntryTestFactory.Create(
+                    Guid.Parse("018cc251-f400-7000-8000-000000000016"),
+                    new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero)),
+                canceled.Token));
+        Assert.Equal(canceled.Token, cancellation.CancellationToken);
+
+        Assert.Equal("entry", Assert.Throws<ArgumentNullException>(() =>
+            MessageJournalRecord.FromEntry(null!, "journal")).ParamName);
+        Assert.Equal("partitionKey", Assert.Throws<ArgumentException>(() =>
+            MessageJournalRecord.FromEntry(
+                MessageJournalEntryTestFactory.Create(
+                    Guid.Parse("018cc251-f400-7000-8000-000000000013"),
+                    new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero)),
+                "invalid/key")).ParamName);
     }
 
     [Theory]
@@ -121,4 +206,15 @@ public sealed class AzureTableMessageJournalOptionsTests
         maximumEntryBytes: 4096,
         maximumEntries: 10,
         retentionPeriod: TimeSpan.FromDays(1));
+
+    private static TableClient CreateTableClient()
+    {
+        var credential = new TableSharedKeyCredential(
+            "localaccount",
+            Convert.ToBase64String(new byte[32]));
+        return new TableClient(
+            new Uri("http://127.0.0.1:1/localaccount"),
+            "journal",
+            credential);
+    }
 }

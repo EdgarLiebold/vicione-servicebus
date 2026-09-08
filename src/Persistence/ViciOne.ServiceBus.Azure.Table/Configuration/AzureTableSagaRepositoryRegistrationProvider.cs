@@ -1,9 +1,12 @@
 using System;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Azure.Table;
+using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus.Configuration;
+namespace ViciOne.ServiceBus.Azure.Table.Configuration;
 
-/// <summary>Applies one Azure Table repository configuration to saga types registered at runtime.</summary>
-public class AzureTableSagaRepositoryRegistrationProvider :
+/// <summary>Applies one Azure Table repository configuration to saga types discovered during registration.</summary>
+internal sealed class AzureTableSagaRepositoryRegistrationProvider :
     ISagaRepositoryRegistrationProvider
 {
     readonly Action<IAzureTableSagaRepositoryConfigurator> _configure;
@@ -17,11 +20,11 @@ public class AzureTableSagaRepositoryRegistrationProvider :
     }
 
     /// <summary>Registers an Azure Table repository for the specified saga type.</summary>
-    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TSaga">The saga state receiving the repository registration.</typeparam>
     /// <param name="configurator">The saga registration to update.</param>
-    public virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
+    public void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
         where TSaga : class, ISaga
     {
-        configurator.AzureTableRepository(_configure);
+        configurator.UseAzureTable(repository => _configure(repository));
     }
 }

@@ -5830,125 +5830,45 @@ TYPE class public ViciOne.ServiceBus.Azure.Storage.MessageDataRepositorySelector
 
 ASSEMBLY ViciOne.ServiceBus.Azure.Table VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.Azure.Table.AzureTableJobServiceConfigurationExtensions [static]
-  METHOD public static System.Void UseAzureTableSagaRepository(ViciOne.ServiceBus.Configuration.IJobServiceConfigurator configurator, System.Func<Azure.Data.Tables.TableClient> contextFactory)
-  METHOD public static System.Void UseAzureTableSagaRepository(ViciOne.ServiceBus.Configuration.IJobServiceConfigurator configurator, System.Func<Azure.Data.Tables.TableClient> contextFactory, ViciOne.ServiceBus.AzureTable.ISagaKeyFormatter<ViciOne.ServiceBus.JobService.JobTypeSaga> jobTypeKeyFormatter, ViciOne.ServiceBus.AzureTable.ISagaKeyFormatter<ViciOne.ServiceBus.JobService.JobSaga> jobKeyFormatter, ViciOne.ServiceBus.AzureTable.ISagaKeyFormatter<ViciOne.ServiceBus.JobService.JobAttemptSaga> jobAttemptKeyFormatter)
+  METHOD public static System.Void UseAzureTable(ViciOne.ServiceBus.Configuration.IJobServiceConfigurator configurator, System.Func<Azure.Data.Tables.TableClient> tableClientFactory)
+  METHOD public static System.Void UseAzureTable(ViciOne.ServiceBus.Configuration.IJobServiceConfigurator configurator, System.Func<Azure.Data.Tables.TableClient> tableClientFactory, ViciOne.ServiceBus.Azure.Table.IAzureTableSagaKeyFormatter jobTypeKeyFormatter, ViciOne.ServiceBus.Azure.Table.IAzureTableSagaKeyFormatter jobKeyFormatter, ViciOne.ServiceBus.Azure.Table.IAzureTableSagaKeyFormatter jobAttemptKeyFormatter)
 TYPE class public ViciOne.ServiceBus.Azure.Table.AzureTableMessageJournalConfigurationExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Advanced.ConnectHandle UseAzureTableMessageJournal(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, Azure.Data.Tables.TableClient table, ViciOne.ServiceBus.AzureTable.MessageJournal.AzureTableMessageJournalStoreOptions storeOptions, ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy policy, ViciOne.ServiceBus.MessageJournal.MessageJournalOptions journalOptions)
-  METHOD public static ViciOne.ServiceBus.Advanced.ConnectHandle UseAzureTableMessageJournal(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, Azure.Data.Tables.TableServiceClient tableServiceClient, System.String tableName, ViciOne.ServiceBus.AzureTable.MessageJournal.AzureTableMessageJournalStoreOptions storeOptions, ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy policy, ViciOne.ServiceBus.MessageJournal.MessageJournalOptions journalOptions)
-  METHOD public static ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator UseAzureTable(ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator configurator, Azure.Data.Tables.TableClient table, ViciOne.ServiceBus.AzureTable.MessageJournal.AzureTableMessageJournalStoreOptions storeOptions)
-  METHOD public static ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator UseAzureTable(ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator configurator, Azure.Data.Tables.TableServiceClient tableServiceClient, System.String tableName, ViciOne.ServiceBus.AzureTable.MessageJournal.AzureTableMessageJournalStoreOptions storeOptions)
-TYPE class public ViciOne.ServiceBus.Azure.Table.AzureTableRepositoryRegistrationExtensions [static]
-  METHOD public static System.Void SetAzureTableSagaRepositoryProvider(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Azure.Table.IAzureTableSagaRepositoryConfigurator> configure)
-  METHOD public static ViciOne.ServiceBus.Configuration.IJobSagaRegistrationConfigurator AzureTableRepository(ViciOne.ServiceBus.Configuration.IJobSagaRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Azure.Table.IAzureTableSagaRepositoryConfigurator> configure)
-  METHOD public static ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<T> AzureTableRepository<T>(ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<T> configurator, System.Action<ViciOne.ServiceBus.Azure.Table.IAzureTableSagaRepositoryConfigurator<T>> configure = null)
-TYPE interface public ViciOne.ServiceBus.Azure.Table.IAzureTableSagaRepositoryConfigurator
-  METHOD public abstract System.Void TableClientFactory(System.Func<Azure.Data.Tables.TableClient> tableClientFactory)
-  METHOD public abstract System.Void TableClientFactory(System.Func<System.IServiceProvider,Azure.Data.Tables.TableClient> tableClientFactory)
-TYPE interface public ViciOne.ServiceBus.Azure.Table.IAzureTableSagaRepositoryConfigurator<TSaga>
-  METHOD public abstract System.Void KeyFormatter(System.Func<ViciOne.ServiceBus.AzureTable.ISagaKeyFormatter<TSaga>> formatterFactory)
-TYPE interface public ViciOne.ServiceBus.AzureTable.DatabaseContext<TSaga>
-  METHOD public abstract System.ValueTuple<System.String,System.String> Format(System.Guid correlationId)
-  PROPERTY Azure.Data.Tables.TableClient Table { public-get;  }
-  PROPERTY ViciOne.ServiceBus.AzureTable.IEntityConverter<TSaga> Converter { public-get;  }
-  PROPERTY ViciOne.ServiceBus.AzureTable.ISagaKeyFormatter<TSaga> Formatter { public-get;  }
-TYPE interface public ViciOne.ServiceBus.AzureTable.IEntityConverter<T>
-  METHOD public abstract System.Collections.Generic.IDictionary<System.String,System.Object> GetDictionary(T entity)
-  METHOD public abstract T GetObject(System.Collections.Generic.IDictionary<System.String,System.Object> entityProperties)
-TYPE interface public ViciOne.ServiceBus.AzureTable.ISagaKeyFormatter<TSaga>
-  METHOD public abstract System.ValueTuple<System.String,System.String> Format(System.Guid correlationId)
-TYPE class public ViciOne.ServiceBus.AzureTable.MessageJournal.AzureTableMessageJournalStore [sealed]
-  CTOR public ViciOne.ServiceBus.AzureTable.MessageJournal.AzureTableMessageJournalStore(Azure.Data.Tables.TableClient table, ViciOne.ServiceBus.AzureTable.MessageJournal.AzureTableMessageJournalStoreOptions options)
+  METHOD public static ViciOne.ServiceBus.Advanced.ConnectHandle UseAzureTableMessageJournal(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, Azure.Data.Tables.TableClient table, ViciOne.ServiceBus.Azure.Table.AzureTableMessageJournalStoreOptions storeOptions, ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy policy, ViciOne.ServiceBus.MessageJournal.MessageJournalOptions journalOptions)
+  METHOD public static ViciOne.ServiceBus.Advanced.ConnectHandle UseAzureTableMessageJournal(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, Azure.Data.Tables.TableServiceClient tableServiceClient, System.String tableName, ViciOne.ServiceBus.Azure.Table.AzureTableMessageJournalStoreOptions storeOptions, ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy policy, ViciOne.ServiceBus.MessageJournal.MessageJournalOptions journalOptions)
+  METHOD public static ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator UseAzureTable(ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator configurator, Azure.Data.Tables.TableClient table, ViciOne.ServiceBus.Azure.Table.AzureTableMessageJournalStoreOptions storeOptions)
+  METHOD public static ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator UseAzureTable(ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator configurator, Azure.Data.Tables.TableServiceClient tableServiceClient, System.String tableName, ViciOne.ServiceBus.Azure.Table.AzureTableMessageJournalStoreOptions storeOptions)
+TYPE class public ViciOne.ServiceBus.Azure.Table.AzureTableMessageJournalStore [sealed]
+  CTOR public ViciOne.ServiceBus.Azure.Table.AzureTableMessageJournalStore(Azure.Data.Tables.TableClient table, ViciOne.ServiceBus.Azure.Table.AzureTableMessageJournalStoreOptions options)
   METHOD public virtual System.Threading.Tasks.ValueTask AppendAsync(ViciOne.ServiceBus.MessageJournal.MessageJournalEntry entry, System.Threading.CancellationToken cancellationToken)
   PROPERTY ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits Limits { public-get;  }
-TYPE class public ViciOne.ServiceBus.AzureTable.MessageJournal.AzureTableMessageJournalStoreOptions [sealed]
-  CTOR public ViciOne.ServiceBus.AzureTable.MessageJournal.AzureTableMessageJournalStoreOptions(System.String partitionKey, ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits limits)
-  FIELD public const System.Int32 MaximumBatchBoundEntries = 98
-  FIELD public const System.Int32 MaximumBinaryPropertyBytes = 65536
+TYPE class public ViciOne.ServiceBus.Azure.Table.AzureTableMessageJournalStoreOptions [sealed]
+  CTOR public ViciOne.ServiceBus.Azure.Table.AzureTableMessageJournalStoreOptions(System.String partitionKey, ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits limits)
+  FIELD public const System.Int32 MaximumJournalEntriesPerPartition = 98
+  FIELD public const System.Int32 MaximumPropertyBytes = 65536
   PROPERTY System.String PartitionKey { public-get;  }
   PROPERTY ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits Limits { public-get;  }
-TYPE class public ViciOne.ServiceBus.AzureTable.MessageJournal.MessageJournalRecord [sealed]
-  CTOR public ViciOne.ServiceBus.AzureTable.MessageJournal.MessageJournalRecord()
-  PROPERTY Azure.ETag ETag { public-get; public-set; }
-  PROPERTY System.Byte[] Body { public-get; public-set; }
-  PROPERTY System.DateTimeOffset ObservedAt { public-get; public-set; }
-  PROPERTY System.Guid EntryId { public-get; public-set; }
-  PROPERTY System.Int32 ContentSizeInBytes { public-get; public-set; }
-  PROPERTY System.Nullable<System.DateTimeOffset> Timestamp { public-get; public-set; }
-  PROPERTY System.String ContentType { public-get; public-set; }
-  PROPERTY System.String DataClassification { public-get; public-set; }
-  PROPERTY System.String HeadersJson { public-get; public-set; }
-  PROPERTY System.String MessageTypesJson { public-get; public-set; }
-  PROPERTY System.String MetadataJson { public-get; public-set; }
-  PROPERTY System.String Operation { public-get; public-set; }
-  PROPERTY System.String Outcome { public-get; public-set; }
-  PROPERTY System.String PartitionKey { public-get; public-set; }
-  PROPERTY System.String RowKey { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.AzureTable.Saga.AzureTableDatabaseContext<TSaga>
-  CTOR public ViciOne.ServiceBus.AzureTable.Saga.AzureTableDatabaseContext<TSaga>(Azure.Data.Tables.TableClient table, ViciOne.ServiceBus.AzureTable.ISagaKeyFormatter<TSaga> keyFormatter)
+TYPE class public ViciOne.ServiceBus.Azure.Table.AzureTableSagaConcurrencyException [sealed,base=ViciOne.ServiceBus.ConcurrencyException]
+  CTOR public ViciOne.ServiceBus.Azure.Table.AzureTableSagaConcurrencyException(System.String message, System.Type sagaType, System.Guid correlationId)
+  CTOR public ViciOne.ServiceBus.Azure.Table.AzureTableSagaConcurrencyException(System.String message, System.Type sagaType, System.Guid correlationId, System.Exception innerException)
+TYPE class public ViciOne.ServiceBus.Azure.Table.AzureTableSagaRepository [static]
+  METHOD public static ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> Create<TSaga>(System.Func<Azure.Data.Tables.TableClient> tableClientFactory)
+  METHOD public static ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> Create<TSaga>(System.Func<Azure.Data.Tables.TableClient> tableClientFactory, ViciOne.ServiceBus.Azure.Table.IAzureTableSagaKeyFormatter keyFormatter)
+TYPE class public ViciOne.ServiceBus.Azure.Table.AzureTableSagaRepositoryRegistrationExtensions [static]
+  METHOD public static System.Void UseAzureTableForRegisteredSagas(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Azure.Table.IAzureTableSagaRepositoryConfigurator> configure)
+  METHOD public static ViciOne.ServiceBus.Configuration.IJobSagaRegistrationConfigurator UseAzureTable(ViciOne.ServiceBus.Configuration.IJobSagaRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Azure.Table.IAzureTableSagaRepositoryConfigurator> configure)
+  METHOD public static ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> UseAzureTable<TSaga>(ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> configurator, System.Action<ViciOne.ServiceBus.Azure.Table.IAzureTableSagaRepositoryConfigurator> configure)
+TYPE class public ViciOne.ServiceBus.Azure.Table.FixedPartitionSagaKeyFormatter [sealed]
+  CTOR public ViciOne.ServiceBus.Azure.Table.FixedPartitionSagaKeyFormatter(System.String partitionKey)
   METHOD public virtual System.ValueTuple<System.String,System.String> Format(System.Guid correlationId)
-  PROPERTY Azure.Data.Tables.TableClient Table { public-get;  }
-  PROPERTY ViciOne.ServiceBus.AzureTable.IEntityConverter<TSaga> Converter { public-get;  }
-  PROPERTY ViciOne.ServiceBus.AzureTable.ISagaKeyFormatter<TSaga> Formatter { public-get;  }
-TYPE class public ViciOne.ServiceBus.AzureTable.Saga.AzureTableSagaRepository<TSaga> [static]
-  METHOD public static ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> Create(System.Func<Azure.Data.Tables.TableClient> tableFactory)
-  METHOD public static ViciOne.ServiceBus.Sagas.ISagaRepository<TSaga> Create(System.Func<Azure.Data.Tables.TableClient> tableFactory, ViciOne.ServiceBus.AzureTable.ISagaKeyFormatter<TSaga> keyFormatter)
-TYPE class public ViciOne.ServiceBus.AzureTable.Saga.AzureTableSagaRepositoryContext<TSaga,TMessage> [base=ViciOne.ServiceBus.Context.ConsumeContextScope<TMessage>]
-  CTOR public ViciOne.ServiceBus.AzureTable.Saga.AzureTableSagaRepositoryContext<TSaga,TMessage>(ViciOne.ServiceBus.AzureTable.DatabaseContext<TSaga> context, ViciOne.ServiceBus.ConsumeContext<TMessage> consumeContext, ViciOne.ServiceBus.Saga.ISagaConsumeContextFactory<ViciOne.ServiceBus.AzureTable.DatabaseContext<TSaga>,TSaga> factory)
-  METHOD public virtual System.Threading.Tasks.Task DeleteAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task DiscardAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task SaveAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task UndoAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task UpdateAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,T>> CreateSagaConsumeContextAsync<T>(ViciOne.ServiceBus.ConsumeContext<T> consumeContext, TSaga instance, ViciOne.ServiceBus.Saga.SagaConsumeContextMode mode)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,TMessage>> AddAsync(TSaga instance, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,TMessage>> InsertAsync(TSaga instance, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga,TMessage>> LoadAsync(System.Guid correlationId, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.AzureTable.Saga.AzureTableSagaRepositoryContextFactory<TSaga>
-  CTOR public ViciOne.ServiceBus.AzureTable.Saga.AzureTableSagaRepositoryContextFactory<TSaga>(Azure.Data.Tables.TableClient tableClient, ViciOne.ServiceBus.Saga.ISagaConsumeContextFactory<ViciOne.ServiceBus.AzureTable.DatabaseContext<TSaga>,TSaga> factory, ViciOne.ServiceBus.AzureTable.ISagaKeyFormatter<TSaga> keyFormatter)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(ViciOne.ServiceBus.ConsumeContext<T> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Saga.SagaRepositoryContext<TSaga,T>> next)
-  METHOD public virtual System.Threading.Tasks.Task SendQueryAsync<T>(ViciOne.ServiceBus.ConsumeContext<T> context, ViciOne.ServiceBus.Sagas.ISagaQuery<TSaga> query, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Saga.SagaRepositoryQueryContext<TSaga,T>> next)
-  METHOD public virtual System.Threading.Tasks.Task<T> ExecuteAsync<T>(System.Func<ViciOne.ServiceBus.Saga.LoadSagaRepositoryContext<TSaga>,System.Threading.Tasks.Task<T>> asyncMethod, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.AzureTable.Saga.ConstPartitionSagaKeyFormatter<TSaga>
-  CTOR public ViciOne.ServiceBus.AzureTable.Saga.ConstPartitionSagaKeyFormatter<TSaga>(System.String partitionKey)
+TYPE class public ViciOne.ServiceBus.Azure.Table.FixedRowSagaKeyFormatter [sealed]
+  CTOR public ViciOne.ServiceBus.Azure.Table.FixedRowSagaKeyFormatter(System.String rowKey)
   METHOD public virtual System.ValueTuple<System.String,System.String> Format(System.Guid correlationId)
-TYPE class public ViciOne.ServiceBus.AzureTable.Saga.ConstRowSagaKeyFormatter<TSaga>
-  CTOR public ViciOne.ServiceBus.AzureTable.Saga.ConstRowSagaKeyFormatter<TSaga>(System.String rowKey)
-  METHOD public virtual System.ValueTuple<System.String,System.String> Format(System.Guid correlationId)
-TYPE class public ViciOne.ServiceBus.AzureTable.Saga.EntityConverter<T>
-  CTOR public ViciOne.ServiceBus.AzureTable.Saga.EntityConverter<T>(System.Collections.Generic.IList<ViciOne.ServiceBus.AzureTable.Saga.IEntityPropertyConverter<T>> converters)
-  METHOD public virtual System.Collections.Generic.IDictionary<System.String,System.Object> GetDictionary(T entity)
-  METHOD public virtual T GetObject(System.Collections.Generic.IDictionary<System.String,System.Object> entityProperties)
-TYPE class public ViciOne.ServiceBus.AzureTable.Saga.EntityConverterFactory [static]
-  METHOD public static ViciOne.ServiceBus.AzureTable.IEntityConverter<T> CreateConverter<T>()
-TYPE class public ViciOne.ServiceBus.AzureTable.Saga.EntityPropertyConverter<TEntity,TProperty>
-  CTOR public ViciOne.ServiceBus.AzureTable.Saga.EntityPropertyConverter<TEntity,TProperty>(System.String name)
-  METHOD public virtual System.Void FromEntity(TEntity entity, System.Collections.Generic.IDictionary<System.String,System.Object> entityProperties)
-  METHOD public virtual System.Void ToEntity(TEntity entity, System.Collections.Generic.IDictionary<System.String,System.Object> entityProperties)
-TYPE interface public ViciOne.ServiceBus.AzureTable.Saga.IEntityPropertyConverter<TEntity>
-  METHOD public abstract System.Void FromEntity(TEntity entity, System.Collections.Generic.IDictionary<System.String,System.Object> entityProperties)
-  METHOD public abstract System.Void ToEntity(TEntity entity, System.Collections.Generic.IDictionary<System.String,System.Object> entityProperties)
-TYPE class public ViciOne.ServiceBus.AzureTable.Saga.ObjectEntityPropertyConverter<TEntity,TProperty>
-  CTOR public ViciOne.ServiceBus.AzureTable.Saga.ObjectEntityPropertyConverter<TEntity,TProperty>(System.String name)
-  METHOD public virtual System.Void FromEntity(TEntity entity, System.Collections.Generic.IDictionary<System.String,System.Object> entityProperties)
-  METHOD public virtual System.Void ToEntity(TEntity entity, System.Collections.Generic.IDictionary<System.String,System.Object> entityProperties)
-TYPE class public ViciOne.ServiceBus.AzureTable.Saga.SagaETag
-  CTOR public ViciOne.ServiceBus.AzureTable.Saga.SagaETag(System.String eTag)
-  PROPERTY System.String ETag { public-get;  }
-TYPE class public ViciOne.ServiceBus.AzureTable.Saga.ValueTypeEntityPropertyConverter<TEntity,TProperty>
-  CTOR public ViciOne.ServiceBus.AzureTable.Saga.ValueTypeEntityPropertyConverter<TEntity,TProperty>(System.String name)
-  METHOD public virtual System.Void FromEntity(TEntity entity, System.Collections.Generic.IDictionary<System.String,System.Object> entityProperties)
-  METHOD public virtual System.Void ToEntity(TEntity entity, System.Collections.Generic.IDictionary<System.String,System.Object> entityProperties)
-TYPE class public ViciOne.ServiceBus.Configuration.AzureTableSagaRepositoryConfigurator<TSaga>
-  CTOR public ViciOne.ServiceBus.Configuration.AzureTableSagaRepositoryConfigurator<TSaga>()
-  METHOD public System.Void Register(ViciOne.ServiceBus.Configuration.ISagaRepositoryRegistrationConfigurator<TSaga> configurator)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void KeyFormatter(System.Func<ViciOne.ServiceBus.AzureTable.ISagaKeyFormatter<TSaga>> formatterFactory)
-  METHOD public virtual System.Void TableClientFactory(System.Func<Azure.Data.Tables.TableClient> tableClientFactory)
-  METHOD public virtual System.Void TableClientFactory(System.Func<System.IServiceProvider,Azure.Data.Tables.TableClient> tableClientFactory)
-TYPE class public ViciOne.ServiceBus.Configuration.AzureTableSagaRepositoryRegistrationProvider
-  CTOR public ViciOne.ServiceBus.Configuration.AzureTableSagaRepositoryRegistrationProvider(System.Action<ViciOne.ServiceBus.Azure.Table.IAzureTableSagaRepositoryConfigurator> configure)
-  METHOD public virtual System.Void Configure<TSaga>(ViciOne.ServiceBus.Configuration.ISagaRegistrationConfigurator<TSaga> configurator)
+TYPE interface public ViciOne.ServiceBus.Azure.Table.IAzureTableSagaKeyFormatter
+  METHOD public abstract System.ValueTuple<System.String,System.String> Format(System.Guid correlationId)
+TYPE interface public ViciOne.ServiceBus.Azure.Table.IAzureTableSagaRepositoryConfigurator
+  METHOD public abstract System.Void UseKeyFormatter(ViciOne.ServiceBus.Azure.Table.IAzureTableSagaKeyFormatter keyFormatter)
+  METHOD public abstract System.Void UseTableClientFactory(System.Func<Azure.Data.Tables.TableClient> tableClientFactory)
+  METHOD public abstract System.Void UseTableClientFactory(System.Func<System.IServiceProvider,Azure.Data.Tables.TableClient> tableClientFactory)
 
 ASSEMBLY ViciOne.ServiceBus.AzureServiceBus.Testing VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarnessOptions [sealed]

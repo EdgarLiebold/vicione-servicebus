@@ -10,6 +10,7 @@ public sealed class RequirementCoverageProjectionTests
         "ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.Requirements.AzureTableLocalIntegrationRequirements.json";
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-LOCAL-REQUIREMENTS", "projection-matches-compiled-metadata")]
     public void AzureTableLocalIntegrationRequirements_MatchCompiledRequirementMetadata()
     {
         Assembly assembly = typeof(RequirementCoverageProjectionTests).Assembly;

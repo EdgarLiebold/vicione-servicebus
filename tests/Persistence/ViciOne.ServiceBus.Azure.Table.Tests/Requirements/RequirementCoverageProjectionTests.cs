@@ -10,6 +10,7 @@ public sealed class RequirementCoverageProjectionTests
         "ViciOne.ServiceBus.Azure.Table.Tests.Requirements.AzureTableRequirements.json";
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-REQUIREMENTS", "projection-matches-compiled-metadata")]
     public void AzureTableRequirements_MatchCompiledRequirementMetadata()
     {
         Assembly assembly = typeof(RequirementCoverageProjectionTests).Assembly;

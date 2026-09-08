@@ -1,7 +1,8 @@
 using global::Azure;
 using global::Azure.Core;
 using global::Azure.Data.Tables;
-using ViciOne.ServiceBus.AzureTable.MessageJournal;
+using ViciOne.ServiceBus.Azure.Table;
+using ViciOne.ServiceBus.Azure.Table.MessageJournal;
 using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.MessageJournal;
@@ -118,28 +119,41 @@ public sealed class AzureTableMessageJournalStoreTests
             string rowKey,
             IEnumerable<string>? select = null,
             CancellationToken cancellationToken = default)
-        { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Azure.Response<T>>(cancellationToken); return Task.FromResult(global::Azure.Response.FromValue((T)(object)lease, _response)); }
+        {
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled<global::Azure.Response<T>>(cancellationToken)
+                : Task.FromResult(global::Azure.Response.FromValue((T)(object)lease, _response));
+        }
+
         public override AsyncPageable<T> QueryAsync<T>(
             string? filter = null,
             int? maxPerPage = null,
             IEnumerable<string>? select = null,
             CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested(); return AsyncPageable<T>.FromPages(
+            cancellationToken.ThrowIfCancellationRequested();
+            return AsyncPageable<T>.FromPages(
                 [Page<T>.FromValues(records.Cast<T>().ToArray(), continuationToken: null, _response)]);
         }
+
         public override Task<global::Azure.Response<IReadOnlyList<global::Azure.Response>>> SubmitTransactionAsync(
             IEnumerable<TableTransactionAction> transactionActions,
             CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Azure.Response<global::System.Collections.Generic.IReadOnlyList<global::Azure.Response>>>(cancellationToken); SubmitCallCount++;
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled<global::Azure.Response<IReadOnlyList<global::Azure.Response>>>(cancellationToken);
+
+            SubmitCallCount++;
             SubmittedActions = transactionActions.ToArray();
             return Task.FromResult(global::Azure.Response.FromValue<IReadOnlyList<global::Azure.Response>>([], _response));
         }
 
         public override Task<global::Azure.Response> AddEntityAsync<T>(T entity, CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Azure.Response>(cancellationToken); IndividualWriteCallCount++;
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled<global::Azure.Response>(cancellationToken);
+
+            IndividualWriteCallCount++;
             throw new InvalidOperationException("Journal append must not split the transaction into individual writes.");
         }
 
@@ -149,7 +163,10 @@ public sealed class AzureTableMessageJournalStoreTests
             TableUpdateMode mode = TableUpdateMode.Merge,
             CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Azure.Response>(cancellationToken); IndividualWriteCallCount++;
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled<global::Azure.Response>(cancellationToken);
+
+            IndividualWriteCallCount++;
             throw new InvalidOperationException("Journal append must not split the transaction into individual writes.");
         }
 
@@ -159,7 +176,10 @@ public sealed class AzureTableMessageJournalStoreTests
             ETag ifMatch = default,
             CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Azure.Response>(cancellationToken); IndividualWriteCallCount++;
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled<global::Azure.Response>(cancellationToken);
+
+            IndividualWriteCallCount++;
             throw new InvalidOperationException("Journal append must not split the transaction into individual writes.");
         }
     }

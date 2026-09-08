@@ -309,3 +309,31 @@ whose stated timing, acknowledgement, provider, or return-value semantics disagr
 - Add a trailing maintenance marker: the Roslyn comment scan must fail.
 - Restore a false broker-acknowledgement contract: the semantic documentation guard must fail.
 - Remove one expression-compiler import: the owning product build must fail at the call site.
+
+## Iteration 49 outcome
+
+Make Azure Table one coherent greenfield capability: align public namespaces and physical ownership
+with the package, hide provider implementation types, normalize all composition verbs, preserve the
+complete saga and bounded-journal feature set, and prove behavior against the real Azurite API.
+
+## Iteration 49 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-AZURE-TABLE-PUBLIC-API` | exact intended exported types and greenfield names | Azure Table unit tests | reflection over the complete exported type/member surface |
+| `REQ-VSB-AZURE-TABLE-CONFIGURATION` | direct saga, registered saga, runtime-type, Job Service, and message-journal composition | Azure Table unit and local-integration tests | fail-fast ownership plus real persisted behavior |
+| `REQ-VSB-AZURE-TABLE-SAGA-BOUNDARY` | nulls, cancellation, insert conflict, ETag update/delete, unsupported query | Azure Table unit tests | exact exceptions, token identity, provider-call counts, and error identity |
+| `REQ-VSB-AZURE-TABLE-ENTITY-CONVERSION` | native and serialized property conversion | Azure Table unit and real-provider tests | exact round trip plus malformed-value failure |
+| `REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL` | finite capacity, retention, property limits, lease concurrency, and foreign-row ownership | Azure Table unit and local-integration tests | ordered transaction assertions and real concurrent Azurite writes |
+| requirement projection completeness | unit and local manifests include their projection gates | both Azure Table test projects | projection tests pass against exact embedded manifests |
+
+## Iteration 49 mutation obligations
+
+- Remove custom-formatter key validation: the unsafe-key boundary test must fail before provider I/O.
+- Stop mapping an Azure 412 write response to typed concurrency: the exact exception test must fail.
+- Stop mapping an Azure 409 duplicate save to typed concurrency: the exact save contract must fail.
+- Broaden the journal row-key range to include foreign rows: the real ownership test must fail.
+- Permit a null repository dependency: the exact fail-fast boundary test must fail.
+- Re-expose one provider implementation type: the exact exported-surface test must fail.
+- Discard a saga-specific formatter during registration: the two-saga DI contract must fail on the
+  exact formatter instance without conflating registrations across saga types.

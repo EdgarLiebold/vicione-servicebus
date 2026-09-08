@@ -11,30 +11,25 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!--
-      The capability is Azure Table storage, and the project, the assembly and the namespace already
-      said so while the package identity still carried the old Azure.Cosmos.Table name. Cosmos DB for
-      Table is a supported counterpart that speaks this API, which the description names as such; it
-      is not the product identity.
-    -->
     <PackageId>ViciOne.ServiceBus.Azure.Table</PackageId>
     <Title>ViciOne.ServiceBus.Azure.Table</Title>
     <PackageTags>ViciOne.ServiceBus;Azure;Table</PackageTags>
-    <Description>ViciOne.ServiceBus saga and optional message-journal persistence on Azure Table storage, including Cosmos DB for Table as a supported endpoint of that API; $(Description)</Description>
+    <Description>Azure Table persistence for ViciOne.ServiceBus sagas and bounded message journals.</Description>
   </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
-      <ProjectReference Include="..\..\ViciOne.ServiceBus.Sagas\ViciOne.ServiceBus.Sagas.csproj" />
-      <ProjectReference Include="..\..\ViciOne.ServiceBus.JobService\ViciOne.ServiceBus.JobService.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\ViciOne.ServiceBus.Sagas\ViciOne.ServiceBus.Sagas.csproj" />
+    <ProjectReference Include="..\..\ViciOne.ServiceBus.JobService\ViciOne.ServiceBus.JobService.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Azure.Data.Tables" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Azure.Data.Tables" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <InternalsVisibleTo Include="ViciOne.ServiceBus.Azure.Table.Tests" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
-    </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Azure.Table.Tests" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+  </ItemGroup>
 
 </Project>
