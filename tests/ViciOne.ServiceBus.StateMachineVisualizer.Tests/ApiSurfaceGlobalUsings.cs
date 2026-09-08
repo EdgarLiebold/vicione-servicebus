@@ -11,4 +11,4 @@ global using ViciOne.ServiceBus.Operations;
 global using ViciOne.ServiceBus.Providers.Persistence;
 global using ViciOne.ServiceBus.Providers.Transports;
 global using ViciOne.ServiceBus.Sagas;
-global using ViciOne.ServiceBus.Visualizer;
+global using ViciOne.ServiceBus.StateMachineVisualizer;

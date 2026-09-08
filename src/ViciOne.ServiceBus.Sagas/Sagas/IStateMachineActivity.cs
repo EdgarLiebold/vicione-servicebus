@@ -3,34 +3,34 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Sagas;
 
-/// <summary>Defines the operations required by state machine activity.</summary>
+/// <summary>Represents a state-machine activity that supports structural inspection.</summary>
 public interface IStateMachineActivity :
     IVisitable
 {
 }
 
 
-/// <summary>An activity is part of a behavior that is executed in order.</summary>
+/// <summary>Represents an activity within a saga behavior pipeline.</summary>
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public interface IStateMachineActivity<TSaga> :
     IStateMachineActivity
     where TSaga : class, SagaStateMachineInstance
 {
-    /// <summary>Execute the activity with the given behavior context.</summary>
+    /// <summary>Executes the activity for an untyped event and continues with the next behavior.</summary>
     /// <param name="context">The behavior context.</param>
     /// <param name="next">The behavior that follows this activity.</param>
     /// <returns>An awaitable task.</returns>
     Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next);
 
-    /// <summary>Execute the activity with the given behavior context.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Executes the activity for a message event and continues with the next behavior.</summary>
+    /// <typeparam name="T">The message contract carried by the event.</typeparam>
     /// <param name="context">The behavior context.</param>
     /// <param name="next">The behavior that follows this activity.</param>
     /// <returns>An awaitable task.</returns>
     Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class;
 
-    /// <summary>The exception path through the behavior allows activities to catch and handle exceptions.</summary>
+    /// <summary>Handles or forwards an exception raised while processing an untyped event.</summary>
     /// <typeparam name="TException">The exception handled by the member.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
@@ -38,8 +38,8 @@ public interface IStateMachineActivity<TSaga> :
     Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception;
 
-    /// <summary>The exception path through the behavior allows activities to catch and handle exceptions.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Handles or forwards an exception raised while processing a message event.</summary>
+    /// <typeparam name="T">The message contract carried by the event.</typeparam>
     /// <typeparam name="TException">The exception handled by the member.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
@@ -50,7 +50,7 @@ public interface IStateMachineActivity<TSaga> :
 }
 
 
-/// <summary>An activity is part of a behavior that is executed in order.</summary>
+/// <summary>Represents an activity within a message-specific saga behavior pipeline.</summary>
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public interface IStateMachineActivity<TSaga, TMessage> :
@@ -58,13 +58,13 @@ public interface IStateMachineActivity<TSaga, TMessage> :
     where TSaga : class, SagaStateMachineInstance
     where TMessage : class
 {
-    /// <summary>Execute the activity with the given behavior context.</summary>
+    /// <summary>Executes the activity and continues with the next behavior.</summary>
     /// <param name="context">The behavior context.</param>
     /// <param name="next">The behavior that follows this activity.</param>
     /// <returns>An awaitable task.</returns>
     Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next);
 
-    /// <summary>The exception path through the behavior allows activities to catch and handle exceptions.</summary>
+    /// <summary>Handles or forwards an exception raised while executing the activity for the supplied message.</summary>
     /// <typeparam name="TException">The exception handled by the member.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>

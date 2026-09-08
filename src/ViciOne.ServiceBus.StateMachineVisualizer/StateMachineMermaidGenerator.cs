@@ -1,77 +1,131 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using QuikGraph;
-using ViciOne.ServiceBus.Internals;
-using ViciOne.ServiceBus.Sagas;
 using ViciOne.ServiceBus.SagaStateMachine;
-using ViciOne.ServiceBus.Visualizer.Internal;
+using ViciOne.ServiceBus.StateMachineVisualizer.Internal;
 
-namespace ViciOne.ServiceBus.Visualizer;
+namespace ViciOne.ServiceBus.StateMachineVisualizer;
 
-/// <summary>Generates Mermaid flowchart documents from state-machine graphs.</summary>
+/// <summary>Renders a state-machine graph as a Mermaid flowchart document.</summary>
+/// <remarks>
+/// The constructor creates a private rendering snapshot that is not modified afterward. An instance can therefore
+/// generate the same document repeatedly and can be shared by concurrent readers. Labels are encoded so state and
+/// event names cannot alter the generated Mermaid syntax.
+/// </remarks>
 public sealed class StateMachineMermaidGenerator
 {
     const string OpenBracket = "«";
     const string CloseBracket = "»";
-    readonly AdjacencyGraph<Vertex, Edge<Vertex>> _graph;
+    readonly AdjacencyGraph<StateMachineGraphNode, TaggedEdge<StateMachineGraphNode, StateMachineGraphEdgeKind>> _graph;
 
-    /// <summary>Creates a generator for a state-machine graph.</summary>
-    /// <param name="graph">The state-machine graph to render.</param>
+    /// <summary>Creates a generator for the supplied state-machine graph.</summary>
+    /// <param name="graph">The graph whose nodes and state-machine relationships are rendered.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="graph" /> is <see langword="null" />.</exception>
     public StateMachineMermaidGenerator(StateMachineGraph graph)
     {
         _graph = StateMachineGraphFactory.Create(graph);
     }
 
-    /// <summary>Generates a Mermaid flowchart document.</summary>
-    /// <returns>The complete Mermaid document.</returns>
+    /// <summary>Generates the complete Mermaid flowchart document.</summary>
+    /// <returns>A Mermaid document containing every node and relationship captured by the constructor.</returns>
     public string Generate()
     {
         StringBuilder output = new();
-        List<Vertex> vertices = _graph.Vertices.ToList();
+        List<StateMachineGraphNode> nodes = [.. _graph.Vertices];
+        Dictionary<StateMachineGraphNode, int> indexes = new(nodes.Count);
 
         output.Append("flowchart TB;");
 
-        foreach (Edge<Vertex> edge in _graph.Edges)
+        for (var index = 0; index < nodes.Count; index++)
         {
-            var source = FormatVertex(edge.Source, vertices);
-            var target = FormatVertex(edge.Target, vertices);
-            var line = $"{Environment.NewLine}    {source} --> {target};";
+            StateMachineGraphNode node = nodes[index];
+            indexes.Add(node, index);
+            output.Append(Environment.NewLine)
+                .Append("    ")
+                .Append(FormatNode(node, index))
+                .Append(';');
+        }
 
-            output.Append(line);
+        foreach (TaggedEdge<StateMachineGraphNode, StateMachineGraphEdgeKind> edge in _graph.Edges)
+        {
+            output.Append(Environment.NewLine)
+                .Append("    ")
+                .Append(FormatEdge(edge, indexes))
+                .Append(';');
         }
 
         return output.ToString();
     }
 
-    static string GetVertexLabel(Vertex vertex, bool includeOptionalType)
+    static string EscapeLabel(string label)
     {
-        if (includeOptionalType && vertex.TargetType != typeof(Event) && vertex.TargetType != typeof(Exception))
-        {
-            if (vertex.TargetType.TryGetSingleClosedGenericArguments(typeof(Fault<>), out Type[] arguments))
-                return $"{vertex.Title}{OpenBracket}{arguments[0].Name}{CloseBracket}";
+        StringBuilder escaped = new(label.Length);
 
-            return $"{vertex.Title}{OpenBracket}{vertex.TargetType.Name}{CloseBracket}";
+        foreach (char character in label)
+        {
+            switch (character)
+            {
+                case '&':
+                    escaped.Append("#38;");
+                    break;
+                case '"':
+                    escaped.Append("#quot;");
+                    break;
+                case '#':
+                    escaped.Append("#35;");
+                    break;
+                case '<':
+                    escaped.Append("#60;");
+                    break;
+                case '>':
+                    escaped.Append("#62;");
+                    break;
+                case '\\':
+                    escaped.Append("#92;");
+                    break;
+                case '[':
+                    escaped.Append("#91;");
+                    break;
+                case ']':
+                    escaped.Append("#93;");
+                    break;
+                case '`':
+                    escaped.Append("#96;");
+                    break;
+                case '\r':
+                    escaped.Append("#13;");
+                    break;
+                case '\n':
+                    escaped.Append("#10;");
+                    break;
+                default:
+                    escaped.Append(character);
+                    break;
+            }
         }
 
-        return vertex.Title;
+        return escaped.ToString();
     }
 
-    static string FormatVertex(Vertex vertex, List<Vertex> vertices)
+    static string FormatNode(StateMachineGraphNode node, int index)
     {
-        var index = vertices.IndexOf(vertex);
-
-        if (vertex.VertexType == typeof(Event))
+        if (node.Kind != StateMachineGraphNodeKind.State)
         {
-            var vertexLabel = GetVertexLabel(vertex, true);
+            string nodeLabel = EscapeLabel(StateMachineNodeLabelFormatter.Format(node, OpenBracket, CloseBracket));
 
-            if (vertex.IsComposite)
-                return $"{index}[\\\"{vertexLabel}\"/]";
+            if (node.IsCompositeEvent)
+                return $"{index}[\\\"{nodeLabel}\"/]";
 
-            return $"{index}[\"{vertexLabel}\"]";
+            return $"{index}[\"{nodeLabel}\"]";
         }
 
-        return $"{index}([\"{GetVertexLabel(vertex, false)}\"])";
+        return $"{index}([\"{EscapeLabel(node.Name)}\"])";
     }
+
+    static string FormatEdge(
+        TaggedEdge<StateMachineGraphNode, StateMachineGraphEdgeKind> edge,
+        IReadOnlyDictionary<StateMachineGraphNode, int> indexes) => edge.Tag == StateMachineGraphEdgeKind.StateInheritance
+        ? $"{indexes[edge.Source]} -. inherits .-> {indexes[edge.Target]}"
+        : $"{indexes[edge.Source]} --> {indexes[edge.Target]}";
 }

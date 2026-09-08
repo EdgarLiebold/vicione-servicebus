@@ -156,6 +156,9 @@ are no compatibility shims; update call sites directly.
 | `ConnectMessageJournal(...)` during bus creation | `bus.UseMessageJournal(journal => ...)` | Gives store, sanitization policy, and finite runtime options one validated owner. |
 | Separate payload-admission registration | `bus.Limits(MessageLimits.Conservative)` or explicit `MessageLimits` | Makes send and receive size boundaries mandatory for every bus. |
 | `ITransactionalBus` | `IAmbientTransactionBus` or `IBufferedBus` | Separates ambient transaction ownership from explicit FIFO buffering. |
+| `new Vertex(type, targetType, title, isComposite)` | `StateMachineGraphNode.CreateState(name)`, `CreateEvent(name, messageType, isCompositeEvent)`, or `CreateException(exceptionType)` | Replaces runtime-type sentinels with a valid semantic state/event/exception model. |
+| `new Edge(from, to, title)` and `graph.Vertices` | `new StateMachineGraphEdge(source, target, kind)` and `graph.Nodes` | Uses domain-specific names and explicit relationship kinds, removes the inaccessible redundant edge title, and exposes an immutable graph snapshot. |
+| Direct use of `GraphStateMachineVisitor<TSaga>` | `stateMachine.GetGraph()` | Keeps traversal state internal while preserving graph inspection as the supported operation. |
 
 #### Moved namespaces and provider names
 
@@ -179,6 +182,7 @@ are no compatibility shims; update call sites directly.
 | `ViciOne.ServiceBus.DynamoDbIntegration` | `ViciOne.ServiceBus.DynamoDb` | Removes the redundant integration suffix. |
 | `ViciOne.ServiceBus.QuartzIntegration` | `ViciOne.ServiceBus.Quartz` | Aligns project, package, assembly, and namespace. |
 | Analyzer implementation and package under one assembly name | `ViciOne.ServiceBus.Analyzers` and `ViciOne.ServiceBus.Analyzers.CodeFixes`, shipped by `ViciOne.ServiceBus.Analyzers` | Keeps compiler-only analyzer dependencies separate from workspace-based code fixes. |
+| `ViciOne.ServiceBus.Visualizer` | `ViciOne.ServiceBus.StateMachineVisualizer` | Aligns the public namespace with the package and assembly identity. |
 
 #### New capability packages
 

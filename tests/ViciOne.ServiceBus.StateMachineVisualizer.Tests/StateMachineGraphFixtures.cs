@@ -12,12 +12,12 @@ internal static class StateMachineGraphFixtures
         var final = State("Final");
         var suspended = State("Suspended");
         var initialized = Event("Initialized");
-        var exception = Event("Exception", typeof(Exception));
+        var exception = ExceptionNode(typeof(Exception));
         var finished = Event("Finished");
         var suspend = Event("Suspend");
         var resume = Event("Resume");
         var restart = Event("Restart", typeof(RestartData));
-        Vertex[] vertices =
+        StateMachineGraphNode[] nodes =
         [
             initial,
             running,
@@ -31,23 +31,23 @@ internal static class StateMachineGraphFixtures
             resume,
             restart,
         ];
-        Edge[] edges =
+        StateMachineGraphEdge[] edges =
         [
-            Connect(initial, initialized),
-            Connect(running, finished),
-            Connect(running, suspend),
-            Connect(failed, restart),
-            Connect(suspended, resume),
-            Connect(initialized, running),
-            Connect(initialized, exception),
-            Connect(exception, failed),
-            Connect(finished, final),
-            Connect(suspend, suspended),
-            Connect(resume, running),
-            Connect(restart, running),
+            Connect(initial, initialized, StateMachineGraphEdgeKind.EventBinding),
+            Connect(running, finished, StateMachineGraphEdgeKind.EventBinding),
+            Connect(running, suspend, StateMachineGraphEdgeKind.EventBinding),
+            Connect(failed, restart, StateMachineGraphEdgeKind.EventBinding),
+            Connect(suspended, resume, StateMachineGraphEdgeKind.EventBinding),
+            Connect(initialized, running, StateMachineGraphEdgeKind.StateTransition),
+            Connect(initialized, exception, StateMachineGraphEdgeKind.ExceptionHandler),
+            Connect(exception, failed, StateMachineGraphEdgeKind.StateTransition),
+            Connect(finished, final, StateMachineGraphEdgeKind.StateTransition),
+            Connect(suspend, suspended, StateMachineGraphEdgeKind.StateTransition),
+            Connect(resume, running, StateMachineGraphEdgeKind.StateTransition),
+            Connect(restart, running, StateMachineGraphEdgeKind.StateTransition),
         ];
 
-        return new StateMachineGraph(vertices, edges);
+        return new StateMachineGraph(nodes, edges);
     }
 
     internal static StateMachineGraph Composite(bool isComposite)
@@ -59,33 +59,82 @@ internal static class StateMachineGraphFixtures
         var first = Event("First");
         var allReceived = Event("AllReceived", isComposite: isComposite);
         var second = Event("Second");
-        Vertex[] vertices = [initial, waiting, final, start, first, allReceived, second];
-        Edge[] edges =
+        var restart = Event("Restart");
+        StateMachineGraphNode[] nodes = [initial, waiting, final, start, first, allReceived, second, restart];
+        List<StateMachineGraphEdge> edges =
         [
-            Connect(initial, start),
-            Connect(waiting, first),
-            Connect(waiting, second),
-            Connect(final, first),
-            Connect(final, second),
-            Connect(start, waiting),
-            Connect(first, allReceived),
-            Connect(allReceived, final),
-            Connect(second, allReceived),
+            Connect(initial, start, StateMachineGraphEdgeKind.EventBinding),
+            Connect(waiting, first, StateMachineGraphEdgeKind.EventBinding),
+            Connect(waiting, second, StateMachineGraphEdgeKind.EventBinding),
+            Connect(final, first, StateMachineGraphEdgeKind.EventBinding),
+            Connect(final, second, StateMachineGraphEdgeKind.EventBinding),
+            Connect(final, restart, StateMachineGraphEdgeKind.EventBinding),
+            Connect(start, waiting, StateMachineGraphEdgeKind.StateTransition),
+            Connect(allReceived, final, StateMachineGraphEdgeKind.StateTransition),
+            Connect(restart, waiting, StateMachineGraphEdgeKind.StateTransition),
         ];
+        if (isComposite)
+        {
+            edges.Add(Connect(first, allReceived, StateMachineGraphEdgeKind.CompositeContribution));
+            edges.Add(Connect(second, allReceived, StateMachineGraphEdgeKind.CompositeContribution));
+        }
 
-        return new StateMachineGraph(vertices, edges);
+        return new StateMachineGraph(nodes, edges);
+    }
+
+    internal static StateMachineGraph Disconnected()
+    {
+        var dormant = State("Dormant");
+        var wake = Event("Wake");
+        return new StateMachineGraph([dormant, wake], []);
+    }
+
+    internal static StateMachineGraph SyntaxSensitiveLabel()
+    {
+        var initial = State("State \" hash# <tag> & slash\\ tick` line\r\nnext");
+        var completed = Event("Quote \" hash# <tag> & slash\\ tick` line\r\nnext");
+        return new StateMachineGraph(
+            [initial, completed],
+            [Connect(initial, completed, StateMachineGraphEdgeKind.EventBinding)]);
+    }
+
+    internal static StateMachineGraph TypedEvents()
+    {
+        var initial = State("Initial");
+        var received = Event("Received", typeof(Envelope<int>));
+        var faulted = Event("Faulted", typeof(Fault<Envelope<string>>));
+        var arrayReceived = Event("ArrayReceived", typeof(Envelope<int>[,]));
+        var exception = ExceptionNode(typeof(GenericGraphFixtureException<Envelope<int>>));
+        var nestedReceived = Event("NestedReceived", typeof(GenericGraphFixtureOuter<int>.Message<string>));
+        var nestedException = ExceptionNode(typeof(GenericGraphFixtureOuter<int>.Failure<string>));
+        var pairReceived = Event("PairReceived", typeof(Pair<int, string>));
+        return new StateMachineGraph(
+            [initial, received, faulted, arrayReceived, exception, nestedReceived, nestedException, pairReceived],
+            [
+                Connect(initial, received, StateMachineGraphEdgeKind.EventBinding),
+                Connect(initial, faulted, StateMachineGraphEdgeKind.EventBinding),
+                Connect(initial, arrayReceived, StateMachineGraphEdgeKind.EventBinding),
+                Connect(received, exception, StateMachineGraphEdgeKind.ExceptionHandler),
+                Connect(initial, nestedReceived, StateMachineGraphEdgeKind.EventBinding),
+                Connect(nestedReceived, nestedException, StateMachineGraphEdgeKind.ExceptionHandler),
+                Connect(initial, pairReceived, StateMachineGraphEdgeKind.EventBinding),
+            ]);
     }
 
     internal static string PlatformLines(string text) =>
         text.Replace("\r", string.Empty, StringComparison.Ordinal)
             .Replace("\n", Environment.NewLine, StringComparison.Ordinal);
 
-    private static Vertex State(string title) => new(typeof(State), typeof(State), title, false);
+    private static StateMachineGraphNode State(string name) => StateMachineGraphNode.CreateState(name);
 
-    private static Vertex Event(string title, Type? targetType = null, bool isComposite = false) =>
-        new(typeof(Event), targetType ?? typeof(Event), title, isComposite);
+    private static StateMachineGraphNode Event(string name, Type? messageType = null, bool isComposite = false) =>
+        StateMachineGraphNode.CreateEvent(name, messageType, isComposite);
 
-    private static Edge Connect(Vertex from, Vertex to) => new(from, to, to.Title);
+    private static StateMachineGraphNode ExceptionNode(Type exceptionType) => StateMachineGraphNode.CreateException(exceptionType);
 
-    internal sealed class RestartData;
+    private static StateMachineGraphEdge Connect(
+        StateMachineGraphNode source,
+        StateMachineGraphNode target,
+        StateMachineGraphEdgeKind kind) => new(source, target, kind);
+
 }

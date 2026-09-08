@@ -2,67 +2,62 @@ using System;
 using QuikGraph;
 using QuikGraph.Graphviz;
 using QuikGraph.Graphviz.Dot;
-using ViciOne.ServiceBus.Internals;
-using ViciOne.ServiceBus.Sagas;
 using ViciOne.ServiceBus.SagaStateMachine;
-using ViciOne.ServiceBus.Visualizer.Internal;
+using ViciOne.ServiceBus.StateMachineVisualizer.Internal;
 
-namespace ViciOne.ServiceBus.Visualizer;
+namespace ViciOne.ServiceBus.StateMachineVisualizer;
 
-/// <summary>Generates Graphviz DOT documents from state-machine graphs.</summary>
+/// <summary>Renders a state-machine graph as a Graphviz DOT document.</summary>
+/// <remarks>
+/// The constructor creates a private rendering snapshot that is not modified afterward. An instance can therefore
+/// generate the same document repeatedly and can be shared by concurrent readers.
+/// </remarks>
 public sealed class StateMachineGraphvizGenerator
 {
-    readonly AdjacencyGraph<Vertex, Edge<Vertex>> _graph;
+    readonly AdjacencyGraph<StateMachineGraphNode, TaggedEdge<StateMachineGraphNode, StateMachineGraphEdgeKind>> _graph;
 
-    /// <summary>Creates a generator for a state-machine graph.</summary>
-    /// <param name="graph">The state-machine graph to render.</param>
+    /// <summary>Creates a generator for the supplied state-machine graph.</summary>
+    /// <param name="graph">The graph whose nodes and state-machine relationships are rendered.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="graph" /> is <see langword="null" />.</exception>
     public StateMachineGraphvizGenerator(StateMachineGraph graph)
     {
         _graph = StateMachineGraphFactory.Create(graph);
     }
 
-    /// <summary>Generates a Graphviz DOT document.</summary>
-    /// <returns>The complete DOT document.</returns>
+    /// <summary>Generates the complete Graphviz DOT document.</summary>
+    /// <returns>A DOT document containing every node and relationship captured by the constructor.</returns>
     public string Generate()
     {
-        var algorithm = new GraphvizAlgorithm<Vertex, Edge<Vertex>>(_graph);
-        algorithm.FormatVertex += VertexStyler;
+        var algorithm = new GraphvizAlgorithm<StateMachineGraphNode, TaggedEdge<StateMachineGraphNode, StateMachineGraphEdgeKind>>(_graph);
+        algorithm.FormatEdge += StyleEdge;
+        algorithm.FormatVertex += StyleNode;
         return algorithm.Generate();
     }
 
-    static void VertexStyler(object sender, FormatVertexEventArgs<Vertex> args)
+    static void StyleEdge(
+        object sender,
+        FormatEdgeEventArgs<StateMachineGraphNode, TaggedEdge<StateMachineGraphNode, StateMachineGraphEdgeKind>> args)
     {
-        args.VertexFormat.Label = args.Vertex.Title;
+        if (args.Edge.Tag != StateMachineGraphEdgeKind.StateInheritance)
+            return;
 
-        if (args.Vertex.VertexType == typeof(Event))
+        args.EdgeFormat.Label.Value = "inherits";
+        args.EdgeFormat.Style = GraphvizEdgeStyle.Dashed;
+    }
+
+    static void StyleNode(object sender, FormatVertexEventArgs<StateMachineGraphNode> args)
+    {
+        if (args.Vertex.Kind != StateMachineGraphNodeKind.State)
         {
+            args.VertexFormat.Label = StateMachineNodeLabelFormatter.Format(args.Vertex, "<", ">");
             args.VertexFormat.FontColor = GraphvizColor.Black;
-            args.VertexFormat.Shape = args.Vertex.IsComposite ? GraphvizVertexShape.InvHouse : GraphvizVertexShape.Rectangle;
-
-            if (args.Vertex.TargetType != typeof(Event) && args.Vertex.TargetType != typeof(Exception))
-            {
-                if (args.Vertex.TargetType.TryGetSingleClosedGenericArguments(typeof(Fault<>), out Type[] arguments))
-                    args.VertexFormat.Label += "<" + arguments[0].Name + ">";
-                else
-                    args.VertexFormat.Label += "<" + args.Vertex.TargetType.Name + ">";
-            }
+            args.VertexFormat.Shape = args.Vertex.IsCompositeEvent ? GraphvizVertexShape.InvHouse : GraphvizVertexShape.Rectangle;
         }
         else
         {
-            switch (args.Vertex.Title)
-            {
-                case "Initial":
-                    args.VertexFormat.FillColor = GraphvizColor.White;
-                    break;
-                case "Final":
-                    args.VertexFormat.FillColor = GraphvizColor.White;
-                    break;
-                default:
-                    args.VertexFormat.FillColor = GraphvizColor.White;
-                    args.VertexFormat.FontColor = GraphvizColor.Black;
-                    break;
-            }
-
+            args.VertexFormat.Label = args.Vertex.Name;
+            args.VertexFormat.FillColor = GraphvizColor.White;
+            args.VertexFormat.FontColor = GraphvizColor.Black;
             args.VertexFormat.Shape = GraphvizVertexShape.Ellipse;
         }
     }

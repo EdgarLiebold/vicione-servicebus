@@ -11242,6 +11242,7 @@ TYPE class public ViciOne.ServiceBus.SagaStateMachine.CatchFaultActivity<TSaga,T
   METHOD public virtual System.Threading.Tasks.Task FaultedAsync<TMessage,T>(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,TMessage,T> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga,TMessage> next)
   METHOD public virtual System.Void Accept(ViciOne.ServiceBus.Sagas.StateMachineVisitor visitor)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
+  PROPERTY System.Type ExceptionType { public-get;  }
 TYPE class public ViciOne.ServiceBus.SagaStateMachine.CompleteRequestActivity
   CTOR public ViciOne.ServiceBus.SagaStateMachine.CompleteRequestActivity()
   METHOD public virtual System.Threading.Tasks.Task ExecuteAsync(ViciOne.ServiceBus.Sagas.BehaviorContext<ViciOne.ServiceBus.Components.RequestState,ViciOne.ServiceBus.Contracts.RequestCompleted> context, ViciOne.ServiceBus.Sagas.IBehavior<ViciOne.ServiceBus.Components.RequestState,ViciOne.ServiceBus.Contracts.RequestCompleted> next)
@@ -11351,15 +11352,6 @@ TYPE class public ViciOne.ServiceBus.SagaStateMachine.DataEventActivityBinder<TI
   METHOD public virtual ViciOne.ServiceBus.Sagas.EventActivityBinder<TInstance,TData> IfElse(ViciOne.ServiceBus.Sagas.StateMachineCondition<TInstance,TData> condition, System.Func<ViciOne.ServiceBus.Sagas.EventActivityBinder<TInstance,TData>,ViciOne.ServiceBus.Sagas.EventActivityBinder<TInstance,TData>> thenActivityCallback, System.Func<ViciOne.ServiceBus.Sagas.EventActivityBinder<TInstance,TData>,ViciOne.ServiceBus.Sagas.EventActivityBinder<TInstance,TData>> elseActivityCallback)
   METHOD public virtual ViciOne.ServiceBus.Sagas.EventActivityBinder<TInstance,TData> IfElseAwaited(ViciOne.ServiceBus.Sagas.StateMachineAsyncCondition<TInstance,TData> condition, System.Func<ViciOne.ServiceBus.Sagas.EventActivityBinder<TInstance,TData>,ViciOne.ServiceBus.Sagas.EventActivityBinder<TInstance,TData>> thenActivityCallback, System.Func<ViciOne.ServiceBus.Sagas.EventActivityBinder<TInstance,TData>,ViciOne.ServiceBus.Sagas.EventActivityBinder<TInstance,TData>> elseActivityCallback)
   METHOD public virtual ViciOne.ServiceBus.Sagas.EventActivityBinder<TInstance,TData> Retry(System.Action<ViciOne.ServiceBus.Configuration.IRetryConfigurator> configure, System.Func<ViciOne.ServiceBus.Sagas.EventActivityBinder<TInstance,TData>,ViciOne.ServiceBus.Sagas.EventActivityBinder<TInstance,TData>> activityCallback)
-TYPE class public ViciOne.ServiceBus.SagaStateMachine.Edge
-  CTOR public ViciOne.ServiceBus.SagaStateMachine.Edge(ViciOne.ServiceBus.SagaStateMachine.Vertex from, ViciOne.ServiceBus.SagaStateMachine.Vertex to, System.String title)
-  METHOD public System.Boolean Equals(System.Object obj)
-  METHOD public System.Int32 GetHashCode()
-  METHOD public System.String ToString()
-  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.SagaStateMachine.Edge other)
-  PROPERTY System.String DebuggerDisplay { public-get;  }
-  PROPERTY ViciOne.ServiceBus.SagaStateMachine.Vertex From { public-get;  }
-  PROPERTY ViciOne.ServiceBus.SagaStateMachine.Vertex To { public-get;  }
 TYPE class public ViciOne.ServiceBus.SagaStateMachine.EmptyBehavior<TSaga,TMessage>
   CTOR public ViciOne.ServiceBus.SagaStateMachine.EmptyBehavior<TSaga,TMessage>()
   METHOD public virtual System.Threading.Tasks.Task ExecuteAsync(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga,TMessage> context)
@@ -11547,20 +11539,6 @@ TYPE class public ViciOne.ServiceBus.SagaStateMachine.FaultedUnscheduleActivity<
   METHOD public virtual System.Threading.Tasks.Task FaultedAsync<TException>(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,TException> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga> next)
   METHOD public virtual System.Void Accept(ViciOne.ServiceBus.Sagas.StateMachineVisitor inspector)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.SagaStateMachine.GraphStateMachineExtensions [static]
-  METHOD public static ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph GetGraph<TSaga>(ViciOne.ServiceBus.Sagas.StateMachine<TSaga> machine)
-TYPE class public ViciOne.ServiceBus.SagaStateMachine.GraphStateMachineVisitor<TSaga>
-  CTOR public ViciOne.ServiceBus.SagaStateMachine.GraphStateMachineVisitor<TSaga>(ViciOne.ServiceBus.Sagas.StateMachine<TSaga> machine)
-  METHOD public virtual System.Void Visit(ViciOne.ServiceBus.Sagas.Event event, System.Action<ViciOne.ServiceBus.Sagas.Event> next)
-  METHOD public virtual System.Void Visit(ViciOne.ServiceBus.Sagas.IStateMachineActivity activity)
-  METHOD public virtual System.Void Visit(ViciOne.ServiceBus.Sagas.IStateMachineActivity activity, System.Action<ViciOne.ServiceBus.Sagas.IStateMachineActivity> next)
-  METHOD public virtual System.Void Visit(ViciOne.ServiceBus.Sagas.State state, System.Action<ViciOne.ServiceBus.Sagas.State> next)
-  METHOD public virtual System.Void Visit<T,TData>(ViciOne.ServiceBus.Sagas.IBehavior<T,TData> behavior)
-  METHOD public virtual System.Void Visit<T,TData>(ViciOne.ServiceBus.Sagas.IBehavior<T,TData> behavior, System.Action<ViciOne.ServiceBus.Sagas.IBehavior<T,TData>> next)
-  METHOD public virtual System.Void Visit<T>(ViciOne.ServiceBus.Sagas.IBehavior<T> behavior)
-  METHOD public virtual System.Void Visit<T>(ViciOne.ServiceBus.Sagas.IBehavior<T> behavior, System.Action<ViciOne.ServiceBus.Sagas.IBehavior<T>> next)
-  METHOD public virtual System.Void Visit<TData>(ViciOne.ServiceBus.Sagas.Event<TData> event, System.Action<ViciOne.ServiceBus.Sagas.Event<TData>> next)
-  PROPERTY ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph Graph { public-get;  }
 TYPE interface public ViciOne.ServiceBus.SagaStateMachine.IActivityBinder<TSaga>
   METHOD public abstract System.Boolean IsStateTransitionEvent(ViciOne.ServiceBus.Sagas.State state)
   METHOD public abstract System.Void Bind(ViciOne.ServiceBus.SagaStateMachine.IBehaviorBuilder<TSaga> builder)
@@ -11826,10 +11804,43 @@ TYPE class public ViciOne.ServiceBus.SagaStateMachine.StateMachineFaultedActivit
   CTOR public ViciOne.ServiceBus.SagaStateMachine.StateMachineFaultedActivitySelector<TSaga,TMessage,TException>(ViciOne.ServiceBus.Sagas.ExceptionActivityBinder<TSaga,TMessage,TException> binder)
   METHOD public virtual ViciOne.ServiceBus.Sagas.ExceptionActivityBinder<TSaga,TMessage,TException> OfInstanceType<TActivity>()
   METHOD public virtual ViciOne.ServiceBus.Sagas.ExceptionActivityBinder<TSaga,TMessage,TException> OfType<TActivity>()
-TYPE class public ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph
-  CTOR public ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph(System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.SagaStateMachine.Vertex> vertices, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.SagaStateMachine.Edge> edges)
-  PROPERTY System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.SagaStateMachine.Edge> Edges { public-get;  }
-  PROPERTY System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.SagaStateMachine.Vertex> Vertices { public-get;  }
+TYPE class public ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph [sealed]
+  CTOR public ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph(System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNode> nodes, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphEdge> edges)
+  PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphEdge> Edges { public-get;  }
+  PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNode> Nodes { public-get;  }
+TYPE class public ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphEdge [sealed]
+  CTOR public ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphEdge(ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNode source, ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNode target, ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphEdgeKind kind)
+  METHOD public System.Boolean Equals(System.Object obj)
+  METHOD public System.Int32 GetHashCode()
+  METHOD public System.String ToString()
+  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphEdge other)
+  PROPERTY ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphEdgeKind Kind { public-get;  }
+  PROPERTY ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNode Source { public-get;  }
+  PROPERTY ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNode Target { public-get;  }
+TYPE enum public ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphEdgeKind
+  FIELD public System.Int32 value__
+  FIELD public const ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphEdgeKind CompositeContribution = 3
+  FIELD public const ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphEdgeKind EventBinding = 0
+  FIELD public const ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphEdgeKind ExceptionHandler = 2
+  FIELD public const ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphEdgeKind StateInheritance = 4
+  FIELD public const ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphEdgeKind StateTransition = 1
+TYPE class public ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphExtensions [static]
+  METHOD public static ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph GetGraph<TSaga>(ViciOne.ServiceBus.Sagas.StateMachine<TSaga> machine)
+TYPE class public ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNode [sealed]
+  METHOD public System.String ToString()
+  METHOD public static ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNode CreateEvent(System.String name, System.Type messageType = null, System.Boolean isCompositeEvent = false)
+  METHOD public static ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNode CreateException(System.Type exceptionType)
+  METHOD public static ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNode CreateState(System.String name)
+  PROPERTY System.Boolean IsCompositeEvent { public-get;  }
+  PROPERTY System.String Name { public-get;  }
+  PROPERTY System.Type ExceptionType { public-get;  }
+  PROPERTY System.Type MessageType { public-get;  }
+  PROPERTY ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNodeKind Kind { public-get;  }
+TYPE enum public ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNodeKind
+  FIELD public System.Int32 value__
+  FIELD public const ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNodeKind Event = 1
+  FIELD public const ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNodeKind Exception = 2
+  FIELD public const ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphNodeKind State = 0
 TYPE delegate public ViciOne.ServiceBus.SagaStateMachine.StateMachineUnhandledEventCallback<TSaga> [sealed]
   CTOR public ViciOne.ServiceBus.SagaStateMachine.StateMachineUnhandledEventCallback<TSaga>(System.Object object, System.IntPtr method)
   METHOD public virtual System.IAsyncResult BeginInvoke(ViciOne.ServiceBus.Sagas.BehaviorContext<TSaga> context, ViciOne.ServiceBus.Sagas.State state, System.AsyncCallback callback, System.Object object)
@@ -11879,17 +11890,6 @@ TYPE class public ViciOne.ServiceBus.SagaStateMachine.UnscheduleActivity<TSaga>
   METHOD public virtual System.Threading.Tasks.Task FaultedAsync<TException>(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,TException> context, ViciOne.ServiceBus.Sagas.IBehavior<TSaga> next)
   METHOD public virtual System.Void Accept(ViciOne.ServiceBus.Sagas.StateMachineVisitor inspector)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.SagaStateMachine.Vertex
-  CTOR public ViciOne.ServiceBus.SagaStateMachine.Vertex(System.Type type, System.Type targetType, System.String title, System.Boolean isComposite)
-  METHOD public System.Boolean Equals(System.Object obj)
-  METHOD public System.Int32 GetHashCode()
-  METHOD public System.String ToString()
-  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.SagaStateMachine.Vertex other)
-  PROPERTY System.Boolean IsComposite { public-get;  }
-  PROPERTY System.String DebuggerDisplay { public-get;  }
-  PROPERTY System.String Title { public-get;  }
-  PROPERTY System.Type TargetType { public-get;  }
-  PROPERTY System.Type VertexType { public-get;  }
 TYPE delegate public ViciOne.ServiceBus.Sagas.AsyncEventExceptionMessageFactory<TSaga,TException,T> [sealed]
   CTOR public ViciOne.ServiceBus.Sagas.AsyncEventExceptionMessageFactory<TSaga,TException,T>(System.Object object, System.IntPtr method)
   METHOD public virtual System.IAsyncResult BeginInvoke(ViciOne.ServiceBus.Sagas.BehaviorExceptionContext<TSaga,TException> context, System.AsyncCallback callback, System.Object object)
@@ -12157,6 +12157,8 @@ TYPE interface public ViciOne.ServiceBus.Sagas.IStateMachineEventActivitiesBuild
   METHOD public abstract ViciOne.ServiceBus.Sagas.IStateMachineEventActivitiesBuilder<TSaga> When<TData>(ViciOne.ServiceBus.Sagas.Event<TData> event, ViciOne.ServiceBus.Sagas.StateMachineCondition<TSaga,TData> filter, System.Func<ViciOne.ServiceBus.Sagas.EventActivityBinder<TSaga,TData>,ViciOne.ServiceBus.Sagas.EventActivityBinder<TSaga,TData>> configure)
   METHOD public abstract ViciOne.ServiceBus.Sagas.IStateMachineModifier<TSaga> CommitActivities()
   PROPERTY System.Boolean IsCommitted { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Sagas.IStateMachineExceptionActivity
+  PROPERTY System.Type ExceptionType { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Sagas.IStateMachineFaultedActivitySelector<TInstance,TData,TException>
   METHOD public abstract ViciOne.ServiceBus.Sagas.ExceptionActivityBinder<TInstance,TData,TException> OfInstanceType<TActivity>()
   METHOD public abstract ViciOne.ServiceBus.Sagas.ExceptionActivityBinder<TInstance,TData,TException> OfType<TActivity>()
@@ -12602,6 +12604,7 @@ TYPE interface public ViciOne.ServiceBus.Sagas.State<TSaga>
   METHOD public abstract System.Void Bind(ViciOne.ServiceBus.Sagas.Event event, ViciOne.ServiceBus.Sagas.IStateMachineActivity<TSaga> activity)
   METHOD public abstract System.Void Ignore(ViciOne.ServiceBus.Sagas.Event event)
   METHOD public abstract System.Void Ignore<T>(ViciOne.ServiceBus.Sagas.Event<T> event, ViciOne.ServiceBus.Sagas.StateMachineCondition<TSaga,T> filter)
+  PROPERTY System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Sagas.Event> DeclaredEvents { public-get;  }
   PROPERTY System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Sagas.Event> Events { public-get;  }
   PROPERTY ViciOne.ServiceBus.Sagas.State<TSaga> SuperState { public-get;  }
 TYPE class public ViciOne.ServiceBus.Sagas.StateAccessorExtensions [static]
@@ -12700,6 +12703,7 @@ TYPE interface public ViciOne.ServiceBus.Sagas.StateMachineVisitor
   METHOD public abstract System.Void Visit(ViciOne.ServiceBus.Sagas.Event event, System.Action<ViciOne.ServiceBus.Sagas.Event> next)
   METHOD public abstract System.Void Visit(ViciOne.ServiceBus.Sagas.IStateMachineActivity activity)
   METHOD public abstract System.Void Visit(ViciOne.ServiceBus.Sagas.IStateMachineActivity activity, System.Action<ViciOne.ServiceBus.Sagas.IStateMachineActivity> next)
+  METHOD public abstract System.Void Visit(ViciOne.ServiceBus.Sagas.IStateMachineExceptionActivity activity, System.Action<ViciOne.ServiceBus.Sagas.IStateMachineExceptionActivity> next)
   METHOD public abstract System.Void Visit(ViciOne.ServiceBus.Sagas.State state, System.Action<ViciOne.ServiceBus.Sagas.State> next)
   METHOD public abstract System.Void Visit<T,TMessage>(ViciOne.ServiceBus.Sagas.IBehavior<T,TMessage> behavior)
   METHOD public abstract System.Void Visit<T,TMessage>(ViciOne.ServiceBus.Sagas.IBehavior<T,TMessage> behavior, System.Action<ViciOne.ServiceBus.Sagas.IBehavior<T,TMessage>> next)
@@ -12933,6 +12937,7 @@ TYPE class public ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine<TInstan
   METHOD public virtual System.Void Ignore(ViciOne.ServiceBus.Sagas.Event event)
   METHOD public virtual System.Void Ignore<T>(ViciOne.ServiceBus.Sagas.Event<T> event, ViciOne.ServiceBus.Sagas.StateMachineCondition<TInstance,T> filter)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
+  PROPERTY System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Sagas.Event> DeclaredEvents { public-get;  }
   PROPERTY System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Sagas.Event> Events { public-get;  }
   PROPERTY System.String Name { public-get;  }
   PROPERTY ViciOne.ServiceBus.Sagas.Event Enter { public-get;  }
@@ -13258,11 +13263,11 @@ TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.UriTypeHandler [base
   METHOD public System.Void SetValue(System.Data.IDbDataParameter parameter, System.Uri value)
 
 ASSEMBLY ViciOne.ServiceBus.StateMachineVisualizer VERSION=1.0.0.0
-TYPE class public ViciOne.ServiceBus.Visualizer.StateMachineGraphvizGenerator [sealed]
-  CTOR public ViciOne.ServiceBus.Visualizer.StateMachineGraphvizGenerator(ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph graph)
+TYPE class public ViciOne.ServiceBus.StateMachineVisualizer.StateMachineGraphvizGenerator [sealed]
+  CTOR public ViciOne.ServiceBus.StateMachineVisualizer.StateMachineGraphvizGenerator(ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph graph)
   METHOD public System.String Generate()
-TYPE class public ViciOne.ServiceBus.Visualizer.StateMachineMermaidGenerator [sealed]
-  CTOR public ViciOne.ServiceBus.Visualizer.StateMachineMermaidGenerator(ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph graph)
+TYPE class public ViciOne.ServiceBus.StateMachineVisualizer.StateMachineMermaidGenerator [sealed]
+  CTOR public ViciOne.ServiceBus.StateMachineVisualizer.StateMachineMermaidGenerator(ViciOne.ServiceBus.SagaStateMachine.StateMachineGraph graph)
   METHOD public System.String Generate()
 
 ASSEMBLY ViciOne.ServiceBus.Testing VERSION=1.0.0.0

@@ -7,7 +7,8 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 /// <typeparam name="TException">The exception handled by the member.</typeparam>
 public class CatchFaultActivity<TSaga, TException> :
-    IStateMachineActivity<TSaga>
+    IStateMachineActivity<TSaga>,
+    IStateMachineExceptionActivity
     where TSaga : class, SagaStateMachineInstance
     where TException : Exception
 {
@@ -15,10 +16,15 @@ public class CatchFaultActivity<TSaga, TException> :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="behavior">The state-machine behavior to compose or inspect.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="behavior" /> is <see langword="null" />.</exception>
     public CatchFaultActivity(IBehavior<TSaga> behavior)
     {
+        ArgumentNullException.ThrowIfNull(behavior);
         _behavior = behavior;
     }
+
+    /// <summary>Gets the exception type handled by the activity.</summary>
+    public Type ExceptionType => typeof(TException);
 
     /// <summary>Accepts the supplied value.</summary>
     /// <param name="visitor">The visitor.</param>
@@ -38,7 +44,7 @@ public class CatchFaultActivity<TSaga, TException> :
         _behavior.Probe(scope.CreateScope("behavior"));
     }
 
-    /// <summary>Runs the configured action.</summary>
+    /// <summary>Passes forward processing to the next behavior.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -47,8 +53,8 @@ public class CatchFaultActivity<TSaga, TException> :
         return next.ExecuteAsync(context);
     }
 
-    /// <summary>Runs the configured action.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Passes message processing to the next behavior.</summary>
+    /// <typeparam name="T">The message contract carried by the event.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -58,8 +64,8 @@ public class CatchFaultActivity<TSaga, TException> :
         return next.ExecuteAsync(context);
     }
 
-    /// <summary>Reports that the operation has faulted.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Compensates a matching exception or forwards it to the next fault behavior.</summary>
+    /// <typeparam name="T">The exception type received by the fault pipeline.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -77,9 +83,9 @@ public class CatchFaultActivity<TSaga, TException> :
             await next.FaultedAsync(context).ConfigureAwait(false);
     }
 
-    /// <summary>Reports that the operation has faulted.</summary>
+    /// <summary>Compensates a matching message-processing exception or forwards it to the next fault behavior.</summary>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="T">The exception type received by the fault pipeline.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

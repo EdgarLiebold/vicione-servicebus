@@ -1,5 +1,4 @@
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
-using ViciOne.ServiceBus.Visualizer;
 using Xunit;
 
 namespace ViciOne.ServiceBus.StateMachineVisualizer.Tests;
@@ -8,18 +7,29 @@ public sealed class StateMachineMermaidGeneratorTests
 {
     private const string Expected = """
         flowchart TB;
-            0(["Initial"]) --> 5["Initialized"];
-            1(["Running"]) --> 7["Finished"];
-            1(["Running"]) --> 8["Suspend"];
-            2(["Failed"]) --> 10["Restart«RestartData»"];
-            4(["Suspended"]) --> 9["Resume"];
-            5["Initialized"] --> 1(["Running"]);
-            5["Initialized"] --> 6["Exception"];
-            6["Exception"] --> 2(["Failed"]);
-            7["Finished"] --> 3(["Final"]);
-            8["Suspend"] --> 4(["Suspended"]);
-            9["Resume"] --> 1(["Running"]);
-            10["Restart«RestartData»"] --> 1(["Running"]);
+            0(["Initial"]);
+            1(["Running"]);
+            2(["Failed"]);
+            3(["Final"]);
+            4(["Suspended"]);
+            5["Initialized"];
+            6["catch System.Exception"];
+            7["Finished"];
+            8["Suspend"];
+            9["Resume"];
+            10["Restart«RestartData»"];
+            0 --> 5;
+            1 --> 7;
+            1 --> 8;
+            2 --> 10;
+            4 --> 9;
+            5 --> 1;
+            5 --> 6;
+            6 --> 2;
+            7 --> 3;
+            8 --> 4;
+            9 --> 1;
+            10 --> 1;
         """;
 
     [Fact]
@@ -30,5 +40,55 @@ public sealed class StateMachineMermaidGeneratorTests
             .Generate();
 
         Assert.Equal(StateMachineGraphFixtures.PlatformLines(Expected), output);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-VISUALIZER-MERMAID", "generic-and-fault-type-labels")]
+    public void TypedEvents_RenderReadableGenericAndFaultPayloadNames()
+    {
+        string output = new StateMachineMermaidGenerator(StateMachineGraphFixtures.TypedEvents())
+            .Generate();
+
+        Assert.Contains("1[\"Received«Envelope#60;Int32#62;»\"]", output, StringComparison.Ordinal);
+        Assert.Contains("2[\"Faulted«Envelope#60;String#62;»\"]", output, StringComparison.Ordinal);
+        Assert.Contains("3[\"ArrayReceived«Envelope#60;Int32#62;#91;,#93;»\"]", output, StringComparison.Ordinal);
+        Assert.Contains(
+            "4[\"catch ViciOne.ServiceBus.StateMachineVisualizer.Tests.GenericGraphFixtureException#60;ViciOne.ServiceBus.StateMachineVisualizer.Tests.Envelope#60;System.Int32#62;#62;\"]",
+            output,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "5[\"NestedReceived«GenericGraphFixtureOuter#60;Int32#62;.Message#60;String#62;»\"]",
+            output,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "6[\"catch ViciOne.ServiceBus.StateMachineVisualizer.Tests.GenericGraphFixtureOuter#60;System.Int32#62;.Failure#60;System.String#62;\"]",
+            output,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "7[\"PairReceived«Pair#60;Int32, String#62;»\"]",
+            output,
+            StringComparison.Ordinal);
+        Assert.DoesNotContain('`', output);
+        Assert.DoesNotContain("Fault#60;", output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-VISUALIZER-MERMAID", "syntax-sensitive-label-encoding")]
+    public void SyntaxSensitiveLabel_IsEncodedWithoutChangingFlowchartStructure()
+    {
+        string output = new StateMachineMermaidGenerator(StateMachineGraphFixtures.SyntaxSensitiveLabel())
+            .Generate();
+
+        string[] lines = output.Split(Environment.NewLine, StringSplitOptions.None);
+        Assert.Equal(4, lines.Length);
+        Assert.Equal(
+            "    0([\"State #quot; hash#35; #60;tag#62; #38; slash#92; tick#96; line#13;#10;next\"]);",
+            lines[1]);
+        Assert.Equal(
+            "    1[\"Quote #quot; hash#35; #60;tag#62; #38; slash#92; tick#96; line#13;#10;next\"];",
+            lines[2]);
+        Assert.Equal("    0 --> 1;", lines[3]);
+        Assert.DoesNotContain("<tag>", output, StringComparison.Ordinal);
+        Assert.DoesNotContain("line\r\nnext", output, StringComparison.Ordinal);
     }
 }

@@ -59,7 +59,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             return string.CompareOrdinal(Name, other?.Name ?? "") == 0;
         }
 
-        /// <summary>Gets the super state.</summary>
+        /// <inheritdoc />
         public State<TInstance>? SuperState { get; }
         /// <summary>Gets the name.</summary>
         public string Name { get; }
@@ -222,7 +222,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         }
 
         /// <summary>Ignores the selected event or message.</summary>
-        /// <typeparam name="T">The value type.</typeparam>
+        /// <typeparam name="T">The message contract carried by the event.</typeparam>
         /// <param name="event">The event.</param>
         /// <param name="filter">The filter to add to the pipeline.</param>
         public void Ignore<T>(Event<T> @event, StateMachineCondition<TInstance, T> filter)
@@ -260,8 +260,13 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             return Name.Equals(state.Name) || (SuperState != null && SuperState.IsStateOf(state));
         }
 
-        /// <summary>Gets the events.</summary>
+        /// <inheritdoc />
         public IEnumerable<Event> Events => SuperState != null ? SuperState.Events.Union(GetStateEvents()).Distinct() : GetStateEvents();
+
+        /// <inheritdoc />
+        public IEnumerable<Event> DeclaredEvents => _behaviors.Keys
+            .Union(_ignoredEvents.Keys.Where(IsRealEvent))
+            .Distinct();
 
         /// <summary>Compares this instance with the supplied value.</summary>
         /// <param name="other">The other.</param>
