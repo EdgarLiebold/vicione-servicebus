@@ -8,6 +8,7 @@
 
   <PropertyGroup>
     <PackageTags>ViciOne.ServiceBus</PackageTags>
+    <Description>Core messaging runtime, application composition, routing, reliability, and observability for ViciOne.ServiceBus.</Description>
     <!-- Murmur3UnsafeHashGenerator pins its buffers; without this it reports CS0227. -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>

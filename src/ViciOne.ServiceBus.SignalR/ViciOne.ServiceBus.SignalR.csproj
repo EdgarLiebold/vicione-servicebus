@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <PackageTags>ViciOne.ServiceBus;SignalR</PackageTags>
-    <Description>ViciOne.ServiceBus SignalR Backplane support; $(Description)</Description>
+    <Description>SignalR scale-out backplane integration for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
-    <ProjectReference Include="..\..\src\ViciOne.ServiceBus.Initializers\ViciOne.ServiceBus.Initializers.csproj" />
+    <ProjectReference Include="..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="..\ViciOne.ServiceBus.Initializers\ViciOne.ServiceBus.Initializers.csproj" />
   </ItemGroup>
 
 </Project>

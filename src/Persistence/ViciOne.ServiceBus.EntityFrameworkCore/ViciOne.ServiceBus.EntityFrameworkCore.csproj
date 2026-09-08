@@ -11,7 +11,7 @@
     <PackageId>ViciOne.ServiceBus.EntityFrameworkCore</PackageId>
     <Title>ViciOne.ServiceBus.EntityFrameworkCore</Title>
     <PackageTags>ViciOne.ServiceBus;EF;EFCore;EntityFramework;EntityFrameworkCore</PackageTags>
-    <Description>ViciOne.ServiceBus Entity Framework Core persistence support; $(Description)</Description>
+    <Description>Entity Framework Core outbox, inbox, and durable messaging persistence for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>

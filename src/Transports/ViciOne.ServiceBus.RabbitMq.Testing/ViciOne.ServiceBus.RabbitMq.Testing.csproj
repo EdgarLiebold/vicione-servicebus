@@ -7,7 +7,7 @@
     <RootNamespace>ViciOne.ServiceBus.RabbitMq.Testing</RootNamespace>
     <PackageId>ViciOne.ServiceBus.RabbitMq.Testing</PackageId>
     <PackageTags>ViciOne.ServiceBus;RabbitMQ;Testing</PackageTags>
-    <Description>RabbitMQ-specific ViciOne ServiceBus test harness support.</Description>
+    <Description>RabbitMQ-specific transport test harness APIs for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -121,6 +121,20 @@ public sealed class DeveloperJourneyArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-DEVELOPER-JOURNEYS", "fresh-package-lock-evaluation-is-worktree-neutral")]
+    public void PackageGate_EvaluatesFreshPackagesAgainstTransientLocks()
+    {
+        string verifier = Path.Combine(RepositoryLayout.Root, "tools", "ci", "verify_developer_journeys.sh");
+        string script = File.ReadAllText(verifier);
+
+        Assert.Contains("temporary_lock_root=\"$temporary_root/locks\"", script, StringComparison.Ordinal);
+        Assert.Contains("cp \"$tracked_lock\" \"$transient_lock\"", script, StringComparison.Ordinal);
+        Assert.Contains("-p:NuGetLockFilePath=$transient_lock", script, StringComparison.Ordinal);
+        Assert.Contains("-p:RestoreLockedMode=true", script, StringComparison.Ordinal);
+        Assert.Contains("if $update_lock; then", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-PACKED-PUBLIC-API", "fresh-package-api-must-match-versioned-complete-baseline")]
     public void PackageGate_EnforcesVersionedPublicApiBaselineForEveryRuntimePackage()
     {

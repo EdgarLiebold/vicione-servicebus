@@ -15,7 +15,7 @@
     <PackageId>ViciOne.ServiceBus.EventHubs</PackageId>
     <Title>ViciOne.ServiceBus.EventHubs</Title>
     <PackageTags>ViciOne.ServiceBus;EventHub</PackageTags>
-    <Description>ViciOne.ServiceBus EventHub Support; $(Description)</Description>
+    <Description>Azure Event Hubs producer and consumer integration for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -4,6 +4,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <PackageTags>ViciOne.ServiceBus;Mediator</PackageTags>
+    <Description>In-process request, send, and publish mediation through ViciOne.ServiceBus pipelines.</Description>
   </PropertyGroup>
 
   <ItemGroup>

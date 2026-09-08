@@ -14,7 +14,7 @@
     <PackageId>ViciOne.ServiceBus.AzureServiceBus</PackageId>
     <Title>ViciOne.ServiceBus.AzureServiceBus</Title>
     <PackageTags>ViciOne.ServiceBus;Azure;ServiceBus</PackageTags>
-    <Description>ViciOne.ServiceBus Azure Service Bus Core transport support; $(Description)</Description>
+    <Description>Azure Service Bus queue, topic, subscription, and session transport integration for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>

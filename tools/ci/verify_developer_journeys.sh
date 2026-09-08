@@ -27,6 +27,7 @@ build_server_arguments=(--disable-build-servers -m:1)
 temporary_root="$(mktemp -d "${TMPDIR:-/tmp}/vicione-developer-journeys.XXXXXX")"
 package_feed="$temporary_root/packages"
 global_packages="$temporary_root/global-packages"
+temporary_lock_root="$temporary_root/locks"
 nuget_config="$temporary_root/NuGet.config"
 sample_project="$repository_root/samples/DeveloperJourneys/ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj"
 public_api_consumer_project="$repository_root/samples/PackageConsumers/PublicApiBaseline/ViciOne.ServiceBus.Samples.PublicApiBaselinePackageConsumer.csproj"
@@ -49,7 +50,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-mkdir -p "$package_feed" "$global_packages"
+mkdir -p "$package_feed" "$global_packages" "$temporary_lock_root"
 
 printf '%s\n' \
   '<?xml version="1.0" encoding="utf-8"?>' \
@@ -69,6 +70,32 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=1
 export MSBUILDDISABLENODEREUSE=1
 export NUGET_PACKAGES="$global_packages"
+
+restore_package_consumer() {
+  local project="$1"
+  local project_file="${project##*/}"
+  local project_name="${project_file%.csproj}"
+  local tracked_lock="${project%/*}/packages.lock.json"
+  local transient_lock="$temporary_lock_root/$project_name.packages.lock.json"
+  local restore_arguments=(
+    restore "$project"
+    --configfile "$nuget_config"
+    --force-evaluate
+  )
+
+  if $update_lock; then
+    restore_arguments+=("-p:RestoreLockedMode=false")
+  else
+    test -f "$tracked_lock"
+    cp "$tracked_lock" "$transient_lock"
+    restore_arguments+=(
+      "-p:NuGetLockFilePath=$transient_lock"
+      "-p:RestoreLockedMode=true"
+    )
+  fi
+
+  "$dotnet_cli" "${restore_arguments[@]}"
+}
 
 testing_package_projects=(
   "$repository_root/src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj"
@@ -135,16 +162,7 @@ if [[ "$actual_package_count" != "${#expected_packages[@]}" ]]; then
   exit 1
 fi
 
-restore_arguments=(
-  restore "$sample_project"
-  --configfile "$nuget_config"
-  --force-evaluate
-)
-if $update_lock; then
-  restore_arguments+=("-p:RestoreLockedMode=false")
-fi
-
-"$dotnet_cli" "${restore_arguments[@]}"
+restore_package_consumer "$sample_project"
 "$dotnet_cli" build "$sample_project" \
   --configuration Release \
   --no-restore \
@@ -160,16 +178,7 @@ fi
   --no-restore
 
 for consumer_project in "${isolated_consumer_projects[@]}"; do
-  restore_arguments=(
-    restore "$consumer_project"
-    --configfile "$nuget_config"
-    --force-evaluate
-  )
-  if $update_lock; then
-    restore_arguments+=("-p:RestoreLockedMode=false")
-  fi
-
-  "$dotnet_cli" "${restore_arguments[@]}"
+  restore_package_consumer "$consumer_project"
   "$dotnet_cli" build "$consumer_project" \
     --configuration Release \
     --no-restore \
@@ -184,16 +193,7 @@ for consumer_project in "${isolated_consumer_projects[@]}"; do
     --no-restore
 done
 
-restore_arguments=(
-  restore "$public_api_consumer_project"
-  --configfile "$nuget_config"
-  --force-evaluate
-)
-if $update_lock; then
-  restore_arguments+=("-p:RestoreLockedMode=false")
-fi
-
-"$dotnet_cli" "${restore_arguments[@]}"
+restore_package_consumer "$public_api_consumer_project"
 "$dotnet_cli" build "$public_api_consumer_project" \
   --configuration Release \
   --no-restore \

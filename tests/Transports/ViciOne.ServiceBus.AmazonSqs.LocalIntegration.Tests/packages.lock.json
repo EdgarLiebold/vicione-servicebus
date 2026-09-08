@@ -308,19 +308,11 @@
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
-      "vicione.servicebus.jobservice": {
-        "type": "Project",
-        "dependencies": {
-          "ViciOne.ServiceBus": "[1.0.0, )",
-          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
-        }
-      },
       "vicione.servicebus.quartz": {
         "type": "Project",
         "dependencies": {
           "Quartz": "[4.0.0, )",
-          "ViciOne.ServiceBus": "[1.0.0, )",
-          "ViciOne.ServiceBus.JobService": "[1.0.0, )"
+          "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
       "vicione.servicebus.sagas": {

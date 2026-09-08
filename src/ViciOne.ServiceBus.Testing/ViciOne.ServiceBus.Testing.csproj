@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <TargetFramework>net10.0</TargetFramework>
     <PackageTags>ViciOne.ServiceBus;Testing</PackageTags>
-    <Description>Dedicated ViciOne ServiceBus test harness and test-support package.</Description>
+    <Description>Transport-independent test harness and test-support APIs for ViciOne.ServiceBus applications.</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -699,9 +699,7 @@
           "FastExpressionCompiler": "[5.4.1, )",
           "MessagePack": "[3.1.8, )",
           "ViciOne.ServiceBus": "[1.0.0, )",
-          "ViciOne.ServiceBus.Abstractions": "[1.0.0, )",
-          "ViciOne.ServiceBus.Courier": "[1.0.0, )",
-          "ViciOne.ServiceBus.JobService": "[1.0.0, )"
+          "ViciOne.ServiceBus.Abstractions": "[1.0.0, )"
         }
       },
       "vicione.servicebus.rabbitmq": {

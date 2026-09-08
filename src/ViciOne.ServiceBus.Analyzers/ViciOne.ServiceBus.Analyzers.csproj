@@ -10,7 +10,7 @@
     <LangVersion>latest</LangVersion>
     <WarningLevel>10</WarningLevel>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-    <!-- The aggregate analyzer package publishes this assembly. -->
+    <!-- The aggregate analyzer package publishes this compiler-host assembly. -->
     <IsPackable>false</IsPackable>
     <PackageId>ViciOne.ServiceBus.Analyzers.Assembly</PackageId>
   </PropertyGroup>

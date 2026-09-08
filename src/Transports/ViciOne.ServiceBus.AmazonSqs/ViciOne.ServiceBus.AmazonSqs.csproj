@@ -14,7 +14,7 @@
     <PackageId>ViciOne.ServiceBus.AmazonSqs</PackageId>
     <Title>ViciOne.ServiceBus.AmazonSqs</Title>
     <PackageTags>ViciOne.ServiceBus;AmazonSQS</PackageTags>
-    <Description>ViciOne.ServiceBus Amazon SQS transport support; $(Description)</Description>
+    <Description>Amazon SQS queue and SNS topic transport integration for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>

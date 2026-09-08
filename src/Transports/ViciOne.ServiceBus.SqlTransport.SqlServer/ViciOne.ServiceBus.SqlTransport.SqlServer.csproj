@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../../signing.props" />
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -8,9 +9,9 @@
 
   <PropertyGroup>
     <PackageId>ViciOne.ServiceBus.SqlTransport.SqlServer</PackageId>
-    <Title>ViciOne.ServiceBus.SqlTransport.SQL Server</Title>
+    <Title>ViciOne.ServiceBus.SqlTransport.SqlServer</Title>
     <PackageTags>ViciOne.ServiceBus;Database;Transport;SQL Server;Microsoft;Azure;SQL</PackageTags>
-    <Description>ViciOne.ServiceBus SQL Server Transport; $(Description)</Description>
+    <Description>SQL Server-backed queue and topic transport integration for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>

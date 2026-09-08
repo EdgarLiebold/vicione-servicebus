@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../../signing.props"/>
+  <Import Project="../../signing.props" />
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -14,7 +14,7 @@
 
   <PropertyGroup>
     <PackageTags>ViciOne.ServiceBus</PackageTags>
-    <Description>$(Description)</Description>
+    <Description>Public messaging contracts, contexts, topology abstractions, and pipeline primitives for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -48,11 +48,4 @@
     <ArtifactsProjectName>ViciOne.ServiceBus.Tests.Unit</ArtifactsProjectName>
   </PropertyGroup>
 
-  <!-- The SQL transport compatibility project remains in the engineering graph until its provider
-       integration owners are complete. Keep the hermetic owner in a distinct artifacts
-       directory so the two projects cannot race over one project.assets.json during that overlap. -->
-  <PropertyGroup Condition=" '$(MSBuildProjectName)' == 'ViciOne.ServiceBus.SqlTransport.Tests' ">
-    <ArtifactsProjectName>ViciOne.ServiceBus.SqlTransport.Tests.Unit</ArtifactsProjectName>
-  </PropertyGroup>
-
 </Project>

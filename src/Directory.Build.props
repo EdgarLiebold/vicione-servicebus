@@ -1,12 +1,12 @@
 <Project>
-  <Import Project="..\Directory.Build.props"/>
+  <Import Project="..\Directory.Build.props" />
 
   <PropertyGroup>
     <Product>ViciOne.ServiceBus</Product>
     <Copyright>Copyright 2007-2024 Chris Patterson</Copyright>
     <Authors>Chris Patterson</Authors>
-    <!-- Unsafe code is granted per project, only where the compiler requires it. -->
-    <DebugSymbols>True</DebugSymbols>
+    <!-- Source assemblies emit debug information; the root targets select its configuration-specific representation. -->
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
@@ -19,7 +19,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/EdgarLiebold/vicione-servicebus</PackageProjectUrl>
     <Description>ViciOne.ServiceBus provides a developer-focused, modern platform for creating distributed applications without complexity.</Description>
-    <IsPackable>True</IsPackable>
+    <IsPackable>true</IsPackable>
 
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

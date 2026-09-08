@@ -13,8 +13,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
 
-    <!-- This project carries no logic. It exists so that the analyzer assembly and the code fix
-         assembly, which must not live together, still ship as the one package they always were. -->
+    <!-- This packaging project bundles the separately loadable analyzer and code-fix assemblies
+         into one consumer-facing development package without emitting a library assembly. -->
     <PackageId>ViciOne.ServiceBus.Analyzers</PackageId>
     <AssemblyName>ViciOne.ServiceBus.Analyzers.Package</AssemblyName>
     <RootNamespace>ViciOne.ServiceBus.Analyzers.Package</RootNamespace>
@@ -26,7 +26,7 @@
     <EmbedUntrackedSources>false</EmbedUntrackedSources>
     <Authors>Remco Blok, $(Authors)</Authors>
     <PackageTags>ViciOne.ServiceBus</PackageTags>
-    <Description>$(Description)</Description>
+    <Description>Compiler diagnostics and code fixes that enforce ViciOne.ServiceBus API conventions.</Description>
 
     <TargetsForTfmSpecificContentInPackage>
       $(TargetsForTfmSpecificContentInPackage);PackAnalyzerAssemblies

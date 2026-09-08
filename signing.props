@@ -1,5 +1,5 @@
 <Project>
-  <!-- These properties will be used only by projects that sign the assemblies -->
+  <!-- Importing assembly projects use the repository key for strong-name signing. -->
 
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)ViciOne.ServiceBus.snk</AssemblyOriginatorKeyFile>

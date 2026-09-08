@@ -7,7 +7,7 @@
     <RootNamespace>ViciOne.ServiceBus.EventHubs.Testing</RootNamespace>
     <PackageId>ViciOne.ServiceBus.EventHubs.Testing</PackageId>
     <PackageTags>ViciOne.ServiceBus;EventHub;Testing</PackageTags>
-    <Description>EventHub-specific ViciOne ServiceBus test harness support.</Description>
+    <Description>Azure Event Hubs-specific producer and consumer test harness APIs for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>

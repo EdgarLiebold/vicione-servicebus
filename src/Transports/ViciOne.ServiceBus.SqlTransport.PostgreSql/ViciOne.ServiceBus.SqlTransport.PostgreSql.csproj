@@ -11,7 +11,7 @@
     <PackageId>ViciOne.ServiceBus.SqlTransport.PostgreSql</PackageId>
     <Title>ViciOne.ServiceBus.SqlTransport.PostgreSql</Title>
     <PackageTags>ViciOne.ServiceBus;Database;Transport;PostgreSQL;npgsql</PackageTags>
-    <Description>ViciOne.ServiceBus PostgreSQL Database Transport; $(Description)</Description>
+    <Description>PostgreSQL-backed queue and topic transport integration for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -7,7 +7,7 @@
     <RootNamespace>ViciOne.ServiceBus.AzureServiceBus.Testing</RootNamespace>
     <PackageId>ViciOne.ServiceBus.AzureServiceBus.Testing</PackageId>
     <PackageTags>ViciOne.ServiceBus;Azure;ServiceBus;Testing</PackageTags>
-    <Description>Azure Service Bus-specific ViciOne ServiceBus test harness support.</Description>
+    <Description>Azure Service Bus-specific transport test harness APIs for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>

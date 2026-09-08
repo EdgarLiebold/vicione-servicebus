@@ -7,7 +7,7 @@
     <PackageId>ViciOne.ServiceBus.EntityFrameworkCore.Sagas</PackageId>
     <Title>ViciOne.ServiceBus.EntityFrameworkCore.Sagas</Title>
     <PackageTags>ViciOne.ServiceBus;EF;EFCore;EntityFramework;EntityFrameworkCore;Sagas</PackageTags>
-    <Description>ViciOne.ServiceBus Entity Framework Core saga, future, and job persistence support; $(Description)</Description>
+    <Description>Entity Framework Core saga, future, and job persistence for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>

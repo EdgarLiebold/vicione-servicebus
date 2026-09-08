@@ -14,7 +14,7 @@
     <PackageId>ViciOne.ServiceBus.ActiveMq</PackageId>
     <Title>ViciOne.ServiceBus.ActiveMq</Title>
     <PackageTags>ViciOne.ServiceBus;ActiveMQ</PackageTags>
-    <Description>ViciOne.ServiceBus ActiveMQ transport support; $(Description)</Description>
+    <Description>ActiveMQ and AMQP transport integration for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -14,7 +14,7 @@
     <PackageId>ViciOne.ServiceBus.Quartz</PackageId>
     <Title>ViciOne.ServiceBus.Quartz</Title>
     <PackageTags>ViciOne.ServiceBus;Quartz;Scheduler;Scheduling</PackageTags>
-    <Description>ViciOne.ServiceBus Quartz.NET scheduler support; $(Description)</Description>
+    <Description>Quartz.NET scheduling and recurring-message integration for ViciOne.ServiceBus.</Description>
   </PropertyGroup>
 
   <ItemGroup>
