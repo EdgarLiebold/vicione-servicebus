@@ -22,12 +22,16 @@ public class BusRegistrationContext :
     public BusRegistrationContext(IServiceProvider provider, IContainerSelector selector, ISetScopedConsumeContext setScopedConsumeContext, Type busType)
         : base(provider, selector, setScopedConsumeContext)
     {
+        BusType = busType ?? throw new ArgumentNullException(nameof(busType));
         BusKey = BusRegistrationIdentity.GetKey(busType);
     }
 
     string IBusRegistrationIdentity.BusKey => BusKey;
 
     internal string BusKey { get; }
+
+    /// <summary>Gets the bus contract represented by this context.</summary>
+    public Type BusType { get; }
 
     /// <summary>Gets the endpoint name formatter.</summary>
     public IEndpointNameFormatter EndpointNameFormatter => Selector.GetEndpointNameFormatter(this);

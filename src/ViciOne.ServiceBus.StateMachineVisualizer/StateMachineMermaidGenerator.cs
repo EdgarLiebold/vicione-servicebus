@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using QuikGraph;
-using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Internals;
-using ViciOne.ServiceBus.SagaStateMachine;
 using ViciOne.ServiceBus.Sagas;
+using ViciOne.ServiceBus.SagaStateMachine;
 using ViciOne.ServiceBus.Visualizer.Internal;
 
 namespace ViciOne.ServiceBus.Visualizer;

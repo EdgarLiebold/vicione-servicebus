@@ -7,6 +7,9 @@ namespace ViciOne.ServiceBus.Configuration;
 public interface IBusRegistrationContext :
     IRegistrationContext
 {
+    /// <summary>Gets the bus contract represented by this registration context.</summary>
+    Type BusType { get; }
+
     /// <summary>Gets the endpoint name formatter.</summary>
     IEndpointNameFormatter EndpointNameFormatter { get; }
 

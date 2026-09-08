@@ -241,19 +241,19 @@
     },
     {
       "type": "QuartzEndpointOptions",
-      "source": "src/Scheduling/ViciOne.ServiceBus.Quartz/Configuration/QuartzEndpointOptions.cs",
-      "boundary": "host-start",
-      "registrationSource": "src/Scheduling/ViciOne.ServiceBus.Quartz/Configuration/QuartzRegistrationExtensions.cs",
-      "invariantCount": 3,
-      "negativeTest": { "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzOptionsStartupValidationTests.cs", "method": "InvalidEndpointOption_FailsAtStartup" },
-      "positiveTest": { "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzOptionsStartupValidationTests.cs", "method": "CoherentEndpointOptions_PassTheSameStartupBoundary" }
+      "source": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzEndpointOptions.cs",
+      "boundary": "registration",
+      "registrationSource": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulingExtensions.cs",
+      "invariantCount": 5,
+      "negativeTest": { "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzOptionsValidationTests.cs", "method": "InvalidEndpointOption_FailsDuringRegistration" },
+      "positiveTest": { "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzOptionsValidationTests.cs", "method": "CoherentEndpointOptions_PassTheRegistrationBoundary" }
     },
     {
       "type": "QuartzSchedulerOptions",
       "source": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulerOptions.cs",
       "boundary": "configuration-materialization",
-      "invariantCount": 3,
-      "negativeTest": { "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzSchedulerOptionsTests.cs", "method": "CreateSettings_RejectsMissingSchedulerFactory" },
+      "invariantCount": 7,
+      "negativeTest": { "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzSchedulerOptionsTests.cs", "method": "RuntimeSettings_RejectInvalidConstruction" },
       "positiveTest": { "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzSchedulerOptionsTests.cs", "method": "CreateSettings_SnapshotsEveryRuntimeValue" }
     },
     {

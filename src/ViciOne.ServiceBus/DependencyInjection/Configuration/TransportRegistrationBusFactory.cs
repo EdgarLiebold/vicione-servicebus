@@ -128,10 +128,19 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
         }
     }
 
-    static void ConnectBusObservers(IServiceProvider context, IBusObserverConnector connector)
+    static void ConnectBusObservers(IBusRegistrationContext context, IBusObserverConnector connector)
     {
         foreach (var observer in context.GetServices<IBusObserver>())
             connector.ConnectBusObserver(observer);
+
+        if (context is not IBusRegistrationIdentity identity)
+            return;
+
+        foreach (IBusObserverRegistration registration in context.GetServices<IBusObserverRegistration>()
+                     .Where(registration => string.Equals(registration.BusKey, identity.BusKey, StringComparison.Ordinal)))
+        {
+            connector.ConnectBusObserver(registration.Resolve(context));
+        }
     }
 
     static void ConnectMessageJournal(IBusRegistrationContext context, IBusFactoryConfigurator configurator)

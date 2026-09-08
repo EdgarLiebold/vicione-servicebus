@@ -3,30 +3,69 @@ using Quartz;
 
 namespace ViciOne.ServiceBus.Quartz;
 
-/// <summary>Defines configuration options for quartz scheduler.</summary>
+/// <summary>Configures a Quartz scheduler whose lifecycle is bound directly to a bus.</summary>
 public sealed class QuartzSchedulerOptions
 {
-    /// <summary>Used to create the scheduler at bus start. The default is an isolated Quartz 4 standalone in-memory scheduler.</summary>
-    public ISchedulerFactory SchedulerFactory { get; set; } = QuartzSchedulerBuilder.Create(builder =>
-        builder.UseJobFactory(new Quartz.ViciOneServiceBusJobFactory())).Build();
+    /// <summary>Gets or sets the transport prefetch count; <see langword="null"/> leaves it provider-defined.</summary>
+    public int? PrefetchCount { get; set; } = 32;
 
-    /// <summary>The queue name for the quartz service, defaults to "quartz".</summary>
+    /// <summary>Gets or sets the maximum number of concurrently processed scheduling commands.</summary>
+    public int? ConcurrentMessageLimit { get; set; }
+
+    /// <summary>Gets or sets the scheduling endpoint queue name.</summary>
     public string QueueName { get; set; } = "quartz";
 
-    /// <summary>Whether to start the scheduler when bus starts, defaults to true.</summary>
+    /// <summary>Gets or sets whether the scheduler starts with the bus.</summary>
     public bool StartScheduler { get; set; } = true;
 
-    /// <summary>
-    /// Provides the single UTC time source used by ViciOne scheduling jobs. The default is
-    /// <see cref="TimeProvider.System" />.
-    /// </summary>
+    /// <summary>Gets or sets the delay before the scheduler starts after its bus becomes ready.</summary>
+    public TimeSpan? StartDelay { get; set; }
+
+    /// <summary>Gets or sets whether final scheduler disposal waits for executing jobs to complete.</summary>
+    public bool WaitForJobsToComplete { get; set; } = true;
+
+    /// <summary>Gets or sets the time source used to calculate remaining message lifetimes.</summary>
     public TimeProvider TimeProvider { get; set; } = TimeProvider.System;
 
-    /// <summary>Optional resolver for time zone identifiers not available from the operating system.</summary>
+    /// <summary>Gets or sets a fallback resolver for time-zone identifiers unavailable to the operating system.</summary>
     public Func<string, TimeZoneInfo?>? TimeZoneResolver { get; set; }
 
-    internal QuartzSchedulerSettings CreateSettings()
+    /// <summary>Gets or sets the persistent backoff applied when delivery fails transiently.</summary>
+    public RetryPolicy DeliveryRetryPolicy { get; set; } = RetryPolicy.Exponential(
+        maxAttempts: 5,
+        initialDelay: TimeSpan.FromSeconds(1),
+        factor: 2,
+        maxDelay: TimeSpan.FromMinutes(1));
+
+    internal Runtime.QuartzSchedulerSettings CreateSettings(global::Quartz.ISchedulerFactory schedulerFactory)
     {
-        return new QuartzSchedulerSettings(SchedulerFactory, QueueName, StartScheduler, TimeProvider, TimeZoneResolver);
+        ArgumentNullException.ThrowIfNull(schedulerFactory);
+        ArgumentException.ThrowIfNullOrWhiteSpace(QueueName);
+        if (PrefetchCount is <= 0)
+            throw new ArgumentOutOfRangeException(nameof(PrefetchCount), PrefetchCount, "PrefetchCount must be greater than zero.");
+        if (ConcurrentMessageLimit is <= 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(ConcurrentMessageLimit),
+                ConcurrentMessageLimit,
+                "ConcurrentMessageLimit must be greater than zero.");
+        }
+        if (StartDelay.HasValue && StartDelay.Value < TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(StartDelay), StartDelay, "StartDelay must not be negative.");
+        ArgumentNullException.ThrowIfNull(TimeProvider);
+        ArgumentNullException.ThrowIfNull(DeliveryRetryPolicy);
+
+        return new Runtime.QuartzSchedulerSettings(
+            schedulerFactory,
+            QueueName,
+            PrefetchCount,
+            ConcurrentMessageLimit,
+            StartScheduler,
+            StartDelay,
+            WaitForJobsToComplete,
+            TimeProvider,
+            TimeZoneResolver,
+            DeliveryRetryPolicy,
+            Runtime.QuartzSchedulerNamespace.ForEndpoint(QueueName));
     }
 }

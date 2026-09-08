@@ -18,11 +18,12 @@ public sealed class AmazonSqsQuartzSchedulingTests
         var scheduled = NewObservation<ScheduledMessage<QuartzDelivery>>();
         var delivered = NewObservation<Guid>();
         var deliveryCount = 0;
-        ISchedulerFactory? schedulerFactory = null;
+        QuartzSchedulerLease? schedulerLease = null;
         IBusControl bus = Bus.Factory.CreateUsingAmazonSqs(configurator =>
         {
             fixture.ConfigureHost(configurator);
-            configurator.ConfigureInMemoryScheduler(out schedulerFactory, schedulerQueue);
+            schedulerLease = configurator.ConfigureInMemoryQuartzScheduler(
+                options => options.QueueName = schedulerQueue);
             configurator.ReceiveEndpoint(inputQueue, endpoint =>
             {
                 endpoint.Durable = false;
@@ -68,20 +69,21 @@ public sealed class AmazonSqsQuartzSchedulingTests
             Assert.Equal(flowId, await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             Assert.Equal(1, Volatile.Read(ref deliveryCount));
 
-            IScheduler scheduler = await Assert.IsAssignableFrom<ISchedulerFactory>(schedulerFactory)
+            IScheduler scheduler = await Assert.IsType<QuartzSchedulerLease>(schedulerLease).SchedulerFactory
                 .GetScheduler(cancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            ITrigger? completedTrigger = await scheduler.GetTrigger(
-                    new TriggerKey(schedule.TokenId.ToString("N")),
-                    cancellationToken).AsTask()
+            IReadOnlyCollection<TriggerKey> remainingTriggers = await scheduler
+                .GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup(), cancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            Assert.Null(completedTrigger);
+            Assert.DoesNotContain(remainingTriggers, key => key.Name == schedule.TokenId.ToString("N"));
             Assert.Equal(1, Volatile.Read(ref deliveryCount));
         }
         finally
         {
             if (started)
                 await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            if (schedulerLease is not null)
+                await schedulerLease.DisposeAsync();
         }
     }
 

@@ -10,7 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj" />
     <ProjectReference Include="../../src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj" />
+    <ProjectReference Include="../../src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj" />
     <PackageReference Include="MessagePack" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />

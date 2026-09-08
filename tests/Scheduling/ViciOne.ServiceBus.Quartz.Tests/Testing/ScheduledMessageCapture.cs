@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.Advanced.Observers;
 using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Quartz.Tests.Testing;

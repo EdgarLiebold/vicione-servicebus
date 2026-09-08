@@ -1,3 +1,8 @@
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.JobService;
+using ViciOne.ServiceBus.Providers.Transports;
+
 namespace ViciOne.ServiceBus.Quartz.Tests.Testing;
 
 internal static class QuartzJobServiceTestBus

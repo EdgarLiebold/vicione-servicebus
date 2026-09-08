@@ -5,7 +5,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Using_quartz_with_serializer.Should_work_properly",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-CONTAINER/native-di-composition-and-serializer-roundtrip",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzContainerIntegrationTests.RegisteredQuartzScheduler_DeliversThroughTheConfiguredBusAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests.RegisteredQuartzScheduler_DeliversThroughTheConfiguredBusAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -15,7 +15,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Using_quartz_with_serializer.Should_work_properly_with_message_headers",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-CONTAINER/native-di-composition-and-serializer-roundtrip",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzContainerIntegrationTests.RegisteredQuartzScheduler_DeliversThroughTheConfiguredBusAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests.RegisteredQuartzScheduler_DeliversThroughTheConfiguredBusAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -25,7 +25,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.When_using_retry_middleware_for_courier.Should_publish_the_faulted_routing_slip_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-COURIER/permanent-fault-compensates",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzCourierRedeliveryIntegrationTests.PermanentActivityFailure_FaultsTheSlipAndCompensatesTheCompletedActivityAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzCourierRedeliveryIntegrationTests.PermanentActivityFailure_FaultsTheSlipAndCompensatesTheCompletedActivityAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -35,7 +35,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.When_using_retry_middleware_for_courier.Should_retry_and_eventually_succeed",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-COURIER/transient-fault-recovers",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzCourierRedeliveryIntegrationTests.TransientActivityFailure_RetriesAndCompletesTheSlipAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzCourierRedeliveryIntegrationTests.TransientActivityFailure_RetriesAndCompletesTheSlipAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -45,7 +45,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.When_using_redelivery_middleware_for_courier.Should_publish_the_faulted_routing_slip_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-COURIER/permanent-fault-compensates",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzCourierRedeliveryIntegrationTests.PermanentActivityFailure_FaultsTheSlipAndCompensatesTheCompletedActivityAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzCourierRedeliveryIntegrationTests.PermanentActivityFailure_FaultsTheSlipAndCompensatesTheCompletedActivityAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -55,7 +55,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.When_using_redelivery_middleware_for_courier.Should_retry_and_eventually_succeed",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-COURIER/transient-fault-recovers",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzCourierRedeliveryIntegrationTests.TransientActivityFailure_RetriesAndCompletesTheSlipAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzCourierRedeliveryIntegrationTests.TransientActivityFailure_RetriesAndCompletesTheSlipAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -65,7 +65,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Using_a_scheduled_delay_retry_mechanism.Should_properly_defer_the_message_delivery",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-REDELIVERY-SCOPE/handler-consumer-message-endpoint-and-bus",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -75,7 +75,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Using_a_scheduled_delay_retry_mechanism_for_consumer.Should_properly_defer_the_message_delivery",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-REDELIVERY-SCOPE/handler-consumer-message-endpoint-and-bus",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -85,7 +85,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Using_a_scheduled_delay_retry_mechanism_for_consumer_without_message.Should_properly_defer_the_message_delivery",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-REDELIVERY-SCOPE/handler-consumer-message-endpoint-and-bus",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -95,7 +95,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Using_scheduled_redelivery_configured_via_the_bus.Should_properly_order_the_middleware",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-REDELIVERY-SCOPE/handler-consumer-message-endpoint-and-bus",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -105,7 +105,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Using_an_explicit_retry_later_via_scheduling.Should_properly_defer_the_message_delivery",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-EXPLICIT-REDELIVERY/two-explicit-redeliveries",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzExplicitRedeliveryIntegrationTests.Redeliver_SchedulesEachRequestedDeliveryThroughQuartzAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzExplicitRedeliveryIntegrationTests.Redeliver_SchedulesEachRequestedDeliveryThroughQuartzAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -115,7 +115,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Using_an_explicit_retry_later_via_scheduling_with_custom_callback.callback_executed_before_defer_the_message_delivery",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-EXPLICIT-REDELIVERY/callback-mutates-redelivered-message",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzExplicitRedeliveryIntegrationTests.Redeliver_CallbackRunsBeforeSchedulingAndMutatesTheRedeliveredMessageAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzExplicitRedeliveryIntegrationTests.Redeliver_CallbackRunsBeforeSchedulingAndMutatesTheRedeliveredMessageAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -145,7 +145,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.When_an_existing_instance_is_not_found_and_message_is_redelivered.Should_schedule_the_message_and_redeliver_to_the_instance",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-MISSING-SAGA/redelivery-finds-later-instance",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzMissingSagaRedeliveryIntegrationTests.MissingSaga_IsScheduledThroughQuartzAndDeliveredAfterTheInstanceExistsAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMissingSagaRedeliveryIntegrationTests.MissingSaga_IsScheduledThroughQuartzAndDeliveredAfterTheInstanceExistsAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -155,7 +155,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Cancel_scheduled_message_through_the_outbox.Should_cancel_the_message",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-OUTBOX/rollback-versus-no-outbox",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzOutboxSchedulingIntegrationTests.FaultingConsumer_CancelsTheQuartzTriggerOnlyWhenTheOutboxOwnsTheScheduleAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzOutboxSchedulingIntegrationTests.FaultingConsumer_CancelsTheQuartzTriggerOnlyWhenTheOutboxOwnsTheScheduleAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -165,7 +165,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Not_cancel_scheduled_message_with_no_outbox.Should_not_cancel_the_message",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-OUTBOX/rollback-versus-no-outbox",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzOutboxSchedulingIntegrationTests.FaultingConsumer_CancelsTheQuartzTriggerOnlyWhenTheOutboxOwnsTheScheduleAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzOutboxSchedulingIntegrationTests.FaultingConsumer_CancelsTheQuartzTriggerOnlyWhenTheOutboxOwnsTheScheduleAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -175,7 +175,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Specifying_an_event_in_the_past.Should_handle_now_properly",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-DUE-TIME/past-now-and-future-delivery",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.DueSchedule_IsDeliveredWithoutManualSchedulerInterventionAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleTimingIntegrationTests.DueSchedule_IsDeliveredWithoutManualSchedulerInterventionAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -185,7 +185,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Specifying_an_event_in_the_past.Should_handle_slightly_in_the_future_properly",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-DUE-TIME/past-now-and-future-delivery",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.DueSchedule_IsDeliveredWithoutManualSchedulerInterventionAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleTimingIntegrationTests.DueSchedule_IsDeliveredWithoutManualSchedulerInterventionAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -195,7 +195,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Specifying_an_event_in_the_past.Should_include_message_headers",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-METADATA/complete-envelope-roundtrip",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.ScheduledDelivery_RestoresTheCompleteMessageContextAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleTimingIntegrationTests.ScheduledDelivery_RestoresTheCompleteMessageContextAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -205,7 +205,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Specifying_an_event_in_the_past.Should_properly_send_the_message",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-DELIVERY/serialized-payload-and-context-roundtrip",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.SchedulerCommandIntegrationTests.TriggeredJob_DeliversTheSerializedPayloadAndUserHeadersAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests.TriggeredJob_DeliversTheSerializedPayloadAndUserHeadersAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -215,7 +215,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Specifying_a_future_event_that_is_canceled.Should_be_able_to_cancel_a_future_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-CANCEL/future-trigger-is-removed-before-delivery",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.CancelingAFutureSchedule_RemovesTheTriggerBeforeItCanDeliverAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleTimingIntegrationTests.CancelingAFutureSchedule_RemovesTheTriggerBeforeItCanDeliverAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -225,7 +225,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Specifying_an_event_reschedule_if_exists.Should_reschedule",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-ONE-TIME/same-token-replaces-trigger",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.SchedulerCommandIntegrationTests.ReusingTheToken_ReplacesRatherThanDuplicatesTheTriggerAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests.ReusingTheToken_ReplacesRatherThanDuplicatesTheTriggerAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -235,7 +235,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.QuartzPublish_Specs.Should_receive_the_message",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-DUE-TIME/past-now-and-future-delivery",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.DueSchedule_IsDeliveredWithoutManualSchedulerInterventionAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleTimingIntegrationTests.DueSchedule_IsDeliveredWithoutManualSchedulerInterventionAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -245,7 +245,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Specifying_a_recurring_event.Should_cancel_recurring_schedule",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-RECURRING-CONTROL/schedule-pause-resume-cancel",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.SchedulerCommandIntegrationTests.RecurringControlCommands_OperateOnOneCanonicalTriggerAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests.RecurringControlCommands_OperateOnOneCanonicalTriggerAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -255,7 +255,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Specifying_a_recurring_event.Should_pause_recurring_schedule",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-RECURRING-CONTROL/schedule-pause-resume-cancel",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.SchedulerCommandIntegrationTests.RecurringControlCommands_OperateOnOneCanonicalTriggerAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests.RecurringControlCommands_OperateOnOneCanonicalTriggerAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -265,7 +265,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Specifying_a_recurring_event.Should_handle_now_properly",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-RECURRING-DELIVERY/public-api-and-time-domain-headers",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzRecurringDeliveryIntegrationTests.RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContextAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzRecurringDeliveryIntegrationTests.RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContextAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -275,7 +275,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Specifying_a_recurring_event.Should_contain_additional_headers_that_provide_schedule_key_context",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-RECURRING-DELIVERY/public-api-and-time-domain-headers",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzRecurringDeliveryIntegrationTests.RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContextAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzRecurringDeliveryIntegrationTests.RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContextAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -285,7 +285,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Specifying_a_recurring_event.Should_contain_additional_headers_that_provide_time_domain_context",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-RECURRING-DELIVERY/public-api-and-time-domain-headers",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzRecurringDeliveryIntegrationTests.RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContextAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzRecurringDeliveryIntegrationTests.RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContextAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -295,7 +295,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.A_long_running_state_machine_initiated_by_a_request.Should_accept_that_faults_happen",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-NESTED-REQUEST/fault-propagates-to-original-request",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzNestedRequestIntegrationTests.NestedSagaRequest_FaultPropagatesToTheOriginalRequesterAndClearsBothSagasAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzNestedRequestIntegrationTests.NestedSagaRequest_FaultPropagatesToTheOriginalRequesterAndClearsBothSagasAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -305,7 +305,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.A_long_running_state_machine_initiated_by_a_request.Should_complete_the_request",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-NESTED-REQUEST/response-completes-original-request",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzNestedRequestIntegrationTests.NestedSagaRequest_ResponseCompletesTheOriginalRequestAndClearsBothSagasAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzNestedRequestIntegrationTests.NestedSagaRequest_ResponseCompletesTheOriginalRequestAndClearsBothSagasAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -315,7 +315,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Sending_a_request_that_times_out.Should_receive_the_timeout_notification",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-SAGA-REQUEST/quartz-timeout-is-delivered-to-the-pending-saga",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzSagaRequestTimeoutIntegrationTests.SagaRequest_QuartzTimeoutIsDeliveredToThePendingSagaAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaRequestTimeoutIntegrationTests.SagaRequest_QuartzTimeoutIsDeliveredToThePendingSagaAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -325,7 +325,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Sending_a_request_from_a_state_machine.Should_handle_the_response",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-SAGA-REQUEST/response-cancels-timeout-and-clears-request-id",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzSagaRequestTimeoutIntegrationTests.SagaRequest_ResponseCancelsItsQuartzTimeoutAndClearsTheRequestIdentityAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaRequestTimeoutIntegrationTests.SagaRequest_ResponseCancelsItsQuartzTimeoutAndClearsTheRequestIdentityAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -335,7 +335,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Rescheduling_a_message_from_a_state_machine.Should_reschedule_the_message_with_a_new_token_id",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-SAGA-RESCHEDULE/replace-cancel-and-finalize",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacementAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests.Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacementAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -345,7 +345,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.ScheduleMessage_Specs.Should_get_both_messages",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-CHAINED-DELIVERY/trace-and-interface-dispatch",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzChainedSchedulingIntegrationTests.ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContractAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzChainedSchedulingIntegrationTests.ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContractAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -355,7 +355,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.ScheduleMessageUsingRawJson_Specs.Should_get_both_messages",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-CHAINED-DELIVERY/trace-and-interface-dispatch",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzChainedSchedulingIntegrationTests.ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContractAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzChainedSchedulingIntegrationTests.ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContractAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -365,7 +365,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Specifying_an_expiration_time.Should_include_it_with_the_final_message",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-EXPIRATION/chained-delivery-preserves-time-to-live-within-scheduling-precision",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzChainedSchedulingIntegrationTests.ChainedSchedule_PreservesTheConfiguredTimeToLiveWithinSchedulingPrecisionAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzChainedSchedulingIntegrationTests.ChainedSchedule_PreservesTheConfiguredTimeToLiveWithinSchedulingPrecisionAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -375,7 +375,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Scheduling_a_message_from_a_state_machine.Should_cancel_when_the_order_is_submitted",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-SAGA-RESCHEDULE/replace-cancel-and-finalize",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacementAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests.Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacementAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -385,7 +385,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Scheduling_a_message_from_a_state_machine.Should_receive_the_timeout",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-SAGA-SCHEDULE/scheduled-message-correlates-and-finalizes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.ScheduledMessage_CorrelatesToItsSagaAndFinalizesItAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests.ScheduledMessage_CorrelatesToItsSagaAndFinalizesItAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -395,7 +395,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Scheduling_a_message_from_a_state_machine.Should_reschedule_the_timeout_when_items_are_added",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-SAGA-RESCHEDULE/replace-cancel-and-finalize",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacementAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests.Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacementAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -405,7 +405,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Using_scheduled_redelivery.Should_use_the_correct_intervals_for_each_redelivery",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-REDELIVERY-INTERVALS/configured-sequence-is-scheduled-in-order",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzScheduledRedeliveryIntegrationTests.ScheduledRedelivery_UsesEveryConfiguredIntervalInOrderAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledRedeliveryIntegrationTests.ScheduledRedelivery_UsesEveryConfiguredIntervalInOrderAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -415,7 +415,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.When_processing_a_lot_of_saga_instances.Should_remove_the_saga_once_completed",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-SAGA-LOAD/concurrent-schedules-finalize-and-remove-all-sagas",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.ConcurrentScheduledSagas_FinalizeAndLeaveNoStoredInstancesAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests.ConcurrentScheduledSagas_FinalizeAndLeaveNoStoredInstancesAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -425,7 +425,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Using_the_quartz_service_with_json.Should_properly_send_the_message",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-CHAINED-DELIVERY/trace-and-interface-dispatch",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzChainedSchedulingIntegrationTests.ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContractAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzChainedSchedulingIntegrationTests.ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContractAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -435,7 +435,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Using_the_quartz_service_and_cancelling.Should_properly_send_the_message",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-CANCEL/future-trigger-is-removed-before-delivery",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.CancelingAFutureSchedule_RemovesTheTriggerBeforeItCanDeliverAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleTimingIntegrationTests.CancelingAFutureSchedule_RemovesTheTriggerBeforeItCanDeliverAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -445,7 +445,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Scheduling_two_messages_from_the_same_saga_instance.Should_deliver_both_messages",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-SAGA-MULTIPLE-SCHEDULES/independent-token-and-delivery",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.Saga_CanOwnAndReceiveTwoIndependentSchedulesAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests.Saga_CanOwnAndReceiveTwoIndependentSchedulesAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -455,7 +455,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_cancelled.Should_get_the_job_accepted",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/cancellation-reaches-consumer-and-terminal-event",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -465,7 +465,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_cancelled.Should_have_published_the_job_cancelled_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/cancellation-reaches-consumer-and-terminal-event",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -475,7 +475,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_cancelled.Should_have_published_the_job_started_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/cancellation-reaches-consumer-and-terminal-event",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -485,7 +485,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_cancelled.Should_have_published_the_job_submitted_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/cancellation-reaches-consumer-and-terminal-event",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -495,7 +495,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout.Should_get_the_job_accepted",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/default-request-client-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -505,7 +505,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout.Should_have_published_the_job_completed_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/default-request-client-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -515,7 +515,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout.Should_have_published_the_job_started_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/default-request-client-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -525,7 +525,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout.Should_have_published_the_job_submitted_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/default-request-client-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -535,7 +535,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_using_request_client.Should_get_the_job_accepted",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/addressed-request-client-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -545,7 +545,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_using_request_client.Should_have_published_the_job_completed_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/addressed-request-client-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -555,7 +555,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_using_request_client.Should_have_published_the_job_started_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/addressed-request-client-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -565,7 +565,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_using_request_client.Should_have_published_the_job_submitted_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/addressed-request-client-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -575,7 +575,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_bunch_of_jobs.Should_get_the_job_accepted",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/concurrent-limit-is-enforced-and-all-jobs-complete",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -585,7 +585,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_bunch_of_jobs.Should_have_published_the_job_completed_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/concurrent-limit-is-enforced-and-all-jobs-complete",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -595,7 +595,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_bunch_of_jobs.Should_have_published_the_job_started_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/concurrent-limit-is-enforced-and-all-jobs-complete",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -605,7 +605,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_bunch_of_jobs.Should_have_published_the_job_submitted_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/concurrent-limit-is-enforced-and-all-jobs-complete",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -615,7 +615,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_with_status_checks.Should_get_the_job_accepted",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/running-attempt-answers-scheduled-status-check",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -625,7 +625,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_with_status_checks.Should_have_published_the_job_completed_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/running-attempt-answers-scheduled-status-check",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -635,7 +635,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_with_status_checks.Should_have_published_the_job_started_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/running-attempt-answers-scheduled-status-check",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -645,7 +645,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_with_status_checks.Should_have_published_the_job_submitted_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE/running-attempt-answers-scheduled-status-check",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -655,7 +655,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_faults.Should_get_the_job_accepted",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-FAULT/unhandled-failure-faults-the-job",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -665,7 +665,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_faults.Should_have_published_the_job_faulted_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-FAULT/unhandled-failure-faults-the-job",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -675,7 +675,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_faults.Should_have_published_the_job_started_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-FAULT/unhandled-failure-faults-the-job",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -685,7 +685,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_faults.Should_have_published_the_job_submitted_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-FAULT/unhandled-failure-faults-the-job",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -695,7 +695,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_faults_with_retry.Should_get_the_job_accepted",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-FAULT/configured-retry-completes-through-quartz",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -705,7 +705,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_faults_with_retry.Should_have_published_the_job_completed_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-FAULT/configured-retry-completes-through-quartz",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -715,7 +715,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_faults_with_retry.Should_have_published_the_job_started_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-FAULT/configured-retry-completes-through-quartz",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -725,7 +725,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_faults_with_retry.Should_have_published_the_job_submitted_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-FAULT/configured-retry-completes-through-quartz",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -735,7 +735,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_faults_with_retry.Should_not_have_published_the_job_faulted_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-FAULT/configured-retry-completes-through-quartz",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -745,7 +745,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned.Should_get_the_job_accepted",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT/silent-attempt-faults-without-retry",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -755,7 +755,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned.Should_have_published_the_job_faulted_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT/silent-attempt-faults-without-retry",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -765,7 +765,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned.Should_have_published_the_job_started_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT/silent-attempt-faults-without-retry",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -775,7 +775,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned.Should_have_published_the_job_submitted_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT/silent-attempt-faults-without-retry",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -785,7 +785,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned.Should_have_faulted_through_the_suspect_path",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT/silent-attempt-faults-without-retry",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -795,7 +795,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned.Should_not_have_retried_or_completed_the_job",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT/silent-attempt-faults-without-retry",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -805,7 +805,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_get_the_job_accepted",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT/retry-ignores-stale-attempt-and-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -815,7 +815,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_have_published_the_job_completed_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT/retry-ignores-stale-attempt-and-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -825,7 +825,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_have_published_the_job_started_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT/retry-ignores-stale-attempt-and-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -835,7 +835,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_have_published_the_job_submitted_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT/retry-ignores-stale-attempt-and-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -845,7 +845,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_have_completed_on_the_retry_of_the_suspect_attempt",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT/retry-ignores-stale-attempt-and-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -855,7 +855,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_to_turnout_that_is_abandoned_and_retried.Should_not_have_published_the_job_faulted_event",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT/retry-ignores-stale-attempt-and-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   },
@@ -865,7 +865,7 @@
     "sourceSymbol": "ViciOne.ServiceBus.Quartz.Tests.Turnout.Submitting_a_job_whose_previous_attempt_reports_late.Should_ignore_a_completed_message_from_the_previous_attempt",
     "disposition": "REPLACED_EXECUTING",
     "targetRequirement": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT/retry-ignores-stale-attempt-and-completes",
-    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
+    "targetTest": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync",
     "profile": "UnitArchitecture",
     "rationale": "The named native xUnit 4/MTP v2 carrier preserves this behavior with an isolated causal path, immutable observations and an exact external oracle."
   }

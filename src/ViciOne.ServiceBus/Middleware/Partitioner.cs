@@ -13,9 +13,9 @@ public class Partitioner :
     readonly int _partitionCount;
     readonly Partition[] _partitions;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="partitionCount">The partition count.</param>
-    /// <param name="hashGenerator">The hash generator.</param>
+    /// <summary>Initializes a partitioner with a fixed number of independently serialized pipelines.</summary>
+    /// <param name="partitionCount">The number of partitions to create.</param>
+    /// <param name="hashGenerator">The hash generator used to select a partition from a key.</param>
     public Partitioner(int partitionCount, IHashGenerator hashGenerator)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(partitionCount, 1);
@@ -30,10 +30,10 @@ public class Partitioner :
             .ToArray();
     }
 
-    /// <summary>Gets partitioner.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="keyProvider">The key provider.</param>
-    /// <returns>The partitioner.</returns>
+    /// <summary>Creates a pipeline partitioner that derives a partition key from each context.</summary>
+    /// <typeparam name="T">The pipe-context type processed by the partitioner.</typeparam>
+    /// <param name="keyProvider">The function that selects the partition key for a context.</param>
+    /// <returns>A context-specific view of this partitioner.</returns>
     public IPartitioner<T> GetPartitioner<T>(PartitionKeyProvider<T> keyProvider)
         where T : class, PipeContext
     {
@@ -70,7 +70,6 @@ public class Partitioner :
         return _partitions[partitionId].SendAsync(context, next);
     }
 
-
     class ContextPartitioner<TContext> :
         IPartitioner<TContext>
         where TContext : class, PipeContext
@@ -86,7 +85,10 @@ public class Partitioner :
 
         public Task SendAsync(TContext context, IPipe<TContext> next, CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); var key = _keyProvider(context);
+            if (cancellationToken.IsCancellationRequested)
+                return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken);
+
+            var key = _keyProvider(context);
             if (key == null)
                 throw new InvalidOperationException("The partition key provider returned null.");
 

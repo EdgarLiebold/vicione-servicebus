@@ -1,19 +1,22 @@
-using ViciOne.ServiceBus.Quartz;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Quartz.Consumers;
 using ViciOne.ServiceBus.Scheduling;
 
-namespace ViciOne.ServiceBus.Configuration;
+namespace ViciOne.ServiceBus.Quartz.Configuration;
 
 /// <summary>Partitions recurring-schedule resume commands by their Quartz trigger identity.</summary>
-public class ResumeScheduledMessageConsumerDefinition :
-    ConsumerDefinition<ResumeScheduledMessageConsumer>
+internal sealed class ResumeScheduledMessageConsumerDefinition<TBus> :
+    ConsumerDefinition<ResumeScheduledMessageConsumer<TBus>>
+    where TBus : class, IBus
 {
-    readonly QuartzEndpointDefinition _endpointDefinition;
+    readonly QuartzEndpointDefinition<TBus> _endpointDefinition;
 
     /// <summary>Initializes the consumer definition with the shared scheduling endpoint definition.</summary>
     /// <param name="endpointDefinition">The shared Quartz endpoint and partitioner definition.</param>
-    public ResumeScheduledMessageConsumerDefinition(QuartzEndpointDefinition endpointDefinition)
+    public ResumeScheduledMessageConsumerDefinition(QuartzEndpointDefinition<TBus> endpointDefinition)
     {
-        _endpointDefinition = endpointDefinition;
+        _endpointDefinition = endpointDefinition ?? throw new ArgumentNullException(nameof(endpointDefinition));
 
         EndpointDefinition = endpointDefinition;
     }
@@ -23,11 +26,11 @@ public class ResumeScheduledMessageConsumerDefinition :
     /// <param name="consumerConfigurator">The resume consumer configuration.</param>
     /// <param name="context">The active registration context.</param>
     protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator,
-        IConsumerConfigurator<ResumeScheduledMessageConsumer> consumerConfigurator, IRegistrationContext context)
+        IConsumerConfigurator<ResumeScheduledMessageConsumer<TBus>> consumerConfigurator, IRegistrationContext context)
     {
-        consumerConfigurator.Message<ResumeScheduledRecurringMessage>(m =>
-        {
-            m.UsePartitioner(_endpointDefinition.Partition, p => $"{p.Message.ScheduleGroup},{p.Message.ScheduleId}");
-        });
+        consumerConfigurator.Message<ResumeScheduledRecurringMessage>(message =>
+            message.UsePartitioner(_endpointDefinition.Partition, context => Runtime.QuartzTriggerKey.GetPartitionKey(
+                context.Message.ScheduleId,
+                context.Message.ScheduleGroup)));
     }
 }

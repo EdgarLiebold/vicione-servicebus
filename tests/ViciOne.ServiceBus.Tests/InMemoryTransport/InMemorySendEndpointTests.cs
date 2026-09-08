@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -8,6 +9,64 @@ namespace ViciOne.ServiceBus.Tests.InMemoryTransport;
 
 public sealed class InMemorySendEndpointTests
 {
+    [Theory]
+    [InlineData(null)]
+    [InlineData("north")]
+    [RequirementCoverage("REQ-VSB-IN-MEMORY-TRANSPORT-PROPERTIES", "routing-key-replay-contract")]
+    public async Task Delivery_ExposesOnlyPresentRoutingKeysForSchedulingAndReplayAsync(string? routingKey)
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var harness = new InMemoryTestHarness($"transport-properties-{NewId.NextGuid():N}")
+        {
+            TestTimeout = timeout,
+            TestInactivityTimeout = timeout,
+        };
+        var delivered = new TaskCompletionSource<TransportPropertyObservation>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+            endpoint.Handler<TransportPropertyMessage>(context =>
+            {
+                Assert.True(context.TryGetPayload(out TransportReceiveContext? transportContext));
+                delivered.TrySetResult(new TransportPropertyObservation(
+                    transportContext.ActivitySystem,
+                    transportContext.GetTransportProperties()));
+                return Task.CompletedTask;
+            });
+        bool started = false;
+
+        try
+        {
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+            started = true;
+
+            await harness.InputQueueSendEndpoint.SendAsync(
+                new TransportPropertyMessage("scheduled"),
+                context =>
+                {
+                    if (routingKey is not null)
+                        context.SetRoutingKey(routingKey);
+                },
+                cancellationToken);
+
+            TransportPropertyObservation observation = await delivered.Task.WaitAsync(timeout, cancellationToken);
+            Assert.Equal("in-memory", observation.ActivitySystem);
+            if (routingKey is null)
+                Assert.Null(observation.Properties);
+            else
+            {
+                IReadOnlyDictionary<string, object> properties = Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(
+                    observation.Properties);
+                Assert.Equal(routingKey, Assert.IsType<string>(properties["RoutingKey"]));
+            }
+        }
+        finally
+        {
+            if (started)
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-OVERLOADS", "seven-runtime-interface-and-context-paths")]
     public async Task EverySendOverload_DeliversItsRuntimeContractAndContextExactlyOnceAsync()
@@ -100,6 +159,12 @@ public sealed class InMemorySendEndpointTests
     private sealed record InterfaceConcreteSent(int Sequence) : InterfaceSent;
 
     private sealed record ConcreteSent(int Sequence);
+
+    private sealed record TransportPropertyMessage(string Value);
+
+    private sealed record TransportPropertyObservation(
+        string ActivitySystem,
+        IDictionary<string, object>? Properties);
 
     private sealed record SendObservation(int Sequence, Guid? RequestId, string Contract);
 

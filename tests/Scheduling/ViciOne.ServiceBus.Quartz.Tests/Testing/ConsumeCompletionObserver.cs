@@ -1,3 +1,5 @@
+using ViciOne.ServiceBus.Advanced.Observers;
+
 namespace ViciOne.ServiceBus.Quartz.Tests.Testing;
 
 internal sealed class ConsumeCompletionObserver<TMessage>(Func<TMessage, bool> predicate, int expectedCount = 1) : IConsumeObserver

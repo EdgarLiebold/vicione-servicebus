@@ -1,37 +1,34 @@
 using System;
-using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Middleware;
-using ViciOne.ServiceBus.Quartz;
+using ViciOne.ServiceBus.Quartz.Consumers;
 
-namespace ViciOne.ServiceBus.Configuration;
+namespace ViciOne.ServiceBus.Quartz.Configuration;
 
 /// <summary>Defines the shared receive endpoint and partitioner for Quartz scheduling commands.</summary>
-public class QuartzEndpointDefinition :
-    IEndpointDefinition<ScheduleMessageConsumer>,
-    IEndpointDefinition<CancelScheduledMessageConsumer>,
-    IEndpointDefinition<PauseScheduledMessageConsumer>,
-    IEndpointDefinition<ResumeScheduledMessageConsumer>
+internal sealed class QuartzEndpointDefinition<TBus> :
+    IEndpointDefinition<ScheduleMessageConsumer<TBus>>,
+    IEndpointDefinition<CancelScheduledMessageConsumer<TBus>>,
+    IEndpointDefinition<PauseScheduledMessageConsumer<TBus>>,
+    IEndpointDefinition<ResumeScheduledMessageConsumer<TBus>>,
+    IAsyncDisposable
+    where TBus : class, IBus
 {
     readonly int? _concurrentMessageLimit;
     readonly int? _prefetchCount;
     readonly string _queueName;
 
-    /// <summary>Initializes the endpoint definition from validated Quartz endpoint options.</summary>
-    /// <param name="options">The validated queue, prefetch, and concurrency settings.</param>
-    public QuartzEndpointDefinition(IOptions<QuartzEndpointOptions> options)
+    /// <summary>Initializes the endpoint definition from validated immutable settings.</summary>
+    /// <param name="settings">The bus-specific endpoint settings.</param>
+    public QuartzEndpointDefinition(QuartzEndpointSettings settings)
     {
-        ArgumentNullException.ThrowIfNull(options);
-        QuartzEndpointOptions value = options.Value;
-        ArgumentException.ThrowIfNullOrWhiteSpace(value.QueueName);
-        if (value.PrefetchCount is <= 0)
-            throw new ArgumentOutOfRangeException(nameof(value.PrefetchCount), value.PrefetchCount, "PrefetchCount must be greater than zero.");
-        if (value.ConcurrentMessageLimit is <= 0)
-            throw new ArgumentOutOfRangeException(nameof(value.ConcurrentMessageLimit), value.ConcurrentMessageLimit,
-                "ConcurrentMessageLimit must be greater than zero.");
+        ArgumentNullException.ThrowIfNull(settings);
 
-        _prefetchCount = value.PrefetchCount;
-        _concurrentMessageLimit = value.ConcurrentMessageLimit;
-        _queueName = value.QueueName;
+        _prefetchCount = settings.PrefetchCount;
+        _concurrentMessageLimit = settings.ConcurrentMessageLimit;
+        _queueName = settings.QueueName;
 
         Partition = new Partitioner(_concurrentMessageLimit ?? _prefetchCount ?? 32, new Murmur3UnsafeHashGenerator());
     }
@@ -40,16 +37,16 @@ public class QuartzEndpointDefinition :
     public IPartitioner Partition { get; }
 
     /// <summary>Gets whether the endpoint configures consume topology for scheduling contracts.</summary>
-    public virtual bool ConfigureConsumeTopology => true;
+    public bool ConfigureConsumeTopology => true;
 
     /// <summary>Gets whether the scheduling endpoint is temporary.</summary>
-    public virtual bool IsTemporary => false;
+    public bool IsTemporary => false;
 
     /// <summary>Gets the configured transport prefetch count.</summary>
-    public virtual int? PrefetchCount => _prefetchCount;
+    public int? PrefetchCount => _prefetchCount;
 
     /// <summary>Gets the configured maximum number of concurrent scheduling commands.</summary>
-    public virtual int? ConcurrentMessageLimit => _concurrentMessageLimit;
+    public int? ConcurrentMessageLimit => _concurrentMessageLimit;
 
     string IEndpointDefinition.GetEndpointName(IEndpointNameFormatter formatter)
     {
@@ -63,5 +60,12 @@ public class QuartzEndpointDefinition :
     public void Configure<T>(T configurator, IRegistrationContext? context)
         where T : IReceiveEndpointConfigurator
     {
+    }
+
+    /// <summary>Releases the partitioner owned by the endpoint definition.</summary>
+    /// <returns>An awaitable disposal operation.</returns>
+    public ValueTask DisposeAsync()
+    {
+        return Partition.DisposeAsync();
     }
 }

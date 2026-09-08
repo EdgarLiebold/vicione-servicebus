@@ -9125,105 +9125,38 @@ TYPE class public ViciOne.ServiceBus.MessagePack.MessagePackSerializerFactory [s
   PROPERTY System.Net.Mime.ContentType ContentType { public-get;  }
 
 ASSEMBLY ViciOne.ServiceBus.Quartz VERSION=1.0.0.0
-TYPE class public ViciOne.ServiceBus.Configuration.CancelScheduledMessageConsumerDefinition [base=ViciOne.ServiceBus.Advanced.Registration.ConsumerDefinition<ViciOne.ServiceBus.Quartz.CancelScheduledMessageConsumer>]
-  CTOR public ViciOne.ServiceBus.Configuration.CancelScheduledMessageConsumerDefinition(ViciOne.ServiceBus.Configuration.QuartzEndpointDefinition endpointDefinition)
-  METHOD protected System.Void ConfigureConsumer(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator endpointConfigurator, ViciOne.ServiceBus.Configuration.IConsumerConfigurator<ViciOne.ServiceBus.Quartz.CancelScheduledMessageConsumer> consumerConfigurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-TYPE class public ViciOne.ServiceBus.Configuration.PauseScheduledMessageConsumerDefinition [base=ViciOne.ServiceBus.Advanced.Registration.ConsumerDefinition<ViciOne.ServiceBus.Quartz.PauseScheduledMessageConsumer>]
-  CTOR public ViciOne.ServiceBus.Configuration.PauseScheduledMessageConsumerDefinition(ViciOne.ServiceBus.Configuration.QuartzEndpointDefinition endpointDefinition)
-  METHOD protected System.Void ConfigureConsumer(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator endpointConfigurator, ViciOne.ServiceBus.Configuration.IConsumerConfigurator<ViciOne.ServiceBus.Quartz.PauseScheduledMessageConsumer> consumerConfigurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-TYPE class public ViciOne.ServiceBus.Configuration.QuartzEndpointDefinition
-  CTOR public ViciOne.ServiceBus.Configuration.QuartzEndpointDefinition(Microsoft.Extensions.Options.IOptions<ViciOne.ServiceBus.Quartz.QuartzEndpointOptions> options)
-  METHOD public virtual System.Void Configure<T>(T configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-  PROPERTY System.Boolean ConfigureConsumeTopology { public-get;  }
-  PROPERTY System.Boolean IsTemporary { public-get;  }
-  PROPERTY System.Nullable<System.Int32> ConcurrentMessageLimit { public-get;  }
-  PROPERTY System.Nullable<System.Int32> PrefetchCount { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.IPartitioner Partition { public-get;  }
-TYPE class public ViciOne.ServiceBus.Configuration.ReliableQuartzSchedulerConfigurationExtensions [static]
-  METHOD public static ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator UseInMemoryScheduler(ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator configurator, System.Action<ViciOne.ServiceBus.Quartz.QuartzEndpointOptions> configure = null)
-  METHOD public static ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator UseQuartzScheduler(ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator configurator, System.Action<ViciOne.ServiceBus.Quartz.QuartzEndpointOptions> configure = null)
-TYPE class public ViciOne.ServiceBus.Configuration.ResumeScheduledMessageConsumerDefinition [base=ViciOne.ServiceBus.Advanced.Registration.ConsumerDefinition<ViciOne.ServiceBus.Quartz.ResumeScheduledMessageConsumer>]
-  CTOR public ViciOne.ServiceBus.Configuration.ResumeScheduledMessageConsumerDefinition(ViciOne.ServiceBus.Configuration.QuartzEndpointDefinition endpointDefinition)
-  METHOD protected System.Void ConfigureConsumer(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator endpointConfigurator, ViciOne.ServiceBus.Configuration.IConsumerConfigurator<ViciOne.ServiceBus.Quartz.ResumeScheduledMessageConsumer> consumerConfigurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-TYPE class public ViciOne.ServiceBus.Configuration.ScheduleMessageConsumerDefinition [base=ViciOne.ServiceBus.Advanced.Registration.ConsumerDefinition<ViciOne.ServiceBus.Quartz.ScheduleMessageConsumer>]
-  CTOR public ViciOne.ServiceBus.Configuration.ScheduleMessageConsumerDefinition(ViciOne.ServiceBus.Configuration.QuartzEndpointDefinition endpointDefinition)
-  METHOD protected System.Void ConfigureConsumer(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator endpointConfigurator, ViciOne.ServiceBus.Configuration.IConsumerConfigurator<ViciOne.ServiceBus.Quartz.ScheduleMessageConsumer> consumerConfigurator, ViciOne.ServiceBus.Configuration.IRegistrationContext context)
-TYPE class public ViciOne.ServiceBus.Quartz.CancelScheduledMessageConsumer
-  CTOR public ViciOne.ServiceBus.Quartz.CancelScheduledMessageConsumer(Quartz.ISchedulerFactory schedulerFactory)
-  METHOD public virtual System.Threading.Tasks.Task ConsumeAsync(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Scheduling.CancelScheduledMessage> context)
-  METHOD public virtual System.Threading.Tasks.Task ConsumeAsync(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Scheduling.CancelScheduledRecurringMessage> context)
-TYPE class public ViciOne.ServiceBus.Quartz.JobDataMessageContext
-  CTOR public ViciOne.ServiceBus.Quartz.JobDataMessageContext(Quartz.IJobExecutionContext executionContext, ViciOne.ServiceBus.Advanced.Serialization.IObjectDeserializer objectDeserializer)
-  METHOD public virtual System.Boolean TryGetHeader(System.String key, out System.Object value)
-  METHOD public virtual System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>> GetAll()
-  METHOD public virtual System.Collections.Generic.IEnumerator<ViciOne.ServiceBus.Advanced.HeaderValue> GetEnumerator()
-  METHOD public virtual System.Nullable<T> Get<T>(System.String key, System.Nullable<T> defaultValue = null)
-  METHOD public virtual T Get<T>(System.String key, T defaultValue = null)
-  PROPERTY System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> TransportProperties { public-get;  }
-  PROPERTY System.Nullable<System.DateTimeOffset> ExpirationTime { public-get;  }
-  PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
-  PROPERTY System.Nullable<System.Guid> ConversationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> CorrelationId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> InitiatorId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> MessageId { public-get;  }
-  PROPERTY System.Nullable<System.Guid> RequestId { public-get;  }
-  PROPERTY System.Uri DestinationAddress { public-get;  }
-  PROPERTY System.Uri FaultAddress { public-get;  }
-  PROPERTY System.Uri ResponseAddress { public-get;  }
-  PROPERTY System.Uri SourceAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.Headers Headers { public-get;  }
-  PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
-TYPE class public ViciOne.ServiceBus.Quartz.PauseScheduledMessageConsumer
-  CTOR public ViciOne.ServiceBus.Quartz.PauseScheduledMessageConsumer(Quartz.ISchedulerFactory schedulerFactory)
-  METHOD public virtual System.Threading.Tasks.Task ConsumeAsync(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessage> context)
-TYPE class public ViciOne.ServiceBus.Quartz.QuartzBusObserver
-  CTOR public ViciOne.ServiceBus.Quartz.QuartzBusObserver(Quartz.ISchedulerFactory schedulerFactory, Microsoft.Extensions.Options.IOptions<Quartz.QuartzHostedServiceOptions> options)
-  METHOD public virtual System.Threading.Tasks.Task PostStartAsync(ViciOne.ServiceBus.IBus bus, System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.Observers.BusReady> busReady)
-  METHOD public virtual System.Threading.Tasks.Task PostStopAsync(ViciOne.ServiceBus.IBus bus)
-  METHOD public virtual System.Threading.Tasks.Task PreStartAsync(ViciOne.ServiceBus.IBus bus)
-  METHOD public virtual System.Threading.Tasks.Task PreStopAsync(ViciOne.ServiceBus.IBus bus)
-  METHOD public virtual System.Threading.Tasks.Task StartFaultedAsync(ViciOne.ServiceBus.IBus bus, System.Exception exception)
-  METHOD public virtual System.Threading.Tasks.Task StopFaultedAsync(ViciOne.ServiceBus.IBus bus, System.Exception exception)
-  METHOD public virtual System.Void CreateFaulted(System.Exception exception)
-  METHOD public virtual System.Void PostCreate(ViciOne.ServiceBus.IBus bus)
 TYPE class public ViciOne.ServiceBus.Quartz.QuartzEndpointOptions [sealed]
   CTOR public ViciOne.ServiceBus.Quartz.QuartzEndpointOptions()
+  PROPERTY Quartz.RetryPolicy DeliveryRetryPolicy { public-get; public-set; }
+  PROPERTY System.Boolean WaitForJobsToComplete { public-get; public-set; }
   PROPERTY System.Func<System.String,System.TimeZoneInfo> TimeZoneResolver { public-get; public-set; }
   PROPERTY System.Nullable<System.Int32> ConcurrentMessageLimit { public-get; public-set; }
   PROPERTY System.Nullable<System.Int32> PrefetchCount { public-get; public-set; }
+  PROPERTY System.Nullable<System.TimeSpan> StartDelay { public-get; public-set; }
   PROPERTY System.String QueueName { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Quartz.QuartzIntegrationExtensions [static]
-  METHOD public static System.Uri ConfigureInMemoryScheduler(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, Quartz.ISchedulerFactory schedulerFactory, System.String queueName = "quartz")
-  METHOD public static System.Uri ConfigureInMemoryScheduler(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, System.Action<ViciOne.ServiceBus.Quartz.QuartzSchedulerOptions> configure)
-  METHOD public static System.Uri ConfigureInMemoryScheduler(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, System.String queueName = "quartz")
-  METHOD public static System.Uri ConfigureInMemoryScheduler(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, out Quartz.ISchedulerFactory schedulerFactory, System.String queueName = "quartz")
-TYPE class public ViciOne.ServiceBus.Quartz.QuartzRegistrationExtensions [static]
-  METHOD public static System.Void AddQuartzConsumers(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Quartz.QuartzEndpointOptions> configure = null)
-  METHOD public static System.Void ConfigureQuartzConsumers(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IBusRegistrationContext context)
+TYPE class public ViciOne.ServiceBus.Quartz.QuartzSchedulerLease [sealed]
+  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
+  PROPERTY Quartz.ISchedulerFactory SchedulerFactory { public-get;  }
+  PROPERTY System.Uri EndpointAddress { public-get;  }
 TYPE class public ViciOne.ServiceBus.Quartz.QuartzSchedulerOptions [sealed]
   CTOR public ViciOne.ServiceBus.Quartz.QuartzSchedulerOptions()
-  PROPERTY Quartz.ISchedulerFactory SchedulerFactory { public-get; public-set; }
+  PROPERTY Quartz.RetryPolicy DeliveryRetryPolicy { public-get; public-set; }
   PROPERTY System.Boolean StartScheduler { public-get; public-set; }
+  PROPERTY System.Boolean WaitForJobsToComplete { public-get; public-set; }
   PROPERTY System.Func<System.String,System.TimeZoneInfo> TimeZoneResolver { public-get; public-set; }
+  PROPERTY System.Nullable<System.Int32> ConcurrentMessageLimit { public-get; public-set; }
+  PROPERTY System.Nullable<System.Int32> PrefetchCount { public-get; public-set; }
+  PROPERTY System.Nullable<System.TimeSpan> StartDelay { public-get; public-set; }
   PROPERTY System.String QueueName { public-get; public-set; }
   PROPERTY System.TimeProvider TimeProvider { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Quartz.ResumeScheduledMessageConsumer
-  CTOR public ViciOne.ServiceBus.Quartz.ResumeScheduledMessageConsumer(Quartz.ISchedulerFactory schedulerFactory)
-  METHOD public virtual System.Threading.Tasks.Task ConsumeAsync(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessage> context)
-TYPE class public ViciOne.ServiceBus.Quartz.ScheduleMessageConsumer
-  CTOR public ViciOne.ServiceBus.Quartz.ScheduleMessageConsumer(Quartz.ISchedulerFactory schedulerFactory)
-  CTOR public ViciOne.ServiceBus.Quartz.ScheduleMessageConsumer(Quartz.ISchedulerFactory schedulerFactory, Microsoft.Extensions.Options.IOptions<ViciOne.ServiceBus.Quartz.QuartzEndpointOptions> options)
-  METHOD public virtual System.Threading.Tasks.Task ConsumeAsync(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Scheduling.ScheduleMessage> context)
-  METHOD public virtual System.Threading.Tasks.Task ConsumeAsync(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessage> context)
-TYPE class public ViciOne.ServiceBus.Quartz.ScheduledMessageJob
-  CTOR public ViciOne.ServiceBus.Quartz.ScheduledMessageJob()
-  CTOR public ViciOne.ServiceBus.Quartz.ScheduledMessageJob(ViciOne.ServiceBus.IBus bus, System.TimeProvider timeProvider)
-  METHOD public System.Threading.Tasks.ValueTask ExecuteAsync(Quartz.IJobExecutionContext context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.Quartz.ViciOneServiceBusJobFactory
-  CTOR public ViciOne.ServiceBus.Quartz.ViciOneServiceBusJobFactory()
-  CTOR public ViciOne.ServiceBus.Quartz.ViciOneServiceBusJobFactory(ViciOne.ServiceBus.IBus bus, System.TimeProvider timeProvider)
-  METHOD public System.Threading.Tasks.ValueTask ReturnJobAsync(Quartz.Extensibility.JobScope scope, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.ValueTask<Quartz.Extensibility.JobScope> CreateJobAsync(Quartz.Extensibility.TriggerFiredBundle bundle, Quartz.IScheduler scheduler, System.Threading.CancellationToken cancellationToken = null)
+TYPE class public ViciOne.ServiceBus.Quartz.QuartzSchedulingExtensions [static]
+  METHOD public static System.Void AddQuartzScheduling(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.Func<System.IServiceProvider,Quartz.ISchedulerFactory> schedulerFactory, System.Action<ViciOne.ServiceBus.Quartz.QuartzEndpointOptions> configure = null)
+  METHOD public static System.Void AddQuartzScheduling<TBus>(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator<TBus> configurator, System.Func<System.IServiceProvider,Quartz.ISchedulerFactory> schedulerFactory, System.Action<ViciOne.ServiceBus.Quartz.QuartzEndpointOptions> configure = null)
+  METHOD public static System.Void ConfigureQuartzScheduling(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IBusRegistrationContext context)
+  METHOD public static ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator<TBus> UseInMemoryQuartzScheduler<TBus>(ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator<TBus> configurator, System.Action<ViciOne.ServiceBus.Quartz.QuartzEndpointOptions> configure = null)
+  METHOD public static ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator<TBus> UseQuartzScheduler<TBus>(ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator<TBus> configurator, System.Func<System.IServiceProvider,Quartz.ISchedulerFactory> schedulerFactory, System.Action<ViciOne.ServiceBus.Quartz.QuartzEndpointOptions> configure = null)
+  METHOD public static ViciOne.ServiceBus.Quartz.QuartzSchedulerLease ConfigureInMemoryQuartzScheduler(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, System.Action<ViciOne.ServiceBus.Quartz.QuartzSchedulerOptions> configure = null)
+  METHOD public static ViciOne.ServiceBus.Quartz.QuartzSchedulerLease ConfigureQuartzScheduler(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, Quartz.ISchedulerFactory schedulerFactory, System.Action<ViciOne.ServiceBus.Quartz.QuartzSchedulerOptions> configure = null)
 
 ASSEMBLY ViciOne.ServiceBus.RabbitMq.Testing VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqDependencyInjectionTestingExtensions [static]
@@ -14908,6 +14841,7 @@ TYPE class public ViciOne.ServiceBus.Configuration.BusRegistrationContext [base=
   METHOD public virtual System.Void ConfigureEndpoints<T>(ViciOne.ServiceBus.Configuration.IReceiveConfigurator<T> configurator, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter = null)
   METHOD public virtual System.Void ConfigureEndpoints<T>(ViciOne.ServiceBus.Configuration.IReceiveConfigurator<T> configurator, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.DependencyInjection.Registration.IRegistrationFilterConfigurator> configureFilter)
   METHOD public virtual ViciOne.ServiceBus.Configuration.IConfigureReceiveEndpoint GetConfigureReceiveEndpoints()
+  PROPERTY System.Type BusType { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.IEndpointNameFormatter EndpointNameFormatter { public-get;  }
 TYPE class public ViciOne.ServiceBus.Configuration.CircuitBreakerConfigurationExtensions [static]
   METHOD public static System.Void UseCircuitBreaker<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> configurator, System.Action<ViciOne.ServiceBus.Configuration.CircuitBreakerOptions> configure = null)
@@ -15519,6 +15453,7 @@ TYPE interface public ViciOne.ServiceBus.Configuration.IBusRegistrationContext
   METHOD public abstract System.Void ConfigureEndpoints<T>(ViciOne.ServiceBus.Configuration.IReceiveConfigurator<T> configurator, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter)
   METHOD public abstract System.Void ConfigureEndpoints<T>(ViciOne.ServiceBus.Configuration.IReceiveConfigurator<T> configurator, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.DependencyInjection.Registration.IRegistrationFilterConfigurator> configureFilter)
   METHOD public abstract ViciOne.ServiceBus.Configuration.IConfigureReceiveEndpoint GetConfigureReceiveEndpoints()
+  PROPERTY System.Type BusType { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.IEndpointNameFormatter EndpointNameFormatter { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Configuration.ICompensateTransformSpecification<TLog>
 TYPE interface public ViciOne.ServiceBus.Configuration.IConsumePipeConfiguration
@@ -16059,6 +15994,8 @@ TYPE class public ViciOne.ServiceBus.Configuration.ObserverPipeSpecification<T>
 TYPE class public ViciOne.ServiceBus.Configuration.ObserverRegistrationExtensions [static]
   METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddBusObserver<T>(Microsoft.Extensions.DependencyInjection.IServiceCollection services)
   METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddBusObserver<T>(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Func<System.IServiceProvider,T> factory)
+  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddBusObserver<TBus,TObserver>(Microsoft.Extensions.DependencyInjection.IServiceCollection services)
+  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddBusObserver<TBus,TObserver>(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Func<System.IServiceProvider,TObserver> factory)
   METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddConsumeObserver<T>(Microsoft.Extensions.DependencyInjection.IServiceCollection services)
   METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddConsumeObserver<T>(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Func<System.IServiceProvider,T> factory)
   METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddPublishObserver<T>(Microsoft.Extensions.DependencyInjection.IServiceCollection services)
@@ -17583,6 +17520,8 @@ TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryPublishTransportP
   METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Transports.ISendTransport> GetPublishTransportAsync<T>(System.Uri publishAddress, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryReceiveContext [sealed,base=ViciOne.ServiceBus.Transports.BaseReceiveContext]
   CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryReceiveContext(ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage message, ViciOne.ServiceBus.InMemoryTransport.InMemoryReceiveEndpointContext receiveEndpointContext)
+  METHOD public virtual System.Collections.Generic.IDictionary<System.String,System.Object> GetTransportProperties()
+  PROPERTY System.String ActivitySystem { public-get;  }
   PROPERTY System.String RoutingKey { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.MessageBody Body { public-get;  }
   PROPERTY ViciOne.ServiceBus.Transports.IHeaderProvider HeaderProvider { protected-get;  }

@@ -28,12 +28,12 @@ public sealed class QuartzTransactionalOutboxTests
         await fixture.Harness.Bus.PublishAsync(command, fixture.CancellationToken);
         ScheduledMessage<ScheduledOutboxPayload> scheduled = await fixture.Gate.Scheduled
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        var triggerKey = new TriggerKey(scheduled.TokenId.ToString("N"));
-
         try
         {
-            Assert.False(await fixture.Scheduler.Exists(triggerKey, fixture.CancellationToken).AsTask()
-                .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken));
+            IReadOnlyCollection<TriggerKey> uncommittedTriggers = await fixture.Scheduler
+                .GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup(), fixture.CancellationToken).AsTask()
+                .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+            Assert.DoesNotContain(uncommittedTriggers, key => key.Name == scheduled.TokenId.ToString("N"));
             Assert.Equal(0, scheduleObserver.ObservedCount);
         }
         finally
@@ -48,6 +48,12 @@ public sealed class QuartzTransactionalOutboxTests
             .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         Guid? observedScheduleCorrelationId = await scheduleObserver.Completed
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+        IReadOnlyCollection<TriggerKey> committedTriggers = await fixture.Scheduler
+            .GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup(), fixture.CancellationToken).AsTask()
+            .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+        TriggerKey triggerKey = Assert.Single(
+            committedTriggers,
+            key => key.Name == scheduled.TokenId.ToString("N"));
         ITrigger trigger = Assert.IsAssignableFrom<ITrigger>(
             await fixture.Scheduler.GetTrigger(triggerKey, fixture.CancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken));
@@ -275,7 +281,7 @@ public sealed class QuartzTransactionalOutboxTests
                     .Register<ScheduleMessage>("vicione.scheduler.schedule")
                     .Register<ScheduledOutboxPayload>("vicione.tests.ef.scheduled-outbox-payload"));
                 configuration.AddPublishMessageScheduler();
-                configuration.AddQuartzConsumers();
+                configuration.AddQuartzScheduling(provider => provider.GetRequiredService<ISchedulerFactory>());
                 configuration.ConfigureEntityFrameworkTransactionalStore<QuartzOutboxDbContext>(outbox =>
                 {
                     outbox.UsePostgres();

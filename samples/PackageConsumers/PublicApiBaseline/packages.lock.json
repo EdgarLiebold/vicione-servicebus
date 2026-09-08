@@ -6,7 +6,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "7VriD4CNV4kGxOjPCX0GWYQQqkD/AHrImbaFlcZKzy9bH6C+xnXFab72hYedaLFrQ2j2jIsg2CcLrHC7LUvddA==",
+        "contentHash": "7A97hRtAdRsX4li8itQw6p4kalAq5j/ppRq3GXr/Gbz0uK0zvvmzd48tslT1zP7hkMe6Ut0mfHv9YhfwqaG81w==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -22,13 +22,13 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "9ta5336QwiTx/XqWwf8antKAhXPb7GwzkIFm+uSghrAkHOf9SvzX7XvcJPaVhrMYcDTVSP2peB2Vwu3c+9g0iA=="
+        "contentHash": "cBZt3LecadRudGM7hsndWFmJ/SWRwGTF2KU7so5i2A9cv40ExIdbbY99cxIJymN0BvMpcyyLosPNy8rhKDD+dA=="
       },
       "ViciOne.ServiceBus.ActiveMq": {
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "Zx1j3QFlWXJFAPhIVOjJLkqRk9G6wfc+XYaPvevvSF0djAypBnhrh2jljVlMx/aPzpa/LLuGV2OsPv/j+2Lojw==",
+        "contentHash": "bSFAJ6/hYvYLwDZnB5ae24kFe8yg3w3IrXjDJv7YodImEYz3PNnGWQLQYI0a/W50wkykROxlu5LCExGRIfXiAQ==",
         "dependencies": {
           "Apache.NMS.AMQP": "2.4.0",
           "Apache.NMS.ActiveMQ": "2.2.0",
@@ -47,7 +47,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "hbRnmcMSShNjSK8SQgJS1nWWAWtZEigbxHdkKq0Z8w0YV8SirYJlmH6Eid6lg82sK+BjIu/R+9/vRfJm/uNqCQ==",
+        "contentHash": "X6PA0IUFDyNDNoBVOH9DNp/LbgLXLzMwINM3ONmAxhBJ1yfdYZ8/PFVeg+oz5x1LWZVYHoZmfEyuLDEKGP0igg==",
         "dependencies": {
           "AWSSDK.S3": "4.0.102.4",
           "FastExpressionCompiler": "5.4.1",
@@ -64,7 +64,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "E5e6ByCBj4Heaqs089uBnL/Pj5Fo7QyMQdI3wRiwE43N3Ac7+scBOJDF5/5xUZHttfkN0vhWVNAEcgbwFWaMgg==",
+        "contentHash": "Cu3RskoNAfu496/GPnEZG1Ih63Pd3Oxac93D6sK6q/pS88X3I+z5P7pNBTQweI3bWdOj4SBmirI+0Zdx7IeoMA==",
         "dependencies": {
           "AWSSDK.SQS": "4.0.100.11",
           "AWSSDK.SimpleNotificationService": "4.0.100.11",
@@ -82,7 +82,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "0NcPrFd/xa+7uDi5WkLmmiL76w870S3Jg3HWkZWui9YJmfjyjJ0cdWivwQ1qXh+kK8rod65myNx+Ga1AUm7uiA==",
+        "contentHash": "rIb1Ns9QqIvY7JXFwOU7lXcIofQeHPmUU5rryK/BbjREDa/XYU1pZEb5l8k3qZHmr0YnXAh5otD+Brs1Ds/D6w==",
         "dependencies": {
           "Azure.Storage.Blobs": "12.29.2",
           "FastExpressionCompiler": "5.4.1",
@@ -99,7 +99,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "BwPD5Nvwc48gKQx3rEANmEekxmJPQMjFuuMESmiNHKjk12rdZ3HCTmWgIQrXNNa0MNAmg7+t2ToGOvzbGDpR4A==",
+        "contentHash": "zMA4a0jnoi8hJPPMmPzwOFtfGHIpjdfn7KC05v8f9nskoSaZYCQmgmqzRJgPeqqxr6BEkgRMn/wGTgLEEbADhg==",
         "dependencies": {
           "Azure.Data.Tables": "12.12.0",
           "FastExpressionCompiler": "5.4.1",
@@ -118,7 +118,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "9o8aCElNUls6zHihtFMMOPv7wFtncHeO5xcVban5uuGwOI9/5qpLb5/6tegsl4W9GT851qt06XJbVq5mUlhvbA==",
+        "contentHash": "SD1GBh05VWLsaynukL3xugJn6zqCEUAuaYVnl7h3fzH/jy2MVLMTGmLdGrBENuqhyn16olXqpEgYoaUGQk7+HQ==",
         "dependencies": {
           "Azure.Identity": "1.21.0",
           "Azure.Messaging.ServiceBus": "7.20.2",
@@ -137,7 +137,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "udoS/Tv+L4MejfCu9YdzYD2sLO55rkBhNcRPIzrHSY1NYhHwaG0lV4DXolC4gVFIS/AsNWH7OPotpVQFt4NqPQ==",
+        "contentHash": "huMrSclaOuMr4UvfJCSycllxgC1JVZmoj6ptl71crExJhkahiPDGHhx449IuLx/ee4Bq7XNtGZ/+buzbVOA22Q==",
         "dependencies": {
           "Azure.Identity": "1.21.0",
           "Azure.Messaging.ServiceBus": "7.20.2",
@@ -156,7 +156,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "JJIZhZ5YYV7t8rvB9UR0tuHq48D2Mj0Ja2v3A8mxy1QmDoXnhtH9RuIuYIbff3r3ZtJ/XkIdGPriBRt07G596Q==",
+        "contentHash": "oXFzPThRBfkNgkmKOlh5qzajqoVMYPPKNwJwdX7elctdFJs0sIO06zZa+6uXG4HbR9EYRpUZMtMvxbEqevh7kg==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -172,7 +172,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "XaHFNdJGAQ2Kftg5Ca84G3LjWbJTNtp6m3SgkB743kWk1wqEuaF4eJPTgxISHoSAoya0VvkW5QvRdH6wW/b6aw==",
+        "contentHash": "bK62wobs0KMsrkmV6s2qI6Z/JNapqclKxk6gKEUQKVH9UW4i7KWQLS/1Q8imjwpMI76WSKxSkSAoR4zooXOHgQ==",
         "dependencies": {
           "AWSSDK.DynamoDBv2": "4.0.103.5",
           "FastExpressionCompiler": "5.4.1",
@@ -190,7 +190,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "VFNE9yxwBmWuIpubJIUVSKzxPF5WiuU06+45liO2Lh/2SLxFvv5GzHXAtXXOuRz8lsphQr8jksgYoswITIy+8w==",
+        "contentHash": "wJLEaoVRoLizUnf6Uh5+vXK2vIFqruwf/DuEUcyNB/h5N40gto2BprgiFfJWeBYKoVNeYbsyZ1IMmHovFue3Nw==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.EntityFrameworkCore.Relational": "10.0.11",
@@ -209,7 +209,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "jh3OvuYsmGBh3nAtKhlycA7sPaSbTYPIppEV0tqOAhOlmOaVafAYM734OaGH5drIZkTsdpNTWiL7j3v8CqMF1A==",
+        "contentHash": "GfxzRvqSFmbycpf2N8U4pRABL1pT8Ar03jXAhtXQakdERV9he4Ff6EMXb1MkZ9Kxs1Ui7GMBaVGhFYIhbZTNbg==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.EntityFrameworkCore.Relational": "10.0.11",
@@ -231,7 +231,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "D0K2eiP/B1y+JBeX1z8vI4HFqadYphAiLFg2/6xwtq9ut1t3zXAuypeVxtff/n/q/CNmQNriqk3hNFbpGLhtTw==",
+        "contentHash": "PGyKziPQHopBzlBj0jFvYeTnBfrtZfmW2g3MXV7MFEwosFppgkHuJ5sikX7UdlMUQUnqBE7R4RpUvs8nWWAcXA==",
         "dependencies": {
           "Azure.Messaging.EventHubs.Processor": "5.12.2",
           "Azure.Storage.Blobs": "12.29.2",
@@ -250,7 +250,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "6Z9uCFcpyhCDLqFTG0nG1ZpkRIGdkIyNstcYV23S+dbrgdrDkTOliJXmThBVUpjfmOAJQQ1wXzGNhyj08+SgSA==",
+        "contentHash": "0wubvxf/sn7kMEVlBPaRCTgcLURtrI4GfxhSm8mXeTB43/Z7D2T8a/pg+SWbtxeeKP+StZRANFmMo7pU/q4mEg==",
         "dependencies": {
           "Azure.Messaging.EventHubs.Processor": "5.12.2",
           "Azure.Storage.Blobs": "12.29.2",
@@ -269,7 +269,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "XEMUoyH3nqVKeyI3UClq/+bXhKD6Xhxiid2FTY0XESEIGOeIa+MxkSyh5OIQWb+ZIE4dFwPOjpOf/5c1SI2hGQ==",
+        "contentHash": "uSSJCYQMHcDMvXrYvtcA1CTDkSN+5zRETi17H0WCq0APJdM8Fji8W+3A2HI5nobhd51CgvrpQkmLGj9RbeROQw==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -287,7 +287,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "8QfaaksjOo2jAIG7Re5kd9ZGd+3d6Zcxxf6DSNedFRx7WQwTNH+l7/gle5MW+rHNFMbCe9C3QH0VfoIYhy4neQ==",
+        "contentHash": "n9fMyNmlAe5Coh/LuWwpkGWoVeXv7OGDY+Xr4+RySamGxgiw2UZHdqQKVjGXmjYol+tBuxCNkdX5f43XlSPM9g==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -303,7 +303,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "8iagJSVHc4qbgorzOmXgirLzKDT+oKkmMAD3na+LHpWNFNunPpECgG6YthlfFIFVoBgKZZNi2Ah5kWDm7NUNVA==",
+        "contentHash": "Es2L21Hd81veASFK32NyaHcKcW4co0pHLpkbkc3EAFK6CLJlHTv3QTCp8xO5LulMUhc2oPT+3I9LuaT4s7kleA==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -320,7 +320,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "+qhr4Bg5JVmh5oyUFDPn81QD31ho4PGUZZ7taZSRRnbgzSP+NgHD102Yod5kH2YJ0/u2qbxhx4MGhSn59Ia9GA==",
+        "contentHash": "CCBHEfjJZlmdARu19/LT/1e+WZQjYCciLtzZ4sQLRoC5f6eQnbmRJu4X2exXEL68pDV+uMiyIu1NqY4opE8SMw==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -336,7 +336,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "TyUbdlcqh515GlSrogAqLlds7AUBuH6DJEb/dQGymMHWM+t5JTUBX7o7kzUPHVMOzFowj3h4gDdG2zHD7fLzPQ==",
+        "contentHash": "u2KdfhGMatpe75AxKSP1f4bC5uqXdVAzcuZjUnT2sWg5+2PW61PqdmKMABwZhhNweZTqH7gGFfUy2CWqZTcfVg==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "MessagePack": "3.1.8",
@@ -347,16 +347,14 @@
           "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
           "Microsoft.Extensions.Options": "10.0.11",
           "ViciOne.ServiceBus": "1.0.0",
-          "ViciOne.ServiceBus.Abstractions": "1.0.0",
-          "ViciOne.ServiceBus.Courier": "1.0.0",
-          "ViciOne.ServiceBus.JobService": "1.0.0"
+          "ViciOne.ServiceBus.Abstractions": "1.0.0"
         }
       },
       "ViciOne.ServiceBus.Quartz": {
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "F0o2UB51S5kPV2mJokQFq9BOEbCkVSFrxEE6+JYCTVGkdH9LTAmRlgM0UUh7fcjbhFK2Wx/rOtx9l1Jc5h54BA==",
+        "contentHash": "0yCZ10ymG7jT1TElXExUHMHpavqfC2srUIguly4xgJjbPfgR4kcquRBl74JS3pksfktTL3j5fBMEQ5x7rPL16A==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.Extensions.DependencyInjection": "10.0.11",
@@ -367,15 +365,14 @@
           "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
           "Microsoft.Extensions.Options": "10.0.11",
           "Quartz": "4.0.0",
-          "ViciOne.ServiceBus": "1.0.0",
-          "ViciOne.ServiceBus.JobService": "1.0.0"
+          "ViciOne.ServiceBus": "1.0.0"
         }
       },
       "ViciOne.ServiceBus.RabbitMq": {
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "bZQiLwkNCd/swXZR5yeAbV4qoEW37p7lZhCXgLMWdyiYitlPpnxNJ+RDXK4dr8hPZXLNPwVaBN7uOfHpGwwf2Q==",
+        "contentHash": "YZXHiTvtO959QgidljhYCw+M9Lj6dYEii1UFclWJczJqhiYEuqYzkAZxJrbHY9CeNZHVs+VF4d8YCS7xDc1b2w==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -392,7 +389,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "/lptO9K0AJTcViH27LwFfhz495NruuiZXCt+Gfi3rcUbgYkEkk5Z6zJUlWY3FJa+xSLwSARlnPmpzv+kgwTQ8Q==",
+        "contentHash": "icIVtcCnFQw+Xhb2+wXMmJuie0VVAT4UT9MLWMln1/YaZoety2z570+yQEaJmRnS8edTQRHwc4G49ATC6cgeKQ==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -410,7 +407,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "ZoXDpCXEZV44MymRJEzpflBo1YKhJkOFv78P2NGlahV0RcJGc48JW26sBeoeaah4Tf/CdgSE936MDr+4cJsmDw==",
+        "contentHash": "NZBmbUTOsXrs3huT5hjDJscOd38v9jmRqnEj/Z5QmKpnDI2cmLwFk4jH0PoGrwHtgZw4I/HW04cHZdDj5rB7ZA==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -426,7 +423,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "LmXQHhviZZ8Hfz43N2/xKS3sJtamOM7duT9RVBudkodUvuwUAkKC/XBoDRb+Id506mkwN0UYZTg+5EKXclmRYw==",
+        "contentHash": "YD7UfuJpULJMeHLaEblNC0cledhfYBo06SXyyfNqmhQKHvAEegVg4R2/Y/k10LFsA1mB/D+8hZX8neEkz/v2YQ==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "ViciOne.ServiceBus": "1.0.0",
@@ -437,7 +434,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "GwUV2u4L0p4g63vg7m4t1bg+LMMWKbO7n1mNbxduThRSk5NhUUxO0cxD8AvxDsNB273yUPH7b4vWdXRwkCLOhA==",
+        "contentHash": "xdWzZX6grRrZPgtqO70o+gvMQi6jaCUsOCd2uZRF0nf7IPV3USdMnjCFCr8VpTT5MPpECZlrfiiklWUeiEQ/RQ==",
         "dependencies": {
           "Dapper": "2.1.79",
           "FastExpressionCompiler": "5.4.1",
@@ -455,7 +452,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "W3FiFNvDZ/uA8Yp60ZPJg1KkSu6RLF97RZMKILtxHcp4l/KvWiBRI52ntGBGiNdAI88rGYZMsID1F5Ufk5jS4A==",
+        "contentHash": "GaY8DN3PSTcNiqyCKJtvWQpt8OxHAj06swWvHoG0e/RomgVmFeajRcFtMDgRzYBm6WHK+9xzlRWHOydgQ6XTsg==",
         "dependencies": {
           "Dapper": "2.1.79",
           "FastExpressionCompiler": "5.4.1",
@@ -474,7 +471,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "PXts++VQJKL00zlzwv4gHZuPQFUbqhw+0raR2Tu7NLyIKWLqWavraKnpW/SqDs3P4fJmwTrqpJ65RRuVO95OAg==",
+        "contentHash": "cUncyNJIGQm8jz6KhWsh1hIDAjp4JN4eTrEsjZ6fVq8pqef00DlU8ZMDG48yXhayR8LBW7yh/JyVX25kk+7gIw==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -493,7 +490,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "z7pII7yVnQC3xDdt40sBXsn0DUb6hDa2MMPElZmXoH3BYzo5wU/Rq7Qh5wlTxTGks0XzjiyFAyfyq45lh1gfOw==",
+        "contentHash": "Mrae9o96xEXRlxropCK5m5fBnWYs1lQWxUQYEpTQ5kumwJIhgThg5b6/9lpNG2xbcGx3kn5zbH1lsa4m0OLa+A==",
         "dependencies": {
           "FastExpressionCompiler": "5.4.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",

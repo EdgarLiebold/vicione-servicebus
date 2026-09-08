@@ -2,10 +2,9 @@ using System;
 using QuikGraph;
 using QuikGraph.Graphviz;
 using QuikGraph.Graphviz.Dot;
-using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Internals;
-using ViciOne.ServiceBus.SagaStateMachine;
 using ViciOne.ServiceBus.Sagas;
+using ViciOne.ServiceBus.SagaStateMachine;
 using ViciOne.ServiceBus.Visualizer.Internal;
 
 namespace ViciOne.ServiceBus.Visualizer;

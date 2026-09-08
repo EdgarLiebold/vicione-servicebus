@@ -20,7 +20,6 @@
   <ItemGroup>
     <PackageReference Include="Quartz" />
     <ProjectReference Include="..\..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
-    <ProjectReference Include="..\..\ViciOne.ServiceBus.JobService\ViciOne.ServiceBus.JobService.csproj" />
   </ItemGroup>
 
   <ItemGroup>

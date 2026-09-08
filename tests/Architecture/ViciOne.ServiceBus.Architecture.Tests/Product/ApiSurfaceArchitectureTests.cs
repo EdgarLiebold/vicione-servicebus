@@ -244,7 +244,7 @@ public sealed class ApiSurfaceArchitectureTests
     {
         string sourceRoot = Path.Combine(RepositoryLayout.Root, "src");
         Regex declaration = new(
-            @"public\s+static[^\r\n{;]*\b(?<name>Use[A-Za-z0-9_]*Scheduler)\s*\(\s*this\s+(?<receiver>[A-Za-z0-9_<>.,?]+)",
+            @"public\s+static[^\r\n{;]*\b(?<name>Use[A-Za-z0-9_]*Scheduler)(?:<[^>\r\n]+>)?\s*\(\s*this\s+(?<receiver>[A-Za-z0-9_<>.,?]+)",
             RegexOptions.CultureInvariant);
         var entryPoints = Directory.EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(path => declaration.Matches(File.ReadAllText(path)).Select(match => new
@@ -256,14 +256,35 @@ public sealed class ApiSurfaceArchitectureTests
             .OrderBy(static entry => entry.Name, StringComparer.Ordinal)
             .ToArray();
 
-        Assert.Equal(
-            ["UseInMemoryScheduler", "UseQuartzScheduler", "UseTransportScheduler"],
-            entryPoints.Select(static entry => entry.Name));
-        Assert.All(entryPoints, entry =>
+        var expected = new[]
         {
+            new
+            {
+                Name = "UseInMemoryQuartzScheduler",
+                Receiver = "IReliableMessagingConfigurator<TBus>",
+                Namespace = "ViciOne.ServiceBus.Quartz",
+            },
+            new
+            {
+                Name = "UseQuartzScheduler",
+                Receiver = "IReliableMessagingConfigurator<TBus>",
+                Namespace = "ViciOne.ServiceBus.Quartz",
+            },
+            new
+            {
+                Name = "UseTransportScheduler",
+                Receiver = "IReliableMessagingConfigurator",
+                Namespace = "ViciOne.ServiceBus.Configuration",
+            },
+        };
+
+        Assert.Equal(expected.Select(static entry => entry.Name), entryPoints.Select(static entry => entry.Name));
+        Assert.All(expected.Zip(entryPoints), pair =>
+        {
+            var (contract, entry) = pair;
             string source = File.ReadAllText(entry.Path);
-            Assert.Equal("IReliableMessagingConfigurator", entry.Receiver);
-            Assert.Contains("namespace ViciOne.ServiceBus.Configuration;", source, StringComparison.Ordinal);
+            Assert.Equal(contract.Receiver, entry.Receiver);
+            Assert.Contains($"namespace {contract.Namespace};", source, StringComparison.Ordinal);
             Assert.Contains("IReliableMessagingProviderConfigurator", source, StringComparison.Ordinal);
         });
     }
