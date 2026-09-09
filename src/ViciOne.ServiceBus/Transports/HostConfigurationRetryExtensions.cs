@@ -82,6 +82,9 @@ public static class HostConfigurationRetryExtensions
 
     static ConnectionException CreateStoppingException(Uri description, Exception? lastFailure)
     {
-        return new ConnectionException($"The transport is stopping and cannot be used: {description}", lastFailure);
+        return new ConnectionException(
+            $"The transport is stopping and cannot be used: {description}",
+            lastFailure,
+            isTransient: true);
     }
 }

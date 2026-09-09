@@ -75,7 +75,7 @@ try
         IRequestClient<GetSuiteStatus> client = scope.ServiceProvider.GetRequiredService<IRequestClient<GetSuiteStatus>>();
         Response<SuiteStatus> response = await client.Advanced().GetResponseAsync<SuiteStatus>(
             new GetSuiteStatus("composition"),
-            RequestTimeout.After(s: 10));
+            new RequestTimeout(TimeSpan.FromSeconds(10)));
         if (response.Message.Value != "ready:composition")
             throw new InvalidOperationException($"Unexpected request response: {response.Message.Value}");
 

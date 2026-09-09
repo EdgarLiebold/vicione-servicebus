@@ -22,7 +22,7 @@ public class ActiveMqConnectionException :
     /// <param name="message">The error message.</param>
     /// <param name="innerException">The underlying connection failure.</param>
     public ActiveMqConnectionException(string message, Exception innerException)
-        : base(message, innerException)
+        : base(message, innerException, isTransient: true)
     {
     }
 }

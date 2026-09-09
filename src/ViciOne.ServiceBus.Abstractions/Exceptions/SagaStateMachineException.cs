@@ -2,44 +2,56 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to saga state machine.</summary>
+/// <summary>Provides the exception base for invalid saga state-machine definitions and behavior execution.</summary>
 public class SagaStateMachineException :
     ViciOneServiceBusException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a state-machine exception without a custom message.</summary>
     public SagaStateMachineException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a state-machine exception with the specified failure message.</summary>
+    /// <param name="message">The description of the state-machine failure.</param>
     public SagaStateMachineException(string message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an exception for the specified state-machine type.</summary>
     /// <param name="machineType">The runtime machine type used by the operation.</param>
-    /// <param name="message">The message to process.</param>
+    /// <param name="message">The description of the state-machine failure.</param>
     public SagaStateMachineException(Type machineType, string message)
-        : base($"{machineType.Name}: {message}")
+        : base(FormatMessage(machineType, message))
     {
+        MachineType = machineType;
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates a state-machine exception with an underlying failure.</summary>
+    /// <param name="message">The description of the state-machine failure.</param>
+    /// <param name="innerException">The exception raised by the state machine.</param>
     public SagaStateMachineException(string message, Exception innerException)
         : base(message, innerException)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an exception for the specified state-machine type and underlying failure.</summary>
     /// <param name="machineType">The runtime machine type used by the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <param name="message">The description of the state-machine failure.</param>
+    /// <param name="innerException">The exception raised by the state machine.</param>
     public SagaStateMachineException(Type machineType, string message, Exception innerException)
-        : base($"{machineType.Name}: {message}", innerException)
+        : base(FormatMessage(machineType, message), innerException)
     {
+        MachineType = machineType;
+    }
+
+    /// <summary>Gets the state-machine type associated with the failure, when one was supplied.</summary>
+    public Type? MachineType { get; }
+
+    static string FormatMessage(Type machineType, string message)
+    {
+        ArgumentNullException.ThrowIfNull(machineType);
+
+        return $"{machineType.Name}: {message}";
     }
 }

@@ -38,7 +38,7 @@ public sealed class FutureRequestConsumerIntegrationTests
                 new CalculatePriceMessage(orderLineId, "missing"),
                 fixture.CancellationToken));
 
-        Assert.Equal(TypeCache<CalculatePrice>.ShortName, exception.RequestType);
+        Assert.Equal(typeof(CalculatePrice), exception.RequestType);
         Fault<CalculatePrice> typedFault = Assert.IsAssignableFrom<Fault<CalculatePrice>>(exception.Fault);
         Assert.Equal(orderLineId, typedFault.Message.CorrelationId);
         Assert.Equal("missing", typedFault.Message.Sku);

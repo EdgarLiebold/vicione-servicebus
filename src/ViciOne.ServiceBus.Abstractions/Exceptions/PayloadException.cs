@@ -2,25 +2,25 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to payload.</summary>
+/// <summary>Provides the exception base for missing or invalid pipe-context payloads.</summary>
 public class PayloadException :
     ViciOneServiceBusException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a payload exception without a custom message.</summary>
     public PayloadException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a payload exception with the specified failure message.</summary>
+    /// <param name="message">The description of the payload failure.</param>
     public PayloadException(string message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates a payload exception with an underlying failure.</summary>
+    /// <param name="message">The description of the payload failure.</param>
+    /// <param name="innerException">The exception that caused payload access to fail.</param>
     public PayloadException(string message, Exception innerException)
         : base(message, innerException)
     {

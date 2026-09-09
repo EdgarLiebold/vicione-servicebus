@@ -83,7 +83,7 @@ public sealed class RequestClientBoundaryTests
         var client = new RequestClient<BoundaryRequest>(
             new BoundaryClientFactoryContext(),
             endpoint,
-            RequestTimeout.After(s: 1));
+            new RequestTimeout(TimeSpan.FromSeconds(1)));
 
         ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() => Invoke(entryPoint, client));
 

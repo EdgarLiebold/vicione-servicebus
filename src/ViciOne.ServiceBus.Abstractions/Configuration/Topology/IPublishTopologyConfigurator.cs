@@ -1,35 +1,33 @@
 using System;
-using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures publish topology.</summary>
+/// <summary>Configures how message contracts are represented by broker publish topology.</summary>
 public interface IPublishTopologyConfigurator :
     IPublishTopology,
     ISpecification
 {
-    /// <summary>Returns the specification for the message type.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <returns>The message topology.</returns>
-    new IMessagePublishTopologyConfigurator<T> GetMessageTopology<T>()
-        where T : class;
+    /// <summary>Gets the mutable publish topology for a message contract.</summary>
+    /// <typeparam name="TMessage">The message contract.</typeparam>
+    /// <returns>The message-specific publish topology.</returns>
+    new IMessagePublishTopologyConfigurator<TMessage> GetMessageTopology<TMessage>()
+        where TMessage : class;
 
-    /// <summary>Returns the specification for the message type.</summary>
+    /// <summary>Gets the mutable publish topology for a runtime message contract.</summary>
     /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <returns>The message topology.</returns>
+    /// <returns>The message-specific publish topology.</returns>
     new IMessagePublishTopologyConfigurator GetMessageTopology(Type messageType);
 
     /// <summary>
-    /// Adds a convention to the topology, which will be applied to every message type
-    /// requested, to determine if a convention for the message type is available.
+    /// Adds a convention that is evaluated when publish topology is created for a message contract.
     /// </summary>
-    /// <param name="convention">The Publish topology convention.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <param name="convention">The publish-topology convention to register.</param>
+    /// <returns><see langword="true" /> when the convention was added; otherwise, <see langword="false" />.</returns>
     bool TryAddConvention(IPublishTopologyConvention convention);
 
-    /// <summary>Add a Publish topology for a specific message type.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="topology">The topology.</param>
-    void AddMessagePublishTopology<T>(IMessagePublishTopology<T> topology)
-        where T : class;
+    /// <summary>Adds publish topology for a message contract.</summary>
+    /// <typeparam name="TMessage">The message contract.</typeparam>
+    /// <param name="topology">The publish topology to add.</param>
+    void AddMessagePublishTopology<TMessage>(IMessagePublishTopology<TMessage> topology)
+        where TMessage : class;
 }

@@ -8,41 +8,34 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>Caches read write property data.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Caches readable and writable instance properties for case-insensitive lookup.</summary>
+/// <typeparam name="T">The target type.</typeparam>
 public class ReadWritePropertyCache<T> : IReadWritePropertyCache<T>
 {
     readonly IReadOnlyDictionary<string, ReadWriteProperty<T>> _properties;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="accessPolicy">The access policy.</param>
+    /// <summary>Builds the property cache for <typeparamref name="T" />.</summary>
+    /// <param name="accessPolicy">The accessibility boundary applied to property getters and setters.</param>
     public ReadWritePropertyCache(PropertyAccessPolicy accessPolicy = PropertyAccessPolicy.PublicOnly)
     {
         _properties = CreatePropertyCache(accessPolicy);
     }
 
-    /// <summary>Gets or sets the value at the specified index.</summary>
-    /// <param name="name">The name.</param>
+    /// <summary>Gets a cached property by name.</summary>
+    /// <param name="name">The case-insensitive property name.</param>
     public ReadWriteProperty<T> this[string name] => _properties[name];
 
-    /// <summary>Gets enumerator.</summary>
-    /// <returns>The enumerator.</returns>
+    /// <summary>Returns an enumerator over the cached properties.</summary>
+    /// <returns>An enumerator over the cached property accessors.</returns>
     public IEnumerator<ReadWriteProperty<T>> GetEnumerator() => _properties.Values.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    /// <summary>Attempts to get value.</summary>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">Receives the value produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Attempts to get a cached property by name.</summary>
+    /// <param name="key">The case-insensitive property name.</param>
+    /// <param name="value">Receives the cached property when found.</param>
+    /// <returns><see langword="true" /> when the property exists.</returns>
     public bool TryGetValue(string key, [NotNullWhen(true)] out ReadWriteProperty<T>? value) => _properties.TryGetValue(key, out value);
-
-    /// <summary>Attempts to get property.</summary>
-    /// <param name="propertyName">The property name.</param>
-    /// <param name="property">Receives the property produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryGetProperty(string propertyName, [NotNullWhen(true)] out ReadWriteProperty<T>? property) =>
-        _properties.TryGetValue(propertyName, out property);
 
     static IReadOnlyDictionary<string, ReadWriteProperty<T>> CreatePropertyCache(PropertyAccessPolicy accessPolicy)
     {
@@ -56,17 +49,17 @@ public class ReadWritePropertyCache<T> : IReadWritePropertyCache<T>
             .ToDictionary(property => property.Property.Name, StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>Updates the target with the supplied value.</summary>
-    /// <param name="propertyExpression">The property expression.</param>
-    /// <param name="instance">The instance.</param>
-    /// <param name="value">The value to process.</param>
+    /// <summary>Writes a selected property on an instance.</summary>
+    /// <param name="propertyExpression">An expression selecting a property on <typeparamref name="T" />.</param>
+    /// <param name="instance">The target instance.</param>
+    /// <param name="value">The new property value.</param>
     public void Set(Expression<Func<T, object>> propertyExpression, T instance, object? value) =>
         _properties[propertyExpression.GetMemberName()].Set(instance, value);
 
-    /// <summary>Retrieves the requested value.</summary>
-    /// <param name="propertyExpression">The property expression.</param>
-    /// <param name="instance">The instance.</param>
-    /// <returns>The requested value.</returns>
+    /// <summary>Reads a selected property from an instance.</summary>
+    /// <param name="propertyExpression">An expression selecting a property on <typeparamref name="T" />.</param>
+    /// <param name="instance">The target instance.</param>
+    /// <returns>The boxed property value.</returns>
     public object? Get(Expression<Func<T, object>> propertyExpression, T instance) =>
         _properties[propertyExpression.GetMemberName()].Get(instance);
 }

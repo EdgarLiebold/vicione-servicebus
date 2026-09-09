@@ -2,20 +2,36 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to unknown event.</summary>
-public class UnknownEventException :
+/// <summary>Reports an event name that is not defined by a saga state machine.</summary>
+public sealed class UnknownEventException :
     SagaStateMachineException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an unknown-event exception without state-machine context.</summary>
     public UnknownEventException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="machineType">The runtime machine type used by the operation.</param>
-    /// <param name="eventName">The event name.</param>
-    public UnknownEventException(string machineType, string eventName)
-        : base($"The {eventName} event is not defined for the {machineType} state machine")
+    /// <summary>Creates an exception for an event not defined by the specified state machine.</summary>
+    /// <param name="machineName">The logical name of the state machine.</param>
+    /// <param name="eventName">The undefined event name.</param>
+    public UnknownEventException(string machineName, string eventName)
+        : base(FormatMessage(machineName, eventName))
     {
+        MachineName = machineName;
+        EventName = eventName;
+    }
+
+    /// <summary>Gets the logical state-machine name, when one was supplied.</summary>
+    public string? MachineName { get; }
+
+    /// <summary>Gets the undefined event name, when one was supplied.</summary>
+    public string? EventName { get; }
+
+    static string FormatMessage(string machineName, string eventName)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(machineName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(eventName);
+
+        return $"The {eventName} event is not defined for the {machineName} state machine";
     }
 }

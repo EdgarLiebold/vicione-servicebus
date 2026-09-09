@@ -2,34 +2,34 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to message not consumed.</summary>
+/// <summary>Reports that no consumer accepted a message delivered to an endpoint.</summary>
 public class MessageNotConsumedException :
     TransportException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an unconsumed-message exception without endpoint context.</summary>
     public MessageNotConsumedException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="uri">The uri.</param>
+    /// <summary>Creates an unconsumed-message exception for the specified endpoint.</summary>
+    /// <param name="uri">The endpoint that received the unconsumed message.</param>
     public MessageNotConsumedException(Uri uri)
         : base(uri)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="uri">The uri.</param>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates an unconsumed-message exception for the specified endpoint.</summary>
+    /// <param name="uri">The endpoint that received the unconsumed message.</param>
+    /// <param name="message">The description of why the message was not consumed.</param>
     public MessageNotConsumedException(Uri uri, string message)
         : base(uri, message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="uri">The uri.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates an unconsumed-message exception with an underlying failure.</summary>
+    /// <param name="uri">The endpoint that received the unconsumed message.</param>
+    /// <param name="message">The description of why the message was not consumed.</param>
+    /// <param name="innerException">The exception that prevented the message from being consumed.</param>
     public MessageNotConsumedException(Uri uri, string message, Exception innerException)
         : base(uri, message, innerException)
     {

@@ -2,13 +2,19 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Represents an error related to endpoint qos configuration.</summary>
+/// <summary>Reports conflicting or invalid transport quality-of-service ownership for an endpoint.</summary>
 public sealed class EndpointQosConfigurationException : ConfigurationException
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates an exception with the endpoint quality-of-service validation message.</summary>
+    /// <param name="message">The description of the invalid endpoint configuration.</param>
     public EndpointQosConfigurationException(string message)
-        : base(message)
+        : base(RequireMessage(message))
     {
+    }
+
+    static string RequireMessage(string message)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(message);
+        return message;
     }
 }

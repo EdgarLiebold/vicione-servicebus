@@ -15,7 +15,7 @@ public interface IReceiveEndpoint :
     IConsumeMessageObserverConnector,
     IProbeSite
 {
-    /// <summary>Gets the input address.</summary>
+    /// <summary>Gets the transport address from which the endpoint receives messages.</summary>
     Uri InputAddress { get; }
 
     /// <summary>Gets a task that completes when the endpoint is ready to consume messages.</summary>

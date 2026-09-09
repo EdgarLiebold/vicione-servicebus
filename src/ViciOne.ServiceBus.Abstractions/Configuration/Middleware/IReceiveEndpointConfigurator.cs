@@ -4,14 +4,14 @@ using System.Text.Json;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configure a receiving endpoint.</summary>
+/// <summary>Configures transport, topology, serialization, middleware, and lifecycle dependencies for a receive endpoint.</summary>
 public interface IReceiveEndpointConfigurator :
     IEndpointConfigurator,
     IReceiveEndpointObserverConnector,
     IReceiveEndpointDependencyConnector,
     IReceiveEndpointDependentConnector
 {
-    /// <summary>Returns the input address of the receive endpoint.</summary>
+    /// <summary>Gets the receive endpoint's input address.</summary>
     Uri InputAddress { get; }
 
     /// <summary>
@@ -20,55 +20,54 @@ public interface IReceiveEndpointConfigurator :
     /// </summary>
     bool ConfigureConsumeTopology { set; }
 
-    /// <summary>If true (the default), faults should be published when no ResponseAddress or FaultAddress are present.</summary>
+    /// <summary>Sets whether unaddressed consumer faults are published.</summary>
     bool PublishFaults { set; }
 
-    /// <summary>Specify the number of messages to prefetch from the message broker.</summary>
-    /// <value>The limit</value>
+    /// <summary>Gets or sets the broker-specific number of messages fetched ahead of processing.</summary>
     int PrefetchCount { get; set; }
 
-    /// <summary>Specify the number of concurrent messages that can be consumed (separate from prefetch count).</summary>
+    /// <summary>Gets or sets the maximum number of messages processed concurrently on the endpoint.</summary>
     int? ConcurrentMessageLimit { get; set; }
 
-    /// <summary>When deserializing a message, if no ContentType is present on the receive context, use this as the default.</summary>
+    /// <summary>Sets the content type used when an incoming transport message does not specify one.</summary>
     ContentType DefaultContentType { set; }
 
-    /// <summary>When serializing a message, use the content type specified for serialization.</summary>
+    /// <summary>Sets the content type used to serialize messages sent from this endpoint.</summary>
     ContentType SerializerContentType { set; }
 
     /// <summary>
     /// Configures whether the broker topology is configured for the specified message type. Related to
     /// <see cref="ConfigureConsumeTopology" />, but for an individual message type.
     /// </summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="enabled">The enabled.</param>
-    void ConfigureMessageTopology<T>(bool enabled = true)
-        where T : class;
+    /// <typeparam name="TMessage">The message contract.</typeparam>
+    /// <param name="enabled">Whether the transport creates consume topology for the message contract.</param>
+    void ConfigureMessageTopology<TMessage>(bool enabled = true)
+        where TMessage : class;
 
     /// <summary>
     /// Configures whether the broker topology is configured for the specified message type. Related to
     /// <see cref="ConfigureConsumeTopology" />, but for an individual message type.
     /// </summary>
     /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <param name="enabled">The enabled.</param>
+    /// <param name="enabled">Whether the transport creates consume topology for the message contract.</param>
     void ConfigureMessageTopology(Type messageType, bool enabled = true);
 
-    /// <summary>Adds endpoint specification to the configuration.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    void AddEndpointSpecification(IReceiveEndpointSpecification configurator);
+    /// <summary>Adds a transport-specific receive-endpoint specification.</summary>
+    /// <param name="specification">The endpoint specification to add.</param>
+    void AddEndpointSpecification(IReceiveEndpointSpecification specification);
 
-    /// <summary>Add a message serializer using the specified factory (can be shared by serializer/deserializer).</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
-    /// <param name="isSerializer">If true, set the current serializer to the specified factory.</param>
+    /// <summary>Adds a message serializer created by the supplied factory.</summary>
+    /// <param name="factory">The serializer factory to add.</param>
+    /// <param name="isSerializer">Whether this factory becomes the endpoint's serializer.</param>
     void AddSerializer(ISerializerFactory factory, bool isSerializer = true);
 
-    /// <summary>Add a message deserializer using the specified factory (can be shared by serializer/deserializer).</summary>
-    /// <param name="factory">The factory invoked by the operation.</param>
-    /// <param name="isDefault">If true, set the default content type to the content type of the deserializer.</param>
+    /// <summary>Adds a message deserializer created by the supplied factory.</summary>
+    /// <param name="factory">The deserializer factory to add.</param>
+    /// <param name="isDefault">Whether this factory's content type becomes the endpoint default.</param>
     void AddDeserializer(ISerializerFactory factory, bool isDefault = false);
 
-    /// <summary>Configures the System.Text.Json payload policy for this receive endpoint. Endpoint configuration is isolated from the parent bus.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Configures an endpoint-local copy of the System.Text.Json serializer options.</summary>
+    /// <param name="configure">The function that returns the configured serializer options.</param>
     void ConfigureSystemTextJsonSerializerOptions(Func<JsonSerializerOptions, JsonSerializerOptions> configure);
 
     /// <summary>Clears all message serialization configuration.</summary>

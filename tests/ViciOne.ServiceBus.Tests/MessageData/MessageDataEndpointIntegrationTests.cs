@@ -165,7 +165,8 @@ public sealed class MessageDataEndpointIntegrationTests
         try
         {
             IRequestClient<DataRequest> client = connectedClient
-                ? await harness.ConnectRequestClientAsync<DataRequest>(TestContext.Current.CancellationToken) : harness.Bus.CreateRequestClient<DataRequest>(harness.InputQueueAddress, timeout);
+                ? await harness.ConnectRequestClientAsync<DataRequest>(TestContext.Current.CancellationToken)
+                : harness.Bus.CreateRequestClient<DataRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
 
             Response<DataResponse> response = await client.Advanced().GetResponseAsync<DataResponse>(values: new
             {

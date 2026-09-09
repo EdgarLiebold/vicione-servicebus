@@ -63,7 +63,7 @@ internal sealed class ClientRequestHandle<TRequest> :
         _sendRequestCallback = sendRequestCallback;
         _cancellationToken = cancellationToken;
 
-        _timeout = timeout.HasValue ? timeout : _context.DefaultTimeout.HasValue ? _context.DefaultTimeout.Value : RequestTimeout.Default;
+        _timeout = timeout.HasValue ? timeout : _context.DefaultTimeout.HasValue ? _context.DefaultTimeout : RequestTimeout.Default;
         _timeToLive = _timeout;
 
         RequestId = requestId ?? NewId.NextGuid();
@@ -234,7 +234,7 @@ internal sealed class ClientRequestHandle<TRequest> :
             if (_sendContext.Task.IsFaulted)
                 await _sendContext.Task.ConfigureAwait(false);
 
-            var requestException = new RequestCanceledException(RequestId.ToString("D"), exception, exception.CancellationToken);
+            var requestException = new RequestCanceledException(RequestId, exception, exception.CancellationToken);
 
             Fail(requestException);
 
@@ -316,7 +316,7 @@ internal sealed class ClientRequestHandle<TRequest> :
 
     void Fail(Fault message)
     {
-        Fail(new RequestFaultException(TypeCache<TRequest>.ShortName, message));
+        Fail(new RequestFaultException(typeof(TRequest), message));
     }
 
     void Fail(Exception responseException, Exception? messageException = null)
@@ -391,7 +391,7 @@ internal sealed class ClientRequestHandle<TRequest> :
 
     void TimeoutExpired(object? state)
     {
-        var timeoutException = new RequestTimeoutException(RequestId.ToString());
+        var timeoutException = new RequestTimeoutException(RequestId);
 
         Fail(timeoutException);
     }

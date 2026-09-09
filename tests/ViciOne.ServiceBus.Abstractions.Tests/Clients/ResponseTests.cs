@@ -152,6 +152,54 @@ public sealed class ResponseTests
             new Response<FirstResponse, SecondResponse, ThirdResponse>(first, second, null!)).ParamName);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RESPONSE-WRAPPER", "default-values-reject-context-and-tuple-access")]
+    public void DefaultResponseWrappers_RejectContextAndTupleAccess()
+    {
+        Response<FirstResponse, SecondResponse> two = default;
+        Response<FirstResponse, SecondResponse, ThirdResponse> three = default;
+
+        Assert.Throws<InvalidOperationException>(() => two.Message);
+        Assert.Throws<InvalidOperationException>(() => three.MessageId);
+        Assert.Throws<InvalidOperationException>(() => two.Deconstruct(out _, out _));
+        Assert.Throws<InvalidOperationException>(() => three.Deconstruct(out _, out _, out _));
+        Assert.False(two.Is(out Response<FirstResponse>? twoResult));
+        Assert.Null(twoResult);
+        Assert.False(three.Is<SecondResponse>(out Response<SecondResponse>? threeResult));
+        Assert.Null(threeResult);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RESPONSE-WRAPPER", "descriptive-public-metadata-names")]
+    public void ResponseWrappers_ExposeDescriptiveGenericAndDeconstructionParameterNames()
+    {
+        Assert.Equal(
+            ["TResponse1", "TResponse2"],
+            typeof(Response<,>).GetGenericArguments().Select(argument => argument.Name));
+        Assert.Equal(
+            ["TResponse1", "TResponse2", "TResponse3"],
+            typeof(Response<,,>).GetGenericArguments().Select(argument => argument.Name));
+
+        Assert.Equal(
+            "TResponse",
+            typeof(Response<,>).GetMethods()
+                .Single(method => method.Name == nameof(Response<FirstResponse, SecondResponse>.Is) && method.IsGenericMethodDefinition)
+                .GetGenericArguments()
+                .Single()
+                .Name);
+
+        Assert.Equal(
+            ["response1Task", "response2Task"],
+            typeof(Response<,>).GetMethod(nameof(Response<FirstResponse, SecondResponse>.Deconstruct))!
+                .GetParameters()
+                .Select(parameter => parameter.Name));
+        Assert.Equal(
+            ["response1Task", "response2Task", "response3Task"],
+            typeof(Response<,,>).GetMethod(nameof(Response<FirstResponse, SecondResponse, ThirdResponse>.Deconstruct))!
+                .GetParameters()
+                .Select(parameter => parameter.Name));
+    }
+
     private static void AssertDelegatesCompleteContext(Response actual, Response expected)
     {
         Assert.Equal(expected.MessageId, actual.MessageId);

@@ -1,7 +1,7 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configure the execution of the activity and arguments with some tasty middleware.</summary>
-/// <typeparam name="TLog">The log type.</typeparam>
+/// <summary>Configures the middleware pipeline that processes an activity's compensation log.</summary>
+/// <typeparam name="TLog">The compensation-log contract.</typeparam>
 public interface ICompensateLogConfigurator<TLog> :
     IPipeConfigurator<CompensateContext<TLog>>,
     IConsumeConfigurator

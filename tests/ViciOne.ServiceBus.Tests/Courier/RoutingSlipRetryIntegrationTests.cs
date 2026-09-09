@@ -38,7 +38,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         {
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
-            builder.AddVariable("Seed", "header-isolation");
+            builder.SetVariable("Seed", "header-isolation");
             builder.AddActivity(compensating.Name, compensating.ExecuteAddress, new RetryArguments("log"));
             builder.AddActivity(failing.Name, failing.ExecuteAddress, new RedeliveryArguments(1));
 
@@ -84,7 +84,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         {
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
-            builder.AddVariable("Seed", "retry-seed");
+            builder.SetVariable("Seed", "retry-seed");
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new RetryArguments("execute"));
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
@@ -138,7 +138,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         {
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
-            builder.AddVariable("Seed", "compensation-seed");
+            builder.SetVariable("Seed", "compensation-seed");
             builder.AddActivity(compensating.Name, compensating.ExecuteAddress, new RetryArguments("logged-value"));
             builder.AddActivity(failing.Name, failing.ExecuteAddress, new RetryArguments("terminal"));
 
@@ -225,7 +225,7 @@ public sealed class RoutingSlipRetryIntegrationTests
                     RoutingSlipEvents.ActivityCompensationFailed | RoutingSlipEvents.CompensationFailed,
                     RoutingSlipEventContents.All);
             }
-            builder.AddVariable("Seed", "failed-compensation-seed");
+            builder.SetVariable("Seed", "failed-compensation-seed");
             builder.AddActivity(compensating.Name, compensating.ExecuteAddress, new RetryArguments("failed-log"));
             builder.AddActivity(failing.Name, failing.ExecuteAddress, new RetryArguments("terminal"));
 
@@ -304,7 +304,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         {
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
-            builder.AddVariable("Seed", "redelivery-seed");
+            builder.SetVariable("Seed", "redelivery-seed");
             builder.AddActivity(
                 activity.Name,
                 activity.ExecuteAddress,
@@ -357,7 +357,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         {
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
-            builder.AddVariable("Seed", "retry-fault-seed");
+            builder.SetVariable("Seed", "retry-fault-seed");
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new RetryArguments("fault"));
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);

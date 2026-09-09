@@ -135,7 +135,7 @@ public sealed class ActiveMqLifecycleTests
             Guid flowId = Guid.NewGuid();
             IRequestClient<CycleRequest> client = bus.CreateRequestClient<CycleRequest>(
                 new Uri($"queue:{queueName}"),
-                RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
+                new RequestTimeout(fixture.OperationTimeout));
             Response<CycleResponse> response = await client.GetResponseAsync<CycleResponse>(
                     new CycleRequest(flowId),
                     cancellationToken)

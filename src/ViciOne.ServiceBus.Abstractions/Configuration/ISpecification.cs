@@ -3,13 +3,11 @@ using System.Collections.Generic;
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
-/// A specification, that can be validated as part of a configurator, is used
-/// to allow nesting and chaining of specifications while ensuring that all aspects
-/// of the configuration are verified correct.
+/// Defines a configuration component that can report validation results before runtime resources are created.
 /// </summary>
 public interface ISpecification
 {
-    /// <summary>Validate the specification, ensuring that a successful build will occur.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <summary>Validates the configuration represented by this specification.</summary>
+    /// <returns>All success, warning, and failure results produced by validation.</returns>
     IEnumerable<ValidationResult> Validate();
 }

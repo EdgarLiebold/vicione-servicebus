@@ -72,7 +72,7 @@ public sealed class MessageContextFlowTests
         {
             Task<ConsumeContext<AcceptedResponse>> subscriber = harness.SubscribeHandlerAsync<AcceptedResponse>(TestContext.Current.CancellationToken);
             IRequestClient<RequestMessage> client =
-                harness.Bus.CreateRequestClient<RequestMessage>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<RequestMessage>(harness.InputQueueAddress, new RequestTimeout(timeout));
             Response<AcceptedResponse> response = await client.Advanced().GetResponseAsync<AcceptedResponse>(
                 new RequestMessage(correlationId, "request"),
                 callback: handle => handle.UseExecute(context => context.ConversationId = conversationId),
@@ -133,7 +133,7 @@ public sealed class MessageContextFlowTests
         await harness.StartAsync(cancellationToken);
         try
         {
-            IRequestClient<RequestMessage> client = harness.Bus.CreateRequestClient<RequestMessage>(timeout);
+            IRequestClient<RequestMessage> client = harness.Bus.CreateRequestClient<RequestMessage>(new RequestTimeout(timeout));
             Response<AcceptedResponse> response = await client.Advanced().GetResponseAsync<AcceptedResponse>(
                 new RequestMessage(correlationId, "publish"),
                 cancellationToken: cancellationToken);
@@ -167,7 +167,7 @@ public sealed class MessageContextFlowTests
         try
         {
             IRequestClient<RequestMessage> client =
-                harness.Bus.CreateRequestClient<RequestMessage>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<RequestMessage>(harness.InputQueueAddress, new RequestTimeout(timeout));
             Response<AcceptedResponse, RejectedResponse> response =
                 await client.Advanced().GetResponseAsync<AcceptedResponse, RejectedResponse>(
                     new RequestMessage(correlationId, "two-types"),
@@ -206,11 +206,11 @@ public sealed class MessageContextFlowTests
         {
             var clientFactory = new ClientFactory(new BusClientFactoryContext(
                 harness.Bus,
-                RequestTimeout.After(m: 1),
+                new RequestTimeout(TimeSpan.FromMinutes(1)),
                 timeProvider));
             IRequestClient<RequestMessage> client = clientFactory.CreateRequestClient<RequestMessage>(
                 harness.InputQueueAddress,
-                RequestTimeout.After(m: 1));
+                new RequestTimeout(TimeSpan.FromMinutes(1)));
             var requestMessage = new RequestMessage(
                 Guid.Parse("2f651398-caa1-45c6-b23d-48133e00709f"),
                 "unanswered");
@@ -255,7 +255,7 @@ public sealed class MessageContextFlowTests
         try
         {
             IRequestClient<RequestMessage> client =
-                harness.Bus.CreateRequestClient<RequestMessage>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<RequestMessage>(harness.InputQueueAddress, new RequestTimeout(timeout));
 
             TaskCanceledException exception = await Assert.ThrowsAsync<TaskCanceledException>(() => client.Advanced().GetResponseAsync<AcceptedResponse>(
                 new RequestMessage(Guid.Parse("acff2021-8c44-440d-9d8d-c77f172ed296"), "canceled"),

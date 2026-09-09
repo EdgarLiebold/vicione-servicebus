@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures receive pipe.</summary>
+/// <summary>Configures middleware that processes transport receive contexts before deserialization.</summary>
 public interface IReceivePipeConfigurator :
     IPipeConfigurator<ReceiveContext>
 {

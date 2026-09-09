@@ -3,55 +3,55 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Initializers;
 
-/// <summary>A message initializer that doesn't use the input.</summary>
-/// <typeparam name="TMessage">The message type.</typeparam>
+/// <summary>Creates and populates messages from runtime input objects.</summary>
+/// <typeparam name="TMessage">The message contract produced by the initializer.</typeparam>
 public interface IMessageInitializer<TMessage>
     where TMessage : class
 {
-    /// <summary>Create a message context, using <paramref name="context" /> as a base for payloads, etc.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>The newly created instance.</returns>
+    /// <summary>Creates an unpopulated message context that inherits the supplied pipeline context.</summary>
+    /// <param name="context">The pipeline context that supplies payloads and cancellation state.</param>
+    /// <returns>A context containing a newly created message.</returns>
     InitializeContext<TMessage> Create(PipeContext context);
 
-    /// <summary>Create a message context.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The newly created instance.</returns>
+    /// <summary>Creates an unpopulated message context with the supplied cancellation token.</summary>
+    /// <param name="cancellationToken">The token exposed by the new initialization context.</param>
+    /// <returns>A context containing a newly created message.</returns>
     InitializeContext<TMessage> Create(CancellationToken cancellationToken);
 
-    /// <summary>Initialize the message, using the input.</summary>
-    /// <param name="input">The input.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the initialize outcome.</returns>
+    /// <summary>Creates and populates a message from an input object.</summary>
+    /// <param name="input">The object whose compatible values populate the message.</param>
+    /// <param name="cancellationToken">The token that cancels initialization.</param>
+    /// <returns>A task containing the populated message context.</returns>
     Task<InitializeContext<TMessage>> InitializeAsync(object input, CancellationToken cancellationToken);
 
-    /// <summary>Initialize the message, using the input.</summary>
-    /// <param name="context">An existing initialize message context.</param>
-    /// <param name="input">The input.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the initialize outcome.</returns>
+    /// <summary>Applies an additional input object to an existing message context.</summary>
+    /// <param name="context">The message context to populate.</param>
+    /// <param name="input">The object whose compatible values populate the message.</param>
+    /// <param name="cancellationToken">The token that cancels initialization.</param>
+    /// <returns>A task containing the populated message context.</returns>
     Task<InitializeContext<TMessage>> InitializeAsync(InitializeContext<TMessage> context, object input, CancellationToken cancellationToken = default);
 
-    /// <summary>Initialize the message using the input and send it to the endpoint.</summary>
-    /// <param name="context">The base context.</param>
-    /// <param name="input">The input object.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the initialize message outcome.</returns>
+    /// <summary>Creates a message and prepares the send pipe that applies initialized headers.</summary>
+    /// <param name="context">The pipeline context inherited by message initialization.</param>
+    /// <param name="input">The object whose compatible values populate the message.</param>
+    /// <param name="pipe">Additional send-pipeline stages to include.</param>
+    /// <param name="cancellationToken">The token that cancels initialization.</param>
+    /// <returns>A task containing the populated message and its send pipe.</returns>
     Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object input, IPipe<SendContext<TMessage>>? pipe = null, CancellationToken cancellationToken = default);
 
-    /// <summary>Initialize the message using the input and send it to the endpoint.</summary>
-    /// <param name="context">The base context.</param>
-    /// <param name="input">The input object.</param>
-    /// <param name="moreInputs">Additional objects used to initialize the message.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the initialize message outcome.</returns>
+    /// <summary>Creates a message, applies multiple input objects, and prepares its send pipe.</summary>
+    /// <param name="context">The pipeline context inherited by message initialization.</param>
+    /// <param name="input">The primary object applied after the additional inputs.</param>
+    /// <param name="moreInputs">Additional input objects applied in array order before <paramref name="input"/>; null entries are ignored.</param>
+    /// <param name="pipe">Additional send-pipeline stages to include.</param>
+    /// <param name="cancellationToken">The token that cancels initialization.</param>
+    /// <returns>A task containing the populated message and its send pipe.</returns>
     Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object input, object?[] moreInputs, IPipe<SendContext<TMessage>>? pipe = null, CancellationToken cancellationToken = default);
 
-    /// <summary>Initialize the message using the input and send it to the endpoint.</summary>
-    /// <param name="input">The input object.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the initialize message outcome.</returns>
+    /// <summary>Creates a message and prepares its send pipe without inheriting another pipeline context.</summary>
+    /// <param name="input">The object whose compatible values populate the message.</param>
+    /// <param name="pipe">The send-pipeline stages associated with the initialized message.</param>
+    /// <param name="cancellationToken">The token that cancels initialization.</param>
+    /// <returns>A task containing the populated message and its send pipe.</returns>
     Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(object input, IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken);
 }

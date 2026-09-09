@@ -2,36 +2,36 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced.Registration;
 
-/// <summary>Defines the operations required by consumer definition.</summary>
+/// <summary>Describes how a registered consumer is named and configured on a receive endpoint.</summary>
 public interface IConsumerDefinition :
     IDefinition
 {
-    /// <summary>The consumer type.</summary>
+    /// <summary>Gets the registered consumer implementation type.</summary>
     Type ConsumerType { get; }
 
-    /// <summary>Gets the endpoint definition.</summary>
+    /// <summary>Gets the consumer's dedicated endpoint definition, when one was configured.</summary>
     IEndpointDefinition? EndpointDefinition { get; }
 
-    /// <summary>Return the endpoint name for the consumer, using the specified formatter if necessary.</summary>
-    /// <param name="formatter">The formatter.</param>
-    /// <returns>The endpoint name.</returns>
+    /// <summary>Gets the configured endpoint name or derives one with the supplied formatter.</summary>
+    /// <param name="formatter">The naming convention used when no explicit name is configured.</param>
+    /// <returns>The consumer endpoint name.</returns>
     string GetEndpointName(IEndpointNameFormatter formatter);
 }
 
 
-/// <summary>Defines the operations required by consumer definition.</summary>
+/// <summary>Describes endpoint configuration for a specific registered consumer.</summary>
 /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
 public interface IConsumerDefinition<TConsumer> :
     IConsumerDefinition
     where TConsumer : class, IConsumer
 {
-    /// <summary>Sets the endpoint definition, if available.</summary>
+    /// <summary>Sets the consumer's dedicated endpoint definition.</summary>
     new IEndpointDefinition<TConsumer> EndpointDefinition { set; }
 
-    /// <summary>Configure the consumer on the receive endpoint.</summary>
+    /// <summary>Applies consumer-specific configuration to a receive endpoint.</summary>
     /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer.</param>
-    /// <param name="consumerConfigurator">The consumer configurator.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <param name="consumerConfigurator">The consumer pipeline to configure.</param>
+    /// <param name="context">The registration context that resolves registered dependencies.</param>
     void Configure(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<TConsumer> consumerConfigurator,
         IRegistrationContext context);
 }

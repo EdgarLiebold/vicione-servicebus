@@ -28,7 +28,7 @@ public class InMemoryMessageMoveTransport
     {
         var messageId = context.GetMessageId(NewId.NextGuid());
 
-        var body = context.GetBody();
+        var body = context.GetBodyBytes();
 
         var transportMessage = new InMemoryTransportMessage(messageId, body, context.ContentType?.MediaType);
 

@@ -37,7 +37,7 @@ public sealed class InMemoryOutboxFaultTests
             Guid correlationId = NewId.NextGuid();
             IRequestClient<OutboxRequest> client = harness.Bus.CreateRequestClient<OutboxRequest>(
                 harness.InputQueueAddress,
-                timeout);
+                new RequestTimeout(timeout));
 
             RequestFaultException fault = await Assert.ThrowsAsync<RequestFaultException>(() =>
                 client.GetResponseAsync<OutboxResponse>(

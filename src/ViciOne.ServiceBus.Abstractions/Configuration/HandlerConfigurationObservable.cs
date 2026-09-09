@@ -8,9 +8,9 @@ public class HandlerConfigurationObservable :
     Connectable<IHandlerConfigurationObserver>,
     IHandlerConfigurationObserver
 {
-    /// <summary>Reports that handler has been configured.</summary>
+    /// <summary>Notifies observers that a message handler is configured.</summary>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configurator">The completed handler configuration.</param>
     public void HandlerConfigured<TMessage>(IHandlerConfigurator<TMessage> configurator)
         where TMessage : class
     {

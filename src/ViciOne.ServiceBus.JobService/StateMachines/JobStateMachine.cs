@@ -898,7 +898,7 @@ static class JobStateMachineBehaviorExtensions
         return binder
             .Then(context =>
             {
-                context.Saga.Faulted = context.GetUtcDateTime();
+                context.Saga.Faulted = context.GetUtcNow();
                 context.Saga.Reason = getReason(context);
             })
             .Publish<JobSaga, T, JobCanceled>(context => new JobCanceledEvent

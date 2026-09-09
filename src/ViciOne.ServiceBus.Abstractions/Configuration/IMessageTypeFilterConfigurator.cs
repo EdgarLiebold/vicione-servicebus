@@ -5,28 +5,28 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>Configures a message filter, for including and excluding message types.</summary>
 public interface IMessageTypeFilterConfigurator
 {
-    /// <summary>Include the message if it is any of the specified message types.</summary>
+    /// <summary>Includes messages assignable to any specified message type.</summary>
     /// <param name="messageTypes">The message types.</param>
     void Include(params Type[] messageTypes);
 
-    /// <summary>Include the type matches the specified filter expression.</summary>
+    /// <summary>Includes message types that satisfy the predicate.</summary>
     /// <param name="filter">The filter expression.</param>
     void Include(Func<Type, bool> filter);
 
-    /// <summary>Include the message if it is the specified message type.</summary>
+    /// <summary>Includes messages assignable to the specified message type.</summary>
     /// <typeparam name="T">The message type.</typeparam>
     void Include<T>()
         where T : class;
 
-    /// <summary>Exclude the message if it is any of the specified message types.</summary>
+    /// <summary>Excludes messages assignable to any specified message type.</summary>
     /// <param name="messageTypes">The message types.</param>
     void Exclude(params Type[] messageTypes);
 
-    /// <summary>Exclude the type matches the specified filter expression.</summary>
+    /// <summary>Excludes message types that satisfy the predicate.</summary>
     /// <param name="filter">The filter expression.</param>
     void Exclude(Func<Type, bool> filter);
 
-    /// <summary>Exclude the message if it is the specified message type.</summary>
+    /// <summary>Excludes messages assignable to the specified message type.</summary>
     /// <typeparam name="T">The message type.</typeparam>
     void Exclude<T>()
         where T : class;

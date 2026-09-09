@@ -43,7 +43,7 @@ public sealed class PipeContextTimeProviderExtensionsTests
         var context = new TestPipeContext();
         context.SetTimeProvider(new FakeTimeProvider(expected));
 
-        DateTimeOffset actual = context.GetUtcDateTime();
+        DateTimeOffset actual = context.GetUtcNow();
 
         Assert.Equal(expected, actual);
         Assert.Equal(TimeSpan.Zero, actual.Offset);
@@ -66,7 +66,7 @@ public sealed class PipeContextTimeProviderExtensionsTests
         Assert.Equal(
             "context",
             Assert.Throws<ArgumentNullException>(() =>
-                PipeContextTimeProviderExtensions.GetUtcDateTime(null!)).ParamName);
+                PipeContextTimeProviderExtensions.GetUtcNow(null!)).ParamName);
         Assert.Equal(
             "timeProvider",
             Assert.Throws<ArgumentNullException>(() => context.SetTimeProvider(null!)).ParamName);

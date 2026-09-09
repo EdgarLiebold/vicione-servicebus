@@ -5,8 +5,8 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>Caches implemented message type data.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Caches the immediate polymorphic topology parents of a message contract.</summary>
+/// <typeparam name="TMessage">The message contract whose topology is inspected.</typeparam>
 public class ImplementedMessageTypeCache<TMessage> :
     IImplementedMessageTypeCache<TMessage>
     where TMessage : class
@@ -22,6 +22,8 @@ public class ImplementedMessageTypeCache<TMessage> :
 
     void IImplementedMessageTypeCache<TMessage>.EnumerateImplementedTypes(IImplementedMessageType implementedMessageType)
     {
+        ArgumentNullException.ThrowIfNull(implementedMessageType);
+
         for (var i = 0; i < _implementedTypes.Length; i++)
         {
             if (_implementedTypes[i].MessageType == typeof(TMessage))
@@ -31,10 +33,13 @@ public class ImplementedMessageTypeCache<TMessage> :
         }
     }
 
-    /// <summary>Enumerate the implemented message types.</summary>
-    /// <param name="implementedMessageType">The interface reference to invoke for each type.</param>
+    /// <summary>Invokes a consumer once for each immediate polymorphic topology parent.</summary>
+    /// <param name="implementedMessageType">The consumer invoked for every topology parent.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="implementedMessageType" /> is <see langword="null" />.</exception>
     public static void EnumerateImplementedTypes(IImplementedMessageType implementedMessageType)
     {
+        ArgumentNullException.ThrowIfNull(implementedMessageType);
+
         Cached.Instance.Value.EnumerateImplementedTypes(implementedMessageType);
     }
 
@@ -102,10 +107,10 @@ public class ImplementedMessageTypeCache<TMessage> :
 
     struct ImplementedType
     {
-        /// <summary>The implemented type.</summary>
+        /// <summary>The topology-parent type.</summary>
         public readonly Type Type;
 
-        /// <summary>True if the interface is directly implemented by the type.</summary>
+        /// <summary>Whether the parent is an immediate topology edge.</summary>
         public readonly bool Direct;
 
         public ImplementedType(Type type, bool direct)

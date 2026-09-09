@@ -90,7 +90,7 @@ public sealed class RequestClientOutboxTests
         {
             Guid correlationId = Guid.Parse("aed6e056-e9db-433b-af42-a048046b3912");
             IRequestClient<OuterRequest> client =
-                harness.Bus.CreateRequestClient<OuterRequest>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<OuterRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
 
             Response<OuterResponse> response = await client.GetResponseAsync<OuterResponse>(
                 new OuterRequest(correlationId),
@@ -176,7 +176,7 @@ public sealed class RequestClientOutboxTests
             IRequestClient<InnerRequest> client = context.Advanced().CreateRequestClient<InnerRequest>(
                 bus,
                 context.Advanced().ReceiveContext.InputAddress,
-                RequestTimeout.After(s: 1));
+                new RequestTimeout(TimeSpan.FromSeconds(1)));
             Response<InnerResponse> inner = await client.GetResponseAsync<InnerResponse>(
                 new InnerRequest(context.Message.CorrelationId),
                 context.CancellationToken);

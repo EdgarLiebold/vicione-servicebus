@@ -61,7 +61,7 @@ public sealed class MessageDataInitializerIntegrationTests
         try
         {
             IRequestClient<ObjectRequest> client =
-                harness.Bus.CreateRequestClient<ObjectRequest>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<ObjectRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
             Response<ObjectResponse> response = await client.Advanced().GetResponseAsync<ObjectResponse>(
                 values: new { Payload = expected },
                 cancellationToken: cancellationToken);
@@ -170,7 +170,7 @@ public sealed class MessageDataInitializerIntegrationTests
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            IRequestClient<TRequest> client = harness.Bus.CreateRequestClient<TRequest>(harness.InputQueueAddress, timeout);
+            IRequestClient<TRequest> client = harness.Bus.CreateRequestClient<TRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
             Response<ProcessedDocument> response = await client.Advanced().GetResponseAsync<ProcessedDocument>(values: new
             {
                 CorrelationId = correlationId,
@@ -227,7 +227,7 @@ public sealed class MessageDataInitializerIntegrationTests
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            IRequestClient<TRequest> client = harness.Bus.CreateRequestClient<TRequest>(harness.InputQueueAddress, timeout);
+            IRequestClient<TRequest> client = harness.Bus.CreateRequestClient<TRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
                 client.Advanced().GetResponseAsync<ProcessedDocument>(values: new
                 {

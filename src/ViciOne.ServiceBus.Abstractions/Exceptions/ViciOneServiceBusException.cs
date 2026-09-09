@@ -2,25 +2,25 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to vici one service bus.</summary>
+/// <summary>Provides the common base for failures reported by ViciOne ServiceBus.</summary>
 public class ViciOneServiceBusException :
     Exception
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a service-bus exception without a custom message.</summary>
     public ViciOneServiceBusException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a service-bus exception with the specified failure message.</summary>
+    /// <param name="message">The description of the failure.</param>
     public ViciOneServiceBusException(string? message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates a service-bus exception with an underlying failure.</summary>
+    /// <param name="message">The description of the failure.</param>
+    /// <param name="innerException">The exception that caused this failure.</param>
     public ViciOneServiceBusException(string? message, Exception? innerException)
         : base(message, innerException)
     {

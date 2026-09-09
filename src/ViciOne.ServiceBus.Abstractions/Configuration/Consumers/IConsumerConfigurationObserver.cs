@@ -6,14 +6,14 @@ public interface IConsumerConfigurationObserver
 {
     /// <summary>Called when a consumer is configured.</summary>
     /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configurator">The completed consumer configuration.</param>
     void ConsumerConfigured<TConsumer>(IConsumerConfigurator<TConsumer> configurator)
         where TConsumer : class;
 
     /// <summary>Called when a consumer/message combination is configured.</summary>
     /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configurator">The completed consumer-message configuration.</param>
     void ConsumerMessageConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, TMessage> configurator)
         where TConsumer : class
         where TMessage : class;

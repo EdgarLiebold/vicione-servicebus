@@ -4,37 +4,37 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>The base for any pipe context proxy, optimized to avoid member access.</summary>
+/// <summary>Forwards pipe-context state and payload operations to a parent context.</summary>
 public abstract class ProxyPipeContext
 {
     readonly PipeContext _parentContext;
 
-    /// <summary>The parent pipe context for this proxy.</summary>
-    /// <param name="parentContext">The parent context.</param>
+    /// <summary>Initializes a forwarding view over <paramref name="parentContext" />.</summary>
+    /// <param name="parentContext">The pipe context to forward.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="parentContext" /> is <see langword="null" />.</exception>
     protected ProxyPipeContext(PipeContext parentContext)
     {
+        ArgumentNullException.ThrowIfNull(parentContext);
+
         _parentContext = parentContext;
     }
 
-    /// <summary>Returns the CancellationToken for the context (implicit interface).</summary>
+    /// <inheritdoc cref="PipeContext.CancellationToken" />
     public virtual CancellationToken CancellationToken => _parentContext.CancellationToken;
 
-    /// <summary>Returns true if the payload type is included with or supported by the context type.</summary>
-    /// <param name="payloadType">The runtime payload type used by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc cref="PipeContext.HasPayloadType" />
     public virtual bool HasPayloadType(Type payloadType)
     {
+        ArgumentNullException.ThrowIfNull(payloadType);
+
         return payloadType.IsInstanceOfType(this) || _parentContext.HasPayloadType(payloadType);
     }
 
-    /// <summary>Attempts to get the specified payload type.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="payload">Receives the payload produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public virtual bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
-        where T : class
+    /// <inheritdoc cref="PipeContext.TryGetPayload{TPayload}" />
+    public virtual bool TryGetPayload<TPayload>([NotNullWhen(true)] out TPayload? payload)
+        where TPayload : class
     {
-        if (this is T context)
+        if (this is TPayload context)
         {
             payload = context;
             return true;
@@ -43,28 +43,26 @@ public abstract class ProxyPipeContext
         return _parentContext.TryGetPayload(out payload);
     }
 
-    /// <summary>Get or add a payload to the context, using the provided payload factory.</summary>
-    /// <typeparam name="T">The payload type.</typeparam>
-    /// <param name="payloadFactory">The payload factory, which is only invoked if the payload is not present.</param>
-    /// <returns>The or add payload.</returns>
-    public virtual T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
-        where T : class
+    /// <inheritdoc cref="PipeContext.GetOrAddPayload{TPayload}" />
+    public virtual TPayload GetOrAddPayload<TPayload>(PayloadFactory<TPayload> payloadFactory)
+        where TPayload : class
     {
-        if (this is T context)
+        ArgumentNullException.ThrowIfNull(payloadFactory);
+
+        if (this is TPayload context)
             return context;
 
         return _parentContext.GetOrAddPayload(payloadFactory);
     }
 
-    /// <summary>Either adds a new payload, or updates an existing payload.</summary>
-    /// <typeparam name="T">The payload type.</typeparam>
-    /// <param name="addFactory">The payload factory called if the payload is not present.</param>
-    /// <param name="updateFactory">The payload factory called if the payload already exists.</param>
-    /// <returns>The t produced by the operation.</returns>
-    public virtual T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
-        where T : class
+    /// <inheritdoc cref="PipeContext.AddOrUpdatePayload{TPayload}" />
+    public virtual TPayload AddOrUpdatePayload<TPayload>(PayloadFactory<TPayload> addFactory, UpdatePayloadFactory<TPayload> updateFactory)
+        where TPayload : class
     {
-        if (this is T context)
+        ArgumentNullException.ThrowIfNull(addFactory);
+        ArgumentNullException.ThrowIfNull(updateFactory);
+
+        if (this is TPayload context)
             return context;
 
         return _parentContext.AddOrUpdatePayload(addFactory, updateFactory);

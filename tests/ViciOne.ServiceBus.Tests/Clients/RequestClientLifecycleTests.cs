@@ -20,12 +20,12 @@ public sealed class RequestClientLifecycleTests
     public async Task DisabledTransportTimeToLive_DoesNotDisableTheClientDeadlineAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var context = new RecordingClientFactoryContext(timeProvider, RequestTimeout.After(m: 1));
+        var context = new RecordingClientFactoryContext(timeProvider, new RequestTimeout(TimeSpan.FromMinutes(1)));
         var request = new LifecycleRequest("no-transport-ttl");
         using var handle = new ClientRequestHandle<LifecycleRequest>(
             context,
             SendRequestAsync,
-            timeout: RequestTimeout.After(m: 1),
+            timeout: new RequestTimeout(TimeSpan.FromMinutes(1)),
             requestId: Guid.Parse("91d9c54e-7818-4327-b24f-aa55ee18871d"));
         handle.TimeToLive = RequestTimeout.None;
 
@@ -64,7 +64,7 @@ public sealed class RequestClientLifecycleTests
     public async Task CancellationAndDeadline_FirstTerminalOutcomeWinsExactlyAsync(TerminalOutcome firstOutcome)
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var context = new RecordingClientFactoryContext(timeProvider, RequestTimeout.After(m: 1));
+        var context = new RecordingClientFactoryContext(timeProvider, new RequestTimeout(TimeSpan.FromMinutes(1)));
         using var callerCancellation = new CancellationTokenSource();
         var request = new LifecycleRequest(firstOutcome.ToString());
         using var handle = new ClientRequestHandle<LifecycleRequest>(
@@ -76,7 +76,7 @@ public sealed class RequestClientLifecycleTests
                 return request;
             },
             callerCancellation.Token,
-            RequestTimeout.After(m: 1),
+            new RequestTimeout(TimeSpan.FromMinutes(1)),
             Guid.Parse("2f79d87e-580b-4a1d-83c3-a4fb23ab393e"));
         Task<Response<LifecycleResponse>> response = handle.GetResponseAsync<LifecycleResponse>(true, TestContext.Current.CancellationToken);
         await timeProvider.WaitForTimerCountAsync(1);
@@ -114,12 +114,12 @@ public sealed class RequestClientLifecycleTests
     public async Task DuplicateResponseType_IsRejectedWithoutReplacingTheOriginalHandlerAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var context = new RecordingClientFactoryContext(timeProvider, RequestTimeout.After(m: 1));
+        var context = new RecordingClientFactoryContext(timeProvider, new RequestTimeout(TimeSpan.FromMinutes(1)));
         var request = new LifecycleRequest("duplicate-handler");
         var handle = new ClientRequestHandle<LifecycleRequest>(
             context,
             (_, _, _) => Task.FromResult(request),
-            timeout: RequestTimeout.After(m: 1));
+            timeout: new RequestTimeout(TimeSpan.FromMinutes(1)));
         Task<Response<LifecycleResponse>> original = handle.GetResponseAsync<LifecycleResponse>(false, TestContext.Current.CancellationToken);
 
         RequestException exception = Assert.Throws<RequestException>(() =>
@@ -140,7 +140,7 @@ public sealed class RequestClientLifecycleTests
     [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "pre-canceled-handle-never-starts-send")]
     public async Task PreCanceledHandle_PreservesTheCallerTokenWithoutStartingTheSendAsync()
     {
-        var context = new RecordingClientFactoryContext(TimeProvider.System, RequestTimeout.After(m: 1));
+        var context = new RecordingClientFactoryContext(TimeProvider.System, new RequestTimeout(TimeSpan.FromMinutes(1)));
         using var cancellation = new CancellationTokenSource();
         cancellation.Cancel();
         var sendCount = 0;
@@ -152,7 +152,7 @@ public sealed class RequestClientLifecycleTests
                 return Task.FromResult(new LifecycleRequest("unexpected"));
             },
             cancellation.Token,
-            RequestTimeout.After(m: 1));
+            new RequestTimeout(TimeSpan.FromMinutes(1)));
 
         TaskCanceledException responseCancellation = await Assert.ThrowsAsync<TaskCanceledException>(
             () => handle.GetResponseAsync<LifecycleResponse>(true, CancellationToken.None));
@@ -169,7 +169,7 @@ public sealed class RequestClientLifecycleTests
     public async Task ResponseWaitCancellation_PreservesItsOwnTokenAfterTheRequestWasSentAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var context = new RecordingClientFactoryContext(timeProvider, RequestTimeout.After(m: 1));
+        var context = new RecordingClientFactoryContext(timeProvider, new RequestTimeout(TimeSpan.FromMinutes(1)));
         var request = new LifecycleRequest("separate-response-wait");
         using var handle = new ClientRequestHandle<LifecycleRequest>(
             context,
@@ -178,7 +178,7 @@ public sealed class RequestClientLifecycleTests
                 await pipe.SendAsync(new MessageSendContext<LifecycleRequest>(request, cancellationToken));
                 return request;
             },
-            timeout: RequestTimeout.After(m: 1));
+            timeout: new RequestTimeout(TimeSpan.FromMinutes(1)));
         using var responseCancellation = new CancellationTokenSource();
         Task<Response<LifecycleResponse>> response = handle.GetResponseAsync<LifecycleResponse>(true, responseCancellation.Token);
         await timeProvider.WaitForTimerCountAsync(1);
@@ -195,7 +195,7 @@ public sealed class RequestClientLifecycleTests
     public async Task CancellationDuringTheSendPipeline_DisposesATimeoutTimerCreatedAfterCancellationAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
-        var context = new RecordingClientFactoryContext(timeProvider, RequestTimeout.After(m: 1));
+        var context = new RecordingClientFactoryContext(timeProvider, new RequestTimeout(TimeSpan.FromMinutes(1)));
         var request = new LifecycleRequest("late-timer");
         using var cancellation = new CancellationTokenSource();
         var pipeEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -208,7 +208,7 @@ public sealed class RequestClientLifecycleTests
                 return request;
             },
             cancellation.Token,
-            RequestTimeout.After(m: 1));
+            new RequestTimeout(TimeSpan.FromMinutes(1)));
         handle.UseExecuteAwaited(async _ =>
         {
             pipeEntered.TrySetResult();
@@ -256,7 +256,7 @@ public sealed class RequestClientLifecycleTests
                     return request;
                 },
                 cancellation.Token,
-                RequestTimeout.After(m: 1));
+                new RequestTimeout(TimeSpan.FromMinutes(1)));
             Task<Response<LifecycleResponse>> response = handle.GetResponseAsync<LifecycleResponse>(true, CancellationToken.None);
             await timeProvider.TimerCreated.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
 
@@ -281,12 +281,12 @@ public sealed class RequestClientLifecycleTests
     [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "terminal-cleanup-releases-send-cancellation-source")]
     public async Task DisposingACompletedHandle_ReleasesItsSendCancellationSourceAsync()
     {
-        var context = new RecordingClientFactoryContext(TimeProvider.System, RequestTimeout.After(m: 1));
+        var context = new RecordingClientFactoryContext(TimeProvider.System, new RequestTimeout(TimeSpan.FromMinutes(1)));
         var request = new LifecycleRequest("dispose-cancellation-source");
         var handle = new ClientRequestHandle<LifecycleRequest>(
             context,
             (_, _, _) => Task.FromResult(request),
-            timeout: RequestTimeout.After(m: 1));
+            timeout: new RequestTimeout(TimeSpan.FromMinutes(1)));
         Task<Response<LifecycleResponse>> response = handle.GetResponseAsync<LifecycleResponse>(true, CancellationToken.None);
         Assert.Same(request, await handle.Message);
 
@@ -381,7 +381,7 @@ public sealed class RequestClientLifecycleTests
 
         public int DisconnectCount => Volatile.Read(ref _disconnectCount);
 
-        public RequestTimeout DefaultTimeout => RequestTimeout.After(m: 1);
+        public RequestTimeout DefaultTimeout => new(TimeSpan.FromMinutes(1));
 
         public TimeProvider TimeProvider { get; } = timeProvider;
 

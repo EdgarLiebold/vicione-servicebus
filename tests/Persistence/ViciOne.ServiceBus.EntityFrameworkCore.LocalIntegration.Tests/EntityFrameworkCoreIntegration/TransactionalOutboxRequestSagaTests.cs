@@ -33,7 +33,7 @@ public sealed class TransactionalOutboxRequestSagaTests
         ExceptionInfo outer = Assert.Single(fault.Exceptions);
         ExceptionInfo original = Assert.Single(Flatten(outer), item =>
             item.ExceptionType == TypeCache<ExpectedSagaFailure>.ShortName);
-        Assert.Equal(TypeCache<StartRequestSaga>.ShortName, exception.RequestType);
+        Assert.Equal(typeof(StartRequestSaga), exception.RequestType);
         Assert.Equal(TypeCache<ExpectedSagaFailure>.ShortName, original.ExceptionType);
         Assert.Equal(ExpectedSagaFailure.FailureMessage, original.Message);
         Assert.Equal(request.CorrelationId, fault.Message.CorrelationId);

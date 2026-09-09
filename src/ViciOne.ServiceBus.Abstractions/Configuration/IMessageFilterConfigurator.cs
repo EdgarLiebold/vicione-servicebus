@@ -2,17 +2,17 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures a message filter, for including and excluding message types.</summary>
+/// <summary>Configures message inclusion and exclusion predicates in addition to type filters.</summary>
 public interface IMessageFilterConfigurator :
     IMessageTypeFilterConfigurator
 {
-    /// <summary>Include the message if it is the specified message type and matches the specified filter expression.</summary>
+    /// <summary>Includes messages of the specified type that satisfy the predicate.</summary>
     /// <typeparam name="T">The message type.</typeparam>
     /// <param name="filter">The filter expression.</param>
     void Include<T>(Func<T, bool> filter)
         where T : class;
 
-    /// <summary>Exclude the message if it is the specified message type and matches the specified filter expression.</summary>
+    /// <summary>Excludes messages of the specified type that satisfy the predicate.</summary>
     /// <typeparam name="T">The message type.</typeparam>
     /// <param name="filter">The filter expression.</param>
     void Exclude<T>(Func<T, bool> filter)

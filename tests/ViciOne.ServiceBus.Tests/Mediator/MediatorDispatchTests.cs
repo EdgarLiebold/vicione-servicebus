@@ -279,7 +279,7 @@ public sealed class MediatorDispatchTests
             });
         });
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
-        IRequestClient<RequestMessage> client = mediator.CreateRequestClient<RequestMessage>(RequestTimeout.After(m: 1));
+        IRequestClient<RequestMessage> client = mediator.CreateRequestClient<RequestMessage>(new RequestTimeout(TimeSpan.FromMinutes(1)));
         var request = new RequestMessage(NewId.NextGuid());
 
         Task<Response<ResponseMessage>> response = client.GetResponseAsync<ResponseMessage>(request, source.Token);

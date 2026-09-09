@@ -1,36 +1,32 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>Caches host metadata data.</summary>
+/// <summary>Provides process-wide host metadata and deployment-environment detection.</summary>
 public static class HostMetadataCache
 {
     static bool? _isRunningInContainer;
     static bool? _isRunningInKubernetes;
 
-    static bool? _isNetFramework;
-    /// <summary>Gets the host.</summary>
+    /// <summary>Gets the immutable metadata captured for the current process.</summary>
     public static HostInfo Host => Cached.HostInfo;
-    /// <summary>Gets the empty.</summary>
+
+    /// <summary>Gets an empty host-metadata value for messages that contain no host information.</summary>
     public static HostInfo Empty => Cached.EmptyHostInfo;
 
-    /// <summary>Gets a value indicating whether running in container.</summary>
+    /// <summary>Gets whether the .NET runtime identifies the process as containerized.</summary>
     public static bool IsRunningInContainer =>
         _isRunningInContainer ??= bool.TryParse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out var inDocker) && inDocker;
 
-    /// <summary>Gets a value indicating whether kubernetes.</summary>
-    public static bool IsKubernetes =>
+    /// <summary>Gets whether Kubernetes service discovery or mounted service-account data is present.</summary>
+    public static bool IsRunningInKubernetes =>
         _isRunningInKubernetes ??= Environment.GetEnvironmentVariable("KUBERNETES_SERVICE_HOST") != null
             || Directory.Exists("/var/run/secrets/kubernetes.io");
 
-    /// <summary>Gets a value indicating whether net framework.</summary>
-    public static bool IsNetFramework => _isNetFramework ??= RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework");
-
-    /// <summary>Gets commit hash.</summary>
-    /// <returns>The commit hash.</returns>
+    /// <summary>Gets the source revision suffix embedded in the ServiceBus informational version.</summary>
+    /// <returns>The revision suffix after <c>+</c>, or <see langword="null" /> when none is embedded.</returns>
     public static string? GetCommitHash()
     {
         var assembly = typeof(IBus).Assembly;
@@ -39,9 +35,9 @@ public static class HostMetadataCache
         if (attribute == null)
             return null;
 
-        var splitIndex = attribute.InformationalVersion.IndexOf('+');
+        int splitIndex = attribute.InformationalVersion.IndexOf('+');
         if (splitIndex > 0)
-            return attribute.InformationalVersion.Substring(splitIndex + 1);
+            return attribute.InformationalVersion[(splitIndex + 1)..];
 
         return null;
     }

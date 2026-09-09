@@ -2,15 +2,15 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Initializers;
 
-/// <summary>Defines the operations required by initializer variable.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Resolves a message-property value from the current initialization context.</summary>
+/// <typeparam name="T">The resolved value type.</typeparam>
 public interface IInitializerVariable<T>
 {
-    /// <summary>Gets value.</summary>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <summary>Resolves the value for a message being initialized.</summary>
+    /// <typeparam name="TMessage">The message contract being initialized.</typeparam>
+    /// <param name="context">The message, input graph, and pipeline state available to the resolver.</param>
+    /// <param name="cancellationToken">The token that cancels value resolution.</param>
+    /// <returns>A task containing the resolved property value.</returns>
     Task<T> GetValueAsync<TMessage>(InitializeContext<TMessage> context, CancellationToken cancellationToken = default)
         where TMessage : class;
 }

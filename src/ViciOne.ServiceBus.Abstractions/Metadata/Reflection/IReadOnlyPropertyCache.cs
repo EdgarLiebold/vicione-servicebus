@@ -3,13 +3,13 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>Provides cached access to read only property data.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Provides case-insensitive lookup and enumeration of readable instance properties.</summary>
+/// <typeparam name="T">The declaring or derived target type.</typeparam>
 public interface IReadOnlyPropertyCache<T> : IEnumerable<ReadOnlyProperty<T>>
 {
-    /// <summary>Attempts to get value.</summary>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">Receives the value produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Attempts to get a readable property by name.</summary>
+    /// <param name="key">The case-insensitive property name.</param>
+    /// <param name="value">Receives the cached property when found.</param>
+    /// <returns><see langword="true" /> when the property exists.</returns>
     bool TryGetValue(string key, [NotNullWhen(true)] out ReadOnlyProperty<T>? value);
 }

@@ -46,7 +46,7 @@ internal sealed class SubmitJobConsumer<TJob> :
             schedule.Validate().ThrowIfContainsFailure("The job schedule is invalid:");
         }
 
-        return PublishJobSubmittedAsync(context.Advanced(), context.Message.JobId, context.Message.Job, context.SentTime ?? context.GetUtcDateTime(), schedule,
+        return PublishJobSubmittedAsync(context.Advanced(), context.Message.JobId, context.Message.Job, context.SentTime ?? context.GetUtcNow(), schedule,
             context.Message.JobProperties, context.CancellationToken);
     }
 
@@ -63,7 +63,7 @@ internal sealed class SubmitJobConsumer<TJob> :
             context.Advanced(),
             jobId,
             context.Message,
-            context.SentTime ?? context.GetUtcDateTime(),
+            context.SentTime ?? context.GetUtcNow(),
             null,
             null,
             context.CancellationToken);

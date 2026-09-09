@@ -55,12 +55,12 @@ public class RabbitMqMoveTransport<TSettings>
         {
             properties = new BasicProperties(basicConsumeContext.Properties);
             routingKey = basicConsumeContext.RoutingKey!;
-            body = context.GetBody();
+            body = context.GetBodyBytes();
         }
         else
         {
             properties = new BasicProperties { Headers = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase) };
-            body = context.GetBody();
+            body = context.GetBodyBytes();
         }
 
         SendHeaders headers = new MoveTransportHeaders(properties);

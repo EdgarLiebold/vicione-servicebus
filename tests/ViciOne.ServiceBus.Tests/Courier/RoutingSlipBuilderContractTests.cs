@@ -40,8 +40,8 @@ public sealed class RoutingSlipBuilderContractTests
         Assert.Throws<ArgumentNullException>(() => builder.AddActivity("Activity", null!));
         Assert.Throws<ArgumentNullException>(() => builder.AddActivity("Activity", address, (object)null!));
         Assert.Throws<ArgumentNullException>(() => builder.AddActivity("Activity", address, (IDictionary<string, object>)null!));
-        Assert.Throws<ArgumentException>(() => builder.AddVariable("", "value"));
-        Assert.Throws<ArgumentException>(() => builder.AddVariable(" ", new object()));
+        Assert.Throws<ArgumentException>(() => builder.SetVariable("", "value"));
+        Assert.Throws<ArgumentException>(() => builder.SetVariable(" ", new object()));
         Assert.Throws<ArgumentNullException>(() => builder.SetVariables((object)null!));
         Assert.Throws<ArgumentNullException>(() => builder.SetVariables((IEnumerable<KeyValuePair<string, object>>)null!));
         Assert.Throws<ArgumentNullException>(() => builder.AddSubscription(null!, RoutingSlipEvents.All));
@@ -73,12 +73,12 @@ public sealed class RoutingSlipBuilderContractTests
         var arguments = new Dictionary<string, object> { ["state"] = "original" };
         var builder = new RoutingSlipBuilder(NewId.NextGuid());
         builder.AddActivity("First", firstAddress, arguments);
-        builder.AddVariable("tenant", "north");
+        builder.SetVariable("tenant", "north");
         builder.AddSubscription(firstAddress, RoutingSlipEvents.Completed);
 
         RoutingSlip first = builder.Build();
         arguments["state"] = "caller-mutated";
-        builder.AddVariable("tenant", "south");
+        builder.SetVariable("tenant", "south");
         builder.AddActivity("Second", secondAddress);
         builder.AddSubscription(secondAddress, RoutingSlipEvents.Faulted);
 

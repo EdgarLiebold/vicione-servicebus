@@ -2,35 +2,35 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>The client factory context, which contains multiple interfaces and properties used by clients.</summary>
+/// <summary>Provides request routing, response connections, endpoint resolution, and time to a client factory.</summary>
 public interface ClientFactoryContext :
     IConsumePipeConnector,
     IRequestPipeConnector
 {
-    /// <summary>Default timeout for requests.</summary>
+    /// <summary>Gets the timeout used when a request does not specify one.</summary>
     RequestTimeout DefaultTimeout { get; }
 
-    /// <summary>Time source used for request deadlines.</summary>
+    /// <summary>Gets the time source used for request deadlines and timeout timers.</summary>
     TimeProvider TimeProvider { get; }
 
-    /// <summary>Message routes owned by the bus that created this client factory.</summary>
+    /// <summary>Gets the message routes owned by the bus that created this context.</summary>
     IMessageRouteTable MessageRoutes { get; }
 
-    /// <summary>The address used for responses to messages sent by this client.</summary>
+    /// <summary>Gets the address to which request responders send replies.</summary>
     Uri ResponseAddress { get; }
 
-    /// <summary>Returns an endpoint to which requests are sent.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="consumeContext">The consume context.</param>
-    /// <returns>The request endpoint.</returns>
+    /// <summary>Gets the route-resolved send endpoint for a request contract.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="consumeContext">The consumed message whose outbound metadata is propagated, or <see langword="null" />.</param>
+    /// <returns>The endpoint that sends requests of type <typeparamref name="T" />.</returns>
     IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
         where T : class;
 
-    /// <summary>Returns an endpoint to which requests are sent.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="consumeContext">The consume context.</param>
-    /// <returns>The request endpoint.</returns>
+    /// <summary>Gets the send endpoint for a request contract at an explicit destination.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="destinationAddress">The address to which requests are sent.</param>
+    /// <param name="consumeContext">The consumed message whose outbound metadata is propagated, or <see langword="null" />.</param>
+    /// <returns>The endpoint that sends requests of type <typeparamref name="T" />.</returns>
     IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
         where T : class;
 }

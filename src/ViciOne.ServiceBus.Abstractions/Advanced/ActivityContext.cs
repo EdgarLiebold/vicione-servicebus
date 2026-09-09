@@ -9,28 +9,28 @@ namespace ViciOne.ServiceBus.Advanced;
 public interface ActivityContext :
     ConsumeContext
 {
-    /// <summary>Gets the variables.</summary>
+    /// <summary>Gets the immutable routing-slip variables visible to the activity.</summary>
     IReadOnlyDictionary<string, object> Variables { get; }
 
-    /// <summary>Gets the tracking number.</summary>
+    /// <summary>Gets the identifier shared by every event and activity in the routing slip.</summary>
     Guid TrackingNumber { get; }
 
-    /// <summary>Gets the activity name.</summary>
+    /// <summary>Gets the itinerary name of the current activity.</summary>
     string ActivityName { get; }
 
-    /// <summary>Gets the execution id.</summary>
+    /// <summary>Gets the identifier of this activity execution attempt.</summary>
     Guid ExecutionId { get; }
 
-    /// <summary>Gets the timestamp.</summary>
+    /// <summary>Gets the UTC timestamp at which this activity context was created.</summary>
     DateTimeOffset Timestamp { get; }
 
-    /// <summary>Gets the elapsed.</summary>
+    /// <summary>Gets the elapsed time since this activity context was created.</summary>
     TimeSpan Elapsed { get; }
 
     /// <summary>Notifies the receive pipeline that the activity message was consumed.</summary>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the notification.</returns>
+    /// <param name="duration">The time spent consuming the activity message.</param>
+    /// <param name="consumerType">The diagnostic consumer identity recorded with the notification.</param>
+    /// <param name="cancellationToken">The token that cancels observer notification.</param>
+    /// <returns>A task that completes after all consume observers have been notified.</returns>
     Task NotifyActivityConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default);
 }

@@ -105,7 +105,7 @@ internal sealed class HubLifetimeManagerTestEnvironment<THub> : IAsyncDisposable
             new HubLifetimeManagerOptions<THub>
             {
                 ServerName = $"signalr-test-server-{index}",
-                RequestTimeout = Timeout,
+                RequestTimeout = new RequestTimeout(Timeout),
             },
             new BusHubLifetimeScopeProvider(_harness.Bus),
             new TestHubProtocolResolver(availableProtocols));

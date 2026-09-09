@@ -27,6 +27,8 @@ internal sealed class ReliableMessageScheduler<TBus> : IMessageScheduler
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
+    public TimeProvider TimeProvider => _timeProvider;
+
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(
         Uri destination,
         DateTimeOffset dueAt,
@@ -34,6 +36,21 @@ internal sealed class ReliableMessageScheduler<TBus> : IMessageScheduler
         CancellationToken cancellationToken = default)
         where T : class
         => await ScheduleSendCoreAsync(destination, dueAt, message, null, cancellationToken).ConfigureAwait(false);
+
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(
+        Uri destination,
+        TimeSpan delay,
+        T message,
+        CancellationToken cancellationToken = default)
+        where T : class
+    {
+        ValidateRelativeSend(destination, message);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<ScheduledMessage<T>>(cancellationToken);
+
+        DateTimeOffset dueAt = RelativeScheduleTime.GetDueAt(this, delay);
+        return ScheduleSendAsync(destination, dueAt, message, cancellationToken);
+    }
 
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(
         Uri destination,
@@ -45,6 +62,23 @@ internal sealed class ReliableMessageScheduler<TBus> : IMessageScheduler
     {
         ArgumentNullException.ThrowIfNull(options);
         return await ScheduleSendCoreAsync(destination, dueAt, message, options, cancellationToken).ConfigureAwait(false);
+    }
+
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(
+        Uri destination,
+        TimeSpan delay,
+        T message,
+        ScheduleOptions options,
+        CancellationToken cancellationToken = default)
+        where T : class
+    {
+        ValidateRelativeSend(destination, message);
+        ArgumentNullException.ThrowIfNull(options);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<ScheduledMessage<T>>(cancellationToken);
+
+        DateTimeOffset dueAt = RelativeScheduleTime.GetDueAt(this, delay);
+        return ScheduleSendAsync(destination, dueAt, message, options, cancellationToken);
     }
 
     async Task<ScheduledMessage<T>> ScheduleSendCoreAsync<T>(
@@ -88,6 +122,20 @@ internal sealed class ReliableMessageScheduler<TBus> : IMessageScheduler
         return ScheduleSendAsync(destination, dueAt, message, cancellationToken);
     }
 
+    public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(
+        TimeSpan delay,
+        T message,
+        CancellationToken cancellationToken = default)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(message);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<ScheduledMessage<T>>(cancellationToken);
+
+        DateTimeOffset dueAt = RelativeScheduleTime.GetDueAt(this, delay);
+        return SchedulePublishAsync(dueAt, message, cancellationToken);
+    }
+
     public async Task CancelScheduledSendAsync(
         ScheduledMessage scheduled,
         CancellationToken cancellationToken = default)
@@ -100,5 +148,14 @@ internal sealed class ReliableMessageScheduler<TBus> : IMessageScheduler
             throw new InvalidOperationException($"Scheduled message '{scheduled.TokenId}' was not found.");
         if (result.Disposition == ReliableMessagingOperationDisposition.InvalidState)
             throw new InvalidOperationException($"Scheduled message '{scheduled.TokenId}' can no longer be cancelled.");
+    }
+
+    static void ValidateRelativeSend<T>(Uri destination, T message)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(destination);
+        ArgumentNullException.ThrowIfNull(message);
+        if (!destination.IsAbsoluteUri)
+            throw new ArgumentException("The scheduled destination must be an absolute URI.", nameof(destination));
     }
 }

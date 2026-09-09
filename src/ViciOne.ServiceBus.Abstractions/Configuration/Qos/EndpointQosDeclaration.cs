@@ -2,19 +2,19 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced.Topology;
 
-/// <summary>A discovered endpoint QoS declaration used during topology validation.</summary>
-/// <param name="EndpointName">The endpoint name.</param>
-/// <param name="ConsumerType">The runtime consumer type used by the operation.</param>
-/// <param name="Qos">The qos.</param>
-/// <param name="Ownership">The ownership.</param>
+/// <summary>Describes transport quality-of-service claimed for an endpoint during topology validation.</summary>
+/// <param name="EndpointName">The endpoint that owns the transport settings.</param>
+/// <param name="ConsumerType">The consumer associated with the declaration.</param>
+/// <param name="Qos">The declared transport quality-of-service settings.</param>
+/// <param name="Ownership">The configuration boundary that declared the settings.</param>
 public sealed record EndpointQosDeclaration(
     string EndpointName,
     Type ConsumerType,
     EndpointTransportQos Qos,
     EndpointQosOwnership Ownership)
 {
-    /// <summary>Validates the current configuration.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <summary>Validates the endpoint identity, consumer, ownership, and transport settings.</summary>
+    /// <returns>This validated declaration.</returns>
     public EndpointQosDeclaration Validate()
     {
         if (string.IsNullOrWhiteSpace(EndpointName))

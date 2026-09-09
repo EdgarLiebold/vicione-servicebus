@@ -1,39 +1,38 @@
 using System;
-using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures service instance.</summary>
+/// <summary>Configures the bus and dedicated receive endpoint for a service instance.</summary>
 public interface IServiceInstanceConfigurator :
     IReceiveConfigurator,
     IOptionsSet
 {
-    /// <summary>Gets the endpoint name formatter.</summary>
+    /// <summary>Gets the convention used to derive endpoint names.</summary>
     IEndpointNameFormatter EndpointNameFormatter { get; }
 
-    /// <summary>If the InstanceEndpoint is enabled, the address of the instance endpoint.</summary>
+    /// <summary>Gets the address of the service instance's dedicated receive endpoint.</summary>
     Uri InstanceAddress { get; }
 
-    /// <summary>Gets the bus configurator.</summary>
+    /// <summary>Gets the configurator for shared bus receive endpoints.</summary>
     IReceiveConfigurator BusConfigurator { get; }
-    /// <summary>Gets the instance endpoint configurator.</summary>
+    /// <summary>Gets the configurator for the service instance's dedicated receive endpoint.</summary>
     IReceiveEndpointConfigurator InstanceEndpointConfigurator { get; }
 
-    /// <summary>Add a specification for validation.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Adds a configuration specification to the validation set.</summary>
+    /// <param name="specification">The specification to validate before the bus starts.</param>
     void AddSpecification(ISpecification specification);
 }
 
 
-/// <summary>Configures service instance.</summary>
-/// <typeparam name="TEndpointConfigurator">The endpoint configurator type.</typeparam>
+/// <summary>Configures a service instance using a transport-specific endpoint configurator.</summary>
+/// <typeparam name="TEndpointConfigurator">The transport-specific receive-endpoint configurator.</typeparam>
 public interface IServiceInstanceConfigurator<out TEndpointConfigurator> :
     IServiceInstanceConfigurator,
     IReceiveConfigurator<TEndpointConfigurator>
     where TEndpointConfigurator : IReceiveEndpointConfigurator
 {
-    /// <summary>Gets the bus configurator.</summary>
+    /// <summary>Gets the transport-specific configurator for shared bus receive endpoints.</summary>
     new IReceiveConfigurator<TEndpointConfigurator> BusConfigurator { get; }
-    /// <summary>Gets the instance endpoint configurator.</summary>
+    /// <summary>Gets the transport-specific configurator for the service instance's dedicated receive endpoint.</summary>
     new TEndpointConfigurator InstanceEndpointConfigurator { get; }
 }

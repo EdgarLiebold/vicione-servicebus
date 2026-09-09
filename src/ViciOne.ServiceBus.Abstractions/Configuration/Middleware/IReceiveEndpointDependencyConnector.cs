@@ -2,10 +2,10 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Defines the operations required by receive endpoint dependency connector.</summary>
+/// <summary>Registers startup prerequisites for a receive endpoint.</summary>
 public interface IReceiveEndpointDependencyConnector
 {
-    /// <summary>Add receive endpoint dependency. Endpoint will be started when dependency is Ready.</summary>
-    /// <param name="dependency">The dependency.</param>
+    /// <summary>Adds a prerequisite whose readiness must complete before the endpoint starts.</summary>
+    /// <param name="dependency">The endpoint startup prerequisite.</param>
     void AddDependency(IReceiveEndpointDependency dependency);
 }

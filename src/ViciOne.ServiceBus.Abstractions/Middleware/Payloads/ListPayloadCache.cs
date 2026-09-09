@@ -4,33 +4,39 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Payloads;
 
-/// <summary>Caches list payload data.</summary>
-public class ListPayloadCache :
+/// <summary>Stores pipe-context payloads in insertion order and resolves the most recently added compatible value.</summary>
+public sealed class ListPayloadCache :
     IPayloadCache
 {
-    IList<object>? _cache;
+    readonly List<object> _cache;
+    readonly object _syncRoot = new();
 
     /// <summary>Initializes a new instance.</summary>
     public ListPayloadCache()
     {
+        _cache = [];
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="payloads">The payloads.</param>
+    /// <summary>Initializes the cache with the supplied payloads.</summary>
+    /// <param name="payloads">The payloads to store in their supplied order.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="payloads" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException"><paramref name="payloads" /> contains a <see langword="null" /> element.</exception>
     public ListPayloadCache(object[] payloads)
     {
+        ArgumentNullException.ThrowIfNull(payloads);
+
+        if (Array.IndexOf(payloads, null) >= 0)
+            throw new ArgumentException("Payloads cannot contain null elements.", nameof(payloads));
+
         _cache = new List<object>(payloads);
     }
 
-    /// <summary>Determines whether the current value has payload type.</summary>
-    /// <param name="payloadType">The runtime payload type used by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool HasPayloadType(Type payloadType)
     {
-        if (_cache == null)
-            return false;
+        ArgumentNullException.ThrowIfNull(payloadType);
 
-        lock (this)
+        lock (_syncRoot)
         {
             for (var i = _cache.Count - 1; i >= 0; i--)
             {
@@ -42,20 +48,11 @@ public class ListPayloadCache :
         return false;
     }
 
-    /// <summary>Attempts to get payload.</summary>
-    /// <typeparam name="TPayload">The payload type.</typeparam>
-    /// <param name="payload">Receives the payload produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryGetPayload<TPayload>([NotNullWhen(true)] out TPayload? payload)
         where TPayload : class
     {
-        if (_cache == null)
-        {
-            payload = default;
-            return false;
-        }
-
-        lock (this)
+        lock (_syncRoot)
         {
             for (var i = _cache.Count - 1; i >= 0; i--)
             {
@@ -71,66 +68,55 @@ public class ListPayloadCache :
         return false;
     }
 
-    /// <summary>Gets or add payload.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="payloadFactory">The payload factory.</param>
-    /// <returns>The or add payload.</returns>
-    public T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
-        where T : class
+    /// <inheritdoc />
+    public TPayload GetOrAddPayload<TPayload>(PayloadFactory<TPayload> payloadFactory)
+        where TPayload : class
     {
-        lock (this)
+        ArgumentNullException.ThrowIfNull(payloadFactory);
+
+        lock (_syncRoot)
         {
-            if (_cache != null)
+            for (var i = _cache.Count - 1; i >= 0; i--)
             {
-                for (var i = _cache.Count - 1; i >= 0; i--)
-                {
-                    if (_cache[i] is T result)
-                        return result;
-                }
+                if (_cache[i] is TPayload result)
+                    return result;
             }
 
-            var payload = payloadFactory();
+            TPayload payload = payloadFactory()
+                ?? throw new InvalidOperationException("The payload factory returned null.");
 
-            if (_cache != null)
-                _cache.Add(payload);
-            else
-                _cache = new List<object>(1) { payload };
+            _cache.Add(payload);
 
             return payload;
         }
     }
 
-    /// <summary>Adds or update payload to the configuration.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="addFactory">The add factory.</param>
-    /// <param name="updateFactory">The update factory.</param>
-    /// <returns>The t produced by the operation.</returns>
-    public T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
-        where T : class
+    /// <inheritdoc />
+    public TPayload AddOrUpdatePayload<TPayload>(PayloadFactory<TPayload> addFactory, UpdatePayloadFactory<TPayload> updateFactory)
+        where TPayload : class
     {
-        lock (this)
+        ArgumentNullException.ThrowIfNull(addFactory);
+        ArgumentNullException.ThrowIfNull(updateFactory);
+
+        lock (_syncRoot)
         {
-            if (_cache != null)
+            for (var i = _cache.Count - 1; i >= 0; i--)
             {
-                for (var i = _cache.Count - 1; i >= 0; i--)
+                if (_cache[i] is TPayload result)
                 {
-                    if (_cache[i] is T result)
-                    {
-                        var updated = updateFactory(result);
+                    TPayload updated = updateFactory(result)
+                        ?? throw new InvalidOperationException("The payload update factory returned null.");
 
-                        _cache[i] = updated;
+                    _cache[i] = updated;
 
-                        return updated;
-                    }
+                    return updated;
                 }
             }
 
-            var payload = addFactory();
+            TPayload payload = addFactory()
+                ?? throw new InvalidOperationException("The payload factory returned null.");
 
-            if (_cache != null)
-                _cache.Add(payload);
-            else
-                _cache = new List<object>(1) { payload };
+            _cache.Add(payload);
 
             return payload;
         }

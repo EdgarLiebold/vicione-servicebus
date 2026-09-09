@@ -27,11 +27,10 @@ public sealed class DefaultTechnicalFailureClassifierTests
         Exception[] terminal =
         [
             new ConnectionException("temporary words do not matter", isTransient: false),
+            new StaleConcurrencyLimitCommandException(DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddTicks(1)),
             new OperationCanceledException(),
             new ConfigurationException(),
             new PipeConfigurationException(),
-            new ConventionException(),
-            new MessageInitializerException(),
             new MessageException(),
             new PayloadException(),
             new RoutingSlipArgumentException(),

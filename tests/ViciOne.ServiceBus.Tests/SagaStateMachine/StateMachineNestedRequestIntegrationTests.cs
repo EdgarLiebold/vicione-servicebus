@@ -25,7 +25,7 @@ public sealed class StateMachineNestedRequestIntegrationTests
         {
             IRequestClient<CreateShortLink> client = harness.Bus.CreateRequestClient<CreateShortLink>(
                 harness.InputQueueAddress,
-                timeout);
+                new RequestTimeout(timeout));
             Response<ShortLinkCreated> response = await client.GetResponseAsync<ShortLinkCreated>(
                     new CreateShortLink(link),
                     cancellationToken)
@@ -64,11 +64,11 @@ public sealed class StateMachineNestedRequestIntegrationTests
         {
             IRequestClient<CreateShortLink> client = harness.Bus.CreateRequestClient<CreateShortLink>(
                 harness.InputQueueAddress,
-                timeout);
+                new RequestTimeout(timeout));
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
                 client.GetResponseAsync<ShortLinkCreated>(new CreateShortLink(link), cancellationToken));
 
-            Assert.Equal(TypeCache<CreateShortLink>.ShortName, exception.RequestType);
+            Assert.Equal(typeof(CreateShortLink), exception.RequestType);
             Assert.Contains(link.AbsoluteUri, exception.Message, StringComparison.Ordinal);
             Fault<CreateShortLink> originalFault = Assert.IsAssignableFrom<Fault<CreateShortLink>>(exception.Fault);
             ExceptionInfo cause = Assert.Single(originalFault.Exceptions);

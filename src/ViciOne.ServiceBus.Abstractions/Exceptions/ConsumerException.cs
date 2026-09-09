@@ -2,25 +2,25 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to consumer.</summary>
+/// <summary>Provides the exception base for failures associated with message consumers.</summary>
 public class ConsumerException :
     ViciOneServiceBusException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a consumer exception without a custom message.</summary>
     public ConsumerException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a consumer exception with the specified failure message.</summary>
+    /// <param name="message">The description of the consumer failure.</param>
     public ConsumerException(string message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates a consumer exception with an underlying failure.</summary>
+    /// <param name="message">The description of the consumer failure.</param>
+    /// <param name="innerException">The exception that caused the consumer to fail.</param>
     public ConsumerException(string message, Exception innerException)
         : base(message, innerException)
     {

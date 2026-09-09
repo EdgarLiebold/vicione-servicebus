@@ -81,6 +81,17 @@ public sealed class HealthResultContractTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-HEALTH-RESULT", "required-endpoint-address")]
+    public void EndpointHealthResultFactories_RejectAnEndpointWithoutAnInputAddress()
+    {
+        IReceiveEndpoint endpoint = CreateEndpoint(null!);
+
+        Assert.Equal(
+            "receiveEndpoint",
+            Assert.Throws<ArgumentException>(() => EndpointHealthResult.Healthy(endpoint, "ready")).ParamName);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-RESULT", "property-based-api")]
     public void HealthResultTypes_ExposeStateThroughPropertiesInsteadOfPublicFields()
     {

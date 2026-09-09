@@ -44,7 +44,7 @@ public class InMemoryRequestResponseTransport :
     public async Task<IRequestClient<T>> GetRequestClientAsync<T>(TimeSpan settingsRequestTimeout)
         where T : class
     {
-        return _clientFactory.CreateRequestClient<T>(_targetEndpointAddress, settingsRequestTimeout);
+        return _clientFactory.CreateRequestClient<T>(_targetEndpointAddress, new RequestTimeout(settingsRequestTimeout));
     }
 
     public async ValueTask DisposeAsync()

@@ -374,12 +374,14 @@ public sealed class RateAndConcurrencyLimitTests
             cancellationToken,
             contextTimestamp: StartTime.AddMinutes(2)));
 
-        CommandException stale = await Assert.ThrowsAsync<CommandException>(() => filter.SendAsync(
+        StaleConcurrencyLimitCommandException stale = await Assert.ThrowsAsync<StaleConcurrencyLimitCommandException>(() => filter.SendAsync(
             new ConcurrencyCommandContext(
                 concurrencyLimit: 3,
                 cancellationToken,
                 commandTimestamp: StartTime.AddMinutes(1))));
         Assert.Contains("updated after", stale.Message, StringComparison.Ordinal);
+        Assert.Equal(StartTime.AddMinutes(1), stale.CommandTimestamp);
+        Assert.Equal(StartTime.AddMinutes(2), stale.LastAppliedTimestamp);
 
         var entered = NewSignal();
         var release = NewSignal();
@@ -565,9 +567,12 @@ public sealed class RateAndConcurrencyLimitTests
             TestContext.Current.CancellationToken);
 
         await limiter.ConsumeAsync(newestContext);
-        CommandException exception = await Assert.ThrowsAsync<CommandException>(() => limiter.ConsumeAsync(staleContext));
+        StaleConcurrencyLimitCommandException exception = await Assert.ThrowsAsync<StaleConcurrencyLimitCommandException>(() =>
+            limiter.ConsumeAsync(staleContext));
 
         Assert.Contains("updated after", exception.Message, StringComparison.Ordinal);
+        Assert.Equal(StartTime.AddMinutes(1), exception.CommandTimestamp);
+        Assert.Equal(StartTime.AddMinutes(2), exception.LastAppliedTimestamp);
         Assert.Equal(2, ((IConcurrencyLimiter)limiter).Limit);
         Assert.Equal(1, ((LimitConsumeContextProxy)(object)newestContext).ResponseCount);
         Assert.Equal(0, ((LimitConsumeContextProxy)(object)staleContext).ResponseCount);

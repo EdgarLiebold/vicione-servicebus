@@ -42,10 +42,10 @@ public sealed class RabbitMqRequestResponseTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             clientFactory = bus.CreateReplyToClientFactory(
-                RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
+                new RequestTimeout(fixture.OperationTimeout));
             IRequestClient<RequestMessage> client = clientFactory.CreateRequestClient<RequestMessage>(
                 new Uri($"queue:{queue}"),
-                RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
+                new RequestTimeout(fixture.OperationTimeout));
             Response<ResponseMessage> response = await client.GetResponseAsync<ResponseMessage>(
                     new RequestMessage(expected),
                     cancellationToken)

@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Providers.Persistence;
 public sealed class BusPersistenceIdentity<TBus>
     where TBus : class, IBus
 {
-    /// <summary>Exposes the maximum length used by the containing type.</summary>
+    /// <summary>Gets the maximum permitted persistence-identity length.</summary>
     public const int MaximumLength = 128;
 
     private readonly string? _value;
@@ -24,20 +24,22 @@ public sealed class BusPersistenceIdentity<TBus>
 
     internal static BusPersistenceIdentity<TBus> Unspecified { get; } = new(null);
 
-    /// <summary>Creates the requested value.</summary>
-    /// <param name="value">The value to process.</param>
-    /// <returns>The newly created instance.</returns>
+    /// <summary>Creates a validated persistence identity for this bus type.</summary>
+    /// <param name="value">The stable identity shared by the bus's persistent features.</param>
+    /// <returns>The validated persistence identity.</returns>
     public static BusPersistenceIdentity<TBus> Create(string value)
         => new(Validate(value));
 
-    /// <summary>Gets a value indicating whether specified.</summary>
+    /// <summary>Gets whether a persistence identity was configured.</summary>
     public bool IsSpecified => _value is not null;
 
-    /// <summary>Requires the selected capability.</summary>
-    /// <param name="feature">The feature.</param>
-    /// <returns>The string produced by the operation.</returns>
+    /// <summary>Gets the configured persistence identity for a named persistent feature.</summary>
+    /// <param name="feature">The persistent feature that requires the identity.</param>
+    /// <returns>The configured persistence identity.</returns>
     public string Require(string feature)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(feature);
+
         if (_value is not null)
             return _value;
 

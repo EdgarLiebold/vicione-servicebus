@@ -2,22 +2,22 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures receive pipeline.</summary>
+/// <summary>Provides access to transport receive, dead-letter, error, and transport middleware.</summary>
 public interface IReceivePipelineConfigurator
 {
-    /// <summary>Configure the Receive pipeline.</summary>
-    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <summary>Configures middleware that processes transport receive contexts.</summary>
+    /// <param name="callback">The callback that adds receive middleware.</param>
     void ConfigureReceive(Action<IReceivePipeConfigurator> callback);
 
-    /// <summary>Configure the dead letter pipeline, which is called if the message is not consumed.</summary>
-    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <summary>Configures middleware invoked when a received message is not consumed.</summary>
+    /// <param name="callback">The callback that adds dead-letter middleware.</param>
     void ConfigureDeadLetter(Action<IPipeConfigurator<ReceiveContext>> callback);
 
-    /// <summary>Configure the exception pipeline, which is called if there are uncaught consumer exceptions.</summary>
-    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <summary>Configures middleware invoked for unhandled receive or consumer exceptions.</summary>
+    /// <param name="callback">The callback that adds error middleware.</param>
     void ConfigureError(Action<IPipeConfigurator<ExceptionReceiveContext>> callback);
 
-    /// <summary>Configure the transport options.</summary>
-    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <summary>Configures transport delivery capacity.</summary>
+    /// <param name="callback">The callback that configures transport limits.</param>
     void ConfigureTransport(Action<ITransportConfigurator> callback);
 }

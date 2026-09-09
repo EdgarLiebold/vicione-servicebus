@@ -58,4 +58,18 @@ public sealed class BusHostInfoTests
         Assert.Empty(constructor.GetParameters());
         Assert.True(typeof(BusHostInfo).IsSealed);
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-HOST-METADATA", "runtime-neutral-environment-api")]
+    public void EnvironmentApi_UsesCurrentPlatformTermsWithoutFrameworkCompatibilityState()
+    {
+        string[] environmentProperties = typeof(HostMetadataCache)
+            .GetProperties(BindingFlags.Public | BindingFlags.Static)
+            .Where(property => property.PropertyType == typeof(bool))
+            .Select(property => property.Name)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(["IsRunningInContainer", "IsRunningInKubernetes"], environmentProperties);
+    }
 }

@@ -23,7 +23,7 @@ public sealed class MessagePackDomainContractTests
             "convert-video",
             new Uri("loopback://courier/convert-video"),
             new { Path = "input.mp4" });
-        builder.AddVariable("tenant", "north");
+        builder.SetVariable("tenant", "north");
         builder.AddSubscription(
             new Uri("loopback://courier/events"),
             RoutingSlipEvents.Completed | RoutingSlipEvents.Faulted);

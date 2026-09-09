@@ -3,34 +3,42 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to request canceled.</summary>
+/// <summary>Reports that a request was canceled before a response completed it.</summary>
 public class RequestCanceledException :
     OperationCanceledException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a cancellation exception without a request identifier.</summary>
     public RequestCanceledException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="requestId">The request id.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    public RequestCanceledException(string requestId, CancellationToken cancellationToken)
+    /// <summary>Creates a cancellation exception for the specified request.</summary>
+    /// <param name="requestId">The identifier of the canceled request.</param>
+    /// <param name="cancellationToken">The token that canceled the request.</param>
+    public RequestCanceledException(Guid requestId, CancellationToken cancellationToken)
         : base(FormatMessage(requestId), cancellationToken)
     {
+        RequestId = requestId;
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="requestId">The request id.</param>
-    /// <param name="innerException">The inner exception.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    public RequestCanceledException(string requestId, Exception innerException, CancellationToken cancellationToken)
+    /// <summary>Creates a cancellation exception for the specified request and underlying failure.</summary>
+    /// <param name="requestId">The identifier of the canceled request.</param>
+    /// <param name="innerException">The exception observed when the request was canceled.</param>
+    /// <param name="cancellationToken">The token that canceled the request.</param>
+    public RequestCanceledException(Guid requestId, Exception innerException, CancellationToken cancellationToken)
         : base(FormatMessage(requestId), innerException, cancellationToken)
     {
+        RequestId = requestId;
     }
 
-    static string FormatMessage(string requestId)
+    /// <summary>Gets the identifier of the canceled request, when one was supplied.</summary>
+    public Guid? RequestId { get; }
+
+    static string FormatMessage(Guid requestId)
     {
-        return $"The request was canceled, RequestId: {requestId}";
+        if (requestId == Guid.Empty)
+            throw new ArgumentOutOfRangeException(nameof(requestId), requestId, "The request identifier cannot be empty.");
+
+        return $"The request was canceled, RequestId: {requestId:D}";
     }
 }

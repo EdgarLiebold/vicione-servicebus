@@ -2,25 +2,25 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to publish.</summary>
-public class PublishException :
+/// <summary>Reports that a message could not be published to its resolved destination.</summary>
+public sealed class PublishException :
     ViciOneServiceBusException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a publish exception without a custom message.</summary>
     public PublishException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a publish exception with the specified failure message.</summary>
+    /// <param name="message">The description of the publish failure.</param>
     public PublishException(string message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates a publish exception with an underlying failure.</summary>
+    /// <param name="message">The description of the publish failure.</param>
+    /// <param name="innerException">The exception that prevented the message from being published.</param>
     public PublishException(string message, Exception innerException)
         : base(message, innerException)
     {

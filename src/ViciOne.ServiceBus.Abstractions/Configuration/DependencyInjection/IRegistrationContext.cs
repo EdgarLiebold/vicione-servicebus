@@ -3,79 +3,78 @@ using System;
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
-/// Registration contains the consumers and sagas that have been registered, allowing them to be configured on one or more
-/// receive endpoints.
+/// Provides registered consumers, sagas, activities, futures, and services while receive endpoints are configured.
 /// </summary>
 public interface IRegistrationContext :
     IServiceProvider
 {
-    /// <summary>Configure a consumer on the receive endpoint.</summary>
-    /// <param name="consumerType">The consumer type.</param>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Configures a registered consumer on a receive endpoint.</summary>
+    /// <param name="consumerType">The registered consumer implementation type.</param>
+    /// <param name="configurator">The receive endpoint to configure.</param>
     void ConfigureConsumer(Type consumerType, IReceiveEndpointConfigurator configurator);
 
-    /// <summary>Configure a consumer on the receive endpoint, with an optional configuration action.</summary>
-    /// <typeparam name="T">The consumer type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    void ConfigureConsumer<T>(IReceiveEndpointConfigurator configurator, Action<IConsumerConfigurator<T>>? configure = null)
-        where T : class, IConsumer;
+    /// <summary>Configures a registered consumer on a receive endpoint and optionally customizes its pipeline.</summary>
+    /// <typeparam name="TConsumer">The registered consumer implementation.</typeparam>
+    /// <param name="configurator">The receive endpoint to configure.</param>
+    /// <param name="configure">The optional callback that configures the consumer pipeline.</param>
+    void ConfigureConsumer<TConsumer>(IReceiveEndpointConfigurator configurator, Action<IConsumerConfigurator<TConsumer>>? configure = null)
+        where TConsumer : class, IConsumer;
 
-    /// <summary>Configure all registered consumers on the receive endpoint.</summary>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Configures every registered consumer on a receive endpoint.</summary>
+    /// <param name="configurator">The receive endpoint to configure.</param>
     void ConfigureConsumers(IReceiveEndpointConfigurator configurator);
 
     /// <summary>Configures every registered handler category on the receive endpoint.</summary>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configurator">The receive endpoint to configure.</param>
     void ConfigureConsumerKinds(IReceiveEndpointConfigurator configurator);
 
-    /// <summary>Configure a saga on the receive endpoint.</summary>
-    /// <param name="sagaType">The saga type.</param>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Configures a registered saga on a receive endpoint.</summary>
+    /// <param name="sagaType">The registered saga state type.</param>
+    /// <param name="configurator">The receive endpoint to configure.</param>
     void ConfigureSaga(Type sagaType, IReceiveEndpointConfigurator configurator);
 
-    /// <summary>Configure a saga on the receive endpoint, with an optional configuration action.</summary>
-    /// <typeparam name="T">The saga type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    void ConfigureSaga<T>(IReceiveEndpointConfigurator configurator, Action<ISagaConfigurator<T>>? configure = null)
-        where T : class;
+    /// <summary>Configures a registered saga on a receive endpoint and optionally customizes its pipeline.</summary>
+    /// <typeparam name="TSaga">The registered saga state type.</typeparam>
+    /// <param name="configurator">The receive endpoint to configure.</param>
+    /// <param name="configure">The optional callback that configures the saga pipeline.</param>
+    void ConfigureSaga<TSaga>(IReceiveEndpointConfigurator configurator, Action<ISagaConfigurator<TSaga>>? configure = null)
+        where TSaga : class;
 
-    /// <summary>Configure all registered sagas on the receive endpoint.</summary>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Configures every registered saga on a receive endpoint.</summary>
+    /// <param name="configurator">The receive endpoint to configure.</param>
     void ConfigureSagas(IReceiveEndpointConfigurator configurator);
 
-    /// <summary>Configure the specified execute activity type.</summary>
-    /// <param name="activityType">The runtime activity type used by the operation.</param>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Configures the execution endpoint for a registered routing-slip activity.</summary>
+    /// <param name="activityType">The registered activity implementation type.</param>
+    /// <param name="configurator">The execution endpoint to configure.</param>
     void ConfigureExecuteActivity(Type activityType, IReceiveEndpointConfigurator configurator);
 
-    /// <summary>Configure the specified activity type.</summary>
-    /// <param name="activityType">The runtime activity type used by the operation.</param>
-    /// <param name="executeEndpointConfigurator">The configurator for the execute activity endpoint.</param>
-    /// <param name="compensateEndpointConfigurator">The configurator for the compensate activity endpoint.</param>
+    /// <summary>Configures both execution and compensation endpoints for a registered routing-slip activity.</summary>
+    /// <param name="activityType">The registered activity implementation type.</param>
+    /// <param name="executeEndpointConfigurator">The execution endpoint to configure.</param>
+    /// <param name="compensateEndpointConfigurator">The compensation endpoint to configure.</param>
     void ConfigureActivity(Type activityType, IReceiveEndpointConfigurator executeEndpointConfigurator,
         IReceiveEndpointConfigurator compensateEndpointConfigurator);
 
-    /// <summary>Configure the specified activity type.</summary>
-    /// <param name="activityType">The runtime activity type used by the operation.</param>
-    /// <param name="executeEndpointConfigurator">The configurator for the execute activity endpoint.</param>
-    /// <param name="compensateAddress">The compensate address.</param>
+    /// <summary>Configures an activity execution endpoint that sends compensation to an existing endpoint.</summary>
+    /// <param name="activityType">The registered activity implementation type.</param>
+    /// <param name="executeEndpointConfigurator">The execution endpoint to configure.</param>
+    /// <param name="compensateAddress">The endpoint that processes compensation requests.</param>
     void ConfigureActivityExecute(Type activityType, IReceiveEndpointConfigurator executeEndpointConfigurator, Uri compensateAddress);
 
-    /// <summary>Configure the specified activity type.</summary>
-    /// <param name="activityType">The runtime activity type used by the operation.</param>
-    /// <param name="compensateEndpointConfigurator">The configurator for the compensate activity endpoint.</param>
+    /// <summary>Configures the compensation endpoint for a registered routing-slip activity.</summary>
+    /// <param name="activityType">The registered activity implementation type.</param>
+    /// <param name="compensateEndpointConfigurator">The compensation endpoint to configure.</param>
     void ConfigureActivityCompensate(Type activityType, IReceiveEndpointConfigurator compensateEndpointConfigurator);
 
-    /// <summary>Configure a future on the receive endpoint.</summary>
-    /// <param name="futureType">The saga type.</param>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Configures a registered future on a receive endpoint.</summary>
+    /// <param name="futureType">The registered future implementation type.</param>
+    /// <param name="configurator">The receive endpoint to configure.</param>
     void ConfigureFuture(Type futureType, IReceiveEndpointConfigurator configurator);
 
-    /// <summary>Configure a future on the receive endpoint, with an optional configuration action.</summary>
-    /// <typeparam name="T">The saga type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    void ConfigureFuture<T>(IReceiveEndpointConfigurator configurator)
-        where T : class;
+    /// <summary>Configures a registered future on a receive endpoint.</summary>
+    /// <typeparam name="TFuture">The registered future implementation type.</typeparam>
+    /// <param name="configurator">The receive endpoint to configure.</param>
+    void ConfigureFuture<TFuture>(IReceiveEndpointConfigurator configurator)
+        where TFuture : class;
 }

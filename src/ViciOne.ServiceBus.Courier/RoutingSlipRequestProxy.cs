@@ -23,15 +23,15 @@ public abstract class RoutingSlipRequestProxy<TRequest> :
             ?? throw new InvalidOperationException("The routing slip response endpoint address cannot be null.");
         builder.AddSubscription(responseEndpointAddress, RoutingSlipEvents.Completed | RoutingSlipEvents.Faulted);
 
-        builder.AddVariable(RoutingSlipRequestVariableNames.RequestId, context.RequestId);
-        builder.AddVariable(RoutingSlipRequestVariableNames.ResponseAddress, context.ResponseAddress);
-        builder.AddVariable(RoutingSlipRequestVariableNames.FaultAddress, context.FaultAddress);
-        builder.AddVariable(RoutingSlipRequestVariableNames.Request, context.Message);
-        builder.AddVariable(RoutingSlipRequestVariableNames.RequestAddress, context.Advanced().ReceiveContext.InputAddress);
+        builder.SetVariable(RoutingSlipRequestVariableNames.RequestId, context.RequestId);
+        builder.SetVariable(RoutingSlipRequestVariableNames.ResponseAddress, context.ResponseAddress);
+        builder.SetVariable(RoutingSlipRequestVariableNames.FaultAddress, context.FaultAddress);
+        builder.SetVariable(RoutingSlipRequestVariableNames.Request, context.Message);
+        builder.SetVariable(RoutingSlipRequestVariableNames.RequestAddress, context.Advanced().ReceiveContext.InputAddress);
 
         var retryAttempt = context.Headers.Get<int>(MessageHeaders.Request.RoutingSlipRetryCount);
         if (retryAttempt > 0)
-            builder.AddVariable(RoutingSlipRequestVariableNames.RetryAttempt, retryAttempt);
+            builder.SetVariable(RoutingSlipRequestVariableNames.RetryAttempt, retryAttempt);
 
         await BuildRoutingSlipAsync(builder, context).ConfigureAwait(false);
 

@@ -1,22 +1,26 @@
+using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides extension methods for receive endpoint configurator dependency.</summary>
+/// <summary>Links receive endpoints so startup and shutdown honor their dependency relationship.</summary>
 public static class ReceiveEndpointConfiguratorDependencyExtensions
 {
-    /// <summary>Adds dependency to the configuration.</summary>
-    /// <param name="connector">The connector.</param>
-    /// <param name="dependency">The dependency.</param>
+    /// <summary>Starts one endpoint only after another is ready and stops the dependency only after its dependent completes.</summary>
+    /// <param name="connector">The endpoint that depends on another endpoint.</param>
+    /// <param name="dependency">The endpoint that must become ready first and stop last.</param>
     public static void AddDependency(this IReceiveEndpointConfigurator connector, IReceiveEndpointConfigurator dependency)
     {
+        ArgumentNullException.ThrowIfNull(connector);
+        ArgumentNullException.ThrowIfNull(dependency);
+
         connector.AddDependency(new ReceiveEndpointDependency(dependency));
         dependency.AddDependent(new ReceiveEndpointDependent(connector));
     }
 
 
-    class ReceiveEndpointDependency :
+    sealed class ReceiveEndpointDependency :
         IReceiveEndpointDependency,
         IReceiveEndpointObserver
     {
@@ -25,15 +29,20 @@ public static class ReceiveEndpointConfiguratorDependencyExtensions
 
         public ReceiveEndpointDependency(IReceiveEndpointObserverConnector connector)
         {
+            ArgumentNullException.ThrowIfNull(connector);
+
             _ready = new TaskCompletionSource<ReceiveEndpointReady>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            _handle = connector.ConnectReceiveEndpointObserver(this);
+            _handle = connector.ConnectReceiveEndpointObserver(this)
+                ?? throw new InvalidOperationException("The dependency endpoint returned no observer connection handle.");
         }
 
         public Task Ready => _ready.Task;
 
         Task IReceiveEndpointObserver.ReadyAsync(ReceiveEndpointReady ready)
         {
+            ArgumentNullException.ThrowIfNull(ready);
+
             _handle.Disconnect();
 
             _ready.TrySetResult(ready);
@@ -48,17 +57,30 @@ public static class ReceiveEndpointConfiguratorDependencyExtensions
 
         Task IReceiveEndpointObserver.CompletedAsync(ReceiveEndpointCompleted completed)
         {
+            ArgumentNullException.ThrowIfNull(completed);
+
+            _handle.Disconnect();
+            _ready.TrySetException(new InvalidOperationException("The dependency endpoint completed before it became ready."));
+
             return Task.CompletedTask;
         }
 
         Task IReceiveEndpointObserver.FaultedAsync(ReceiveEndpointFaulted faulted)
         {
+            ArgumentNullException.ThrowIfNull(faulted);
+
+            if (faulted.IsTerminal)
+            {
+                _handle.Disconnect();
+                _ready.TrySetException(faulted.Exception);
+            }
+
             return Task.CompletedTask;
         }
     }
 
 
-    class ReceiveEndpointDependent :
+    sealed class ReceiveEndpointDependent :
         IReceiveEndpointDependent,
         IReceiveEndpointObserver
     {
@@ -67,9 +89,12 @@ public static class ReceiveEndpointConfiguratorDependencyExtensions
 
         public ReceiveEndpointDependent(IReceiveEndpointObserverConnector connector)
         {
+            ArgumentNullException.ThrowIfNull(connector);
+
             _completed = new TaskCompletionSource<ReceiveEndpointCompleted>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            _handle = connector.ConnectReceiveEndpointObserver(this);
+            _handle = connector.ConnectReceiveEndpointObserver(this)
+                ?? throw new InvalidOperationException("The dependent endpoint returned no observer connection handle.");
         }
 
         public Task Completed => _completed.Task;
@@ -86,6 +111,8 @@ public static class ReceiveEndpointConfiguratorDependencyExtensions
 
         Task IReceiveEndpointObserver.CompletedAsync(ReceiveEndpointCompleted completed)
         {
+            ArgumentNullException.ThrowIfNull(completed);
+
             _handle.Disconnect();
 
             _completed.TrySetResult(completed);
@@ -95,6 +122,14 @@ public static class ReceiveEndpointConfiguratorDependencyExtensions
 
         Task IReceiveEndpointObserver.FaultedAsync(ReceiveEndpointFaulted faulted)
         {
+            ArgumentNullException.ThrowIfNull(faulted);
+
+            if (faulted.IsTerminal)
+            {
+                _handle.Disconnect();
+                _completed.TrySetException(faulted.Exception);
+            }
+
             return Task.CompletedTask;
         }
     }

@@ -43,7 +43,7 @@ public sealed class MediatorSendObserverTests
             Assert.Null(observation.Exception);
         });
 
-        IRequestClient<MediatorRequest> client = mediator.CreateRequestClient<MediatorRequest>(timeout);
+        IRequestClient<MediatorRequest> client = mediator.CreateRequestClient<MediatorRequest>(new RequestTimeout(timeout));
         var request = new MediatorRequest(NewId.NextGuid(), "request");
         Response<MediatorResponse> response = await client.GetResponseAsync<MediatorResponse>(request, cancellationToken);
 

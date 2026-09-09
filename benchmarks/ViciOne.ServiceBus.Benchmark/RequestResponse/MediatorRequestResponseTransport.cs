@@ -20,7 +20,7 @@ public class MediatorRequestResponseTransport :
     public Task<IRequestClient<T>> GetRequestClientAsync<T>(TimeSpan settingsRequestTimeout)
         where T : class
     {
-        return Task.FromResult(_mediator.CreateRequestClient<T>(settingsRequestTimeout));
+        return Task.FromResult(_mediator.CreateRequestClient<T>(new RequestTimeout(settingsRequestTimeout)));
     }
 
     public Task StartAsync(Action<IReceiveEndpointConfigurator> configureReceiveEndpoint, CancellationToken cancellationToken = default)

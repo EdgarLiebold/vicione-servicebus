@@ -13,7 +13,7 @@ public sealed class PropertyCacheTests
         var cache = new ReadWritePropertyCache<CacheTarget>();
         var target = new CacheTarget();
 
-        bool found = cache.TryGetProperty("PUBLICTEXT", out ReadWriteProperty<CacheTarget>? property);
+        bool found = cache.TryGetValue("PUBLICTEXT", out ReadWriteProperty<CacheTarget>? property);
         property?.Set(target, "updated");
 
         Assert.True(found);
@@ -112,6 +112,19 @@ public sealed class PropertyCacheTests
 
         Assert.Equal("accessPolicy", exception.ParamName);
         Assert.Equal(policy, exception.ActualValue);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PROPERTY-METADATA-SURFACE", "single-try-get-contract")]
+    public void ReadWriteCache_ExposesOneConventionalTryGetContract()
+    {
+        string[] tryMethods = typeof(IReadWritePropertyCache<>)
+            .GetMethods()
+            .Where(method => method.Name.StartsWith("Try", StringComparison.Ordinal))
+            .Select(method => method.Name)
+            .ToArray();
+
+        Assert.Equal(["TryGetValue"], tryMethods);
     }
 
     private sealed class CacheTarget

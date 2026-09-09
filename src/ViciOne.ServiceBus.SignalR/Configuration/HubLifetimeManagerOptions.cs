@@ -23,7 +23,7 @@ public sealed class HubLifetimeManagerOptions<THub> :
     public HubLifetimeManagerOptions()
     {
         ServerName = $"{Environment.MachineName}_{NewId.NextGuid():N}";
-        RequestTimeout = TimeSpan.FromSeconds(20);
+        RequestTimeout = new RequestTimeout(TimeSpan.FromSeconds(20));
         ConnectionStore = new HubConnectionStore();
         GroupsSubscriptionManager = new ViciOneServiceBusSubscriptionManager();
         UsersSubscriptionManager = new ViciOneServiceBusSubscriptionManager();

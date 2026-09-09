@@ -96,7 +96,7 @@ public sealed class RoutingSlipLifecycleIntegrationTests
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new CourierArguments("original"));
-            builder.AddVariable("SlipVariable", "knife");
+            builder.SetVariable("SlipVariable", "knife");
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
@@ -148,7 +148,7 @@ public sealed class RoutingSlipLifecycleIntegrationTests
             var builder = new RoutingSlipBuilder(trackingNumber);
             builder.AddActivity(first.Name, first.ExecuteAddress, new CourierArguments("first"));
             builder.AddActivity(second.Name, second.ExecuteAddress, new CourierArguments("second"));
-            builder.AddVariable("SlipVariable", "knife");
+            builder.SetVariable("SlipVariable", "knife");
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(

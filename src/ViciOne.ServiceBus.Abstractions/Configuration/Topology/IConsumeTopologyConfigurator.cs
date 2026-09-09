@@ -1,29 +1,27 @@
 using System;
-using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures consume topology.</summary>
+/// <summary>Configures how message contracts are bound to receive endpoints.</summary>
 public interface IConsumeTopologyConfigurator :
     IConsumeTopology,
     ISpecification
 {
-    /// <summary>Returns the specification for the message type.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <returns>The message topology.</returns>
-    new IMessageConsumeTopologyConfigurator<T> GetMessageTopology<T>()
-        where T : class;
+    /// <summary>Gets the mutable consume topology for a message contract.</summary>
+    /// <typeparam name="TMessage">The message contract.</typeparam>
+    /// <returns>The message-specific consume topology.</returns>
+    new IMessageConsumeTopologyConfigurator<TMessage> GetMessageTopology<TMessage>()
+        where TMessage : class;
 
-    /// <summary>Returns the specification for the message type.</summary>
+    /// <summary>Gets the mutable consume topology for a runtime message contract.</summary>
     /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <returns>The message topology.</returns>
+    /// <returns>The message-specific consume topology.</returns>
     IMessageConsumeTopologyConfigurator GetMessageTopology(Type messageType);
 
     /// <summary>
-    /// Adds a convention to the topology, which will be applied to every message type
-    /// requested, to determine if a convention for the message type is available.
+    /// Adds a convention that is evaluated when consume topology is created for a message contract.
     /// </summary>
-    /// <param name="convention">The Consume topology convention.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <param name="convention">The consume-topology convention to register.</param>
+    /// <returns><see langword="true" /> when the convention was added; otherwise, <see langword="false" />.</returns>
     bool TryAddConvention(IConsumeTopologyConvention convention);
 }

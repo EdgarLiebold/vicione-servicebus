@@ -3,34 +3,31 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>
-/// A request handle manages the client-side request, and allows the request to be configured, response types added, etc. The handle
-/// should be disposed once it is no longer in-use, and the request has been completed (successfully, or otherwise).
-/// </summary>
-/// <typeparam name="TRequest">The request type.</typeparam>
+/// <summary>Configures one request and owns its response registrations until disposal.</summary>
+/// <typeparam name="TRequest">The request message contract.</typeparam>
 public interface RequestHandle<TRequest> :
     RequestHandle,
     IRequestPipeConfigurator<TRequest>
     where TRequest : class
 {
-    /// <summary>The request message that was/will be sent.</summary>
+    /// <summary>Gets the request message accepted by the send path.</summary>
     Task<TRequest> Message { get; }
 }
 
 
-/// <summary>Controls the lifetime of request.</summary>
+/// <summary>Controls the response registrations and lifetime of one pending request.</summary>
 public interface RequestHandle :
     IRequestPipeConfigurator,
     IDisposable
 {
-    /// <summary>If the specified result type is present, it is returned.</summary>
-    /// <typeparam name="T">The result type.</typeparam>
-    /// <param name="readyToSend">If true, sets the request as ready to send and sends it.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>True if the result type specified is present, otherwise false.</returns>
+    /// <summary>Registers a response contract and waits for its matching response.</summary>
+    /// <typeparam name="T">The response message contract.</typeparam>
+    /// <param name="readyToSend">Whether this is the final response registration and the request may be sent.</param>
+    /// <param name="cancellationToken">Cancels waiting for this response.</param>
+    /// <returns>A task containing the matching response.</returns>
     Task<Response<T>> GetResponseAsync<T>(bool readyToSend = true, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Cancel the request.</summary>
+    /// <summary>Cancels sending and response waiting for this request.</summary>
     void Cancel();
 }

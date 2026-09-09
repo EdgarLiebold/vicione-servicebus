@@ -15,7 +15,8 @@ public sealed class EndpointHealthResult
 
         Status = status;
         ReceiveEndpoint = receiveEndpoint;
-        InputAddress = receiveEndpoint.InputAddress;
+        InputAddress = receiveEndpoint.InputAddress
+            ?? throw new ArgumentException("The receive endpoint must expose an input address.", nameof(receiveEndpoint));
         Description = description;
         Exception = exception;
     }

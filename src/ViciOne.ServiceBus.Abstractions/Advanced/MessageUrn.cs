@@ -91,12 +91,12 @@ public sealed class MessageUrn :
 
     /// <summary>Parses the canonical message name, namespace, and optional assembly scope from this URN.</summary>
     /// <param name="name">Receives the message-contract name when this is a message URN.</param>
-    /// <param name="ns">Receives the message-contract namespace when encoded by the URN.</param>
+    /// <param name="namespaceName">Receives the message-contract namespace when encoded by the URN.</param>
     /// <param name="assemblyName">Receives the assembly scope when encoded by the URN.</param>
-    public void Deconstruct(out string? name, out string? ns, out string? assemblyName)
+    public void Deconstruct(out string? name, out string? namespaceName, out string? assemblyName)
     {
         name = null;
-        ns = null;
+        namespaceName = null;
         assemblyName = null;
 
         if (Segments.Length > 0)
@@ -109,12 +109,12 @@ public sealed class MessageUrn :
                 else if (names.Length == 3)
                 {
                     name = names[2];
-                    ns = names[1];
+                    namespaceName = names[1];
                 }
                 else if (names.Length >= 4)
                 {
                     name = names[2];
-                    ns = names[1];
+                    namespaceName = names[1];
                     assemblyName = names[3];
                 }
             }

@@ -1,7 +1,7 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configure the execution of the activity and arguments with some tasty middleware.</summary>
-/// <typeparam name="TArguments">The arguments type.</typeparam>
+/// <summary>Configures the middleware pipeline that processes an activity's execution arguments.</summary>
+/// <typeparam name="TArguments">The execution-arguments contract.</typeparam>
 public interface IExecuteArgumentsConfigurator<TArguments> :
     IPipeConfigurator<ExecuteContext<TArguments>>,
     IConsumeConfigurator

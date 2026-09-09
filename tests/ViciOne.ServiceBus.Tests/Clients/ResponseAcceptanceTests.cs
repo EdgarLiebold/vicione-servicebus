@@ -8,15 +8,14 @@ namespace ViciOne.ServiceBus.Tests.Clients;
 public sealed class ResponseAcceptanceTests
 {
     [Theory]
-    [InlineData(AcceptanceShape.NoResponseAddress, true, false)]
-    [InlineData(AcceptanceShape.NoAcceptHeader, true, true)]
-    [InlineData(AcceptanceShape.NoAcceptHeader, false, false)]
-    [InlineData(AcceptanceShape.CaseChangedAcceptedType, false, true)]
-    [InlineData(AcceptanceShape.DifferentAcceptedType, true, false)]
+    [InlineData(AcceptanceShape.NoResponseAddress, false)]
+    [InlineData(AcceptanceShape.NoAcceptHeader, false)]
+    [InlineData(AcceptanceShape.ExactAcceptedType, true)]
+    [InlineData(AcceptanceShape.CaseChangedAcceptedType, false)]
+    [InlineData(AcceptanceShape.DifferentAcceptedType, false)]
     [RequirementCoverage("REQ-VSB-RESPONSE-ACCEPTANCE", "response-address-header-and-type-matching")]
-    public async Task ResponseAcceptance_RequiresAnAddressAndHonorsHeaderFallbackAndOrdinalCaseInsensitivityAsync(
+    public async Task ResponseAcceptance_RequiresAnAddressAndAnExactDeclaredContractAsync(
         AcceptanceShape shape,
-        bool defaultIfHeaderNotFound,
         bool expected)
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
@@ -31,7 +30,7 @@ public sealed class ResponseAcceptanceTests
         var observed = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         harness.Handler<AcceptanceProbe>(context =>
         {
-            observed.TrySetResult(context.Advanced().IsResponseAccepted<AcceptedResponse>(defaultIfHeaderNotFound));
+            observed.TrySetResult(context.Advanced().IsResponseAccepted<AcceptedResponse>());
             return Task.CompletedTask;
         });
 
@@ -61,7 +60,13 @@ public sealed class ResponseAcceptanceTests
 
         context.ResponseAddress = responseAddress;
 
-        if (shape == AcceptanceShape.CaseChangedAcceptedType)
+        if (shape == AcceptanceShape.ExactAcceptedType)
+        {
+            context.Headers.Set(
+                MessageHeaders.Request.Accept,
+                new[] { MessageUrn.ForTypeString<AcceptedResponse>() });
+        }
+        else if (shape == AcceptanceShape.CaseChangedAcceptedType)
         {
             context.Headers.Set(
                 MessageHeaders.Request.Accept,
@@ -79,6 +84,7 @@ public sealed class ResponseAcceptanceTests
     {
         NoResponseAddress,
         NoAcceptHeader,
+        ExactAcceptedType,
         CaseChangedAcceptedType,
         DifferentAcceptedType,
     }

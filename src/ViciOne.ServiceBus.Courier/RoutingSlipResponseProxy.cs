@@ -8,9 +8,9 @@ using ViciOne.ServiceBus.Events;
 namespace ViciOne.ServiceBus.Courier;
 
 /// <summary>Translates terminal routing-slip events into responses for the original request.</summary>
-/// <typeparam name="TRequest">The request type.</typeparam>
-/// <typeparam name="TResponse">The response type.</typeparam>
-/// <typeparam name="TFault">The fault type.</typeparam>
+/// <typeparam name="TRequest">The original request contract.</typeparam>
+/// <typeparam name="TResponse">The successful response contract.</typeparam>
+/// <typeparam name="TFault">The terminal fault response contract.</typeparam>
 public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
     IConsumer<RoutingSlipCompleted>,
     IConsumer<RoutingSlipFaulted>
@@ -21,9 +21,7 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
     /// <summary>Gets the optional policy used to retry the original request after routing-slip failure.</summary>
     protected virtual IRetryPolicy? RetryPolicy => null;
 
-    /// <summary>Consumes the message provided by the context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public virtual async Task ConsumeAsync(ConsumeContext<RoutingSlipCompleted> context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -40,9 +38,7 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
         await endpoint.SendAsync(response, context.CancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Consumes the message provided by the context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public virtual async Task ConsumeAsync(ConsumeContext<RoutingSlipFaulted> context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -56,15 +52,17 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
                 ?? throw new InvalidOperationException("The routing slip request address is required for a retry.");
 
             var schedulerContext = context.GetPayload<MessageSchedulerContext>();
-
-            await schedulerContext.ScheduleSendAsync(requestAddress, delay, requestInfo.Request, x =>
+            Action<SendContext<TRequest>> configureRetry = sendContext =>
             {
-                x.RequestId = requestInfo.RequestId;
-                x.ResponseAddress = requestInfo.ResponseAddress;
-                x.FaultAddress = requestInfo.FaultAddress;
-                x.Delay = delay;
-                x.Headers.Set(MessageHeaders.Request.RoutingSlipRetryCount, retryAttempt + 1);
-            }, context.CancellationToken).ConfigureAwait(false);
+                sendContext.RequestId = requestInfo.RequestId;
+                sendContext.ResponseAddress = requestInfo.ResponseAddress;
+                sendContext.FaultAddress = requestInfo.FaultAddress;
+                sendContext.Delay = delay;
+                sendContext.Headers.Set(MessageHeaders.Request.RoutingSlipRetryCount, retryAttempt + 1);
+            };
+
+            await schedulerContext.ScheduleSendAsync(requestAddress, delay, requestInfo.Request, configureRetry.ToPipe(),
+                context.CancellationToken).ConfigureAwait(false);
 
             return;
         }
@@ -110,33 +108,29 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
     }
 
     /// <summary>Creates the response sent after successful routing-slip completion.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="request">The request.</param>
-    /// <returns>A task that produces the created value.</returns>
+    /// <param name="context">The routing-slip completion context.</param>
+    /// <param name="request">The original request.</param>
+    /// <returns>A task that produces the successful response.</returns>
     protected abstract Task<TResponse> CreateResponseMessageAsync(ConsumeContext<RoutingSlipCompleted> context, TRequest request);
 
     /// <summary>Creates the response sent after terminal routing-slip failure.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="request">The request.</param>
-    /// <param name="requestId">The request id.</param>
-    /// <returns>A task that produces the created value.</returns>
+    /// <param name="context">The routing-slip fault context.</param>
+    /// <param name="request">The original request.</param>
+    /// <param name="requestId">The original request identifier.</param>
+    /// <returns>A task that produces the terminal fault response.</returns>
     protected abstract Task<TFault> CreateFaultedResponseMessageAsync(ConsumeContext<RoutingSlipFaulted> context, TRequest request, Guid requestId);
 }
 
 
 /// <summary>Translates terminal routing-slip events into a response or a standard request fault.</summary>
-/// <typeparam name="TRequest">The request type.</typeparam>
-/// <typeparam name="TResponse">The response type.</typeparam>
+/// <typeparam name="TRequest">The original request contract.</typeparam>
+/// <typeparam name="TResponse">The successful response contract.</typeparam>
 public abstract class RoutingSlipResponseProxy<TRequest, TResponse> :
     RoutingSlipResponseProxy<TRequest, TResponse, Fault<TRequest>>
     where TRequest : class
     where TResponse : class
 {
-    /// <summary>Creates faulted response message.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="request">The request.</param>
-    /// <param name="requestId">The request id.</param>
-    /// <returns>A task that produces the created value.</returns>
+    /// <inheritdoc />
     protected override Task<Fault<TRequest>> CreateFaultedResponseMessageAsync(ConsumeContext<RoutingSlipFaulted> context, TRequest request, Guid requestId)
     {
         IEnumerable<ExceptionInfo> exceptions = context.Message.ActivityExceptions.Select(x => x.ExceptionInfo);

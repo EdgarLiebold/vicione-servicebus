@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Advanced;
 /// <summary>The requested bus health status was not reached within the configured timeout.</summary>
 public sealed class BusHealthStatusTimeoutException : TimeoutException
 {
-    /// <summary>Initializes a timeout with the expected status and last complete health observation.</summary>
+    /// <summary>Creates a timeout for an expected status and the last complete health observation.</summary>
     /// <param name="expectedStatus">The expected status.</param>
     /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="lastResult">The last health observation completed before the timeout was reported.</param>
@@ -37,6 +37,12 @@ public sealed class BusHealthStatusTimeoutException : TimeoutException
         TimeSpan timeout,
         BusHealthResult lastResult)
     {
+        if (!Enum.IsDefined(expectedStatus))
+            throw new ArgumentOutOfRangeException(nameof(expectedStatus), expectedStatus, "Must be a defined bus health status.");
+
+        if (timeout < TimeSpan.Zero && timeout != System.Threading.Timeout.InfiniteTimeSpan)
+            throw new ArgumentOutOfRangeException(nameof(timeout), timeout, "Must be non-negative or infinite.");
+
         ArgumentNullException.ThrowIfNull(lastResult);
 
         return $"The bus did not reach health status '{expectedStatus}' within {timeout}. "

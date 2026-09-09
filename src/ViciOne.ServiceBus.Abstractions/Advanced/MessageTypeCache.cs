@@ -340,8 +340,18 @@ public sealed class MessageTypeCache<T> :
             return activityName;
         }
 
-        var (name, ns, _) = MessageUrn.ForType<T>();
-        return $"{name}/{ns}";
+        MessageUrn urn = MessageUrn.ForType<T>();
+        var (name, namespaceName, assemblyName) = urn;
+
+        if (name is null)
+            return urn.ToString();
+
+        if (namespaceName is null)
+            return name;
+
+        return assemblyName is null
+            ? $"{name}/{namespaceName}"
+            : $"{name}/{namespaceName}/{assemblyName}";
     }
 
 

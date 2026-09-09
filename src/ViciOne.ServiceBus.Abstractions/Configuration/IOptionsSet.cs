@@ -3,34 +3,34 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Defines the operations required by options set.</summary>
+/// <summary>Stores and retrieves one configuration-options instance per exact option type.</summary>
 public interface IOptionsSet
 {
-    /// <summary>Configure the options, adding the option type if it is not present.</summary>
-    /// <typeparam name="T">The option type.</typeparam>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The t produced by the operation.</returns>
+    /// <summary>Gets or creates the options of the requested type and applies optional configuration.</summary>
+    /// <typeparam name="T">The configuration-options type.</typeparam>
+    /// <param name="configure">An optional callback that configures the stored instance.</param>
+    /// <returns>The unique options instance for <typeparamref name="T"/>.</returns>
     T Options<T>(Action<T>? configure = null)
         where T : IOptions, new();
 
-    /// <summary>Specify the options, will fault if it already exists.</summary>
-    /// <typeparam name="T">The option type.</typeparam>
-    /// <param name="options">The options that control the operation.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The t produced by the operation.</returns>
+    /// <summary>Adds a specific options instance and rejects a different instance for the same type.</summary>
+    /// <typeparam name="T">The configuration-options type.</typeparam>
+    /// <param name="options">The options instance to store.</param>
+    /// <param name="configure">An optional callback that configures the stored instance.</param>
+    /// <returns>The stored options instance.</returns>
     T Options<T>(T options, Action<T>? configure = null)
         where T : IOptions;
 
-    /// <summary>Return the options, if present.</summary>
-    /// <typeparam name="T">The option type.</typeparam>
-    /// <param name="options">Receives the options produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Attempts to get the options stored for the exact requested type.</summary>
+    /// <typeparam name="T">The configuration-options type.</typeparam>
+    /// <param name="options">Receives the stored options when found.</param>
+    /// <returns><see langword="true" /> when options are present; otherwise, <see langword="false" />.</returns>
     bool TryGetOptions<T>(out T options)
         where T : IOptions;
 
-    /// <summary>Enumerate the options which are assignable to the specified type.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <returns>The selected options.</returns>
+    /// <summary>Enumerates stored options assignable to the requested type.</summary>
+    /// <typeparam name="T">The base type or interface to select.</typeparam>
+    /// <returns>The assignable stored options.</returns>
     IEnumerable<T> SelectOptions<T>()
         where T : class;
 }

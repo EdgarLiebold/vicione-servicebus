@@ -2,162 +2,164 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides extension methods for validation result.</summary>
+/// <summary>Creates configuration-validation results and composes their member paths.</summary>
 public static class ValidationResultExtensions
 {
-    /// <summary>Creates a failed result.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The validation result produced by the operation.</returns>
-    public static ValidationResult Failure(this ISpecification configurator, string message)
+    /// <summary>Creates a failure associated with a configuration specification.</summary>
+    /// <param name="specification">The specification whose validation produced the failure.</param>
+    /// <param name="message">The validation failure message.</param>
+    /// <returns>The failure result.</returns>
+    public static ValidationResult Failure(this ISpecification specification, string message)
     {
         return new Result(ValidationResultDisposition.Failure, message);
     }
 
-    /// <summary>Creates a failed result.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The validation result produced by the operation.</returns>
-    public static ValidationResult Failure(this ISpecification? configurator, string key, string message)
+    /// <summary>Creates a failure for a configuration member.</summary>
+    /// <param name="specification">The specification whose validation produced the failure, when one is available.</param>
+    /// <param name="key">The configuration-member path.</param>
+    /// <param name="message">The validation failure message.</param>
+    /// <returns>The failure result.</returns>
+    public static ValidationResult Failure(this ISpecification? specification, string key, string message)
     {
         return new Result(ValidationResultDisposition.Failure, key, message);
     }
 
-    /// <summary>Creates a failed result.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">The value to process.</param>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The validation result produced by the operation.</returns>
-    public static ValidationResult Failure(this ISpecification configurator, string key, string value, string message)
+    /// <summary>Creates a failure for a configuration member and its rejected value.</summary>
+    /// <param name="specification">The specification whose validation produced the failure.</param>
+    /// <param name="key">The configuration-member path.</param>
+    /// <param name="value">The rejected value.</param>
+    /// <param name="message">The validation failure message.</param>
+    /// <returns>The failure result.</returns>
+    public static ValidationResult Failure(this ISpecification specification, string key, string value, string message)
     {
         return new Result(ValidationResultDisposition.Failure, key, value, message);
     }
 
-    /// <summary>Reports the current warning.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The validation result produced by the operation.</returns>
-    public static ValidationResult Warning(this ISpecification configurator, string message)
+    /// <summary>Creates a warning associated with a configuration specification.</summary>
+    /// <param name="specification">The specification whose validation produced the warning.</param>
+    /// <param name="message">The validation warning message.</param>
+    /// <returns>The warning result.</returns>
+    public static ValidationResult Warning(this ISpecification specification, string message)
     {
         return new Result(ValidationResultDisposition.Warning, message);
     }
 
-    /// <summary>Reports the current warning.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The validation result produced by the operation.</returns>
-    public static ValidationResult Warning(this ISpecification? configurator, string key, string message)
+    /// <summary>Creates a warning for a configuration member.</summary>
+    /// <param name="specification">The specification whose validation produced the warning, when one is available.</param>
+    /// <param name="key">The configuration-member path.</param>
+    /// <param name="message">The validation warning message.</param>
+    /// <returns>The warning result.</returns>
+    public static ValidationResult Warning(this ISpecification? specification, string key, string message)
     {
         return new Result(ValidationResultDisposition.Warning, key, message);
     }
 
-    /// <summary>Reports the current warning.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">The value to process.</param>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The validation result produced by the operation.</returns>
-    public static ValidationResult Warning(this ISpecification configurator, string key, string value, string message)
+    /// <summary>Creates a warning for a configuration member and its noteworthy value.</summary>
+    /// <param name="specification">The specification whose validation produced the warning.</param>
+    /// <param name="key">The configuration-member path.</param>
+    /// <param name="value">The noteworthy value.</param>
+    /// <param name="message">The validation warning message.</param>
+    /// <returns>The warning result.</returns>
+    public static ValidationResult Warning(this ISpecification specification, string key, string value, string message)
     {
         return new Result(ValidationResultDisposition.Warning, key, value, message);
     }
 
-    /// <summary>Creates a successful result.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The validation result produced by the operation.</returns>
-    public static ValidationResult Success(this ISpecification configurator, string message)
+    /// <summary>Creates a success associated with a configuration specification.</summary>
+    /// <param name="specification">The specification whose validation produced the success.</param>
+    /// <param name="message">The validation success message.</param>
+    /// <returns>The success result.</returns>
+    public static ValidationResult Success(this ISpecification specification, string message)
     {
         return new Result(ValidationResultDisposition.Success, message);
     }
 
-    /// <summary>Creates a successful result.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The validation result produced by the operation.</returns>
-    public static ValidationResult Success(this ISpecification configurator, string key, string message)
+    /// <summary>Creates a success for a configuration member.</summary>
+    /// <param name="specification">The specification whose validation produced the success.</param>
+    /// <param name="key">The configuration-member path.</param>
+    /// <param name="message">The validation success message.</param>
+    /// <returns>The success result.</returns>
+    public static ValidationResult Success(this ISpecification specification, string key, string message)
     {
         return new Result(ValidationResultDisposition.Success, key, message);
     }
 
-    /// <summary>Creates a successful result.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">The value to process.</param>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The validation result produced by the operation.</returns>
-    public static ValidationResult Success(this ISpecification configurator, string key, string value, string message)
+    /// <summary>Creates a success for a configuration member and its accepted value.</summary>
+    /// <param name="specification">The specification whose validation produced the success.</param>
+    /// <param name="key">The configuration-member path.</param>
+    /// <param name="value">The accepted value.</param>
+    /// <param name="message">The validation success message.</param>
+    /// <returns>The success result.</returns>
+    public static ValidationResult Success(this ISpecification specification, string key, string value, string message)
     {
         return new Result(ValidationResultDisposition.Success, key, value, message);
     }
 
-    /// <summary>Associates the value with its parent key.</summary>
-    /// <param name="result">The result.</param>
-    /// <param name="parentKey">The parent key.</param>
-    /// <returns>The validation result produced by the operation.</returns>
+    /// <summary>Prefixes a validation result's member path with its parent configuration path.</summary>
+    /// <param name="result">The result whose member path is nested.</param>
+    /// <param name="parentKey">The parent configuration path.</param>
+    /// <returns>A result containing the composed member path.</returns>
     public static ValidationResult WithParentKey(this ValidationResult result, string parentKey)
     {
-        var key = parentKey + "." + result.Key;
+        ArgumentNullException.ThrowIfNull(result);
+        ArgumentException.ThrowIfNullOrWhiteSpace(parentKey);
+
+        var key = string.IsNullOrEmpty(result.Key)
+            ? parentKey
+            : parentKey + "." + result.Key;
 
         return new Result(result.Disposition, key, result.Value, result.Message);
     }
 
-    /// <summary>Represents a configuration validation result created by these extensions.</summary>
-    public class Result :
+    sealed class Result :
         ValidationResult
     {
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="disposition">The disposition.</param>
-        /// <param name="key">The key used to identify the requested entry.</param>
-        /// <param name="value">The value to process.</param>
-        /// <param name="message">The message to process.</param>
         public Result(ValidationResultDisposition disposition, string key, string? value, string message)
         {
+            Validate(disposition, message);
+            ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
             Disposition = disposition;
             Key = key;
             Value = value;
             Message = message;
         }
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="disposition">The disposition.</param>
-        /// <param name="key">The key used to identify the requested entry.</param>
-        /// <param name="message">The message to process.</param>
         public Result(ValidationResultDisposition disposition, string key, string message)
         {
+            Validate(disposition, message);
+            ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
             Disposition = disposition;
             Key = key;
             Message = message;
         }
 
-        /// <summary>Initializes a new instance.</summary>
-        /// <param name="disposition">The disposition.</param>
-        /// <param name="message">The message to process.</param>
         public Result(ValidationResultDisposition disposition, string message)
         {
-            Key = "";
+            Validate(disposition, message);
+
+            Key = string.Empty;
             Disposition = disposition;
             Message = message;
         }
 
-        /// <summary>Gets the disposition.</summary>
         public ValidationResultDisposition Disposition { get; }
-        /// <summary>Gets the key.</summary>
         public string Key { get; }
-        /// <summary>Gets the value.</summary>
         public string? Value { get; }
-        /// <summary>Gets the message.</summary>
         public string Message { get; }
 
-        /// <summary>Returns the string representation of this instance.</summary>
-        /// <returns>The converted string.</returns>
         public override string ToString()
         {
             return $"[{Disposition}] {(string.IsNullOrEmpty(Key) ? Message : Key + " " + Message)}";
+        }
+
+        static void Validate(ValidationResultDisposition disposition, string message)
+        {
+            if (!Enum.IsDefined(disposition))
+                throw new ArgumentOutOfRangeException(nameof(disposition), disposition, "The validation disposition must be defined.");
+
+            ArgumentException.ThrowIfNullOrWhiteSpace(message);
         }
     }
 }

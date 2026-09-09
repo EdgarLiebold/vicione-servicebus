@@ -4,26 +4,25 @@ using System.Diagnostics.CodeAnalysis;
 namespace ViciOne.ServiceBus.Initializers;
 
 /// <summary>
-/// Message initialization context, which includes the message being initialized and the input
-/// being used to initialize the message properties.
+/// Exposes a message together with one input object used to populate its properties.
 /// </summary>
-/// <typeparam name="TMessage">The message type.</typeparam>
-/// <typeparam name="TInput">The input type.</typeparam>
+/// <typeparam name="TMessage">The message contract being initialized.</typeparam>
+/// <typeparam name="TInput">The input-object type.</typeparam>
 public interface InitializeContext<out TMessage, out TInput> :
     InitializeContext<TMessage>
     where TMessage : class
     where TInput : class
 {
-    /// <summary>If true, the input is present, otherwise it equals <i>default</i>.</summary>
+    /// <summary>Gets whether an input object is available.</summary>
     bool HasInput { get; }
 
-    /// <summary>Gets the input.</summary>
+    /// <summary>Gets the input object.</summary>
     TInput Input { get; }
 }
 
 
-/// <summary>The context of the message being initialized.</summary>
-/// <typeparam name="TMessage">The message type.</typeparam>
+/// <summary>Exposes a message while its properties and outgoing headers are initialized.</summary>
+/// <typeparam name="TMessage">The message contract being initialized.</typeparam>
 public interface InitializeContext<out TMessage> :
     InitializeContext
     where TMessage : class
@@ -31,42 +30,41 @@ public interface InitializeContext<out TMessage> :
     /// <summary>Gets the message type.</summary>
     Type MessageType { get; }
 
-    /// <summary>The message being initialized.</summary>
+    /// <summary>Gets the message being initialized.</summary>
     TMessage Message { get; }
 
-    /// <summary>Creates input context.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="input">The input.</param>
-    /// <returns>The created input context.</returns>
+    /// <summary>Creates a view that associates an input object with this message.</summary>
+    /// <typeparam name="T">The input-object type.</typeparam>
+    /// <param name="input">The input object to expose.</param>
+    /// <returns>A context exposing both the message and input object.</returns>
     InitializeContext<TMessage, T> CreateInputContext<T>(T input)
         where T : class;
 }
 
 
-/// <summary>Exposes state for initialize operations.</summary>
+/// <summary>Exposes the pipeline state and object-graph position of message initialization.</summary>
 public interface InitializeContext :
     PipeContext
 {
-    /// <summary>how deep this context is within the object graph.</summary>
+    /// <summary>Gets the zero-based depth of this context in the initialized object graph.</summary>
     int Depth { get; }
 
     /// <summary>
-    /// the parent initialize context, which is valid if the type is being initialized
-    /// within another type.
+    /// Gets the containing initialization context, or null for the root context.
     /// </summary>
     InitializeContext? Parent { get; }
 
-    /// <summary>Return the closest parent context for the specified type, if present.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="parentContext">Receives the parent context produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Finds the closest context whose message implements the requested contract.</summary>
+    /// <typeparam name="T">The requested parent message contract.</typeparam>
+    /// <param name="parentContext">Receives the matching context when one is available.</param>
+    /// <returns><see langword="true"/> when a matching context is found; otherwise, <see langword="false"/>.</returns>
     bool TryGetParent<T>([NotNullWhen(true)] out InitializeContext<T>? parentContext)
         where T : class;
 
-    /// <summary>Creates message context.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The created message context.</returns>
+    /// <summary>Creates a child context for a message nested in the current object graph.</summary>
+    /// <typeparam name="T">The nested message contract.</typeparam>
+    /// <param name="message">The nested message instance.</param>
+    /// <returns>A child initialization context for <paramref name="message"/>.</returns>
     InitializeContext<T> CreateMessageContext<T>(T message)
         where T : class;
 }

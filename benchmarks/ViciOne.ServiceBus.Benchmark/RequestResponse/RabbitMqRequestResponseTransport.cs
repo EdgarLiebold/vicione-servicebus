@@ -23,7 +23,7 @@ public class RabbitMqRequestResponseTransport :
     public async Task<IRequestClient<T>> GetRequestClientAsync<T>(TimeSpan settingsRequestTimeout)
         where T : class
     {
-        return _clientFactory.CreateRequestClient<T>(_targetEndpointAddress, settingsRequestTimeout);
+        return _clientFactory.CreateRequestClient<T>(_targetEndpointAddress, new RequestTimeout(settingsRequestTimeout));
     }
 
     public async Task StartAsync(Action<IReceiveEndpointConfigurator> configureReceiveEndpoint, CancellationToken cancellationToken = default)

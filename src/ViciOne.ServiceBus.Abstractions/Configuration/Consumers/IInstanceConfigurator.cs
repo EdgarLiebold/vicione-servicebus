@@ -1,14 +1,14 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures instance.</summary>
+/// <summary>Marks configuration shared by an existing consumer instance.</summary>
 public interface IInstanceConfigurator :
     IConsumeConfigurator
 {
 }
 
 
-/// <summary>Configures instance.</summary>
-/// <typeparam name="TInstance">The instance type.</typeparam>
+/// <summary>Configures middleware for an existing consumer instance.</summary>
+/// <typeparam name="TInstance">The consumer-instance type.</typeparam>
 public interface IInstanceConfigurator<TInstance> :
     IConsumerConfigurator<TInstance>,
     IInstanceConfigurator

@@ -2,26 +2,26 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to consume context not available.</summary>
-public class ConsumeContextNotAvailableException :
+/// <summary>Reports that an operation requiring an active consume context was invoked outside message consumption.</summary>
+public sealed class ConsumeContextNotAvailableException :
     ViciOneServiceBusException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an exception with the standard missing-context message.</summary>
     public ConsumeContextNotAvailableException()
         : this("A valid ConsumeContext was not available")
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a missing-context exception with the specified failure message.</summary>
+    /// <param name="message">The description of the unavailable context.</param>
     public ConsumeContextNotAvailableException(string message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates a missing-context exception with an underlying failure.</summary>
+    /// <param name="message">The description of the unavailable context.</param>
+    /// <param name="innerException">The exception that prevented access to the consume context.</param>
     public ConsumeContextNotAvailableException(string message, Exception innerException)
         : base(message, innerException)
     {

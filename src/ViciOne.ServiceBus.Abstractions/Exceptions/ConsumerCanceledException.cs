@@ -2,25 +2,25 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to consumer canceled.</summary>
-public class ConsumerCanceledException :
+/// <summary>Reports an unexpected cancellation while a consumer processes a message.</summary>
+public sealed class ConsumerCanceledException :
     ViciOneServiceBusException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a consumer-cancellation exception without a custom message.</summary>
     public ConsumerCanceledException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a consumer-cancellation exception with the specified failure message.</summary>
+    /// <param name="message">The description of the unexpected cancellation.</param>
     public ConsumerCanceledException(string message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates a consumer-cancellation exception with the cancellation cause.</summary>
+    /// <param name="message">The description of the unexpected cancellation.</param>
+    /// <param name="innerException">The cancellation exception observed by the consumer.</param>
     public ConsumerCanceledException(string message, Exception innerException)
         : base(message, innerException)
     {

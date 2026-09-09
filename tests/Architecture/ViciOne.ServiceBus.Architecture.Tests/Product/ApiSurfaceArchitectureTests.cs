@@ -394,6 +394,32 @@ public sealed class ApiSurfaceArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-HERITAGE-DISPOSITION", "legacy-only-exceptions-are-absent")]
+    public void LegacyOnlyExceptionTypes_AreAbsentFromTheApplicationApi()
+    {
+        string[] removedTypeNames =
+        [
+            "ViciOne.ServiceBus.CommandException",
+            "ViciOne.ServiceBus.ConventionException",
+            "ViciOne.ServiceBus.EndpointException",
+            "ViciOne.ServiceBus.EndpointNotFoundException",
+            "ViciOne.ServiceBus.MessageInitializerException",
+            "ViciOne.ServiceBus.MessageRetryLimitExceededException",
+            "ViciOne.ServiceBus.PayloadFactoryException",
+            "ViciOne.ServiceBus.PipeFactoryException",
+            "ViciOne.ServiceBus.PipelineException",
+            "ViciOne.ServiceBus.ProduceException",
+            "ViciOne.ServiceBus.RecurringJobException",
+            "ViciOne.ServiceBus.SendException",
+            "ViciOne.ServiceBus.ShutDownException",
+            "ViciOne.ServiceBus.ValueFactoryException",
+        ];
+
+        Assembly abstractions = typeof(ViciOneServiceBusException).Assembly;
+        Assert.All(removedTypeNames, typeName => Assert.Null(abstractions.GetType(typeName, throwOnError: false)));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-API-DISCOVERABILITY", "preferred-journeys-use-no-advanced-or-historical-path")]
     public void PreferredPackageJourneys_UseOnlyApplicationAndProviderEntryPoints()
     {

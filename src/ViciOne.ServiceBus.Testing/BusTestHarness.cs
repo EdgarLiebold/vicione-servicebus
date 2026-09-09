@@ -96,7 +96,7 @@ public abstract class BusTestHarness :
     public virtual IRequestClient<TRequest> CreateRequestClient<TRequest>(Uri destinationAddress)
         where TRequest : class
     {
-        return Bus.CreateRequestClient<TRequest>(destinationAddress, TestTimeout);
+        return Bus.CreateRequestClient<TRequest>(destinationAddress, new RequestTimeout(TestTimeout));
     }
 
     /// <summary>Connects observers.</summary>

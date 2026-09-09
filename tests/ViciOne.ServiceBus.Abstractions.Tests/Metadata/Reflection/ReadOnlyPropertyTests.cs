@@ -143,6 +143,23 @@ public sealed class ReadOnlyPropertyTests
         Assert.Equal(policy, exception.ActualValue);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PROPERTY-METADATA-SURFACE", "method-owned-delegates")]
+    public void AccessorSurface_DoesNotExposeItsImplementationDelegatesAsPublicFields()
+    {
+        Type[] accessorTypes =
+        [
+            typeof(ReadOnlyProperty),
+            typeof(ReadOnlyProperty<>),
+            typeof(ReadOnlyProperty<,>),
+            typeof(ReadWriteProperty),
+            typeof(ReadWriteProperty<>),
+            typeof(ReadWriteProperty<,>),
+        ];
+
+        Assert.All(accessorTypes, type => Assert.Empty(type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)));
+    }
+
     static PropertyInfo Property<T>(string name)
     {
         return typeof(T).GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)

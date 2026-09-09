@@ -27,7 +27,9 @@ public sealed class QuartzMissingSagaRedeliveryIntegrationTests
                 endpoint.StateMachineSaga(stateMachine, repository)));
         var scheduledCommands = new ConsumeCompletionObserver<ScheduleMessage>(_ => true);
         using ConnectHandle observer = fixture.Bus.ConnectConsumeObserver(scheduledCommands);
-        IRequestClient<CheckServiceStatus> requestClient = fixture.Bus.CreateRequestClient<CheckServiceStatus>(inputAddress, timeout);
+        IRequestClient<CheckServiceStatus> requestClient = fixture.Bus.CreateRequestClient<CheckServiceStatus>(
+            inputAddress,
+            new RequestTimeout(timeout));
         Task<Response<ServiceStatus, ServiceInstanceNotFound>> responseTask = requestClient.Advanced().GetResponseAsync<
             ServiceStatus,
             ServiceInstanceNotFound>(

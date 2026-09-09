@@ -2,49 +2,27 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to request.</summary>
+/// <summary>Reports a failure in the request-response lifecycle.</summary>
 public class RequestException :
     ViciOneServiceBusException
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
-    /// <param name="response">The response.</param>
-    public RequestException(string message, Exception innerException, object response)
-        : base(message, innerException)
-    {
-        Response = response;
-    }
-
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a request exception without a custom failure message.</summary>
     public RequestException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a request exception with the specified failure message.</summary>
+    /// <param name="message">The description of the request failure.</param>
     public RequestException(string message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates a request exception with an underlying failure.</summary>
+    /// <param name="message">The description of the request failure.</param>
+    /// <param name="innerException">The exception that caused the request to fail.</param>
     public RequestException(string message, Exception innerException)
         : base(message, innerException)
     {
     }
-
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="response">The response.</param>
-    protected RequestException(string message, object response)
-        : base(message)
-    {
-        Response = response;
-    }
-
-    /// <summary>Gets the response.</summary>
-    public object? Response { get; }
 }

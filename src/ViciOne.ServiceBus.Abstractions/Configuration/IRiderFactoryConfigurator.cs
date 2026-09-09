@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures rider factory.</summary>
+/// <summary>Configures an auxiliary transport hosted alongside a bus.</summary>
 public interface IRiderFactoryConfigurator :
     IReceiveEndpointObserverConnector
 {

@@ -104,7 +104,7 @@ public class MediatorTestHarness :
     public virtual IRequestClient<TRequest> CreateRequestClient<TRequest>()
         where TRequest : class
     {
-        return Mediator.CreateRequestClient<TRequest>(TestTimeout);
+        return Mediator.CreateRequestClient<TRequest>(new RequestTimeout(TestTimeout));
     }
 
     IMediator CreateMediator()

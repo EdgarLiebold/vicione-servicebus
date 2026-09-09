@@ -142,7 +142,7 @@ public sealed class AzureServiceBusMessageFlowTests
             started = true;
             IRequestClient<RequestMessage> requestClient = bus.CreateRequestClient<RequestMessage>(
                 new Uri($"queue:{queue}"),
-                RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
+                new RequestTimeout(fixture.OperationTimeout));
 
             Response<ResponseMessage> response = await requestClient.GetResponseAsync<ResponseMessage>(
                     new RequestMessage(correlationId),

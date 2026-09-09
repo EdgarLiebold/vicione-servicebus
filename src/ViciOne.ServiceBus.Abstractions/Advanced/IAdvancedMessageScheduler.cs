@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Advanced;
 
@@ -8,6 +9,45 @@ namespace ViciOne.ServiceBus.Advanced;
 public interface IAdvancedMessageScheduler :
     IMessageScheduler
 {
+    /// <inheritdoc />
+    Task<ScheduledMessage<TMessage>> IMessageScheduler.ScheduleSendAsync<TMessage>(Uri destination, TimeSpan delay, TMessage message,
+        CancellationToken cancellationToken)
+    {
+        ValidateDestination(destination);
+        ArgumentNullException.ThrowIfNull(message);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<ScheduledMessage<TMessage>>(cancellationToken);
+
+        DateTimeOffset dueAt = RelativeScheduleTime.GetDueAt(this, delay);
+        return ScheduleSendAsync(destination, dueAt, message, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    Task<ScheduledMessage<TMessage>> IMessageScheduler.ScheduleSendAsync<TMessage>(Uri destination, TimeSpan delay, TMessage message,
+        ScheduleOptions options, CancellationToken cancellationToken)
+    {
+        ValidateDestination(destination);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(options);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<ScheduledMessage<TMessage>>(cancellationToken);
+
+        DateTimeOffset dueAt = RelativeScheduleTime.GetDueAt(this, delay);
+        return ScheduleSendAsync(destination, dueAt, message, options, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    Task<ScheduledMessage<TMessage>> IMessageScheduler.SchedulePublishAsync<TMessage>(TimeSpan delay, TMessage message,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(message);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<ScheduledMessage<TMessage>>(cancellationToken);
+
+        DateTimeOffset dueAt = RelativeScheduleTime.GetDueAt(this, delay);
+        return SchedulePublishAsync(dueAt, message, cancellationToken);
+    }
+
     /// <inheritdoc />
     Task<ScheduledMessage<T>> IMessageScheduler.ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, T message, ScheduleOptions options,
         CancellationToken cancellationToken)
@@ -32,9 +72,6 @@ public interface IAdvancedMessageScheduler :
     new Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message,
         CancellationToken cancellationToken = default)
         where T : class;
-
-    /// <summary>Gets the clock used to calculate and timestamp schedules.</summary>
-    TimeProvider TimeProvider { get; }
 
     /// <summary>Schedules a message with a typed send pipe.</summary>
     /// <typeparam name="T">The message contract.</typeparam>
@@ -139,7 +176,7 @@ public interface IAdvancedMessageScheduler :
     /// <param name="destination">The destination that owns the scheduled message.</param>
     /// <param name="tokenId">The token that identifies the scheduled message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the scheduled send has been canceled.</returns>
     Task CancelScheduledSendAsync(Uri destination, Guid tokenId, CancellationToken cancellationToken = default);
 
     /// <summary>Schedules a publication with a typed send pipe.</summary>
@@ -235,7 +272,7 @@ public interface IAdvancedMessageScheduler :
     /// <typeparam name="T">The published message contract.</typeparam>
     /// <param name="tokenId">The token that identifies the scheduled publication.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the scheduled publication has been canceled.</returns>
     Task CancelScheduledPublishAsync<T>(Guid tokenId, CancellationToken cancellationToken = default)
         where T : class;
 
@@ -243,6 +280,13 @@ public interface IAdvancedMessageScheduler :
     /// <param name="messageType">The published message contract.</param>
     /// <param name="tokenId">The token that identifies the scheduled publication.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the scheduled publication has been canceled.</returns>
     Task CancelScheduledPublishAsync(Type messageType, Guid tokenId, CancellationToken cancellationToken = default);
+
+    private static void ValidateDestination(Uri destination)
+    {
+        ArgumentNullException.ThrowIfNull(destination);
+        if (!destination.IsAbsoluteUri)
+            throw new ArgumentException("The scheduled destination must be an absolute URI.", nameof(destination));
+    }
 }

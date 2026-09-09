@@ -4,45 +4,41 @@ namespace ViciOne.ServiceBus.Configuration;
 public interface IEndpointDefinition
 {
     /// <summary>
-    /// True if the endpoint is temporary, and should be removed when the bus/endpoint is stopped. Temporary queues
-    /// should be configured as auto-delete, non-durable, express, whatever creates the least impact and fastest performance.
+    /// Gets whether the endpoint and its broker resources are removed when the endpoint stops.
     /// </summary>
     bool IsTemporary { get; }
 
     /// <summary>
-    /// The number of messages to fetch in advance from the broker, if applicable. This should <b>only</b> be set when
-    /// necessary, use the <see cref="ConcurrentMessageLimit" /> initially.
+    /// Gets the broker-specific number of messages fetched ahead of processing, when explicitly configured.
     /// </summary>
     int? PrefetchCount { get; }
 
     /// <summary>
-    /// The maximum number of concurrent messages which can be delivered at any one time. This should be set by an
-    /// endpoint before modifying the prefetch count. If this is specified, and <see cref="PrefetchCount" /> is left default,
-    /// it will calculate an effective prefetch count automatically when supported.
+    /// Gets the maximum number of messages delivered concurrently to the endpoint, when explicitly configured.
     /// </summary>
     int? ConcurrentMessageLimit { get; }
 
-    /// <summary>If true, configure the broker topology, which may include binding exchanges, subscribing to topics, etc.</summary>
+    /// <summary>Gets whether the transport creates the consume topology required to route messages to the endpoint.</summary>
     bool ConfigureConsumeTopology { get; }
 
-    /// <summary>Return the endpoint name for the consumer, using the specified formatter if necessary.</summary>
-    /// <param name="formatter">The formatter.</param>
+    /// <summary>Gets the configured endpoint name or derives one with the supplied formatter.</summary>
+    /// <param name="formatter">The naming convention used when no explicit name is configured.</param>
     /// <returns>The endpoint name.</returns>
     string GetEndpointName(IEndpointNameFormatter formatter);
 
-    /// <summary>Configure the endpoint, as provided by the transport-specific receive endpoint configurator.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    void Configure<T>(T configurator, IRegistrationContext? context = null)
-        where T : IReceiveEndpointConfigurator;
+    /// <summary>Applies the definition to a transport-specific receive endpoint.</summary>
+    /// <typeparam name="TEndpointConfigurator">The transport-specific receive-endpoint configurator.</typeparam>
+    /// <param name="configurator">The receive endpoint to configure.</param>
+    /// <param name="context">The registration context available to configuration callbacks.</param>
+    void Configure<TEndpointConfigurator>(TEndpointConfigurator configurator, IRegistrationContext? context = null)
+        where TEndpointConfigurator : IReceiveEndpointConfigurator;
 }
 
 
-/// <summary>Defines the operations required by endpoint definition.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public interface IEndpointDefinition<T> :
+/// <summary>Associates an endpoint definition with the component registered on that endpoint.</summary>
+/// <typeparam name="TRegistration">The consumer, saga, future, or activity registration owned by the endpoint.</typeparam>
+public interface IEndpointDefinition<TRegistration> :
     IEndpointDefinition
-    where T : class
+    where TRegistration : class
 {
 }

@@ -1,23 +1,17 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>
-/// Reports information about the configuration before configuring
-/// so that corrections can be made without allocating resources, etc.
-/// </summary>
+/// <summary>Describes one result produced while validating configuration before resources are allocated.</summary>
 public interface ValidationResult
 {
-    /// <summary>
-    /// The disposition of the result, any Failure items will prevent
-    /// the configuration from completing.
-    /// </summary>
+    /// <summary>Gets the severity that determines whether configuration may continue.</summary>
     ValidationResultDisposition Disposition { get; }
 
-    /// <summary>The message associated with the result.</summary>
+    /// <summary>Gets the human-readable validation message.</summary>
     string Message { get; }
 
-    /// <summary>The key associated with the result (chained if configurators are nested).</summary>
+    /// <summary>Gets the dotted path of the configuration member associated with the result.</summary>
     string Key { get; }
 
-    /// <summary>The value associated with the result.</summary>
+    /// <summary>Gets the rejected or noteworthy value, when one is available.</summary>
     string? Value { get; }
 }

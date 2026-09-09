@@ -56,5 +56,17 @@ public sealed class EndpointTransportQosTests
                 .Validate()).ParamName);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-V5-ENDPOINT-QOS", "exception-message-required")]
+    public void ConfigurationFailure_RequiresADiagnosticMessage()
+    {
+        Assert.Equal(
+            "message",
+            Assert.Throws<ArgumentException>(() => new EndpointQosConfigurationException(" ")).ParamName);
+        Assert.Equal(
+            "message",
+            Assert.Throws<ArgumentNullException>(() => new EndpointQosConfigurationException(null!)).ParamName);
+    }
+
     private sealed class Consumer;
 }

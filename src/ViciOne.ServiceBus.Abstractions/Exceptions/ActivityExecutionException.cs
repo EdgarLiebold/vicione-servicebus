@@ -2,25 +2,25 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to activity execution.</summary>
+/// <summary>Reports a failure while executing a routing-slip activity.</summary>
 public class ActivityExecutionException :
     CourierException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an activity-execution exception without a custom message.</summary>
     public ActivityExecutionException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates an activity-execution exception with the specified failure message.</summary>
+    /// <param name="message">The description of the execution failure.</param>
     public ActivityExecutionException(string message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates an activity-execution exception with an underlying failure.</summary>
+    /// <param name="message">The description of the execution failure.</param>
+    /// <param name="innerException">The exception that caused activity execution to fail.</param>
     public ActivityExecutionException(string message, Exception innerException)
         : base(message, innerException)
     {

@@ -19,6 +19,7 @@ public static class SchedulePublishExtensions
         where T : class
     {
         var scheduler = GetScheduler(context);
+        ArgumentNullException.ThrowIfNull(message);
 
         return scheduler.SchedulePublishAsync(dueAt, message, cancellationToken);
     }
@@ -36,6 +37,8 @@ public static class SchedulePublishExtensions
         where T : class
     {
         var scheduler = GetScheduler(context);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
 
         return scheduler.SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
     }
@@ -53,6 +56,8 @@ public static class SchedulePublishExtensions
         where T : class
     {
         var scheduler = GetScheduler(context);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
 
         return scheduler.SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
     }
@@ -85,6 +90,7 @@ public static class SchedulePublishExtensions
         CancellationToken cancellationToken = default)
     {
         var scheduler = GetScheduler(context);
+        ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(messageType);
 
         return scheduler.SchedulePublishAsync(dueAt, message, messageType, cancellationToken);
@@ -102,6 +108,7 @@ public static class SchedulePublishExtensions
     {
         var scheduler = GetScheduler(context);
         ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
 
         return scheduler.SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
     }
@@ -118,6 +125,9 @@ public static class SchedulePublishExtensions
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
         var scheduler = GetScheduler(context);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageType);
+        ArgumentNullException.ThrowIfNull(pipe);
 
         return scheduler.SchedulePublishAsync(dueAt, message, messageType, pipe, cancellationToken);
     }
@@ -153,6 +163,7 @@ public static class SchedulePublishExtensions
     {
         var scheduler = GetScheduler(context);
         ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(pipe);
 
         return scheduler.SchedulePublishAsync(dueAt, values, pipe, cancellationToken);
     }
@@ -171,6 +182,7 @@ public static class SchedulePublishExtensions
     {
         var scheduler = GetScheduler(context);
         ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(pipe);
 
         return scheduler.SchedulePublishAsync<T>(dueAt, values, pipe, cancellationToken);
     }

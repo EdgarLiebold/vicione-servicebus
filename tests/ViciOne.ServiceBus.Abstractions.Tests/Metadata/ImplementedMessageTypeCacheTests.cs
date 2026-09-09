@@ -51,6 +51,16 @@ public sealed class ImplementedMessageTypeCacheTests
         AssertTopology<StandaloneMessage>();
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-IMPLEMENTED-MESSAGE-TYPE-CACHE", "required-enumerator")]
+    public void Enumeration_RejectsAMissingConsumerForEveryTopologyShape()
+    {
+        Assert.Equal("implementedMessageType", Assert.Throws<ArgumentNullException>(
+            () => ImplementedMessageTypeCache<LeafContract>.EnumerateImplementedTypes(null!)).ParamName);
+        Assert.Equal("implementedMessageType", Assert.Throws<ArgumentNullException>(
+            () => ImplementedMessageTypeCache<StandaloneMessage>.EnumerateImplementedTypes(null!)).ParamName);
+    }
+
     private static void AssertTopology<TMessage>(params Type[] expectedTypes)
         where TMessage : class
     {

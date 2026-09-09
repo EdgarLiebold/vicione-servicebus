@@ -99,7 +99,7 @@ public class Supervisor :
     /// <returns>A task that completes when every captured child has completed.</returns>
     protected virtual async Task StopSupervisorAsync(StopSupervisorContext context)
     {
-        switch (context.Agents.Length)
+        switch (context.Agents.Count)
         {
             case 0:
                 SetCompleted(Task.CompletedTask);
@@ -111,14 +111,14 @@ public class Supervisor :
                 break;
             case > 1:
                 {
-                    var completedTasks = new Task[context.Agents.Length];
-                    for (var i = 0; i < context.Agents.Length; i++)
+                    var completedTasks = new Task[context.Agents.Count];
+                    for (var i = 0; i < context.Agents.Count; i++)
                         completedTasks[i] = context.Agents[i].Completed;
 
                     SetCompleted(Task.WhenAll(completedTasks));
 
-                    var stopTasks = new Task[context.Agents.Length];
-                    for (var i = 0; i < context.Agents.Length; i++)
+                    var stopTasks = new Task[context.Agents.Count];
+                    for (var i = 0; i < context.Agents.Count; i++)
                         stopTasks[i] = context.Agents[i].StopAsync(context);
 
                     await Task.WhenAll(stopTasks).ConfigureAwait(false);
@@ -146,11 +146,11 @@ public class Supervisor :
             : base(context)
         {
             _context = context;
-            Agents = agents;
+            Agents = Array.AsReadOnly(agents);
         }
 
         string StopContext.Reason => _context.Reason;
 
-        public IAgent[] Agents { get; }
+        public IReadOnlyList<IAgent> Agents { get; }
     }
 }

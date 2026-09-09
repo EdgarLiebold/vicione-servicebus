@@ -2,36 +2,36 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures exception.</summary>
+/// <summary>Configures exception types and predicates included in or excluded from a policy.</summary>
 public interface IExceptionConfigurator
 {
-    /// <summary>Handles the supplied message or context.</summary>
-    /// <param name="exceptionTypes">The exception types.</param>
+    /// <summary>Includes the specified exception types.</summary>
+    /// <param name="exceptionTypes">The exception types to include.</param>
     void Handle(params Type[] exceptionTypes);
 
-    /// <summary>Handles the supplied message or context.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    void Handle<T>()
-        where T : Exception;
+    /// <summary>Includes an exception type.</summary>
+    /// <typeparam name="TException">The exception type to include.</typeparam>
+    void Handle<TException>()
+        where TException : Exception;
 
-    /// <summary>Handles the supplied message or context.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="filter">The filter to add to the pipeline.</param>
-    void Handle<T>(Func<T, bool> filter)
-        where T : Exception;
+    /// <summary>Includes exceptions of a type when they match a predicate.</summary>
+    /// <typeparam name="TException">The exception type to evaluate.</typeparam>
+    /// <param name="filter">The predicate that selects included exceptions.</param>
+    void Handle<TException>(Func<TException, bool> filter)
+        where TException : Exception;
 
-    /// <summary>Ignores the selected event or message.</summary>
-    /// <param name="exceptionTypes">The exception types.</param>
+    /// <summary>Excludes the specified exception types.</summary>
+    /// <param name="exceptionTypes">The exception types to exclude.</param>
     void Ignore(params Type[] exceptionTypes);
 
-    /// <summary>Ignores the selected event or message.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    void Ignore<T>()
-        where T : Exception;
+    /// <summary>Excludes an exception type.</summary>
+    /// <typeparam name="TException">The exception type to exclude.</typeparam>
+    void Ignore<TException>()
+        where TException : Exception;
 
-    /// <summary>Ignores the selected event or message.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="filter">The filter to add to the pipeline.</param>
-    void Ignore<T>(Func<T, bool> filter)
-        where T : Exception;
+    /// <summary>Excludes exceptions of a type when they match a predicate.</summary>
+    /// <typeparam name="TException">The exception type to evaluate.</typeparam>
+    /// <param name="filter">The predicate that selects excluded exceptions.</param>
+    void Ignore<TException>(Func<TException, bool> filter)
+        where TException : Exception;
 }

@@ -77,10 +77,6 @@ public static class AdvancedBusRegistrationConfiguratorExtensions
         where TDefinition : class, IEndpointDefinition<T>
         where T : class => configurator.Advanced().AddEndpoint<TDefinition, T>(registration, settings);
 
-    /// <inheritdoc cref="IAdvancedRegistrationConfigurator.SetDefaultRequestTimeout(int?,int?,int?,int?,int?)" />
-    public static void SetDefaultRequestTimeout(this IRegistrationConfigurator configurator, int? d = null, int? h = null, int? m = null,
-        int? s = null, int? ms = null) => configurator.Advanced().SetDefaultRequestTimeout(d, h, m, s, ms);
-
     /// <inheritdoc cref="IAdvancedRegistrationConfigurator.GetOrAddRegistrationCompletionParticipant{TParticipant}" />
     public static TParticipant GetOrAddRegistrationCompletionParticipant<TParticipant>(this IRegistrationConfigurator configurator,
         Func<TParticipant> factory)

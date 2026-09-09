@@ -35,8 +35,8 @@ public sealed class RoutingSlipArgumentIntegrationTests
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
             builder.AddActivity(activity.Name, activity.ExecuteAddress, ArgumentsFor(shape, trackingNumber));
-            builder.AddVariable(nameof(ResolveArguments.Value), "variable");
-            builder.AddVariable(nameof(ResolveArguments.GuidValue), trackingNumber);
+            builder.SetVariable(nameof(ResolveArguments.Value), "variable");
+            builder.SetVariable(nameof(ResolveArguments.GuidValue), trackingNumber);
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(

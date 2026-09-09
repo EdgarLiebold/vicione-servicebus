@@ -17,14 +17,6 @@ public interface IAdvancedRegistrationConfigurator
         where TDefinition : class, IEndpointDefinition<T>
         where T : class;
 
-    /// <summary>Sets the default request timeout from individual duration components.</summary>
-    /// <param name="d">The <c>d</c> value.</param>
-    /// <param name="h">The <c>h</c> value.</param>
-    /// <param name="m">The <c>m</c> value.</param>
-    /// <param name="s">The <c>s</c> value.</param>
-    /// <param name="ms">The ms.</param>
-    void SetDefaultRequestTimeout(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null);
-
     /// <summary>Gets or add registration completion participant.</summary>
     /// <typeparam name="TParticipant">The participant type.</typeparam>
     /// <param name="factory">Creates the participant when it has not been registered.</param>

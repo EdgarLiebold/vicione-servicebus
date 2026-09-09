@@ -2,12 +2,15 @@ using System;
 using System.Collections.Frozen;
 
 namespace ViciOne.ServiceBus;
+
 /// <summary>Immutable diagnostic-sensitivity metadata for one runtime message type.</summary>
 public sealed record MessageSensitivityDescriptor
 {
-    /// <summary>Creates one validated immutable descriptor.</summary>
-    /// <param name="payloadSensitivity">The payload sensitivity.</param>
-    /// <param name="sensitiveMembers">The sensitive members.</param>
+    /// <summary>Initializes the classification for a payload and its named members.</summary>
+    /// <param name="payloadSensitivity">Whether the complete payload must be redacted.</param>
+    /// <param name="sensitiveMembers">The case-sensitive CLR member names that must be redacted.</param>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="payloadSensitivity" /> is not defined.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="sensitiveMembers" /> is <see langword="null" />.</exception>
     public MessageSensitivityDescriptor(
         MessagePayloadSensitivity payloadSensitivity,
         FrozenSet<string> sensitiveMembers)
@@ -24,18 +27,19 @@ public sealed record MessageSensitivityDescriptor
         SensitiveMembers = sensitiveMembers ?? throw new ArgumentNullException(nameof(sensitiveMembers));
     }
 
-    /// <summary>Gets the payload sensitivity.</summary>
+    /// <summary>Gets the classification applied to the complete payload.</summary>
     public MessagePayloadSensitivity PayloadSensitivity { get; }
 
-    /// <summary>Gets the sensitive members.</summary>
+    /// <summary>Gets the case-sensitive CLR member names that must be redacted.</summary>
     public FrozenSet<string> SensitiveMembers { get; }
 
     /// <summary>Gets whether every payload member must be redacted.</summary>
     public bool IsSensitive => PayloadSensitivity == MessagePayloadSensitivity.Sensitive;
 
-    /// <summary>Returns whether the named CLR member is sensitive.</summary>
-    /// <param name="memberName">The member name.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether a named CLR member is classified as sensitive.</summary>
+    /// <param name="memberName">The case-sensitive CLR member name.</param>
+    /// <returns><see langword="true" /> when the member must be redacted.</returns>
+    /// <exception cref="ArgumentException"><paramref name="memberName" /> is empty or consists only of white-space characters.</exception>
     public bool IsMemberSensitive(string memberName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(memberName);

@@ -4,39 +4,37 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>Provides extension methods for response.</summary>
+/// <summary>Provides response deconstruction and response-contract acceptance checks.</summary>
 public static class ResponseExtensions
 {
-    /// <summary>Used for pattern matching via (response,message).</summary>
-    /// <param name="response">The response.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="message">Receives the message produced by the operation.</param>
+    /// <summary>Deconstructs a response into its message context and message for pattern matching.</summary>
+    /// <param name="response">The response to deconstruct.</param>
+    /// <param name="context">Receives the complete response context.</param>
+    /// <param name="message">Receives the response message.</param>
     public static void Deconstruct(this Response response, out Response context, out object message)
     {
+        ArgumentNullException.ThrowIfNull(response);
         context = response;
         message = response.Message;
     }
 
-    /// <summary>
-    /// Returns true if the response type is explicitly accepted, or if the accept response header is
-    /// not present (downlevel client).
-    /// </summary>
-    /// <typeparam name="T">The response type.</typeparam>
-    /// <param name="context">The consumed message context.</param>
-    /// <param name="defaultIfHeaderNotFound">Value to return if header was not present.</param>
-    /// <returns>True if explicitly support or header is missing, otherwise false.</returns>
-    public static bool IsResponseAccepted<T>(this ConsumeContext context, bool defaultIfHeaderNotFound = true)
+    /// <summary>Determines whether a request explicitly declares a response contract as accepted.</summary>
+    /// <typeparam name="T">The response contract to inspect.</typeparam>
+    /// <param name="context">The consumed request context.</param>
+    /// <returns><see langword="true"/> when the request has a response address and declares the exact response contract; otherwise, <see langword="false"/>.</returns>
+    public static bool IsResponseAccepted<T>(this ConsumeContext context)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(context);
         if (context.ResponseAddress == null)
             return false;
 
         var acceptTypes = context.GetHeader<IList<string>>(MessageHeaders.Request.Accept);
         if (acceptTypes == null || acceptTypes.Count <= 0)
-            return defaultIfHeaderNotFound;
+            return false;
 
         var matchingTypeNames = MessageTypeCache<T>.MessageTypeNames;
 
-        return acceptTypes.Any(accept => matchingTypeNames.Any(x => x.Equals(accept, StringComparison.OrdinalIgnoreCase)));
+        return acceptTypes.Any(accept => matchingTypeNames.Any(typeName => typeName.Equals(accept, StringComparison.Ordinal)));
     }
 }

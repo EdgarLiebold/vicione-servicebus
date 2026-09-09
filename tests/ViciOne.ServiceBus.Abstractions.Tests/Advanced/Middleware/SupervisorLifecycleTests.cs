@@ -175,6 +175,24 @@ public sealed class SupervisorLifecycleTests
         Assert.False(supervisor.Stopped.IsCancellationRequested);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SUPERVISOR-LIFECYCLE", "stop-agent-snapshot-is-read-only")]
+    public async Task StopContext_ExposesAReadOnlyChildSnapshotAsync()
+    {
+        var supervisor = new CapturingSupervisor();
+        var child = new Agent();
+        child.SetReady();
+        supervisor.Add(child);
+
+        await supervisor.StopAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal(typeof(IReadOnlyList<IAgent>),
+            typeof(StopSupervisorContext).GetProperty(nameof(StopSupervisorContext.Agents))!.PropertyType);
+        Assert.NotNull(supervisor.CapturedAgents);
+        Assert.False(supervisor.CapturedAgents is IAgent[]);
+        Assert.Same(child, Assert.Single(supervisor.CapturedAgents));
+    }
+
     private sealed class ReadyFailureException(int iteration)
         : Exception($"Child readiness failed during iteration {iteration}.")
     {
@@ -220,4 +238,15 @@ public sealed class SupervisorLifecycleTests
     }
 
     private sealed class ChildCompletionException : Exception;
+
+    private sealed class CapturingSupervisor : Supervisor
+    {
+        public IReadOnlyList<IAgent>? CapturedAgents { get; private set; }
+
+        protected override Task StopSupervisorAsync(StopSupervisorContext context)
+        {
+            CapturedAgents = context.Agents;
+            return base.StopSupervisorAsync(context);
+        }
+    }
 }

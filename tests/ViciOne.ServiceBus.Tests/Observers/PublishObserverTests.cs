@@ -44,7 +44,7 @@ public sealed class PublishObserverTests
             });
             Assert.Empty(sendObserver.Events);
 
-            IRequestClient<PublishedRequest> client = harness.Bus.CreateRequestClient<PublishedRequest>(timeout);
+            IRequestClient<PublishedRequest> client = harness.Bus.CreateRequestClient<PublishedRequest>(new RequestTimeout(timeout));
             var request = new PublishedRequest(NewId.NextGuid(), "request");
             Response<PublishedResponse> response = await client.GetResponseAsync<PublishedResponse>(request, cancellationToken);
 

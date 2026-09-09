@@ -2,10 +2,10 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures publish pipeline.</summary>
+/// <summary>Provides access to middleware applied while messages are published.</summary>
 public interface IPublishPipelineConfigurator
 {
-    /// <summary>Configure the Publish pipeline.</summary>
-    /// <param name="callback">The callback invoked by the operation.</param>
+    /// <summary>Configures the publish pipeline.</summary>
+    /// <param name="callback">The callback that adds publish middleware.</param>
     void ConfigurePublish(Action<IPublishPipeConfigurator> callback);
 }

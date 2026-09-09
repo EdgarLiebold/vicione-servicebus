@@ -116,7 +116,7 @@ public sealed class PostgreSqlSerializationAndRequestTests
             started = true;
             IRequestClient<RequestMessage> client = bus.CreateRequestClient<RequestMessage>(
                 new Uri($"queue:{queueName}"),
-                RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
+                new RequestTimeout(fixture.OperationTimeout));
             var observed = new List<(int Sequence, Guid CorrelationId)>();
             for (var sequence = 0; sequence < 5; sequence++)
             {

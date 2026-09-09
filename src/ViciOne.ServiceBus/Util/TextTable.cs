@@ -110,7 +110,7 @@ public class TextTable
 
         var table = new TextTable(columnNames) { _columnTypes = columnTypes };
 
-        foreach (IEnumerable<object?> propertyValues in rows.Select(value => properties.Select(column => column.GetProperty(value))))
+        foreach (IEnumerable<object?> propertyValues in rows.Select(value => properties.Select(column => column.Get(value))))
             table.AddRow(propertyValues.ToArray());
 
         return table;

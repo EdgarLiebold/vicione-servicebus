@@ -114,9 +114,27 @@ public sealed class MessageTypeCacheImmutabilityTests
         });
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-METADATA-VALIDATION", "custom-diagnostic-addresses")]
+    public void DiagnosticAddress_PreservesEachSupportedCustomUrnShape()
+    {
+        Assert.Equal("ContractName", MessageTypeCache<NameOnlyUrnMessage>.DiagnosticAddress);
+        Assert.Equal("ContractName/Contracts/AssemblyScope", MessageTypeCache<AssemblyScopedUrnMessage>.DiagnosticAddress);
+        Assert.Equal("scheme:identifier", MessageTypeCache<CustomSchemeMessage>.DiagnosticAddress);
+    }
+
     private interface CacheContract;
 
     private sealed record CacheMessage(string Value) : CacheContract;
+
+    [MessageUrn("ContractName")]
+    private sealed class NameOnlyUrnMessage;
+
+    [MessageUrn("Contracts:ContractName:AssemblyScope")]
+    private sealed class AssemblyScopedUrnMessage;
+
+    [MessageUrn("scheme:identifier", useDefaultPrefix: false)]
+    private sealed class CustomSchemeMessage;
 
     private sealed class OpenGenericMessage<T>;
 }

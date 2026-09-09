@@ -1,126 +1,131 @@
 using System;
 using System.Collections.Generic;
-using ViciOne.ServiceBus.Configuration;
+using System.Linq;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides extension methods for filter configuration.</summary>
+/// <summary>Adds typed filters to consume, send, publish, and general middleware pipelines.</summary>
 public static class FilterConfigurationExtensions
 {
     /// <summary>Adds a filter to the consume pipe for the specific message type.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="configurator">The pipe configurator.</param>
+    /// <typeparam name="TMessage">The consumed message contract.</typeparam>
+    /// <param name="configurator">The consume pipeline to configure.</param>
     /// <param name="filter">The filter to add.</param>
-    public static void UseFilter<T>(this IConsumePipeConfigurator configurator, IFilter<ConsumeContext<T>> filter)
-        where T : class
+    public static void UseFilter<TMessage>(this IConsumePipeConfigurator configurator, IFilter<ConsumeContext<TMessage>> filter)
+        where TMessage : class
     {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(filter);
 
-        var specification = new FilterPipeSpecification<ConsumeContext<T>>(filter);
+        var specification = new FilterPipeSpecification<ConsumeContext<TMessage>>(filter);
 
         configurator.AddPipeSpecification(specification);
     }
 
     /// <summary>Adds a filter to the send pipe for the specific message type.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="configurator">The pipe configurator.</param>
+    /// <typeparam name="TMessage">The sent message contract.</typeparam>
+    /// <param name="configurator">The send pipeline to configure.</param>
     /// <param name="filter">The filter to add.</param>
-    public static void UseFilter<T>(this ISendPipeConfigurator configurator, IFilter<SendContext<T>> filter)
-        where T : class
+    public static void UseFilter<TMessage>(this ISendPipeConfigurator configurator, IFilter<SendContext<TMessage>> filter)
+        where TMessage : class
     {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(filter);
 
-        var specification = new FilterPipeSpecification<SendContext<T>>(filter);
+        var specification = new FilterPipeSpecification<SendContext<TMessage>>(filter);
 
         configurator.AddPipeSpecification(specification);
     }
 
     /// <summary>Adds a filter to the publish pipe for the specific message type.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="configurator">The pipe configurator.</param>
+    /// <typeparam name="TMessage">The published message contract.</typeparam>
+    /// <param name="configurator">The publish pipeline to configure.</param>
     /// <param name="filter">The filter to add.</param>
-    public static void UseFilter<T>(this IPublishPipeConfigurator configurator, IFilter<PublishContext<T>> filter)
-        where T : class
+    public static void UseFilter<TMessage>(this IPublishPipeConfigurator configurator, IFilter<PublishContext<TMessage>> filter)
+        where TMessage : class
     {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(filter);
 
-        var specification = new FilterPipeSpecification<PublishContext<T>>(filter);
+        var specification = new FilterPipeSpecification<PublishContext<TMessage>>(filter);
 
         configurator.AddPipeSpecification(specification);
     }
 
     /// <summary>Adds a filter to the pipe.</summary>
-    /// <typeparam name="T">The context type.</typeparam>
-    /// <param name="configurator">The pipe configurator.</param>
+    /// <typeparam name="TContext">The pipeline context.</typeparam>
+    /// <param name="configurator">The pipeline to configure.</param>
     /// <param name="filter">The filter to add.</param>
-    public static void UseFilter<T>(this IPipeConfigurator<T> configurator, IFilter<T> filter)
-        where T : class, PipeContext
+    public static void UseFilter<TContext>(this IPipeConfigurator<TContext> configurator, IFilter<TContext> filter)
+        where TContext : class, PipeContext
     {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(filter);
 
-        var pipeBuilderConfigurator = new FilterPipeSpecification<T>(filter);
+        var pipeBuilderConfigurator = new FilterPipeSpecification<TContext>(filter);
 
         configurator.AddPipeSpecification(pipeBuilderConfigurator);
     }
 
     /// <summary>Adds filters to the pipe.</summary>
-    /// <typeparam name="T">The context type.</typeparam>
-    /// <param name="configurator">The pipe configurator.</param>
+    /// <typeparam name="TContext">The pipeline context.</typeparam>
+    /// <param name="configurator">The pipeline to configure.</param>
     /// <param name="filters">The filters to add.</param>
-    public static void UseFilters<T>(this IPipeConfigurator<T> configurator, IEnumerable<IFilter<T>> filters)
-        where T : class, PipeContext
+    public static void UseFilters<TContext>(this IPipeConfigurator<TContext> configurator, IEnumerable<IFilter<TContext>> filters)
+        where TContext : class, PipeContext
     {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
-        if (filters == null)
-            throw new ArgumentNullException(nameof(filters));
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(filters);
 
-        foreach (IFilter<T> filter in filters)
+        IFilter<TContext>[] snapshot = filters.ToArray();
+        foreach (IFilter<TContext> filter in snapshot)
+            ArgumentNullException.ThrowIfNull(filter, nameof(filters));
+
+        foreach (IFilter<TContext> filter in snapshot)
         {
-            var pipeBuilderConfigurator = new FilterPipeSpecification<T>(filter);
+            var pipeBuilderConfigurator = new FilterPipeSpecification<TContext>(filter);
 
             configurator.AddPipeSpecification(pipeBuilderConfigurator);
         }
     }
 
     /// <summary>Adds filters to the pipe.</summary>
-    /// <typeparam name="T">The context type.</typeparam>
-    /// <param name="configurator">The pipe configurator.</param>
+    /// <typeparam name="TContext">The pipeline context.</typeparam>
+    /// <param name="configurator">The pipeline to configure.</param>
     /// <param name="filters">The filters to add.</param>
-    public static void UseFilters<T>(this IPipeConfigurator<T> configurator, params IFilter<T>[] filters)
-        where T : class, PipeContext
+    public static void UseFilters<TContext>(this IPipeConfigurator<TContext> configurator, params IFilter<TContext>[] filters)
+        where TContext : class, PipeContext
     {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
-        if (filters == null)
-            throw new ArgumentNullException(nameof(filters));
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(filters);
 
-        foreach (IFilter<T> filter in filters)
+        foreach (IFilter<TContext> filter in filters)
+            ArgumentNullException.ThrowIfNull(filter, nameof(filters));
+
+        foreach (IFilter<TContext> filter in filters)
         {
-            var pipeBuilderConfigurator = new FilterPipeSpecification<T>(filter);
+            var pipeBuilderConfigurator = new FilterPipeSpecification<TContext>(filter);
 
             configurator.AddPipeSpecification(pipeBuilderConfigurator);
         }
     }
 
     /// <summary>Adds a filter to the pipe which is of a different type than the native pipe context type.</summary>
-    /// <typeparam name="TContext">The context type.</typeparam>
-    /// <typeparam name="TFilter">The filter context type.</typeparam>
-    /// <param name="configurator">The pipe configurator.</param>
+    /// <typeparam name="TContext">The native pipeline context.</typeparam>
+    /// <typeparam name="TFilter">The base context accepted by the filter.</typeparam>
+    /// <param name="configurator">The pipeline to configure.</param>
     /// <param name="filter">The filter to add.</param>
-    /// <param name="contextProvider">The context provider.</param>
-    /// <param name="inputContextProvider">The input context provider.</param>
+    /// <param name="contextProvider">The function that merges the filter context back into the native context.</param>
+    /// <param name="inputContextProvider">The function that presents the native context to the filter.</param>
     public static void UseFilter<TContext, TFilter>(this IPipeConfigurator<TContext> configurator, IFilter<TFilter> filter,
         MergeFilterContextProvider<TContext, TFilter> contextProvider, FilterContextProvider<TFilter, TContext> inputContextProvider)
         where TContext : class, TFilter
         where TFilter : class, PipeContext
     {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(filter);
+        ArgumentNullException.ThrowIfNull(contextProvider);
+        ArgumentNullException.ThrowIfNull(inputContextProvider);
 
         var filterSpecification = new FilterPipeSpecification<TFilter>(filter);
 

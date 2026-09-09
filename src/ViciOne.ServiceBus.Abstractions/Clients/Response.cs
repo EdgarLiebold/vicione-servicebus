@@ -5,49 +5,47 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus;
 
 /// <summary>
-/// The base response type, which can be used to pattern match, via deconstruct, to the accepted
-/// response types.
+/// Exposes a received response message together with its messaging context.
 /// </summary>
 public interface Response :
     MessageContext
 {
-    /// <summary>Gets the message.</summary>
+    /// <summary>Gets the received response message.</summary>
     object Message { get; }
 }
 
 
-/// <summary>Defines the operations required by response.</summary>
-/// <typeparam name="TResponse">The response type.</typeparam>
+/// <summary>Exposes a strongly typed response message together with its messaging context.</summary>
+/// <typeparam name="TResponse">The response message contract.</typeparam>
 public interface Response<out TResponse> :
     Response
     where TResponse : class
 {
-    /// <summary>The response message that was received.</summary>
+    /// <summary>Gets the received response message.</summary>
     new TResponse Message { get; }
 }
 
 
 /// <summary>
-/// The response for a request that accepts two response types, which can be matched easily or converted back into a tuple of
-/// tasks.
+/// Represents the completed branch of a request that accepts two response contracts while preserving both branch tasks.
 /// </summary>
-/// <typeparam name="T1">The 1 type.</typeparam>
-/// <typeparam name="T2">The 2 type.</typeparam>
-public readonly struct Response<T1, T2> :
+/// <typeparam name="TResponse1">The first accepted response contract.</typeparam>
+/// <typeparam name="TResponse2">The second accepted response contract.</typeparam>
+public readonly struct Response<TResponse1, TResponse2> :
     Response
-    where T1 : class
-    where T2 : class
+    where TResponse1 : class
+    where TResponse2 : class
 {
-    readonly Response<T1>? _response1;
-    readonly Response<T2>? _response2;
-    readonly Response _response;
-    readonly Task<Response<T1>> _response1Task;
-    readonly Task<Response<T2>> _response2Task;
+    readonly Response<TResponse1>? _response1;
+    readonly Response<TResponse2>? _response2;
+    readonly Response? _response;
+    readonly Task<Response<TResponse1>>? _response1Task;
+    readonly Task<Response<TResponse2>>? _response2Task;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="response1">The response1.</param>
-    /// <param name="response2">The response2.</param>
-    public Response(Task<Response<T1>> response1, Task<Response<T2>> response2)
+    /// <summary>Creates a two-contract response from branch tasks when at least one branch completed successfully.</summary>
+    /// <param name="response1">The first response-contract task.</param>
+    /// <param name="response2">The second response-contract task.</param>
+    public Response(Task<Response<TResponse1>> response1, Task<Response<TResponse2>> response2)
     {
         ArgumentNullException.ThrowIfNull(response1);
         ArgumentNullException.ThrowIfNull(response2);
@@ -61,40 +59,40 @@ public readonly struct Response<T1, T2> :
         _response = _response1 as Response ?? _response2 ?? throw new ArgumentException("At least one response must have completed");
     }
 
-    /// <summary>Determines whether the condition is satisfied.</summary>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool Is([NotNullWhen(true)] out Response<T1>? result)
+    /// <summary>Gets the first response branch when it completed successfully.</summary>
+    /// <param name="result">Receives the first response branch when available.</param>
+    /// <returns><see langword="true"/> when the first branch completed successfully; otherwise, <see langword="false"/>.</returns>
+    public bool Is([NotNullWhen(true)] out Response<TResponse1>? result)
     {
         result = _response1;
 
         return result != default;
     }
 
-    /// <summary>Determines whether the condition is satisfied.</summary>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool Is([NotNullWhen(true)] out Response<T2>? result)
+    /// <summary>Gets the second response branch when it completed successfully.</summary>
+    /// <param name="result">Receives the second response branch when available.</param>
+    /// <returns><see langword="true"/> when the second branch completed successfully; otherwise, <see langword="false"/>.</returns>
+    public bool Is([NotNullWhen(true)] out Response<TResponse2>? result)
     {
         result = _response2;
 
         return result != default;
     }
 
-    /// <summary>Determines whether the condition is satisfied.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool Is<T>([NotNullWhen(true)] out Response<T>? result)
-        where T : class
+    /// <summary>Gets the completed response branch when it implements the requested contract.</summary>
+    /// <typeparam name="TResponse">The response contract to match.</typeparam>
+    /// <param name="result">Receives the matching response branch when available.</param>
+    /// <returns><see langword="true"/> when a completed branch implements <typeparamref name="TResponse"/>; otherwise, <see langword="false"/>.</returns>
+    public bool Is<TResponse>([NotNullWhen(true)] out Response<TResponse>? result)
+        where TResponse : class
     {
-        if (_response1 is Response<T> response1)
+        if (_response1 is Response<TResponse> response1)
         {
             result = response1;
             return true;
         }
 
-        if (_response2 is Response<T> response2)
+        if (_response2 is Response<TResponse> response2)
         {
             result = response2;
             return true;
@@ -104,93 +102,97 @@ public readonly struct Response<T1, T2> :
         return false;
     }
 
-    /// <summary>Deconstructs this value into its components.</summary>
-    /// <param name="r1">Receives the r1 produced by the operation.</param>
-    /// <param name="r2">Receives the r2 produced by the operation.</param>
-    public void Deconstruct(out Task<Response<T1>> r1, out Task<Response<T2>> r2)
+    /// <summary>Deconstructs the response into its original branch tasks.</summary>
+    /// <param name="response1Task">Receives the first response-contract task.</param>
+    /// <param name="response2Task">Receives the second response-contract task.</param>
+    public void Deconstruct(out Task<Response<TResponse1>> response1Task, out Task<Response<TResponse2>> response2Task)
     {
-        r1 = _response1Task;
-        r2 = _response2Task;
+        _ = Context;
+        response1Task = _response1Task!;
+        response2Task = _response2Task!;
     }
 
-    /// <summary>Converts a value to <see cref="Response&lt;T1, T2&gt;" />.</summary>
-    /// <param name="source">The source value.</param>
-    /// <returns>The value produced by the operation.</returns>
-    public static implicit operator Response<T1, T2>((Task<Response<T1>> response1, Task<Response<T2>> response2) source)
+    /// <summary>Creates a response wrapper from two response-contract tasks.</summary>
+    /// <param name="source">The two response-contract tasks.</param>
+    /// <returns>A wrapper over the successfully completed response branch.</returns>
+    public static implicit operator Response<TResponse1, TResponse2>(
+        (Task<Response<TResponse1>> response1, Task<Response<TResponse2>> response2) source)
     {
-        return new Response<T1, T2>(source.response1, source.response2);
+        return new Response<TResponse1, TResponse2>(source.response1, source.response2);
     }
 
     /// <summary>Gets the message id.</summary>
-    public Guid? MessageId => _response.MessageId;
+    public Guid? MessageId => Context.MessageId;
 
     /// <summary>Gets the request id.</summary>
-    public Guid? RequestId => _response.RequestId;
+    public Guid? RequestId => Context.RequestId;
 
     /// <summary>Gets the correlation id.</summary>
-    public Guid? CorrelationId => _response.CorrelationId;
+    public Guid? CorrelationId => Context.CorrelationId;
 
     /// <summary>Gets the conversation id.</summary>
-    public Guid? ConversationId => _response.ConversationId;
+    public Guid? ConversationId => Context.ConversationId;
 
     /// <summary>Gets the initiator id.</summary>
-    public Guid? InitiatorId => _response.InitiatorId;
+    public Guid? InitiatorId => Context.InitiatorId;
 
     /// <summary>Gets the expiration time.</summary>
-    public DateTimeOffset? ExpirationTime => _response.ExpirationTime;
+    public DateTimeOffset? ExpirationTime => Context.ExpirationTime;
 
     /// <summary>Gets the source address.</summary>
-    public Uri? SourceAddress => _response.SourceAddress;
+    public Uri? SourceAddress => Context.SourceAddress;
 
     /// <summary>Gets the destination address.</summary>
-    public Uri? DestinationAddress => _response.DestinationAddress;
+    public Uri? DestinationAddress => Context.DestinationAddress;
 
     /// <summary>Gets the response address.</summary>
-    public Uri? ResponseAddress => _response.ResponseAddress;
+    public Uri? ResponseAddress => Context.ResponseAddress;
 
     /// <summary>Gets the fault address.</summary>
-    public Uri? FaultAddress => _response.FaultAddress;
+    public Uri? FaultAddress => Context.FaultAddress;
 
     /// <summary>Gets the sent time.</summary>
-    public DateTimeOffset? SentTime => _response.SentTime;
+    public DateTimeOffset? SentTime => Context.SentTime;
 
     /// <summary>Gets the headers.</summary>
-    public Headers Headers => _response.Headers;
+    public Headers Headers => Context.Headers;
 
     /// <summary>Gets the host.</summary>
-    public HostInfo Host => _response.Host;
+    public HostInfo Host => Context.Host;
 
     /// <summary>Gets the message.</summary>
-    public object Message => _response.Message;
+    public object Message => Context.Message;
+
+    Response Context => _response
+        ?? throw new InvalidOperationException("The response wrapper has not been constructed.");
 }
 
 
 /// <summary>
-/// The response for a request that accepts two response types, which can be matched easily or converted back into a tuple of
-/// tasks.
+/// Represents the completed branch of a request that accepts three response contracts while preserving every branch task.
 /// </summary>
-/// <typeparam name="T1">The 1 type.</typeparam>
-/// <typeparam name="T2">The 2 type.</typeparam>
-/// <typeparam name="T3">The 3 type.</typeparam>
-public readonly struct Response<T1, T2, T3> :
+/// <typeparam name="TResponse1">The first accepted response contract.</typeparam>
+/// <typeparam name="TResponse2">The second accepted response contract.</typeparam>
+/// <typeparam name="TResponse3">The third accepted response contract.</typeparam>
+public readonly struct Response<TResponse1, TResponse2, TResponse3> :
     Response
-    where T1 : class
-    where T2 : class
-    where T3 : class
+    where TResponse1 : class
+    where TResponse2 : class
+    where TResponse3 : class
 {
-    readonly Response<T1>? _response1;
-    readonly Response<T2>? _response2;
-    readonly Response<T3>? _response3;
-    readonly Response _response;
-    readonly Task<Response<T1>> _response1Task;
-    readonly Task<Response<T2>> _response2Task;
-    readonly Task<Response<T3>> _response3Task;
+    readonly Response<TResponse1>? _response1;
+    readonly Response<TResponse2>? _response2;
+    readonly Response<TResponse3>? _response3;
+    readonly Response? _response;
+    readonly Task<Response<TResponse1>>? _response1Task;
+    readonly Task<Response<TResponse2>>? _response2Task;
+    readonly Task<Response<TResponse3>>? _response3Task;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="response1">The response1.</param>
-    /// <param name="response2">The response2.</param>
-    /// <param name="response3">The response3.</param>
-    public Response(Task<Response<T1>> response1, Task<Response<T2>> response2, Task<Response<T3>> response3)
+    /// <summary>Creates a three-contract response from branch tasks when at least one branch completed successfully.</summary>
+    /// <param name="response1">The first response-contract task.</param>
+    /// <param name="response2">The second response-contract task.</param>
+    /// <param name="response3">The third response-contract task.</param>
+    public Response(Task<Response<TResponse1>> response1, Task<Response<TResponse2>> response2, Task<Response<TResponse3>> response3)
     {
         ArgumentNullException.ThrowIfNull(response1);
         ArgumentNullException.ThrowIfNull(response2);
@@ -208,56 +210,56 @@ public readonly struct Response<T1, T2, T3> :
             ?? throw new ArgumentException("At least one response must have completed");
     }
 
-    /// <summary>Determines whether the condition is satisfied.</summary>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool Is([NotNullWhen(true)] out Response<T1>? result)
+    /// <summary>Gets the first response branch when it completed successfully.</summary>
+    /// <param name="result">Receives the first response branch when available.</param>
+    /// <returns><see langword="true"/> when the first branch completed successfully; otherwise, <see langword="false"/>.</returns>
+    public bool Is([NotNullWhen(true)] out Response<TResponse1>? result)
     {
         result = _response1;
 
         return result != default;
     }
 
-    /// <summary>Determines whether the condition is satisfied.</summary>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool Is([NotNullWhen(true)] out Response<T2>? result)
+    /// <summary>Gets the second response branch when it completed successfully.</summary>
+    /// <param name="result">Receives the second response branch when available.</param>
+    /// <returns><see langword="true"/> when the second branch completed successfully; otherwise, <see langword="false"/>.</returns>
+    public bool Is([NotNullWhen(true)] out Response<TResponse2>? result)
     {
         result = _response2;
 
         return result != default;
     }
 
-    /// <summary>Determines whether the condition is satisfied.</summary>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool Is([NotNullWhen(true)] out Response<T3>? result)
+    /// <summary>Gets the third response branch when it completed successfully.</summary>
+    /// <param name="result">Receives the third response branch when available.</param>
+    /// <returns><see langword="true"/> when the third branch completed successfully; otherwise, <see langword="false"/>.</returns>
+    public bool Is([NotNullWhen(true)] out Response<TResponse3>? result)
     {
         result = _response3;
 
         return result != default;
     }
 
-    /// <summary>Determines whether the condition is satisfied.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="result">Receives the result produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool Is<T>([NotNullWhen(true)] out Response<T>? result)
-        where T : class
+    /// <summary>Gets the completed response branch when it implements the requested contract.</summary>
+    /// <typeparam name="TResponse">The response contract to match.</typeparam>
+    /// <param name="result">Receives the matching response branch when available.</param>
+    /// <returns><see langword="true"/> when a completed branch implements <typeparamref name="TResponse"/>; otherwise, <see langword="false"/>.</returns>
+    public bool Is<TResponse>([NotNullWhen(true)] out Response<TResponse>? result)
+        where TResponse : class
     {
-        if (_response1 is Response<T> response1)
+        if (_response1 is Response<TResponse> response1)
         {
             result = response1;
             return true;
         }
 
-        if (_response2 is Response<T> response2)
+        if (_response2 is Response<TResponse> response2)
         {
             result = response2;
             return true;
         }
 
-        if (_response3 is Response<T> response3)
+        if (_response3 is Response<TResponse> response3)
         {
             result = response3;
             return true;
@@ -267,64 +269,72 @@ public readonly struct Response<T1, T2, T3> :
         return false;
     }
 
-    /// <summary>Deconstructs this value into its components.</summary>
-    /// <param name="r1">Receives the r1 produced by the operation.</param>
-    /// <param name="r2">Receives the r2 produced by the operation.</param>
-    /// <param name="r3">Receives the r3 produced by the operation.</param>
-    public void Deconstruct(out Task<Response<T1>> r1, out Task<Response<T2>> r2, out Task<Response<T3>> r3)
+    /// <summary>Deconstructs the response into its original branch tasks.</summary>
+    /// <param name="response1Task">Receives the first response-contract task.</param>
+    /// <param name="response2Task">Receives the second response-contract task.</param>
+    /// <param name="response3Task">Receives the third response-contract task.</param>
+    public void Deconstruct(
+        out Task<Response<TResponse1>> response1Task,
+        out Task<Response<TResponse2>> response2Task,
+        out Task<Response<TResponse3>> response3Task)
     {
-        r1 = _response1Task;
-        r2 = _response2Task;
-        r3 = _response3Task;
+        _ = Context;
+        response1Task = _response1Task!;
+        response2Task = _response2Task!;
+        response3Task = _response3Task!;
     }
 
-    /// <summary>Converts a value to <see cref="Response&lt;T1, T2, T3&gt;" />.</summary>
-    /// <param name="source">The source value.</param>
-    /// <returns>The value produced by the operation.</returns>
-    public static implicit operator Response<T1, T2, T3>((Task<Response<T1>> response1, Task<Response<T2>> response2, Task<Response<T3>> response3) source)
+    /// <summary>Creates a response wrapper from three response-contract tasks.</summary>
+    /// <param name="source">The three response-contract tasks.</param>
+    /// <returns>A wrapper over the successfully completed response branch.</returns>
+    public static implicit operator Response<TResponse1, TResponse2, TResponse3>(
+        (Task<Response<TResponse1>> response1, Task<Response<TResponse2>> response2, Task<Response<TResponse3>> response3) source)
     {
-        return new Response<T1, T2, T3>(source.response1, source.response2, source.response3);
+        return new Response<TResponse1, TResponse2, TResponse3>(source.response1, source.response2, source.response3);
     }
 
     /// <summary>Gets the message id.</summary>
-    public Guid? MessageId => _response.MessageId;
+    public Guid? MessageId => Context.MessageId;
 
     /// <summary>Gets the request id.</summary>
-    public Guid? RequestId => _response.RequestId;
+    public Guid? RequestId => Context.RequestId;
 
     /// <summary>Gets the correlation id.</summary>
-    public Guid? CorrelationId => _response.CorrelationId;
+    public Guid? CorrelationId => Context.CorrelationId;
 
     /// <summary>Gets the conversation id.</summary>
-    public Guid? ConversationId => _response.ConversationId;
+    public Guid? ConversationId => Context.ConversationId;
 
     /// <summary>Gets the initiator id.</summary>
-    public Guid? InitiatorId => _response.InitiatorId;
+    public Guid? InitiatorId => Context.InitiatorId;
 
     /// <summary>Gets the expiration time.</summary>
-    public DateTimeOffset? ExpirationTime => _response.ExpirationTime;
+    public DateTimeOffset? ExpirationTime => Context.ExpirationTime;
 
     /// <summary>Gets the source address.</summary>
-    public Uri? SourceAddress => _response.SourceAddress;
+    public Uri? SourceAddress => Context.SourceAddress;
 
     /// <summary>Gets the destination address.</summary>
-    public Uri? DestinationAddress => _response.DestinationAddress;
+    public Uri? DestinationAddress => Context.DestinationAddress;
 
     /// <summary>Gets the response address.</summary>
-    public Uri? ResponseAddress => _response.ResponseAddress;
+    public Uri? ResponseAddress => Context.ResponseAddress;
 
     /// <summary>Gets the fault address.</summary>
-    public Uri? FaultAddress => _response.FaultAddress;
+    public Uri? FaultAddress => Context.FaultAddress;
 
     /// <summary>Gets the sent time.</summary>
-    public DateTimeOffset? SentTime => _response.SentTime;
+    public DateTimeOffset? SentTime => Context.SentTime;
 
     /// <summary>Gets the headers.</summary>
-    public Headers Headers => _response.Headers;
+    public Headers Headers => Context.Headers;
 
     /// <summary>Gets the host.</summary>
-    public HostInfo Host => _response.Host;
+    public HostInfo Host => Context.Host;
 
     /// <summary>Gets the message.</summary>
-    public object Message => _response.Message;
+    public object Message => Context.Message;
+
+    Response Context => _response
+        ?? throw new InvalidOperationException("The response wrapper has not been constructed.");
 }

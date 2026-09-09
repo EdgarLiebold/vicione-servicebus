@@ -3,33 +3,33 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Payloads;
 
-/// <summary>The context properties.</summary>
+/// <summary>Stores strongly typed objects associated with a pipe context.</summary>
 public interface IPayloadCache
 {
-    /// <summary>Checks if the property exists in the cache.</summary>
-    /// <param name="payloadType">The property type.</param>
-    /// <returns>True if the property exists in the cache, otherwise false.</returns>
+    /// <summary>Determines whether a payload assignable to <paramref name="payloadType" /> is available.</summary>
+    /// <param name="payloadType">The requested payload type.</param>
+    /// <returns><see langword="true" /> when a compatible payload is available; otherwise, <see langword="false" />.</returns>
     bool HasPayloadType(Type payloadType);
 
-    /// <summary>Returns the value of the property if it exists in the cache.</summary>
-    /// <typeparam name="TPayload">The property type.</typeparam>
-    /// <param name="payload">The property value.</param>
-    /// <returns>True if the value was returned, otherwise false.</returns>
+    /// <summary>Tries to get the most recently stored compatible payload.</summary>
+    /// <typeparam name="TPayload">The requested payload type.</typeparam>
+    /// <param name="payload">The compatible payload when one is available.</param>
+    /// <returns><see langword="true" /> when a compatible payload was found; otherwise, <see langword="false" />.</returns>
     bool TryGetPayload<TPayload>([NotNullWhen(true)] out TPayload? payload)
         where TPayload : class;
 
-    /// <summary>Return an existing or create a new property.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="payloadFactory">The payload factory.</param>
-    /// <returns>The or add payload.</returns>
-    T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
-        where T : class;
+    /// <summary>Gets an existing compatible payload or atomically creates and stores one.</summary>
+    /// <typeparam name="TPayload">The requested payload type.</typeparam>
+    /// <param name="payloadFactory">The factory used when no compatible payload exists.</param>
+    /// <returns>The existing or newly created payload.</returns>
+    TPayload GetOrAddPayload<TPayload>(PayloadFactory<TPayload> payloadFactory)
+        where TPayload : class;
 
-    /// <summary>Either adds a new payload, or updates an existing payload.</summary>
-    /// <typeparam name="T">The payload type.</typeparam>
-    /// <param name="addFactory">The payload factory called if the payload is not present.</param>
-    /// <param name="updateFactory">The payload factory called if the payload already exists.</param>
-    /// <returns>The t produced by the operation.</returns>
-    T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
-        where T : class;
+    /// <summary>Atomically creates a payload or replaces the most recent compatible payload.</summary>
+    /// <typeparam name="TPayload">The payload type.</typeparam>
+    /// <param name="addFactory">The factory used when no compatible payload exists.</param>
+    /// <param name="updateFactory">The factory used to replace an existing compatible payload.</param>
+    /// <returns>The newly created or updated payload.</returns>
+    TPayload AddOrUpdatePayload<TPayload>(PayloadFactory<TPayload> addFactory, UpdatePayloadFactory<TPayload> updateFactory)
+        where TPayload : class;
 }

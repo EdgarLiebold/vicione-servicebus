@@ -237,22 +237,11 @@ public class TestHarnessRegistrationConfigurator :
         _configurator.AddRequestClient(requestType, destinationAddress, timeout);
     }
 
-    /// <summary>Sets default request timeout.</summary>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <summary>Sets the timeout used by request clients that do not specify one.</summary>
+    /// <param name="timeout">The explicit default timeout.</param>
     public void SetDefaultRequestTimeout(RequestTimeout timeout)
     {
         _configurator.SetDefaultRequestTimeout(timeout);
-    }
-
-    /// <summary>Sets default request timeout.</summary>
-    /// <param name="d">The <c>d</c> value.</param>
-    /// <param name="h">The <c>h</c> value.</param>
-    /// <param name="m">The <c>m</c> value.</param>
-    /// <param name="s">The <c>s</c> value.</param>
-    /// <param name="ms">The ms.</param>
-    public void SetDefaultRequestTimeout(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null)
-    {
-        _advancedConfigurator.SetDefaultRequestTimeout(d, h, m, s, ms);
     }
 
     /// <summary>Sets endpoint name formatter.</summary>

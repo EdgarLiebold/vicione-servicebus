@@ -112,7 +112,10 @@ public class InMemoryTestHarness :
     public virtual Task<IRequestClient<TRequest>> ConnectRequestClientAsync<TRequest>(Uri destinationAddress, CancellationToken cancellationToken = default)
         where TRequest : class
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.IRequestClient<TRequest>>(cancellationToken); return Task.FromResult(Bus.CreateRequestClient<TRequest>(destinationAddress, TestTimeout));
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<IRequestClient<TRequest>>(cancellationToken);
+
+        return Task.FromResult(Bus.CreateRequestClient<TRequest>(destinationAddress, new RequestTimeout(TestTimeout)));
     }
 
     /// <summary>Creates bus.</summary>

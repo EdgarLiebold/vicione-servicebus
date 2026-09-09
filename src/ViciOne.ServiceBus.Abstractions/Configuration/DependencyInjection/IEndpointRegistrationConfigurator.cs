@@ -2,45 +2,40 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures endpoint registration.</summary>
+/// <summary>Configures transport-independent settings for a registered receive endpoint.</summary>
 public interface IEndpointRegistrationConfigurator
 {
-    /// <summary>Set the endpoint name, overriding the default endpoint name formatter.</summary>
+    /// <summary>Sets an explicit endpoint name instead of using the configured naming convention.</summary>
     string Name { set; }
 
-    /// <summary>True if the endpoint should be removed after the endpoint is stopped.</summary>
+    /// <summary>Sets whether the endpoint and its broker resources are removed when the endpoint stops.</summary>
     bool Temporary { set; }
 
     /// <summary>
-    /// Only specify when required, use <see cref="ConcurrentMessageLimit" /> first and
-    /// only specific a <see cref="PrefetchCount" /> when the default is not appropriate.
+    /// Sets the broker-specific number of messages fetched ahead of processing.
     /// </summary>
     int? PrefetchCount { set; }
 
     /// <summary>
-    /// The maximum number of concurrent messages processing at one time on the endpoint. Is
-    /// used to configure the transport efficiently.
+    /// Sets the maximum number of messages processed concurrently on the endpoint.
     /// </summary>
     int? ConcurrentMessageLimit { set; }
 
     /// <summary>
-    /// Defaults to true, which connects topics/exchanges/etc. to the endpoint queue at the broker.
-    /// If set to false, no broker topology is configured (automatically set to false for courier
-    /// activities because routing slips are sent directly and should never be published).
+    /// Sets whether the transport creates the consume topology required to route messages to the endpoint.
     /// </summary>
     bool ConfigureConsumeTopology { set; }
 
     /// <summary>
-    /// Specifies an identifier that uniquely identifies the endpoint instance, which is appended to the
-    /// end of the endpoint name.
+    /// Sets the endpoint-instance identifier appended to the endpoint name.
     /// </summary>
     string InstanceId { set; }
 
-    /// <summary>Add an endpoint configuration callback to the registration.</summary>
-    /// <param name="callback">The callback invoked by the operation.</param>
-    void AddConfigureEndpointCallback(Action<IReceiveEndpointConfigurator>? callback);
+    /// <summary>Adds a callback that configures the transport-specific receive endpoint.</summary>
+    /// <param name="callback">The callback invoked when the endpoint is configured.</param>
+    void AddConfigureEndpointCallback(Action<IReceiveEndpointConfigurator> callback);
 
-    /// <summary>Add an endpoint configuration callback to the registration.</summary>
-    /// <param name="callback">The callback invoked by the operation.</param>
-    void AddConfigureEndpointCallback(Action<IRegistrationContext, IReceiveEndpointConfigurator>? callback);
+    /// <summary>Adds a callback that can resolve registered services while configuring the receive endpoint.</summary>
+    /// <param name="callback">The callback invoked when the endpoint is configured.</param>
+    void AddConfigureEndpointCallback(Action<IRegistrationContext, IReceiveEndpointConfigurator> callback);
 }

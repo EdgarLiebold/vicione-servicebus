@@ -1,10 +1,10 @@
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Defines the operations required by consumer configuration observer connector.</summary>
+/// <summary>Connects observers that receive consumer-configuration notifications.</summary>
 public interface IConsumerConfigurationObserverConnector
 {
-    /// <summary>Connects consumer configuration observer.</summary>
+    /// <summary>Registers a consumer-configuration observer.</summary>
     /// <param name="observer">The observer to connect.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     ConnectHandle ConnectConsumerConfigurationObserver(IConsumerConfigurationObserver observer);

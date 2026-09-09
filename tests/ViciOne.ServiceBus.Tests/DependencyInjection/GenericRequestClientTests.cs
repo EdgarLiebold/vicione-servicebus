@@ -9,13 +9,23 @@ namespace ViciOne.ServiceBus.Tests.DependencyInjection;
 public sealed class GenericRequestClientTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-FACTORY-FORWARDING", "sealed-wrapper-and-required-scope")]
+    public void ScopedWrapper_IsSealedAndRequiresAServiceProvider()
+    {
+        Assert.True(typeof(GenericRequestClient<TestRequest>).IsSealed);
+        Assert.Equal(
+            "provider",
+            Assert.Throws<ArgumentNullException>(() => new GenericRequestClient<TestRequest>(null!)).ParamName);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-FACTORY-FORWARDING", "typed-message-timeout-and-token")]
     public void TypedCreate_ForwardsMessageTimeoutAndCancellationTokenInContractOrder()
     {
         (IRequestClient<TestRequest> inner, RecordingAdvancedRequestClientProxy recorder) = CreateAdvancedClientRecorder();
         IRequestClient<TestRequest> client = CreateGenericClient(inner);
         var request = new TestRequest("typed-request");
-        RequestTimeout timeout = RequestTimeout.After(s: 23);
+        var timeout = new RequestTimeout(TimeSpan.FromSeconds(23));
         using var cancellation = new CancellationTokenSource();
 
         RequestHandle<TestRequest> actual = client.Advanced().Create(request, timeout, cancellation.Token);
@@ -34,7 +44,7 @@ public sealed class GenericRequestClientTests
         (IRequestClient<TestRequest> inner, RecordingAdvancedRequestClientProxy recorder) = CreateAdvancedClientRecorder();
         IRequestClient<TestRequest> client = CreateGenericClient(inner);
         var values = new { Value = "initialized-request" };
-        RequestTimeout timeout = RequestTimeout.After(s: 29);
+        var timeout = new RequestTimeout(TimeSpan.FromSeconds(29));
         using var cancellation = new CancellationTokenSource();
 
         RequestHandle<TestRequest> actual = client.Advanced().Create(values, timeout, cancellation.Token);

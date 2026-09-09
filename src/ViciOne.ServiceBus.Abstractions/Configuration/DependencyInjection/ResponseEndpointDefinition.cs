@@ -1,10 +1,10 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Specifies a temporary endpoint, with the prefix "response".</summary>
-public class ResponseEndpointDefinition :
+/// <summary>Defines an auto-deleting receive endpoint tagged for request responses.</summary>
+public sealed class ResponseEndpointDefinition :
     TemporaryEndpointDefinition
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a temporary endpoint definition whose generated name uses the <c>response</c> tag.</summary>
     public ResponseEndpointDefinition()
         : base("response")
     {

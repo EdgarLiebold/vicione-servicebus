@@ -8,13 +8,13 @@ namespace ViciOne.ServiceBus.Advanced;
 /// <typeparam name="TBus">The interface that uniquely identifies the bus registration.</typeparam>
 public abstract class BusInstance<TBus> :
     IBusControl,
-    Advanced.IAdvancedPublishEndpoint,
+    IAdvancedPublishEndpoint,
     IMessageRouteProvider
     where TBus : class, IBus
 {
     readonly IBusControl _busControl;
 
-    /// <summary>Initializes a typed facade over a bus control.</summary>
+    /// <summary>Creates a typed facade over a bus control.</summary>
     /// <param name="busControl">The bus control that performs all operations.</param>
     protected BusInstance(IBusControl busControl)
     {

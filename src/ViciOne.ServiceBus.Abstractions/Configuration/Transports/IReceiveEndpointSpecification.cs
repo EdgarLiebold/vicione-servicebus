@@ -1,12 +1,10 @@
-using ViciOne.ServiceBus.Configuration;
-
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Specification for configuring a receive endpoint.</summary>
+/// <summary>Validates and applies one transport-specific receive-endpoint configuration concern.</summary>
 public interface IReceiveEndpointSpecification :
     ISpecification
 {
-    /// <summary>Applies the supplied configuration.</summary>
-    /// <param name="builder">The builder that receives the configuration.</param>
+    /// <summary>Applies the specification to a receive-endpoint builder.</summary>
+    /// <param name="builder">The builder that materializes the receive endpoint.</param>
     void Configure(IReceiveEndpointBuilder builder);
 }

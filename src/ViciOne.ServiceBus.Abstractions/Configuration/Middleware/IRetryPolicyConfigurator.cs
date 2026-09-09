@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Configuration;
 public interface IRetryPolicyConfigurator :
     IExceptionConfigurator
 {
-    /// <summary>Sets the factory that creates the retry policy from the configured exception filter.</summary>
-    /// <param name="factory">Creates the retry policy.</param>
+    /// <summary>Sets the factory that combines the configured exception filter with retry timing.</summary>
+    /// <param name="factory">The retry-policy factory.</param>
     void SetRetryPolicy(RetryPolicyFactory factory);
 }

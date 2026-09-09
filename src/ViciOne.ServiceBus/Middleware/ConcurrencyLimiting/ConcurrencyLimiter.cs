@@ -81,7 +81,7 @@ internal sealed class ConcurrencyLimiter :
             try
             {
                 if (commandTimestamp < _lastUpdated)
-                    throw new CommandException("The concurrency limit was updated after the command was sent.");
+                    throw new StaleConcurrencyLimitCommandException(commandTimestamp, _lastUpdated);
 
                 int previousLimit = Volatile.Read(ref _concurrencyLimit);
                 if (concurrencyLimit > previousLimit)

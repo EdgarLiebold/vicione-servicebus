@@ -20,7 +20,7 @@ public sealed class QuartzNestedRequestIntegrationTests
         await using NestedRequestFixture fixture = await NestedRequestFixture.StartAsync(faultService: false);
         IRequestClient<CreateShortLink> client = fixture.Bus.CreateRequestClient<CreateShortLink>(
             fixture.SagaAddress,
-            fixture.Timeout);
+            new RequestTimeout(fixture.Timeout));
 
         Response<ShortLinkCreated> response = await client.GetResponseAsync<ShortLinkCreated>(
                 new CreateShortLink(new Uri("https://example.test/complete")),
@@ -44,7 +44,7 @@ public sealed class QuartzNestedRequestIntegrationTests
         await using NestedRequestFixture fixture = await NestedRequestFixture.StartAsync(faultService: true);
         IRequestClient<CreateShortLink> client = fixture.Bus.CreateRequestClient<CreateShortLink>(
             fixture.SagaAddress,
-            fixture.Timeout);
+            new RequestTimeout(fixture.Timeout));
 
         RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
             client.GetResponseAsync<ShortLinkCreated>(

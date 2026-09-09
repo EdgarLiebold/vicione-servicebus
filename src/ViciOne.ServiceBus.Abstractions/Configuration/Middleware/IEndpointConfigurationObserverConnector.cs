@@ -1,10 +1,10 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Defines the operations required by endpoint configuration observer connector.</summary>
+/// <summary>Connects observers that receive endpoint-configuration notifications.</summary>
 public interface IEndpointConfigurationObserverConnector
 {
-    /// <summary>Connect a configuration observer to the bus configurator, which is invoked as consumers are configured.</summary>
+    /// <summary>Registers an endpoint-configuration observer.</summary>
     /// <param name="observer">The observer to connect.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <returns>A handle that disconnects the observer.</returns>
     ConnectHandle ConnectEndpointConfigurationObserver(IEndpointConfigurationObserver observer);
 }

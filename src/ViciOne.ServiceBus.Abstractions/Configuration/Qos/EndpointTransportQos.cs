@@ -8,17 +8,17 @@ namespace ViciOne.ServiceBus.Configuration;
 /// </summary>
 public sealed record EndpointTransportQos
 {
-    /// <summary>Gets or sets the prefetch count.</summary>
+    /// <summary>Gets the broker-specific number of messages fetched ahead of processing.</summary>
     public int? PrefetchCount { get; init; }
 
-    /// <summary>Gets or sets the concurrent delivery limit.</summary>
+    /// <summary>Gets the maximum number of messages delivered concurrently to the endpoint.</summary>
     public int? ConcurrentDeliveryLimit { get; init; }
 
-    /// <summary>Gets a value indicating whether this declaration changes transport QoS.</summary>
+    /// <summary>Gets whether either transport quality-of-service setting is specified.</summary>
     public bool IsSpecified => PrefetchCount is not null || ConcurrentDeliveryLimit is not null;
 
-    /// <summary>Validates the current configuration.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <summary>Validates that every specified transport limit is positive.</summary>
+    /// <returns>This validated settings instance.</returns>
     public EndpointTransportQos Validate()
     {
         if (PrefetchCount is <= 0)

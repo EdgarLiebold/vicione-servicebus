@@ -32,7 +32,7 @@ public sealed class RoutingSlipRequestIntegrationTests
             var request = new CourierRequest(NewId.NextGuid(), "request-value");
             IRequestClient<CourierRequest> client = harness.Bus.CreateRequestClient<CourierRequest>(
                 harness.InputQueueAddress,
-                timeout);
+                new RequestTimeout(timeout));
 
             Response<CourierResponse> response = await client.Advanced().GetResponseAsync<CourierResponse>(
                 request,
@@ -74,7 +74,7 @@ public sealed class RoutingSlipRequestIntegrationTests
             var request = new CourierRequest(NewId.NextGuid(), "ordinary-fault");
             IRequestClient<CourierRequest> client = harness.Bus.CreateRequestClient<CourierRequest>(
                 harness.InputQueueAddress,
-                timeout);
+                new RequestTimeout(timeout));
 
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
                 client.Advanced().GetResponseAsync<CourierResponse>(request, cancellationToken: cancellationToken));
@@ -117,7 +117,7 @@ public sealed class RoutingSlipRequestIntegrationTests
             var request = new CourierRequest(NewId.NextGuid(), "retry-fault");
             IRequestClient<CourierRequest> client = harness.Bus.CreateRequestClient<CourierRequest>(
                 harness.InputQueueAddress,
-                timeout);
+                new RequestTimeout(timeout));
 
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
                 client.Advanced().GetResponseAsync<CourierResponse>(request, cancellationToken: cancellationToken));
@@ -160,7 +160,7 @@ public sealed class RoutingSlipRequestIntegrationTests
             var request = new CourierRequest(NewId.NextGuid(), "declared-fault");
             IRequestClient<CourierRequest> client = harness.Bus.CreateRequestClient<CourierRequest>(
                 harness.InputQueueAddress,
-                timeout);
+                new RequestTimeout(timeout));
 
             (Task<Response<CourierResponse>> responseTask, Task<Response<CourierFaultResponse>> faultTask) =
                 await client.Advanced().GetResponseAsync<CourierResponse, CourierFaultResponse>(

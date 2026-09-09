@@ -1,11 +1,11 @@
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>Defines the operations required by implemented message type.</summary>
+/// <summary>Receives a strongly typed message-topology parent discovered at run time.</summary>
 public interface IImplementedMessageType
 {
-    /// <summary>Determines whether the type implements the message contract.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="direct">The direct.</param>
+    /// <summary>Processes one implemented message contract.</summary>
+    /// <typeparam name="T">The implemented message contract.</typeparam>
+    /// <param name="direct">Whether the contract is an immediate topology parent.</param>
     void ImplementsMessageType<T>(bool direct)
         where T : class;
 }

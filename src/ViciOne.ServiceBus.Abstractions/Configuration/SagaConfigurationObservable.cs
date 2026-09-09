@@ -8,9 +8,9 @@ public class SagaConfigurationObservable :
     Connectable<ISagaConfigurationObserver>,
     ISagaConfigurationObserver
 {
-    /// <summary>Reports that saga has been configured.</summary>
+    /// <summary>Notifies observers that a saga is configured.</summary>
     /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configurator">The completed saga configuration.</param>
     public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
         where TSaga : class
     {
@@ -19,10 +19,10 @@ public class SagaConfigurationObservable :
         ForEach(observer => observer.SagaConfigured(configurator));
     }
 
-    /// <summary>Reports that state machine saga has been configured.</summary>
-    /// <typeparam name="TInstance">The instance type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="stateMachine">The state machine.</param>
+    /// <summary>Notifies observers that a state-machine saga is configured.</summary>
+    /// <typeparam name="TInstance">The saga state managed by the state machine.</typeparam>
+    /// <param name="configurator">The completed saga configuration.</param>
+    /// <param name="stateMachine">The state machine that owns the saga configuration.</param>
     public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
         where TInstance : class
     {
@@ -32,10 +32,10 @@ public class SagaConfigurationObservable :
         ForEach(observer => observer.StateMachineSagaConfigured(configurator, stateMachine));
     }
 
-    /// <summary>Reports that saga message has been configured.</summary>
+    /// <summary>Notifies observers that a saga's message-specific pipeline is configured.</summary>
     /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="configurator">The completed message-specific saga configuration.</param>
     public void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
         where TSaga : class
         where TMessage : class

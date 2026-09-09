@@ -5,86 +5,83 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>Provides access to the read write property.</summary>
+/// <summary>Reads and writes one instance property through cached accessors.</summary>
 public class ReadWriteProperty : ReadOnlyProperty
 {
-    /// <summary>Exposes the set property used by the containing type.</summary>
-    public readonly Action<object, object?> SetProperty;
+    readonly Action<object, object?> _setter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="property">The property.</param>
-    /// <param name="accessPolicy">The access policy.</param>
+    /// <summary>Initializes cached accessors for a reflected property.</summary>
+    /// <param name="property">The instance property to read and write.</param>
+    /// <param name="accessPolicy">The accessibility boundary for both accessors.</param>
     public ReadWriteProperty(PropertyInfo property, PropertyAccessPolicy accessPolicy = PropertyAccessPolicy.PublicOnly)
         : base(property, accessPolicy)
     {
-        SetProperty = PropertyAccessorFactory.CreateUntypedSetter(Property, accessPolicy);
+        _setter = PropertyAccessorFactory.CreateUntypedSetter(Property, accessPolicy);
     }
 
-    /// <summary>Updates the target with the supplied value.</summary>
-    /// <param name="instance">The instance.</param>
-    /// <param name="value">The value to process.</param>
-    public void Set(object instance, object? value) => SetProperty(instance, value);
+    /// <summary>Writes the property on an instance.</summary>
+    /// <param name="instance">The target instance.</param>
+    /// <param name="value">The new property value.</param>
+    public void Set(object instance, object? value) => _setter(instance, value);
 }
 
 
-/// <summary>Provides access to the read write property.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Reads and writes one instance property through target-typed cached accessors.</summary>
+/// <typeparam name="T">The target type.</typeparam>
 public class ReadWriteProperty<T> : ReadOnlyProperty<T>
 {
-    /// <summary>Exposes the set property used by the containing type.</summary>
-    public readonly Action<T, object?> SetProperty;
+    readonly Action<T, object?> _setter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="propertyExpression">The property expression.</param>
-    /// <param name="accessPolicy">The access policy.</param>
+    /// <summary>Initializes target-typed accessors from a property expression.</summary>
+    /// <param name="propertyExpression">An expression selecting the property on <typeparamref name="T" />.</param>
+    /// <param name="accessPolicy">The accessibility boundary for both accessors.</param>
     public ReadWriteProperty(Expression<Func<T, object>> propertyExpression, PropertyAccessPolicy accessPolicy = PropertyAccessPolicy.PublicOnly)
         : this(propertyExpression.GetPropertyInfo(), accessPolicy)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="property">The property.</param>
-    /// <param name="accessPolicy">The access policy.</param>
+    /// <summary>Initializes target-typed accessors from reflected property metadata.</summary>
+    /// <param name="property">The instance property to read and write.</param>
+    /// <param name="accessPolicy">The accessibility boundary for both accessors.</param>
     public ReadWriteProperty(PropertyInfo? property, PropertyAccessPolicy accessPolicy = PropertyAccessPolicy.PublicOnly)
         : base(property, accessPolicy)
     {
-        SetProperty = PropertyAccessorFactory.CreateSetter<T>(Property, accessPolicy);
+        _setter = PropertyAccessorFactory.CreateSetter<T>(Property, accessPolicy);
     }
 
-    /// <summary>Updates the target with the supplied value.</summary>
-    /// <param name="instance">The instance.</param>
-    /// <param name="value">The value to process.</param>
-    public void Set(T instance, object? value) => SetProperty(instance, value);
+    /// <summary>Writes the property on an instance.</summary>
+    /// <param name="instance">The target instance.</param>
+    /// <param name="value">The new property value.</param>
+    public void Set(T instance, object? value) => _setter(instance, value);
 }
 
 
-/// <summary>Provides access to the read write property.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Reads and writes one instance property through fully typed cached accessors.</summary>
+/// <typeparam name="T">The target type.</typeparam>
 /// <typeparam name="TProperty">The property type.</typeparam>
 public class ReadWriteProperty<T, TProperty> : ReadOnlyProperty<T, TProperty>
 {
-    /// <summary>Exposes the set property used by the containing type.</summary>
-    public readonly Action<T, TProperty> SetProperty;
+    readonly Action<T, TProperty> _setter;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="propertyExpression">The property expression.</param>
-    /// <param name="accessPolicy">The access policy.</param>
+    /// <summary>Initializes fully typed accessors from a property expression.</summary>
+    /// <param name="propertyExpression">An expression selecting the property on <typeparamref name="T" />.</param>
+    /// <param name="accessPolicy">The accessibility boundary for both accessors.</param>
     public ReadWriteProperty(Expression<Func<T, object>> propertyExpression, PropertyAccessPolicy accessPolicy = PropertyAccessPolicy.PublicOnly)
         : this(propertyExpression.GetPropertyInfo(), accessPolicy)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="property">The property.</param>
-    /// <param name="accessPolicy">The access policy.</param>
+    /// <summary>Initializes fully typed accessors from reflected property metadata.</summary>
+    /// <param name="property">The <typeparamref name="TProperty" /> instance property to read and write.</param>
+    /// <param name="accessPolicy">The accessibility boundary for both accessors.</param>
     public ReadWriteProperty(PropertyInfo? property, PropertyAccessPolicy accessPolicy = PropertyAccessPolicy.PublicOnly)
         : base(property, accessPolicy)
     {
-        SetProperty = PropertyAccessorFactory.CreateSetter<T, TProperty>(Property, accessPolicy);
+        _setter = PropertyAccessorFactory.CreateSetter<T, TProperty>(Property, accessPolicy);
     }
 
-    /// <summary>Updates the target with the supplied value.</summary>
-    /// <param name="instance">The instance.</param>
-    /// <param name="value">The value to process.</param>
-    public void Set(T instance, TProperty value) => SetProperty(instance, value);
+    /// <summary>Writes the property on an instance.</summary>
+    /// <param name="instance">The target instance.</param>
+    /// <param name="value">The new property value.</param>
+    public void Set(T instance, TProperty value) => _setter(instance, value);
 }

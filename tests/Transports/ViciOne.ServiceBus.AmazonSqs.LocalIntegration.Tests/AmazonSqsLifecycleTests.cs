@@ -53,7 +53,7 @@ public sealed class AmazonSqsLifecycleTests
             started = true;
             IRequestClient<LifecycleRequest> client = bus.CreateRequestClient<LifecycleRequest>(
                 new Uri($"queue:{queueName}"),
-                RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
+                new RequestTimeout(fixture.OperationTimeout));
             Response<LifecycleResponse> response = await client.GetResponseAsync<LifecycleResponse>(
                     new LifecycleRequest(id), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);

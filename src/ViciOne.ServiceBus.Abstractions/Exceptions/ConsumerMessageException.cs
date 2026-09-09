@@ -2,25 +2,25 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to consumer message.</summary>
-public class ConsumerMessageException :
+/// <summary>Reports that a consumer cannot process a received message.</summary>
+public sealed class ConsumerMessageException :
     ConsumerException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a consumer-message exception without a custom message.</summary>
     public ConsumerMessageException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a consumer-message exception with the specified failure message.</summary>
+    /// <param name="message">The description of the message-processing failure.</param>
     public ConsumerMessageException(string message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates a consumer-message exception with an underlying failure.</summary>
+    /// <param name="message">The description of the message-processing failure.</param>
+    /// <param name="innerException">The exception raised while the consumer processed the message.</param>
     public ConsumerMessageException(string message, Exception innerException)
         : base(message, innerException)
     {

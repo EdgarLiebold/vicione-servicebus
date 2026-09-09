@@ -57,7 +57,7 @@ public class QueueSqlReceiveEndpointContext :
     /// <returns>The converted exception.</returns>
     public override Exception ConvertException(Exception exception, string message)
     {
-        return new ConnectionException(message + _hostConfiguration.HostAddress, exception);
+        return new ConnectionException(message + _hostConfiguration.HostAddress, exception, isTransient: true);
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>

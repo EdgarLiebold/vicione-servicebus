@@ -99,14 +99,14 @@ static class JobTypeStateMachineBehaviorExtensions
     {
         if (context.Saga.OverrideExpiresAt.HasValue)
         {
-            if (context.Saga.OverrideExpiresAt.Value <= context.GetUtcDateTime())
+            if (context.Saga.OverrideExpiresAt.Value <= context.GetUtcNow())
             {
                 context.Saga.OverrideExpiresAt = null;
                 context.Saga.OverrideConcurrentJobLimit = null;
             }
         }
 
-        var timestamp = context.GetUtcDateTime();
+        var timestamp = context.GetUtcNow();
         JobTypeCapacity.RemoveExpiredAllocations(context.Saga, timestamp, heartbeatTimeout);
 
         var jobId = context.Message.JobId;
@@ -186,7 +186,7 @@ static class JobTypeStateMachineBehaviorExtensions
             ValidateConcurrencyUpdate(context.Message);
 
             var instanceAddress = context.Message.InstanceAddress;
-            DateTimeOffset instanceUpdated = context.GetUtcDateTime();
+            DateTimeOffset instanceUpdated = context.GetUtcNow();
 
             if (context.Saga.ServiceInstances.TryGetValue(instanceAddress, out var instance))
             {

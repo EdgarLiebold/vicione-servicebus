@@ -1,51 +1,59 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to configuration.</summary>
+/// <summary>Reports an invalid service-bus configuration and its validation failures.</summary>
 public class ConfigurationException :
     ViciOneServiceBusException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a configuration exception without a custom message or validation results.</summary>
     public ConfigurationException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="results">The results.</param>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a configuration exception containing a stable snapshot of the validation results.</summary>
+    /// <param name="results">The validation results that explain the invalid configuration.</param>
+    /// <param name="message">The description of the configuration failure.</param>
     public ConfigurationException(IEnumerable<ValidationResult> results, string message)
         : base(message)
     {
-        Results = results;
+        Results = Snapshot(results);
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="results">The results.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates a configuration exception containing validation results and an underlying failure.</summary>
+    /// <param name="results">The validation results that explain the invalid configuration.</param>
+    /// <param name="message">The description of the configuration failure.</param>
+    /// <param name="innerException">The exception that caused this configuration failure.</param>
     public ConfigurationException(IEnumerable<ValidationResult> results, string message, Exception innerException)
         : base(message, innerException)
     {
-        Results = results;
+        Results = Snapshot(results);
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a configuration exception with the specified failure message.</summary>
+    /// <param name="message">The description of the configuration failure.</param>
     public ConfigurationException(string message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates a configuration exception with an underlying failure.</summary>
+    /// <param name="message">The description of the configuration failure.</param>
+    /// <param name="innerException">The exception that caused this configuration failure.</param>
     public ConfigurationException(string message, Exception innerException)
         : base(message, innerException)
     {
     }
 
-    /// <summary>Gets or sets the results.</summary>
-    public IEnumerable<ValidationResult> Results { get; protected set; } = [];
+    /// <summary>Gets the immutable snapshot of validation results associated with the failure.</summary>
+    public IReadOnlyList<ValidationResult> Results { get; } = [];
+
+    static IReadOnlyList<ValidationResult> Snapshot(IEnumerable<ValidationResult> results)
+    {
+        ArgumentNullException.ThrowIfNull(results);
+
+        return results.ToArray();
+    }
 }

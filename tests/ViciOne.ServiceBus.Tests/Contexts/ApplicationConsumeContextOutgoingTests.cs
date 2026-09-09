@@ -55,7 +55,7 @@ public sealed class ApplicationConsumeContextOutgoingTests
         try
         {
             IRequestClient<ScopedRequest> client =
-                harness.Bus.CreateRequestClient<ScopedRequest>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<ScopedRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
 
             Response<ScopedResponse> response = await client.GetResponseAsync<ScopedResponse>(
                 new ScopedRequest("order-42"),

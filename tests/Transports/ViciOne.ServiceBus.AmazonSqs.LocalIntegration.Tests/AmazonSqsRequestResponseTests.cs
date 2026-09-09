@@ -37,7 +37,7 @@ public sealed class AmazonSqsRequestResponseTests
             started = true;
             IRequestClient<RequestMessage> client = bus.CreateRequestClient<RequestMessage>(
                 new Uri($"queue:{queueName}"),
-                RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
+                new RequestTimeout(fixture.OperationTimeout));
             RequestMessage[] requests = Enumerable.Range(0, RequestCount)
                 .Select(sequence => new RequestMessage(sequence, Guid.NewGuid()))
                 .ToArray();

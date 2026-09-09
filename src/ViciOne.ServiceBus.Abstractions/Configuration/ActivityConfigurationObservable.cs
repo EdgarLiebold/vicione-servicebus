@@ -8,11 +8,11 @@ public class ActivityConfigurationObservable :
     Connectable<IActivityConfigurationObserver>,
     IActivityConfigurationObserver
 {
-    /// <summary>Reports that activity has been configured.</summary>
-    /// <typeparam name="TActivity">The activity type.</typeparam>
-    /// <typeparam name="TArguments">The arguments type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="compensateAddress">The compensate address.</param>
+    /// <summary>Notifies observers that an activity's execution and compensation pipelines are configured.</summary>
+    /// <typeparam name="TActivity">The activity implementation.</typeparam>
+    /// <typeparam name="TArguments">The execution-arguments contract.</typeparam>
+    /// <param name="configurator">The completed execution-pipeline configuration.</param>
+    /// <param name="compensateAddress">The endpoint that processes compensation requests.</param>
     public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
         where TActivity : class
         where TArguments : class
@@ -23,10 +23,10 @@ public class ActivityConfigurationObservable :
         ForEach(observer => observer.ActivityConfigured(configurator, compensateAddress));
     }
 
-    /// <summary>Reports that execute activity has been configured.</summary>
-    /// <typeparam name="TActivity">The activity type.</typeparam>
-    /// <typeparam name="TArguments">The arguments type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Notifies observers that an activity's execution pipeline is configured.</summary>
+    /// <typeparam name="TActivity">The activity implementation.</typeparam>
+    /// <typeparam name="TArguments">The execution-arguments contract.</typeparam>
+    /// <param name="configurator">The completed execution-pipeline configuration.</param>
     public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
         where TActivity : class
         where TArguments : class
@@ -36,10 +36,10 @@ public class ActivityConfigurationObservable :
         ForEach(observer => observer.ExecuteActivityConfigured(configurator));
     }
 
-    /// <summary>Reports that compensate activity has been configured.</summary>
-    /// <typeparam name="TActivity">The activity type.</typeparam>
-    /// <typeparam name="TLog">The log type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Notifies observers that an activity's compensation pipeline is configured.</summary>
+    /// <typeparam name="TActivity">The activity implementation.</typeparam>
+    /// <typeparam name="TLog">The compensation-log contract.</typeparam>
+    /// <param name="configurator">The completed compensation-pipeline configuration.</param>
     public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
         where TActivity : class
         where TLog : class

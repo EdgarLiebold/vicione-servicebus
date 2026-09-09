@@ -1,32 +1,32 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Defines settings for endpoint.</summary>
-/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
-public interface IEndpointSettings<TConsumer>
-    where TConsumer : class
+/// <summary>Exposes transport-independent settings and callbacks for an endpoint definition.</summary>
+/// <typeparam name="TDefinition">The endpoint definition associated with the settings.</typeparam>
+public interface IEndpointSettings<TDefinition>
+    where TDefinition : class
 {
-    /// <summary>Gets the name.</summary>
+    /// <summary>Gets the explicit endpoint name, when configured.</summary>
     string? Name { get; }
 
-    /// <summary>Gets a value indicating whether temporary.</summary>
+    /// <summary>Gets whether the endpoint and its broker resources are removed when the endpoint stops.</summary>
     bool IsTemporary { get; }
 
-    /// <summary>Gets the prefetch count.</summary>
+    /// <summary>Gets the broker-specific number of messages fetched ahead of processing.</summary>
     int? PrefetchCount { get; }
 
-    /// <summary>Gets the concurrent message limit.</summary>
+    /// <summary>Gets the maximum number of messages processed concurrently on the endpoint.</summary>
     int? ConcurrentMessageLimit { get; }
 
-    /// <summary>Gets the configure consume topology.</summary>
+    /// <summary>Gets whether the transport creates the endpoint's consume topology.</summary>
     bool ConfigureConsumeTopology { get; }
 
-    /// <summary>Gets the instance id.</summary>
+    /// <summary>Gets the identifier appended to the endpoint name, when configured.</summary>
     string? InstanceId { get; }
 
-    /// <summary>Configures endpoint.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    void ConfigureEndpoint<T>(T configurator, IRegistrationContext? context)
-        where T : IReceiveEndpointConfigurator;
+    /// <summary>Invokes the registered callbacks for a transport-specific receive endpoint.</summary>
+    /// <typeparam name="TEndpointConfigurator">The transport-specific receive-endpoint configurator.</typeparam>
+    /// <param name="configurator">The receive endpoint to configure.</param>
+    /// <param name="context">The registration context available to callbacks.</param>
+    void ConfigureEndpoint<TEndpointConfigurator>(TEndpointConfigurator configurator, IRegistrationContext? context)
+        where TEndpointConfigurator : IReceiveEndpointConfigurator;
 }

@@ -53,7 +53,7 @@ internal sealed class RequestClient<TRequest> :
             if (remaining <= TimeSpan.Zero)
                 throw new ArgumentOutOfRangeException(nameof(options), options.Deadline, "The request deadline must be in the future.");
 
-            timeout = remaining;
+            timeout = new RequestTimeout(remaining);
         }
 
         async Task<TRequest> RequestAsync(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token)
@@ -69,7 +69,7 @@ internal sealed class RequestClient<TRequest> :
             configurator =>
             {
                 if (optionsSnapshot.TimeToLive is { } timeToLive)
-                    configurator.TimeToLive = timeToLive;
+                    configurator.TimeToLive = new RequestTimeout(timeToLive);
 
                 configurator.UseExecute(context => OutgoingOptionsPipe.Apply(context, optionsSnapshot));
             },
@@ -155,19 +155,19 @@ internal sealed class RequestClient<TRequest> :
     }
 
     /// <inheritdoc />
-    public Task<Response<T1, T2>> GetResponseAsync<T1, T2>(TRequest message, RequestTimeout timeout = default,
+    public Task<Response<TResponse1, TResponse2>> GetResponseAsync<TResponse1, TResponse2>(TRequest message, RequestTimeout timeout = default,
         CancellationToken cancellationToken = default)
-        where T1 : class
-        where T2 : class
+        where TResponse1 : class
+        where TResponse2 : class
     {
-        return GetResponseAsync<T1, T2>(message, null, timeout, cancellationToken);
+        return GetResponseAsync<TResponse1, TResponse2>(message, null, timeout, cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task<Response<T1, T2>> GetResponseAsync<T1, T2>(TRequest message, RequestPipeConfiguratorCallback<TRequest>? callback,
+    public Task<Response<TResponse1, TResponse2>> GetResponseAsync<TResponse1, TResponse2>(TRequest message, RequestPipeConfiguratorCallback<TRequest>? callback,
         RequestTimeout timeout = default, CancellationToken cancellationToken = default)
-        where T1 : class
-        where T2 : class
+        where TResponse1 : class
+        where TResponse2 : class
     {
         ArgumentNullException.ThrowIfNull(message);
 
@@ -178,23 +178,23 @@ internal sealed class RequestClient<TRequest> :
             return message;
         }
 
-        return GetResponseInternalAsync<T1, T2>(RequestAsync, timeout, cancellationToken, callback);
+        return GetResponseInternalAsync<TResponse1, TResponse2>(RequestAsync, timeout, cancellationToken, callback);
     }
 
     /// <inheritdoc />
-    public Task<Response<T1, T2>> GetResponseAsync<T1, T2>(object values, RequestTimeout timeout = default,
+    public Task<Response<TResponse1, TResponse2>> GetResponseAsync<TResponse1, TResponse2>(object values, RequestTimeout timeout = default,
         CancellationToken cancellationToken = default)
-        where T1 : class
-        where T2 : class
+        where TResponse1 : class
+        where TResponse2 : class
     {
-        return GetResponseAsync<T1, T2>(values, null, timeout, cancellationToken);
+        return GetResponseAsync<TResponse1, TResponse2>(values, null, timeout, cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task<Response<T1, T2>> GetResponseAsync<T1, T2>(object values, RequestPipeConfiguratorCallback<TRequest>? callback,
+    public Task<Response<TResponse1, TResponse2>> GetResponseAsync<TResponse1, TResponse2>(object values, RequestPipeConfiguratorCallback<TRequest>? callback,
         RequestTimeout timeout = default, CancellationToken cancellationToken = default)
-        where T1 : class
-        where T2 : class
+        where TResponse1 : class
+        where TResponse2 : class
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
@@ -204,25 +204,25 @@ internal sealed class RequestClient<TRequest> :
             return await _requestSendEndpoint.SendAsync(requestId, values, pipe, token).ConfigureAwait(false);
         }
 
-        return GetResponseInternalAsync<T1, T2>(RequestAsync, timeout, cancellationToken, callback);
+        return GetResponseInternalAsync<TResponse1, TResponse2>(RequestAsync, timeout, cancellationToken, callback);
     }
 
     /// <inheritdoc />
-    public Task<Response<T1, T2, T3>> GetResponseAsync<T1, T2, T3>(TRequest message, RequestTimeout timeout = default,
+    public Task<Response<TResponse1, TResponse2, TResponse3>> GetResponseAsync<TResponse1, TResponse2, TResponse3>(TRequest message, RequestTimeout timeout = default,
         CancellationToken cancellationToken = default)
-        where T1 : class
-        where T2 : class
-        where T3 : class
+        where TResponse1 : class
+        where TResponse2 : class
+        where TResponse3 : class
     {
-        return GetResponseAsync<T1, T2, T3>(message, null, timeout, cancellationToken);
+        return GetResponseAsync<TResponse1, TResponse2, TResponse3>(message, null, timeout, cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task<Response<T1, T2, T3>> GetResponseAsync<T1, T2, T3>(TRequest message, RequestPipeConfiguratorCallback<TRequest>? callback,
+    public Task<Response<TResponse1, TResponse2, TResponse3>> GetResponseAsync<TResponse1, TResponse2, TResponse3>(TRequest message, RequestPipeConfiguratorCallback<TRequest>? callback,
         RequestTimeout timeout = default, CancellationToken cancellationToken = default)
-        where T1 : class
-        where T2 : class
-        where T3 : class
+        where TResponse1 : class
+        where TResponse2 : class
+        where TResponse3 : class
     {
         ArgumentNullException.ThrowIfNull(message);
 
@@ -233,25 +233,25 @@ internal sealed class RequestClient<TRequest> :
             return message;
         }
 
-        return GetResponseInternalAsync<T1, T2, T3>(RequestAsync, timeout, cancellationToken, callback);
+        return GetResponseInternalAsync<TResponse1, TResponse2, TResponse3>(RequestAsync, timeout, cancellationToken, callback);
     }
 
     /// <inheritdoc />
-    public Task<Response<T1, T2, T3>> GetResponseAsync<T1, T2, T3>(object values, RequestTimeout timeout = default,
+    public Task<Response<TResponse1, TResponse2, TResponse3>> GetResponseAsync<TResponse1, TResponse2, TResponse3>(object values, RequestTimeout timeout = default,
         CancellationToken cancellationToken = default)
-        where T1 : class
-        where T2 : class
-        where T3 : class
+        where TResponse1 : class
+        where TResponse2 : class
+        where TResponse3 : class
     {
-        return GetResponseAsync<T1, T2, T3>(values, null, timeout, cancellationToken);
+        return GetResponseAsync<TResponse1, TResponse2, TResponse3>(values, null, timeout, cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task<Response<T1, T2, T3>> GetResponseAsync<T1, T2, T3>(object values, RequestPipeConfiguratorCallback<TRequest>? callback,
+    public Task<Response<TResponse1, TResponse2, TResponse3>> GetResponseAsync<TResponse1, TResponse2, TResponse3>(object values, RequestPipeConfiguratorCallback<TRequest>? callback,
         RequestTimeout timeout = default, CancellationToken cancellationToken = default)
-        where T1 : class
-        where T2 : class
-        where T3 : class
+        where TResponse1 : class
+        where TResponse2 : class
+        where TResponse3 : class
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
@@ -261,7 +261,7 @@ internal sealed class RequestClient<TRequest> :
             return await _requestSendEndpoint.SendAsync(requestId, values, pipe, token).ConfigureAwait(false);
         }
 
-        return GetResponseInternalAsync<T1, T2, T3>(RequestAsync, timeout, cancellationToken, callback);
+        return GetResponseInternalAsync<TResponse1, TResponse2, TResponse3>(RequestAsync, timeout, cancellationToken, callback);
     }
 
     async Task<Response<T>> GetResponseInternalAsync<T>(ClientRequestHandle<TRequest>.SendRequestCallback request,
@@ -281,42 +281,46 @@ internal sealed class RequestClient<TRequest> :
         return await handle.GetResponseAsync<T>(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    async Task<Response<T1, T2>> GetResponseInternalAsync<T1, T2>(ClientRequestHandle<TRequest>.SendRequestCallback request, RequestTimeout timeout, CancellationToken cancellationToken, RequestPipeConfiguratorCallback<TRequest>? callback = null)
-        where T1 : class
-        where T2 : class
+    async Task<Response<TResponse1, TResponse2>> GetResponseInternalAsync<TResponse1, TResponse2>(
+        ClientRequestHandle<TRequest>.SendRequestCallback request,
+        RequestTimeout timeout,
+        CancellationToken cancellationToken,
+        RequestPipeConfiguratorCallback<TRequest>? callback = null)
+        where TResponse1 : class
+        where TResponse2 : class
     {
         using RequestHandle<TRequest> handle = new ClientRequestHandle<TRequest>(_context, request, cancellationToken, timeout.Or(_timeout));
 
         callback?.Invoke(handle);
 
-        Task<Response<T1>> result1 = handle.GetResponseAsync<T1>(false, cancellationToken: cancellationToken);
-        Task<Response<T2>> result2 = handle.GetResponseAsync<T2>(cancellationToken: cancellationToken);
+        Task<Response<TResponse1>> result1 = handle.GetResponseAsync<TResponse1>(false, cancellationToken: cancellationToken);
+        Task<Response<TResponse2>> result2 = handle.GetResponseAsync<TResponse2>(cancellationToken: cancellationToken);
 
         var task = await Task.WhenAny(result1, result2).ConfigureAwait(false);
 
         await task.ConfigureAwait(false);
 
-        return new Response<T1, T2>(result1, result2);
+        return new Response<TResponse1, TResponse2>(result1, result2);
     }
 
-    async Task<Response<T1, T2, T3>> GetResponseInternalAsync<T1, T2, T3>(ClientRequestHandle<TRequest>.SendRequestCallback request,
+    async Task<Response<TResponse1, TResponse2, TResponse3>> GetResponseInternalAsync<TResponse1, TResponse2, TResponse3>(ClientRequestHandle<TRequest>.SendRequestCallback request,
         RequestTimeout timeout, CancellationToken cancellationToken, RequestPipeConfiguratorCallback<TRequest>? callback = null)
-        where T1 : class
-        where T2 : class
-        where T3 : class
+        where TResponse1 : class
+        where TResponse2 : class
+        where TResponse3 : class
     {
         using RequestHandle<TRequest> handle = new ClientRequestHandle<TRequest>(_context, request, cancellationToken, timeout.Or(_timeout));
 
         callback?.Invoke(handle);
 
-        Task<Response<T1>> result1 = handle.GetResponseAsync<T1>(false, cancellationToken: cancellationToken);
-        Task<Response<T2>> result2 = handle.GetResponseAsync<T2>(false, cancellationToken: cancellationToken);
-        Task<Response<T3>> result3 = handle.GetResponseAsync<T3>(cancellationToken: cancellationToken);
+        Task<Response<TResponse1>> result1 = handle.GetResponseAsync<TResponse1>(false, cancellationToken: cancellationToken);
+        Task<Response<TResponse2>> result2 = handle.GetResponseAsync<TResponse2>(false, cancellationToken: cancellationToken);
+        Task<Response<TResponse3>> result3 = handle.GetResponseAsync<TResponse3>(cancellationToken: cancellationToken);
 
         var task = await Task.WhenAny(result1, result2, result3).ConfigureAwait(false);
 
         await task.ConfigureAwait(false);
 
-        return new Response<T1, T2, T3>(result1, result2, result3);
+        return new Response<TResponse1, TResponse2, TResponse3>(result1, result2, result3);
     }
 }

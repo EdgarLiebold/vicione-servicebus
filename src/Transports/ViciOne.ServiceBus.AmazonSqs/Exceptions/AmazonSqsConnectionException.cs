@@ -22,7 +22,7 @@ public class AmazonSqsConnectionException :
     /// <param name="message">The error message.</param>
     /// <param name="innerException">The underlying failure.</param>
     public AmazonSqsConnectionException(string message, Exception innerException)
-        : base(message, innerException)
+        : base(message, innerException, isTransient: true)
     {
     }
 }

@@ -71,11 +71,11 @@ public sealed class ContainerScopedEndpointTests
             await endpoint.SendAsync(sent, cancellationToken);
             Response<BusScopeResponse> response = await client.Advanced().GetResponseAsync<BusScopeResponse>(
                 request,
-                timeout: timeout,
+                timeout: new RequestTimeout(timeout),
                 cancellationToken: cancellationToken);
             Response<BusScopeResponse> explicitResponse = await explicitClient.Advanced().GetResponseAsync<BusScopeResponse>(
                 explicitRequest,
-                timeout: timeout,
+                timeout: new RequestTimeout(timeout),
                 cancellationToken: cancellationToken);
             BusScopeCapture[] captures = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 

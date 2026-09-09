@@ -3,9 +3,9 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>Receives notifications about endpoint configuration events.</summary>
 public interface IEndpointConfigurationObserver
 {
-    /// <summary>Called when an endpoint is configured.</summary>
-    /// <typeparam name="T">The receive endpoint configurator type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    void EndpointConfigured<T>(T configurator)
-        where T : IReceiveEndpointConfigurator;
+    /// <summary>Called after a receive endpoint's configuration is complete.</summary>
+    /// <typeparam name="TEndpointConfigurator">The transport-specific receive-endpoint configurator.</typeparam>
+    /// <param name="configurator">The completed endpoint configuration.</param>
+    void EndpointConfigured<TEndpointConfigurator>(TEndpointConfigurator configurator)
+        where TEndpointConfigurator : IReceiveEndpointConfigurator;
 }

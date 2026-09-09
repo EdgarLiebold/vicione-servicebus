@@ -10,7 +10,7 @@ public sealed class RequestTimeoutTests
     public void DefaultNoneAndOr_HaveExactValueSemantics()
     {
         RequestTimeout none = RequestTimeout.None;
-        RequestTimeout fallback = RequestTimeout.After(s: 17);
+        var fallback = new RequestTimeout(TimeSpan.FromSeconds(17));
 
         Assert.False(none.HasValue);
         Assert.Throws<InvalidOperationException>(() => none.Value);
@@ -23,54 +23,53 @@ public sealed class RequestTimeoutTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-REQUEST-TIMEOUT", "time-span-and-millisecond-conversions")]
-    public void ImplicitConversions_PreserveTheExactRequestedDuration()
+    [RequirementCoverage("REQ-VSB-REQUEST-TIMEOUT", "explicit-duration-construction")]
+    public void Constructor_PreservesTheExactRequestedDuration()
     {
-        RequestTimeout fromTimeSpan = TimeSpan.FromMilliseconds(725);
-        RequestTimeout fromMilliseconds = 125;
+        var timeout = new RequestTimeout(TimeSpan.FromMilliseconds(725));
 
-        Assert.Equal(TimeSpan.FromMilliseconds(725), fromTimeSpan.Value);
-        Assert.Equal(TimeSpan.FromMilliseconds(125), fromMilliseconds.Value);
-        Assert.NotEqual(fromTimeSpan, fromMilliseconds);
+        Assert.Equal(TimeSpan.FromMilliseconds(725), timeout.Value);
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-REQUEST-TIMEOUT", "component-composition")]
-    public void After_ComposesEveryDurationComponentExactly()
+    [RequirementCoverage("REQ-VSB-REQUEST-TIMEOUT", "unambiguous-public-surface")]
+    public void PublicSurface_RequiresAnExplicitTimeSpanUnit()
     {
-        RequestTimeout timeout = RequestTimeout.After(d: 1, h: 2, m: 3, s: 4, ms: 5);
+        Type timeoutType = typeof(RequestTimeout);
+        string[] conversionOrComponentFactories = timeoutType
+            .GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.DeclaredOnly)
+            .Where(method => method.Name is "op_Implicit" or "After")
+            .Select(method => method.Name)
+            .ToArray();
 
-        Assert.Equal(new TimeSpan(1, 2, 3, 4, 5), timeout.Value);
-        Assert.Equal(timeout, RequestTimeout.After(d: 1, h: 2, m: 3, s: 4, ms: 5));
-        Assert.True(timeout == RequestTimeout.After(d: 1, h: 2, m: 3, s: 4, ms: 5));
-        Assert.False(timeout != RequestTimeout.After(d: 1, h: 2, m: 3, s: 4, ms: 5));
+        Assert.NotNull(timeoutType.GetConstructor([typeof(TimeSpan)]));
+        Assert.Empty(conversionOrComponentFactories);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-TIMEOUT", "value-equality")]
+    public void Equality_UsesTheExactDuration()
+    {
+        var first = new RequestTimeout(TimeSpan.FromMinutes(2));
+        var same = new RequestTimeout(TimeSpan.FromMinutes(2));
+        var different = new RequestTimeout(TimeSpan.FromMinutes(3));
+
+        Assert.Equal(first, same);
+        Assert.NotEqual(first, different);
+        Assert.True(first == same);
+        Assert.True(first != different);
     }
 
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    [RequirementCoverage("REQ-VSB-REQUEST-TIMEOUT", "non-positive-conversion-rejected")]
-    public void NonPositiveImplicitDurations_AreRejected(int milliseconds)
+    [RequirementCoverage("REQ-VSB-REQUEST-TIMEOUT", "non-positive-duration-rejected")]
+    public void Constructor_RejectsNonPositiveDurations(int milliseconds)
     {
-        ArgumentOutOfRangeException integerException = Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            RequestTimeout _ = milliseconds;
-        });
-        ArgumentOutOfRangeException timeSpanException = Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            RequestTimeout _ = TimeSpan.FromMilliseconds(milliseconds);
-        });
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(
+            () => new RequestTimeout(TimeSpan.FromMilliseconds(milliseconds)));
 
-        Assert.Equal("milliseconds", integerException.ParamName);
-        Assert.Equal("timeout", timeSpanException.ParamName);
-    }
-
-    [Fact]
-    [RequirementCoverage("REQ-VSB-REQUEST-TIMEOUT", "empty-composition-rejected")]
-    public void EmptyAfterComposition_IsRejected()
-    {
-        ArgumentException exception = Assert.Throws<ArgumentException>(() => RequestTimeout.After());
-
-        Assert.Equal("The timeout must be > 0", exception.Message);
+        Assert.Equal("timeout", exception.ParamName);
+        Assert.Equal(TimeSpan.FromMilliseconds(milliseconds), exception.ActualValue);
     }
 }

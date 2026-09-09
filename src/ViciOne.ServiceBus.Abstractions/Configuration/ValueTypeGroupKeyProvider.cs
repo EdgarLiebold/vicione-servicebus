@@ -27,11 +27,11 @@ public sealed class ValueTypeGroupKeyProvider<TMessage, TKey> :
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        TKey? property = _provider(context);
+        TKey? selectedKey = _provider(context);
 
-        if (property.HasValue)
+        if (selectedKey.HasValue)
         {
-            key = property.Value;
+            key = selectedKey.Value;
             return true;
         }
 

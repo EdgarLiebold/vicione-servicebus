@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Defines the operations required by options.</summary>
+/// <summary>Marks a value as a service-bus configuration option.</summary>
 public interface IOptions
 {
 }

@@ -130,7 +130,7 @@ public sealed class MultiBusRequestTests
             .AddViciOneServiceBus<IBusB>(configuration =>
             {
                 configuration.Limits(MessageLimits.Conservative);
-                configuration.AddRequestClient<SecondaryRequest>(RequestTimeout.After(s: 1));
+                configuration.AddRequestClient<SecondaryRequest>(new RequestTimeout(TimeSpan.FromSeconds(1)));
                 configuration.AddConsumer<SecondaryRequestConsumer>();
                 configuration.UsingInMemory((context, configurator) =>
                 {

@@ -2,7 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures consumer registration.</summary>
+/// <summary>Configures registration for a specific consumer.</summary>
 /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
 public interface IConsumerRegistrationConfigurator<TConsumer> :
     IConsumerRegistrationConfigurator
@@ -11,12 +11,12 @@ public interface IConsumerRegistrationConfigurator<TConsumer> :
 }
 
 
-/// <summary>Configures consumer registration.</summary>
+/// <summary>Configures endpoint ownership for a consumer registration.</summary>
 public interface IConsumerRegistrationConfigurator
 {
-    /// <summary>Applies the endpoint configuration.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Configures a dedicated receive endpoint for the consumer.</summary>
+    /// <param name="configure">The callback that configures the endpoint registration.</param>
     void Endpoint(Action<IEndpointRegistrationConfigurator> configure);
-    /// <summary>Excludes from configure endpoints.</summary>
+    /// <summary>Excludes the consumer from automatic endpoint configuration.</summary>
     void ExcludeFromConfigureEndpoints();
 }

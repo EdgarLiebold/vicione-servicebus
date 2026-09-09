@@ -1,5 +1,3 @@
-using System;
-
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Specifies the available validation result disposition values.</summary>

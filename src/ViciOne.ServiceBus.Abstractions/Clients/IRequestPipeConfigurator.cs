@@ -2,8 +2,8 @@ using System;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>Configures request pipe.</summary>
-/// <typeparam name="TRequest">The request type.</typeparam>
+/// <summary>Configures the send pipeline for a request message.</summary>
+/// <typeparam name="TRequest">The request message contract.</typeparam>
 public interface IRequestPipeConfigurator<TRequest> :
     IRequestPipeConfigurator,
     IPipeConfigurator<SendContext<TRequest>>
@@ -12,15 +12,13 @@ public interface IRequestPipeConfigurator<TRequest> :
 }
 
 
-/// <summary>Configures request pipe.</summary>
+/// <summary>Exposes identity and delivery settings for one pending request.</summary>
 public interface IRequestPipeConfigurator
 {
-    /// <summary>The RequestId assigned to the request, and used in the header for the outgoing request message.</summary>
+    /// <summary>Gets the identifier used to correlate the request with its response.</summary>
     Guid RequestId { get; }
 
-    /// <summary>
-    /// Set the request message time to live, which by default is equal to the request timeout. Clearing this value
-    /// will prevent any TimeToLive value from being specified.
-    /// </summary>
+    /// <summary>Sets the transport time-to-live, or clears it with <see cref="RequestTimeout.None" />.</summary>
+    /// <remarks>The request response deadline is unchanged.</remarks>
     RequestTimeout TimeToLive { set; }
 }

@@ -71,7 +71,7 @@ public sealed class MediatorRequestTests
             },
             timeProvider);
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
-        IRequestClient<PendingRequest> client = mediator.CreateRequestClient<PendingRequest>(RequestTimeout.After(m: 1));
+        IRequestClient<PendingRequest> client = mediator.CreateRequestClient<PendingRequest>(new RequestTimeout(TimeSpan.FromMinutes(1)));
         var message = new PendingRequest("no-response");
         using RequestHandle<PendingRequest> request = client.Create(
             message,
@@ -116,7 +116,7 @@ public sealed class MediatorRequestTests
                 ValidateScopes = true,
             });
         IMediator mediator = provider.GetRequiredService<IMediator>();
-        IRequestClient<PendingRequest> client = mediator.CreateRequestClient<PendingRequest>(RequestTimeout.After(m: 1));
+        IRequestClient<PendingRequest> client = mediator.CreateRequestClient<PendingRequest>(new RequestTimeout(TimeSpan.FromMinutes(1)));
         var message = new PendingRequest("di-time-provider");
         using RequestHandle<PendingRequest> request = client.Create(
             message,
@@ -148,7 +148,7 @@ public sealed class MediatorRequestTests
     {
         IMediator mediator = Bus.Factory.CreateMediator(configuration => configuration.Limits(MessageLimits.Conservative));
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
-        IRequestClient<PendingRequest> client = mediator.CreateRequestClient<PendingRequest>(OperationTimeout());
+        IRequestClient<PendingRequest> client = mediator.CreateRequestClient<PendingRequest>(new RequestTimeout(OperationTimeout()));
         using RequestHandle<PendingRequest> request = client.Create(
             new PendingRequest("missing-handler"),
             cancellationToken: TestContext.Current.CancellationToken);

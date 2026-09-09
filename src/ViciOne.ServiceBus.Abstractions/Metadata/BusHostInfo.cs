@@ -4,36 +4,36 @@ using System.Reflection;
 
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>Carries diagnostic information for bus host.</summary>
+/// <summary>Represents serializable process and runtime metadata for a message-producing host.</summary>
 public sealed class BusHostInfo : HostInfo
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Initializes an empty host-metadata value for serialization.</summary>
     public BusHostInfo()
     {
     }
 
-    /// <summary>Gets or sets the machine name.</summary>
+    /// <summary>Gets or sets the machine or container host name.</summary>
     public string? MachineName { get; set; }
 
-    /// <summary>Gets or sets the process name.</summary>
+    /// <summary>Gets or sets the executable or entry-assembly name.</summary>
     public string? ProcessName { get; set; }
 
-    /// <summary>Gets or sets the process id.</summary>
+    /// <summary>Gets or sets the operating-system process identifier.</summary>
     public int ProcessId { get; set; }
 
-    /// <summary>Gets or sets the assembly.</summary>
+    /// <summary>Gets or sets the entry-assembly name.</summary>
     public string? Assembly { get; set; }
 
-    /// <summary>Gets or sets the assembly version.</summary>
+    /// <summary>Gets or sets the entry-assembly version.</summary>
     public string? AssemblyVersion { get; set; }
 
-    /// <summary>Gets or sets the framework version.</summary>
+    /// <summary>Gets or sets the runtime version.</summary>
     public string? FrameworkVersion { get; set; }
 
-    /// <summary>Gets or sets the vici one service bus version.</summary>
+    /// <summary>Gets or sets the ViciOne.ServiceBus assembly version.</summary>
     public string? ViciOneServiceBusVersion { get; set; }
 
-    /// <summary>Gets or sets the operating system version.</summary>
+    /// <summary>Gets or sets the operating-system version description.</summary>
     public string? OperatingSystemVersion { get; set; }
 
     internal static BusHostInfo CaptureCurrent()

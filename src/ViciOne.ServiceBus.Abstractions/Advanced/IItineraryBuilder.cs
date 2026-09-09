@@ -30,12 +30,12 @@ public interface IItineraryBuilder
     /// <summary>Adds, updates, or removes a string variable.</summary>
     /// <param name="key">The variable name.</param>
     /// <param name="value">The new value, or <see langword="null"/> to remove the variable.</param>
-    void AddVariable(string key, string? value);
+    void SetVariable(string key, string? value);
 
     /// <summary>Adds, updates, or removes an object variable.</summary>
     /// <param name="key">The variable name.</param>
     /// <param name="value">The new value, or <see langword="null"/> to remove the variable.</param>
-    void AddVariable(string key, object? value);
+    void SetVariable(string key, object? value);
 
     /// <summary>
     /// Adds or replaces routing-slip variables from the readable properties of an object.

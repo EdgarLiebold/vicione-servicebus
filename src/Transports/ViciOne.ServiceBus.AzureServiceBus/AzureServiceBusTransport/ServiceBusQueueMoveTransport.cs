@@ -33,7 +33,7 @@ public class ServiceBusQueueMoveTransport
             if (!context.TryGetPayload(out ServiceBusMessageContext? messageContext))
                 throw new ArgumentException("The ReceiveContext must contain a BrokeredMessageContext (from Azure Service Bus)", nameof(context));
 
-            var body = context.GetBody();
+            var body = context.GetBodyBytes();
 
             var message = new ServiceBusMessage(body)
             {

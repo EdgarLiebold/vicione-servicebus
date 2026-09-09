@@ -317,7 +317,7 @@ static class JobAttemptStateMachineBehaviorExtensions
                 JobId = context.Saga.JobId,
                 AttemptId = context.Saga.CorrelationId,
                 RetryAttempt = context.Saga.RetryAttempt,
-                Timestamp = context.GetUtcDateTime(),
+                Timestamp = context.GetUtcNow(),
                 RetryDelay = context.GetRetryDelay(),
                 Exceptions = new FaultExceptionInfo(new TimeoutException("The job status check timed out."))
             });
@@ -332,7 +332,7 @@ static class JobAttemptStateMachineBehaviorExtensions
                 JobId = context.Saga.JobId,
                 AttemptId = context.Saga.CorrelationId,
                 RetryAttempt = context.Saga.RetryAttempt,
-                Timestamp = context.GetUtcDateTime(),
+                Timestamp = context.GetUtcNow(),
                 RetryDelay = context.GetRetryDelay(),
                 Exceptions = new FaultExceptionInfo(new TimeoutException($"The job service failed to respond: {context.Saga.InstanceAddress} (Suspect)"))
             });

@@ -8,29 +8,29 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>Caches read only property data.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Caches readable instance properties for case-insensitive lookup.</summary>
+/// <typeparam name="T">The target type.</typeparam>
 public class ReadOnlyPropertyCache<T> : IReadOnlyPropertyCache<T>
 {
     readonly IReadOnlyDictionary<string, ReadOnlyProperty<T>> _properties;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="accessPolicy">The access policy.</param>
+    /// <summary>Builds the property cache for <typeparamref name="T" />.</summary>
+    /// <param name="accessPolicy">The accessibility boundary applied to property getters.</param>
     public ReadOnlyPropertyCache(PropertyAccessPolicy accessPolicy = PropertyAccessPolicy.PublicOnly)
     {
         _properties = CreatePropertyCache(accessPolicy);
     }
 
-    /// <summary>Gets enumerator.</summary>
-    /// <returns>The enumerator.</returns>
+    /// <summary>Returns an enumerator over the cached properties.</summary>
+    /// <returns>An enumerator over the cached property readers.</returns>
     public IEnumerator<ReadOnlyProperty<T>> GetEnumerator() => _properties.Values.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    /// <summary>Attempts to get value.</summary>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="value">Receives the value produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Attempts to get a cached property by name.</summary>
+    /// <param name="key">The case-insensitive property name.</param>
+    /// <param name="value">Receives the cached property when found.</param>
+    /// <returns><see langword="true" /> when the property exists.</returns>
     public bool TryGetValue(string key, [NotNullWhen(true)] out ReadOnlyProperty<T>? value) => _properties.TryGetValue(key, out value);
 
     static IReadOnlyDictionary<string, ReadOnlyProperty<T>> CreatePropertyCache(PropertyAccessPolicy accessPolicy)
@@ -45,10 +45,10 @@ public class ReadOnlyPropertyCache<T> : IReadOnlyPropertyCache<T>
             .ToDictionary(property => property.Property.Name, StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>Retrieves the requested value.</summary>
-    /// <param name="propertyExpression">The property expression.</param>
-    /// <param name="instance">The instance.</param>
-    /// <returns>The requested value.</returns>
+    /// <summary>Reads a selected property from an instance.</summary>
+    /// <param name="propertyExpression">An expression selecting a property on <typeparamref name="T" />.</param>
+    /// <param name="instance">The target instance.</param>
+    /// <returns>The boxed property value.</returns>
     public object? Get(Expression<Func<T, object>> propertyExpression, T instance) =>
         _properties[propertyExpression.GetMemberName()].Get(instance);
 }

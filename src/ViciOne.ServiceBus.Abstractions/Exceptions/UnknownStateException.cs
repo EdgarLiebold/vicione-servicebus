@@ -2,20 +2,36 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to unknown state.</summary>
-public class UnknownStateException :
+/// <summary>Reports a state name that is not defined by a saga state machine.</summary>
+public sealed class UnknownStateException :
     SagaStateMachineException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an unknown-state exception without state-machine context.</summary>
     public UnknownStateException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="machineType">The runtime machine type used by the operation.</param>
-    /// <param name="stateName">The state name.</param>
-    public UnknownStateException(string machineType, string stateName)
-        : base($"The {stateName} state is not defined for the {machineType} state machine")
+    /// <summary>Creates an exception for a state not defined by the specified state machine.</summary>
+    /// <param name="machineName">The logical name of the state machine.</param>
+    /// <param name="stateName">The undefined state name.</param>
+    public UnknownStateException(string machineName, string stateName)
+        : base(FormatMessage(machineName, stateName))
     {
+        MachineName = machineName;
+        StateName = stateName;
+    }
+
+    /// <summary>Gets the logical state-machine name, when one was supplied.</summary>
+    public string? MachineName { get; }
+
+    /// <summary>Gets the undefined state name, when one was supplied.</summary>
+    public string? StateName { get; }
+
+    static string FormatMessage(string machineName, string stateName)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(machineName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(stateName);
+
+        return $"The {stateName} state is not defined for the {machineName} state machine";
     }
 }

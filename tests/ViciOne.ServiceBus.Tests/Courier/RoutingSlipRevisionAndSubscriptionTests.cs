@@ -187,7 +187,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
                 harness.InputQueueAddress,
                 RoutingSlipEvents.ActivityCompleted | RoutingSlipEvents.Completed,
                 RoutingSlipEventContents.None);
-            builder.AddVariable("Variable", "knife");
+            builder.SetVariable("Variable", "knife");
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new CourierArguments("original"));
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);

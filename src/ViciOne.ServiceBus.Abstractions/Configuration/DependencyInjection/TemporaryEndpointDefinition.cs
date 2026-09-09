@@ -1,20 +1,34 @@
+using System;
+
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Specifies a temporary endpoint, with the prefix "response".</summary>
+/// <summary>Defines an auto-deleting receive endpoint with a generated temporary name.</summary>
 public class TemporaryEndpointDefinition :
     IEndpointDefinition
 {
     readonly string _tag;
     string? _name;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="tag">The tag.</param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit.</param>
-    /// <param name="prefetchCount">The prefetch count.</param>
-    /// <param name="configureConsumeTopology">The configure consume topology.</param>
+    /// <summary>Creates a temporary endpoint definition.</summary>
+    /// <param name="tag">The purpose tag included in the generated endpoint name.</param>
+    /// <param name="concurrentMessageLimit">The optional maximum number of messages processed concurrently.</param>
+    /// <param name="prefetchCount">The optional broker-specific number of messages fetched ahead of processing.</param>
+    /// <param name="configureConsumeTopology">Whether the transport creates the endpoint's consume topology.</param>
     public TemporaryEndpointDefinition(string? tag = default, int? concurrentMessageLimit = default, int? prefetchCount = default,
         bool configureConsumeTopology = true)
     {
+        if (tag is not null)
+            ArgumentException.ThrowIfNullOrWhiteSpace(tag);
+        if (concurrentMessageLimit <= 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(concurrentMessageLimit),
+                concurrentMessageLimit,
+                "The concurrent message limit must be positive.");
+        }
+        if (prefetchCount < 0)
+            throw new ArgumentOutOfRangeException(nameof(prefetchCount), prefetchCount, "The prefetch count cannot be negative.");
+
         ConcurrentMessageLimit = concurrentMessageLimit;
         PrefetchCount = prefetchCount;
         ConfigureConsumeTopology = configureConsumeTopology;
@@ -22,29 +36,32 @@ public class TemporaryEndpointDefinition :
         _tag = tag ?? "endpoint";
     }
 
-    /// <summary>Gets endpoint name.</summary>
-    /// <param name="formatter">The formatter.</param>
-    /// <returns>The endpoint name.</returns>
+    /// <summary>Gets the generated temporary endpoint name.</summary>
+    /// <param name="formatter">The naming convention used to generate the name.</param>
+    /// <returns>The temporary endpoint name.</returns>
     public string GetEndpointName(IEndpointNameFormatter formatter)
     {
+        ArgumentNullException.ThrowIfNull(formatter);
+
         return _name ??= formatter.TemporaryEndpoint(_tag);
     }
 
-    /// <summary>Gets a value indicating whether temporary.</summary>
+    /// <summary>Gets whether the endpoint and its broker resources are removed when the endpoint stops.</summary>
     public bool IsTemporary => true;
-    /// <summary>Gets the prefetch count.</summary>
+    /// <summary>Gets the broker-specific number of messages fetched ahead of processing.</summary>
     public int? PrefetchCount { get; }
-    /// <summary>Gets the concurrent message limit.</summary>
+    /// <summary>Gets the maximum number of messages processed concurrently on the endpoint.</summary>
     public int? ConcurrentMessageLimit { get; }
-    /// <summary>Gets the configure consume topology.</summary>
+    /// <summary>Gets whether the transport creates the endpoint's consume topology.</summary>
     public bool ConfigureConsumeTopology { get; }
 
-    /// <summary>Applies the supplied configuration.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="context">The context associated with the operation.</param>
-    public void Configure<T>(T configurator, IRegistrationContext? context)
-        where T : IReceiveEndpointConfigurator
+    /// <summary>Validates the receive endpoint supplied for this definition.</summary>
+    /// <typeparam name="TEndpointConfigurator">The transport-specific receive-endpoint configurator.</typeparam>
+    /// <param name="configurator">The receive endpoint associated with the definition.</param>
+    /// <param name="context">The optional registration context; temporary definitions have no callbacks to invoke.</param>
+    public void Configure<TEndpointConfigurator>(TEndpointConfigurator configurator, IRegistrationContext? context)
+        where TEndpointConfigurator : IReceiveEndpointConfigurator
     {
+        ArgumentNullException.ThrowIfNull(configurator);
     }
 }

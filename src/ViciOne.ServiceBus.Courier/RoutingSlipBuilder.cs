@@ -165,7 +165,7 @@ public sealed class RoutingSlipBuilder :
     /// <summary>Sets a string variable, or removes it when the value is null.</summary>
     /// <param name="key">The variable name.</param>
     /// <param name="value">The variable value, or <see langword="null"/> to remove it.</param>
-    public void AddVariable(string key, string? value)
+    public void SetVariable(string key, string? value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
 
@@ -178,7 +178,7 @@ public sealed class RoutingSlipBuilder :
     /// <summary>Sets an object variable, or removes it when the value is null.</summary>
     /// <param name="key">The variable name.</param>
     /// <param name="value">The variable value, or <see langword="null"/> to remove it.</param>
-    public void AddVariable(string key, object? value)
+    public void SetVariable(string key, object? value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
 

@@ -59,7 +59,7 @@ public sealed class ActiveMqTemporaryReplyTests
             started = true;
             IRequestClient<ReplyRequest> client = bus.CreateRequestClient<ReplyRequest>(
                 new Uri($"queue:{queueName}"),
-                RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
+                new RequestTimeout(fixture.OperationTimeout));
             Response<ReplyResponse> response = await client.GetResponseAsync<ReplyResponse>(
                     new ReplyRequest(correlationId),
                     cancellationToken)

@@ -1,8 +1,6 @@
-using ViciOne.ServiceBus.Configuration;
-
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures consume pipe.</summary>
+/// <summary>Configures middleware shared by all messages delivered through a consume pipeline.</summary>
 public interface IConsumePipeConfigurator :
     IPipeConfigurator<ConsumeContext>,
     IConsumerConfigurationObserverConnector,
@@ -14,19 +12,18 @@ public interface IConsumePipeConfigurator :
     IHandlerConfigurationObserver,
     IActivityConfigurationObserver
 {
-    /// <summary>If set to false, the transport will only be started when a connection is made to the consume pipe.</summary>
+    /// <summary>Sets whether the transport starts before a consumer pipeline is connected.</summary>
     bool AutoStart { set; }
 
-    /// <summary>Adds a type-specific pipe specification to the consume pipe.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="specification">The specification.</param>
-    void AddPipeSpecification<T>(IPipeSpecification<ConsumeContext<T>> specification)
-        where T : class;
+    /// <summary>Adds middleware for a specific consumed message contract.</summary>
+    /// <typeparam name="TMessage">The consumed message contract.</typeparam>
+    /// <param name="specification">The middleware specification to add.</param>
+    void AddPipeSpecification<TMessage>(IPipeSpecification<ConsumeContext<TMessage>> specification)
+        where TMessage : class;
 
     /// <summary>
-    /// Adds a pipe specification prior to the message type router so that a single
-    /// instance is used for all message types.
+    /// Adds middleware before message-type routing so one instance processes every consumed contract.
     /// </summary>
-    /// <param name="specification">The specification.</param>
+    /// <param name="specification">The middleware specification to add.</param>
     void AddPrePipeSpecification(IPipeSpecification<ConsumeContext> specification);
 }

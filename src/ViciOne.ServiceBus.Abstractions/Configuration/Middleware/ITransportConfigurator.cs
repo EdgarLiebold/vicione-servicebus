@@ -1,11 +1,11 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures transport.</summary>
+/// <summary>Configures receive-transport delivery capacity.</summary>
 public interface ITransportConfigurator
 {
-    /// <summary>Gets or sets the prefetch count.</summary>
+    /// <summary>Sets the broker-specific number of messages fetched ahead of processing.</summary>
     int PrefetchCount { set; }
 
-    /// <summary>Gets or sets the concurrent message limit.</summary>
+    /// <summary>Sets the maximum number of messages delivered concurrently by the transport.</summary>
     int? ConcurrentMessageLimit { set; }
 }

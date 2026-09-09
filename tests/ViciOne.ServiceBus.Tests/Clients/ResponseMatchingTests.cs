@@ -27,7 +27,7 @@ public sealed class ResponseMatchingTests
         {
             Guid correlationId = Guid.Parse("a79d067b-38d7-4429-b1a4-f36dde9cd808");
             IRequestClient<MatchingRequest> client =
-                harness.Bus.CreateRequestClient<MatchingRequest>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<MatchingRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
 
             Response<AcceptedResponse> response = await client.Advanced().GetResponseAsync<AcceptedResponse>(
                 new MatchingRequest(correlationId),
@@ -36,8 +36,8 @@ public sealed class ResponseMatchingTests
 
             Assert.Equal(new AcceptedResponse(correlationId, "transport"), response.Message);
             Assert.Equal(request.RequestId, response.RequestId);
-            Assert.True(request.Advanced().IsResponseAccepted<AcceptedResponse>(false));
-            Assert.False(request.Advanced().IsResponseAccepted<UnsupportedResponse>(false));
+            Assert.True(request.Advanced().IsResponseAccepted<AcceptedResponse>());
+            Assert.False(request.Advanced().IsResponseAccepted<UnsupportedResponse>());
         }
         finally
         {
@@ -58,14 +58,14 @@ public sealed class ResponseMatchingTests
         try
         {
             IRequestClient<MatchingRequest> client =
-                harness.Bus.CreateRequestClient<MatchingRequest>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<MatchingRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
             var request = new MatchingRequest(Guid.Parse("b08d8c54-3ee8-49df-aeb0-8fd33238d633"));
 
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
                 client.Advanced().GetResponseAsync<UnsupportedResponse>(request, cancellationToken: cancellationToken));
             ExceptionInfo fault = Assert.Single(exception.Fault!.Exceptions);
 
-            Assert.Equal(TypeCache<MatchingRequest>.ShortName, exception.RequestType);
+            Assert.Equal(typeof(MatchingRequest), exception.RequestType);
             Assert.Equal(TypeCache<InvalidOperationException>.ShortName, fault.ExceptionType);
             Assert.Equal(UnsupportedMessage, fault.Message);
             Assert.Equal(request, Assert.IsAssignableFrom<Fault<MatchingRequest>>(exception.Fault).Message);
@@ -90,7 +90,7 @@ public sealed class ResponseMatchingTests
         {
             Guid correlationId = Guid.Parse("4f00d66b-3139-42b1-aed7-dbb80cfa8fdd");
             IRequestClient<MatchingRequest> client =
-                harness.Bus.CreateRequestClient<MatchingRequest>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<MatchingRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
 
             Response<UnsupportedResponse, AcceptedResponse> response =
                 await client.Advanced().GetResponseAsync<UnsupportedResponse, AcceptedResponse>(
@@ -136,7 +136,7 @@ public sealed class ResponseMatchingTests
         {
             Guid correlationId = Guid.Parse("974652ec-49bd-4a11-a0f1-c299beab44e4");
             IRequestClient<MatchingRequest> client =
-                harness.Bus.CreateRequestClient<MatchingRequest>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<MatchingRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
 
             Response<AcceptedResponse, UnsupportedResponse> response =
                 await client.Advanced().GetResponseAsync<AcceptedResponse, UnsupportedResponse>(
@@ -171,7 +171,7 @@ public sealed class ResponseMatchingTests
         {
             Guid correlationId = Guid.Parse("18e6599e-6b59-44f0-b2b5-c20bc64835c5");
             IRequestClient<MatchingRequest> client =
-                harness.Bus.CreateRequestClient<MatchingRequest>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<MatchingRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
 
             Response<UnsupportedResponse, AcceptedResponse, ThirdResponse> response =
                 await client.Advanced().GetResponseAsync<UnsupportedResponse, AcceptedResponse, ThirdResponse>(
@@ -207,7 +207,7 @@ public sealed class ResponseMatchingTests
         IMediator mediator = CreateMediator("mediator");
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
         Guid correlationId = Guid.Parse("eaacba82-61f9-4808-a6e0-426cdb60b9ca");
-        IRequestClient<MatchingRequest> client = mediator.CreateRequestClient<MatchingRequest>(OperationTimeout());
+        IRequestClient<MatchingRequest> client = mediator.CreateRequestClient<MatchingRequest>(new RequestTimeout(OperationTimeout()));
 
         Response<AcceptedResponse> response = await client.Advanced().GetResponseAsync<AcceptedResponse>(
             new MatchingRequest(correlationId),
@@ -224,7 +224,7 @@ public sealed class ResponseMatchingTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         IMediator mediator = CreateMediator("unused");
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
-        IRequestClient<MatchingRequest> client = mediator.CreateRequestClient<MatchingRequest>(OperationTimeout());
+        IRequestClient<MatchingRequest> client = mediator.CreateRequestClient<MatchingRequest>(new RequestTimeout(OperationTimeout()));
 
         RequestException exception = await Assert.ThrowsAsync<RequestException>(() =>
             client.Advanced().GetResponseAsync<UnsupportedResponse>(
@@ -243,7 +243,7 @@ public sealed class ResponseMatchingTests
         IMediator mediator = CreateMediator("mediator-multiple");
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
         Guid correlationId = Guid.Parse("ed2ce1a5-750c-42fa-8f59-4a3126b8aa36");
-        IRequestClient<MatchingRequest> client = mediator.CreateRequestClient<MatchingRequest>(OperationTimeout());
+        IRequestClient<MatchingRequest> client = mediator.CreateRequestClient<MatchingRequest>(new RequestTimeout(OperationTimeout()));
 
         Response<UnsupportedResponse, AcceptedResponse> response =
             await client.Advanced().GetResponseAsync<UnsupportedResponse, AcceptedResponse>(
@@ -273,7 +273,7 @@ public sealed class ResponseMatchingTests
         IMediator mediator = CreateMediator("mediator-three");
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
         Guid correlationId = Guid.Parse("3773fdf6-f876-497d-a36f-ea0969489c0d");
-        IRequestClient<MatchingRequest> client = mediator.CreateRequestClient<MatchingRequest>(OperationTimeout());
+        IRequestClient<MatchingRequest> client = mediator.CreateRequestClient<MatchingRequest>(new RequestTimeout(OperationTimeout()));
 
         Response<UnsupportedResponse, AcceptedResponse, ThirdResponse> response =
             await client.Advanced().GetResponseAsync<UnsupportedResponse, AcceptedResponse, ThirdResponse>(
@@ -309,7 +309,7 @@ public sealed class ResponseMatchingTests
         harness.Handler<MatchingRequest>(async context =>
         {
             requestSeen?.TrySetResult(context);
-            if (!context.Advanced().IsResponseAccepted<AcceptedResponse>(false))
+            if (!context.Advanced().IsResponseAccepted<AcceptedResponse>())
                 throw new InvalidOperationException(UnsupportedMessage);
 
             await context.RespondAsync(new AcceptedResponse(context.Message.CorrelationId, responseValue));
@@ -322,7 +322,7 @@ public sealed class ResponseMatchingTests
             configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<MatchingRequest>(context =>
             {
-                if (!context.Advanced().IsResponseAccepted<AcceptedResponse>(false))
+                if (!context.Advanced().IsResponseAccepted<AcceptedResponse>())
                     throw new InvalidOperationException(UnsupportedMessage);
 
                 return context.RespondAsync(new AcceptedResponse(context.Message.CorrelationId, responseValue));

@@ -48,7 +48,7 @@ public sealed class SerializationFaultTests
                 Assert.IsAssignableFrom<Fault<SerializationFailureRequest>>(fault);
             ExceptionInfo faultException = Assert.Single(fault.Exceptions);
 
-            Assert.Equal(TypeCache<SerializationFailureRequest>.ShortName, exception.RequestType);
+            Assert.Equal(typeof(SerializationFailureRequest), exception.RequestType);
             Assert.NotEqual(Guid.Empty, fault.FaultId);
             Assert.Equal(requestMessageId, fault.FaultedMessageId);
             Assert.NotNull(fault.Host);

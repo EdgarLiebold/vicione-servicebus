@@ -32,7 +32,7 @@ internal sealed class BuildRoutingSlipExecutor<TInput> :
 
         var builder = new RoutingSlipBuilder(trackingNumber);
 
-        builder.AddVariable(MessageHeaders.FutureId, context.CorrelationId);
+        builder.SetVariable(MessageHeaders.FutureId, context.CorrelationId);
 
         builder.AddSubscription(context.ReceiveContext.InputAddress, RoutingSlipEvents.Completed | RoutingSlipEvents.Faulted);
 

@@ -192,7 +192,7 @@ public static class FutureStateExtensions
     public static void SetCompleted(this BehaviorContext<FutureState> context, Guid id)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var timestamp = context.SentTime ?? context.GetUtcDateTime();
+        var timestamp = context.SentTime ?? context.GetUtcNow();
 
         var future = context.Saga;
 
@@ -214,7 +214,7 @@ public static class FutureStateExtensions
     public static void SetFaulted(this BehaviorContext<FutureState> context, Guid id, DateTimeOffset? timestamp = default)
     {
         ArgumentNullException.ThrowIfNull(context);
-        timestamp ??= context.SentTime ?? context.GetUtcDateTime();
+        timestamp ??= context.SentTime ?? context.GetUtcNow();
 
         var future = context.Saga;
 
@@ -278,7 +278,7 @@ public static class FutureStateExtensions
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(factory);
         cancellationToken.ThrowIfCancellationRequested();
-        var timestamp = context.SentTime ?? context.GetUtcDateTime();
+        var timestamp = context.SentTime ?? context.GetUtcNow();
 
         if (future.HasPending())
             future.Pending?.Remove(id);

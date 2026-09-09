@@ -47,7 +47,7 @@ internal sealed class SuperviseJobConsumer :
             {
                 JobId = context.Message.JobId,
                 AttemptId = context.Message.AttemptId,
-                Timestamp = context.GetUtcDateTime(),
+                Timestamp = context.GetUtcNow(),
                 Status = jobHandle.Execution.Status switch
                 {
                     TaskStatus.RanToCompletion => JobAttemptStatusKind.Completed,

@@ -139,7 +139,7 @@ public sealed class ContainerEndpointRoutingTests
             IRequestClient<SubmitOrder> client = scope.ServiceProvider.GetRequiredService<IRequestClient<SubmitOrder>>();
             Response<OrderAccepted> response = await client.Advanced().GetResponseAsync<OrderAccepted>(
                 new SubmitOrder(orderId),
-                timeout: timeout,
+                timeout: new RequestTimeout(timeout),
                 cancellationToken: cancellationToken);
 
             Assert.Equal(orderId, response.Message.OrderId);

@@ -135,6 +135,26 @@ public sealed class BusControlHealthExtensionsTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "timeout-exception-required-inputs")]
+    public void TimeoutException_RejectsInvalidConstructorArguments()
+    {
+        BusHealthResult last = CreateResult(BusHealthStatus.Degraded, "recovering");
+
+        Assert.Equal(
+            "expectedStatus",
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new BusHealthStatusTimeoutException((BusHealthStatus)int.MaxValue, TimeSpan.Zero, last)).ParamName);
+        Assert.Equal(
+            "timeout",
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new BusHealthStatusTimeoutException(BusHealthStatus.Healthy, TimeSpan.FromMilliseconds(-2), last)).ParamName);
+        Assert.Equal(
+            "lastResult",
+            Assert.Throws<ArgumentNullException>(() =>
+                new BusHealthStatusTimeoutException(BusHealthStatus.Healthy, TimeSpan.Zero, null!)).ParamName);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "zero-timeout-final-result")]
     public async Task ZeroTimeout_ObservesOnceAndThenReportsTheUnexpectedResultAsync()
     {

@@ -2,25 +2,25 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to pipe configuration.</summary>
+/// <summary>Provides the exception base for invalid middleware-pipe configuration.</summary>
 public class PipeConfigurationException :
     ViciOneServiceBusException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a pipe-configuration exception without a custom message.</summary>
     public PipeConfigurationException()
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a pipe-configuration exception with the specified failure message.</summary>
+    /// <param name="message">The description of the invalid pipe configuration.</param>
     public PipeConfigurationException(string message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates a pipe-configuration exception with an underlying failure.</summary>
+    /// <param name="message">The description of the invalid pipe configuration.</param>
+    /// <param name="innerException">The exception raised while configuring the pipe.</param>
     public PipeConfigurationException(string message, Exception innerException)
         : base(message, innerException)
     {

@@ -261,7 +261,7 @@ public sealed class RoutingSlipFaultIntegrationTests
             builder.AddActivity(first.Name, first.ExecuteAddress, new CourierArguments("first"));
             builder.AddActivity(second.Name, second.ExecuteAddress, new CourierArguments("second"));
             builder.AddActivity(failing.Name, failing.ExecuteAddress, new FaultingCourierArguments("expected-courier-failure"));
-            builder.AddVariable("SlipVariable", "knife");
+            builder.SetVariable("SlipVariable", "knife");
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(

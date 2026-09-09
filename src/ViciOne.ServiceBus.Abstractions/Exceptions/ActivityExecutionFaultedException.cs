@@ -2,26 +2,26 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>Represents an error related to activity execution faulted.</summary>
-public class ActivityExecutionFaultedException :
+/// <summary>Reports that a routing-slip activity explicitly returned a faulted execution result.</summary>
+public sealed class ActivityExecutionFaultedException :
     ActivityExecutionException
 {
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates an exception for an activity fault that did not provide a specific cause.</summary>
     public ActivityExecutionFaultedException()
         : this("The routing slip activity execution faulted with an unspecified exception")
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates an activity-fault exception with the specified failure message.</summary>
+    /// <param name="message">The description supplied by the faulted activity.</param>
     public ActivityExecutionFaultedException(string message)
         : base(message)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="innerException">The inner exception.</param>
+    /// <summary>Creates an activity-fault exception with an underlying failure.</summary>
+    /// <param name="message">The description supplied by the faulted activity.</param>
+    /// <param name="innerException">The exception reported by the activity.</param>
     public ActivityExecutionFaultedException(string message, Exception innerException)
         : base(message, innerException)
     {

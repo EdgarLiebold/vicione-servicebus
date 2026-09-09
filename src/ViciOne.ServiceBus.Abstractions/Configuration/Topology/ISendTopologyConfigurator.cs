@@ -1,35 +1,30 @@
-using ViciOne.ServiceBus.Configuration;
-
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures send topology.</summary>
+/// <summary>Configures message-specific send topology and failure-queue naming.</summary>
 public interface ISendTopologyConfigurator :
     ISendTopology,
     ISpecification
 {
     /// <summary>
-    /// Specify a dead letter queue name formatter, which is used to format the name for a dead letter queue.
-    /// Defaults to (queue name)_skipped.
+    /// Gets or sets the convention used to derive a dead-letter queue name from its receive queue.
     /// </summary>
-    public new IDeadLetterQueueNameFormatter DeadLetterQueueNameFormatter { get; set; }
+    new IDeadLetterQueueNameFormatter DeadLetterQueueNameFormatter { get; set; }
 
     /// <summary>
-    /// Specify an error queue name formatter, which is used to format the name for an error queue.
-    /// Defaults to (queue name)_error.
+    /// Gets or sets the convention used to derive an error queue name from its receive queue.
     /// </summary>
-    public new IErrorQueueNameFormatter ErrorQueueNameFormatter { get; set; }
+    new IErrorQueueNameFormatter ErrorQueueNameFormatter { get; set; }
 
     /// <summary>
-    /// Adds a convention to the topology, which will be applied to every message type
-    /// requested, to determine if a convention for the message type is available.
+    /// Adds a convention that is evaluated when send topology is created for a message contract.
     /// </summary>
-    /// <param name="convention">The send topology convention.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <param name="convention">The send-topology convention to register.</param>
+    /// <returns><see langword="true" /> when the convention was added; otherwise, <see langword="false" />.</returns>
     bool TryAddConvention(ISendTopologyConvention convention);
 
-    /// <summary>Add a send topology for a specific message type.</summary>
-    /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="topology">The topology.</param>
-    void AddMessageSendTopology<T>(IMessageSendTopology<T> topology)
-        where T : class;
+    /// <summary>Adds send topology for a message contract.</summary>
+    /// <typeparam name="TMessage">The message contract.</typeparam>
+    /// <param name="topology">The send topology to add.</param>
+    void AddMessageSendTopology<TMessage>(IMessageSendTopology<TMessage> topology)
+        where TMessage : class;
 }

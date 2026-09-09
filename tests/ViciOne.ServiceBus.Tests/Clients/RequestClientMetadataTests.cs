@@ -39,7 +39,7 @@ public sealed class RequestClientMetadataTests
             Guid conversationId = Guid.Parse("44000000-0000-0000-0000-000000000044");
             TimeSpan lifetime = TimeSpan.FromMinutes(19);
             IRequestClient<MetadataRequest> client =
-                harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
             var options = new RequestOptions
             {
                 Headers = new Dictionary<string, object?>
@@ -88,7 +88,7 @@ public sealed class RequestClientMetadataTests
         var client = new RequestClient<MetadataRequest>(
             new SnapshotClientFactoryContext(),
             endpoint,
-            RequestTimeout.After(m: 1));
+            new RequestTimeout(TimeSpan.FromMinutes(1)));
         var headers = new Dictionary<string, object?>
         {
             ["tenant"] = "north",
@@ -125,7 +125,7 @@ public sealed class RequestClientMetadataTests
         var client = new RequestClient<MetadataRequest>(
             new SnapshotClientFactoryContext(),
             endpoint,
-            RequestTimeout.After(m: 1));
+            new RequestTimeout(TimeSpan.FromMinutes(1)));
         TimeSpan timeToLive = TimeSpan.FromTicks(ticks);
 
         ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -154,7 +154,7 @@ public sealed class RequestClientMetadataTests
         IRequestClient<MetadataRequest> client = new RequestClient<MetadataRequest>(
             context,
             endpoint,
-            RequestTimeout.After(m: 1));
+            new RequestTimeout(TimeSpan.FromMinutes(1)));
 
         ArgumentOutOfRangeException exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             client.GetResponseAsync<MetadataResponse>(
@@ -177,7 +177,7 @@ public sealed class RequestClientMetadataTests
         try
         {
             IRequestClient<MetadataRequest> client =
-                harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
 
             RequestException exception = await Assert.ThrowsAsync<RequestException>(() =>
                 client.GetResponseAsync<MetadataResponse>(
@@ -214,7 +214,7 @@ public sealed class RequestClientMetadataTests
         {
             Guid correlationId = Guid.Parse("f3b95cb8-b0be-4468-8b18-35d58000aa23");
             IRequestClient<MetadataRequest> client =
-                harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, timeout);
+                harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
 
             Response<MetadataResponse> response = await client.Advanced().GetResponseAsync<MetadataResponse>(
                 new MetadataRequest(correlationId, false),
@@ -278,7 +278,7 @@ public sealed class RequestClientMetadataTests
         {
             Guid correlationId = Guid.Parse("b7bdf9b1-2df2-43ce-a121-c58945e4fb36");
             IRequestClient<MetadataRequest> client =
-                harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, RequestTimeout.After(m: 5));
+                harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, new RequestTimeout(TimeSpan.FromMinutes(5)));
 
             Response<MetadataResponse> response = await client.Advanced().GetResponseAsync<MetadataResponse>(
                 new MetadataRequest(correlationId, false),
@@ -328,7 +328,7 @@ public sealed class RequestClientMetadataTests
                 Guid.Parse("6f56f140-cd81-4d10-b224-fd3bbb70d4df"),
                 true);
             IRequestClient<MetadataRequest> client =
-                harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, RequestTimeout.After(m: 5));
+                harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, new RequestTimeout(TimeSpan.FromMinutes(5)));
 
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
                 client.Advanced().GetResponseAsync<MetadataResponse, AlternateResponse>(
@@ -344,7 +344,7 @@ public sealed class RequestClientMetadataTests
             Assert.Equal(request.MessageId, fault.FaultedMessageId);
             Assert.Equal(request.RequestId, publishedFault.RequestId);
             Assert.NotNull(publishedFault.ExpirationTime);
-            Assert.Equal(TypeCache<MetadataRequest>.ShortName, exception.RequestType);
+            Assert.Equal(typeof(MetadataRequest), exception.RequestType);
             Assert.Equal(MessageTypeCache<MetadataRequest>.MessageTypeNames, fault.FaultMessageTypes);
             Assert.Equal(TypeCache<ExpectedRequestFailure>.ShortName, faultException.ExceptionType);
             Assert.Equal("request rejected", faultException.Message);
@@ -419,7 +419,7 @@ public sealed class RequestClientMetadataTests
 
     private sealed class SnapshotClientFactoryContext : ClientFactoryContext
     {
-        public RequestTimeout DefaultTimeout => RequestTimeout.After(m: 1);
+        public RequestTimeout DefaultTimeout => new(TimeSpan.FromMinutes(1));
 
         public TimeProvider TimeProvider => TimeProvider.System;
 

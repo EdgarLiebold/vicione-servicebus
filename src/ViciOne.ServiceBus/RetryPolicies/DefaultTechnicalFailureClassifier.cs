@@ -5,6 +5,7 @@ using System.Security;
 using System.Text.Json;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
+
 /// <summary>
 /// Conservatively classifies technical failures. Only failures with an explicit transient contract are
 /// retried; structural, programming, security and serialization failures are terminal.
@@ -82,8 +83,6 @@ public sealed class DefaultTechnicalFailureClassifier : ITechnicalFailureClassif
             OperationCanceledException => RetryFailureKind.NonRetryable,
             ConfigurationException => RetryFailureKind.NonRetryable,
             PipeConfigurationException => RetryFailureKind.NonRetryable,
-            ConventionException => RetryFailureKind.NonRetryable,
-            MessageInitializerException => RetryFailureKind.NonRetryable,
             MessageException => RetryFailureKind.NonRetryable,
             PayloadException => RetryFailureKind.NonRetryable,
             UnknownStateException => RetryFailureKind.NonRetryable,

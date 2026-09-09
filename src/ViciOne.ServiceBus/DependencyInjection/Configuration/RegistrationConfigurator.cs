@@ -118,24 +118,13 @@ public abstract class RegistrationConfigurator :
         RequestClientRegistrationCache.Register(requestType, destinationAddress, GetRequestTimeout(timeout), Registrar);
     }
 
-    /// <summary>Sets default request timeout.</summary>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <summary>Sets the timeout used by request clients that do not specify one.</summary>
+    /// <param name="timeout">The explicit default timeout.</param>
+    /// <exception cref="ArgumentException"><paramref name="timeout" /> is unspecified.</exception>
     public void SetDefaultRequestTimeout(RequestTimeout timeout)
     {
-        DefaultRequestTimeout = timeout;
-    }
-
-    /// <summary>Sets default request timeout.</summary>
-    /// <param name="d">The <c>d</c> value.</param>
-    /// <param name="h">The <c>h</c> value.</param>
-    /// <param name="m">The <c>m</c> value.</param>
-    /// <param name="s">The <c>s</c> value.</param>
-    /// <param name="ms">The ms.</param>
-    public void SetDefaultRequestTimeout(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null)
-    {
-        var timeout = new TimeSpan(d ?? 0, h ?? 0, m ?? 0, s ?? 0, ms ?? 0);
-        if (timeout <= TimeSpan.Zero)
-            throw new ArgumentException("The timeout must be > 0");
+        if (!timeout.HasValue)
+            throw new ArgumentException("The default request timeout must be explicit.", nameof(timeout));
 
         DefaultRequestTimeout = timeout;
     }

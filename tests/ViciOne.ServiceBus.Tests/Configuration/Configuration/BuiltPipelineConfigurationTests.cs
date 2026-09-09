@@ -157,7 +157,7 @@ public sealed class BuiltPipelineConfigurationTests
             Assert.False(tracker.SecondEntered.Task.IsCompleted);
 
             IRequestClient<SetConcurrencyLimit> client = bus.CreateRequestClient<SetConcurrencyLimit>(
-                new Uri($"queue:{queueName}"), TimeSpan.FromSeconds(5));
+                new Uri($"queue:{queueName}"), new RequestTimeout(TimeSpan.FromSeconds(5)));
             Response<ConcurrencyLimitUpdated> response = await client.Advanced().GetResponseAsync<ConcurrencyLimitUpdated>(
                     new ManagedConcurrencyLimitCommand(2, DateTimeOffset.UtcNow, limiterId),
                     cancellationToken: cancellationToken)

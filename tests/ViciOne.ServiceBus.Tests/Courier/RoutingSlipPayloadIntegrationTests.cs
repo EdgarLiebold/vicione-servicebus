@@ -35,7 +35,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
             Guid trackingNumber = NewId.NextGuid();
             MessageData<string> storedValue = await repository.PutStringAsync("Frank", cancellationToken);
             var builder = new RoutingSlipBuilder(trackingNumber);
-            builder.AddVariable("Name", "variable");
+            builder.SetVariable("Name", "variable");
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new { Key = "Name", Value = storedValue });
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
@@ -87,7 +87,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
                 new OuterGraph(27, "Hello, World.", 123.45m),
                 ["Albert", "Chris"],
                 argumentsDictionary));
-            builder.AddVariable("ArgumentsDictionary", variableDictionary);
+            builder.SetVariable("ArgumentsDictionary", variableDictionary);
 
             await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
@@ -183,11 +183,11 @@ public sealed class RoutingSlipPayloadIntegrationTests
         {
             var expectedAddress = new Uri("https://example.test/courier/resource?id=27");
             var success = new RoutingSlipBuilder(NewId.NextGuid());
-            success.AddVariable(nameof(UriArguments.Address), expectedAddress);
+            success.SetVariable(nameof(UriArguments.Address), expectedAddress);
             success.AddActivity(activity.Name, activity.ExecuteAddress);
 
             var failure = new RoutingSlipBuilder(NewId.NextGuid());
-            failure.AddVariable(nameof(UriArguments.Address), expectedAddress);
+            failure.SetVariable(nameof(UriArguments.Address), expectedAddress);
             failure.AddActivity(activity.Name, activity.ExecuteAddress);
             failure.AddActivity(failing.Name, failing.ExecuteAddress, new FaultingCourierArguments("force-compensation"));
 

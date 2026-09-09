@@ -49,7 +49,7 @@ public sealed class ActiveMqRequestResponseTests
             RequestMessage[] explicitRequests = CreateRequests("explicit");
             IRequestClient<RequestMessage> explicitClient = bus.CreateRequestClient<RequestMessage>(
                 new Uri($"queue:{queueName}"),
-                RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
+                new RequestTimeout(fixture.OperationTimeout));
 
             Response<ResponseMessage>[] defaultResponses = await AwaitResponsesAsync(
                 defaultRequests,

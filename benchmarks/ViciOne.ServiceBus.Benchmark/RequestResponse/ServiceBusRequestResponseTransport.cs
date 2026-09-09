@@ -24,7 +24,7 @@ public class ServiceBusRequestResponseTransport :
     public Task<IRequestClient<T>> GetRequestClientAsync<T>(TimeSpan settingsRequestTimeout)
         where T : class
     {
-        return Task.FromResult(_clientFactory.CreateRequestClient<T>(_targetEndpointAddress, settingsRequestTimeout));
+        return Task.FromResult(_clientFactory.CreateRequestClient<T>(_targetEndpointAddress, new RequestTimeout(settingsRequestTimeout)));
     }
 
     public async Task StartAsync(Action<IReceiveEndpointConfigurator> configureReceiveEndpoint, CancellationToken cancellationToken = default)

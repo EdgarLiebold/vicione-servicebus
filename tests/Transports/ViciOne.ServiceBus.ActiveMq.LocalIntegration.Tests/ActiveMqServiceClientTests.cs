@@ -43,7 +43,7 @@ public sealed class ActiveMqServiceClientTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             IRequestClient<ServiceRequest> client = bus.CreateRequestClient<ServiceRequest>(
-                RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
+                new RequestTimeout(fixture.OperationTimeout));
             Guid correlationId = Guid.NewGuid();
             Response<ServiceResponse> response = await client.GetResponseAsync<ServiceResponse>(
                     new ServiceRequest(correlationId, "Bogey"),
