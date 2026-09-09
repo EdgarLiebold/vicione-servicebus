@@ -7,32 +7,36 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Connects batch consumer message to the service bus pipeline.</summary>
-/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class BatchConsumerMessageConnector<TConsumer, TMessage> :
+/// <summary>Connects individual messages to the batching pipeline for one batch consumer contract.</summary>
+/// <typeparam name="TConsumer">The consumer that receives completed batches.</typeparam>
+/// <typeparam name="TMessage">The message contract collected into batches.</typeparam>
+internal sealed class BatchConsumerMessageConnector<TConsumer, TMessage> :
     IConsumerMessageConnector<TConsumer>
     where TConsumer : class, IConsumer<Batch<TMessage>>
     where TMessage : class
 {
-    /// <summary>Gets the message type.</summary>
+    /// <summary>Gets the individual message type accepted by the batching pipeline.</summary>
     public Type MessageType => typeof(TMessage);
 
-    /// <summary>Creates consumer message specification.</summary>
-    /// <returns>The created consumer message specification.</returns>
+    /// <summary>Creates the configuration state for this batch consumer and message pair.</summary>
+    /// <returns>A new batch consumer message specification.</returns>
     public IConsumerMessageSpecification<TConsumer> CreateConsumerMessageSpecification()
     {
         return new BatchConsumerMessageSpecification<TConsumer, TMessage>();
     }
 
-    /// <summary>Connects consumer.</summary>
-    /// <param name="consumePipe">The consume pipe.</param>
-    /// <param name="consumerFactory">The consumer factory.</param>
-    /// <param name="specification">The specification.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <summary>Connects collection, batch delivery, and terminal cleanup to the consume pipeline.</summary>
+    /// <param name="consumePipe">The pipeline connector that accepts individual messages.</param>
+    /// <param name="consumerFactory">The factory that creates application batch consumers.</param>
+    /// <param name="specification">The validated consumer configuration.</param>
+    /// <returns>A handle that disconnects the message pipe and drains the batch collector.</returns>
     public ConnectHandle ConnectConsumer(IConsumePipeConnector consumePipe, IConsumerFactory<TConsumer> consumerFactory,
         IConsumerSpecification<TConsumer> specification)
     {
+        ArgumentNullException.ThrowIfNull(consumePipe);
+        ArgumentNullException.ThrowIfNull(consumerFactory);
+        ArgumentNullException.ThrowIfNull(specification);
+
         var options = specification.Options<BatchOptions>();
 
         IConsumerMessageSpecification<TConsumer, Batch<TMessage>> batchMessageSpecification = specification.GetMessageSpecification<Batch<TMessage>>();
@@ -48,7 +52,7 @@ public class BatchConsumerMessageConnector<TConsumer, TMessage> :
             x.UseFilter(new ConsumerMessageFilter<TConsumer, Batch<TMessage>>(consumerFactory, batchConsumerPipe));
         });
 
-        IBatchCollector<TMessage>? collector = null;
+        IBatchCollector<TMessage> collector;
         if (options.GroupKeyProvider == null)
             collector = new BatchCollector<TMessage>(options, batchMessagePipe);
         else
@@ -85,13 +89,14 @@ public class BatchConsumerMessageConnector<TConsumer, TMessage> :
     }
 
 
-    class BatchConnectHandle :
+    sealed class BatchConnectHandle :
         ConnectHandle
     {
         readonly BatchConsumerFactory<TMessage> _factory;
         readonly ConnectHandle _handle;
-        Task _disposeTask = null!;
-        int _disconnected;
+        readonly object _lock = new();
+        Task? _disposeTask;
+        int _observationStarted;
 
         public BatchConnectHandle(ConnectHandle handle, BatchConsumerFactory<TMessage> factory)
         {
@@ -106,18 +111,70 @@ public class BatchConsumerMessageConnector<TConsumer, TMessage> :
 
         public void Disconnect()
         {
-            if (Interlocked.Exchange(ref _disconnected, 1) != 0)
-                return;
-
-            _handle.Disconnect();
-            _disposeTask = DisposeConsumerFactoryAsync();
+            Task cleanup = BeginDisconnectAsync();
+            if (Interlocked.Exchange(ref _observationStarted, 1) == 0)
+                _ = ObserveCleanupFailureAsync(cleanup);
         }
 
-        async Task DisposeConsumerFactoryAsync()
+        public ValueTask DisposeAsync() => new(BeginDisconnectAsync());
+
+        Task BeginDisconnectAsync()
+        {
+            lock (_lock)
+            {
+                if (_disposeTask != null)
+                    return _disposeTask;
+
+                Exception? disconnectFailure = null;
+                try
+                {
+                    _handle.Disconnect();
+                }
+                catch (Exception exception)
+                {
+                    disconnectFailure = exception;
+                }
+
+                Task factoryCleanup;
+                try
+                {
+                    factoryCleanup = _factory.DisposeAsync().AsTask();
+                }
+                catch (Exception exception)
+                {
+                    factoryCleanup = Task.FromException(exception);
+                }
+
+                _disposeTask = CompleteDisconnectAsync(disconnectFailure, factoryCleanup);
+                return _disposeTask;
+            }
+        }
+
+        static async Task CompleteDisconnectAsync(Exception? disconnectFailure, Task factoryCleanup)
+        {
+            Exception? cleanupFailure = null;
+            try
+            {
+                await factoryCleanup.ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                cleanupFailure = exception;
+            }
+
+            if (disconnectFailure != null && cleanupFailure != null)
+                throw new AggregateException("Batch consumer disconnection encountered multiple failures.", disconnectFailure, cleanupFailure);
+            if (disconnectFailure != null)
+                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(disconnectFailure).Throw();
+            if (cleanupFailure != null)
+                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(cleanupFailure).Throw();
+        }
+
+        static async Task ObserveCleanupFailureAsync(Task cleanup)
         {
             try
             {
-                await _factory.DisposeAsync().ConfigureAwait(false);
+                await cleanup.ConfigureAwait(false);
             }
             catch (Exception exception)
             {

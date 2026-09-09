@@ -1,10 +1,11 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>Provides an endpoint for send request send.</summary>
-/// <typeparam name="TRequest">The request type.</typeparam>
+/// <summary>Sends requests for one message contract to an explicit destination.</summary>
+/// <typeparam name="TRequest">The request message contract.</typeparam>
 internal sealed class SendRequestSendEndpoint<TRequest> :
     RequestSendEndpoint<TRequest>
     where TRequest : class
@@ -12,10 +13,10 @@ internal sealed class SendRequestSendEndpoint<TRequest> :
     readonly Uri _destinationAddress;
     readonly ISendEndpointProvider _provider;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a request endpoint for an explicit destination.</summary>
     /// <param name="provider">The send endpoint provider used to resolve the request destination.</param>
     /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="consumeContext">The consume context.</param>
+    /// <param name="consumeContext">The consume context whose correlation metadata is propagated, or <see langword="null" />.</param>
     public SendRequestSendEndpoint(ISendEndpointProvider provider, Uri destinationAddress, ConsumeContext? consumeContext)
         : base(consumeContext)
     {
@@ -23,10 +24,11 @@ internal sealed class SendRequestSendEndpoint<TRequest> :
         _destinationAddress = destinationAddress ?? throw new ArgumentNullException(nameof(destinationAddress));
     }
 
-    /// <summary>Gets send endpoint.</summary>
-    /// <returns>A task that produces the requested value.</returns>
-    protected override async Task<ISendEndpoint> GetSendEndpointAsync()
+    /// <summary>Resolves the configured request destination.</summary>
+    /// <param name="cancellationToken">Cancels endpoint resolution.</param>
+    /// <returns>A task containing the resolved send endpoint.</returns>
+    protected override async Task<ISendEndpoint> GetSendEndpointAsync(CancellationToken cancellationToken)
     {
-        return await _provider.GetSendEndpointAsync(_destinationAddress).ConfigureAwait(false);
+        return await _provider.GetSendEndpointAsync(_destinationAddress, cancellationToken).ConfigureAwait(false);
     }
 }

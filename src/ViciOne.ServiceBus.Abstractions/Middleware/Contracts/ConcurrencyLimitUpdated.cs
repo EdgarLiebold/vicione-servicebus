@@ -2,15 +2,15 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts;
 
-/// <summary>Published when the concurrency limit of a filter is updated.</summary>
+/// <summary>Confirms that a concurrency limiter applied an adjustment command.</summary>
 public interface ConcurrencyLimitUpdated
 {
-    /// <summary>The actual time at which the adjustment was applied.</summary>
+    /// <summary>Gets the UTC time at which the adjustment was applied.</summary>
     DateTimeOffset Timestamp { get; }
 
-    /// <summary>The identifier that was adjusted.</summary>
-    string Id { get; }
+    /// <summary>Gets the optional identifier of the adjusted limiter.</summary>
+    string? LimiterId { get; }
 
-    /// <summary>The current concurrency limit value.</summary>
+    /// <summary>Gets the concurrency limit that was applied.</summary>
     int ConcurrencyLimit { get; }
 }

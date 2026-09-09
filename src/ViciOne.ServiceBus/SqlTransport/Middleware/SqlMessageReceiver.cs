@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Util;
@@ -16,7 +17,7 @@ public sealed class SqlMessageReceiver :
 {
     readonly ClientContext _client;
     readonly SqlReceiveEndpointContext _context;
-    readonly OrderedPartitionedTaskExecutor _executorPool;
+    readonly IPartitionedTaskExecutor<SqlTransportMessage> _executorPool;
     readonly object _lock = new();
     readonly ReceiveSettings _receiveSettings;
     readonly TimeProvider _timeProvider;
@@ -40,14 +41,17 @@ public sealed class SqlMessageReceiver :
         if (_receiveSettings.AutoDeleteOnIdle.HasValue)
             _touchQueueInterval = new TimeSpan(_receiveSettings.AutoDeleteOnIdle.Value.Ticks / 2);
 
-        _executorPool = new OrderedPartitionedTaskExecutor(_receiveSettings);
+        _executorPool = new PartitionedTaskExecutor<SqlTransportMessage>(
+            PartitionKeyProvider,
+            _receiveSettings.ConcurrentMessageLimit,
+            _receiveSettings.ConcurrentDeliveryLimit);
 
         TrySetConsumeTask(ConsumeAsync());
     }
 
-    /// <summary>Reports that active and actual agents has completed.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Waits for child agents, then drains and disposes every activated ordered-delivery partition.</summary>
+    /// <param name="context">The receiver shutdown context.</param>
+    /// <returns>A task that completes when receiver-owned processing has stopped.</returns>
     protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
         await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
@@ -214,39 +218,10 @@ public sealed class SqlMessageReceiver :
             _cancellationTokenSource?.Cancel();
     }
 
-
-    class OrderedPartitionedTaskExecutor :
-        IPartitionedTaskExecutor<SqlTransportMessage>
+    static byte[] PartitionKeyProvider(SqlTransportMessage message)
     {
-        readonly IPartitionedTaskExecutor<SqlTransportMessage> _keyExecutorPool;
-
-        public OrderedPartitionedTaskExecutor(ReceiveSettings receiveSettings)
-        {
-            IHashGenerator hashGenerator = new Murmur3UnsafeHashGenerator();
-            _keyExecutorPool = new PartitionedTaskExecutor<SqlTransportMessage>(PartitionKeyProvider, hashGenerator,
-                receiveSettings.ConcurrentMessageLimit, receiveSettings.ConcurrentDeliveryLimit);
-        }
-
-        public Task EnqueueAsync(SqlTransportMessage result, Func<Task> handle, CancellationToken cancellationToken)
-        {
-            return _keyExecutorPool.EnqueueAsync(result, handle, cancellationToken);
-        }
-
-        public Task ExecuteAsync(SqlTransportMessage result, Func<Task> method, CancellationToken cancellationToken = default)
-        {
-            return _keyExecutorPool.ExecuteAsync(result, method, cancellationToken);
-        }
-
-        public ValueTask DisposeAsync()
-        {
-            return _keyExecutorPool.DisposeAsync();
-        }
-
-        static byte[] PartitionKeyProvider(SqlTransportMessage message)
-        {
-            return string.IsNullOrEmpty(message.PartitionKey)
-                ? []
-                : Encoding.UTF8.GetBytes(message.PartitionKey);
-        }
+        return string.IsNullOrEmpty(message.PartitionKey)
+            ? []
+            : Encoding.UTF8.GetBytes(message.PartitionKey);
     }
 }

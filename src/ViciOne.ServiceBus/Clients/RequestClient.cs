@@ -16,10 +16,10 @@ internal sealed class RequestClient<TRequest> :
     readonly IRequestSendEndpoint<TRequest> _requestSendEndpoint;
     readonly RequestTimeout _timeout;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates a request client for one request contract.</summary>
+    /// <param name="context">The factory context that supplies response endpoints, logging, scheduling, and time.</param>
     /// <param name="requestSendEndpoint">The request send endpoint.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
+    /// <param name="timeout">The default response timeout.</param>
     public RequestClient(ClientFactoryContext context, IRequestSendEndpoint<TRequest> requestSendEndpoint, RequestTimeout timeout)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -30,23 +30,14 @@ internal sealed class RequestClient<TRequest> :
         _timeout = timeout;
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="TResponse">The response type.</typeparam>
-    /// <param name="request">The request.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<TResponse>> GetResponseAsync<TResponse>(TRequest request, CancellationToken cancellationToken = default)
         where TResponse : class
     {
         return GetResponseAsync<TResponse>(request, timeout: default, cancellationToken);
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="TResponse">The response type.</typeparam>
-    /// <param name="request">The request.</param>
-    /// <param name="options">The options that control the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<TResponse>> GetResponseAsync<TResponse>(TRequest request, RequestOptions options,
         CancellationToken cancellationToken = default)
         where TResponse : class
@@ -85,11 +76,7 @@ internal sealed class RequestClient<TRequest> :
             optionsSnapshot.RequestId);
     }
 
-    /// <summary>Creates the requested value.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The newly created instance.</returns>
+    /// <inheritdoc />
     public RequestHandle<TRequest> Create(TRequest message, RequestTimeout timeout, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -104,11 +91,7 @@ internal sealed class RequestClient<TRequest> :
         return new ClientRequestHandle<TRequest>(_context, RequestAsync, cancellationToken, timeout.Or(_timeout));
     }
 
-    /// <summary>Creates the requested value.</summary>
-    /// <param name="values">The values.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The newly created instance.</returns>
+    /// <inheritdoc />
     public RequestHandle<TRequest> Create(object values, RequestTimeout timeout = default, CancellationToken cancellationToken = default)
     {
         if (values == null)
@@ -122,12 +105,7 @@ internal sealed class RequestClient<TRequest> :
         return new ClientRequestHandle<TRequest>(_context, RequestAsync, cancellationToken, timeout.Or(_timeout));
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<T>> GetResponseAsync<T>(TRequest message, RequestTimeout timeout = default,
         CancellationToken cancellationToken = default)
         where T : class
@@ -135,13 +113,7 @@ internal sealed class RequestClient<TRequest> :
         return GetResponseAsync<T>(message, null, timeout, cancellationToken);
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="callback">The callback invoked by the operation.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<T>> GetResponseAsync<T>(TRequest message, RequestPipeConfiguratorCallback<TRequest>? callback,
         RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class
@@ -158,12 +130,7 @@ internal sealed class RequestClient<TRequest> :
         return GetResponseInternalAsync<T>(RequestAsync, timeout, cancellationToken, callback);
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<T>> GetResponseAsync<T>(object values, RequestTimeout timeout = default,
         CancellationToken cancellationToken = default)
         where T : class
@@ -171,13 +138,7 @@ internal sealed class RequestClient<TRequest> :
         return GetResponseAsync<T>(values, null, timeout, cancellationToken);
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="callback">The callback invoked by the operation.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<T>> GetResponseAsync<T>(object values, RequestPipeConfiguratorCallback<TRequest>? callback,
         RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T : class
@@ -193,13 +154,7 @@ internal sealed class RequestClient<TRequest> :
         return GetResponseInternalAsync<T>(RequestAsync, timeout, cancellationToken, callback);
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="T1">The 1 type.</typeparam>
-    /// <typeparam name="T2">The 2 type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<T1, T2>> GetResponseAsync<T1, T2>(TRequest message, RequestTimeout timeout = default,
         CancellationToken cancellationToken = default)
         where T1 : class
@@ -208,14 +163,7 @@ internal sealed class RequestClient<TRequest> :
         return GetResponseAsync<T1, T2>(message, null, timeout, cancellationToken);
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="T1">The 1 type.</typeparam>
-    /// <typeparam name="T2">The 2 type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="callback">The callback invoked by the operation.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<T1, T2>> GetResponseAsync<T1, T2>(TRequest message, RequestPipeConfiguratorCallback<TRequest>? callback,
         RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T1 : class
@@ -233,13 +181,7 @@ internal sealed class RequestClient<TRequest> :
         return GetResponseInternalAsync<T1, T2>(RequestAsync, timeout, cancellationToken, callback);
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="T1">The 1 type.</typeparam>
-    /// <typeparam name="T2">The 2 type.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<T1, T2>> GetResponseAsync<T1, T2>(object values, RequestTimeout timeout = default,
         CancellationToken cancellationToken = default)
         where T1 : class
@@ -248,14 +190,7 @@ internal sealed class RequestClient<TRequest> :
         return GetResponseAsync<T1, T2>(values, null, timeout, cancellationToken);
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="T1">The 1 type.</typeparam>
-    /// <typeparam name="T2">The 2 type.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="callback">The callback invoked by the operation.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<T1, T2>> GetResponseAsync<T1, T2>(object values, RequestPipeConfiguratorCallback<TRequest>? callback,
         RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T1 : class
@@ -272,14 +207,7 @@ internal sealed class RequestClient<TRequest> :
         return GetResponseInternalAsync<T1, T2>(RequestAsync, timeout, cancellationToken, callback);
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="T1">The 1 type.</typeparam>
-    /// <typeparam name="T2">The 2 type.</typeparam>
-    /// <typeparam name="T3">The 3 type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<T1, T2, T3>> GetResponseAsync<T1, T2, T3>(TRequest message, RequestTimeout timeout = default,
         CancellationToken cancellationToken = default)
         where T1 : class
@@ -289,15 +217,7 @@ internal sealed class RequestClient<TRequest> :
         return GetResponseAsync<T1, T2, T3>(message, null, timeout, cancellationToken);
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="T1">The 1 type.</typeparam>
-    /// <typeparam name="T2">The 2 type.</typeparam>
-    /// <typeparam name="T3">The 3 type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="callback">The callback invoked by the operation.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<T1, T2, T3>> GetResponseAsync<T1, T2, T3>(TRequest message, RequestPipeConfiguratorCallback<TRequest>? callback,
         RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T1 : class
@@ -316,14 +236,7 @@ internal sealed class RequestClient<TRequest> :
         return GetResponseInternalAsync<T1, T2, T3>(RequestAsync, timeout, cancellationToken, callback);
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="T1">The 1 type.</typeparam>
-    /// <typeparam name="T2">The 2 type.</typeparam>
-    /// <typeparam name="T3">The 3 type.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<T1, T2, T3>> GetResponseAsync<T1, T2, T3>(object values, RequestTimeout timeout = default,
         CancellationToken cancellationToken = default)
         where T1 : class
@@ -333,15 +246,7 @@ internal sealed class RequestClient<TRequest> :
         return GetResponseAsync<T1, T2, T3>(values, null, timeout, cancellationToken);
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="T1">The 1 type.</typeparam>
-    /// <typeparam name="T2">The 2 type.</typeparam>
-    /// <typeparam name="T3">The 3 type.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="callback">The callback invoked by the operation.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <inheritdoc />
     public Task<Response<T1, T2, T3>> GetResponseAsync<T1, T2, T3>(object values, RequestPipeConfiguratorCallback<TRequest>? callback,
         RequestTimeout timeout = default, CancellationToken cancellationToken = default)
         where T1 : class

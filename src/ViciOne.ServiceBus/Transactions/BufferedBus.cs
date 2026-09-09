@@ -102,7 +102,6 @@ internal sealed class BufferedBus :
             _capacity.Release();
             throw;
         }
-
     }
 
     void RestoreUnattempted(Func<CancellationToken, Task>[] actions, int firstUnattempted)

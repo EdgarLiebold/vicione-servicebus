@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ViciOne.ServiceBus.Diagnostics.Telemetry;
+using ViciOne.ServiceBus.Monitoring.Telemetry;
 using ViciOne.ServiceBus.Providers.Persistence;
 
 namespace ViciOne.ServiceBus.Operations;

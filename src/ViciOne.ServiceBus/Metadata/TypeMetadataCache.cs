@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Metadata;
 
-/// <summary>Caches type metadata data.</summary>
+/// <summary>Provides cached runtime metadata for message-contract types.</summary>
 public static class TypeMetadataCache
 {
     internal static IImplementationBuilder ImplementationBuilder => Cached.Builder;
@@ -81,8 +81,6 @@ public static class TypeMetadataCache
         ArgumentNullException.ThrowIfNull(type);
         return type.IsInterfaceOrConcreteClass() && MessageTypeCache.IsValidMessageType(type) && !type.IsValueTypeOrObject();
     }
-
-
     static class Cached
     {
         internal static readonly IImplementationBuilder Builder = DynamicImplementationBuilder.Instance;
@@ -90,7 +88,7 @@ public static class TypeMetadataCache
 }
 
 
-/// <summary>Provides immutable cached metadata for a message contract type.</summary>
+/// <summary>Provides immutable cached metadata for a compile-time message-contract type.</summary>
 /// <typeparam name="T">The message contract type.</typeparam>
 public static class TypeMetadataCache<T>
 {
@@ -101,18 +99,25 @@ public static class TypeMetadataCache<T>
 
     /// <summary>Gets the canonical short diagnostic name of <typeparamref name="T" />.</summary>
     public static string ShortName => TypeCache<T>.ShortName;
+
     /// <summary>Gets the canonical diagnostic address of <typeparamref name="T" />.</summary>
     public static string DiagnosticAddress => MessageTypeCache<T>.DiagnosticAddress;
+
     /// <summary>Gets the immutable public message properties exposed by <typeparamref name="T" />.</summary>
     public static IReadOnlyList<PropertyInfo> Properties => MessageTypeCache<T>.Properties;
-    /// <summary>Gets whether <typeparamref name="T" /> satisfies the message contract rules.</summary>
+
+    /// <summary>Gets a value indicating whether <typeparamref name="T" /> satisfies the message-contract rules.</summary>
     public static bool IsValidMessageType => MessageTypeCache<T>.IsValidMessageType;
+
     /// <summary>Gets the validation failure when <typeparamref name="T" /> is not a valid message type.</summary>
     public static string? InvalidMessageTypeReason => MessageTypeCache<T>.InvalidMessageTypeReason;
-    /// <summary>Gets whether <typeparamref name="T" /> is an anonymous or otherwise temporary message shape.</summary>
+
+    /// <summary>Gets a value indicating whether <typeparamref name="T" /> is an anonymous or otherwise temporary message shape.</summary>
     public static bool IsTemporaryMessageType => MessageTypeCache<T>.IsTemporaryMessageType;
+
     /// <summary>Gets the immutable set of runtime message types represented by <typeparamref name="T" />.</summary>
     public static IReadOnlyList<Type> MessageTypes => MessageTypeCache<T>.MessageTypes;
+
     /// <summary>Gets the immutable set of wire type identifiers represented by <typeparamref name="T" />.</summary>
     public static IReadOnlyList<string> MessageTypeNames => MessageTypeCache<T>.MessageTypeNames;
 }

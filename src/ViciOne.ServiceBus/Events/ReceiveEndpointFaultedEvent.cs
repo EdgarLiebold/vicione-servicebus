@@ -21,7 +21,7 @@ internal sealed class ReceiveEndpointFaultedEvent :
     public Uri InputAddress => _faulted.InputAddress;
     /// <summary>Gets the transport failure.</summary>
     public Exception Exception => _faulted.Exception;
-    /// <summary>Gets whether the transport has exhausted recovery and will not retry.</summary>
+    /// <summary>Gets a value indicating whether the transport has exhausted recovery and will not retry.</summary>
     public bool IsTerminal => _faulted.IsTerminal;
 
     /// <summary>Gets the endpoint that owns the failed transport.</summary>

@@ -5,7 +5,6 @@ using ViciOne.ServiceBus.BenchmarkConsole.Throughput;
 using ViciOne.ServiceBus.Contracts;
 using ViciOne.ServiceBus.Middleware;
 
-#nullable enable
 namespace ViciOne.ServiceBus.BenchmarkConsole;
 
 [MemoryDiagnoser]
@@ -139,7 +138,7 @@ public class SendBenchmark
         }
 
         public DateTimeOffset? Timestamp { get; } = TimeProvider.System.GetUtcNow();
-        public string? Id => null;
+        public string? LimiterId => null;
         public int ConcurrencyLimit { get; }
     }
 }

@@ -7,25 +7,35 @@ using Microsoft.Extensions.Logging;
 
 namespace ViciOne.ServiceBus.Transports;
 
-/// <summary>Owns registered bus instances.</summary>
-public class BusDepot :
+internal sealed class BusDepot :
     IBusDepot
 {
-    readonly IDictionary<Type, IBusInstance> _instances;
+    readonly IReadOnlyDictionary<Type, IBusInstance> _instances;
     readonly ILogger<BusDepot> _logger;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="instances">The instances.</param>
-    /// <param name="logger">The logger.</param>
     public BusDepot(IEnumerable<IBusInstance> instances, ILogger<BusDepot> logger)
     {
+        ArgumentNullException.ThrowIfNull(instances);
+        ArgumentNullException.ThrowIfNull(logger);
+
+        var instancesByType = new Dictionary<Type, IBusInstance>();
+        foreach (IBusInstance? instance in instances)
+        {
+            if (instance is null)
+                throw new ArgumentException("The bus instance collection cannot contain null values.", nameof(instances));
+
+            if (!instancesByType.TryAdd(instance.InstanceType, instance))
+            {
+                throw new ArgumentException(
+                    $"Only one bus instance may represent the contract type '{instance.InstanceType.FullName}'.",
+                    nameof(instances));
+            }
+        }
+
+        _instances = instancesByType;
         _logger = logger;
-        _instances = instances.ToDictionary(x => x.InstanceType);
     }
 
-    /// <summary>Starts the configured component.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task StartAsync(CancellationToken cancellationToken)
     {
         if (_instances.Count == 0)
@@ -36,9 +46,6 @@ public class BusDepot :
         return Task.WhenAll(_instances.Values.Select(x => x.BusControl.StartAsync(cancellationToken)));
     }
 
-    /// <summary>Stops the configured component.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task StopAsync(CancellationToken cancellationToken)
     {
         if (_instances.Count == 0)

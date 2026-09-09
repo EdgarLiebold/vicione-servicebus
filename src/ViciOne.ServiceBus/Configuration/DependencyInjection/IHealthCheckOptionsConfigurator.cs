@@ -4,18 +4,18 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Configures health check options.</summary>
+/// <summary>Configures the .NET health-check registration associated with one bus.</summary>
 public interface IHealthCheckOptionsConfigurator
 {
-    /// <summary>Set the health check name, overrides the default bus type name.</summary>
-    public string Name { set; }
+    /// <summary>Sets an optional registration name that replaces the bus-derived default.</summary>
+    public string? Name { set; }
 
     /// <summary>
-    /// The minimal <see cref="HealthStatus" /> that should be reported when the health check fails.
-    /// If null then all statuses from <see cref="HealthStatus.Unhealthy"/> to <see cref="HealthStatus.Healthy"/> will be reported depending on app health.
+    /// Sets the lowest <see cref="HealthStatus"/> value the registration reports. A missing value preserves
+    /// the bus snapshot status without applying a floor.
     /// </summary>
     public HealthStatus? MinimalFailureStatus { set; }
 
-    /// <summary>A list of tags that can be used to filter sets of health checks.</summary>
-    public HashSet<string> Tags { get; }
+    /// <summary>Gets the mutable, case-insensitive tag set used to classify the registration.</summary>
+    public ISet<string> Tags { get; }
 }

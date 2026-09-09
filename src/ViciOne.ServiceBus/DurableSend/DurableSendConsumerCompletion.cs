@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Diagnostics.Telemetry;
+using ViciOne.ServiceBus.Monitoring.Telemetry;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
 /// <summary>Process-local, generation-fenced completion capability handed to a volatile transport adapter for one dispatch.</summary>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Middleware.ConcurrencyLimiting;
 
 namespace ViciOne.ServiceBus.Configuration;
 

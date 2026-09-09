@@ -23,6 +23,6 @@ internal sealed class ReceiveEndpointReadyEvent :
     /// <summary>Gets the endpoint that became available.</summary>
     public IReceiveEndpoint ReceiveEndpoint { get; }
 
-    /// <summary>Gets whether this notification follows endpoint startup.</summary>
+    /// <summary>Gets a value indicating whether this notification follows endpoint startup.</summary>
     public bool IsStarted { get; }
 }

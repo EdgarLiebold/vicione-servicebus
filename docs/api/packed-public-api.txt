@@ -673,7 +673,7 @@ TYPE interface public ViciOne.ServiceBus.Advanced.Middleware.BindContext<TLeft,T
   PROPERTY TLeft Left { public-get;  }
   PROPERTY TRight Right { public-get;  }
 TYPE class public ViciOne.ServiceBus.Advanced.Middleware.CommandExtensions [static]
-  METHOD public static System.Threading.Tasks.Task SendCommandAsync<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Contracts.CommandContext> pipe, T command, System.TimeProvider timeProvider = null, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public static System.Threading.Tasks.Task SendCommandAsync<TCommand>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Contracts.CommandContext> pipe, TCommand command, System.TimeProvider timeProvider = null, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.Advanced.Middleware.ConcurrencyLimitExtensions [static]
   METHOD public static System.Threading.Tasks.Task SetConcurrencyLimitAsync(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Contracts.CommandContext> pipe, System.Int32 concurrencyLimit, System.TimeProvider timeProvider = null, System.Threading.CancellationToken cancellationToken = null)
 TYPE enum public ViciOne.ServiceBus.Advanced.Middleware.ConnectPipeOptions
@@ -2484,8 +2484,8 @@ TYPE class public ViciOne.ServiceBus.Context.SendEndpointConverterCache
   METHOD public static System.Threading.Tasks.Task SendInitializerAsync(ViciOne.ServiceBus.ISendEndpoint endpoint, System.Type messageType, System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Contracts.CommandContext
   PROPERTY System.DateTimeOffset Timestamp { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Contracts.CommandContext<T>
-  PROPERTY T Command { public-get;  }
+TYPE interface public ViciOne.ServiceBus.Contracts.CommandContext<TCommand>
+  PROPERTY TCommand Command { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Contracts.ConcurrencyLimitUpdated
   PROPERTY System.DateTimeOffset Timestamp { public-get;  }
   PROPERTY System.Int32 ConcurrencyLimit { public-get;  }
@@ -10439,10 +10439,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.BehaviorContextRetryConfigura
   METHOD public virtual System.Void SetRetryPolicy(ViciOne.ServiceBus.Configuration.RetryPolicyFactory factory)
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectRetryObserver(ViciOne.ServiceBus.Advanced.Observers.IRetryObserver observer)
   PROPERTY ViciOne.ServiceBus.Configuration.RetryPolicyFactory PolicyFactory { public-get;  }
-TYPE class public ViciOne.ServiceBus.Configuration.ConcurrencyLimitSagaConfigurationObserver<TSaga>
-  CTOR public ViciOne.ServiceBus.Configuration.ConcurrencyLimitSagaConfigurationObserver<TSaga>(ViciOne.ServiceBus.Configuration.ISagaConfigurator<TSaga> configurator, System.Int32 concurrentMessageLimit, System.String id = null)
-  METHOD public virtual System.Void StateMachineSagaConfigured<TInstance>(ViciOne.ServiceBus.Configuration.ISagaConfigurator<TInstance> configurator, System.Object stateMachine)
-  PROPERTY ViciOne.ServiceBus.Middleware.IConcurrencyLimiter Limiter { public-get;  }
 TYPE class public ViciOne.ServiceBus.Configuration.CorrelatedByEventCorrelationBuilder<TInstance,TData>
   CTOR public ViciOne.ServiceBus.Configuration.CorrelatedByEventCorrelationBuilder<TInstance,TData>(ViciOne.ServiceBus.Sagas.SagaStateMachine<TInstance> machine, ViciOne.ServiceBus.Sagas.Event<TData> event)
   METHOD public virtual ViciOne.ServiceBus.Sagas.EventCorrelation Build()
@@ -10575,7 +10571,7 @@ TYPE class public ViciOne.ServiceBus.Configuration.ObservesSagaConnectorFactory<
 TYPE class public ViciOne.ServiceBus.Configuration.OrchestratesSagaConnectorFactory<TSaga,TMessage>
   CTOR public ViciOne.ServiceBus.Configuration.OrchestratesSagaConnectorFactory<TSaga,TMessage>()
 TYPE class public ViciOne.ServiceBus.Configuration.PartitionSagaSpecification<TSaga>
-  CTOR public ViciOne.ServiceBus.Configuration.PartitionSagaSpecification<TSaga>(ViciOne.ServiceBus.Advanced.IPartitioner partitioner, ViciOne.ServiceBus.Advanced.PartitionKeyProvider<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga>> keyProvider)
+  CTOR public ViciOne.ServiceBus.Configuration.PartitionSagaSpecification<TSaga>(ViciOne.ServiceBus.Advanced.Middleware.IPartitioner partitioner, ViciOne.ServiceBus.Advanced.Middleware.PartitionKeyProvider<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga>> keyProvider)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
   METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga>> builder)
 TYPE class public ViciOne.ServiceBus.Configuration.RedeliverRequestStateMachineSpecification
@@ -11955,8 +11951,8 @@ TYPE class public ViciOne.ServiceBus.Sagas.Configuration.SagaPipelineConfigurati
   METHOD public static System.Void ConfigureSaga(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext registration, System.Type sagaType)
   METHOD public static System.Void ConfigureSaga<TSaga>(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext registration, System.Action<ViciOne.ServiceBus.Configuration.ISagaConfigurator<TSaga>> configure = null)
   METHOD public static System.Void ConfigureSagas(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IRegistrationContext registration)
-  METHOD public static System.Void UseConcurrentMessageLimit<TSaga>(ViciOne.ServiceBus.Configuration.ISagaConfigurator<TSaga> configurator, System.Int32 concurrentMessageLimit)
-  METHOD public static System.Void UseConcurrentMessageLimit<TSaga>(ViciOne.ServiceBus.Configuration.ISagaConfigurator<TSaga> configurator, System.Int32 concurrentMessageLimit, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator managementEndpointConfigurator, System.String id = null)
+  METHOD public static System.Void UseConcurrencyLimit<TSaga>(ViciOne.ServiceBus.Configuration.ISagaConfigurator<TSaga> configurator, System.Int32 concurrencyLimit)
+  METHOD public static System.Void UseConcurrencyLimit<TSaga>(ViciOne.ServiceBus.Configuration.ISagaConfigurator<TSaga> configurator, System.Int32 concurrencyLimit, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator managementEndpointConfigurator, System.String limiterId = null)
   METHOD public static System.Void UseDelayedRedelivery<TSaga>(ViciOne.ServiceBus.Configuration.ISagaConfigurator<TSaga> configurator, System.Action<ViciOne.ServiceBus.Configuration.IRedeliveryConfigurator> configure)
   METHOD public static System.Void UseMessageRetry<TSaga>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga>> configurator, System.Action<ViciOne.ServiceBus.Configuration.IRetryConfigurator> configure)
   METHOD public static System.Void UseMessageRetry<TSaga>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga>> configurator, ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator connector, System.Action<ViciOne.ServiceBus.Configuration.IRetryConfigurator> configure)
@@ -14209,10 +14205,6 @@ TYPE class public ViciOne.ServiceBus.Advanced.ForwardExtensions [static]
 TYPE interface public ViciOne.ServiceBus.Advanced.IAsyncBusHandle
 TYPE interface public ViciOne.ServiceBus.Advanced.IJsonMessageBody
   METHOD public abstract System.Nullable<System.Text.Json.JsonElement> GetJsonElement(System.Text.Json.JsonSerializerOptions options)
-TYPE interface public ViciOne.ServiceBus.Advanced.IPartitioner
-  METHOD public abstract ViciOne.ServiceBus.Advanced.IPartitioner<T> GetPartitioner<T>(ViciOne.ServiceBus.Advanced.PartitionKeyProvider<T> keyProvider)
-TYPE interface public ViciOne.ServiceBus.Advanced.IPartitioner<TContext>
-  METHOD public abstract System.Threading.Tasks.Task SendAsync(TContext context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<TContext> next, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Advanced.IReceiveEndpointConnector
   METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
   METHOD public abstract ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure = null)
@@ -14322,6 +14314,12 @@ TYPE interface public ViciOne.ServiceBus.Advanced.Middleware.IAsyncPipeContextHa
   METHOD public abstract System.Threading.Tasks.Task CreateFaultedAsync(System.Exception exception)
   METHOD public abstract System.Threading.Tasks.Task CreatedAsync(TContext context)
   METHOD public abstract System.Threading.Tasks.Task FaultedAsync(System.Exception exception)
+TYPE interface public ViciOne.ServiceBus.Advanced.Middleware.IPartitionHashGenerator
+  METHOD public abstract System.UInt32 ComputeHash(System.ReadOnlySpan<System.Byte> partitionKey)
+TYPE interface public ViciOne.ServiceBus.Advanced.Middleware.IPartitioner
+  METHOD public abstract ViciOne.ServiceBus.Advanced.Middleware.IPartitioner<T> GetPartitioner<T>(ViciOne.ServiceBus.Advanced.Middleware.PartitionKeyProvider<T> keyProvider)
+TYPE interface public ViciOne.ServiceBus.Advanced.Middleware.IPartitioner<TContext>
+  METHOD public abstract System.Threading.Tasks.Task SendAsync(TContext context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<TContext> next, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Advanced.Middleware.IPipeContextAgent<TContext>
 TYPE interface public ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory<TContext>
   METHOD public abstract ViciOne.ServiceBus.Advanced.Middleware.IActivePipeContextAgent<TContext> CreateActiveContext(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor supervisor, ViciOne.ServiceBus.Advanced.Middleware.IPipeContextHandle<TContext> context, System.Threading.CancellationToken cancellationToken = null)
@@ -14329,6 +14327,14 @@ TYPE interface public ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory
 TYPE interface public ViciOne.ServiceBus.Advanced.Middleware.IPipeContextHandle<TContext>
   PROPERTY System.Boolean IsDisposed { public-get;  }
   PROPERTY System.Threading.Tasks.Task<TContext> Context { public-get;  }
+TYPE class public ViciOne.ServiceBus.Advanced.Middleware.Murmur3PartitionHashGenerator [sealed]
+  CTOR public ViciOne.ServiceBus.Advanced.Middleware.Murmur3PartitionHashGenerator()
+  METHOD public virtual System.UInt32 ComputeHash(System.ReadOnlySpan<System.Byte> partitionKey)
+TYPE delegate public ViciOne.ServiceBus.Advanced.Middleware.PartitionKeyProvider<TContext> [sealed]
+  CTOR public ViciOne.ServiceBus.Advanced.Middleware.PartitionKeyProvider<TContext>(System.Object object, System.IntPtr method)
+  METHOD public virtual System.Byte[] EndInvoke(System.IAsyncResult result)
+  METHOD public virtual System.Byte[] Invoke(TContext context)
+  METHOD public virtual System.IAsyncResult BeginInvoke(TContext context, System.AsyncCallback callback, System.Object object)
 TYPE class public ViciOne.ServiceBus.Advanced.Middleware.PipeContextAgent<TContext> [sealed,base=ViciOne.ServiceBus.Advanced.Middleware.Agent]
   CTOR public ViciOne.ServiceBus.Advanced.Middleware.PipeContextAgent<TContext>(System.Threading.Tasks.Task<TContext> context)
   CTOR public ViciOne.ServiceBus.Advanced.Middleware.PipeContextAgent<TContext>(TContext context)
@@ -14340,6 +14346,12 @@ TYPE class public ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor<T
   METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.Middleware.IPipe<TContext> pipe, System.Threading.CancellationToken cancellationToken)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
   PROPERTY System.Boolean HasContext { protected-get;  }
+TYPE class public ViciOne.ServiceBus.Advanced.Middleware.PipePartitioner [sealed]
+  CTOR public ViciOne.ServiceBus.Advanced.Middleware.PipePartitioner(System.Int32 partitionCount)
+  CTOR public ViciOne.ServiceBus.Advanced.Middleware.PipePartitioner(System.Int32 partitionCount, ViciOne.ServiceBus.Advanced.Middleware.IPartitionHashGenerator hashGenerator)
+  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
+  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
+  METHOD public virtual ViciOne.ServiceBus.Advanced.Middleware.IPartitioner<T> GetPartitioner<T>(ViciOne.ServiceBus.Advanced.Middleware.PartitionKeyProvider<T> keyProvider)
 TYPE class public ViciOne.ServiceBus.Advanced.Middleware.SupervisorExtensions [static]
   METHOD public static System.Threading.Tasks.Task<TAgent> CreateAgentAsync<T,TAgent>(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor<T> supervisor, ViciOne.ServiceBus.Advanced.Middleware.IAsyncPipeContextAgent<TAgent> asyncContext, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task<TAgent>> agentFactory, System.Threading.CancellationToken cancellationToken)
   METHOD public static System.Void StartAgent<T,TAgent>(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor<T> supervisor, ViciOne.ServiceBus.Advanced.Middleware.IAsyncPipeContextAgent<TAgent> asyncContext, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task<TAgent>> agentFactory, System.Threading.CancellationToken cancellationToken)
@@ -14348,11 +14360,6 @@ TYPE class public ViciOne.ServiceBus.Advanced.Middleware.SupervisorExtensions [s
   METHOD public static ViciOne.ServiceBus.Advanced.Middleware.IAsyncPipeContextAgent<T> AddAsyncContext<T>(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor supervisor)
   METHOD public static ViciOne.ServiceBus.Advanced.Middleware.IPipeContextAgent<T> AddContext<T>(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor supervisor, System.Threading.Tasks.Task<T> context)
   METHOD public static ViciOne.ServiceBus.Advanced.Middleware.IPipeContextAgent<T> AddContext<T>(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor supervisor, T context)
-TYPE delegate public ViciOne.ServiceBus.Advanced.PartitionKeyProvider<TContext> [sealed]
-  CTOR public ViciOne.ServiceBus.Advanced.PartitionKeyProvider<TContext>(System.Object object, System.IntPtr method)
-  METHOD public virtual System.Byte[] EndInvoke(System.IAsyncResult result)
-  METHOD public virtual System.Byte[] Invoke(TContext context)
-  METHOD public virtual System.IAsyncResult BeginInvoke(TContext context, System.AsyncCallback callback, System.Object object)
 TYPE enum public ViciOne.ServiceBus.Advanced.RawSerializerOptions
   FIELD public System.Int32 value__
   FIELD public const ViciOne.ServiceBus.Advanced.RawSerializerOptions AddTransportHeaders = 2
@@ -14901,35 +14908,9 @@ TYPE class public ViciOne.ServiceBus.Configuration.CompositePredicate<T>
   METHOD public System.Void Add(System.Func<T,System.Boolean> filter)
   METHOD public static ViciOne.ServiceBus.Configuration.CompositePredicate<T> op_Addition(ViciOne.ServiceBus.Configuration.CompositePredicate<T> invokes, System.Func<T,System.Boolean> filter)
 TYPE class public ViciOne.ServiceBus.Configuration.ConcurrencyLimitConfigurationExtensions [static]
-  METHOD public static System.Void UseConcurrencyLimit(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, System.Int32 concurrentMessageLimit)
-  METHOD public static System.Void UseConcurrencyLimit(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, System.Int32 concurrentMessageLimit, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator managementEndpointConfigurator, System.String id = null)
+  METHOD public static System.Void UseConcurrencyLimit(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, System.Int32 concurrencyLimit)
+  METHOD public static System.Void UseConcurrencyLimit(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, System.Int32 concurrencyLimit, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator managementEndpointConfigurator, System.String limiterId = null)
   METHOD public static System.Void UseConcurrencyLimit<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> configurator, System.Int32 concurrencyLimit, ViciOne.ServiceBus.Middleware.IPipeRouter router = null)
-TYPE class public ViciOne.ServiceBus.Configuration.ConcurrencyLimitConfigurationObserver [base=ViciOne.ServiceBus.Configuration.ConfigurationObserver]
-  CTOR public ViciOne.ServiceBus.Configuration.ConcurrencyLimitConfigurationObserver(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, System.Int32 concurrentMessageLimit, System.String id = null)
-  METHOD public virtual System.Void MessageConfigured<TMessage>(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator)
-  PROPERTY ViciOne.ServiceBus.Middleware.IConcurrencyLimiter Limiter { public-get;  }
-TYPE class public ViciOne.ServiceBus.Configuration.ConcurrencyLimitConsumePipeSpecification<T>
-  CTOR public ViciOne.ServiceBus.Configuration.ConcurrencyLimitConsumePipeSpecification<T>(ViciOne.ServiceBus.Middleware.IConcurrencyLimiter limiter)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder<ViciOne.ServiceBus.ConsumeContext<T>> builder)
-TYPE class public ViciOne.ServiceBus.Configuration.ConcurrencyLimitConsumerConfigurationObserver<TConsumer>
-  CTOR public ViciOne.ServiceBus.Configuration.ConcurrencyLimitConsumerConfigurationObserver<TConsumer>(ViciOne.ServiceBus.Configuration.IConsumerConfigurator<TConsumer> configurator, System.Int32 concurrentMessageLimit, System.String id = null)
-  PROPERTY ViciOne.ServiceBus.Middleware.IConcurrencyLimiter Limiter { public-get;  }
-TYPE class public ViciOne.ServiceBus.Configuration.ConcurrencyLimitHandlerConfigurationObserver
-  CTOR public ViciOne.ServiceBus.Configuration.ConcurrencyLimitHandlerConfigurationObserver(System.Int32 concurrentMessageLimit, System.String id = null)
-  METHOD public virtual System.Void HandlerConfigured<T>(ViciOne.ServiceBus.Configuration.IHandlerConfigurator<T> configurator)
-  PROPERTY ViciOne.ServiceBus.Middleware.IConcurrencyLimiter Limiter { public-get;  }
-TYPE class public ViciOne.ServiceBus.Configuration.ConcurrencyLimitPipeSpecification<T>
-  CTOR public ViciOne.ServiceBus.Configuration.ConcurrencyLimitPipeSpecification<T>(System.Int32 concurrencyLimit, ViciOne.ServiceBus.Middleware.IPipeRouter router = null)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder<T> builder)
-TYPE class public ViciOne.ServiceBus.Configuration.ConcurrentMessageLimitExtensions [static]
-  METHOD public static System.Void UseConcurrentMessageLimit<TConsumer>(ViciOne.ServiceBus.Configuration.IConsumerConfigurator<TConsumer> configurator, System.Int32 concurrentMessageLimit)
-  METHOD public static System.Void UseConcurrentMessageLimit<TConsumer>(ViciOne.ServiceBus.Configuration.IConsumerConfigurator<TConsumer> configurator, System.Int32 concurrentMessageLimit, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator managementEndpointConfigurator, System.String id = null)
-  METHOD public static System.Void UseConcurrentMessageLimit<TMessage>(ViciOne.ServiceBus.Configuration.IHandlerConfigurator<TMessage> configurator, System.Int32 concurrentMessageLimit)
-  METHOD public static System.Void UseConcurrentMessageLimit<TMessage>(ViciOne.ServiceBus.Configuration.IHandlerConfigurator<TMessage> configurator, System.Int32 concurrentMessageLimit, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator managementEndpointConfigurator, System.String id = null)
-  METHOD public static System.Void UseConcurrentMessageLimit<TMessage>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.ConsumeContext<TMessage>> configurator, System.Int32 concurrentMessageLimit)
-  METHOD public static System.Void UseConcurrentMessageLimit<TMessage>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.ConsumeContext<TMessage>> configurator, System.Int32 concurrentMessageLimit, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator managementEndpointConfigurator, System.String id = null)
 TYPE class public ViciOne.ServiceBus.Configuration.ConfigurationObserver [base=ViciOne.ServiceBus.Util.Connectable<ViciOne.ServiceBus.Configuration.IMessageConfigurationObserver>]
   CTOR protected ViciOne.ServiceBus.Configuration.ConfigurationObserver(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator)
   METHOD public virtual System.Void ActivityConfigured<TActivity,TArguments>(ViciOne.ServiceBus.Advanced.Observers.IExecuteActivityPipeConfigurator<TActivity,TArguments> configurator, System.Uri compensateAddress)
@@ -15021,6 +15002,13 @@ TYPE class public ViciOne.ServiceBus.Configuration.ConsumePipeSpecification
   PROPERTY System.Boolean AutoStart { public-get; public-set; }
 TYPE class public ViciOne.ServiceBus.Configuration.ConsumeTransformSpecification<TMessage> [base=ViciOne.ServiceBus.Configuration.TransformSpecification<TMessage>]
   CTOR public ViciOne.ServiceBus.Configuration.ConsumeTransformSpecification<TMessage>()
+TYPE class public ViciOne.ServiceBus.Configuration.ConsumerConcurrencyLimitConfigurationExtensions [static]
+  METHOD public static System.Void UseConcurrencyLimit<TConsumer>(ViciOne.ServiceBus.Configuration.IConsumerConfigurator<TConsumer> configurator, System.Int32 concurrencyLimit)
+  METHOD public static System.Void UseConcurrencyLimit<TConsumer>(ViciOne.ServiceBus.Configuration.IConsumerConfigurator<TConsumer> configurator, System.Int32 concurrencyLimit, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator managementEndpointConfigurator, System.String limiterId = null)
+  METHOD public static System.Void UseConcurrencyLimit<TMessage>(ViciOne.ServiceBus.Configuration.IHandlerConfigurator<TMessage> configurator, System.Int32 concurrencyLimit)
+  METHOD public static System.Void UseConcurrencyLimit<TMessage>(ViciOne.ServiceBus.Configuration.IHandlerConfigurator<TMessage> configurator, System.Int32 concurrencyLimit, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator managementEndpointConfigurator, System.String limiterId = null)
+  METHOD public static System.Void UseConcurrencyLimit<TMessage>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.ConsumeContext<TMessage>> configurator, System.Int32 concurrencyLimit)
+  METHOD public static System.Void UseConcurrencyLimit<TMessage>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.ConsumeContext<TMessage>> configurator, System.Int32 concurrencyLimit, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator managementEndpointConfigurator, System.String limiterId = null)
 TYPE class public ViciOne.ServiceBus.Configuration.ConsumerConfigurator<TConsumer>
   CTOR public ViciOne.ServiceBus.Configuration.ConsumerConfigurator<TConsumer>(ViciOne.ServiceBus.Advanced.IConsumerFactory<TConsumer> consumerFactory, ViciOne.ServiceBus.Configuration.IConsumerConfigurationObserver observer)
   METHOD public virtual System.Boolean TryGetOptions<T>(out T options)
@@ -16040,10 +16028,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.ParentPublishPipeSpecificatio
 TYPE class public ViciOne.ServiceBus.Configuration.ParentSendPipeSpecificationObserver
   CTOR public ViciOne.ServiceBus.Configuration.ParentSendPipeSpecificationObserver(ViciOne.ServiceBus.Configuration.ISendPipeSpecification specification)
   METHOD public virtual System.Void MessageSpecificationCreated<T>(ViciOne.ServiceBus.Configuration.IMessageSendPipeSpecification<T> specification)
-TYPE class public ViciOne.ServiceBus.Configuration.PartitionConsumerSpecification<TConsumer>
-  CTOR public ViciOne.ServiceBus.Configuration.PartitionConsumerSpecification<TConsumer>(ViciOne.ServiceBus.Advanced.IPartitioner partitioner, ViciOne.ServiceBus.Advanced.PartitionKeyProvider<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer>> keyProvider)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer>> builder)
 TYPE class public ViciOne.ServiceBus.Configuration.PartitionKeyConventionExtensions [static]
   METHOD public static System.Void UsePartitionKeyFormatter<T>(ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> configurator, System.Func<ViciOne.ServiceBus.Advanced.SendContext<T>,System.String> formatter)
   METHOD public static System.Void UsePartitionKeyFormatter<T>(ViciOne.ServiceBus.Configuration.IMessageSendTopologyConfigurator<T> configurator, ViciOne.ServiceBus.Transports.IMessagePartitionKeyFormatter<T> formatter)
@@ -16057,43 +16041,17 @@ TYPE class public ViciOne.ServiceBus.Configuration.PartitionKeyMessageSendTopolo
   METHOD public virtual System.Void SetFormatter(ViciOne.ServiceBus.Transports.IPartitionKeyFormatter formatter)
 TYPE class public ViciOne.ServiceBus.Configuration.PartitionKeySendTopologyConvention
   CTOR public ViciOne.ServiceBus.Configuration.PartitionKeySendTopologyConvention()
-TYPE class public ViciOne.ServiceBus.Configuration.PartitionMessageConfigurationObserver [base=ViciOne.ServiceBus.Configuration.ConfigurationObserver]
-  CTOR public ViciOne.ServiceBus.Configuration.PartitionMessageConfigurationObserver(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, ViciOne.ServiceBus.Advanced.IPartitioner partitioner)
-  METHOD public System.Void BatchConsumerConfigured<TConsumer,TMessage>(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator<TConsumer,ViciOne.ServiceBus.Advanced.Batch<TMessage>> configurator)
-  METHOD public virtual System.Void MessageConfigured<TMessage>(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator)
-TYPE class public ViciOne.ServiceBus.Configuration.PartitionMessageSpecification<T>
-  CTOR public ViciOne.ServiceBus.Configuration.PartitionMessageSpecification<T>(ViciOne.ServiceBus.Advanced.IPartitioner partitioner)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder<ViciOne.ServiceBus.ConsumeContext<T>> builder)
 TYPE class public ViciOne.ServiceBus.Configuration.PartitionerConfigurationExtensions [static]
   METHOD public static System.Void UseMessagePartitioner(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, System.Int32 partitionCount)
-  METHOD public static System.Void UsePartitioner<T>(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, ViciOne.ServiceBus.Advanced.IPartitioner partitioner, System.Func<ViciOne.ServiceBus.ConsumeContext<T>,System.Guid> keyProvider)
-  METHOD public static System.Void UsePartitioner<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> configurator, System.Int32 partitionCount, System.Func<T,System.Byte[]> keyProvider)
-  METHOD public static System.Void UsePartitioner<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> configurator, System.Int32 partitionCount, System.Func<T,System.Guid> keyProvider)
-  METHOD public static System.Void UsePartitioner<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> configurator, System.Int32 partitionCount, System.Func<T,System.Int64> keyProvider)
-  METHOD public static System.Void UsePartitioner<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> configurator, System.Int32 partitionCount, System.Func<T,System.String> keyProvider, System.Text.Encoding encoding = null)
-  METHOD public static System.Void UsePartitioner<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> configurator, ViciOne.ServiceBus.Advanced.IPartitioner partitioner, System.Func<T,System.Byte[]> keyProvider)
-  METHOD public static System.Void UsePartitioner<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> configurator, ViciOne.ServiceBus.Advanced.IPartitioner partitioner, System.Func<T,System.Guid> keyProvider)
-  METHOD public static System.Void UsePartitioner<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> configurator, ViciOne.ServiceBus.Advanced.IPartitioner partitioner, System.Func<T,System.Int64> keyProvider)
-  METHOD public static System.Void UsePartitioner<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> configurator, ViciOne.ServiceBus.Advanced.IPartitioner partitioner, System.Func<T,System.String> keyProvider, System.Text.Encoding encoding = null)
-  METHOD public static System.Void UsePartitioner<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.ConsumeContext<T>> configurator, System.Int32 partitionCount, System.Func<ViciOne.ServiceBus.ConsumeContext<T>,System.Guid> keyProvider)
-  METHOD public static System.Void UsePartitioner<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.ConsumeContext<T>> configurator, ViciOne.ServiceBus.Advanced.IPartitioner partitioner, System.Func<ViciOne.ServiceBus.ConsumeContext<T>,System.Guid> keyProvider)
-  METHOD public static System.Void UsePartitioner<TActivity,TArguments>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> configurator, System.Int32 partitionCount, System.Func<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>,System.Guid> keyProvider)
-  METHOD public static System.Void UsePartitioner<TActivity,TArguments>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> configurator, System.Int32 partitionCount, System.Func<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>,System.String> keyProvider, System.Text.Encoding encoding = null)
-  METHOD public static System.Void UsePartitioner<TActivity,TArguments>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> configurator, ViciOne.ServiceBus.Advanced.IPartitioner partitioner, System.Func<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>,System.Guid> keyProvider)
-  METHOD public static System.Void UsePartitioner<TActivity,TArguments>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>> configurator, ViciOne.ServiceBus.Advanced.IPartitioner partitioner, System.Func<ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity,TArguments>,System.String> keyProvider, System.Text.Encoding encoding = null)
-  METHOD public static System.Void UsePartitioner<TActivity,TLog>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> configurator, System.Int32 partitionCount, System.Func<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>,System.Guid> keyProvider)
-  METHOD public static System.Void UsePartitioner<TActivity,TLog>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> configurator, System.Int32 partitionCount, System.Func<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>,System.String> keyProvider, System.Text.Encoding encoding = null)
-  METHOD public static System.Void UsePartitioner<TActivity,TLog>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> configurator, ViciOne.ServiceBus.Advanced.IPartitioner partitioner, System.Func<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>,System.Guid> keyProvider)
-  METHOD public static System.Void UsePartitioner<TActivity,TLog>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>> configurator, ViciOne.ServiceBus.Advanced.IPartitioner partitioner, System.Func<ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity,TLog>,System.String> keyProvider, System.Text.Encoding encoding = null)
-  METHOD public static System.Void UsePartitioner<TConsumer>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer>> configurator, System.Int32 partitionCount, System.Func<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer>,System.Guid> keyProvider)
-  METHOD public static System.Void UsePartitioner<TConsumer>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer>> configurator, System.Int32 partitionCount, System.Func<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer>,System.String> keyProvider, System.Text.Encoding encoding = null)
-  METHOD public static ViciOne.ServiceBus.Advanced.IPartitioner CreatePartitioner<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> _, System.Int32 partitionCount)
-TYPE class public ViciOne.ServiceBus.Configuration.PartitionerPipeSpecification<T>
-  CTOR public ViciOne.ServiceBus.Configuration.PartitionerPipeSpecification<T>(ViciOne.ServiceBus.Advanced.PartitionKeyProvider<T> keyProvider, System.Int32 partitionCount)
-  CTOR public ViciOne.ServiceBus.Configuration.PartitionerPipeSpecification<T>(ViciOne.ServiceBus.Advanced.PartitionKeyProvider<T> keyProvider, ViciOne.ServiceBus.Advanced.IPartitioner partitioner)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder<T> builder)
+  METHOD public static System.Void UsePartitioner<TContext>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<TContext> configurator, System.Int32 partitionCount, System.Func<TContext,System.Byte[]> keyProvider)
+  METHOD public static System.Void UsePartitioner<TContext>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<TContext> configurator, System.Int32 partitionCount, System.Func<TContext,System.Guid> keyProvider)
+  METHOD public static System.Void UsePartitioner<TContext>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<TContext> configurator, System.Int32 partitionCount, System.Func<TContext,System.Int64> keyProvider)
+  METHOD public static System.Void UsePartitioner<TContext>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<TContext> configurator, System.Int32 partitionCount, System.Func<TContext,System.String> keyProvider, System.Text.Encoding encoding = null)
+  METHOD public static System.Void UsePartitioner<TContext>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<TContext> configurator, ViciOne.ServiceBus.Advanced.Middleware.IPartitioner partitioner, System.Func<TContext,System.Byte[]> keyProvider)
+  METHOD public static System.Void UsePartitioner<TContext>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<TContext> configurator, ViciOne.ServiceBus.Advanced.Middleware.IPartitioner partitioner, System.Func<TContext,System.Guid> keyProvider)
+  METHOD public static System.Void UsePartitioner<TContext>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<TContext> configurator, ViciOne.ServiceBus.Advanced.Middleware.IPartitioner partitioner, System.Func<TContext,System.Int64> keyProvider)
+  METHOD public static System.Void UsePartitioner<TContext>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<TContext> configurator, ViciOne.ServiceBus.Advanced.Middleware.IPartitioner partitioner, System.Func<TContext,System.String> keyProvider, System.Text.Encoding encoding = null)
+  METHOD public static System.Void UsePartitioner<TMessage>(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, ViciOne.ServiceBus.Advanced.Middleware.IPartitioner partitioner, System.Func<ViciOne.ServiceBus.ConsumeContext<TMessage>,System.Guid> keyProvider)
 TYPE class public ViciOne.ServiceBus.Configuration.PayloadAdmissionOptions<TBus> [sealed]
   CTOR public ViciOne.ServiceBus.Configuration.PayloadAdmissionOptions<TBus>()
   PROPERTY System.Nullable<System.Int32> MaximumSerializedBodyBytes { public-get; public-set; }
@@ -16117,10 +16075,6 @@ TYPE class public ViciOne.ServiceBus.Configuration.RateLimitConfigurationExtensi
   METHOD public static System.Void UseRateLimit(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator configurator, System.Int32 rateLimit, System.TimeSpan interval, System.TimeProvider timeProvider = null)
   METHOD public static System.Void UseRateLimit<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> configurator, System.Int32 rateLimit, System.TimeSpan interval, ViciOne.ServiceBus.Middleware.IPipeRouter router = null, System.TimeProvider timeProvider = null)
   METHOD public static System.Void UseRateLimit<T>(ViciOne.ServiceBus.Configuration.IPipeConfigurator<T> configurator, System.Int32 rateLimit, ViciOne.ServiceBus.Middleware.IPipeRouter router = null)
-TYPE class public ViciOne.ServiceBus.Configuration.RateLimitPipeSpecification<T>
-  CTOR public ViciOne.ServiceBus.Configuration.RateLimitPipeSpecification<T>(System.Int32 rateLimit, System.TimeSpan interval, ViciOne.ServiceBus.Middleware.IPipeRouter router = null, System.TimeProvider timeProvider = null)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder<T> builder)
 TYPE class public ViciOne.ServiceBus.Configuration.RawJsonSerializerConfigurationExtensions [static]
   METHOD public static System.Void AddRawJsonSerializer(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, ViciOne.ServiceBus.Advanced.RawSerializerOptions options = Default)
   METHOD public static System.Void UseRawJsonDeserializer(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, ViciOne.ServiceBus.Advanced.RawSerializerOptions options = Default, System.Boolean isDefault = false)
@@ -18477,22 +18431,6 @@ TYPE class public ViciOne.ServiceBus.Metadata.TypeMetadataCache<T> [static]
 TYPE class public ViciOne.ServiceBus.Middleware.ActivityRedeliveryRetryFilter<TContext> [sealed]
   CTOR public ViciOne.ServiceBus.Middleware.ActivityRedeliveryRetryFilter<TContext>(ViciOne.ServiceBus.Advanced.Middleware.IRetryPolicy retryPolicy, ViciOne.ServiceBus.Observables.RetryObservable observers)
   METHOD public virtual System.Threading.Tasks.Task SendAsync(TContext context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<TContext> next)
-TYPE class public ViciOne.ServiceBus.Middleware.ConcurrencyLimitFilter<TContext> [base=ViciOne.ServiceBus.Advanced.Middleware.Agent]
-  CTOR public ViciOne.ServiceBus.Middleware.ConcurrencyLimitFilter<TContext>(System.Int32 concurrencyLimit)
-  METHOD protected System.Threading.Tasks.Task StopAgentAsync(ViciOne.ServiceBus.Advanced.Middleware.StopContext context)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(TContext context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<TContext> next)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Contracts.CommandContext<ViciOne.ServiceBus.Contracts.SetConcurrencyLimit> context)
-  METHOD public virtual System.Void Dispose()
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.Middleware.ConcurrencyLimiter
-  CTOR public ViciOne.ServiceBus.Middleware.ConcurrencyLimiter(System.Int32 concurrencyLimit, System.String id = null)
-  METHOD public virtual System.Threading.Tasks.Task ConsumeAsync(ViciOne.ServiceBus.ConsumeContext<ViciOne.ServiceBus.Contracts.SetConcurrencyLimit> context)
-  METHOD public virtual System.Threading.Tasks.Task WaitAsync(System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Void Release()
-TYPE class public ViciOne.ServiceBus.Middleware.ConsumeConcurrencyLimitFilter<TMessage>
-  CTOR public ViciOne.ServiceBus.Middleware.ConsumeConcurrencyLimitFilter<TMessage>(ViciOne.ServiceBus.Middleware.IConcurrencyLimiter limiter)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.ConsumeContext<TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<TMessage>> next)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
 TYPE class public ViciOne.ServiceBus.Middleware.ConsumeContextConverterFactory
   CTOR public ViciOne.ServiceBus.Middleware.ConsumeContextConverterFactory()
   METHOD public virtual ViciOne.ServiceBus.Middleware.IPipeContextConverter<ViciOne.ServiceBus.ConsumeContext,TOutput> GetConverter<TOutput>()
@@ -18622,11 +18560,6 @@ TYPE class public ViciOne.ServiceBus.Middleware.GenerateFaultFilter
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
 TYPE class public ViciOne.ServiceBus.Middleware.HandlerMessageFilter<TMessage>
   CTOR public ViciOne.ServiceBus.Middleware.HandlerMessageFilter<TMessage>(ViciOne.ServiceBus.Advanced.MessageHandler<TMessage> handler)
-TYPE interface public ViciOne.ServiceBus.Middleware.IConcurrencyLimiter
-  METHOD public abstract System.Threading.Tasks.Task WaitAsync(System.Threading.CancellationToken cancellationToken)
-  METHOD public abstract System.Void Release()
-  PROPERTY System.Int32 Available { public-get;  }
-  PROPERTY System.Int32 Limit { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Middleware.IConsumeContextMessageTypeFilter
   METHOD public abstract ViciOne.ServiceBus.Advanced.ConnectHandle ConnectMessagePipe<T>(System.Guid key, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe)
   METHOD public abstract ViciOne.ServiceBus.Advanced.ConnectHandle ConnectMessagePipe<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe)
@@ -18637,8 +18570,6 @@ TYPE interface public ViciOne.ServiceBus.Middleware.IDynamicFilter<TInput,TKey>
 TYPE interface public ViciOne.ServiceBus.Middleware.IDynamicFilter<TInput>
 TYPE interface public ViciOne.ServiceBus.Middleware.IDynamicRouter<TContext,TKey>
 TYPE interface public ViciOne.ServiceBus.Middleware.IDynamicRouter<TContext>
-TYPE interface public ViciOne.ServiceBus.Middleware.IHashGenerator
-  METHOD public abstract System.UInt32 Hash(System.Byte[] data)
 TYPE interface public ViciOne.ServiceBus.Middleware.IKeyPipeConnector<TKey>
   METHOD public abstract ViciOne.ServiceBus.Advanced.ConnectHandle ConnectPipe<T>(TKey key, ViciOne.ServiceBus.Advanced.Middleware.IPipe<T> pipe)
 TYPE interface public ViciOne.ServiceBus.Middleware.IKeyPipeConnector<TMessage,TKey>
@@ -18725,11 +18656,6 @@ TYPE class public ViciOne.ServiceBus.Middleware.MessageSplitFilter<TConsumer,TMe
   METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,TMessage>> next)
 TYPE class public ViciOne.ServiceBus.Middleware.MethodConsumerMessageFilter<TConsumer,TMessage>
   CTOR public ViciOne.ServiceBus.Middleware.MethodConsumerMessageFilter<TConsumer,TMessage>()
-TYPE class public ViciOne.ServiceBus.Middleware.Murmur3UnsafeHashGenerator
-  CTOR public ViciOne.ServiceBus.Middleware.Murmur3UnsafeHashGenerator()
-  METHOD public System.UInt32 Hash(System.Byte[] data, System.Int32 offset, System.UInt32 count, System.UInt32 seed)
-  METHOD public System.UInt32 Hash(System.String s)
-  METHOD public virtual System.UInt32 Hash(System.Byte[] data)
 TYPE class public ViciOne.ServiceBus.Middleware.ObserverMessageFilter<TMessage>
   CTOR public ViciOne.ServiceBus.Middleware.ObserverMessageFilter<TMessage>(System.IObserver<ViciOne.ServiceBus.ConsumeContext<TMessage>> observer)
 TYPE class public ViciOne.ServiceBus.Middleware.Outbox.BusOutboxNotification<TScope> [sealed]
@@ -18802,18 +18728,6 @@ TYPE class public ViciOne.ServiceBus.Middleware.OutputPipeFilter<TInput,TOutput,
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectPipe<T>(TKey key, ViciOne.ServiceBus.Advanced.Middleware.IPipe<T> pipe)
 TYPE class public ViciOne.ServiceBus.Middleware.OutputPipeFilter<TInput,TOutput>
   CTOR public ViciOne.ServiceBus.Middleware.OutputPipeFilter<TInput,TOutput>(ViciOne.ServiceBus.Middleware.IPipeContextConverter<TInput,TOutput> contextConverter, ViciOne.ServiceBus.Observables.FilterObservable observers, ViciOne.ServiceBus.Middleware.ITeeFilter<TOutput> outputFilter)
-TYPE class public ViciOne.ServiceBus.Middleware.Partition
-  CTOR public ViciOne.ServiceBus.Middleware.Partition(System.Int32 index)
-  METHOD public System.Threading.Tasks.Task SendAsync<T>(T context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<T> next, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-TYPE class public ViciOne.ServiceBus.Middleware.PartitionFilter<TContext>
-  CTOR public ViciOne.ServiceBus.Middleware.PartitionFilter<TContext>(ViciOne.ServiceBus.Advanced.PartitionKeyProvider<TContext> keyProvider, ViciOne.ServiceBus.Advanced.IPartitioner partitioner)
-TYPE class public ViciOne.ServiceBus.Middleware.Partitioner
-  CTOR public ViciOne.ServiceBus.Middleware.Partitioner(System.Int32 partitionCount, ViciOne.ServiceBus.Middleware.IHashGenerator hashGenerator)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.IPartitioner<T> GetPartitioner<T>(ViciOne.ServiceBus.Advanced.PartitionKeyProvider<T> keyProvider)
 TYPE class public ViciOne.ServiceBus.Middleware.PayloadFilter<TContext,TPayload>
   CTOR public ViciOne.ServiceBus.Middleware.PayloadFilter<TContext,TPayload>(TPayload payload)
   METHOD public virtual System.Threading.Tasks.Task SendAsync(TContext context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<TContext> next)
@@ -18829,12 +18743,6 @@ TYPE class public ViciOne.ServiceBus.Middleware.PipeRouter [base=ViciOne.Service
   CTOR public ViciOne.ServiceBus.Middleware.PipeRouter()
 TYPE class public ViciOne.ServiceBus.Middleware.PublishMessageSchedulerFilter
   CTOR public ViciOne.ServiceBus.Middleware.PublishMessageSchedulerFilter()
-TYPE class public ViciOne.ServiceBus.Middleware.RateLimitFilter<TContext>
-  CTOR public ViciOne.ServiceBus.Middleware.RateLimitFilter<TContext>(System.Int32 rateLimit, System.TimeSpan interval, System.TimeProvider timeProvider = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(TContext context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<TContext> next)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Contracts.CommandContext<ViciOne.ServiceBus.Contracts.SetRateLimit> context)
-  METHOD public virtual System.Void Dispose()
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
 TYPE class public ViciOne.ServiceBus.Middleware.ReceiveEndpointDependencyFilter<TContext>
   CTOR public ViciOne.ServiceBus.Middleware.ReceiveEndpointDependencyFilter<TContext>(ViciOne.ServiceBus.Transports.ReceiveEndpointContext context)
   METHOD public virtual System.Threading.Tasks.Task SendAsync(TContext context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<TContext> next)
@@ -21421,7 +21329,7 @@ TYPE class public ViciOne.ServiceBus.Util.ObservableObserver<T>
   METHOD public virtual System.Void OnError(System.Exception error)
   METHOD public virtual System.Void OnNext(T value)
 TYPE class public ViciOne.ServiceBus.Util.PartitionedTaskExecutor<T> [sealed]
-  CTOR public ViciOne.ServiceBus.Util.PartitionedTaskExecutor<T>(ViciOne.ServiceBus.Advanced.PartitionKeyProvider<T> partitionKeyProvider, ViciOne.ServiceBus.Middleware.IHashGenerator hashGenerator, System.Int32 partitionCount, System.Int32 concurrentDeliveryLimit = 1, System.Nullable<System.Int32> partitionCapacity = null)
+  CTOR public ViciOne.ServiceBus.Util.PartitionedTaskExecutor<T>(ViciOne.ServiceBus.Advanced.Middleware.PartitionKeyProvider<T> partitionKeyProvider, System.Int32 partitionCount, System.Int32 concurrentDeliveryLimit = 1, System.Nullable<System.Int32> partitionCapacity = null, ViciOne.ServiceBus.Advanced.Middleware.IPartitionHashGenerator hashGenerator = null)
   METHOD public virtual System.Threading.Tasks.Task EnqueueAsync(T partition, System.Func<System.Threading.Tasks.Task> method, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Threading.Tasks.Task ExecuteAsync(T partition, System.Func<System.Threading.Tasks.Task> method, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()

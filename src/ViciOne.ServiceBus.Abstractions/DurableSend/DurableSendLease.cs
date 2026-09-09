@@ -5,9 +5,9 @@ namespace ViciOne.ServiceBus.Providers.Persistence;
 /// <summary>Fenced ownership lease for one persisted durable-send delivery attempt.</summary>
 public readonly record struct DurableSendLease
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="token">The token.</param>
-    /// <param name="expiresAt">The expires at.</param>
+    /// <summary>Initializes an exclusive delivery lease.</summary>
+    /// <param name="token">The nonempty fencing token issued for the claim.</param>
+    /// <param name="expiresAt">The instant at which another delivery worker may take ownership.</param>
     public DurableSendLease(Guid token, DateTimeOffset expiresAt)
     {
         if (token == Guid.Empty)
@@ -17,9 +17,9 @@ public readonly record struct DurableSendLease
         ExpiresAt = expiresAt;
     }
 
-    /// <summary>Gets the token.</summary>
+    /// <summary>Gets the token that fences state changes made by this lease owner.</summary>
     public Guid Token { get; }
 
-    /// <summary>Gets the expires at.</summary>
+    /// <summary>Gets the instant at which the lease stops excluding another claimant.</summary>
     public DateTimeOffset ExpiresAt { get; }
 }

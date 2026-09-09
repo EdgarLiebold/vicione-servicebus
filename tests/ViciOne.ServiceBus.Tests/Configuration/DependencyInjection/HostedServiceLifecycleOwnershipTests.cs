@@ -149,4 +149,106 @@ public sealed class HostedServiceLifecycleOwnershipTests
         await driver.DisposeAsync();
         Assert.Equal(2, driver.StopCount);
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-HOSTED-LIFECYCLE", "start-timeout-uses-injected-clock")]
+    public async Task StartTimeout_UsesTheInjectedTimeProviderAsync()
+    {
+        var timeProvider = new FakeTimeProvider();
+        var driver = new HostedServiceLifecycleTestDriver(
+            startTimeout: TimeSpan.FromHours(1),
+            timeProvider: timeProvider);
+
+        try
+        {
+            Task start = driver.StartAsync(CancellationToken.None);
+            await driver.StartEntered.WaitAsync(TestContext.Current.CancellationToken);
+
+            timeProvider.Advance(TimeSpan.FromHours(1));
+            await Task.Yield();
+
+            Assert.True(start.IsCompleted);
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => start);
+            Assert.Equal(1, driver.StartCount);
+        }
+        finally
+        {
+            driver.CompleteStart();
+            await driver.DisposeAsync();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-HOSTED-LIFECYCLE", "stop-timeout-uses-injected-clock")]
+    public async Task StopTimeout_UsesTheInjectedTimeProviderAsync()
+    {
+        var timeProvider = new FakeTimeProvider();
+        var driver = new HostedServiceLifecycleTestDriver(
+            blockFirstStop: true,
+            stopTimeout: TimeSpan.FromHours(1),
+            timeProvider: timeProvider);
+
+        try
+        {
+            Task start = driver.StartAsync(CancellationToken.None);
+            driver.CompleteStart();
+            await start;
+
+            Task stop = driver.StopAsync(CancellationToken.None);
+            await driver.StopEntered.WaitAsync(TestContext.Current.CancellationToken);
+            timeProvider.Advance(TimeSpan.FromHours(1));
+            await Task.Yield();
+
+            Assert.True(stop.IsCompleted);
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => stop);
+            Assert.Equal(1, driver.StopCount);
+
+            driver.ReleaseStop();
+            await driver.StopAsync(CancellationToken.None);
+            Assert.Equal(2, driver.StopCount);
+        }
+        finally
+        {
+            driver.ReleaseStop();
+            await driver.DisposeAsync();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-HOSTED-LIFECYCLE", "background-start-and-stop-are-serialized")]
+    public async Task BackgroundStartAndStop_DoNotOverlapDepotOperationsAsync()
+    {
+        var driver = new HostedServiceLifecycleTestDriver(
+            blockFirstStop: true,
+            waitUntilStarted: false);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        Task? stop = null;
+
+        try
+        {
+            Task hostStart = driver.StartAsync(cancellationToken);
+            await driver.StartEntered.WaitAsync(cancellationToken);
+            stop = driver.StopAsync(CancellationToken.None);
+
+            Assert.True(hostStart.IsCompletedSuccessfully);
+            Assert.False(driver.StopEntered.IsCompleted);
+            Assert.Equal(0, driver.StopCount);
+
+            driver.CompleteStart();
+            await driver.StopEntered.WaitAsync(cancellationToken);
+            Assert.Equal(1, driver.StopCount);
+
+            driver.ReleaseStop();
+            await stop;
+        }
+        finally
+        {
+            driver.CompleteStart();
+            driver.ReleaseStop();
+            if (stop is not null)
+                await stop;
+
+            await driver.DisposeAsync();
+        }
+    }
 }

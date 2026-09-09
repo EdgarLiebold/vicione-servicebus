@@ -1,8 +1,10 @@
+using System;
+
 namespace ViciOne.ServiceBus.Context;
 
 /// <summary>Carries state for host execute activity operations.</summary>
-/// <typeparam name="TActivity">The activity type.</typeparam>
-/// <typeparam name="TArguments">The arguments type.</typeparam>
+/// <typeparam name="TActivity">The execute activity type.</typeparam>
+/// <typeparam name="TArguments">The activity argument contract.</typeparam>
 public class HostExecuteActivityContext<TActivity, TArguments> :
     ExecuteContextProxy<TArguments>,
     ExecuteActivityContext<TActivity, TArguments>
@@ -11,13 +13,13 @@ public class HostExecuteActivityContext<TActivity, TArguments> :
 {
     readonly TActivity _activity;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="activity">The activity.</param>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates an execute context bound to its activity instance.</summary>
+    /// <param name="activity">The execute activity instance.</param>
+    /// <param name="context">The execute context to wrap.</param>
     public HostExecuteActivityContext(TActivity activity, ExecuteContext<TArguments> context)
         : base(context)
     {
-        _activity = activity;
+        _activity = activity ?? throw new ArgumentNullException(nameof(activity));
     }
 
     TActivity ExecuteActivityContext<TActivity, TArguments>.Activity => _activity;

@@ -4,8 +4,8 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Used to schedule message redelivery using the message scheduler.</summary>
-/// <typeparam name="TMessage">The message type.</typeparam>
+/// <summary>Schedules redelivery of a consumed message through the configured message scheduler.</summary>
+/// <typeparam name="TMessage">The consumed message contract.</typeparam>
 public class ScheduleMessageRedeliveryContext<TMessage> :
     MessageRedeliveryContext
     where TMessage : class
@@ -13,12 +13,12 @@ public class ScheduleMessageRedeliveryContext<TMessage> :
     readonly ConsumeContext<TMessage> _context;
     readonly RedeliveryOptions _options;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="options">The options that control the operation.</param>
+    /// <summary>Creates a redelivery context for one consumed message.</summary>
+    /// <param name="context">The consumed message to redeliver.</param>
+    /// <param name="options">The redelivery options applied to the scheduled send.</param>
     public ScheduleMessageRedeliveryContext(ConsumeContext<TMessage> context, RedeliveryOptions options)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
         _options = options;
     }
 

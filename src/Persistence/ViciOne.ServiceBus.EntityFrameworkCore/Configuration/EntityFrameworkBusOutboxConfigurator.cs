@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using ViciOne.ServiceBus.DependencyInjection;
-using ViciOne.ServiceBus.Diagnostics.Telemetry;
+using ViciOne.ServiceBus.Monitoring.Telemetry;
 using ViciOne.ServiceBus.EntityFrameworkCore;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Transactions;

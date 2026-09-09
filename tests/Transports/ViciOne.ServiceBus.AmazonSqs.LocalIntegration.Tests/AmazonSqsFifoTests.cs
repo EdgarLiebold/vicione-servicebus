@@ -415,15 +415,15 @@ public sealed class AmazonSqsFifoTests
 
     private static (string First, string Second) CreateDistinctPartitionGroups(int partitionCount)
     {
-        var hash = new Murmur3UnsafeHashGenerator();
+        var hash = new Murmur3PartitionHashGenerator();
         string first = Guid.NewGuid().ToString("N");
-        uint firstPartition = hash.Hash(System.Text.Encoding.UTF8.GetBytes(first)) % (uint)partitionCount;
+        uint firstPartition = hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(first)) % (uint)partitionCount;
         string second;
         do
         {
             second = Guid.NewGuid().ToString("N");
         }
-        while (hash.Hash(System.Text.Encoding.UTF8.GetBytes(second)) % (uint)partitionCount == firstPartition);
+        while (hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(second)) % (uint)partitionCount == firstPartition);
 
         return (first, second);
     }

@@ -41,7 +41,7 @@ public sealed partial class ResourceCache<TValue>
         }
         catch (Exception exception)
         {
-            LogContext.Warning?.Log(exception, "Resource cache timed cleanup faulted");
+            LogWarningSafely(exception, "Resource cache timed cleanup faulted");
         }
         finally
         {
@@ -223,7 +223,7 @@ public sealed partial class ResourceCache<TValue>
         }
         catch (Exception exception)
         {
-            LogContext.Warning?.Log(exception, "Resource cache could not subscribe to usage notifications");
+            LogWarningSafely(exception, "Resource cache could not subscribe to usage notifications");
             return;
         }
 
@@ -236,7 +236,7 @@ public sealed partial class ResourceCache<TValue>
         }
         catch (Exception exception)
         {
-            LogContext.Warning?.Log(exception, "Resource cache could not detach a concurrently removed usage notification");
+            LogWarningSafely(exception, "Resource cache could not detach a concurrently removed usage notification");
         }
     }
 
@@ -256,7 +256,7 @@ public sealed partial class ResourceCache<TValue>
             }
             catch (Exception exception)
             {
-                LogContext.Warning?.Log(exception, "Cached resource disposal faulted");
+                LogWarningSafely(exception, "Cached resource disposal faulted");
             }
         }
     }
@@ -282,7 +282,7 @@ public sealed partial class ResourceCache<TValue>
         }
         catch (Exception exception)
         {
-            LogContext.Warning?.Log(exception, "Uncommitted cached resource disposal faulted");
+            LogWarningSafely(exception, "Uncommitted cached resource disposal faulted");
         }
     }
 
@@ -297,7 +297,7 @@ public sealed partial class ResourceCache<TValue>
         }
         catch (Exception exception)
         {
-            LogContext.Warning?.Log(exception, "Resource cache could not detach usage notifications");
+            LogWarningSafely(exception, "Resource cache could not detach usage notifications");
         }
         finally
         {

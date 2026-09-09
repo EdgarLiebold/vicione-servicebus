@@ -3,8 +3,8 @@
 
   <PropertyGroup>
     <Product>ViciOne.ServiceBus</Product>
-    <Copyright>Copyright 2007-2024 Chris Patterson</Copyright>
-    <Authors>Chris Patterson</Authors>
+    <Copyright>Copyright © ViciOne 2026</Copyright>
+    <Authors>ViciOne</Authors>
     <!-- Source assemblies emit debug information; the root targets select its configuration-specific representation. -->
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>

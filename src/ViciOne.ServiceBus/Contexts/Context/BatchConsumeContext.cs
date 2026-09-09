@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Carries state for batch consume operations.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Represents an assembled message batch while preserving the collector's consume context.</summary>
+/// <typeparam name="TMessage">The batched message contract.</typeparam>
 public class BatchConsumeContext<TMessage> :
     ConsumeContextScope,
     ConsumeContext<Batch<TMessage>>
@@ -12,62 +12,71 @@ public class BatchConsumeContext<TMessage> :
 {
     readonly ConsumeContext _context;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="batch">The batch.</param>
+    /// <summary>Creates a consume context for an assembled batch.</summary>
+    /// <param name="context">The collector context that owns batch settlement.</param>
+    /// <param name="batch">The ordered batch delivered to the consumer.</param>
     public BatchConsumeContext(ConsumeContext context, Batch<TMessage> batch)
         : base(context)
     {
-        _context = context;
-        Message = batch;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+        Message = batch ?? throw new ArgumentNullException(nameof(batch));
     }
 
-    /// <summary>Reports that notify has been consumed.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Forwards successful nested consumption to the collector context.</summary>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="context">The nested consume context that completed.</param>
+    /// <param name="duration">The consumer execution duration.</param>
+    /// <param name="consumerType">The diagnostic consumer name.</param>
+    /// <param name="cancellationToken">Cancels observer notification.</param>
+    /// <returns>A task that represents the collector context's consumed-message notification.</returns>
     public override Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
         return _context.NotifyConsumedAsync(context, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Reports that notify has faulted.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Suppresses nested fault notification because the collector settles each original message.</summary>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="context">The nested consume context that faulted.</param>
+    /// <param name="duration">The consumer execution duration.</param>
+    /// <param name="consumerType">The diagnostic consumer name.</param>
+    /// <param name="exception">The consumer failure.</param>
+    /// <param name="cancellationToken">Cancels notification.</param>
+    /// <returns>A completed task, or a canceled task when cancellation was requested.</returns>
     public override Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
+        ArgumentNullException.ThrowIfNull(exception);
+        return cancellationToken.IsCancellationRequested
+            ? Task.FromCanceled(cancellationToken)
+            : Task.CompletedTask;
     }
 
-    /// <summary>Gets the message.</summary>
+    /// <summary>Gets the assembled batch.</summary>
     public Batch<TMessage> Message { get; }
 
-    /// <summary>Reports that notify has been consumed.</summary>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Forwards successful batch consumption to the collector context.</summary>
+    /// <param name="duration">The batch-consumer execution duration.</param>
+    /// <param name="consumerType">The diagnostic consumer name.</param>
+    /// <param name="cancellationToken">Cancels observer notification.</param>
+    /// <returns>A task that represents the collector context's consumed-batch notification.</returns>
     public Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
         return _context.NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Reports that notify has faulted.</summary>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Suppresses batch fault notification because the collector settles each original message.</summary>
+    /// <param name="duration">The batch-consumer execution duration.</param>
+    /// <param name="consumerType">The diagnostic consumer name.</param>
+    /// <param name="exception">The consumer failure.</param>
+    /// <param name="cancellationToken">Cancels notification.</param>
+    /// <returns>A completed task, or a canceled task when cancellation was requested.</returns>
     public Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
+        ArgumentException.ThrowIfNullOrWhiteSpace(consumerType);
+        ArgumentNullException.ThrowIfNull(exception);
+        return cancellationToken.IsCancellationRequested
+            ? Task.FromCanceled(cancellationToken)
+            : Task.CompletedTask;
     }
 }

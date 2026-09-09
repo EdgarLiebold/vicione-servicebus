@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ViciOne.ServiceBus.Diagnostics.Telemetry;
+using ViciOne.ServiceBus.Monitoring.Telemetry;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;

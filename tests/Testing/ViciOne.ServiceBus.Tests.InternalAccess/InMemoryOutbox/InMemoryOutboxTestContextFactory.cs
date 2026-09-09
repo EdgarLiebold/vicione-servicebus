@@ -46,6 +46,7 @@ public static class InMemoryOutboxTestContextFactory
         private readonly Dictionary<Type, object> _payloads = [];
         private CancellationToken _cancellationToken;
         private object _message = null!;
+        private Guid _messageId;
         private ReceiveContext _receiveContext = null!;
         private SerializerContext _serializerContext = null!;
 
@@ -58,6 +59,7 @@ public static class InMemoryOutboxTestContextFactory
             where T : class
         {
             _message = message;
+            _messageId = NewId.NextGuid();
             _receiveContext = receiveContext;
             _serializerContext = serializerContext;
             _cancellationToken = cancellationToken;
@@ -77,6 +79,10 @@ public static class InMemoryOutboxTestContextFactory
             {
                 case "get_Message":
                     return _message;
+                case "get_MessageId":
+                    return _messageId;
+                case "get_SentTime":
+                    return DateTimeOffset.UnixEpoch;
                 case "get_ReceiveContext":
                     return _receiveContext;
                 case "get_SerializerContext":
@@ -146,10 +152,19 @@ public static class InMemoryOutboxTestContextFactory
         {
             "get_InputAddress" => _inputAddress,
             "get_CancellationToken" => _cancellationToken,
+            "get_IsDelivered" => false,
             "get_PublishEndpointProvider" => _publishEndpointProvider,
             "get_SendEndpointProvider" => _sendEndpointProvider,
+            "HasPayloadType" => false,
+            "TryGetPayload" => SetMissingPayload(args),
             _ => throw new NotSupportedException(targetMethod?.Name),
         };
+
+        private static bool SetMissingPayload(object?[]? args)
+        {
+            args![0] = null;
+            return false;
+        }
     }
 
     private class MessageSchedulerContextProxy : DispatchProxy

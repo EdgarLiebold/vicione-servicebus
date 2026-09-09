@@ -4,35 +4,31 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Carries state for mediator consume operations.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Represents a mediator dispatch as a typed consume context.</summary>
+/// <typeparam name="TMessage">The dispatched message contract.</typeparam>
 public class MediatorConsumeContext<TMessage> :
     DeserializerConsumeContext,
     ConsumeContext<TMessage>
     where TMessage : class
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="receiveContext">The receive context.</param>
-    /// <param name="serializerContext">The serializer context.</param>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a typed consume context for one mediator dispatch.</summary>
+    /// <param name="receiveContext">The in-process receive context.</param>
+    /// <param name="serializerContext">The serializer context that owns message metadata.</param>
+    /// <param name="message">The dispatched message.</param>
     public MediatorConsumeContext(ReceiveContext receiveContext, SerializerContext serializerContext, TMessage message)
         : base(receiveContext, serializerContext)
     {
-        Message = message;
+        Message = message ?? throw new ArgumentNullException(nameof(message));
     }
 
-    /// <summary>Determines whether the current value has message type.</summary>
-    /// <param name="messageType">The runtime type of the message contract.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public override bool HasMessageType(Type messageType)
     {
+        ArgumentNullException.ThrowIfNull(messageType);
         return messageType.IsAssignableFrom(typeof(TMessage));
     }
 
-    /// <summary>Attempts to get message.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="consumeContext">Receives the consume context produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public override bool TryGetMessage<T>([NotNullWhen(true)] out ConsumeContext<T>? consumeContext)
     {
         if (Message is T message)
@@ -45,66 +41,59 @@ public class MediatorConsumeContext<TMessage> :
         return false;
     }
 
-    /// <summary>Gets the message id.</summary>
+    /// <inheritdoc />
     public override Guid? MessageId => SerializerContext.MessageId;
-    /// <summary>Gets the request id.</summary>
+    /// <inheritdoc />
     public override Guid? RequestId => SerializerContext.RequestId;
-    /// <summary>Gets the correlation id.</summary>
+    /// <inheritdoc />
     public override Guid? CorrelationId => SerializerContext.CorrelationId;
-    /// <summary>Gets the conversation id.</summary>
+    /// <inheritdoc />
     public override Guid? ConversationId => SerializerContext.ConversationId;
-    /// <summary>Gets the initiator id.</summary>
+    /// <inheritdoc />
     public override Guid? InitiatorId => SerializerContext.InitiatorId;
-    /// <summary>Gets the expiration time.</summary>
+    /// <inheritdoc />
     public override DateTimeOffset? ExpirationTime => SerializerContext.ExpirationTime;
-    /// <summary>Gets the source address.</summary>
+    /// <inheritdoc />
     public override Uri? SourceAddress => SerializerContext.SourceAddress;
-    /// <summary>Gets the destination address.</summary>
+    /// <inheritdoc />
     public override Uri? DestinationAddress => SerializerContext.DestinationAddress;
-    /// <summary>Gets the response address.</summary>
+    /// <inheritdoc />
     public override Uri? ResponseAddress => SerializerContext.ResponseAddress;
-    /// <summary>Gets the fault address.</summary>
+    /// <inheritdoc />
     public override Uri? FaultAddress => SerializerContext.FaultAddress;
-    /// <summary>Gets the sent time.</summary>
+    /// <inheritdoc />
     public override DateTimeOffset? SentTime => SerializerContext.SentTime;
-    /// <summary>Gets the headers.</summary>
+    /// <inheritdoc />
     public override Headers Headers => SerializerContext.Headers;
-    /// <summary>Gets the host.</summary>
+    /// <inheritdoc />
     public override HostInfo Host => SerializerContext.Host;
-    /// <summary>Gets the supported message types.</summary>
+    /// <inheritdoc />
     public override IEnumerable<string> SupportedMessageTypes => SerializerContext.SupportedMessageTypes;
 
-    /// <summary>Gets the message.</summary>
+    /// <inheritdoc />
     public TMessage Message { get; }
 
-    /// <summary>Reports that notify has been consumed.</summary>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
         return ReceiveContext.NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Reports that notify has faulted.</summary>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
         return ReceiveContext.NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Generates fault.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Suppresses transport fault publication because mediator dispatch propagates failures directly.</summary>
+    /// <typeparam name="T">The failed message contract.</typeparam>
+    /// <param name="context">The mediator consume context that faulted.</param>
+    /// <param name="exception">The dispatch failure.</param>
+    /// <returns>A completed task because no fault message is published.</returns>
     protected override Task GenerateFaultAsync<T>(ConsumeContext<T> context, Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(exception);
         return Task.CompletedTask;
     }
 }

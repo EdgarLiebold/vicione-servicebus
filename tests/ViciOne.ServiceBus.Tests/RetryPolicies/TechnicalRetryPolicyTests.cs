@@ -1,5 +1,4 @@
 using ViciOne.ServiceBus.Configuration;
-using ViciOne.ServiceBus.Introspection;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Transports;

@@ -22,6 +22,6 @@ internal sealed class ReceiveTransportFaultedEvent :
 
     /// <summary>Gets the transport failure.</summary>
     public Exception Exception { get; }
-    /// <summary>Gets whether the transport has exhausted recovery and will not retry.</summary>
+    /// <summary>Gets a value indicating whether the transport has exhausted recovery and will not retry.</summary>
     public bool IsTerminal { get; }
 }

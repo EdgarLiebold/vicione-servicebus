@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Advanced.Observers;
 
@@ -9,8 +10,8 @@ public interface HostReady
     Uri HostAddress { get; }
 
     /// <summary>Gets the receive-endpoint readiness snapshots collected for the host.</summary>
-    ReceiveEndpointReady[] ReceiveEndpoints { get; }
+    IReadOnlyList<ReceiveEndpointReady> ReceiveEndpoints { get; }
 
     /// <summary>Gets the rider readiness snapshots collected for the host.</summary>
-    RiderReady[] Riders { get; }
+    IReadOnlyList<RiderReady> Riders { get; }
 }

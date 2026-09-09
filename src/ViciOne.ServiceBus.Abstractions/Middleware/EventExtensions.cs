@@ -5,36 +5,37 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Advanced.Middleware;
 
-/// <summary>Provides extension methods for event.</summary>
+/// <summary>Publishes typed notifications through event pipelines.</summary>
 public static class EventExtensions
 {
-    /// <summary>Publishes event.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public static Task PublishEventAsync<T>(this IPipe<EventContext> pipe, T message, TimeProvider? timeProvider = null, CancellationToken cancellationToken = default)
-        where T : class
+    /// <summary>Publishes an event with a context-scoped clock and cancellation token.</summary>
+    /// <typeparam name="TEvent">The event contract type.</typeparam>
+    /// <param name="pipe">The event pipeline.</param>
+    /// <param name="message">The event to publish.</param>
+    /// <param name="timeProvider">The clock used to timestamp the event context.</param>
+    /// <param name="cancellationToken">The token that cancels event processing.</param>
+    /// <returns>The asynchronous dispatch of the event through every configured event-pipeline stage.</returns>
+    public static Task PublishEventAsync<TEvent>(this IPipe<EventContext> pipe, TEvent message, TimeProvider? timeProvider = null,
+        CancellationToken cancellationToken = default)
+        where TEvent : class
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (pipe == null)
-            throw new ArgumentNullException(nameof(pipe));
-        if (message == null)
-            throw new ArgumentNullException(nameof(message));
+        ArgumentNullException.ThrowIfNull(pipe);
+        ArgumentNullException.ThrowIfNull(message);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
 
-        var context = new PublishEventContext<T>(message, timeProvider ?? TimeProvider.System);
+        var context = new PublishEventContext<TEvent>(message, timeProvider ?? TimeProvider.System, cancellationToken);
 
         return pipe.SendAsync(context);
     }
 
-
-    class PublishEventContext<T> :
+    private sealed class PublishEventContext<TEvent> :
         BasePipeContext,
-        EventContext<T>
-        where T : class
+        EventContext<TEvent>
+        where TEvent : class
     {
-        public PublishEventContext(T @event, TimeProvider timeProvider)
+        public PublishEventContext(TEvent @event, TimeProvider timeProvider, CancellationToken cancellationToken)
+            : base(cancellationToken)
         {
             Event = @event;
             Timestamp = timeProvider.GetUtcNow();
@@ -43,6 +44,6 @@ public static class EventExtensions
 
         public DateTimeOffset Timestamp { get; }
 
-        public T Event { get; }
+        public TEvent Event { get; }
     }
 }

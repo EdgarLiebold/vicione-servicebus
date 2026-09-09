@@ -71,7 +71,7 @@ public sealed partial class ResourceCache<TValue>
         }
         catch (Exception exception)
         {
-            LogContext.Warning?.Log(exception, faultMessage);
+            LogWarningSafely(exception, faultMessage);
         }
     }
 
@@ -83,7 +83,19 @@ public sealed partial class ResourceCache<TValue>
         }
         catch (Exception exception)
         {
-            LogContext.Warning?.Log(exception, "Resource cache cleanup timer disposal faulted");
+            LogWarningSafely(exception, "Resource cache cleanup timer disposal faulted");
+        }
+    }
+
+    static void LogWarningSafely(Exception exception, string message)
+    {
+        try
+        {
+            LogContext.Warning?.Log(exception, message);
+        }
+        catch
+        {
+            // Diagnostic logging cannot change cache state or resource-ownership outcomes.
         }
     }
 

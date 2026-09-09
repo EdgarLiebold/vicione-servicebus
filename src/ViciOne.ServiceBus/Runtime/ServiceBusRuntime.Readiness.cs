@@ -22,7 +22,7 @@ internal sealed partial class ServiceBusRuntime
 
         var terminal = _terminalFault;
 
-        using var timeout = new CancellationTokenSource(ReadyTimeout, _timeProvider);
+        using var timeout = new CancellationTokenSource(DefaultReadinessTimeout, _timeProvider);
 
         terminal?.Attach(timeout);
         try
@@ -35,7 +35,7 @@ internal sealed partial class ServiceBusRuntime
                 throw cause;
 
             throw new ConnectionException(
-                $"The bus endpoint did not become ready within {ReadyTimeout.TotalSeconds:0} s, so the consumer "
+                $"The bus endpoint did not become ready within {DefaultReadinessTimeout.TotalSeconds:0} s, so the consumer "
                 + $"could not be connected: {Address}");
         }
         finally

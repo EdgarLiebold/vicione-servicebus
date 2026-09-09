@@ -11,7 +11,6 @@ internal sealed class FaultEvent<T> :
 {
     const int MaximumExceptionCount = 16;
 
-
     /// <summary>Creates an empty instance for contract materialization.</summary>
     public FaultEvent()
     {
@@ -45,7 +44,7 @@ internal sealed class FaultEvent<T> :
         ArgumentNullException.ThrowIfNull(exceptions);
         ArgumentNullException.ThrowIfNull(faultMessageTypes);
 
-        Timestamp = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
+        Timestamp = (timeProvider ?? TimeProvider.System).GetUtcNow();
         FaultId = NewId.NextGuid();
 
         Message = message;
@@ -62,20 +61,29 @@ internal sealed class FaultEvent<T> :
 
     /// <summary>Gets or sets the identifier of this fault event.</summary>
     public Guid FaultId { get; set; }
+
     /// <summary>Gets or sets the identifier of the failed message, when supplied.</summary>
     public Guid? FaultedMessageId { get; set; }
+
     /// <summary>Gets or sets the UTC time at which the fault was created.</summary>
     public DateTimeOffset Timestamp { get; set; }
+
     /// <summary>Gets or sets the bounded exception snapshots associated with the fault.</summary>
     public ExceptionInfo[] Exceptions { get; set; } = null!;
+
     /// <summary>Gets or sets the host that consumed the failed message.</summary>
     public HostInfo Host { get; set; } = null!;
+
     /// <summary>Gets or sets the message type identifiers declared by the failed envelope.</summary>
     public string[] FaultMessageTypes { get; set; } = null!;
+
     /// <summary>Gets or sets the message whose consumption failed.</summary>
     public T Message { get; set; } = default!;
+
     static ExceptionInfo[] GetExceptions(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+
         var aggregateException = exception as AggregateException;
 
         return aggregateException?.InnerExceptions.Where(x => x != null).Take(MaximumExceptionCount)
@@ -91,14 +99,19 @@ internal sealed class FaultEvent :
 {
     /// <summary>Gets or sets the identifier of this fault event.</summary>
     public Guid FaultId { get; set; }
+
     /// <summary>Gets or sets the identifier of the failed message, when supplied.</summary>
     public Guid? FaultedMessageId { get; set; }
+
     /// <summary>Gets or sets the UTC time at which the fault was created.</summary>
     public DateTimeOffset Timestamp { get; set; }
+
     /// <summary>Gets or sets the bounded exception snapshots associated with the fault.</summary>
     public ExceptionInfo[] Exceptions { get; set; } = null!;
+
     /// <summary>Gets or sets the host that consumed the failed message.</summary>
     public HostInfo Host { get; set; } = null!;
+
     /// <summary>Gets or sets the message type identifiers declared by the failed envelope.</summary>
     public string[] FaultMessageTypes { get; set; } = null!;
 }

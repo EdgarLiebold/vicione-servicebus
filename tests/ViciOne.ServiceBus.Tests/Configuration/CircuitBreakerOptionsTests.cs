@@ -62,6 +62,11 @@ public sealed class CircuitBreakerOptionsTests
         Assert.Equal("values", Assert.Throws<ArgumentOutOfRangeException>(() => options.SetBreakDurations(TimeSpan.Zero)).ParamName);
         Assert.Equal("values", Assert.Throws<ArgumentOutOfRangeException>(() => options.SetBreakDurations(TimeSpan.FromTicks(-1))).ParamName);
         Assert.Equal(
+            "values",
+            Assert.Throws<ArgumentException>(() =>
+                options.SetBreakDurations(TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(1))).ParamName);
+        Assert.Equal([TimeSpan.FromTicks(1), TimeSpan.FromSeconds(2)], options.BreakDurations);
+        Assert.Equal(
             "retryAfter",
             Assert.Throws<ArgumentOutOfRangeException>(() => new CircuitBreakerOpenException(TimeSpan.FromTicks(-1), false, null)).ParamName);
     }

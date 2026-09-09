@@ -4,6 +4,7 @@ using System.Diagnostics.Metrics;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Middleware.CircuitBreaker;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Testing;
@@ -99,6 +100,32 @@ public sealed class CircuitBreakerFilterTests
         await pipe.SendAsync(new TestPipeContext());
 
         Assert.Equal(3, protectedCallCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-TRIP", "sampling-counters-saturate-without-wrapping")]
+    public void ClosedSamplingCounters_SaturateWithoutWrappingOrSuppressingATrip()
+    {
+        var time = new ObservableTimeProvider(StartTime);
+        CircuitBreakerSettings settings = new CircuitBreakerOptions()
+            .SetMinimumThroughput(1)
+            .SetFailureRatio(1)
+            .SetSamplingDuration(TimeSpan.FromMinutes(1))
+            .SetBreakDuration(TimeSpan.FromSeconds(1))
+            .SetTimeProvider(time)
+            .CreateSettings();
+        var stateMachine = new CircuitBreakerStateMachine(settings);
+        CircuitBreakerLease lease = stateMachine.Acquire();
+        CircuitBreakerStateMachine.ClosedState closed = Assert.IsType<CircuitBreakerStateMachine.ClosedState>(lease.State);
+        closed.AttemptCount = int.MaxValue;
+        closed.FailureCount = int.MaxValue;
+
+        CircuitBreakerLease saturatedLease = stateMachine.Acquire();
+        stateMachine.RecordFailure(saturatedLease, new ExpectedFailureException("saturated failure"));
+
+        Assert.Equal(int.MaxValue, closed.AttemptCount);
+        Assert.Equal(int.MaxValue, closed.FailureCount);
+        Assert.Equal("open", stateMachine.GetSnapshot().State);
     }
 
     [Fact]
@@ -246,8 +273,8 @@ public sealed class CircuitBreakerFilterTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "classified-failure-escalates-and-success-resets")]
-    public async Task ClassifiedProbeFailure_EscalatesTheBreakDurationAndSuccessResetsItAsync()
+    [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "classified-failure-escalates-saturates-and-success-resets")]
+    public async Task ClassifiedProbeFailure_EscalatesSaturatesAndSuccessResetsTheBreakDurationAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         var outcome = ProbeOutcome.Fail;
@@ -263,6 +290,12 @@ public sealed class CircuitBreakerFilterTests
         CircuitBreakerOpenException escalated = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
             () => pipe.SendAsync(new TestPipeContext()));
         Assert.Equal(TimeSpan.FromSeconds(3), escalated.RetryAfter);
+
+        time.Advance(TimeSpan.FromSeconds(3));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
+        CircuitBreakerOpenException saturated = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
+            () => pipe.SendAsync(new TestPipeContext()));
+        Assert.Equal(TimeSpan.FromSeconds(3), saturated.RetryAfter);
 
         outcome = ProbeOutcome.Succeed;
         time.Advance(TimeSpan.FromSeconds(3));
@@ -350,6 +383,33 @@ public sealed class CircuitBreakerFilterTests
             () => pipe.SendAsync(new TestPipeContext()));
         Assert.Same(outcome, rejection.InnerException);
         Assert.Equal(TimeSpan.FromSeconds(1), rejection.RetryAfter);
+        Assert.False(rejection.ProbeInProgress);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "distinct-dependency-cancellation-wins-over-concurrent-caller-cancellation")]
+    public async Task DistinctDependencyCancellation_ReopensEvenWhenTheCallerIsAlsoCanceledAsync()
+    {
+        var time = new ObservableTimeProvider(StartTime);
+        Exception outcome = new ExpectedFailureException("initial trip");
+        IPipe<TestPipeContext> pipe = CreatePipe(time, _ => Task.FromException(outcome));
+
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
+        time.Advance(TimeSpan.FromSeconds(1));
+
+        using var callerCancellation = new CancellationTokenSource();
+        using var dependencyCancellation = new CancellationTokenSource();
+        callerCancellation.Cancel();
+        dependencyCancellation.Cancel();
+        outcome = new OperationCanceledException("dependency timeout", dependencyCancellation.Token);
+
+        OperationCanceledException observed = await Assert.ThrowsAsync<OperationCanceledException>(
+            () => pipe.SendAsync(new TestPipeContext(callerCancellation.Token)));
+        Assert.Same(outcome, observed);
+
+        CircuitBreakerOpenException rejection = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
+            () => pipe.SendAsync(new TestPipeContext()));
+        Assert.Same(outcome, rejection.InnerException);
         Assert.False(rejection.ProbeInProgress);
     }
 

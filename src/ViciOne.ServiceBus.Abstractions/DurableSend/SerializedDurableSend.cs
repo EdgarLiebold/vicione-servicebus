@@ -10,32 +10,32 @@ namespace ViciOne.ServiceBus.Providers.Persistence;
 /// </remarks>
 public sealed record SerializedDurableSend
 {
-    /// <summary>Exposes the maximum destination address characters used by the containing type.</summary>
+    /// <summary>Gets the maximum permitted length of an absolute destination URI.</summary>
     public const int MaximumDestinationAddressCharacters = 2048;
-    /// <summary>Exposes the maximum content type characters used by the containing type.</summary>
+    /// <summary>Gets the maximum permitted length of the media type.</summary>
     public const int MaximumContentTypeCharacters = 256;
-    /// <summary>Gets or sets the id.</summary>
+    /// <summary>Gets the stable identity used for idempotent durable admission.</summary>
     public required DurableSendId Id { get; init; }
 
-    /// <summary>Gets or sets the contract identity.</summary>
+    /// <summary>Gets the application contract identity required to deserialize the body.</summary>
     public required MessageContractIdentity ContractIdentity { get; init; }
 
-    /// <summary>Gets or sets the destination address.</summary>
+    /// <summary>Gets the absolute transport destination.</summary>
     public required Uri DestinationAddress { get; init; }
 
-    /// <summary>Gets or sets the content type.</summary>
+    /// <summary>Gets the media type of the serialized body.</summary>
     public required string ContentType { get; init; }
 
-    /// <summary>Gets or sets the body.</summary>
+    /// <summary>Gets the serialized application body.</summary>
     public required ReadOnlyMemory<byte> Body { get; init; }
 
     /// <summary>Opaque, bounded ServiceBus infrastructure metadata encoded with the stable infrastructure metadata codec.</summary>
     public ReadOnlyMemory<byte> Metadata { get; init; }
 
-    /// <summary>Gets or sets the message id.</summary>
+    /// <summary>Gets the optional message identity propagated to the transport.</summary>
     public Guid? MessageId { get; init; }
 
-    /// <summary>Gets or sets the correlation id.</summary>
+    /// <summary>Gets the optional correlation identity propagated to the transport.</summary>
     public Guid? CorrelationId { get; init; }
 
     /// <summary>
@@ -62,7 +62,9 @@ public sealed record SerializedDurableSend
     }
 
     /// <summary>Validates the durable infrastructure contract before it crosses a persistence boundary.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <returns>This record when every invariant is satisfied.</returns>
+    /// <exception cref="ArgumentException">The record contains an invalid identity, address, or media type.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The address or media type exceeds its supported bound.</exception>
     public SerializedDurableSend Validate()
     {
         if (Id.Value == Guid.Empty)

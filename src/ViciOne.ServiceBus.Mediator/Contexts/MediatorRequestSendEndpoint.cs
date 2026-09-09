@@ -1,3 +1,5 @@
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Clients;
 
@@ -17,13 +19,15 @@ internal sealed class MediatorRequestSendEndpoint<TRequest> :
     public MediatorRequestSendEndpoint(ISendEndpoint endpoint, ConsumeContext? consumeContext)
         : base(consumeContext)
     {
-        _endpoint = endpoint;
+        _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
     }
 
     /// <summary>Returns the mediator send endpoint.</summary>
+    /// <param name="cancellationToken">Cancels endpoint resolution before the endpoint is returned.</param>
     /// <returns>A completed task containing the mediator endpoint.</returns>
-    protected override Task<ISendEndpoint> GetSendEndpointAsync()
+    protected override Task<ISendEndpoint> GetSendEndpointAsync(CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         return Task.FromResult(_endpoint);
     }
 }

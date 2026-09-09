@@ -10,9 +10,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Batching;
 
-/// <summary>Consumes batch messages.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class BatchConsumer<TMessage> :
+/// <summary>Tracks one batch until size, time, cancellation, or terminal flushing selects its outcome.</summary>
+/// <typeparam name="TMessage">The message contract collected into the batch.</typeparam>
+internal sealed class BatchConsumer<TMessage> :
     IConsumer<TMessage>
     where TMessage : class
 {
@@ -25,19 +25,25 @@ public class BatchConsumer<TMessage> :
     readonly BatchOptions _options;
     readonly ITimer _timer;
     readonly TimeProvider _timeProvider;
+    int _completionState;
     Activity _currentActivity = null!;
     DateTime _lastMessage;
     ILogContext? _logContext = null!;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="options">The options that control the operation.</param>
-    /// <param name="executor">The executor.</param>
-    /// <param name="dispatcher">The dispatcher.</param>
-    /// <param name="consumerPipe">The consumer pipe.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <summary>Creates an empty batch and starts its configured completion timer.</summary>
+    /// <param name="options">The batch size and timing limits.</param>
+    /// <param name="executor">The executor that serializes changes to this batch.</param>
+    /// <param name="dispatcher">The executor that bounds completed-batch delivery.</param>
+    /// <param name="consumerPipe">The pipeline that receives this batch after completion.</param>
+    /// <param name="timeProvider">The clock and timer source for batch metadata and expiration.</param>
     public BatchConsumer(BatchOptions options, TaskExecutor executor, TaskExecutor dispatcher, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe,
         TimeProvider timeProvider)
     {
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(executor);
+        ArgumentNullException.ThrowIfNull(dispatcher);
+        ArgumentNullException.ThrowIfNull(consumerPipe);
+
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _executor = executor;
         _consumerPipe = consumerPipe;
@@ -50,14 +56,16 @@ public class BatchConsumer<TMessage> :
         _timer = _timeProvider.CreateTimer(TimeLimitExpired, null, _options.TimeLimit, Timeout.InfiniteTimeSpan);
     }
 
-    /// <summary>Gets or sets a value indicating whether completed.</summary>
-    public bool IsCompleted { get; private set; }
+    /// <summary>Gets whether this collector has stopped accepting messages and chosen its terminal outcome.</summary>
+    public bool IsCompleted => Volatile.Read(ref _completionState) != 0;
 
-    /// <summary>Consumes the message provided by the context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Holds one message pipeline open until this batch reaches its terminal outcome.</summary>
+    /// <param name="context">The message context waiting on the batch.</param>
+    /// <returns>A task that completes with the batch delivery outcome.</returns>
     public async Task ConsumeAsync(ConsumeContext<TMessage> context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         try
         {
             await _completed.Task.ConfigureAwait(false);
@@ -78,29 +86,28 @@ public class BatchConsumer<TMessage> :
 
     void TimeLimitExpired(object? state)
     {
-        _executor.EnqueueBlocking(() =>
+        if (IsCompleted)
+            return;
+
+        try
         {
-            if (IsCompleted)
-                return Task.CompletedTask;
-
-            IsCompleted = true;
-
-            if (_messages.Count <= 0)
-                return Task.CompletedTask;
-
-            List<ConsumeContext<TMessage>> messages = GetMessageBatchInOrder();
-
-            return _dispatcher.EnqueueAsync(() => DeliverAsync(messages[messages.Count - 1].Advanced(), messages, BatchCompletionMode.Time));
-        });
+            _executor.EnqueueBlocking(() => CompleteBatchAsync(BatchCompletionMode.Time));
+        }
+        catch (ObjectDisposedException) when (IsCompleted)
+        {
+            // Terminal cleanup already owns the batch and has stopped the collector executor.
+        }
     }
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="currentActivity">The current activity.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Adds a message and closes the batch immediately when its size limit is reached.</summary>
+    /// <param name="context">The message context to add.</param>
+    /// <param name="currentActivity">The trace activity associated with the admission.</param>
+    /// <param name="cancellationToken">Cancels admission of a size-completed batch to the delivery queue.</param>
+    /// <returns>A task that completes after any required delivery-queue admission.</returns>
     public Task AddAsync(ConsumeContext<TMessage> context, Activity? currentActivity, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         _logContext ??= LogContext.Current;
         if (currentActivity != null)
             _currentActivity = currentActivity;
@@ -129,42 +136,47 @@ public class BatchConsumer<TMessage> :
         _lastMessage = _timeProvider.GetUtcNow().UtcDateTime;
 
         if (IsReadyToDeliver(context.Advanced()))
-        {
-            IsCompleted = true;
-
-            List<ConsumeContext<TMessage>> messageList = GetMessageBatchInOrder();
-
-            return messageList.Count == 0
-                ? Task.CompletedTask
-                : _dispatcher.EnqueueAsync(() => DeliverAsync(context.Advanced(), messageList, BatchCompletionMode.Size), cancellationToken: cancellationToken);
-        }
+            return CompleteBatchAsync(BatchCompletionMode.Size, context.Advanced(), cancellationToken);
 
         return Task.CompletedTask;
     }
 
     void RemoveCanceledMessage(Guid messageId)
     {
-        _executor.EnqueueBlocking(() =>
+        if (IsCompleted)
+            return;
+
+        try
         {
-            if (IsCompleted)
-                return Task.CompletedTask;
-
-            if (_messages.TryGetValue(messageId, out var batchEntry))
+            _executor.EnqueueBlocking(() =>
             {
-                batchEntry.Unregister();
+                if (IsCompleted)
+                    return Task.CompletedTask;
 
-                _messages.Remove(messageId);
-
-                if (_messages.Count == 0)
+                if (_messages.Remove(messageId, out BatchEntry batchEntry))
                 {
-                    IsCompleted = true;
+                    batchEntry.Unregister();
 
-                    _completed.TrySetCanceled();
+                    if (_messages.Count == 0 && Interlocked.CompareExchange(ref _completionState, 1, 0) == 0)
+                    {
+                        Exception? cleanupFailure = StopTimerAndRegistrations();
+                        if (cleanupFailure == null)
+                            _completed.TrySetCanceled(batchEntry.Context.CancellationToken);
+                        else
+                        {
+                            _completed.TrySetException(cleanupFailure);
+                            return Task.FromException(cleanupFailure);
+                        }
+                    }
                 }
-            }
 
-            return Task.CompletedTask;
-        });
+                return Task.CompletedTask;
+            });
+        }
+        catch (ObjectDisposedException) when (IsCompleted)
+        {
+            // Terminal cleanup already owns the batch and has stopped the collector executor.
+        }
     }
 
     bool IsReadyToDeliver(ConsumeContext context)
@@ -175,48 +187,130 @@ public class BatchConsumer<TMessage> :
         return _messages.Count == _options.MessageLimit;
     }
 
-    /// <summary>Forces complete.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Closes the current partial batch and schedules it for immediate delivery.</summary>
+    /// <param name="cancellationToken">Cancels only admission to the batch-dispatch queue.</param>
+    /// <returns>A task that completes after the forced batch is admitted to the dispatch queue.</returns>
     public Task ForceCompleteAsync(CancellationToken cancellationToken = default)
     {
-        IsCompleted = true;
+        return CompleteBatchAsync(BatchCompletionMode.Forced, cancellationToken: cancellationToken);
+    }
 
-        List<ConsumeContext<TMessage>> consumeContexts = GetMessageBatchInOrder();
-        return consumeContexts.Count == 0
-            ? Task.CompletedTask
-            : _dispatcher.EnqueueAsync(() => DeliverAsync(consumeContexts[consumeContexts.Count - 1].Advanced(), consumeContexts,
-                BatchCompletionMode.Forced), cancellationToken: cancellationToken);
+    Task CompleteBatchAsync(
+        BatchCompletionMode completionMode,
+        ConsumeContext? completionContext = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (Interlocked.CompareExchange(ref _completionState, 1, 0) != 0)
+            return Task.CompletedTask;
+
+        List<ConsumeContext<TMessage>> messages = GetMessageBatchInOrder();
+        Exception? cleanupFailure = StopTimerAndRegistrations();
+        if (cleanupFailure != null)
+        {
+            _completed.TrySetException(cleanupFailure);
+            return Task.FromException(cleanupFailure);
+        }
+
+        if (messages.Count == 0)
+        {
+            _completed.TrySetResult(_timeProvider.GetUtcNow().UtcDateTime);
+            return Task.CompletedTask;
+        }
+
+        ConsumeContext context = completionContext ?? messages[messages.Count - 1].Advanced();
+        return EnqueueDeliveryAsync(context, messages, completionMode, cancellationToken);
+    }
+
+    async Task EnqueueDeliveryAsync(
+        ConsumeContext context,
+        IReadOnlyList<ConsumeContext<TMessage>> messages,
+        BatchCompletionMode completionMode,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _dispatcher.EnqueueAsync(
+                    () => DeliverAsync(context, messages, completionMode),
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception)
+        {
+            _completed.TrySetCanceled(exception.CancellationToken);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            _completed.TrySetException(exception);
+            throw;
+        }
+    }
+
+    Exception? StopTimerAndRegistrations()
+    {
+        List<Exception>? failures = null;
+        try
+        {
+            _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        }
+        catch (Exception exception)
+        {
+            (failures ??= []).Add(exception);
+        }
+
+        try
+        {
+            _timer.Dispose();
+        }
+        catch (Exception exception)
+        {
+            (failures ??= []).Add(exception);
+        }
+
+        foreach (BatchEntry batchEntry in _messages.Values)
+        {
+            try
+            {
+                batchEntry.Unregister();
+            }
+            catch (Exception exception)
+            {
+                (failures ??= []).Add(exception);
+            }
+        }
+
+        return failures switch
+        {
+            null => null,
+            { Count: 1 } => failures[0],
+            _ => new AggregateException("Batch cleanup encountered multiple failures.", failures),
+        };
     }
 
     async Task DeliverAsync(ConsumeContext context, IReadOnlyList<ConsumeContext<TMessage>> messages, BatchCompletionMode batchCompletionMode)
     {
-        _timer.Dispose();
-
-        foreach (var batchEntry in _messages.Values)
-            batchEntry.Unregister();
-
-        LogContext.SetCurrentIfNull(_logContext);
-
-        Activity.Current = _currentActivity;
-
-        Batch<TMessage> batch = new MessageBatch<TMessage>(_firstMessage, _lastMessage, batchCompletionMode, messages);
-
-        ConsumeContext<Batch<TMessage>> batchConsumeContext = new BatchConsumeContext<TMessage>(context, batch);
+        ConsumeContext<Batch<TMessage>>? batchConsumeContext = null;
 
         try
         {
+            LogContext.SetCurrentIfNull(_logContext);
+            Activity.Current = _currentActivity;
+
+            Batch<TMessage> batch = new MessageBatch<TMessage>(_firstMessage, _lastMessage, batchCompletionMode, messages);
+            batchConsumeContext = new BatchConsumeContext<TMessage>(context, batch);
+
             await _consumerPipe.SendAsync(batchConsumeContext).ConfigureAwait(false);
 
             _completed.TrySetResult(_timeProvider.GetUtcNow().UtcDateTime);
         }
         catch (OperationCanceledException exception) when (exception.CancellationToken == context.CancellationToken)
         {
-            _completed.TrySetCanceled();
+            _completed.TrySetCanceled(context.CancellationToken);
         }
         catch (Exception exception)
         {
-            if (batchConsumeContext.TryGetPayload(out RetryContext<ConsumeContext<Batch<TMessage>>>? retryContext))
+            if (batchConsumeContext != null
+                && batchConsumeContext.TryGetPayload(out RetryContext<ConsumeContext<Batch<TMessage>>>? retryContext))
             {
                 for (var i = 0; i < messages.Count; i++)
                     messages[i].GetOrAddPayload(() => retryContext);

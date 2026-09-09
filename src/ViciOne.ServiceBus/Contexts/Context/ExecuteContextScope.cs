@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Defines the lifetime scope for execute context.</summary>
-/// <typeparam name="TArguments">The arguments type.</typeparam>
+/// <summary>Adds scoped payloads to an execute activity context.</summary>
+/// <typeparam name="TArguments">The activity argument contract.</typeparam>
 public class ExecuteContextScope<TArguments> :
     ActivityContextScope,
     ExecuteContext<TArguments>
@@ -12,9 +12,9 @@ public class ExecuteContextScope<TArguments> :
 {
     readonly ExecuteContext<TArguments> _context;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="payloads">The payloads.</param>
+    /// <summary>Creates an execute scope with additional payloads.</summary>
+    /// <param name="context">The execute context to wrap.</param>
+    /// <param name="payloads">The payloads visible within this execute scope.</param>
     public ExecuteContextScope(ExecuteContext<TArguments> context, params object[] payloads)
         : base(context, payloads)
     {
@@ -22,7 +22,7 @@ public class ExecuteContextScope<TArguments> :
         Arguments = context.Arguments;
     }
 
-    /// <summary>Gets the arguments.</summary>
+    /// <summary>Gets the activity arguments.</summary>
     public TArguments Arguments { get; }
 
     /// <summary>Gets or sets the result; the value is unset until the activity completes.</summary>
@@ -222,7 +222,7 @@ public class ExecuteContextScope<TArguments> :
     }
 
     /// <summary>Reports that the operation has faulted.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="exception">The failure that faulted the activity execution.</param>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Faulted(Exception exception)
     {
@@ -230,7 +230,7 @@ public class ExecuteContextScope<TArguments> :
     }
 
     /// <summary>Reports that the operation has faulted.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="exception">The failure that faulted the activity execution.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Faulted(Exception exception, ConfigureFaultedActivityOptionsCallback callback)
@@ -239,7 +239,7 @@ public class ExecuteContextScope<TArguments> :
     }
 
     /// <summary>Reports a fault together with the supplied routing-slip variables.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="exception">The failure that faulted the activity execution.</param>
     /// <param name="variables">The variables.</param>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult FaultedWithVariables(Exception exception, object variables)
@@ -248,7 +248,7 @@ public class ExecuteContextScope<TArguments> :
     }
 
     /// <summary>Reports a fault together with the supplied routing-slip variables.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="exception">The failure that faulted the activity execution.</param>
     /// <param name="variables">The variables.</param>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult FaultedWithVariables(Exception exception, IEnumerable<KeyValuePair<string, object>> variables)

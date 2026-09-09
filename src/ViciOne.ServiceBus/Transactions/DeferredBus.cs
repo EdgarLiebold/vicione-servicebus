@@ -35,18 +35,23 @@ internal abstract class DeferredBus :
     public Task PublishAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
         return AddAsync(token => _publishEndpoint.PublishAsync(message, token), cancellationToken);
     }
 
     public Task PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(publishPipe);
         return AddAsync(token => _publishEndpoint.PublishAsync(message, publishPipe, token), cancellationToken);
     }
 
     public Task PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(publishPipe);
         return AddAsync(token => _publishEndpoint.PublishAsync(message, publishPipe, token), cancellationToken);
     }
 
@@ -59,34 +64,45 @@ internal abstract class DeferredBus :
     public Task PublishAsync(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(publishPipe);
         return AddAsync(token => _publishEndpoint.Advanced().PublishAsync(message, message.GetType(), publishPipe, token), cancellationToken);
     }
 
     public Task PublishAsync(object message, Type messageType, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageType);
         return AddAsync(token => _publishEndpoint.PublishAsync(message, messageType, token), cancellationToken);
     }
 
     public Task PublishAsync(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageType);
+        ArgumentNullException.ThrowIfNull(publishPipe);
         return AddAsync(token => _publishEndpoint.PublishAsync(message, messageType, publishPipe, token), cancellationToken);
     }
 
     public Task PublishAsync<T>(object values, CancellationToken cancellationToken = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(values);
         return AddAsync(token => _publishEndpoint.PublishAsync<T>(values, token), cancellationToken);
     }
 
     public Task PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(publishPipe);
         return AddAsync(token => _publishEndpoint.PublishAsync(values, publishPipe, token), cancellationToken);
     }
 
     public Task PublishAsync<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(publishPipe);
         return AddAsync(token => _publishEndpoint.PublishAsync<T>(values, publishPipe, token), cancellationToken);
     }
 
@@ -97,6 +113,7 @@ internal abstract class DeferredBus :
 
     public async Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(address);
         ISendEndpoint endpoint = await _bus.GetSendEndpointAsync(address, cancellationToken: cancellationToken).ConfigureAwait(false);
         return new DeferredBusSendEndpoint(this, endpoint);
     }

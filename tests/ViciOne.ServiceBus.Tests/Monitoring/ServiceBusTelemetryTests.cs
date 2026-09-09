@@ -59,14 +59,111 @@ public sealed class ServiceBusTelemetryTests
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-SCHEMA", "otel-messaging-instrument-identities")]
     public void MetricNames_UseTheApprovedOtelAndViciOneNamespaces()
     {
-        Assert.Equal("messaging.client.sent.messages", ServiceBusTelemetry.Metrics.SentMessages);
-        Assert.Equal("messaging.client.consumed.messages", ServiceBusTelemetry.Metrics.ConsumedMessages);
-        Assert.Equal("messaging.client.operation.duration", ServiceBusTelemetry.Metrics.ClientOperationDuration);
-        Assert.Equal("messaging.process.duration", ServiceBusTelemetry.Metrics.ProcessDuration);
-        Assert.StartsWith("vicione.servicebus.", ServiceBusTelemetry.Metrics.ActiveOperations, StringComparison.Ordinal);
-        Assert.StartsWith("vicione.servicebus.", ServiceBusTelemetry.Metrics.RetryAttempts, StringComparison.Ordinal);
-        Assert.StartsWith("vicione.servicebus.", ServiceBusTelemetry.Metrics.DeliveryDuration, StringComparison.Ordinal);
-        Assert.StartsWith("vicione.servicebus.", ServiceBusTelemetry.Metrics.OutboxMessages, StringComparison.Ordinal);
+        string[] names =
+        [
+            ServiceBusTelemetry.Metrics.SentMessages,
+            ServiceBusTelemetry.Metrics.ConsumedMessages,
+            ServiceBusTelemetry.Metrics.ClientOperationDuration,
+            ServiceBusTelemetry.Metrics.ProcessDuration,
+            ServiceBusTelemetry.Metrics.ActiveOperations,
+            ServiceBusTelemetry.Metrics.RetryAttempts,
+            ServiceBusTelemetry.Metrics.DeliveryDuration,
+            ServiceBusTelemetry.Metrics.OutboxMessages,
+            ServiceBusTelemetry.Metrics.DurableSenderAdmission,
+            ServiceBusTelemetry.Metrics.DurableSenderAdmissionSize,
+            ServiceBusTelemetry.Metrics.DurableSenderDelivery,
+            ServiceBusTelemetry.Metrics.DurableSenderDeliveryDuration,
+            ServiceBusTelemetry.Metrics.DurableSenderConsumerCompletion,
+            ServiceBusTelemetry.Metrics.DurableSenderConsumerCompletionDuration,
+            ServiceBusTelemetry.Metrics.ReliabilityAbandoned,
+            ServiceBusTelemetry.Metrics.DurableSenderStored,
+            ServiceBusTelemetry.Metrics.DurableSenderStoredContentSize,
+            ServiceBusTelemetry.Metrics.DurableSenderPending,
+            ServiceBusTelemetry.Metrics.DurableSenderRetryScheduled,
+            ServiceBusTelemetry.Metrics.DurableSenderAwaitingConsumerCompletion,
+            ServiceBusTelemetry.Metrics.DurableSenderQuarantined,
+            ServiceBusTelemetry.Metrics.DurableSenderOldestPendingAge,
+            ServiceBusTelemetry.Metrics.PayloadAdmission,
+            ServiceBusTelemetry.Metrics.PayloadBodySize,
+            ServiceBusTelemetry.Metrics.PayloadEnvelopeSize,
+        ];
+
+        Assert.Equal(
+        [
+            "messaging.client.sent.messages",
+            "messaging.client.consumed.messages",
+            "messaging.client.operation.duration",
+            "messaging.process.duration",
+            "vicione.servicebus.messaging.operations.active",
+            "vicione.servicebus.messaging.retry.attempts",
+            "vicione.servicebus.messaging.delivery.duration",
+            "vicione.servicebus.outbox.messages",
+            "vicione.servicebus.durable_sender.admission",
+            "vicione.servicebus.durable_sender.admission.size",
+            "vicione.servicebus.durable_sender.delivery",
+            "vicione.servicebus.durable_sender.delivery.duration",
+            "vicione.servicebus.durable_sender.consumer_completion",
+            "vicione.servicebus.durable_sender.consumer_completion.duration",
+            "vicione.servicebus.reliability.abandoned",
+            "vicione.servicebus.durable_sender.stored",
+            "vicione.servicebus.durable_sender.stored.content.size",
+            "vicione.servicebus.durable_sender.pending",
+            "vicione.servicebus.durable_sender.retry_scheduled",
+            "vicione.servicebus.durable_sender.awaiting_consumer_completion",
+            "vicione.servicebus.durable_sender.quarantined",
+            "vicione.servicebus.durable_sender.oldest_pending.age",
+            "vicione.servicebus.payload.admission",
+            "vicione.servicebus.payload.body.size",
+            "vicione.servicebus.payload.envelope.size",
+        ], names);
+        Assert.Equal(names.Length, names.Distinct(StringComparer.Ordinal).Count());
+        Assert.All(names, name => Assert.True(
+            name.StartsWith("messaging.", StringComparison.Ordinal)
+            || name.StartsWith("vicione.servicebus.", StringComparison.Ordinal),
+            $"Unexpected metric namespace: {name}"));
+
+        string[] attributes =
+        [
+            ServiceBusTelemetry.Attributes.MessagingSystem,
+            ServiceBusTelemetry.Attributes.OperationName,
+            ServiceBusTelemetry.Attributes.OperationType,
+            ServiceBusTelemetry.Attributes.ErrorType,
+            ServiceBusTelemetry.Attributes.ProcessorKind,
+            ServiceBusTelemetry.Attributes.OutboxOperation,
+            ServiceBusTelemetry.Attributes.Outcome,
+            ServiceBusTelemetry.Attributes.Bus,
+            ServiceBusTelemetry.Attributes.DurableSendId,
+            ServiceBusTelemetry.Attributes.MessageContract,
+            ServiceBusTelemetry.Attributes.DurableSenderRetainedContentSize,
+            ServiceBusTelemetry.Attributes.DeliveryAttempt,
+            ServiceBusTelemetry.Attributes.PayloadWarningThresholdExceeded,
+            ServiceBusTelemetry.Attributes.ReliabilitySide,
+            ServiceBusTelemetry.Attributes.MessageId,
+        ];
+        Assert.Equal(
+        [
+            "messaging.system",
+            "messaging.operation.name",
+            "messaging.operation.type",
+            "error.type",
+            "vicione.servicebus.processor.kind",
+            "vicione.servicebus.outbox.operation",
+            "vicione.servicebus.outcome",
+            "vicione.servicebus.bus",
+            "vicione.servicebus.durable_send.id",
+            "vicione.servicebus.contract",
+            "vicione.servicebus.durable_sender.retained_content.size",
+            "vicione.servicebus.delivery.attempt",
+            "vicione.servicebus.payload.warning_threshold_exceeded",
+            "vicione.servicebus.reliability.side",
+            "messaging.message.id",
+        ], attributes);
+        Assert.Equal(attributes.Length, attributes.Distinct(StringComparer.Ordinal).Count());
+        Assert.All(attributes, name => Assert.True(
+            name.StartsWith("messaging.", StringComparison.Ordinal)
+            || name.StartsWith("error.", StringComparison.Ordinal)
+            || name.StartsWith("vicione.servicebus.", StringComparison.Ordinal),
+            $"Unexpected attribute namespace: {name}"));
     }
 
     [Fact]

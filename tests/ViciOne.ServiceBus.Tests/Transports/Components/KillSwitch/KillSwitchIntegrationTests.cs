@@ -11,8 +11,8 @@ namespace ViciOne.ServiceBus.Tests.Transports.Components.KillSwitch;
 public sealed class KillSwitchIntegrationTests
 {
     [Fact]
-    [RequirementCoverage("REQ-VSB-KILL-SWITCH-INMEMORY", "healthy-degraded-healthy-with-continued-delivery")]
-    public async Task InMemoryEndpoint_TransitionsHealthyDegradedHealthyAndContinuesDeliveryAsync()
+    [RequirementCoverage("REQ-VSB-KILL-SWITCH-INMEMORY", "partitioned-pipeline-remains-healthy-after-kill-switch-restart")]
+    public async Task PartitionedInMemoryEndpoint_RemainsHealthyAndContinuesDeliveryAfterKillSwitchRestartAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -31,6 +31,7 @@ public sealed class KillSwitchIntegrationTests
                         .SetTripThresholdRatio(1)
                         .SetRestartDelay(TimeSpan.FromSeconds(1))
                         .SetTimeProvider(time));
+                    configurator.UseMessagePartitioner(4);
                     configurator.ConfigureEndpoints(context);
                 });
             });
@@ -54,7 +55,7 @@ public sealed class KillSwitchIntegrationTests
             Assert.Equal(HealthStatus.Healthy, (await healthChecks.CheckHealthAsync(cancellationToken)).Status);
 
             await bus.PublishBatchAsync(
-                Enumerable.Range(0, 4).Select(index => new FailingMessage(index)),
+                Enumerable.Range(0, 4).Select(index => new FailingMessage(NewId.NextGuid(), index)),
                 cancellationToken);
             BusHealthResult degraded = await bus.WaitForHealthStatusAsync(
                 BusHealthStatus.Degraded,
@@ -73,7 +74,7 @@ public sealed class KillSwitchIntegrationTests
             Assert.Equal(BusHealthStatus.Healthy, recovered.Status);
             Assert.Equal(HealthStatus.Healthy, (await healthChecks.CheckHealthAsync(cancellationToken)).Status);
 
-            await bus.PublishAsync(new HealthyMessage("after recovery"), cancellationToken);
+            await bus.PublishAsync(new HealthyMessage(NewId.NextGuid(), "after recovery"), cancellationToken);
             HealthyMessage consumed = await delivery.Delivered.WaitAsync(timeout, cancellationToken);
             Assert.Equal("after recovery", consumed.Value);
         }
@@ -118,7 +119,7 @@ public sealed class KillSwitchIntegrationTests
 
         try
         {
-            await bus.PublishAsync(new FailingMessage(0), cancellationToken);
+            await bus.PublishAsync(new FailingMessage(NewId.NextGuid(), 0), cancellationToken);
             await bus.WaitForHealthStatusAsync(BusHealthStatus.Degraded, timeout, cancellationToken);
             await time.WaitForTimerCountAsync(1).WaitAsync(timeout, cancellationToken);
             Assert.Equal(1, lifecycle.TargetReadyCount);
@@ -141,8 +142,8 @@ public sealed class KillSwitchIntegrationTests
     private static TimeSpan OperationTimeout() =>
         TestConfigurationProvider.ForCurrentTestRun().GetValidatedOptions().OperationTimeout!.Value;
 
-    private sealed record FailingMessage(int Index);
-    private sealed record HealthyMessage(string Value);
+    private sealed record FailingMessage(Guid CorrelationId, int Index) : CorrelatedBy<Guid>;
+    private sealed record HealthyMessage(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
 
     private sealed class FailingAndHealthyConsumer(HealthyDeliveryProbe delivery) :
         IConsumer<FailingMessage>,

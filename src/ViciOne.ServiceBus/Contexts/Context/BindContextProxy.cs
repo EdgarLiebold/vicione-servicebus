@@ -3,44 +3,40 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>The BindContext.</summary>
-/// <typeparam name="TLeft">The left type.</typeparam>
-/// <typeparam name="TRight">The right type.</typeparam>
+/// <summary>Combines a pipeline context with one bound value and exposes both through payload lookup.</summary>
+/// <typeparam name="TLeft">The pipeline context type.</typeparam>
+/// <typeparam name="TRight">The bound value type.</typeparam>
 public class BindContextProxy<TLeft, TRight> :
     BindContext<TLeft, TRight>
     where TLeft : class, PipeContext
     where TRight : class
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="left">The left.</param>
-    /// <param name="source">The source value.</param>
+    /// <summary>Creates a bound context from a pipeline context and value.</summary>
+    /// <param name="left">The pipeline context that owns cancellation and existing payloads.</param>
+    /// <param name="source">The value exposed as the right side and as a payload.</param>
     public BindContextProxy(TLeft left, TRight source)
     {
-        Left = left;
-        Right = source;
+        Left = left ?? throw new ArgumentNullException(nameof(left));
+        Right = source ?? throw new ArgumentNullException(nameof(source));
     }
 
-    /// <summary>Gets the left.</summary>
+    /// <inheritdoc />
     public TLeft Left { get; }
 
-    /// <summary>Gets the right.</summary>
+    /// <inheritdoc />
     public TRight Right { get; }
 
-    /// <summary>Gets the cancellation token.</summary>
+    /// <inheritdoc />
     public CancellationToken CancellationToken => Left.CancellationToken;
 
-    /// <summary>Determines whether the current value has payload type.</summary>
-    /// <param name="payloadType">The runtime payload type used by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool HasPayloadType(Type payloadType)
     {
+        ArgumentNullException.ThrowIfNull(payloadType);
         return payloadType.IsInstanceOfType(Right) || Left.HasPayloadType(payloadType);
     }
 
-    /// <summary>Attempts to get payload.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="payload">Receives the payload produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
         where T : class
     {
@@ -53,27 +49,25 @@ public class BindContextProxy<TLeft, TRight> :
         return Left.TryGetPayload(out payload);
     }
 
-    /// <summary>Gets or add payload.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="payloadFactory">The payload factory.</param>
-    /// <returns>The or add payload.</returns>
+    /// <inheritdoc />
     public T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(payloadFactory);
+
         if (Right is T context)
             return context;
 
         return Left.GetOrAddPayload(payloadFactory);
     }
 
-    /// <summary>Adds or update payload to the configuration.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="addFactory">The add factory.</param>
-    /// <param name="updateFactory">The update factory.</param>
-    /// <returns>The t produced by the operation.</returns>
+    /// <inheritdoc />
     public T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(addFactory);
+        ArgumentNullException.ThrowIfNull(updateFactory);
+
         if (Right is T context)
             return context;
 

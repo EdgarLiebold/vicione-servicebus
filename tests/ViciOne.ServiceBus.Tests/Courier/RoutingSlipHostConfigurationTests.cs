@@ -105,7 +105,7 @@ public sealed class RoutingSlipHostConfigurationTests
         var compensateKeys = new ConcurrentQueue<string>();
         IPartitioner? partitioner = null;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-partition");
-        harness.OnConfigureBus += configurator => partitioner = configurator.CreatePartitioner(8);
+        harness.OnConfigureBus += _ => partitioner = new PipePartitioner(8);
         var factory = new FactoryMethodActivityFactory<FirstCourierActivity, CourierArguments, CourierLog>(
             _ => new FirstCourierActivity(),
             _ => new FirstCourierActivity());

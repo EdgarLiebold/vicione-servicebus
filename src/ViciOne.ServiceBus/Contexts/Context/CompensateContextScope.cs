@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Defines the lifetime scope for compensate context.</summary>
-/// <typeparam name="TLog">The log type.</typeparam>
+/// <summary>Adds scoped payloads to a compensation context.</summary>
+/// <typeparam name="TLog">The compensation log contract.</typeparam>
 public class CompensateContextScope<TLog> :
     ActivityContextScope,
     CompensateContext<TLog>
@@ -12,22 +12,22 @@ public class CompensateContextScope<TLog> :
 {
     readonly CompensateContext<TLog> _context;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="payloads">The payloads.</param>
+    /// <summary>Creates a compensation scope with additional payloads.</summary>
+    /// <param name="context">The compensation context to wrap.</param>
+    /// <param name="payloads">The payloads visible within this compensation scope.</param>
     public CompensateContextScope(CompensateContext<TLog> context, params object[] payloads)
         : base(context, payloads)
     {
         _context = context;
     }
 
-    /// <summary>Gets the log.</summary>
+    /// <summary>Gets the compensation log.</summary>
     public TLog Log => _context.Log;
 
-    /// <summary>Creates activity context.</summary>
-    /// <typeparam name="TActivity">The activity type.</typeparam>
-    /// <param name="activity">The activity.</param>
-    /// <returns>The created activity context.</returns>
+    /// <summary>Creates a host context that binds a compensation activity instance.</summary>
+    /// <typeparam name="TActivity">The compensation activity type.</typeparam>
+    /// <param name="activity">The compensation activity instance.</param>
+    /// <returns>The activity-bound compensation context.</returns>
     public CompensateActivityContext<TActivity, TLog> CreateActivityContext<TActivity>(TActivity activity)
         where TActivity : class
     {
@@ -65,7 +65,7 @@ public class CompensateContextScope<TLog> :
     }
 
     /// <summary>Reports a failed result.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="exception">The failure that prevented compensation from completing.</param>
     /// <returns>The compensation result produced by the operation.</returns>
     public CompensationResult Failed(Exception exception)
     {

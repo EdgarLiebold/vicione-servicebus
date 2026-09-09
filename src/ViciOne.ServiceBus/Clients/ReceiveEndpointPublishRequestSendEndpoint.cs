@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Clients;
@@ -21,11 +22,12 @@ internal sealed class ReceiveEndpointPublishRequestSendEndpoint<TRequest> :
     }
 
     /// <summary>Waits for the response endpoint and resolves the publish destination for the request contract.</summary>
+    /// <param name="cancellationToken">Cancels readiness waiting or endpoint resolution.</param>
     /// <returns>A task that produces the publish send endpoint.</returns>
-    protected override async Task<ISendEndpoint> GetSendEndpointAsync()
+    protected override async Task<ISendEndpoint> GetSendEndpointAsync(CancellationToken cancellationToken)
     {
-        var ready = await _handle.Ready.ConfigureAwait(false);
+        var ready = await _handle.Ready.WaitAsync(cancellationToken).ConfigureAwait(false);
 
-        return await ready.ReceiveEndpoint.GetPublishSendEndpointAsync<TRequest>().ConfigureAwait(false);
+        return await ready.ReceiveEndpoint.GetPublishSendEndpointAsync<TRequest>(cancellationToken).ConfigureAwait(false);
     }
 }

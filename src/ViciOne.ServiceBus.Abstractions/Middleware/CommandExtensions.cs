@@ -5,36 +5,37 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Advanced.Middleware;
 
-/// <summary>Provides extension methods for command.</summary>
+/// <summary>Sends typed control commands through command pipelines.</summary>
 public static class CommandExtensions
 {
-    /// <summary>Sends command.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="command">The command.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public static Task SendCommandAsync<T>(this IPipe<CommandContext> pipe, T command, TimeProvider? timeProvider = null, CancellationToken cancellationToken = default)
-        where T : class
+    /// <summary>Sends a control command with a context-scoped clock and cancellation token.</summary>
+    /// <typeparam name="TCommand">The command contract type.</typeparam>
+    /// <param name="pipe">The command pipeline.</param>
+    /// <param name="command">The command to send.</param>
+    /// <param name="timeProvider">The clock used to timestamp the command context.</param>
+    /// <param name="cancellationToken">The token that cancels command processing.</param>
+    /// <returns>The asynchronous dispatch of the command through every configured command-pipeline stage.</returns>
+    public static Task SendCommandAsync<TCommand>(this IPipe<CommandContext> pipe, TCommand command, TimeProvider? timeProvider = null,
+        CancellationToken cancellationToken = default)
+        where TCommand : class
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (pipe == null)
-            throw new ArgumentNullException(nameof(pipe));
-        if (command == null)
-            throw new ArgumentNullException(nameof(command));
+        ArgumentNullException.ThrowIfNull(pipe);
+        ArgumentNullException.ThrowIfNull(command);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
 
-        var context = new SendCommandContext<T>(command, timeProvider ?? TimeProvider.System);
+        var context = new SendCommandContext<TCommand>(command, timeProvider ?? TimeProvider.System, cancellationToken);
 
         return pipe.SendAsync(context);
     }
 
-
-    class SendCommandContext<T> :
+    private sealed class SendCommandContext<TCommand> :
         BasePipeContext,
-        CommandContext<T>
-        where T : class
+        CommandContext<TCommand>
+        where TCommand : class
     {
-        public SendCommandContext(T command, TimeProvider timeProvider)
+        public SendCommandContext(TCommand command, TimeProvider timeProvider, CancellationToken cancellationToken)
+            : base(cancellationToken)
         {
             Command = command;
             Timestamp = timeProvider.GetUtcNow();
@@ -43,6 +44,6 @@ public static class CommandExtensions
 
         public DateTimeOffset Timestamp { get; }
 
-        public T Command { get; }
+        public TCommand Command { get; }
     }
 }

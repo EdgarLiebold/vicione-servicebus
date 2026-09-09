@@ -1,6 +1,6 @@
 using Azure.Messaging.EventHubs.Processor;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
-using ViciOne.ServiceBus.Util;
 using Xunit;
 
 namespace ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration;

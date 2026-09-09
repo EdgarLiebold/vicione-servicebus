@@ -9,7 +9,6 @@ internal sealed class ReceiveFaultEvent :
 {
     const int MaximumExceptionCount = 16;
 
-
     /// <summary>Creates an empty instance for contract materialization.</summary>
     public ReceiveFaultEvent()
     {
@@ -28,7 +27,7 @@ internal sealed class ReceiveFaultEvent :
         ArgumentNullException.ThrowIfNull(host);
         ArgumentNullException.ThrowIfNull(exception);
 
-        Timestamp = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
+        Timestamp = (timeProvider ?? TimeProvider.System).GetUtcNow();
         FaultId = NewId.NextGuid();
 
         Host = host;
@@ -45,16 +44,22 @@ internal sealed class ReceiveFaultEvent :
 
     /// <summary>Gets or sets the identifier of this fault event.</summary>
     public Guid FaultId { get; set; }
+
     /// <summary>Gets or sets the UTC time at which the fault was created.</summary>
     public DateTimeOffset Timestamp { get; set; }
+
     /// <summary>Gets or sets the identifier of the failed message, when supplied.</summary>
     public Guid? FaultedMessageId { get; set; }
+
     /// <summary>Gets or sets the bounded exception snapshots associated with the fault.</summary>
     public ExceptionInfo[] Exceptions { get; set; } = null!;
+
     /// <summary>Gets or sets the host that received the failed envelope.</summary>
     public HostInfo Host { get; set; } = null!;
+
     /// <summary>Gets or sets the message type identifiers declared by the failed envelope.</summary>
     public string[] FaultMessageTypes { get; set; } = null!;
+
     /// <summary>Gets or sets the content type declared by the incoming envelope.</summary>
     public string? ContentType { get; set; }
 }

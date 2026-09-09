@@ -1,5 +1,6 @@
 using System.Diagnostics.Metrics;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -40,7 +41,7 @@ public sealed class PayloadAdmissionTelemetryTests
             || IsRejectedEnvelopeSize(measurement)), measurement =>
         {
             Assert.InRange(measurement.Tags.Count, 2, 2);
-            Assert.Equal(["error.type", "outcome"],
+            Assert.Equal([ServiceBusTelemetry.Attributes.ErrorType, ServiceBusTelemetry.Attributes.Outcome],
                 measurement.Tags.Select(tag => tag.Key).Order(StringComparer.Ordinal).ToArray());
             Assert.All(measurement.Tags, tag =>
             {
@@ -61,7 +62,7 @@ public sealed class PayloadAdmissionTelemetryTests
         using var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, current) =>
         {
-            if (instrument.Meter.Name == "ViciOne.ServiceBus"
+            if (instrument.Meter.Name == ServiceBusTelemetry.MeterName
                 && ReferenceEquals(instrument.Meter.Scope, meterFactory)
                 && instrument.Name.StartsWith("vicione.servicebus.payload.", StringComparison.Ordinal))
                 current.EnableMeasurementEvents(instrument);
@@ -109,16 +110,16 @@ public sealed class PayloadAdmissionTelemetryTests
     }
 
     private static bool IsRejectedAdmission(MetricMeasurement measurement) =>
-        measurement.Name == "vicione.servicebus.payload.admission"
-        && Equals(measurement.Tag("outcome"), "rejected");
+        measurement.Name == ServiceBusTelemetry.Metrics.PayloadAdmission
+        && Equals(measurement.Tag(ServiceBusTelemetry.Attributes.Outcome), "rejected");
 
     private static bool IsRejectedBodySize(MetricMeasurement measurement) =>
-        measurement.Name == "vicione.servicebus.payload.body.size"
-        && Equals(measurement.Tag("outcome"), "rejected");
+        measurement.Name == ServiceBusTelemetry.Metrics.PayloadBodySize
+        && Equals(measurement.Tag(ServiceBusTelemetry.Attributes.Outcome), "rejected");
 
     private static bool IsRejectedEnvelopeSize(MetricMeasurement measurement) =>
-        measurement.Name == "vicione.servicebus.payload.envelope.size"
-        && Equals(measurement.Tag("outcome"), "rejected");
+        measurement.Name == ServiceBusTelemetry.Metrics.PayloadEnvelopeSize
+        && Equals(measurement.Tag(ServiceBusTelemetry.Attributes.Outcome), "rejected");
 
     private sealed class HostileExporterException : Exception
     {

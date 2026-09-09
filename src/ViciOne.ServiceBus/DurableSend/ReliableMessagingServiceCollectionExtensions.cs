@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus;
-using ViciOne.ServiceBus.Diagnostics.Telemetry;
+using ViciOne.ServiceBus.Monitoring.Telemetry;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 

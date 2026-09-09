@@ -42,6 +42,8 @@ internal sealed class MetricObservationSession : IDisposable
 
     public IReadOnlyList<MetricMeasurement> Measurements => _measurements.ToArray();
 
+    public void RecordObservableInstruments() => _listener.RecordObservableInstruments();
+
     public async Task WaitForCountAsync(
         Func<MetricMeasurement, bool> predicate,
         int expectedCount,

@@ -10,21 +10,21 @@ public sealed class ScopedClientFactory :
     readonly IClientFactory _clientFactory;
     readonly ConsumeContext? _consumeContext;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="clientFactory">The client factory.</param>
-    /// <param name="consumeContext">The consume context.</param>
+    /// <summary>Creates a scoped facade over an existing client factory.</summary>
+    /// <param name="clientFactory">The factory that owns request-client infrastructure.</param>
+    /// <param name="consumeContext">The current consume context, or <see langword="null" /> outside consumption.</param>
     public ScopedClientFactory(IClientFactory clientFactory, ConsumeContext? consumeContext)
     {
         _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
         _consumeContext = consumeContext;
     }
 
-    /// <summary>Creates request.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created request.</returns>
+    /// <summary>Creates a request that uses the configured route or publishes when no route exists.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="message">The request message.</param>
+    /// <param name="timeout">The maximum response-wait duration.</param>
+    /// <param name="cancellationToken">Cancels sending or response waiting.</param>
+    /// <returns>The request handle.</returns>
     public RequestHandle<T> CreateRequest<T>(T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
@@ -33,13 +33,13 @@ public sealed class ScopedClientFactory :
         return client.Create(message, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates request.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created request.</returns>
+    /// <summary>Creates a request for an explicit destination.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="destinationAddress">The request service address.</param>
+    /// <param name="message">The request message.</param>
+    /// <param name="timeout">The maximum response-wait duration.</param>
+    /// <param name="cancellationToken">Cancels sending or response waiting.</param>
+    /// <returns>The request handle.</returns>
     public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
@@ -48,12 +48,12 @@ public sealed class ScopedClientFactory :
         return client.Create(message, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates request.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created request.</returns>
+    /// <summary>Creates and initializes a request that uses the configured route or publishes when no route exists.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="values">The values used to initialize the request.</param>
+    /// <param name="timeout">The maximum response-wait duration.</param>
+    /// <param name="cancellationToken">Cancels initialization, sending, or response waiting.</param>
+    /// <returns>The request handle.</returns>
     public RequestHandle<T> CreateRequest<T>(object values, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
@@ -62,13 +62,13 @@ public sealed class ScopedClientFactory :
         return client.Create(values, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates request.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Creates and initializes a request for an explicit destination.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created request.</returns>
+    /// <param name="values">The values used to initialize the request.</param>
+    /// <param name="timeout">The maximum response-wait duration.</param>
+    /// <param name="cancellationToken">Cancels initialization, sending, or response waiting.</param>
+    /// <returns>The request handle.</returns>
     public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, object values, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
@@ -77,10 +77,10 @@ public sealed class ScopedClientFactory :
         return client.Create(values, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates request client.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <returns>The created request client.</returns>
+    /// <summary>Creates a request client that uses the configured route or publishes when no route exists.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="timeout">The default response-wait duration.</param>
+    /// <returns>The request client.</returns>
     public IRequestClient<T> CreateRequestClient<T>(RequestTimeout timeout)
         where T : class
     {
@@ -90,11 +90,11 @@ public sealed class ScopedClientFactory :
         return _clientFactory.CreateRequestClient<T>(_consumeContext, timeout);
     }
 
-    /// <summary>Creates request client.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <returns>The created request client.</returns>
+    /// <summary>Creates a request client for an explicit destination.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="destinationAddress">The request service address.</param>
+    /// <param name="timeout">The default response-wait duration.</param>
+    /// <returns>The request client.</returns>
     public IRequestClient<T> CreateRequestClient<T>(Uri destinationAddress, RequestTimeout timeout)
         where T : class
     {

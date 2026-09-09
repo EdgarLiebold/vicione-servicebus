@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.JobService;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Middleware.Partitioning;
 using JobServiceState = ViciOne.ServiceBus.JobService.JobService;
 
 namespace ViciOne.ServiceBus.Configuration;
@@ -15,8 +16,8 @@ internal sealed class JobSagaDefinition :
     readonly JobSagaOptions _options;
     readonly JobSagaSettingsConfigurator _setOptions;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="options">The options that control the operation.</param>
+    /// <summary>Captures the shared job-saga settings used to configure job coordination.</summary>
+    /// <param name="options">The validated job-saga settings wrapper.</param>
     public JobSagaDefinition(IOptions<JobSagaOptions> options)
     {
         ArgumentNullException.ThrowIfNull(options);
@@ -41,7 +42,7 @@ internal sealed class JobSagaDefinition :
         {
             configurator.ConcurrentMessageLimit = _options.ConcurrentMessageLimit;
 
-            var partition = new Partitioner(_options.ConcurrentMessageLimit.Value, new Murmur3UnsafeHashGenerator());
+            var partition = new PartitionCoordinator(_options.ConcurrentMessageLimit.Value);
 
             configurator.UsePartitioner<JobSubmitted>(partition, p => p.Message.JobId);
 

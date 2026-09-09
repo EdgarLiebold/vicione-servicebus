@@ -68,8 +68,9 @@ public class PipeContextSupervisor<TContext> :
             }
             catch (Exception faultException)
             {
-                LogContext.Error?.Log(faultException, "Context fault notification failed; the primary operation failure is preserved: {ContextType}",
-                    TypeCache<TContext>.ShortName);
+                LogCleanupFailure(
+                    faultException,
+                    "Context fault notification failed; the primary operation failure is preserved: {ContextType}");
             }
 
             throw;
@@ -84,7 +85,7 @@ public class PipeContextSupervisor<TContext> :
             }
             catch (Exception stopException)
             {
-                LogContext.Error?.Log(stopException, "Context stop failed; the operation result is preserved: {ContextType}", TypeCache<TContext>.ShortName);
+                LogCleanupFailure(stopException, "Context stop failed; the operation result is preserved: {ContextType}");
             }
 
             try
@@ -93,8 +94,7 @@ public class PipeContextSupervisor<TContext> :
             }
             catch (Exception disposeException)
             {
-                LogContext.Error?.Log(disposeException, "Context disposal failed; the operation result is preserved: {ContextType}",
-                    TypeCache<TContext>.ShortName);
+                LogCleanupFailure(disposeException, "Context disposal failed; the operation result is preserved: {ContextType}");
             }
         }
     }
@@ -163,6 +163,18 @@ public class PipeContextSupervisor<TContext> :
             SetReady(context.Context);
 
             return context;
+        }
+    }
+
+    static void LogCleanupFailure(Exception exception, string messageTemplate)
+    {
+        try
+        {
+            LogContext.Error?.Log(exception, messageTemplate, TypeCache<TContext>.ShortName);
+        }
+        catch
+        {
+            // Diagnostic logging cannot change the operation or cleanup outcome.
         }
     }
 }

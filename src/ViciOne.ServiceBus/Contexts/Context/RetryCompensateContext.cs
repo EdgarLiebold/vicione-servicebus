@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Carries state for retry compensate operations.</summary>
-/// <typeparam name="TLog">The log type.</typeparam>
+/// <summary>Tracks retry state while preserving compensation results between attempts.</summary>
+/// <typeparam name="TLog">The compensation log contract.</typeparam>
 public class RetryCompensateContext<TLog> :
     CompensateContextScope<TLog>,
     ConsumeRetryContext
@@ -14,14 +14,14 @@ public class RetryCompensateContext<TLog> :
     readonly CompensationResult? _existingResult;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="retryPolicy">The retry policy.</param>
-    /// <param name="retryContext">The retry context.</param>
+    /// <summary>Creates a compensation retry attempt.</summary>
+    /// <param name="context">The compensation context being retried.</param>
+    /// <param name="retryPolicy">The policy that creates subsequent attempts.</param>
+    /// <param name="retryContext">The previous retry attempt, or <see langword="null" /> for the first attempt.</param>
     public RetryCompensateContext(CompensateContext<TLog> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         : base(context)
     {
-        _retryPolicy = retryPolicy;
+        _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));
         _context = context;
 
         if (retryContext is RetryContext<CompensateContext<TLog>> compensateRetryContext)
@@ -47,13 +47,15 @@ public class RetryCompensateContext<TLog> :
     /// <summary>Gets the retry count.</summary>
     public int RetryCount { get; }
 
-    /// <summary>Creates next.</summary>
-    /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-    /// <param name="retryContext">The retry context.</param>
-    /// <returns>The created next.</returns>
+    /// <summary>Creates the next compensation retry context and restores any pre-retry result.</summary>
+    /// <typeparam name="TContext">The requested consume-retry context type.</typeparam>
+    /// <param name="retryContext">The retry state for the next attempt.</param>
+    /// <returns>The next typed retry context.</returns>
     public TContext CreateNext<TContext>(RetryContext retryContext)
         where TContext : class, ConsumeRetryContext
     {
+        ArgumentNullException.ThrowIfNull(retryContext);
+
         if (retryContext is RetryContext<CompensateContext<TLog>> compensateRetryContext && _existingResult != null)
             compensateRetryContext.Context.Result = _existingResult;
 
@@ -61,9 +63,9 @@ public class RetryCompensateContext<TLog> :
             ?? throw new InvalidOperationException($"The retry context cannot be represented as {TypeCache<TContext>.ShortName}.");
     }
 
-    /// <summary>Notifies registered observers about pending faults.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Restores the original compensation result after all retry attempts are exhausted.</summary>
+    /// <param name="cancellationToken">Cancels result restoration.</param>
+    /// <returns>A completed task, or a canceled task when cancellation was requested.</returns>
     public Task NotifyPendingFaultsAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
@@ -74,7 +76,6 @@ public class RetryCompensateContext<TLog> :
 
         return Task.CompletedTask;
     }
-
 
     class RetryCompensationResult :
         CompensationResult

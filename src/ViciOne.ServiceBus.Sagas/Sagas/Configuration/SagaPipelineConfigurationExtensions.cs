@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Contracts;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Middleware.Partitioning;
 using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Sagas.Configuration;
@@ -14,37 +15,41 @@ namespace ViciOne.ServiceBus.Sagas.Configuration;
 public static class SagaPipelineConfigurationExtensions
 {
     /// <summary>Limits the number of concurrently consumed saga messages.</summary>
-    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="concurrentMessageLimit">The maximum number of concurrently consumed messages.</param>
-    public static void UseConcurrentMessageLimit<TSaga>(this ISagaConfigurator<TSaga> configurator, int concurrentMessageLimit)
+    /// <typeparam name="TSaga">The saga state type.</typeparam>
+    /// <param name="configurator">The saga pipeline to limit.</param>
+    /// <param name="concurrencyLimit">The positive concurrency budget shared by all messages handled by the saga.</param>
+    public static void UseConcurrencyLimit<TSaga>(this ISagaConfigurator<TSaga> configurator, int concurrencyLimit)
         where TSaga : class, ISaga
     {
         ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentOutOfRangeException.ThrowIfLessThan(concurrencyLimit, 1);
 
-        var observer = new ConcurrencyLimitSagaConfigurationObserver<TSaga>(configurator, concurrentMessageLimit);
+        var observer = new ConcurrencyLimitSagaConfigurationObserver<TSaga>(configurator, concurrencyLimit);
         configurator.ConnectSagaConfigurationObserver(observer);
     }
 
     /// <summary>Limits the number of concurrently consumed saga messages and exposes runtime limit management.</summary>
-    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit.</param>
-    /// <param name="managementEndpointConfigurator">The management endpoint configurator.</param>
-    /// <param name="id">The optional identifier used to select the limit at runtime.</param>
-    public static void UseConcurrentMessageLimit<TSaga>(this ISagaConfigurator<TSaga> configurator, int concurrentMessageLimit,
-        IReceiveEndpointConfigurator managementEndpointConfigurator, string? id = null)
+    /// <typeparam name="TSaga">The saga state type.</typeparam>
+    /// <param name="configurator">The saga pipeline to limit.</param>
+    /// <param name="concurrencyLimit">The initial positive concurrency budget shared by all handled messages.</param>
+    /// <param name="managementEndpointConfigurator">The endpoint that consumes limit-adjustment commands.</param>
+    /// <param name="limiterId">An optional case-insensitive identifier for selective adjustments.</param>
+    public static void UseConcurrencyLimit<TSaga>(this ISagaConfigurator<TSaga> configurator, int concurrencyLimit,
+        IReceiveEndpointConfigurator managementEndpointConfigurator, string? limiterId = null)
         where TSaga : class, ISaga
     {
         ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentOutOfRangeException.ThrowIfLessThan(concurrencyLimit, 1);
         ArgumentNullException.ThrowIfNull(managementEndpointConfigurator);
+        if (limiterId != null)
+            ArgumentException.ThrowIfNullOrWhiteSpace(limiterId);
 
-        var observer = new ConcurrencyLimitSagaConfigurationObserver<TSaga>(configurator, concurrentMessageLimit, id);
+        var observer = new ConcurrencyLimitSagaConfigurationObserver<TSaga>(configurator, concurrencyLimit, limiterId);
         configurator.ConnectSagaConfigurationObserver(observer);
 
         managementEndpointConfigurator.Instance(observer.Limiter, x =>
         {
-            x.UseConcurrentMessageLimit(1);
+            x.UseConcurrencyLimit(1);
             x.Message<SetConcurrencyLimit>(m => m.UseMessageRetry(r => r.None()));
         });
     }
@@ -364,7 +369,7 @@ public static class SagaPipelineConfigurationExtensions
         int partitionCount, PartitionKeyProvider<SagaConsumeContext<TSaga>> keyProvider)
         where TSaga : class, ISaga
     {
-        var partitioner = new Partitioner(partitionCount, new Murmur3UnsafeHashGenerator());
+        var partitioner = new PartitionCoordinator(partitionCount);
         configurator.AddPipeSpecification(new PartitionSagaSpecification<TSaga>(partitioner, keyProvider));
     }
 }

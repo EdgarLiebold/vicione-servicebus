@@ -152,7 +152,6 @@ public sealed class SourceFileNamingArchitectureTests
         [
             "GlobalUsings.cs",
             "ViciOne.ServiceBus.csproj",
-            "ViciOne.ServiceBus.csproj.DotSettings",
             "packages.lock.json",
         ];
 
@@ -225,6 +224,70 @@ public sealed class SourceFileNamingArchitectureTests
 
         Assert.False(Directory.Exists(Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Agents")));
         Assert.False(Directory.Exists(Path.Combine(RepositoryLayout.Root, "tests", "ViciOne.ServiceBus.Tests", "Agents")));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "flow-control-files-separate-public-spi-configuration-and-runtime-mechanics")]
+    public void FlowControlFiles_AreGroupedByApiLayerAndResponsibility()
+    {
+        (string Directory, string Namespace, string[] Files)[] groups =
+        [
+            (
+                "src/ViciOne.ServiceBus/Advanced/Middleware/Partitioning",
+                "ViciOne.ServiceBus.Advanced.Middleware",
+                ["IPartitionedTaskExecutor.cs", "IPartitionHashGenerator.cs", "IPartitioner.cs", "Murmur3PartitionHashGenerator.cs",
+                    "PartitionedTaskExecutor.cs", "PartitionKeyProvider.cs", "PipePartitioner.cs"]),
+            (
+                "src/ViciOne.ServiceBus/Configuration/CircuitBreaker",
+                "ViciOne.ServiceBus.Configuration",
+                ["CircuitBreakerConfigurationExtensions.cs", "CircuitBreakerOptions.cs", "CircuitBreakerPipeSpecification.cs"]),
+            (
+                "src/ViciOne.ServiceBus/Configuration/ConcurrencyLimit",
+                "ViciOne.ServiceBus.Configuration",
+                ["ConcurrencyLimitConfigurationExtensions.cs", "ConcurrencyLimitConfigurationObserver.cs",
+                    "ConcurrencyLimitConsumePipeSpecification.cs", "ConcurrencyLimitConsumerConfigurationObserver.cs",
+                    "ConcurrencyLimitHandlerConfigurationObserver.cs", "ConcurrencyLimitPipeSpecification.cs",
+                    "ConsumerConcurrencyLimitConfigurationExtensions.cs"]),
+            (
+                "src/ViciOne.ServiceBus/Configuration/Partition",
+                "ViciOne.ServiceBus.Configuration",
+                ["PartitionerConfigurationExtensions.cs", "PartitionerPipeSpecification.cs", "PartitionMessageConfigurationObserver.cs",
+                    "PartitionMessageSpecification.cs"]),
+            (
+                "src/ViciOne.ServiceBus/Configuration/RateLimiting",
+                "ViciOne.ServiceBus.Configuration",
+                ["RateLimitConfigurationExtensions.cs", "RateLimitPipeSpecification.cs"]),
+            (
+                "src/ViciOne.ServiceBus/Middleware/CircuitBreaker",
+                "ViciOne.ServiceBus.Middleware.CircuitBreaker",
+                ["CircuitBreakerFilter.cs", "CircuitBreakerSettings.cs", "CircuitBreakerStateMachine.cs", "CircuitBreakerTelemetry.cs"]),
+            (
+                "src/ViciOne.ServiceBus/Middleware/ConcurrencyLimiting",
+                "ViciOne.ServiceBus.Middleware.ConcurrencyLimiting",
+                ["ConcurrencyLimitFilter.cs", "ConcurrencyLimiter.cs", "ConsumeConcurrencyLimitFilter.cs", "IConcurrencyLimiter.cs"]),
+            (
+                "src/ViciOne.ServiceBus/Middleware/Partitioning",
+                "ViciOne.ServiceBus.Middleware.Partitioning",
+                ["Partition.cs", "PartitionCoordinator.cs", "PartitionFilter.cs"]),
+            (
+                "src/ViciOne.ServiceBus/Middleware/RateLimiting",
+                "ViciOne.ServiceBus.Middleware.RateLimiting",
+                ["RateLimitFilter.cs"]),
+        ];
+
+        foreach ((string relativeDirectory, string expectedNamespace, string[] expectedFiles) in groups)
+        {
+            string directory = Path.Combine(RepositoryLayout.Root, relativeDirectory);
+            string[] actualFiles = Directory.EnumerateFiles(directory, "*.cs", SearchOption.TopDirectoryOnly)
+                .Select(Path.GetFileName)
+                .OfType<string>()
+                .Order(StringComparer.Ordinal)
+                .ToArray();
+            Assert.Equal(expectedFiles.Order(StringComparer.Ordinal), actualFiles);
+            Assert.All(actualFiles, file => Assert.Equal(
+                [expectedNamespace],
+                ReadNamespaces(Path.Combine(directory, file), TestContext.Current.CancellationToken)));
+        }
     }
 
     [Fact]
@@ -342,6 +405,39 @@ public sealed class SourceFileNamingArchitectureTests
         Assert.Equal(allowedFiles, actualFiles);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "terminal-partitioners-have-explicit-lifetime-owners")]
+    public void TerminalPipePartitioners_AreCreatedOnlyByComponentsWithATerminalLifetimeOwner()
+    {
+        string[] expectedOwners =
+        [
+            "src/Scheduling/ViciOne.ServiceBus.Quartz/Configuration/QuartzEndpointDefinition.cs",
+            "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulingExtensions.cs",
+        ];
+        string[] actualOwners = RepositoryLayout.ProductProjects
+            .SelectMany(project => MsBuildEvaluation.ItemMetadata(project, "Compile", "FullPath"))
+            .Select(Path.GetFullPath)
+            .Where(IsRepositorySource)
+            .Where(path => CreatedTypeNames(path).Contains(nameof(PipePartitioner), StringComparer.Ordinal))
+            .Select(RepositoryLayout.RelativeToRoot)
+            .Distinct(StringComparer.Ordinal)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(expectedOwners, actualOwners);
+
+        string dedicatedSpecification = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus",
+            "Configuration",
+            "Partition",
+            "PartitionerPipeSpecification.cs");
+        string[] dedicatedCreatedTypes = CreatedTypeNames(dedicatedSpecification);
+        Assert.Contains("PartitionCoordinator", dedicatedCreatedTypes);
+        Assert.DoesNotContain(nameof(PipePartitioner), dedicatedCreatedTypes);
+    }
+
     private static SourceFileInspection Inspect(string source)
     {
         string path = RepositoryLayout.RelativeToRoot(source);
@@ -401,6 +497,22 @@ public sealed class SourceFileNamingArchitectureTests
             .DescendantNodes()
             .OfType<BaseNamespaceDeclarationSyntax>()
             .Select(static declaration => declaration.Name.ToString())
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+
+    private static string[] CreatedTypeNames(string path) =>
+        CSharpSyntaxTree.ParseText(File.ReadAllText(path))
+            .GetCompilationUnitRoot()
+            .DescendantNodes()
+            .OfType<ObjectCreationExpressionSyntax>()
+            .Select(static creation => creation.Type switch
+            {
+                IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
+                GenericNameSyntax generic => generic.Identifier.ValueText,
+                QualifiedNameSyntax qualified => qualified.Right.Identifier.ValueText,
+                AliasQualifiedNameSyntax aliasQualified => aliasQualified.Name.Identifier.ValueText,
+                _ => creation.Type.ToString(),
+            })
             .Distinct(StringComparer.Ordinal)
             .ToArray();
 

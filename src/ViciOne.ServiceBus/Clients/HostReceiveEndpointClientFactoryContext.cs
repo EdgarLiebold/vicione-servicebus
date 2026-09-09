@@ -13,7 +13,7 @@ internal sealed class HostReceiveEndpointClientFactoryContext :
     /// <summary>Creates a client-factory context that owns a connected response endpoint.</summary>
     /// <param name="handle">The connected endpoint that receives responses and is stopped on disposal.</param>
     /// <param name="defaultTimeout">The default request timeout.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <param name="timeProvider">The time source used to measure request deadlines.</param>
     public HostReceiveEndpointClientFactoryContext(
         IHostReceiveEndpointHandle handle,
         RequestTimeout defaultTimeout = default,

@@ -4,18 +4,18 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Defines configuration options for health check.</summary>
-public interface IHealthCheckOptions
+/// <summary>Provides the immutable read contract consumed while health-check registrations are projected.</summary>
+internal interface IHealthCheckOptions
 {
-    /// <summary>Set the health check name, overrides the default bus type name.</summary>
-    public string? Name { get; }
+    /// <summary>Gets the optional explicit registration name.</summary>
+    string? Name { get; }
 
     /// <summary>
-    /// The minimal <see cref="HealthStatus" /> that should be reported when the health check fails.
-    /// If null then all statuses from <see cref="HealthStatus.Unhealthy"/> to <see cref="HealthStatus.Healthy"/> will be reported depending on app health.
+    /// Gets the lowest <see cref="HealthStatus"/> value the registration reports, or <see langword="null"/>
+    /// when the bus snapshot status is preserved unchanged.
     /// </summary>
-    public HealthStatus? MinimalFailureStatus { get; }
+    HealthStatus? MinimalFailureStatus { get; }
 
-    /// <summary>A list of tags that can be used to filter sets of health checks.</summary>
-    public HashSet<string> Tags { get; }
+    /// <summary>Gets the configured registration tags.</summary>
+    IReadOnlySet<string> Tags { get; }
 }

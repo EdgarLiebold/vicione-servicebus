@@ -1,67 +1,76 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Batching;
 
-/// <summary>Collects batch values.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class BatchCollector<TMessage> :
+/// <summary>Serializes messages into consecutive batches without a grouping key.</summary>
+/// <typeparam name="TMessage">The message contract collected into each batch.</typeparam>
+internal sealed class BatchCollector<TMessage> :
     IBatchCollector<TMessage>
     where TMessage : class
 {
-    readonly TaskExecutor _collector;
     readonly IPipe<ConsumeContext<Batch<TMessage>>> _consumerPipe;
-    readonly TaskExecutor _dispatcher;
+    readonly BatchCollectorLifetime _lifetime;
     readonly BatchOptions _options;
     BatchConsumer<TMessage>? _currentConsumer;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="options">The options that control the operation.</param>
-    /// <param name="consumerPipe">The consumer pipe.</param>
+    /// <summary>Creates a collector whose completed batches are sent through the supplied pipe.</summary>
+    /// <param name="options">The batch size, timing, and delivery-concurrency limits.</param>
+    /// <param name="consumerPipe">The pipeline that receives each completed batch.</param>
     public BatchCollector(BatchOptions options, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe)
     {
-        _options = options;
-        _consumerPipe = consumerPipe;
+        _options = options ?? throw new ArgumentNullException(nameof(options));
+        _consumerPipe = consumerPipe ?? throw new ArgumentNullException(nameof(consumerPipe));
 
-        _collector = new TaskExecutor();
-        _dispatcher = new TaskExecutor(options.ConcurrencyLimit);
+        _lifetime = new BatchCollectorLifetime(options.ConcurrencyLimit);
     }
 
-    /// <summary>Releases the resources owned by this instance.</summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public async ValueTask DisposeAsync()
-    {
-        await _collector.DisposeAsync().ConfigureAwait(false);
-        await _dispatcher.DisposeAsync().ConfigureAwait(false);
-    }
+    /// <summary>Stops admissions, delivers any partial batch, and drains all accepted operations.</summary>
+    /// <returns>A value task that completes after collection and batch delivery have terminated.</returns>
+    public ValueTask DisposeAsync() => _lifetime.DisposeAsync(FlushActiveBatchesAsync);
 
-    /// <summary>Collects the matching values.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the collect outcome.</returns>
+    /// <summary>Adds one message to the current batch.</summary>
+    /// <param name="context">The message context to collect.</param>
+    /// <param name="cancellationToken">Cancels admission to the serialized collector.</param>
+    /// <returns>The batch consumer whose completion governs the message pipeline.</returns>
     public Task<BatchConsumer<TMessage>> CollectAsync(ConsumeContext<TMessage> context, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Batching.BatchConsumer<TMessage>>(cancellationToken); var currentActivity = Activity.Current;
+        ArgumentNullException.ThrowIfNull(context);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<BatchConsumer<TMessage>>(cancellationToken);
+        if (!_lifetime.TryBeginOperation())
+            return Task.FromException<BatchConsumer<TMessage>>(new ObjectDisposedException(GetType().Name));
 
-        return _collector.ExecuteAsync(() => AddAsync(context, currentActivity), context.CancellationToken);
+        return CollectCoreAsync(context, Activity.Current, cancellationToken);
     }
 
-    /// <summary>Marks the current operation as complete.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="consumer">The consumer.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Removes a completed consumer when it still represents the current batch.</summary>
+    /// <param name="context">The message context associated with the completed consumer.</param>
+    /// <param name="consumer">The completed batch consumer.</param>
+    /// <param name="cancellationToken">Cancels admission to the serialized collector.</param>
+    /// <returns>A task that completes after the current-batch reference has been updated.</returns>
     public Task CompleteAsync(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer, CancellationToken cancellationToken = default)
     {
-        return _collector.ExecuteAsync(() => RemoveAsync(consumer), cancellationToken: cancellationToken);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(consumer);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+        if (!_lifetime.TryBeginOperation())
+            return Task.CompletedTask;
+
+        return CompleteCoreAsync(consumer, cancellationToken);
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Adds the completed-batch pipeline to the probe graph.</summary>
+    /// <param name="context">The probe graph to extend.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var scope = context.CreateScope("batchCollector");
 
         _consumerPipe.Probe(scope);
@@ -75,6 +84,58 @@ public class BatchCollector<TMessage> :
         return Task.CompletedTask;
     }
 
+    async Task<BatchConsumer<TMessage>> CollectCoreAsync(
+        ConsumeContext<TMessage> context,
+        Activity? currentActivity,
+        CancellationToken cancellationToken)
+    {
+        using CancellationTokenSource? linkedCancellation = CreateOperationCancellation(
+            context.CancellationToken,
+            cancellationToken,
+            out CancellationToken operationToken);
+        try
+        {
+            return await _lifetime.Collector.ExecuteAsync(
+                    () => AddAsync(context, currentActivity),
+                    operationToken)
+                .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception) when (cancellationToken.IsCancellationRequested)
+        {
+            throw new OperationCanceledException(exception.Message, exception, cancellationToken);
+        }
+        catch (OperationCanceledException exception) when (context.CancellationToken.IsCancellationRequested)
+        {
+            throw new OperationCanceledException(exception.Message, exception, context.CancellationToken);
+        }
+        finally
+        {
+            _lifetime.CompleteOperation();
+        }
+    }
+
+    async Task CompleteCoreAsync(BatchConsumer<TMessage> consumer, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _lifetime.Collector.ExecuteAsync(
+                    () => RemoveAsync(consumer),
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+        finally
+        {
+            _lifetime.CompleteOperation();
+        }
+    }
+
+    Task FlushActiveBatchesAsync()
+    {
+        BatchConsumer<TMessage>? consumer = _currentConsumer;
+        _currentConsumer = null;
+        return consumer?.ForceCompleteAsync() ?? Task.CompletedTask;
+    }
+
     async Task<BatchConsumer<TMessage>> AddAsync(ConsumeContext<TMessage> context, Activity? currentActivity)
     {
         if (_currentConsumer != null)
@@ -84,79 +145,116 @@ public class BatchCollector<TMessage> :
         }
 
         if (_currentConsumer == null || _currentConsumer.IsCompleted)
-            _currentConsumer = new BatchConsumer<TMessage>(_options, _collector, _dispatcher, _consumerPipe, context.GetTimeProvider());
+        {
+            _currentConsumer = new BatchConsumer<TMessage>(
+                _options,
+                _lifetime.Collector,
+                _lifetime.Dispatcher,
+                _consumerPipe,
+                context.GetTimeProvider());
+        }
 
         await _currentConsumer.AddAsync(context, currentActivity).ConfigureAwait(false);
 
         return _currentConsumer;
     }
+
+    static CancellationTokenSource? CreateOperationCancellation(
+        CancellationToken contextCancellationToken,
+        CancellationToken cancellationToken,
+        out CancellationToken operationToken)
+    {
+        if (!contextCancellationToken.CanBeCanceled || contextCancellationToken == cancellationToken)
+        {
+            operationToken = cancellationToken;
+            return null;
+        }
+
+        if (!cancellationToken.CanBeCanceled)
+        {
+            operationToken = contextCancellationToken;
+            return null;
+        }
+
+        CancellationTokenSource linkedCancellation =
+            CancellationTokenSource.CreateLinkedTokenSource(contextCancellationToken, cancellationToken);
+        operationToken = linkedCancellation.Token;
+        return linkedCancellation;
+    }
 }
 
 
-/// <summary>Collects batch values.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-/// <typeparam name="TKey">The key used for lookup.</typeparam>
-public class BatchCollector<TMessage, TKey> :
+/// <summary>Serializes messages into independent batches selected by a grouping key.</summary>
+/// <typeparam name="TMessage">The message contract collected into each batch.</typeparam>
+/// <typeparam name="TKey">The non-null grouping-key type.</typeparam>
+internal sealed class BatchCollector<TMessage, TKey> :
     IBatchCollector<TMessage>
     where TMessage : class
     where TKey : notnull
 {
-    readonly TaskExecutor _collector;
     readonly IDictionary<TKey, BatchConsumer<TMessage>> _collectors;
     readonly IPipe<ConsumeContext<Batch<TMessage>>> _consumerPipe;
-    readonly TaskExecutor _dispatcher;
     readonly IGroupKeyProvider<TMessage, TKey> _keyProvider;
+    readonly BatchCollectorLifetime _lifetime;
     readonly BatchOptions _options;
     BatchConsumer<TMessage>? _currentConsumer;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="options">The options that control the operation.</param>
-    /// <param name="consumerPipe">The consumer pipe.</param>
-    /// <param name="keyProvider">The key provider.</param>
+    /// <summary>Creates a collector whose completed groups are sent through the supplied pipe.</summary>
+    /// <param name="options">The batch size, timing, and delivery-concurrency limits.</param>
+    /// <param name="consumerPipe">The pipeline that receives each completed batch.</param>
+    /// <param name="keyProvider">The selector that assigns messages to groups.</param>
     public BatchCollector(BatchOptions options, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe, IGroupKeyProvider<TMessage, TKey> keyProvider)
     {
-        _options = options;
-        _consumerPipe = consumerPipe;
-        _keyProvider = keyProvider;
+        _options = options ?? throw new ArgumentNullException(nameof(options));
+        _consumerPipe = consumerPipe ?? throw new ArgumentNullException(nameof(consumerPipe));
+        _keyProvider = keyProvider ?? throw new ArgumentNullException(nameof(keyProvider));
 
-        _collector = new TaskExecutor();
-        _dispatcher = new TaskExecutor(options.ConcurrencyLimit);
+        _lifetime = new BatchCollectorLifetime(options.ConcurrencyLimit);
         _collectors = new Dictionary<TKey, BatchConsumer<TMessage>>();
     }
 
-    /// <summary>Releases the resources owned by this instance.</summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public async ValueTask DisposeAsync()
-    {
-        await _collector.DisposeAsync().ConfigureAwait(false);
-        await _dispatcher.DisposeAsync().ConfigureAwait(false);
-    }
+    /// <summary>Stops admissions, delivers every partial group, and drains all accepted operations.</summary>
+    /// <returns>A value task that completes after collection and batch delivery have terminated.</returns>
+    public ValueTask DisposeAsync() => _lifetime.DisposeAsync(FlushActiveBatchesAsync);
 
-    /// <summary>Collects the matching values.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the collect outcome.</returns>
+    /// <summary>Adds one message to the batch selected by its grouping key.</summary>
+    /// <param name="context">The message context to collect.</param>
+    /// <param name="cancellationToken">Cancels admission to the serialized collector.</param>
+    /// <returns>The batch consumer whose completion governs the message pipeline.</returns>
     public Task<BatchConsumer<TMessage>> CollectAsync(ConsumeContext<TMessage> context, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Batching.BatchConsumer<TMessage>>(cancellationToken); var currentActivity = Activity.Current;
+        ArgumentNullException.ThrowIfNull(context);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<BatchConsumer<TMessage>>(cancellationToken);
+        if (!_lifetime.TryBeginOperation())
+            return Task.FromException<BatchConsumer<TMessage>>(new ObjectDisposedException(GetType().Name));
 
-        return _collector.ExecuteAsync(() => AddAsync(context, currentActivity), context.CancellationToken);
+        return CollectCoreAsync(context, Activity.Current, cancellationToken);
     }
 
-    /// <summary>Marks the current operation as complete.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="consumer">The consumer.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Removes a completed consumer when it still represents its group.</summary>
+    /// <param name="context">The message context used to resolve the group.</param>
+    /// <param name="consumer">The completed batch consumer.</param>
+    /// <param name="cancellationToken">Cancels admission to the serialized collector.</param>
+    /// <returns>A task that completes after the group reference has been updated.</returns>
     public Task CompleteAsync(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer, CancellationToken cancellationToken = default)
     {
-        return _collector.ExecuteAsync(() => RemoveAsync(context, consumer), cancellationToken: cancellationToken);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(consumer);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+        if (!_lifetime.TryBeginOperation())
+            return Task.CompletedTask;
+
+        return CompleteCoreAsync(context, consumer, cancellationToken);
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Adds the completed-batch pipeline to the probe graph.</summary>
+    /// <param name="context">The probe graph to extend.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var scope = context.CreateScope("batchCollector");
 
         _consumerPipe.Probe(scope);
@@ -175,6 +273,67 @@ public class BatchCollector<TMessage, TKey> :
         return Task.CompletedTask;
     }
 
+    async Task<BatchConsumer<TMessage>> CollectCoreAsync(
+        ConsumeContext<TMessage> context,
+        Activity? currentActivity,
+        CancellationToken cancellationToken)
+    {
+        using CancellationTokenSource? linkedCancellation = CreateOperationCancellation(
+            context.CancellationToken,
+            cancellationToken,
+            out CancellationToken operationToken);
+        try
+        {
+            return await _lifetime.Collector.ExecuteAsync(
+                    () => AddAsync(context, currentActivity),
+                    operationToken)
+                .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception) when (cancellationToken.IsCancellationRequested)
+        {
+            throw new OperationCanceledException(exception.Message, exception, cancellationToken);
+        }
+        catch (OperationCanceledException exception) when (context.CancellationToken.IsCancellationRequested)
+        {
+            throw new OperationCanceledException(exception.Message, exception, context.CancellationToken);
+        }
+        finally
+        {
+            _lifetime.CompleteOperation();
+        }
+    }
+
+    async Task CompleteCoreAsync(
+        ConsumeContext<TMessage> context,
+        BatchConsumer<TMessage> consumer,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _lifetime.Collector.ExecuteAsync(
+                    () => RemoveAsync(context, consumer),
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+        finally
+        {
+            _lifetime.CompleteOperation();
+        }
+    }
+
+    Task FlushActiveBatchesAsync()
+    {
+        BatchConsumer<TMessage>[] consumers = _collectors.Values
+            .Append(_currentConsumer)
+            .OfType<BatchConsumer<TMessage>>()
+            .Distinct()
+            .ToArray();
+        _collectors.Clear();
+        _currentConsumer = null;
+
+        return Task.WhenAll(consumers.Select(static consumer => consumer.ForceCompleteAsync()));
+    }
+
     async Task<BatchConsumer<TMessage>> AddAsync(ConsumeContext<TMessage> context, Activity? currentActivity)
     {
         if (_keyProvider.TryGetKey(context, out var key))
@@ -187,7 +346,12 @@ public class BatchCollector<TMessage, TKey> :
 
             if (consumer == null || consumer.IsCompleted)
             {
-                consumer = new BatchConsumer<TMessage>(_options, _collector, _dispatcher, _consumerPipe, context.GetTimeProvider());
+                consumer = new BatchConsumer<TMessage>(
+                    _options,
+                    _lifetime.Collector,
+                    _lifetime.Dispatcher,
+                    _consumerPipe,
+                    context.GetTimeProvider());
                 _collectors[key] = consumer;
             }
 
@@ -203,10 +367,40 @@ public class BatchCollector<TMessage, TKey> :
         }
 
         if (_currentConsumer == null || _currentConsumer.IsCompleted)
-            _currentConsumer = new BatchConsumer<TMessage>(_options, _collector, _dispatcher, _consumerPipe, context.GetTimeProvider());
+        {
+            _currentConsumer = new BatchConsumer<TMessage>(
+                _options,
+                _lifetime.Collector,
+                _lifetime.Dispatcher,
+                _consumerPipe,
+                context.GetTimeProvider());
+        }
 
         await _currentConsumer.AddAsync(context, currentActivity).ConfigureAwait(false);
 
         return _currentConsumer;
+    }
+
+    static CancellationTokenSource? CreateOperationCancellation(
+        CancellationToken contextCancellationToken,
+        CancellationToken cancellationToken,
+        out CancellationToken operationToken)
+    {
+        if (!contextCancellationToken.CanBeCanceled || contextCancellationToken == cancellationToken)
+        {
+            operationToken = cancellationToken;
+            return null;
+        }
+
+        if (!cancellationToken.CanBeCanceled)
+        {
+            operationToken = contextCancellationToken;
+            return null;
+        }
+
+        CancellationTokenSource linkedCancellation =
+            CancellationTokenSource.CreateLinkedTokenSource(contextCancellationToken, cancellationToken);
+        operationToken = linkedCancellation.Token;
+        return linkedCancellation;
     }
 }

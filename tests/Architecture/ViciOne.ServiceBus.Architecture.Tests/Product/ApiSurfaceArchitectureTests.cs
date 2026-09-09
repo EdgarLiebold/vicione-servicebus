@@ -210,6 +210,141 @@ public sealed class ApiSurfaceArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-API-LAYERING", "flow-control-facades-and-partition-spi-hide-runtime-mechanics")]
+    public void FlowControlApi_ExposesConfigurationFacadesAndPartitionSpiWithoutRuntimeMechanics()
+    {
+        Type[] partitionSpi =
+        [
+            typeof(IPartitionHashGenerator),
+            typeof(IPartitioner),
+            typeof(IPartitioner<>),
+            typeof(Murmur3PartitionHashGenerator),
+            typeof(PipePartitioner),
+            typeof(PartitionKeyProvider<>),
+        ];
+        Assert.All(partitionSpi, type =>
+        {
+            Assert.True(type.IsPublic || type.IsNestedPublic);
+            Assert.Equal("ViciOne.ServiceBus.Advanced.Middleware", type.Namespace);
+        });
+        Assert.DoesNotContain(typeof(IAsyncDisposable), typeof(IPartitioner).GetInterfaces());
+        Assert.Contains(typeof(IAsyncDisposable), typeof(PipePartitioner).GetInterfaces());
+
+        Type[] configurationFacades =
+        [
+            typeof(CircuitBreakerConfigurationExtensions),
+            typeof(CircuitBreakerOptions),
+            typeof(ConcurrencyLimitConfigurationExtensions),
+            typeof(ConsumerConcurrencyLimitConfigurationExtensions),
+            typeof(PartitionerConfigurationExtensions),
+            typeof(RateLimitConfigurationExtensions),
+        ];
+        Assert.All(configurationFacades, type =>
+        {
+            Assert.True(type.IsPublic);
+            Assert.Equal("ViciOne.ServiceBus.Configuration", type.Namespace);
+        });
+
+        MethodInfo[] concurrencyMethods =
+        [
+            .. typeof(ConcurrencyLimitConfigurationExtensions)
+                .GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly),
+            .. typeof(ConsumerConcurrencyLimitConfigurationExtensions)
+                .GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly),
+        ];
+        Assert.NotEmpty(concurrencyMethods);
+        Assert.All(concurrencyMethods, method => Assert.Equal("UseConcurrencyLimit", method.Name));
+        Assert.All(
+            concurrencyMethods.SelectMany(method => method.GetParameters()).Where(parameter => parameter.ParameterType == typeof(string)),
+            parameter => Assert.Equal("limiterId", parameter.Name));
+
+        MethodInfo[] sagaConcurrencyMethods = typeof(ViciOne.ServiceBus.Sagas.Configuration.SagaPipelineConfigurationExtensions)
+            .GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+            .Where(method => method.Name == "UseConcurrencyLimit")
+            .ToArray();
+        Assert.Equal(2, sagaConcurrencyMethods.Length);
+        Assert.All(
+            sagaConcurrencyMethods.SelectMany(method => method.GetParameters()).Where(parameter => parameter.ParameterType == typeof(string)),
+            parameter => Assert.Equal("limiterId", parameter.Name));
+
+        string[] removedTypes =
+        [
+            "ViciOne.ServiceBus.Configuration.ConcurrentMessageLimitExtensions",
+            "ViciOne.ServiceBus.Middleware.ConcurrencyLimitFilter`1",
+            "ViciOne.ServiceBus.Middleware.ConcurrencyLimiter",
+            "ViciOne.ServiceBus.Middleware.ConsumeConcurrencyLimitFilter`1",
+            "ViciOne.ServiceBus.Middleware.IConcurrencyLimiter",
+            "ViciOne.ServiceBus.Middleware.IHashGenerator",
+            "ViciOne.ServiceBus.Middleware.Murmur3UnsafeHashGenerator",
+            "ViciOne.ServiceBus.Middleware.Partition",
+            "ViciOne.ServiceBus.Middleware.PartitionFilter`1",
+            "ViciOne.ServiceBus.Middleware.Partitioner",
+            "ViciOne.ServiceBus.Middleware.RateLimitFilter`1",
+        ];
+        Assert.All(removedTypes, typeName => Assert.Null(ProductAssemblyFacts.Core.GetType(typeName, throwOnError: false)));
+
+        string[] implementationNamespaces =
+        [
+            "ViciOne.ServiceBus.Middleware.CircuitBreaker",
+            "ViciOne.ServiceBus.Middleware.ConcurrencyLimiting",
+            "ViciOne.ServiceBus.Middleware.Partitioning",
+            "ViciOne.ServiceBus.Middleware.RateLimiting",
+        ];
+        Assert.DoesNotContain(ProductAssemblyFacts.Core.GetExportedTypes(), type =>
+            implementationNamespaces.Contains(type.Namespace, StringComparer.Ordinal));
+
+        Type concurrencyFilter = ProductAssemblyFacts.Core.GetType(
+            "ViciOne.ServiceBus.Middleware.ConcurrencyLimiting.ConcurrencyLimitFilter`1",
+            throwOnError: true)!;
+        Assert.Equal(typeof(object), concurrencyFilter.BaseType);
+        Assert.DoesNotContain(
+            concurrencyFilter.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly),
+            method => method.Name == "StopAgentAsync");
+
+        Assembly sagaAssembly = typeof(ViciOne.ServiceBus.Sagas.Configuration.SagaPipelineConfigurationExtensions).Assembly;
+        Type partitionSagaSpecification = sagaAssembly.GetType(
+            "ViciOne.ServiceBus.Configuration.PartitionSagaSpecification`1",
+            throwOnError: true)!;
+        Assert.False(partitionSagaSpecification.IsPublic);
+        Assert.True(partitionSagaSpecification.IsSealed);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-API-LAYERING", "batch-contracts-hide-collector-runtime")]
+    public void BatchApi_ExposesContractsAndConfigurationWithoutRuntimeMechanics()
+    {
+        Assert.True(typeof(Batch<>).IsPublic);
+        Assert.True(typeof(IBatchConfigurator<>).IsPublic);
+        Assert.True(typeof(BatchOptions).IsPublic);
+        Assert.DoesNotContain(ProductAssemblyFacts.Core.GetExportedTypes(), static type =>
+            type.Namespace == "ViciOne.ServiceBus.Batching");
+
+        string[] runtimeTypeNames =
+        [
+            "ViciOne.ServiceBus.Batching.BatchCollector`1",
+            "ViciOne.ServiceBus.Batching.BatchCollector`2",
+            "ViciOne.ServiceBus.Batching.BatchConsumer`1",
+            "ViciOne.ServiceBus.Batching.BatchConsumerFactory`1",
+            "ViciOne.ServiceBus.Batching.BatchCollectorLifetime",
+            "ViciOne.ServiceBus.Batching.IBatchCollector`1",
+            "ViciOne.ServiceBus.Batching.MessageBatch`1",
+            "ViciOne.ServiceBus.Configuration.BatchConsumerMessageConnector`2",
+            "ViciOne.ServiceBus.Configuration.BatchConsumerMessageSpecification`2",
+            "ViciOne.ServiceBus.Configuration.BatchMessageConnectorFactory`2",
+        ];
+        Type[] runtimeTypes = runtimeTypeNames
+            .Select(typeName => ProductAssemblyFacts.Core.GetType(typeName, throwOnError: true)!)
+            .ToArray();
+        Assert.All(runtimeTypes, static type => Assert.False(type.IsPublic));
+        Assert.All(runtimeTypes.Where(static type => type.IsClass), static type => Assert.True(type.IsSealed));
+
+        Type messageBatch = runtimeTypes.Single(static type => type.Name == "MessageBatch`1");
+        Assert.All(
+            messageBatch.GetProperties(BindingFlags.Instance | BindingFlags.Public),
+            static property => Assert.Null(property.SetMethod));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-API-BASELINE", "application-root-is-exactly-the-versioned-baseline")]
     public void ApplicationApi_IsExactlyTheVersionedRootNamespaceBaseline()
     {

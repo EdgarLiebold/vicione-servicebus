@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Caching;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -26,6 +28,25 @@ public sealed class ResourceCacheObserverAndDisposalTests
         Assert.Same(expected, await index.GetAsync("one", TestContext.Current.CancellationToken));
         Assert.Equal(["add:one"], recording.Events);
         Assert.Equal(1, cache.Statistics.Count);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-OBSERVER", "diagnostic-logging-failure-does-not-stop-fanout")]
+    public async Task ObserverAndDiagnosticLoggingFailures_DoNotSkipLaterObserversAsync()
+    {
+        await using var cache = CreateCache();
+        var logger = new ThrowingLogger();
+        using var logging = new LogContextScope(logger);
+        var faulting = new DelegateObserver(onAdded: (_, _) => ValueTask.FromException(new ObserverException("add failed")));
+        var recording = new RecordingObserver();
+        using ConnectHandle firstConnection = cache.Connect(faulting);
+        using ConnectHandle secondConnection = cache.Connect(recording);
+
+        await cache.AddAsync(new Resource("one"), TestContext.Current.CancellationToken);
+
+        Assert.Equal(["add:one"], recording.Events);
+        Assert.Equal(1, cache.Statistics.Count);
+        Assert.Equal(1, logger.CallCount);
     }
 
     [Fact]
@@ -298,6 +319,25 @@ public sealed class ResourceCacheObserverAndDisposalTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-DISPOSAL", "resource-and-diagnostic-failures-do-not-stop-release")]
+    public async Task ResourceAndDiagnosticLoggingFailures_DoNotPreventRemainingResourcesFromBeingReleasedAsync()
+    {
+        var cache = CreateCache();
+        var logger = new ThrowingLogger();
+        using var logging = new LogContextScope(logger);
+        var faulting = new FaultingDisposableResource("faulting");
+        var healthy = new Resource("healthy");
+        await cache.AddAsync(faulting, TestContext.Current.CancellationToken);
+        await cache.AddAsync(healthy, TestContext.Current.CancellationToken);
+
+        await cache.DisposeAsync();
+
+        Assert.Equal(1, faulting.DisposeCount);
+        Assert.Equal(1, healthy.DisposeCount);
+        Assert.Equal(1, logger.CallCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-DISPOSAL", "timer-disposal-failure-does-not-strand-resources")]
     public async Task CleanupTimerDisposalFailure_DoesNotPreventResourceReleaseAsync()
     {
@@ -313,6 +353,27 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
         Assert.Equal(1, timeProvider.Timer.DisposeCount);
         Assert.Equal(1, resource.DisposeCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-DISPOSAL", "timer-and-diagnostic-failures-do-not-strand-resources")]
+    public async Task CleanupTimerAndDiagnosticLoggingFailures_DoNotPreventResourceReleaseAsync()
+    {
+        var logger = new ThrowingLogger();
+        using var logging = new LogContextScope(logger);
+        var timeProvider = new FaultingTimerTimeProvider();
+        var cache = new ResourceCache<Resource>(new ResourceCacheOptions(
+            maxAge: TimeSpan.FromMinutes(30),
+            timeProvider: timeProvider,
+            cleanupInterval: TimeSpan.FromHours(1)));
+        var resource = new Resource("one");
+        await cache.AddAsync(resource, TestContext.Current.CancellationToken);
+
+        await cache.DisposeAsync();
+
+        Assert.Equal(1, timeProvider.Timer.DisposeCount);
+        Assert.Equal(1, resource.DisposeCount);
+        Assert.Equal(1, logger.CallCount);
     }
 
     private static ResourceCache<T> CreateCache<T>(int capacity = 32)
@@ -490,4 +551,38 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
     private sealed class ObserverException(string message) : Exception(message);
     private sealed class DisposalException(string message) : Exception(message);
+
+    private sealed class LogContextScope : IDisposable
+    {
+        private readonly ViciOne.ServiceBus.Logging.ILogContext? _previous = LogContext.Current;
+
+        public LogContextScope(ILogger logger)
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+        }
+
+        public void Dispose()
+        {
+            LogContext.Current = _previous;
+        }
+    }
+
+    private sealed class ThrowingLogger : ILogger
+    {
+        private int _callCount;
+
+        public int CallCount => Volatile.Read(ref _callCount);
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            Interlocked.Increment(ref _callCount);
+            throw new InvalidOperationException("Diagnostic logger failure.");
+        }
+    }
 }

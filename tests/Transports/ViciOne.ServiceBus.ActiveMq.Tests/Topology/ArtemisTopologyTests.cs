@@ -1,6 +1,5 @@
 using ViciOne.ServiceBus.ActiveMq.Configuration;
 using ViciOne.ServiceBus.ActiveMq.Topology;
-using ViciOne.ServiceBus.Introspection;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 

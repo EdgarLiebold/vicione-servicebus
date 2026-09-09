@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Logging;
+using System.Reflection;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -133,6 +136,194 @@ public sealed class RequestClientLifecycleTests
         await Assert.ThrowsAsync<TaskCanceledException>(() => original);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "pre-canceled-handle-never-starts-send")]
+    public async Task PreCanceledHandle_PreservesTheCallerTokenWithoutStartingTheSendAsync()
+    {
+        var context = new RecordingClientFactoryContext(TimeProvider.System, RequestTimeout.After(m: 1));
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        var sendCount = 0;
+        using var handle = new ClientRequestHandle<LifecycleRequest>(
+            context,
+            (_, _, _) =>
+            {
+                Interlocked.Increment(ref sendCount);
+                return Task.FromResult(new LifecycleRequest("unexpected"));
+            },
+            cancellation.Token,
+            RequestTimeout.After(m: 1));
+
+        TaskCanceledException responseCancellation = await Assert.ThrowsAsync<TaskCanceledException>(
+            () => handle.GetResponseAsync<LifecycleResponse>(true, CancellationToken.None));
+        TaskCanceledException messageCancellation = await Assert.ThrowsAsync<TaskCanceledException>(
+            () => handle.Message);
+
+        Assert.Equal(cancellation.Token, responseCancellation.CancellationToken);
+        Assert.Equal(cancellation.Token, messageCancellation.CancellationToken);
+        Assert.Equal(0, sendCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "response-wait-token-remains-effective")]
+    public async Task ResponseWaitCancellation_PreservesItsOwnTokenAfterTheRequestWasSentAsync()
+    {
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        var context = new RecordingClientFactoryContext(timeProvider, RequestTimeout.After(m: 1));
+        var request = new LifecycleRequest("separate-response-wait");
+        using var handle = new ClientRequestHandle<LifecycleRequest>(
+            context,
+            async (_, pipe, cancellationToken) =>
+            {
+                await pipe.SendAsync(new MessageSendContext<LifecycleRequest>(request, cancellationToken));
+                return request;
+            },
+            timeout: RequestTimeout.After(m: 1));
+        using var responseCancellation = new CancellationTokenSource();
+        Task<Response<LifecycleResponse>> response = handle.GetResponseAsync<LifecycleResponse>(true, responseCancellation.Token);
+        await timeProvider.WaitForTimerCountAsync(1);
+
+        responseCancellation.Cancel();
+
+        TaskCanceledException actual = await Assert.ThrowsAsync<TaskCanceledException>(() =>
+            response.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+        Assert.Equal(responseCancellation.Token, actual.CancellationToken);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "cancel-during-send-cannot-leak-late-timer")]
+    public async Task CancellationDuringTheSendPipeline_DisposesATimeoutTimerCreatedAfterCancellationAsync()
+    {
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        var context = new RecordingClientFactoryContext(timeProvider, RequestTimeout.After(m: 1));
+        var request = new LifecycleRequest("late-timer");
+        using var cancellation = new CancellationTokenSource();
+        var pipeEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releasePipe = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var handle = new ClientRequestHandle<LifecycleRequest>(
+            context,
+            async (_, pipe, cancellationToken) =>
+            {
+                await pipe.SendAsync(new MessageSendContext<LifecycleRequest>(request, cancellationToken));
+                return request;
+            },
+            cancellation.Token,
+            RequestTimeout.After(m: 1));
+        handle.UseExecuteAwaited(async _ =>
+        {
+            pipeEntered.TrySetResult();
+            await releasePipe.Task;
+        });
+        Task<Response<LifecycleResponse>> response = handle.GetResponseAsync<LifecycleResponse>(true, CancellationToken.None);
+        await pipeEntered.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+
+        cancellation.Cancel();
+        try
+        {
+            TaskCanceledException actual = await Assert.ThrowsAsync<TaskCanceledException>(() =>
+                response.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+            Assert.Equal(cancellation.Token, actual.CancellationToken);
+        }
+        finally
+        {
+            releasePipe.TrySetResult();
+        }
+        await timeProvider.WaitForTimerCountAsync(1);
+
+        Assert.Equal(1, timeProvider.TimerCount);
+        Assert.Equal(0, timeProvider.ActiveTimerCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "cleanup-and-diagnostic-failures-do-not-stop-cancel")]
+    public async Task Cancellation_WhenTimerHandlerAndDiagnosticCleanupFail_StillDisconnectsEveryHandlerAsync()
+    {
+        var timeProvider = new FaultingTimerTimeProvider();
+        var context = new CleanupFailureClientFactoryContext(timeProvider);
+        var logger = new ThrowingLogger();
+        var previousLogContext = LogContext.Current;
+        LogContext.ConfigureCurrentLogContext(logger);
+        using var cancellation = new CancellationTokenSource();
+        var request = new LifecycleRequest("cleanup-failures");
+
+        try
+        {
+            using var handle = new ClientRequestHandle<LifecycleRequest>(
+                context,
+                async (_, pipe, cancellationToken) =>
+                {
+                    await pipe.SendAsync(new MessageSendContext<LifecycleRequest>(request, cancellationToken));
+                    return request;
+                },
+                cancellation.Token,
+                RequestTimeout.After(m: 1));
+            Task<Response<LifecycleResponse>> response = handle.GetResponseAsync<LifecycleResponse>(true, CancellationToken.None);
+            await timeProvider.TimerCreated.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+
+            cancellation.Cancel();
+
+            TaskCanceledException actual = await Assert.ThrowsAsync<TaskCanceledException>(() =>
+                response.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+            await context.AllDisconnectsAttempted.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+
+            Assert.Equal(cancellation.Token, actual.CancellationToken);
+            Assert.Equal(1, timeProvider.Timer.DisposeCount);
+            Assert.Equal(2, context.DisconnectCount);
+            Assert.Equal(2, logger.CallCount);
+        }
+        finally
+        {
+            LogContext.Current = previousLogContext;
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "terminal-cleanup-releases-send-cancellation-source")]
+    public async Task DisposingACompletedHandle_ReleasesItsSendCancellationSourceAsync()
+    {
+        var context = new RecordingClientFactoryContext(TimeProvider.System, RequestTimeout.After(m: 1));
+        var request = new LifecycleRequest("dispose-cancellation-source");
+        var handle = new ClientRequestHandle<LifecycleRequest>(
+            context,
+            (_, _, _) => Task.FromResult(request),
+            timeout: RequestTimeout.After(m: 1));
+        Task<Response<LifecycleResponse>> response = handle.GetResponseAsync<LifecycleResponse>(true, CancellationToken.None);
+        Assert.Same(request, await handle.Message);
+
+        FieldInfo? sourceField = typeof(ClientRequestHandle<LifecycleRequest>).GetField(
+            "_cancellationTokenSource",
+            BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.NotNull(sourceField);
+        var source = Assert.IsType<CancellationTokenSource>(sourceField.GetValue(handle));
+
+        handle.Dispose();
+
+        await Assert.ThrowsAsync<TaskCanceledException>(() =>
+            response.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+        await AssertSourceIsDisposedAsync(source);
+    }
+
+    private static async Task AssertSourceIsDisposedAsync(CancellationTokenSource source)
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+        while (!timeout.IsCancellationRequested)
+        {
+            try
+            {
+                _ = source.Token;
+            }
+            catch (ObjectDisposedException)
+            {
+                return;
+            }
+
+            await Task.Yield();
+        }
+
+        Assert.Fail("The request handle did not dispose its send cancellation source after terminal cleanup.");
+    }
+
     public enum TerminalOutcome
     {
         CallerCancellation,
@@ -178,4 +369,125 @@ public sealed class RequestClientLifecycleTests
             ConsumeContext? consumeContext = default)
             where T : class => throw new NotSupportedException();
     }
+
+    private sealed class CleanupFailureClientFactoryContext(TimeProvider timeProvider) : ClientFactoryContext
+    {
+        private readonly TaskCompletionSource _allDisconnectsAttempted =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _connectionCount;
+        private int _disconnectCount;
+
+        public Task AllDisconnectsAttempted => _allDisconnectsAttempted.Task;
+
+        public int DisconnectCount => Volatile.Read(ref _disconnectCount);
+
+        public RequestTimeout DefaultTimeout => RequestTimeout.After(m: 1);
+
+        public TimeProvider TimeProvider { get; } = timeProvider;
+
+        public IMessageRouteTable MessageRoutes { get; } = new MessageRouteTable();
+
+        public Uri ResponseAddress { get; } = new("loopback://localhost/cleanup-response");
+
+        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
+            where T : class => CreateConnection();
+
+        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
+            where T : class => CreateConnection();
+
+        public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
+            where T : class => CreateConnection();
+
+        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
+            where T : class => throw new NotSupportedException();
+
+        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
+            where T : class => throw new NotSupportedException();
+
+        private ConnectHandle CreateConnection()
+        {
+            int connection = Interlocked.Increment(ref _connectionCount);
+            return new CleanupConnectHandle(this, throwOnDisconnect: connection == 2);
+        }
+
+        private void RecordDisconnect(bool throwOnDisconnect)
+        {
+            if (Interlocked.Increment(ref _disconnectCount) == 2)
+                _allDisconnectsAttempted.TrySetResult();
+
+            if (throwOnDisconnect)
+                throw new CleanupFailureException("Response handler disconnect failed.");
+        }
+
+        private sealed class CleanupConnectHandle(CleanupFailureClientFactoryContext owner, bool throwOnDisconnect) : ConnectHandle
+        {
+            private int _disconnected;
+
+            public void Disconnect()
+            {
+                if (Interlocked.Exchange(ref _disconnected, 1) == 0)
+                    owner.RecordDisconnect(throwOnDisconnect);
+            }
+
+            public void Dispose() => Disconnect();
+        }
+    }
+
+    private sealed class FaultingTimerTimeProvider : TimeProvider
+    {
+        private readonly TaskCompletionSource _timerCreated =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public FaultingTimer Timer { get; } = new();
+
+        public Task TimerCreated => _timerCreated.Task;
+
+        public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period)
+        {
+            _timerCreated.TrySetResult();
+            return Timer;
+        }
+
+        public sealed class FaultingTimer : ITimer
+        {
+            private int _disposeCount;
+
+            public int DisposeCount => Volatile.Read(ref _disposeCount);
+
+            public bool Change(TimeSpan dueTime, TimeSpan period) => true;
+
+            public void Dispose()
+            {
+                Interlocked.Increment(ref _disposeCount);
+                throw new CleanupFailureException("Request timer disposal failed.");
+            }
+
+            public ValueTask DisposeAsync()
+            {
+                Dispose();
+                return default;
+            }
+        }
+    }
+
+    private sealed class ThrowingLogger : ILogger
+    {
+        private int _callCount;
+
+        public int CallCount => Volatile.Read(ref _callCount);
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            Interlocked.Increment(ref _callCount);
+            throw new InvalidOperationException("Diagnostic logger failure.");
+        }
+    }
+
+    private sealed class CleanupFailureException(string message) : Exception(message);
 }

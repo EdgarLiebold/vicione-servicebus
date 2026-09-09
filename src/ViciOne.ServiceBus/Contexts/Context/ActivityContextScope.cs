@@ -14,9 +14,9 @@ public abstract class ActivityContextScope :
 
     /// <summary>Initializes the scope for the specified activity context.</summary>
     /// <param name="activityContext">The activity context.</param>
-    /// <param name="payloads">The payloads.</param>
+    /// <param name="payloads">The payloads visible within this activity scope.</param>
     protected ActivityContextScope(ActivityContext activityContext, params object[] payloads)
-        : base(activityContext, payloads)
+        : base(activityContext ?? throw new ArgumentNullException(nameof(activityContext)), payloads)
     {
         _activityContext = activityContext;
     }

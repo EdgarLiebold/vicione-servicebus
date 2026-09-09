@@ -331,7 +331,7 @@ public abstract class BaseConsumeContext :
     Task RespondInternalAsync<T>(T message, IPipe<SendContext<T>>? pipe = null)
         where T : class
     {
-        Task<ISendEndpoint> sendEndpointTask = this.GetResponseEndpointAsync<T>();
+        Task<ISendEndpoint> sendEndpointTask = this.GetResponseEndpointAsync<T>(CancellationToken);
         if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
         {
             var sendEndpoint = sendEndpointTask.Result;
@@ -357,7 +357,7 @@ public abstract class BaseConsumeContext :
     Task RespondInternalAsync<T>(object values, IPipe<SendContext<T>>? pipe = null)
         where T : class
     {
-        Task<ISendEndpoint> sendEndpointTask = this.GetResponseEndpointAsync<T>();
+        Task<ISendEndpoint> sendEndpointTask = this.GetResponseEndpointAsync<T>(CancellationToken);
         if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
         {
             var sendEndpoint = sendEndpointTask.Result;

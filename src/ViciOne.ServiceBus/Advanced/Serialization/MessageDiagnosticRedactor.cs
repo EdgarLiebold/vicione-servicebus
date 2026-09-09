@@ -1,8 +1,8 @@
 using System;
 using System.Globalization;
 
-
 namespace ViciOne.ServiceBus.Advanced.Serialization;
+
 /// <summary>Conservative bounded rendering that never invokes arbitrary application <see cref="object.ToString"/> implementations.</summary>
 public sealed class MessageDiagnosticRedactor : IMessageDiagnosticRedactor
 {

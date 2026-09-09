@@ -1,7 +1,7 @@
 using System.Reflection;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using ViciOne.ServiceBus.Configuration;
-using ViciOne.ServiceBus.Diagnostics;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;

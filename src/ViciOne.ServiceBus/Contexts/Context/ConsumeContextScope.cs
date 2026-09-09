@@ -6,33 +6,34 @@ using ViciOne.ServiceBus.Payloads;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Defines the lifetime scope for consume context.</summary>
+/// <summary>Adds a local payload scope to a consume context.</summary>
 public class ConsumeContextScope :
     ConsumeContextProxy
 {
     readonly ConsumeContext _context;
     IPayloadCache? _payloadCache;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates an initially empty payload scope.</summary>
+    /// <param name="context">The consume context to wrap.</param>
     public ConsumeContextScope(ConsumeContext context)
-        : base(context.Advanced())
+        : base((context ?? throw new ArgumentNullException(nameof(context))).Advanced())
     {
         _context = context;
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="payloads">The payloads.</param>
+    /// <summary>Creates a payload scope initialized with the supplied values.</summary>
+    /// <param name="context">The consume context to wrap.</param>
+    /// <param name="payloads">The payloads visible within this scope.</param>
     public ConsumeContextScope(ConsumeContext context, params object[] payloads)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
         _context = context;
+        ArgumentNullException.ThrowIfNull(payloads);
 
         _payloadCache = new ListPayloadCache(payloads);
     }
 
-    /// <summary>Gets the cancellation token.</summary>
+    /// <inheritdoc />
     public override CancellationToken CancellationToken => _context.CancellationToken;
 
     IPayloadCache PayloadCache
@@ -43,18 +44,14 @@ public class ConsumeContextScope :
         }
     }
 
-    /// <summary>Determines whether the current value has payload type.</summary>
-    /// <param name="payloadType">The runtime payload type used by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public override bool HasPayloadType(Type payloadType)
     {
+        ArgumentNullException.ThrowIfNull(payloadType);
         return payloadType.IsInstanceOfType(this) || PayloadCache.HasPayloadType(payloadType) || _context.HasPayloadType(payloadType);
     }
 
-    /// <summary>Attempts to get payload.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="payload">Receives the payload produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <inheritdoc />
     public override bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
         where T : class
     {
@@ -67,12 +64,11 @@ public class ConsumeContextScope :
         return PayloadCache.TryGetPayload(out payload) || _context.TryGetPayload(out payload);
     }
 
-    /// <summary>Gets or add payload.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="payloadFactory">The payload factory.</param>
-    /// <returns>The or add payload.</returns>
+    /// <inheritdoc />
     public override T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
     {
+        ArgumentNullException.ThrowIfNull(payloadFactory);
+
         if (this is T context)
             return context;
 
@@ -85,13 +81,12 @@ public class ConsumeContextScope :
         return PayloadCache.GetOrAddPayload(payloadFactory);
     }
 
-    /// <summary>Adds or update payload to the configuration.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="addFactory">The add factory.</param>
-    /// <param name="updateFactory">The update factory.</param>
-    /// <returns>The t produced by the operation.</returns>
+    /// <inheritdoc />
     public override T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
     {
+        ArgumentNullException.ThrowIfNull(addFactory);
+        ArgumentNullException.ThrowIfNull(updateFactory);
+
         if (this is T context)
             return context;
 
@@ -112,9 +107,8 @@ public class ConsumeContextScope :
     }
 }
 
-
-/// <summary>Defines the lifetime scope for consume context.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Adds a local payload scope to a typed consume context.</summary>
+/// <typeparam name="TMessage">The consumed message contract.</typeparam>
 public class ConsumeContextScope<TMessage> :
     ConsumeContextScope,
     ConsumeContext<TMessage>
@@ -122,42 +116,33 @@ public class ConsumeContextScope<TMessage> :
 {
     readonly ConsumeContext<TMessage> _context;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates an initially empty typed payload scope.</summary>
+    /// <param name="context">The typed consume context to wrap.</param>
     public ConsumeContextScope(ConsumeContext<TMessage> context)
-        : base(context.Advanced())
+        : base((context ?? throw new ArgumentNullException(nameof(context))).Advanced())
     {
         _context = context;
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="payloads">The payloads.</param>
+    /// <summary>Creates a typed payload scope initialized with the supplied values.</summary>
+    /// <param name="context">The typed consume context to wrap.</param>
+    /// <param name="payloads">The payloads visible within this scope.</param>
     public ConsumeContextScope(ConsumeContext<TMessage> context, params object[] payloads)
-        : base(context.Advanced(), payloads)
+        : base((context ?? throw new ArgumentNullException(nameof(context))).Advanced(), payloads)
     {
         _context = context;
     }
 
-    /// <summary>Gets the message.</summary>
+    /// <inheritdoc />
     public TMessage Message => _context.Message;
 
-    /// <summary>Reports that notify has been consumed.</summary>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public virtual Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
         return NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Reports that notify has faulted.</summary>
-    /// <param name="duration">The duration.</param>
-    /// <param name="consumerType">The runtime consumer type used by the operation.</param>
-    /// <param name="exception">The exception associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     public virtual Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
         return NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);

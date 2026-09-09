@@ -54,8 +54,8 @@ internal sealed class ConfigureBusHealthCheckServiceOptions :
                 if (healthCheckOptions.MinimalFailureStatus.HasValue)
                     minimalFailureStatus = healthCheckOptions.MinimalFailureStatus.Value;
 
-                if (healthCheckOptions.Tags.Any())
-                    tags = healthCheckOptions.Tags;
+                if (healthCheckOptions.Tags.Count > 0)
+                    tags = new HashSet<string>(healthCheckOptions.Tags, StringComparer.OrdinalIgnoreCase);
             }
 
             options.Registrations.Add(new HealthCheckRegistration(

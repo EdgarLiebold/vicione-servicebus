@@ -18,6 +18,6 @@ internal sealed class ReceiveTransportReadyEvent :
     /// <summary>Gets the transport's input address.</summary>
     public Uri InputAddress { get; }
 
-    /// <summary>Gets whether this notification follows transport startup.</summary>
+    /// <summary>Gets a value indicating whether this notification follows transport startup.</summary>
     public bool IsStarted { get; }
 }

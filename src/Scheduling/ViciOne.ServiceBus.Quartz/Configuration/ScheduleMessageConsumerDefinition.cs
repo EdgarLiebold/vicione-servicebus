@@ -31,10 +31,10 @@ internal sealed class ScheduleMessageConsumerDefinition<TBus> :
         endpointConfigurator.UseTechnicalMessageRetry();
 
         consumerConfigurator.Message<ScheduleMessage>(message =>
-            message.UsePartitioner(_endpointDefinition.Partition, context => context.Message.TokenId));
+            message.UsePartitioner(_endpointDefinition.Partitioner, context => context.Message.TokenId));
 
         consumerConfigurator.Message<ScheduleRecurringMessage>(message =>
-            message.UsePartitioner(_endpointDefinition.Partition, context => Runtime.QuartzTriggerKey.GetPartitionKey(
+            message.UsePartitioner(_endpointDefinition.Partitioner, context => Runtime.QuartzTriggerKey.GetPartitionKey(
                 context.Message.Schedule.ScheduleId,
                 context.Message.Schedule.ScheduleGroup)));
     }

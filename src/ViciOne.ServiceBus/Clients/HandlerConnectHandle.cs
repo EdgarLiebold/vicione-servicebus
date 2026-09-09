@@ -4,26 +4,25 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>Controls the lifetime of handler connect.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Owns one typed response-handler registration and its response task.</summary>
+/// <typeparam name="T">The response message contract.</typeparam>
 internal interface HandlerConnectHandle<T> :
     HandlerConnectHandle
     where T : class
 {
-    /// <summary>Gets the task.</summary>
+    /// <summary>Gets the task that completes with the matching response.</summary>
     Task<Response<T>> Task { get; }
 }
 
-
-/// <summary>Controls the lifetime of handler connect.</summary>
+/// <summary>Completes and disconnects one response-handler registration.</summary>
 internal interface HandlerConnectHandle :
     ConnectHandle
 {
-    /// <summary>Attempts to set exception.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Attempts to complete the response handler with a request failure.</summary>
+    /// <param name="exception">The request failure.</param>
     void TrySetException(Exception exception);
 
-    /// <summary>Attempts to set canceled.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Attempts to cancel the response handler with the originating token.</summary>
+    /// <param name="cancellationToken">The token that canceled response waiting.</param>
     void TrySetCanceled(CancellationToken cancellationToken);
 }

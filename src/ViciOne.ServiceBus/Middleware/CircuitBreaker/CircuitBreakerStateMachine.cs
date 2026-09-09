@@ -10,7 +10,7 @@ internal sealed class CircuitBreakerStateMachine
 
     public CircuitBreakerStateMachine(CircuitBreakerSettings settings)
     {
-        _settings = settings;
+        _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         _state = new ClosedState(settings.TimeProvider.GetTimestamp());
     }
 
@@ -31,7 +31,7 @@ internal sealed class CircuitBreakerStateMachine
                             continue;
                     }
 
-                    Interlocked.Increment(ref ((ClosedState)state).AttemptCount);
+                    SaturatingIncrement(ref ((ClosedState)state).AttemptCount);
                     return new CircuitBreakerLease(state);
 
                 case OpenState open:
@@ -124,7 +124,7 @@ internal sealed class CircuitBreakerStateMachine
         if (!ReferenceEquals(Volatile.Read(ref _state), closed))
             return;
 
-        int failures = Interlocked.Increment(ref closed.FailureCount);
+        int failures = SaturatingIncrement(ref closed.FailureCount);
         int attempts = Volatile.Read(ref closed.AttemptCount);
         if (attempts < _settings.MinimumThroughput || failures / (double)attempts < _settings.FailureRatio)
             return;
@@ -158,6 +158,21 @@ internal sealed class CircuitBreakerStateMachine
     {
         TimeSpan remaining = open.Duration - _settings.TimeProvider.GetElapsedTime(open.OpenedAt);
         return remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero;
+    }
+
+    private static int SaturatingIncrement(ref int value)
+    {
+        int current = Volatile.Read(ref value);
+        while (current < int.MaxValue)
+        {
+            int observed = Interlocked.CompareExchange(ref value, current + 1, current);
+            if (observed == current)
+                return current + 1;
+
+            current = observed;
+        }
+
+        return int.MaxValue;
     }
 
     internal abstract class State;

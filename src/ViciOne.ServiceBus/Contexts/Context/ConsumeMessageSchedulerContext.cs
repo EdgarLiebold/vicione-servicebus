@@ -23,7 +23,8 @@ public sealed class ConsumeMessageSchedulerContext :
 
         SchedulerFactory = schedulerFactory;
 
-        _scheduler = new Lazy<IMessageScheduler>(() => schedulerFactory(consumeContext));
+        _scheduler = new Lazy<IMessageScheduler>(() => schedulerFactory(consumeContext)
+            ?? throw new InvalidOperationException("The message scheduler factory returned null."));
     }
 
     /// <inheritdoc />

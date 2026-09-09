@@ -45,7 +45,7 @@ public sealed partial class ResourceCache<TValue>
                 catch (Exception exception)
                 {
                     // Observation is downstream of an irreversible commit and cannot roll it back.
-                    LogContext.Warning?.Log(exception, faultMessage);
+                    LogWarningSafely(exception, faultMessage);
                 }
             }
         }

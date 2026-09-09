@@ -2,16 +2,13 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Exposes state for transport receive operations.</summary>
+/// <summary>Exposes transport-specific metadata required for diagnostics and scheduled-message replay.</summary>
 public interface TransportReceiveContext
 {
-    /// <summary>Gets the activity system.</summary>
+    /// <summary>Gets the OpenTelemetry messaging-system identifier, or an empty value when the transport has no explicit identifier.</summary>
     string ActivitySystem => string.Empty;
 
-    /// <summary>
-    /// Write any transport-specific properties to the dictionary so that they can be
-    /// restored on subsequent outgoing messages (scheduled).
-    /// </summary>
-    /// <returns>The transport properties.</returns>
+    /// <summary>Gets transport properties that must be retained when the message is replayed.</summary>
+    /// <returns>The retained transport properties, or <see langword="null" /> when none are required.</returns>
     IDictionary<string, object>? GetTransportProperties();
 }

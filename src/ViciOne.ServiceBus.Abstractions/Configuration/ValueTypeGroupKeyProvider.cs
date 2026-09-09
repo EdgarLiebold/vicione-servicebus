@@ -2,29 +2,31 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides value type group key services.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-/// <typeparam name="TKey">The key used for lookup.</typeparam>
-public class ValueTypeGroupKeyProvider<TMessage, TKey> :
+/// <summary>Adapts a nullable value-type grouping selector to the batch grouping contract.</summary>
+/// <typeparam name="TMessage">The message contract supplied to the selector.</typeparam>
+/// <typeparam name="TKey">The value-type grouping key.</typeparam>
+public sealed class ValueTypeGroupKeyProvider<TMessage, TKey> :
     IGroupKeyProvider<TMessage, TKey>
     where TMessage : class
     where TKey : struct
 {
     readonly Func<ConsumeContext<TMessage>, TKey?> _provider;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <summary>Creates a grouping-key provider from the supplied selector.</summary>
+    /// <param name="provider">The selector evaluated for each message context.</param>
     public ValueTypeGroupKeyProvider(Func<ConsumeContext<TMessage>, TKey?> provider)
     {
-        _provider = provider;
+        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
     }
 
-    /// <summary>Attempts to get key.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="key">Receives the key produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Evaluates the selector and reports whether it returned a key.</summary>
+    /// <param name="context">The message context supplied to the selector.</param>
+    /// <param name="key">Receives the selected key when one exists.</param>
+    /// <returns><see langword="true" /> for a present key; otherwise, <see langword="false" />.</returns>
     public bool TryGetKey(ConsumeContext<TMessage> context, out TKey key)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         TKey? property = _provider(context);
 
         if (property.HasValue)

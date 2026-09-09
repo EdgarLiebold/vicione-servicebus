@@ -9,12 +9,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SQS;
 using Amazon.SQS.Model;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AmazonSqs.Middleware;
+
 /// <summary>Long-polls Amazon SQS and dispatches received messages through the endpoint pipeline.</summary>
 public sealed class AmazonSqsMessageReceiver :
     ConsumerAgent<string>
@@ -189,12 +191,12 @@ public sealed class AmazonSqsMessageReceiver :
 
         public FifoPartitionedTaskExecutor(ReceiveSettings receiveSettings)
         {
-            IHashGenerator hashGenerator = new Murmur3UnsafeHashGenerator();
+            IPartitionHashGenerator hashGenerator = new Murmur3PartitionHashGenerator();
             int partitionCapacity = Math.Max(
                 1,
                 (receiveSettings.PrefetchCount + receiveSettings.ConcurrentMessageLimit - 1) / receiveSettings.ConcurrentMessageLimit);
-            _keyExecutorPool = new PartitionedTaskExecutor<Message>(MessageGroupIdProvider, hashGenerator,
-                receiveSettings.ConcurrentMessageLimit, receiveSettings.ConcurrentDeliveryLimit, partitionCapacity);
+            _keyExecutorPool = new PartitionedTaskExecutor<Message>(MessageGroupIdProvider,
+                receiveSettings.ConcurrentMessageLimit, receiveSettings.ConcurrentDeliveryLimit, partitionCapacity, hashGenerator);
         }
 
         public Task EnqueueAsync(Message result, Func<Task> handle, CancellationToken cancellationToken)

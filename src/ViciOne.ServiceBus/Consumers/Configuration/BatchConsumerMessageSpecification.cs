@@ -5,13 +5,12 @@ using System.Linq;
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
-/// Configures the pipe for a consumer/message combination within a consumer configuration
-/// block. Does not add any handlers to the message pipe standalone, everything is within
-/// the consumer pipe segment.
+/// Builds the individual-message collection pipe and completed-batch consumer pipe for one
+/// batch consumer contract.
 /// </summary>
-/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class BatchConsumerMessageSpecification<TConsumer, TMessage> :
+/// <typeparam name="TConsumer">The consumer that receives completed batches.</typeparam>
+/// <typeparam name="TMessage">The message contract collected into batches.</typeparam>
+internal sealed class BatchConsumerMessageSpecification<TConsumer, TMessage> :
     IConsumerMessageSpecification<TConsumer, Batch<TMessage>>,
     IConsumerMessageConfigurator<TConsumer, TMessage>
     where TMessage : class
@@ -23,7 +22,7 @@ public class BatchConsumerMessageSpecification<TConsumer, TMessage> :
     readonly ConsumerConfigurationObservable _observers;
     readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates independent configurators for the individual-message and batch-message pipeline segments.</summary>
     public BatchConsumerMessageSpecification()
     {
         _batchConfigurator = new PipeConfigurator<ConsumerConsumeContext<TConsumer, Batch<TMessage>>>();
@@ -33,15 +32,15 @@ public class BatchConsumerMessageSpecification<TConsumer, TMessage> :
         _observers = new ConsumerConfigurationObservable();
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Adds middleware to the individual-message consumer segment.</summary>
+    /// <param name="specification">The middleware specification to add.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer, TMessage>> specification)
     {
         _consumerSpecification.AddPipeSpecification(specification);
     }
 
-    /// <summary>Applies the message configuration.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Applies configuration to the individual-message consumer contract.</summary>
+    /// <param name="configure">The message configuration callback.</param>
     public void Message(Action<IConsumerMessageConfigurator<TMessage>> configure)
     {
         _consumerSpecification.Message(configure);
@@ -63,14 +62,14 @@ public class BatchConsumerMessageSpecification<TConsumer, TMessage> :
             .ToArray();
     }
 
-    /// <summary>Gets the message type.</summary>
+    /// <summary>Gets the individual message type collected by this specification.</summary>
     public Type MessageType => typeof(TMessage);
 
-    /// <summary>Attempts to get message specification.</summary>
-    /// <typeparam name="TC">The c type.</typeparam>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="specification">Receives the specification produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Finds either this completed-batch specification or the nested individual-message specification.</summary>
+    /// <typeparam name="TC">The requested consumer type.</typeparam>
+    /// <typeparam name="T">The requested message type.</typeparam>
+    /// <param name="specification">Receives the matching specification when one exists.</param>
+    /// <returns><see langword="true" /> when a matching specification exists; otherwise, <see langword="false" />.</returns>
     public bool TryGetMessageSpecification<TC, T>([NotNullWhen(true)] out IConsumerMessageSpecification<TC, T>? specification)
         where T : class
         where TC : class
@@ -80,23 +79,23 @@ public class BatchConsumerMessageSpecification<TConsumer, TMessage> :
             || _consumerSpecification.TryGetMessageSpecification(out specification);
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Adds middleware to the completed-batch consumer segment.</summary>
+    /// <param name="specification">The middleware specification to add.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer, Batch<TMessage>>> specification)
     {
         _batchConfigurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Adds middleware to the completed-batch message segment.</summary>
+    /// <param name="specification">The middleware specification to add.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumeContext<Batch<TMessage>>> specification)
     {
         _batchMessagePipeConfigurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>Builds the configured component.</summary>
-    /// <param name="consumeFilter">The consume filter.</param>
-    /// <returns>The configured component.</returns>
+    /// <summary>Builds the completed-batch consumer segment with its terminal consume filter.</summary>
+    /// <param name="consumeFilter">The terminal filter that invokes the application consumer.</param>
+    /// <returns>The completed-batch consumer pipe.</returns>
     public IPipe<ConsumerConsumeContext<TConsumer, Batch<TMessage>>> Build(IFilter<ConsumerConsumeContext<TConsumer, Batch<TMessage>>> consumeFilter)
     {
         _batchConfigurator.UseFilter(consumeFilter);
@@ -104,9 +103,9 @@ public class BatchConsumerMessageSpecification<TConsumer, TMessage> :
         return _batchConfigurator.Build();
     }
 
-    /// <summary>Builds message pipe.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The configured message pipe.</returns>
+    /// <summary>Builds the completed-batch message segment after applying final connector configuration.</summary>
+    /// <param name="configure">The final message-pipe configuration callback.</param>
+    /// <returns>The completed-batch message pipe.</returns>
     public IPipe<ConsumeContext<Batch<TMessage>>> BuildMessagePipe(Action<IPipeConfigurator<ConsumeContext<Batch<TMessage>>>> configure)
     {
         configure?.Invoke(_batchMessagePipeConfigurator);
@@ -114,23 +113,23 @@ public class BatchConsumerMessageSpecification<TConsumer, TMessage> :
         return _batchMessagePipeConfigurator.Build();
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Projects consumer-wide middleware onto the completed-batch consumer segment.</summary>
+    /// <param name="specification">The consumer-wide middleware specification to project.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer>> specification)
     {
         _batchConfigurator.AddPipeSpecification(new ConsumerPipeSpecificationProxy<TConsumer, Batch<TMessage>>(specification));
     }
 
-    /// <summary>Connects consumer configuration observer.</summary>
-    /// <param name="observer">The observer to connect.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
+    /// <summary>Connects an observer to batch consumer configuration events.</summary>
+    /// <param name="observer">The observer to register.</param>
+    /// <returns>A handle that disconnects the observer.</returns>
     public ConnectHandle ConnectConsumerConfigurationObserver(IConsumerConfigurationObserver observer)
     {
         return _observers.Connect(observer);
     }
 
-    /// <summary>Applies the message configuration.</summary>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Applies configuration to the completed-batch message segment.</summary>
+    /// <param name="configure">The completed-batch configuration callback.</param>
     public void Message(Action<IConsumerMessageConfigurator<Batch<TMessage>>> configure)
     {
         configure?.Invoke(new ConsumerMessageConfigurator(_batchMessagePipeConfigurator));

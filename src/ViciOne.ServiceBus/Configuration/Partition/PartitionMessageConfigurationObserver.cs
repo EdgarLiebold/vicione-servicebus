@@ -1,42 +1,44 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Observes partition message configuration events.</summary>
-public class PartitionMessageConfigurationObserver :
+/// <summary>Adds correlation-based partitioning to every non-batch message type configured on a consume pipeline.</summary>
+internal sealed class PartitionMessageConfigurationObserver :
     ConfigurationObserver,
     IMessageConfigurationObserver
 {
     readonly IPartitioner _partitioner;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="partitioner">The partitioner.</param>
+    /// <summary>Creates and connects an observer backed by one shared partitioner.</summary>
+    /// <param name="configurator">The consume pipeline whose message configurations are observed.</param>
+    /// <param name="partitioner">The partitioner shared by all observed message types.</param>
     public PartitionMessageConfigurationObserver(IConsumePipeConfigurator configurator, IPartitioner partitioner)
         : base(configurator)
     {
-        _partitioner = partitioner;
+        _partitioner = partitioner ?? throw new ArgumentNullException(nameof(partitioner));
 
         Connect(this);
     }
 
-    /// <summary>Reports that message has been configured.</summary>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Adds correlation-based partitioning to a newly configured message pipeline.</summary>
+    /// <typeparam name="TMessage">The configured message type.</typeparam>
+    /// <param name="configurator">The consume pipeline that owns the message pipeline.</param>
     public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         var specification = new PartitionMessageSpecification<TMessage>(_partitioner);
 
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>Reports that batch consumer has been configured.</summary>
-    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Leaves a batch pipeline unpartitioned because a batch has no single element correlation key.</summary>
+    /// <typeparam name="TConsumer">The batch consumer implementation.</typeparam>
+    /// <typeparam name="TMessage">The message type contained by the batch.</typeparam>
+    /// <param name="configurator">The batch consumer pipeline left unchanged.</param>
     public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
+        where TConsumer : class
+        where TMessage : class
     {
-        var specification = new PartitionMessageSpecification<Batch<TMessage>>(_partitioner);
-
-        configurator.Message(m => m.AddPipeSpecification(specification));
+        ArgumentNullException.ThrowIfNull(configurator);
     }
 }

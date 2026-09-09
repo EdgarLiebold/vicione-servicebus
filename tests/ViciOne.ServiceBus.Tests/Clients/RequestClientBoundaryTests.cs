@@ -1,6 +1,5 @@
 using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.Internals;
-using ViciOne.ServiceBus.Introspection;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Util;
 using Xunit;
@@ -111,6 +110,41 @@ public sealed class RequestClientBoundaryTests
             new ClientRequestHandle<BoundaryRequest>(context, null!)).ParamName);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-CLIENT-BOUNDARY", "pre-canceled-send-skips-endpoint-resolution")]
+    public async Task PreCanceledRequestSend_SkipsEndpointResolutionAndPreservesTheTokenAsync()
+    {
+        var endpoint = new ResolutionProbeRequestSendEndpoint();
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => endpoint.SendAsync(
+            Guid.NewGuid(),
+            new BoundaryRequest("request"),
+            Pipe.Empty<SendContext<BoundaryRequest>>(),
+            cancellation.Token));
+
+        Assert.Equal(cancellation.Token, actual.CancellationToken);
+        Assert.Equal(0, endpoint.ResolutionCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-CLIENT-BOUNDARY", "endpoint-resolution-receives-send-token")]
+    public async Task RequestSend_ForwardsTheExactTokenToEndpointResolutionAsync()
+    {
+        var endpoint = new ResolutionProbeRequestSendEndpoint();
+        using var cancellation = new CancellationTokenSource();
+
+        await Assert.ThrowsAsync<ResolutionProbeException>(() => endpoint.SendAsync(
+            Guid.NewGuid(),
+            new BoundaryRequest("request"),
+            Pipe.Empty<SendContext<BoundaryRequest>>(),
+            cancellation.Token));
+
+        Assert.Equal(1, endpoint.ResolutionCount);
+        Assert.Equal(cancellation.Token, endpoint.ResolutionCancellationToken);
+    }
+
     private static void Invoke(EntryPoint entryPoint, IRequestClient<BoundaryRequest> client)
     {
         switch (entryPoint)
@@ -195,6 +229,25 @@ public sealed class RequestClientBoundaryTests
         }
     }
 
+    private sealed class ResolutionProbeRequestSendEndpoint : RequestSendEndpoint<BoundaryRequest>
+    {
+        public ResolutionProbeRequestSendEndpoint()
+            : base(consumeContext: null)
+        {
+        }
+
+        public int ResolutionCount { get; private set; }
+
+        public CancellationToken ResolutionCancellationToken { get; private set; }
+
+        protected override Task<ISendEndpoint> GetSendEndpointAsync(CancellationToken cancellationToken)
+        {
+            ResolutionCount++;
+            ResolutionCancellationToken = cancellationToken;
+            return Task.FromException<ISendEndpoint>(new ResolutionProbeException());
+        }
+    }
+
     private sealed class BoundaryClientFactoryContext : ClientFactoryContext
     {
         public RequestTimeout DefaultTimeout => RequestTimeout.Default;
@@ -220,4 +273,6 @@ public sealed class RequestClientBoundaryTests
         public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
             where T : class => throw new NotSupportedException();
     }
+
+    private sealed class ResolutionProbeException : Exception;
 }

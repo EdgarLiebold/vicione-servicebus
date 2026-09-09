@@ -42,6 +42,15 @@ public sealed class SchedulingExtensionContractTests
         ConsumeContext context = DispatchProxy.Create<ConsumeContext, UnexpectedInvocationProxy>();
         Assert.Equal("schedulerFactory", Assert.Throws<ArgumentNullException>(() =>
             new ConsumeMessageSchedulerContext(context, null!)).ParamName);
+
+        ReceiveContext receiveContext = DispatchProxy.Create<ReceiveContext, SchedulerReceiveContextProxy>();
+        ((SchedulerReceiveContextProxy)(object)receiveContext).InputAddress = new Uri("loopback://localhost/scheduler-input");
+        ConsumeContext schedulerContext = DispatchProxy.Create<ConsumeContext, SchedulerConsumeContextProxy>();
+        ((SchedulerConsumeContextProxy)(object)schedulerContext).ReceiveContext = receiveContext;
+        var adapter = new ConsumeMessageSchedulerContext(schedulerContext, _ => null!);
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => _ = adapter.TimeProvider);
+        Assert.Equal("The message scheduler factory returned null.", exception.Message);
     }
 
     [Fact]
@@ -94,5 +103,25 @@ public sealed class SchedulingExtensionContractTests
     {
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
             throw new InvalidOperationException($"The invalid scheduler boundary invoked {targetMethod?.Name}.");
+    }
+
+    private class SchedulerConsumeContextProxy : DispatchProxy
+    {
+        public ReceiveContext ReceiveContext { get; set; } = null!;
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            targetMethod?.Name == "get_ReceiveContext"
+                ? ReceiveContext
+                : throw new InvalidOperationException($"The scheduler context invoked {targetMethod?.Name}.");
+    }
+
+    private class SchedulerReceiveContextProxy : DispatchProxy
+    {
+        public Uri InputAddress { get; set; } = null!;
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            targetMethod?.Name == "get_InputAddress"
+                ? InputAddress
+                : throw new InvalidOperationException($"The scheduler receive context invoked {targetMethod?.Name}.");
     }
 }

@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs.Processor;
-using ViciOne.ServiceBus.Util;
+using ViciOne.ServiceBus.Advanced.Middleware;
 
 namespace ViciOne.ServiceBus.EventHubs;
 

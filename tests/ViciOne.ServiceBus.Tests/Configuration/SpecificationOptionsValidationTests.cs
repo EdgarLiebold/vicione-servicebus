@@ -10,6 +10,7 @@ public sealed class SpecificationOptionsValidationTests
     [InlineData(InvalidBatchOption.ConcurrencyLimit, "ConcurrencyLimit")]
     [InlineData(InvalidBatchOption.TimeLimit, "TimeLimit")]
     [InlineData(InvalidBatchOption.TimeLimitStart, "TimeLimitStart")]
+    [InlineData(InvalidBatchOption.CapacityOverflow, "ConcurrencyLimit")]
     [RequirementCoverage("REQ-VSB-BATCH-OPTIONS", "each-invariant-rejected-before-pipe-build")]
     public void BatchOptions_RejectEveryInvalidInvariant(InvalidBatchOption invalid, string property)
     {
@@ -20,6 +21,10 @@ public sealed class SpecificationOptionsValidationTests
             case InvalidBatchOption.ConcurrencyLimit: options.ConcurrencyLimit = 0; break;
             case InvalidBatchOption.TimeLimit: options.TimeLimit = TimeSpan.Zero; break;
             case InvalidBatchOption.TimeLimitStart: options.TimeLimitStart = (BatchTimeLimitStart)42; break;
+            case InvalidBatchOption.CapacityOverflow:
+                options.ConcurrencyLimit = int.MaxValue;
+                options.MessageLimit = 2;
+                break;
         }
 
         ValidationResult[] failures = options.Validate().ToArray();
@@ -31,6 +36,30 @@ public sealed class SpecificationOptionsValidationTests
     [RequirementCoverage("REQ-VSB-BATCH-OPTIONS", "defaults-are-coherent")]
     public void BatchOptions_DefaultsAreCoherent() =>
         Assert.Empty(new BatchOptions().Validate());
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BATCH-OPTIONS", "callbacks-selectors-and-providers-reject-null")]
+    public void BatchConfiguration_RejectsEveryMissingCallbackSelectorAndProviderInput()
+    {
+        var options = new BatchOptions();
+
+        Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() => options.Configure(null, null!)).ParamName);
+        Assert.Equal("callback", Assert.Throws<ArgumentNullException>(() => options.SetConfigurationCallback(null!)).ParamName);
+        Assert.Equal("provider", Assert.Throws<ArgumentNullException>(() =>
+            options.GroupBy<TestBatchMessage, int>((Func<ConsumeContext<TestBatchMessage>, int?>)null!)).ParamName);
+        Assert.Equal("provider", Assert.Throws<ArgumentNullException>(() =>
+            options.GroupBy<TestBatchMessage, string>((Func<ConsumeContext<TestBatchMessage>, string>)null!)).ParamName);
+
+        Assert.Equal("provider", Assert.Throws<ArgumentNullException>(() =>
+            new ValueTypeGroupKeyProvider<TestBatchMessage, int>(null!)).ParamName);
+        Assert.Equal("provider", Assert.Throws<ArgumentNullException>(() =>
+            new GroupKeyProvider<TestBatchMessage, string>(null!)).ParamName);
+
+        var valueProvider = new ValueTypeGroupKeyProvider<TestBatchMessage, int>(_ => 1);
+        var referenceProvider = new GroupKeyProvider<TestBatchMessage, string>(_ => "group");
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => valueProvider.TryGetKey(null!, out _)).ParamName);
+        Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => referenceProvider.TryGetKey(null!, out _)).ParamName);
+    }
 
     [Theory]
     [InlineData(InvalidJobOption.Concurrency, "ConcurrentJobLimit")]
@@ -185,7 +214,9 @@ public sealed class SpecificationOptionsValidationTests
 
     public sealed record TestJob;
 
-    public enum InvalidBatchOption { MessageLimit, ConcurrencyLimit, TimeLimit, TimeLimitStart }
+    public enum InvalidBatchOption { MessageLimit, ConcurrencyLimit, TimeLimit, TimeLimitStart, CapacityOverflow }
+
+    public sealed record TestBatchMessage;
 
     public enum InvalidJobOption { Concurrency, Timeout, CancellationTimeout, GlobalConcurrency, Name, ProgressCount, ProgressTime }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using ViciOne.ServiceBus.Courier;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Middleware.ConcurrencyLimiting;
 using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Configuration;

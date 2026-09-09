@@ -1,44 +1,40 @@
 using System;
 using System.Collections.Generic;
-using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Middleware.Partitioning;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Describes requirements for partition saga.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
-public class PartitionSagaSpecification<TSaga> :
+/// <summary>Serializes saga-consume contexts that resolve to the same partition key.</summary>
+/// <typeparam name="TSaga">The saga state carried by the consume context.</typeparam>
+internal sealed class PartitionSagaSpecification<TSaga> :
     IPipeSpecification<SagaConsumeContext<TSaga>>
     where TSaga : class, ISaga
 {
     readonly PartitionKeyProvider<SagaConsumeContext<TSaga>> _keyProvider;
     readonly IPartitioner _partitioner;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="partitioner">The partitioner.</param>
-    /// <param name="keyProvider">The key provider.</param>
-    public PartitionSagaSpecification(IPartitioner partitioner, PartitionKeyProvider<SagaConsumeContext<TSaga>> keyProvider)
+    /// <summary>Creates a saga specification backed by a shared partitioner and correlation-key selector.</summary>
+    /// <param name="partitioner">The shared partition owner.</param>
+    /// <param name="keyProvider">The function that extracts stable partition bytes from each saga context.</param>
+    internal PartitionSagaSpecification(IPartitioner partitioner, PartitionKeyProvider<SagaConsumeContext<TSaga>> keyProvider)
     {
-        if (partitioner == null)
-            throw new ArgumentNullException(nameof(partitioner));
-        if (keyProvider == null)
-            throw new ArgumentNullException(nameof(keyProvider));
+        ArgumentNullException.ThrowIfNull(partitioner);
+        ArgumentNullException.ThrowIfNull(keyProvider);
 
         _partitioner = partitioner;
         _keyProvider = keyProvider;
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="builder">The builder that receives the configuration.</param>
+    /// <summary>Adds the configured saga partition filter to a consume-pipeline builder.</summary>
+    /// <param name="builder">The saga consume-pipeline builder.</param>
     public void Apply(IPipeBuilder<SagaConsumeContext<TSaga>> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.AddFilter(new PartitionFilter<SagaConsumeContext<TSaga>>(_keyProvider, _partitioner));
     }
 
-    /// <summary>Validates the current configuration.</summary>
-    /// <returns>The validation failures.</returns>
-    public IEnumerable<ValidationResult> Validate()
-    {
-        if (_keyProvider == null)
-            yield return this.Failure("KeyProvider", "must not be null");
-    }
+    /// <summary>Returns no deferred failures because construction validates every required value.</summary>
+    /// <returns>An empty validation result sequence.</returns>
+    public IEnumerable<ValidationResult> Validate() => Array.Empty<ValidationResult>();
 }

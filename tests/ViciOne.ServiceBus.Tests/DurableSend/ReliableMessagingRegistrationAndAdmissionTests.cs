@@ -14,6 +14,7 @@ using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.MessageData.Values;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -891,7 +892,7 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
         measurements.InstrumentPublished = (instrument, listener) =>
         {
             if (instrument.Meter.Name == "ViciOne.ServiceBus"
-                && instrument.Name == "vicione.servicebus.reliability.abandoned")
+                && instrument.Name == ServiceBusTelemetry.Metrics.ReliabilityAbandoned)
                 listener.EnableMeasurementEvents(instrument);
         };
         measurements.SetMeasurementEventCallback<long>((instrument, value, tags, state) =>

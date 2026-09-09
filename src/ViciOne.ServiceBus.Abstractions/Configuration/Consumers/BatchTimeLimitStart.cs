@@ -1,10 +1,10 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Specifies the available batch time limit start values.</summary>
+/// <summary>Specifies which message arrival starts or restarts a batch collection timeout.</summary>
 public enum BatchTimeLimitStart
 {
-    /// <summary>Indicates from first.</summary>
+    /// <summary>Starts the timeout when the first message enters an empty batch.</summary>
     FromFirst,
-    /// <summary>Indicates from last.</summary>
+    /// <summary>Restarts the timeout whenever a message is added to the batch.</summary>
     FromLast
 }

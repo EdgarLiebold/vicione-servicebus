@@ -9,6 +9,7 @@ using ViciOne.ServiceBus.Consumer;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Middleware.Partitioning;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.JobService;
@@ -300,7 +301,7 @@ internal sealed class JobService :
     public void ConfigureSuperviseJobConsumer(IReceiveEndpointConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
-        var partition = new Middleware.Partitioner(16, new Murmur3UnsafeHashGenerator());
+        var partition = new PartitionCoordinator(16);
 
         configurator.UsePartitioner<CancelJobAttempt>(partition, p => p.Message.JobId);
         configurator.UsePartitioner<GetJobAttemptStatus>(partition, p => p.Message.JobId);

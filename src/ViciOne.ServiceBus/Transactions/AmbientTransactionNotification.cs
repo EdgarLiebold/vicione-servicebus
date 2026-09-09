@@ -20,8 +20,7 @@ internal sealed class AmbientTransactionNotification :
 
     public void Prepare(PreparingEnlistment preparingEnlistment)
     {
-        if (preparingEnlistment == null)
-            throw new ArgumentNullException(nameof(preparingEnlistment));
+        ArgumentNullException.ThrowIfNull(preparingEnlistment);
 
         LogContext.Debug?.Log("Prepare notification received");
 
@@ -54,8 +53,7 @@ internal sealed class AmbientTransactionNotification :
 
     public void Add(Func<CancellationToken, Task> action)
     {
-        if (action == null)
-            throw new ArgumentNullException(nameof(action));
+        ArgumentNullException.ThrowIfNull(action);
 
         lock (_pendingActions)
         {
@@ -68,8 +66,7 @@ internal sealed class AmbientTransactionNotification :
 
     void Complete(Enlistment enlistment, string message)
     {
-        if (enlistment == null)
-            throw new ArgumentNullException(nameof(enlistment));
+        ArgumentNullException.ThrowIfNull(enlistment);
 
         LogContext.Debug?.Log(message);
 

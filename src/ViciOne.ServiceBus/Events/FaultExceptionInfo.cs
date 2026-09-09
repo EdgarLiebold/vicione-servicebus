@@ -14,7 +14,6 @@ internal sealed class FaultExceptionInfo : ExceptionInfo
     const int MaximumKeyLength = 256;
     const int MaximumTextLength = 2048;
 
-
     /// <summary>Creates an empty instance for contract materialization.</summary>
     public FaultExceptionInfo()
     {

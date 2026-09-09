@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Carries state for retry execute operations.</summary>
-/// <typeparam name="TArguments">The arguments type.</typeparam>
+/// <summary>Tracks retry state while preserving execute results between attempts.</summary>
+/// <typeparam name="TArguments">The activity argument contract.</typeparam>
 public class RetryExecuteContext<TArguments> :
     ExecuteContextScope<TArguments>,
     ConsumeRetryContext
@@ -14,14 +14,14 @@ public class RetryExecuteContext<TArguments> :
     readonly ExecutionResult? _existingResult;
     readonly IRetryPolicy _retryPolicy;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="retryPolicy">The retry policy.</param>
-    /// <param name="retryContext">The retry context.</param>
+    /// <summary>Creates an execute retry attempt.</summary>
+    /// <param name="context">The execute context being retried.</param>
+    /// <param name="retryPolicy">The policy that creates subsequent attempts.</param>
+    /// <param name="retryContext">The previous retry attempt, or <see langword="null" /> for the first attempt.</param>
     public RetryExecuteContext(ExecuteContext<TArguments> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         : base(context)
     {
-        _retryPolicy = retryPolicy;
+        _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));
         _context = context;
 
         if (retryContext is RetryContext<ExecuteContext<TArguments>> executeRetryContext)
@@ -47,13 +47,15 @@ public class RetryExecuteContext<TArguments> :
     /// <summary>Gets the retry count.</summary>
     public int RetryCount { get; }
 
-    /// <summary>Creates next.</summary>
-    /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-    /// <param name="retryContext">The retry context.</param>
-    /// <returns>The created next.</returns>
+    /// <summary>Creates the next execute retry context and restores any pre-retry result.</summary>
+    /// <typeparam name="TContext">The requested consume-retry context type.</typeparam>
+    /// <param name="retryContext">The retry state for the next attempt.</param>
+    /// <returns>The next typed retry context.</returns>
     public TContext CreateNext<TContext>(RetryContext retryContext)
         where TContext : class, ConsumeRetryContext
     {
+        ArgumentNullException.ThrowIfNull(retryContext);
+
         if (retryContext is RetryContext<ExecuteContext<TArguments>> executeRetryContext && _existingResult != null)
             executeRetryContext.Context.Result = _existingResult;
 
@@ -61,9 +63,9 @@ public class RetryExecuteContext<TArguments> :
             ?? throw new InvalidOperationException($"The retry context cannot be represented as {TypeCache<TContext>.ShortName}.");
     }
 
-    /// <summary>Notifies registered observers about pending faults.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Restores the original execute result after all retry attempts are exhausted.</summary>
+    /// <param name="cancellationToken">Cancels result restoration.</param>
+    /// <returns>A completed task, or a canceled task when cancellation was requested.</returns>
     public Task NotifyPendingFaultsAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
@@ -74,7 +76,6 @@ public class RetryExecuteContext<TArguments> :
 
         return Task.CompletedTask;
     }
-
 
     class RetryExecutionResult :
         ExecutionResult

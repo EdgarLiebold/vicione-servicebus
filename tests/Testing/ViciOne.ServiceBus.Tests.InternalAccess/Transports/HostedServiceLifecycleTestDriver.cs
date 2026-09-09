@@ -11,6 +11,8 @@ public sealed class HostedServiceLifecycleTestDriver : IAsyncDisposable
 
     public HostedServiceLifecycleTestDriver(
         bool blockFirstStop = false,
+        bool waitUntilStarted = true,
+        TimeSpan? startTimeout = null,
         TimeSpan? stopTimeout = null,
         TimeProvider? timeProvider = null)
     {
@@ -19,7 +21,8 @@ public sealed class HostedServiceLifecycleTestDriver : IAsyncDisposable
             new TestServiceProvider(_depot),
             Options.Create(new ViciOneServiceBusHostOptions
             {
-                WaitUntilStarted = true,
+                WaitUntilStarted = waitUntilStarted,
+                StartTimeout = startTimeout,
                 StopTimeout = stopTimeout,
             }),
             timeProvider);

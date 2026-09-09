@@ -32,7 +32,9 @@ internal sealed class SystemTransactionContext :
 
     public async Task CommitAsync(CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); if (_completed)
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (_completed)
             return;
 
         await Task.Factory.FromAsync(_transaction.BeginCommit, _transaction.EndCommit, null).ConfigureAwait(false);
@@ -52,6 +54,8 @@ internal sealed class SystemTransactionContext :
 
     public void Rollback(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+
         if (_completed)
             return;
 

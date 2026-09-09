@@ -3,45 +3,45 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Carries state for mediator send message operations.</summary>
-/// <typeparam name="T">The value type.</typeparam>
+/// <summary>Projects mediator send metadata through the transport-independent message-context contract.</summary>
+/// <typeparam name="T">The message contract.</typeparam>
 public class MediatorSendMessageContext<T> :
     MessageContext
     where T : class
 {
     readonly SendContext<T> _context;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates a message-context view over a mediator send context.</summary>
+    /// <param name="context">The mediator send context to project.</param>
     public MediatorSendMessageContext(SendContext<T> context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    /// <summary>Gets the message id.</summary>
+    /// <inheritdoc />
     public Guid? MessageId => _context.MessageId;
-    /// <summary>Gets the request id.</summary>
+    /// <inheritdoc />
     public Guid? RequestId => _context.RequestId;
-    /// <summary>Gets the correlation id.</summary>
+    /// <inheritdoc />
     public Guid? CorrelationId => _context.CorrelationId;
-    /// <summary>Gets the conversation id.</summary>
+    /// <inheritdoc />
     public Guid? ConversationId => _context.ConversationId;
-    /// <summary>Gets the initiator id.</summary>
+    /// <inheritdoc />
     public Guid? InitiatorId => _context.InitiatorId;
-    /// <summary>Gets the expiration time.</summary>
+    /// <inheritdoc />
     public DateTimeOffset? ExpirationTime => _context.SentTime + _context.TimeToLive;
-    /// <summary>Gets the source address.</summary>
+    /// <inheritdoc />
     public Uri? SourceAddress => _context.SourceAddress;
-    /// <summary>Gets the destination address.</summary>
+    /// <inheritdoc />
     public Uri? DestinationAddress => _context.DestinationAddress;
-    /// <summary>Gets the response address.</summary>
+    /// <inheritdoc />
     public Uri? ResponseAddress => _context.ResponseAddress;
-    /// <summary>Gets the fault address.</summary>
+    /// <inheritdoc />
     public Uri? FaultAddress => _context.FaultAddress;
-    /// <summary>Gets the sent time.</summary>
+    /// <inheritdoc />
     public DateTimeOffset? SentTime => _context.SentTime;
-    /// <summary>Gets the headers.</summary>
+    /// <inheritdoc />
     public Headers Headers => _context.Headers;
-    /// <summary>Gets the host.</summary>
+    /// <inheritdoc />
     public HostInfo Host => HostMetadataCache.Host;
 }

@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Middleware.CircuitBreaker;
 
 internal static class CircuitBreakerTelemetry
 {
-    private static readonly Lazy<Instrumentation> Instruments = new(
+    private static readonly Lazy<Instrumentation> _instruments = new(
         static () => new Instrumentation(),
         LazyThreadSafetyMode.ExecutionAndPublication);
 
@@ -20,9 +20,9 @@ internal static class CircuitBreakerTelemetry
             TagList tags = default;
             tags.Add("circuit_breaker.state.from", from);
             tags.Add("circuit_breaker.state.to", to);
-            Instruments.Value.StateTransitions.Add(1, tags);
+            _instruments.Value.StateTransitions.Add(1, tags);
 
-            using Activity? activity = Instruments.Value.ActivitySource.StartActivity(
+            using Activity? activity = _instruments.Value.ActivitySource.StartActivity(
                 "ViciOne.ServiceBus.CircuitBreaker.StateTransition",
                 ActivityKind.Internal);
             activity?.SetTag("circuit_breaker.state.from", from);
@@ -38,8 +38,8 @@ internal static class CircuitBreakerTelemetry
     {
         try
         {
-            Instruments.Value.Probes.Add(1);
-            using Activity? activity = Instruments.Value.ActivitySource.StartActivity(
+            _instruments.Value.Probes.Add(1);
+            using Activity? activity = _instruments.Value.ActivitySource.StartActivity(
                 "ViciOne.ServiceBus.CircuitBreaker.Probe",
                 ActivityKind.Internal);
             activity?.SetTag("circuit_breaker.probe.result", "acquired");
@@ -57,9 +57,9 @@ internal static class CircuitBreakerTelemetry
             string reason = probeInProgress ? "probe_in_progress" : "open";
             TagList tags = default;
             tags.Add("circuit_breaker.rejection.reason", reason);
-            Instruments.Value.Rejections.Add(1, tags);
+            _instruments.Value.Rejections.Add(1, tags);
 
-            using Activity? activity = Instruments.Value.ActivitySource.StartActivity(
+            using Activity? activity = _instruments.Value.ActivitySource.StartActivity(
                 "ViciOne.ServiceBus.CircuitBreaker.Rejected",
                 ActivityKind.Internal);
             activity?.SetTag("circuit_breaker.rejection.reason", reason);

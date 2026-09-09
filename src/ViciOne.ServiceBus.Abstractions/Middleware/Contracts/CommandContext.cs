@@ -2,21 +2,21 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts;
 
-/// <summary>Exposes state for command operations.</summary>
+/// <summary>Describes a timestamped control command traveling through a command pipeline.</summary>
 public interface CommandContext :
     PipeContext
 {
-    /// <summary>The timestamp at which the command was sent.</summary>
+    /// <summary>Gets the UTC time at which the command context was created.</summary>
     DateTimeOffset Timestamp { get; }
 }
 
 
-/// <summary>Exposes state for command operations.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public interface CommandContext<out T> :
+/// <summary>Provides the typed payload of a control command.</summary>
+/// <typeparam name="TCommand">The command contract type.</typeparam>
+public interface CommandContext<out TCommand> :
     CommandContext
-    where T : class
+    where TCommand : class
 {
-    /// <summary>The command object.</summary>
-    T Command { get; }
+    /// <summary>Gets the command payload.</summary>
+    TCommand Command { get; }
 }

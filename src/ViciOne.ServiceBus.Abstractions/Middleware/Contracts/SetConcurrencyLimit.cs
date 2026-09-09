@@ -2,15 +2,15 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts;
 
-/// <summary>Sets the concurrency limit of a concurrency limit filter.</summary>
+/// <summary>Requests a new concurrency limit from one or more matching limiters.</summary>
 public interface SetConcurrencyLimit
 {
-    /// <summary>The timestamp at which the adjustment command was sent.</summary>
+    /// <summary>Gets the command timestamp used for ordering, or <see langword="null" /> to use the transport sent time.</summary>
     DateTimeOffset? Timestamp { get; }
 
-    /// <summary>The identifier of the concurrency limit to set (optional).</summary>
-    string? Id { get; }
+    /// <summary>Gets the optional case-insensitive limiter identifier; <see langword="null" /> targets every limiter.</summary>
+    string? LimiterId { get; }
 
-    /// <summary>The new concurrency limit for the filter.</summary>
+    /// <summary>Gets the positive concurrency limit to apply.</summary>
     int ConcurrencyLimit { get; }
 }

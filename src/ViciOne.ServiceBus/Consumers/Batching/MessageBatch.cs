@@ -4,44 +4,46 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Batching;
 
-/// <summary>Groups message values into a batch.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-public class MessageBatch<TMessage> :
+/// <summary>Provides the immutable ordered snapshot delivered through the public batch contract.</summary>
+/// <typeparam name="TMessage">The message contract contained in the snapshot.</typeparam>
+internal sealed class MessageBatch<TMessage> :
     Batch<TMessage>
     where TMessage : class
 {
     readonly IReadOnlyList<ConsumeContext<TMessage>> _messages;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="firstMessageReceived">The first message received.</param>
-    /// <param name="lastMessageReceived">The last message received.</param>
-    /// <param name="mode">The mode.</param>
-    /// <param name="messages">The messages.</param>
+    /// <summary>Creates a detached snapshot with its completion metadata.</summary>
+    /// <param name="firstMessageReceived">When collection for the batch began.</param>
+    /// <param name="lastMessageReceived">When the most recent included message arrived.</param>
+    /// <param name="mode">The condition that completed the batch.</param>
+    /// <param name="messages">The ordered message contexts included in the batch.</param>
     public MessageBatch(DateTimeOffset firstMessageReceived, DateTimeOffset lastMessageReceived, BatchCompletionMode mode,
         IReadOnlyList<ConsumeContext<TMessage>> messages)
     {
+        ArgumentNullException.ThrowIfNull(messages);
+
         FirstMessageReceived = firstMessageReceived;
         LastMessageReceived = lastMessageReceived;
         Mode = mode;
-        _messages = messages;
+        _messages = [.. messages];
     }
 
-    /// <summary>Gets or sets the mode.</summary>
-    public BatchCompletionMode Mode { get; set; }
-    /// <summary>Gets or sets the first message received.</summary>
-    public DateTimeOffset FirstMessageReceived { get; set; }
-    /// <summary>Gets or sets the last message received.</summary>
-    public DateTimeOffset LastMessageReceived { get; set; }
+    /// <summary>Gets the condition that completed the batch.</summary>
+    public BatchCompletionMode Mode { get; }
+    /// <summary>Gets when collection for the batch began.</summary>
+    public DateTimeOffset FirstMessageReceived { get; }
+    /// <summary>Gets when the most recent included message arrived.</summary>
+    public DateTimeOffset LastMessageReceived { get; }
 
-    /// <summary>Gets or sets the value at the specified index.</summary>
-    /// <param name="index">The index.</param>
+    /// <summary>Gets the message context at the specified zero-based index.</summary>
+    /// <param name="index">The zero-based index.</param>
     public ConsumeContext<TMessage> this[int index] => _messages[index];
 
-    /// <summary>Gets the length.</summary>
+    /// <summary>Gets the number of message contexts in the snapshot.</summary>
     public int Length => _messages.Count;
 
-    /// <summary>Gets enumerator.</summary>
-    /// <returns>The enumerator.</returns>
+    /// <summary>Returns an enumerator over the ordered message contexts.</summary>
+    /// <returns>An enumerator over the snapshot.</returns>
     public IEnumerator<ConsumeContext<TMessage>> GetEnumerator()
     {
         return _messages.GetEnumerator();

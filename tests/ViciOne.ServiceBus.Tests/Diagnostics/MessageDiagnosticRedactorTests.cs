@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
-using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 

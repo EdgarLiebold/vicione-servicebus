@@ -9,15 +9,15 @@ public sealed class ClientFactory :
     IClientFactory,
     IAsyncDisposable
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates a request-client factory over the supplied provider context.</summary>
+    /// <param name="context">The provider context used for routing, response connections, time, and endpoint resolution.</param>
     public ClientFactory(ClientFactoryContext context)
     {
         Context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    /// <summary>Releases the resources owned by this instance.</summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Asynchronously releases an owned client-factory context when it has a lifetime.</summary>
+    /// <returns>A task that completes when the owned context is released.</returns>
     public ValueTask DisposeAsync()
     {
         if (Context is IAsyncDisposable asyncDisposable)
@@ -26,15 +26,15 @@ public sealed class ClientFactory :
         return default;
     }
 
-    /// <summary>Gets the context.</summary>
+    /// <summary>Gets the provider context used by request clients created by this factory.</summary>
     public ClientFactoryContext Context { get; }
 
-    /// <summary>Creates request.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created request.</returns>
+    /// <summary>Creates a request that uses the configured route or publishes when no route exists.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="message">The request message.</param>
+    /// <param name="timeout">The maximum response-wait duration.</param>
+    /// <param name="cancellationToken">Cancels sending or response waiting.</param>
+    /// <returns>The request handle.</returns>
     public RequestHandle<T> CreateRequest<T>(T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
@@ -43,13 +43,13 @@ public sealed class ClientFactory :
         return client.Create(message, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates request.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Creates a request for an explicit destination.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created request.</returns>
+    /// <param name="message">The request message.</param>
+    /// <param name="timeout">The maximum response-wait duration.</param>
+    /// <param name="cancellationToken">Cancels sending or response waiting.</param>
+    /// <returns>The request handle.</returns>
     public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
@@ -58,13 +58,13 @@ public sealed class ClientFactory :
         return client.Create(message, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates request.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="consumeContext">The consume context.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created request.</returns>
+    /// <summary>Creates a request correlated with the current consumed message.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="consumeContext">The consumed message whose correlation metadata is propagated.</param>
+    /// <param name="message">The request message.</param>
+    /// <param name="timeout">The maximum response-wait duration.</param>
+    /// <param name="cancellationToken">Cancels sending or response waiting.</param>
+    /// <returns>The request handle.</returns>
     public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
@@ -73,14 +73,14 @@ public sealed class ClientFactory :
         return client.Create(message, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates request.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="consumeContext">The consume context.</param>
+    /// <summary>Creates a correlated request for an explicit destination.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="consumeContext">The consumed message whose correlation metadata is propagated.</param>
     /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created request.</returns>
+    /// <param name="message">The request message.</param>
+    /// <param name="timeout">The maximum response-wait duration.</param>
+    /// <param name="cancellationToken">Cancels sending or response waiting.</param>
+    /// <returns>The request handle.</returns>
     public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, Uri destinationAddress, T message, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
@@ -89,12 +89,12 @@ public sealed class ClientFactory :
         return client.Create(message, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates request.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="values">The values.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created request.</returns>
+    /// <summary>Creates and initializes a request that uses the configured route or publish fallback.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="values">The values used to initialize the request.</param>
+    /// <param name="timeout">The maximum response-wait duration.</param>
+    /// <param name="cancellationToken">Cancels initialization, sending, or response waiting.</param>
+    /// <returns>The request handle.</returns>
     public RequestHandle<T> CreateRequest<T>(object values, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
@@ -103,13 +103,13 @@ public sealed class ClientFactory :
         return client.Create(values, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates request.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Creates and initializes a request for an explicit destination.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created request.</returns>
+    /// <param name="values">The values used to initialize the request.</param>
+    /// <param name="timeout">The maximum response-wait duration.</param>
+    /// <param name="cancellationToken">Cancels initialization, sending, or response waiting.</param>
+    /// <returns>The request handle.</returns>
     public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, object values, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
@@ -118,13 +118,13 @@ public sealed class ClientFactory :
         return client.Create(values, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates request.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="consumeContext">The consume context.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created request.</returns>
+    /// <summary>Creates and initializes a request correlated with the current consumed message.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="consumeContext">The consumed message whose correlation metadata is propagated.</param>
+    /// <param name="values">The values used to initialize the request.</param>
+    /// <param name="timeout">The maximum response-wait duration.</param>
+    /// <param name="cancellationToken">Cancels initialization, sending, or response waiting.</param>
+    /// <returns>The request handle.</returns>
     public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, object values, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
@@ -133,14 +133,14 @@ public sealed class ClientFactory :
         return client.Create(values, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates request.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="consumeContext">The consume context.</param>
+    /// <summary>Creates and initializes a correlated request for an explicit destination.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="consumeContext">The consumed message whose correlation metadata is propagated.</param>
     /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The created request.</returns>
+    /// <param name="values">The values used to initialize the request.</param>
+    /// <param name="timeout">The maximum response-wait duration.</param>
+    /// <param name="cancellationToken">Cancels initialization, sending, or response waiting.</param>
+    /// <returns>The request handle.</returns>
     public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, Uri destinationAddress, object values, RequestTimeout timeout, CancellationToken cancellationToken)
         where T : class
     {
@@ -149,10 +149,10 @@ public sealed class ClientFactory :
         return client.Create(values, cancellationToken: cancellationToken);
     }
 
-    /// <summary>Creates request client.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <returns>The created request client.</returns>
+    /// <summary>Creates a request client that uses the configured route or publishes when no route exists.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="timeout">The default response-wait duration.</param>
+    /// <returns>The request client.</returns>
     public IRequestClient<T> CreateRequestClient<T>(RequestTimeout timeout)
         where T : class
     {
@@ -162,11 +162,11 @@ public sealed class ClientFactory :
         return new RequestClient<T>(Context, Context.GetRequestEndpoint<T>(), timeout.Or(Context.DefaultTimeout));
     }
 
-    /// <summary>Creates request client.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="consumeContext">The consume context.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <returns>The created request client.</returns>
+    /// <summary>Creates a request client that propagates an optional consume context.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="consumeContext">The consumed message whose correlation metadata is propagated, or <see langword="null" />.</param>
+    /// <param name="timeout">The default response-wait duration.</param>
+    /// <returns>The request client.</returns>
     public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, RequestTimeout timeout)
         where T : class
     {
@@ -176,11 +176,11 @@ public sealed class ClientFactory :
         return new RequestClient<T>(Context, Context.GetRequestEndpoint<T>(consumeContext), timeout.Or(Context.DefaultTimeout));
     }
 
-    /// <summary>Creates request client.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <summary>Creates a request client for an explicit destination.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
     /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <returns>The created request client.</returns>
+    /// <param name="timeout">The default response-wait duration.</param>
+    /// <returns>The request client.</returns>
     public IRequestClient<T> CreateRequestClient<T>(Uri destinationAddress, RequestTimeout timeout)
         where T : class
     {
@@ -189,12 +189,12 @@ public sealed class ClientFactory :
         return new RequestClient<T>(Context, requestSendEndpoint, timeout.Or(Context.DefaultTimeout));
     }
 
-    /// <summary>Creates request client.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="consumeContext">The consume context.</param>
+    /// <summary>Creates a correlated request client for an explicit destination.</summary>
+    /// <typeparam name="T">The request message contract.</typeparam>
+    /// <param name="consumeContext">The consumed message whose correlation metadata is propagated, or <see langword="null" />.</param>
     /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <returns>The created request client.</returns>
+    /// <param name="timeout">The default response-wait duration.</param>
+    /// <returns>The request client.</returns>
     public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, Uri destinationAddress, RequestTimeout timeout)
         where T : class
     {

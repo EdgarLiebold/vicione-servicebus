@@ -10,23 +10,24 @@ using ViciOne.ServiceBus.Util;
 namespace ViciOne.ServiceBus.Clients;
 
 /// <summary>Coordinates sending one request and awaiting one of its registered response contracts.</summary>
-/// <typeparam name="TRequest">The request type.</typeparam>
+/// <typeparam name="TRequest">The request message contract.</typeparam>
 internal sealed class ClientRequestHandle<TRequest> :
     RequestHandle<TRequest>,
     IPipe<SendContext<TRequest>>
     where TRequest : class
 {
     /// <summary>Sends the request after its response contracts have been registered.</summary>
-    /// <param name="requestId">The request id.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The value produced by the operation.</returns>
+    /// <param name="requestId">The identifier used to correlate the response.</param>
+    /// <param name="pipe">The request send-context pipeline.</param>
+    /// <param name="cancellationToken">Cancels the request send.</param>
+    /// <returns>A task containing the request message accepted by the send path.</returns>
     public delegate Task<TRequest> SendRequestCallback(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken);
 
 
     readonly List<string> _accept;
     readonly CancellationToken _cancellationToken;
     readonly CancellationTokenSource _cancellationTokenSource;
+    readonly CancellationToken _requestSendCancellationToken;
     readonly ClientFactoryContext _context;
     readonly object _handlerLock;
     readonly TaskCompletionSource<TRequest> _message;
@@ -38,19 +39,20 @@ internal sealed class ClientRequestHandle<TRequest> :
     readonly TaskCompletionSource<SendContext<TRequest>> _sendContext;
     readonly SendRequestCallback _sendRequestCallback;
     readonly TaskScheduler _taskScheduler;
+    readonly TaskCompletionSource _terminalCleanupCompleted;
     readonly RequestTimeout _timeout;
     int _faultedOrCanceled;
     ConnectHandle? _faultHandler;
     ITimer? _timeoutTimer;
     RequestTimeout _timeToLive;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="sendRequestCallback">The send request callback.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="timeout">The maximum duration allowed for the operation.</param>
-    /// <param name="requestId">The request id.</param>
-    /// <param name="taskScheduler">The task scheduler.</param>
+    /// <summary>Creates a request handle and starts its send pipeline behind the response-registration gate.</summary>
+    /// <param name="context">The provider context used for response connections, addressing, and time.</param>
+    /// <param name="sendRequestCallback">The operation that sends the request after handlers are registered.</param>
+    /// <param name="cancellationToken">Cancels sending and response waiting.</param>
+    /// <param name="timeout">The maximum response-wait duration.</param>
+    /// <param name="requestId">An optional request identifier; a new identifier is generated when omitted.</param>
+    /// <param name="taskScheduler">The scheduler used for terminal cleanup callbacks.</param>
     public ClientRequestHandle(ClientFactoryContext context, SendRequestCallback sendRequestCallback, CancellationToken cancellationToken = default,
         RequestTimeout timeout = default, Guid? requestId = null, TaskScheduler? taskScheduler = null)
     {
@@ -71,26 +73,42 @@ internal sealed class ClientRequestHandle<TRequest> :
                 ? TaskScheduler.Default
                 : TaskScheduler.FromCurrentSynchronizationContext());
 
-        _message = new TaskCompletionSource<TRequest>();
+        _message = TaskCompletionSources.Create<TRequest>();
         _pipeConfigurator = new PipeConfigurator<SendContext<TRequest>>();
         _sendContext = TaskCompletionSources.Create<SendContext<TRequest>>();
         _readyToSend = TaskCompletionSources.Create<bool>();
         _cancellationTokenSource = new CancellationTokenSource();
+        _requestSendCancellationToken = _cancellationTokenSource.Token;
         _responseHandlers = new Dictionary<Type, HandlerConnectHandle>();
         _handlerLock = new object();
+        _terminalCleanupCompleted = TaskCompletionSources.Create();
         _accept = [];
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            _faultedOrCanceled = 1;
+            _cancellationTokenSource.Cancel();
+            _readyToSend.TrySetCanceled(cancellationToken);
+            _sendContext.TrySetCanceled(cancellationToken);
+            _message.TrySetCanceled(cancellationToken);
+            _cancellationTokenSource.Dispose();
+            _send = Task.FromCanceled(cancellationToken);
+            return;
+        }
 
         if (cancellationToken.CanBeCanceled)
             _registration = cancellationToken.Register(Cancel);
 
         _send = SendRequestAsync();
+        _send.IgnoreUnobservedExceptions();
+        DisposeCancellationTokenSourceAfterTerminalCleanupAsync().IgnoreUnobservedExceptions();
 
         HandleFault();
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Applies request metadata, the configured send pipeline, and the response timeout to an outgoing context.</summary>
+    /// <param name="context">The outgoing request context.</param>
+    /// <returns>A task that completes when the request context is ready for transport.</returns>
     public async Task SendAsync(SendContext<TRequest> context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -110,17 +128,27 @@ internal sealed class ClientRequestHandle<TRequest> :
         if (pipe.IsNotEmpty())
             await pipe.SendAsync(context).ConfigureAwait(false);
 
-        _timeoutTimer = _context.TimeProvider.CreateTimer(
+        ITimer timeoutTimer = _context.TimeProvider.CreateTimer(
             TimeoutExpired,
             this,
             _timeout.Value,
-            Timeout.InfiniteTimeSpan);
+            Timeout.InfiniteTimeSpan)
+            ?? throw new InvalidOperationException("The request time provider returned no timeout timer.");
+
+        if (Interlocked.CompareExchange(ref _timeoutTimer, timeoutTimer, null) is not null)
+        {
+            DisposeTimerSafely(timeoutTimer);
+            throw new InvalidOperationException("The request timeout timer was initialized more than once.");
+        }
+
+        if (Volatile.Read(ref _faultedOrCanceled) != 0)
+            DisposeTimer();
 
         _sendContext.TrySetResult(context);
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Adds request identity and contract information to a diagnostic probe.</summary>
+    /// <param name="context">The probe to populate.</param>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -130,10 +158,10 @@ internal sealed class ClientRequestHandle<TRequest> :
         scope.Add("requestType", TypeCache<TRequest>.ShortName);
     }
 
-    /// <summary>Gets the request id.</summary>
+    /// <summary>Gets the identifier used to correlate responses.</summary>
     public Guid RequestId { get; }
 
-    /// <summary>Gets or sets the time to live.</summary>
+    /// <summary>Sets the transport time-to-live independently of the client response deadline.</summary>
     public RequestTimeout TimeToLive
     {
         set => _timeToLive = value;
@@ -145,46 +173,53 @@ internal sealed class ClientRequestHandle<TRequest> :
         if (Interlocked.CompareExchange(ref _faultedOrCanceled, 1, 0) != 0)
             return;
 
+        CancelRequestSend();
+        CancellationToken cancellationToken = CancellationTokenForCanceledRequest();
+        CompleteCancellationSignals(cancellationToken);
+
         Task.Factory.StartNew(CancelAndDispose, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
     }
 
-    /// <summary>Adds pipe specification to the configuration.</summary>
-    /// <param name="specification">The specification.</param>
+    /// <summary>Adds a send-context specification applied before the request reaches the transport.</summary>
+    /// <param name="specification">The pipeline specification to add.</param>
     public void AddPipeSpecification(IPipeSpecification<SendContext<TRequest>> specification)
     {
         ArgumentNullException.ThrowIfNull(specification);
         _pipeConfigurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>Gets response.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="readyToSend">The ready to send.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the requested value.</returns>
+    /// <summary>Registers one response contract and optionally releases the request for sending.</summary>
+    /// <typeparam name="T">The response message contract.</typeparam>
+    /// <param name="readyToSend">Whether this registration completes the response set and releases the send gate.</param>
+    /// <param name="cancellationToken">Cancels waiting for this response.</param>
+    /// <returns>A task containing the matching response.</returns>
     public Task<Response<T>> GetResponseAsync<T>(bool readyToSend, CancellationToken cancellationToken = default)
         where T : class
     {
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled<Response<T>>(cancellationToken);
 
-        return ResponseAsync<T>(readyToSend);
+        Task<Response<T>> response = ResponseAsync<T>(readyToSend);
+        return cancellationToken.CanBeCanceled
+            ? response.WaitAsync(cancellationToken)
+            : response;
     }
 
-    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <summary>Cancels the request and releases all response-handler connections.</summary>
     public void Dispose()
     {
         if (Interlocked.CompareExchange(ref _faultedOrCanceled, 1, 0) == 0)
             CancelAndDispose();
     }
 
-    /// <summary>Gets the message.</summary>
+    /// <summary>Gets the request message produced by the send callback.</summary>
     public Task<TRequest> Message => _message.Task;
 
     async Task SendRequestAsync()
     {
         try
         {
-            var message = await _sendRequestCallback(RequestId, this, _cancellationTokenSource.Token).ConfigureAwait(false);
+            var message = await _sendRequestCallback(RequestId, this, _requestSendCancellationToken).ConfigureAwait(false);
 
             _message.TrySetResult(message);
         }
@@ -207,9 +242,13 @@ internal sealed class ClientRequestHandle<TRequest> :
         }
         catch (Exception exception)
         {
-            Fail(exception);
+            var requestException = new RequestException(
+                $"An exception occurred while processing the {typeof(TRequest).Name} request",
+                exception);
 
-            throw new RequestException($"An exception occurred while processing the {typeof(TRequest).Name} request", exception);
+            Fail(requestException, exception);
+
+            throw requestException;
         }
     }
 
@@ -280,28 +319,35 @@ internal sealed class ClientRequestHandle<TRequest> :
         Fail(new RequestFaultException(TypeCache<TRequest>.ShortName, message));
     }
 
-    void Fail(Exception exception)
+    void Fail(Exception responseException, Exception? messageException = null)
     {
         if (Interlocked.CompareExchange(ref _faultedOrCanceled, 1, 0) != 0)
             return;
 
         void HandleFail()
         {
-            _registration.Dispose();
+            try
+            {
+                DisposeRegistration();
 
-            DisposeTimer();
+                DisposeTimer();
 
-            _readyToSend.TrySetException(exception);
+                _readyToSend.TrySetException(responseException);
 
-            var wasSet = _sendContext.TrySetException(exception);
+                var wasSet = _sendContext.TrySetException(responseException);
 
-            _message.TrySetException(exception);
-            _message.Task.IgnoreUnobservedExceptions();
+                _message.TrySetException(messageException ?? responseException);
+                _message.Task.IgnoreUnobservedExceptions();
 
-            DisconnectHandlers(handle => handle.TrySetException(exception));
+                DisconnectHandlers(handle => handle.TrySetException(responseException));
 
-            if (wasSet)
-                _cancellationTokenSource.Cancel();
+                if (wasSet)
+                    CancelRequestSend();
+            }
+            finally
+            {
+                _terminalCleanupCompleted.TrySetResult();
+            }
         }
 
         Task.Factory.StartNew(HandleFail, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
@@ -309,21 +355,38 @@ internal sealed class ClientRequestHandle<TRequest> :
 
     void CancelAndDispose()
     {
-        _registration.Dispose();
+        try
+        {
+            DisposeRegistration();
 
-        DisposeTimer();
+            DisposeTimer();
 
-        _cancellationTokenSource.Cancel();
+            CancelRequestSend();
 
-        var cancellationToken = _cancellationToken.IsCancellationRequested ? _cancellationToken : _cancellationTokenSource.Token;
+            var cancellationToken = _cancellationToken.IsCancellationRequested ? _cancellationToken : _requestSendCancellationToken;
 
+            CompleteCancellationSignals(cancellationToken);
+
+            DisconnectHandlers(handle => handle.TrySetCanceled(cancellationToken));
+        }
+        finally
+        {
+            _terminalCleanupCompleted.TrySetResult();
+        }
+    }
+
+    void CompleteCancellationSignals(CancellationToken cancellationToken)
+    {
         _readyToSend.TrySetCanceled(cancellationToken);
-
         _sendContext.TrySetCanceled(cancellationToken);
+        _message.TrySetCanceled(cancellationToken);
 
-        _message.TrySetCanceled();
+        HandlerConnectHandle[] responseHandlers;
+        lock (_handlerLock)
+            responseHandlers = _responseHandlers.Values.ToArray();
 
-        DisconnectHandlers(handle => handle.TrySetCanceled(cancellationToken));
+        foreach (HandlerConnectHandle handle in responseHandlers)
+            TryCleanup(() => handle.TrySetCanceled(cancellationToken), "Completing a canceled request response handler faulted");
     }
 
     void TimeoutExpired(object? state)
@@ -335,23 +398,16 @@ internal sealed class ClientRequestHandle<TRequest> :
 
     void DisposeTimer()
     {
-        try
-        {
-            _timeoutTimer?.Dispose();
-        }
-        catch (ObjectDisposedException)
-        {
-        }
-
-        _timeoutTimer = null;
+        ITimer? timer = Interlocked.Exchange(ref _timeoutTimer, null);
+        DisposeTimerSafely(timer);
     }
 
     CancellationToken CancellationTokenForCanceledRequest()
     {
         if (_cancellationToken.IsCancellationRequested)
             return _cancellationToken;
-        if (_cancellationTokenSource.IsCancellationRequested)
-            return _cancellationTokenSource.Token;
+        if (_requestSendCancellationToken.IsCancellationRequested)
+            return _requestSendCancellationToken;
 
         return new CancellationToken(canceled: true);
     }
@@ -370,10 +426,64 @@ internal sealed class ClientRequestHandle<TRequest> :
 
         foreach (HandlerConnectHandle handle in responseHandlers)
         {
-            complete(handle);
-            handle.Disconnect();
+            TryCleanup(() => complete(handle), "Completing a request response handler faulted");
+            TryCleanup(handle.Disconnect, "Disconnecting a request response handler faulted");
         }
 
-        faultHandler?.Disconnect();
+        if (faultHandler is not null)
+            TryCleanup(faultHandler.Disconnect, "Disconnecting the request fault handler faulted");
+    }
+
+    void CancelRequestSend()
+    {
+        TryCleanup(_cancellationTokenSource.Cancel, "Canceling the request send faulted");
+    }
+
+    async Task DisposeCancellationTokenSourceAfterTerminalCleanupAsync()
+    {
+        await _terminalCleanupCompleted.Task.ConfigureAwait(false);
+
+        try
+        {
+            await _send.ConfigureAwait(false);
+        }
+        catch
+        {
+            // Send failures are propagated through the request completion tasks.
+        }
+
+        _cancellationTokenSource.Dispose();
+    }
+
+    void DisposeRegistration()
+    {
+        TryCleanup(_registration.Dispose, "Disposing the request cancellation registration faulted");
+    }
+
+    static void DisposeTimerSafely(ITimer? timer)
+    {
+        if (timer is null)
+            return;
+
+        TryCleanup(timer.Dispose, "Disposing the request timeout timer faulted");
+    }
+
+    static void TryCleanup(Action cleanup, string message)
+    {
+        try
+        {
+            cleanup();
+        }
+        catch (Exception exception)
+        {
+            try
+            {
+                LogContext.Warning?.Log(exception, message);
+            }
+            catch
+            {
+                // Diagnostic logging cannot change request completion or cleanup outcomes.
+            }
+        }
     }
 }

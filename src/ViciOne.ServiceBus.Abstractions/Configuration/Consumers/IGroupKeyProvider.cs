@@ -1,14 +1,14 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Provides group key services.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-/// <typeparam name="TKey">The key used for lookup.</typeparam>
+/// <summary>Selects an optional grouping key for a message entering a batch collector.</summary>
+/// <typeparam name="TMessage">The message contract supplied to the selector.</typeparam>
+/// <typeparam name="TKey">The grouping-key type.</typeparam>
 public interface IGroupKeyProvider<in TMessage, TKey>
     where TMessage : class
 {
-    /// <summary>Attempts to get key.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="key">Receives the key produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Attempts to select a non-null grouping key.</summary>
+    /// <param name="context">The message context supplied to the selector.</param>
+    /// <param name="key">Receives the selected key when one exists.</param>
+    /// <returns><see langword="true" /> when the message has a grouping key; otherwise, <see langword="false" />.</returns>
     bool TryGetKey(ConsumeContext<TMessage> context, out TKey key);
 }

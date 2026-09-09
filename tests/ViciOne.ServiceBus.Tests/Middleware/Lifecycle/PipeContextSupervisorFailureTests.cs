@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -49,6 +51,34 @@ public sealed class PipeContextSupervisorFailureTests
     public async Task OperationFailure_WhenEveryCleanupStepFails_PreservesTheExactOperationFailureAsync()
     {
         await AssertPrimaryFailureWinsAsync(faultThrows: true, stopThrows: true, disposeThrows: true);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-PRIMARY-FAILURE", "diagnostic-logging-failure")]
+    public async Task OperationFailure_WhenCleanupAndDiagnosticLoggingFail_PreservesTheExactOperationFailureAsync()
+    {
+        var events = new List<string>();
+        var expected = new OperationFailureException();
+        var factory = new RecordingFactory(events, faultThrows: true, stopThrows: true, disposeThrows: true);
+        var supervisor = new PipeContextSupervisor<LifecycleContext>(factory);
+        var pipe = new RecordingPipe(events, expected);
+        var logger = new ThrowingLogger();
+        var previousLogContext = LogContext.Current;
+        LogContext.ConfigureCurrentLogContext(logger);
+
+        try
+        {
+            OperationFailureException actual = await Assert.ThrowsAsync<OperationFailureException>(
+                () => supervisor.SendAsync(pipe, TestContext.Current.CancellationToken));
+
+            Assert.Same(expected, actual);
+            Assert.Equal(["pipe", "fault", "stop", "dispose"], events);
+            Assert.Equal(3, logger.CallCount);
+        }
+        finally
+        {
+            LogContext.Current = previousLogContext;
+        }
     }
 
     [Fact]
@@ -305,4 +335,27 @@ public sealed class PipeContextSupervisorFailureTests
     private sealed class OperationFailureException : Exception;
 
     private sealed class CleanupFailureException(string message) : Exception(message);
+
+    private sealed class ThrowingLogger : ILogger
+    {
+        private int _callCount;
+
+        public int CallCount => Volatile.Read(ref _callCount);
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            Interlocked.Increment(ref _callCount);
+            throw new InvalidOperationException("Diagnostic logger failure.");
+        }
+    }
 }

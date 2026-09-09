@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.JobService;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Middleware.Partitioning;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -203,7 +204,7 @@ public sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
             {
                 e.ConcurrentMessageLimit = _options.ConcurrentMessageLimit;
 
-                var partition = new Partitioner(_options.ConcurrentMessageLimit.Value, new Murmur3UnsafeHashGenerator());
+                var partition = new PartitionCoordinator(_options.ConcurrentMessageLimit.Value);
 
                 e.UsePartitioner<JobSubmitted>(partition, p => p.Message.JobId);
 
@@ -251,7 +252,7 @@ public sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
             {
                 e.ConcurrentMessageLimit = _options.ConcurrentMessageLimit;
 
-                var partition = new Partitioner(_options.ConcurrentMessageLimit.Value, new Murmur3UnsafeHashGenerator());
+                var partition = new PartitionCoordinator(_options.ConcurrentMessageLimit.Value);
 
                 e.UsePartitioner<StartJobAttempt>(partition, p => p.Message.AttemptId);
                 e.UsePartitioner<FinalizeJobAttempt>(partition, p => p.Message.AttemptId);
@@ -286,7 +287,7 @@ public sealed class JobServiceConfigurator<TReceiveEndpointConfigurator> :
             {
                 e.ConcurrentMessageLimit = _options.ConcurrentMessageLimit;
 
-                var partition = new Partitioner(_options.ConcurrentMessageLimit.Value, new Murmur3UnsafeHashGenerator());
+                var partition = new PartitionCoordinator(_options.ConcurrentMessageLimit.Value);
 
                 e.UsePartitioner<AllocateJobSlot>(partition, p => p.Message.JobTypeId);
                 e.UsePartitioner<JobSlotReleased>(partition, p => p.Message.JobTypeId);

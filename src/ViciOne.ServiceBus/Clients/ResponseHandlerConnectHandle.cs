@@ -5,8 +5,8 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>A connection to a request which handles a result, and completes the Task when it's received.</summary>
-/// <typeparam name="TResponse">The response type.</typeparam>
+/// <summary>Owns a response-handler connection and combines its terminal outcome with request-send completion.</summary>
+/// <typeparam name="TResponse">The response message contract.</typeparam>
 internal sealed class ResponseHandlerConnectHandle<TResponse> :
     HandlerConnectHandle<TResponse>
     where TResponse : class
@@ -15,10 +15,10 @@ internal sealed class ResponseHandlerConnectHandle<TResponse> :
     readonly ConnectHandle _handle;
     readonly Task _requestTask;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="handle">The handle.</param>
-    /// <param name="completed">The completed.</param>
-    /// <param name="requestTask">The request task.</param>
+    /// <summary>Creates a response handle for one connected response pipeline.</summary>
+    /// <param name="handle">The response-pipeline connection.</param>
+    /// <param name="completed">The matching response context completion source.</param>
+    /// <param name="requestTask">The task that sends the associated request.</param>
     public ResponseHandlerConnectHandle(ConnectHandle handle, TaskCompletionSource<ConsumeContext<TResponse>> completed, Task requestTask)
     {
         _handle = handle ?? throw new ArgumentNullException(nameof(handle));
@@ -28,39 +28,45 @@ internal sealed class ResponseHandlerConnectHandle<TResponse> :
         Task = GetTaskAsync();
     }
 
-    /// <summary>Releases the resources owned by this instance.</summary>
+    /// <summary>Disposes the response-pipeline connection.</summary>
     public void Dispose()
     {
         _handle.Dispose();
     }
 
-    /// <summary>Disconnects the current observer or endpoint.</summary>
+    /// <summary>Disconnects the response pipeline.</summary>
     public void Disconnect()
     {
         _handle.Disconnect();
     }
 
-    /// <summary>Attempts to set exception.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <summary>Attempts to complete response waiting with a request failure.</summary>
+    /// <param name="exception">The request failure.</param>
     public void TrySetException(Exception exception)
     {
         _completed.TrySetException(exception);
         _completed.Task.IgnoreUnobservedExceptions();
     }
 
-    /// <summary>Attempts to set canceled.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Attempts to cancel response waiting with the originating token.</summary>
+    /// <param name="cancellationToken">The token that canceled the request.</param>
     public void TrySetCanceled(CancellationToken cancellationToken)
     {
         _completed.TrySetCanceled(cancellationToken);
         _completed.Task.IgnoreUnobservedExceptions();
     }
 
-    /// <summary>Gets the task.</summary>
+    /// <summary>Gets the task that validates send completion and returns the matching response.</summary>
     public Task<Response<TResponse>> Task { get; }
 
     async Task<Response<TResponse>> GetTaskAsync()
     {
+        if (!_completed.Task.IsCompleted && !_requestTask.IsCompleted)
+            await System.Threading.Tasks.Task.WhenAny(_completed.Task, _requestTask).ConfigureAwait(false);
+
+        if (_completed.Task is { IsCompleted: true, IsCompletedSuccessfully: false })
+            await _completed.Task.ConfigureAwait(false);
+
         await _requestTask.ConfigureAwait(false);
 
         ConsumeContext<TResponse> context = await _completed.Task.ConfigureAwait(false);

@@ -4,10 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Processor;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.EventHubs.Checkpoints;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transports;
-using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.EventHubs;
 
@@ -35,10 +35,11 @@ public class EventHubDataReceiver :
 
         var lockContext = new ProcessorLockContext(processorContext, receiveSettings, _checkpointTokenSource.Token);
 
-        IHashGenerator hashGenerator = new Murmur3UnsafeHashGenerator();
-        _executorPool = new PartitionedTaskExecutor<ProcessEventArgs>(GetBytes, hashGenerator,
+        IPartitionHashGenerator hashGenerator = new Murmur3PartitionHashGenerator();
+        _executorPool = new PartitionedTaskExecutor<ProcessEventArgs>(GetBytes,
             receiveSettings.ConcurrentMessageLimit,
-            receiveSettings.ConcurrentDeliveryLimit);
+            receiveSettings.ConcurrentDeliveryLimit,
+            hashGenerator: hashGenerator);
 
         _client = lockContext.Client;
         _lockContext = lockContext;

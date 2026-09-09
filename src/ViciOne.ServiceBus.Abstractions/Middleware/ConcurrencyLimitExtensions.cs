@@ -4,34 +4,31 @@ using ViciOne.ServiceBus.Contracts;
 
 namespace ViciOne.ServiceBus.Advanced.Middleware;
 
-/// <summary>Provides extension methods for concurrency limit.</summary>
+/// <summary>Adjusts concurrency-limiting middleware through its control pipeline.</summary>
 public static class ConcurrencyLimitExtensions
 {
-    /// <summary>Set the concurrency limit of the filter.</summary>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="concurrencyLimit">The concurrency limit.</param>
-    /// <param name="timeProvider">The clock used to timestamp the concurrency-limit command and enforce its timeout.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public static Task SetConcurrencyLimitAsync(this IPipe<CommandContext> pipe, int concurrencyLimit, TimeProvider? timeProvider = null, CancellationToken cancellationToken = default)
+    /// <summary>Sets the maximum number of operations allowed to execute concurrently.</summary>
+    /// <param name="pipe">The control pipeline connected to the concurrency limiter.</param>
+    /// <param name="concurrencyLimit">The positive concurrency limit to apply.</param>
+    /// <param name="timeProvider">The clock used to order this command against other adjustments.</param>
+    /// <param name="cancellationToken">The token that cancels the adjustment.</param>
+    /// <returns>A task that completes when every connected concurrency limiter has applied the command.</returns>
+    public static Task SetConcurrencyLimitAsync(this IPipe<CommandContext> pipe, int concurrencyLimit, TimeProvider? timeProvider = null,
+        CancellationToken cancellationToken = default)
     {
-        timeProvider ??= TimeProvider.System;
+        ArgumentNullException.ThrowIfNull(pipe);
+        ArgumentOutOfRangeException.ThrowIfLessThan(concurrencyLimit, 1);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
 
-        return pipe.SendCommandAsync<SetConcurrencyLimit>(new Limit(concurrencyLimit, timeProvider.GetUtcNow()), timeProvider, cancellationToken: cancellationToken);
+        timeProvider ??= TimeProvider.System;
+        var command = new SetConcurrencyLimitCommand(concurrencyLimit, timeProvider.GetUtcNow());
+
+        return pipe.SendCommandAsync<SetConcurrencyLimit>(command, timeProvider, cancellationToken);
     }
 
-
-    class Limit :
-        SetConcurrencyLimit
+    private sealed record SetConcurrencyLimitCommand(int ConcurrencyLimit, DateTimeOffset? Timestamp) : SetConcurrencyLimit
     {
-        public Limit(int concurrencyLimit, DateTimeOffset timestamp)
-        {
-            ConcurrencyLimit = concurrencyLimit;
-            Timestamp = timestamp;
-        }
-
-        public DateTimeOffset? Timestamp { get; }
-        public string? Id => null;
-        public int ConcurrencyLimit { get; }
+        public string? LimiterId => null;
     }
 }

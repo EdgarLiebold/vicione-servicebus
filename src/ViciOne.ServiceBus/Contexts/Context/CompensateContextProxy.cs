@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ViciOne.ServiceBus.Context;
 
 /// <summary>Forwards compensate context operations to an underlying context.</summary>
-/// <typeparam name="TLog">The log type.</typeparam>
+/// <typeparam name="TLog">The compensation log contract.</typeparam>
 public class CompensateContextProxy<TLog> :
     ActivityContextProxy,
     CompensateContext<TLog>
@@ -13,18 +13,18 @@ public class CompensateContextProxy<TLog> :
     readonly CompensateContext<TLog> _context;
     readonly TLog _log;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="log">The log.</param>
+    /// <summary>Creates a compensation-context view with an explicit log.</summary>
+    /// <param name="context">The compensation context to wrap.</param>
+    /// <param name="log">The compensation log exposed by the proxy.</param>
     public CompensateContextProxy(CompensateContext<TLog> context, TLog log)
         : base(context)
     {
         _context = context;
-        _log = log;
+        _log = log ?? throw new ArgumentNullException(nameof(log));
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates a forwarding view over a compensation context.</summary>
+    /// <param name="context">The compensation context to wrap.</param>
     protected CompensateContextProxy(CompensateContext<TLog> context)
         : base(context)
     {

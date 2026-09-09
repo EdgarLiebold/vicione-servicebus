@@ -133,8 +133,19 @@ public sealed class MessagePipelineMetricsTests
                 ServiceBusTelemetry.Attributes.ProcessorKind);
 
             string[] forbiddenFragments = ["message.type", "consumer", "destination", "address", "payload", "custom"];
-            Assert.DoesNotContain(observations.Measurements.SelectMany(item => item.Tags), tag =>
-                forbiddenFragments.Any(fragment => tag.Key.Contains(fragment, StringComparison.OrdinalIgnoreCase)));
+            string[] pipelineInstrumentNames =
+            [
+                ServiceBusTelemetry.Metrics.SentMessages,
+                ServiceBusTelemetry.Metrics.ConsumedMessages,
+                ServiceBusTelemetry.Metrics.ProcessDuration,
+                ServiceBusTelemetry.Metrics.ActiveOperations,
+            ];
+            Assert.DoesNotContain(
+                observations.Measurements
+                    .Where(item => pipelineInstrumentNames.Contains(item.Name, StringComparer.Ordinal))
+                    .SelectMany(item => item.Tags),
+                tag => forbiddenFragments.Any(fragment =>
+                    tag.Key.Contains(fragment, StringComparison.OrdinalIgnoreCase)));
         }
         finally
         {

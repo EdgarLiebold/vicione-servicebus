@@ -1,29 +1,31 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>Provides an endpoint for publish request send.</summary>
-/// <typeparam name="TRequest">The request type.</typeparam>
+/// <summary>Publishes requests for one message contract.</summary>
+/// <typeparam name="TRequest">The request message contract.</typeparam>
 internal sealed class PublishRequestSendEndpoint<TRequest> :
     RequestSendEndpoint<TRequest>
     where TRequest : class
 {
     readonly IPublishEndpointProvider _provider;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Creates a publish-backed request endpoint.</summary>
     /// <param name="provider">The publish endpoint provider used to resolve the request destination.</param>
-    /// <param name="consumeContext">The consume context.</param>
+    /// <param name="consumeContext">The consume context whose correlation metadata is propagated, or <see langword="null" />.</param>
     public PublishRequestSendEndpoint(IPublishEndpointProvider provider, ConsumeContext? consumeContext)
         : base(consumeContext)
     {
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
     }
 
-    /// <summary>Gets send endpoint.</summary>
-    /// <returns>A task that produces the requested value.</returns>
-    protected override async Task<ISendEndpoint> GetSendEndpointAsync()
+    /// <summary>Resolves the publish endpoint for the request contract.</summary>
+    /// <param name="cancellationToken">Cancels endpoint resolution.</param>
+    /// <returns>A task containing the publish send endpoint.</returns>
+    protected override async Task<ISendEndpoint> GetSendEndpointAsync(CancellationToken cancellationToken)
     {
-        return await _provider.GetPublishSendEndpointAsync<TRequest>().ConfigureAwait(false);
+        return await _provider.GetPublishSendEndpointAsync<TRequest>(cancellationToken).ConfigureAwait(false);
     }
 }

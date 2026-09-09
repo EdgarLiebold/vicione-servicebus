@@ -29,7 +29,7 @@ internal sealed class PauseScheduledMessageConsumerDefinition<TBus> :
         IConsumerConfigurator<PauseScheduledMessageConsumer<TBus>> consumerConfigurator, IRegistrationContext context)
     {
         consumerConfigurator.Message<PauseScheduledRecurringMessage>(message =>
-            message.UsePartitioner(_endpointDefinition.Partition, context => Runtime.QuartzTriggerKey.GetPartitionKey(
+            message.UsePartitioner(_endpointDefinition.Partitioner, context => Runtime.QuartzTriggerKey.GetPartitionKey(
                 context.Message.ScheduleId,
                 context.Message.ScheduleGroup)));
     }

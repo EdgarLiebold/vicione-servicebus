@@ -5,7 +5,6 @@ using ViciOne.ServiceBus.Advanced.Observers;
 using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Configuration;
-using ViciOne.ServiceBus.Diagnostics;
 using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.MessagePack.Serialization;
 using ViciOne.ServiceBus.Providers.Persistence;

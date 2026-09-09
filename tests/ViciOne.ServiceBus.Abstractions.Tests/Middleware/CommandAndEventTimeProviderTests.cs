@@ -26,6 +26,18 @@ public sealed class CommandAndEventTimeProviderTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-COMMAND-EVENT-CLOCK", "command-cancellation-owner")]
+    public async Task SentCommand_CarriesTheCallersCancellationTokenAsync()
+    {
+        var pipe = new CapturePipe<CommandContext>();
+        using var cancellation = new CancellationTokenSource();
+
+        await pipe.SendCommandAsync(new RuntimeCommand("cancelable"), cancellationToken: cancellation.Token);
+
+        Assert.Equal(cancellation.Token, pipe.Context.CancellationToken);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-COMMAND-EVENT-CLOCK", "event-context-owner")]
     public async Task PublishedEvent_CarriesTheConfiguredClockAndItsExactUtcTimestampAsync()
     {
@@ -39,6 +51,48 @@ public sealed class CommandAndEventTimeProviderTests
         Assert.Same(message, context.Event);
         Assert.Equal(ObservationTime.UtcDateTime, context.Timestamp);
         Assert.Same(clock, context.GetTimeProvider());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COMMAND-EVENT-CLOCK", "event-cancellation-owner")]
+    public async Task PublishedEvent_CarriesTheCallersCancellationTokenAsync()
+    {
+        var pipe = new CapturePipe<EventContext>();
+        using var cancellation = new CancellationTokenSource();
+
+        await pipe.PublishEventAsync(new RuntimeEvent("cancelable"), cancellationToken: cancellation.Token);
+
+        Assert.Equal(cancellation.Token, pipe.Context.CancellationToken);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COMMAND-EVENT-CANCELLATION", "pre-canceled-command-does-not-create-or-dispatch-context")]
+    public async Task PreCanceledCommand_PreservesItsTokenWithoutReadingTheClockOrInvokingThePipeAsync()
+    {
+        var pipe = new CapturePipe<CommandContext>();
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            pipe.SendCommandAsync(new RuntimeCommand("canceled"), new ThrowingTimeProvider(), cancellation.Token));
+
+        Assert.Equal(cancellation.Token, exception.CancellationToken);
+        Assert.Equal(0, pipe.InvocationCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COMMAND-EVENT-CANCELLATION", "pre-canceled-event-does-not-create-or-dispatch-context")]
+    public async Task PreCanceledEvent_PreservesItsTokenWithoutReadingTheClockOrInvokingThePipeAsync()
+    {
+        var pipe = new CapturePipe<EventContext>();
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            pipe.PublishEventAsync(new RuntimeEvent("canceled"), new ThrowingTimeProvider(), cancellation.Token));
+
+        Assert.Equal(cancellation.Token, exception.CancellationToken);
+        Assert.Equal(0, pipe.InvocationCount);
     }
 
     [Fact]
@@ -57,6 +111,56 @@ public sealed class CommandAndEventTimeProviderTests
         Assert.Same(clock, context.GetTimeProvider());
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONTROL-COMMANDS", "pre-canceled-limits-do-not-dispatch-or-read-clock")]
+    public async Task PreCanceledLimitCommands_PreserveTheirTokenWithoutInvokingThePipeOrClockAsync()
+    {
+        var pipe = new CapturePipe<CommandContext>();
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        OperationCanceledException concurrencyException = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            pipe.SetConcurrencyLimitAsync(2, new ThrowingTimeProvider(), cancellation.Token));
+        OperationCanceledException rateException = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            pipe.SetRateLimitAsync(3, cancellation.Token));
+
+        Assert.Equal(cancellation.Token, concurrencyException.CancellationToken);
+        Assert.Equal(cancellation.Token, rateException.CancellationToken);
+        Assert.Equal(0, pipe.InvocationCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONTROL-COMMANDS", "invalid-limit-boundaries")]
+    public void LimitCommands_RejectNullPipelinesAndNonPositiveLimitsImmediately()
+    {
+        var pipe = new CapturePipe<CommandContext>();
+        IPipe<CommandContext> nullPipe = null!;
+
+        ArgumentNullException nullRatePipe = Assert.Throws<ArgumentNullException>(() =>
+        {
+            _ = nullPipe.SetRateLimitAsync(1, TestContext.Current.CancellationToken);
+        });
+        ArgumentNullException nullConcurrencyPipe = Assert.Throws<ArgumentNullException>(() =>
+        {
+            _ = nullPipe.SetConcurrencyLimitAsync(1, cancellationToken: TestContext.Current.CancellationToken);
+        });
+        ArgumentOutOfRangeException rateLimit = Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            _ = pipe.SetRateLimitAsync(0, TestContext.Current.CancellationToken);
+        });
+        ArgumentOutOfRangeException concurrencyLimit = Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            _ = pipe.SetConcurrencyLimitAsync(0, cancellationToken: TestContext.Current.CancellationToken);
+        });
+
+        Assert.Equal("pipe", nullRatePipe.ParamName);
+        Assert.Equal("pipe", nullConcurrencyPipe.ParamName);
+        Assert.Equal("rateLimit", rateLimit.ParamName);
+        Assert.Equal(0, rateLimit.ActualValue);
+        Assert.Equal("concurrencyLimit", concurrencyLimit.ParamName);
+        Assert.Equal(0, concurrencyLimit.ActualValue);
+    }
+
     private sealed record RuntimeCommand(string Value);
 
     private sealed record RuntimeEvent(string Value);
@@ -66,14 +170,23 @@ public sealed class CommandAndEventTimeProviderTests
     {
         public TContext Context { get; private set; } = null!;
 
+        public int InvocationCount { get; private set; }
+
         public void Probe(ProbeContext context)
         {
         }
 
         public Task SendAsync(TContext context)
         {
+            InvocationCount++;
             Context = context;
             return Task.CompletedTask;
         }
+    }
+
+    private sealed class ThrowingTimeProvider : TimeProvider
+    {
+        public override DateTimeOffset GetUtcNow() =>
+            throw new InvalidOperationException("A pre-canceled operation must not read the clock.");
     }
 }

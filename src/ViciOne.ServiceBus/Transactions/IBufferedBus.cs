@@ -15,8 +15,8 @@ public interface IBufferedBus :
     /// retried automatically; after a failure or cancellation, every unattempted action remains buffered ahead of actions added
     /// during the flush. Calling this method recursively from an action currently being flushed by the same buffered bus is rejected.
     /// </summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="cancellationToken">The token that cancels admission to the flush or the current dispatch.</param>
+    /// <returns>A task that completes after the captured actions have been dispatched or retained after interruption.</returns>
     /// <exception cref="System.InvalidOperationException">
     /// The call was made recursively from an action currently being flushed by this buffered bus.
     /// </exception>

@@ -5,8 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-
 namespace ViciOne.ServiceBus.Advanced.Serialization;
+
 /// <summary>Caches immutable sensitivity metadata without pinning collectible message assemblies.</summary>
 public sealed class MessageSensitivityInspector : IMessageSensitivityInspector
 {

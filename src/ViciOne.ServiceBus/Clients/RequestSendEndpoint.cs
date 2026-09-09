@@ -7,30 +7,34 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Clients;
 
-/// <summary>Provides an endpoint for request send.</summary>
-/// <typeparam name="TRequest">The request type.</typeparam>
+/// <summary>Initializes and sends requests through a lazily resolved endpoint.</summary>
+/// <typeparam name="TRequest">The request message contract.</typeparam>
 internal abstract class RequestSendEndpoint<TRequest> :
     IRequestSendEndpoint<TRequest>
     where TRequest : class
 {
     readonly ConsumeContext? _consumeContext;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="consumeContext">The consume context.</param>
+    /// <summary>Creates a request endpoint with optional consume-context propagation.</summary>
+    /// <param name="consumeContext">The consume context whose correlation metadata is propagated, or <see langword="null" />.</param>
     protected RequestSendEndpoint(ConsumeContext? consumeContext)
     {
         _consumeContext = consumeContext;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="requestId">The request id.</param>
-    /// <param name="values">The values.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the send outcome.</returns>
+    /// <summary>Initializes a request from property values and sends it outside any ambient outbox.</summary>
+    /// <param name="requestId">The identifier used to match the response.</param>
+    /// <param name="values">The values used to initialize the request contract.</param>
+    /// <param name="pipe">The request send-context pipeline.</param>
+    /// <param name="cancellationToken">Cancels endpoint resolution, initialization, or sending.</param>
+    /// <returns>A task containing the initialized request message after transport acceptance.</returns>
     public async Task<TRequest> SendAsync(Guid requestId, object values, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
     {
-        ISendEndpoint endpoint = (await GetSendEndpointAsync().ConfigureAwait(false)).SkipOutbox();
+        ArgumentNullException.ThrowIfNull(values);
+        ArgumentNullException.ThrowIfNull(pipe);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        ISendEndpoint endpoint = (await GetSendEndpointAsync(cancellationToken).ConfigureAwait(false)).SkipOutbox();
 
         (var message, IPipe<SendContext<TRequest>> sendPipe) = _consumeContext != null
             ? await MessageInitializerCache<TRequest>.InitializeMessageAsync(_consumeContext, values,
@@ -42,15 +46,19 @@ internal abstract class RequestSendEndpoint<TRequest> :
         return message;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <param name="requestId">The request id.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Sends an existing request outside any ambient outbox.</summary>
+    /// <param name="requestId">The identifier used to match the response.</param>
+    /// <param name="message">The request message.</param>
+    /// <param name="pipe">The request send-context pipeline.</param>
+    /// <param name="cancellationToken">Cancels endpoint resolution or sending.</param>
+    /// <returns>A task that completes when the destination transport accepts the request.</returns>
     public async Task SendAsync(Guid requestId, TRequest message, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
     {
-        ISendEndpoint endpoint = (await GetSendEndpointAsync().ConfigureAwait(false)).SkipOutbox();
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        ISendEndpoint endpoint = (await GetSendEndpointAsync(cancellationToken).ConfigureAwait(false)).SkipOutbox();
 
         IPipe<SendContext<TRequest>> consumePipe = _consumeContext != null
             ? new ConsumeSendPipeAdapter<TRequest>(_consumeContext, pipe, requestId)
@@ -59,7 +67,8 @@ internal abstract class RequestSendEndpoint<TRequest> :
         await endpoint.SendAsync(message, consumePipe, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Gets send endpoint.</summary>
-    /// <returns>A task that produces the requested value.</returns>
-    protected abstract Task<ISendEndpoint> GetSendEndpointAsync();
+    /// <summary>Resolves the endpoint that accepts the request.</summary>
+    /// <param name="cancellationToken">Cancels endpoint resolution.</param>
+    /// <returns>A task containing the resolved send endpoint.</returns>
+    protected abstract Task<ISendEndpoint> GetSendEndpointAsync(CancellationToken cancellationToken);
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Quartz.Consumers;
@@ -17,6 +18,7 @@ internal sealed class QuartzEndpointDefinition<TBus> :
     where TBus : class, IBus
 {
     readonly int? _concurrentMessageLimit;
+    readonly PipePartitioner _partitioner;
     readonly int? _prefetchCount;
     readonly string _queueName;
 
@@ -30,11 +32,11 @@ internal sealed class QuartzEndpointDefinition<TBus> :
         _concurrentMessageLimit = settings.ConcurrentMessageLimit;
         _queueName = settings.QueueName;
 
-        Partition = new Partitioner(_concurrentMessageLimit ?? _prefetchCount ?? 32, new Murmur3UnsafeHashGenerator());
+        _partitioner = new PipePartitioner(_concurrentMessageLimit ?? _prefetchCount ?? 32);
     }
 
     /// <summary>Gets the partitioner that serializes commands for the same trigger identity.</summary>
-    public IPartitioner Partition { get; }
+    public IPartitioner Partitioner => _partitioner;
 
     /// <summary>Gets whether the endpoint configures consume topology for scheduling contracts.</summary>
     public bool ConfigureConsumeTopology => true;
@@ -66,6 +68,6 @@ internal sealed class QuartzEndpointDefinition<TBus> :
     /// <returns>An awaitable disposal operation.</returns>
     public ValueTask DisposeAsync()
     {
-        return Partition.DisposeAsync();
+        return _partitioner.DisposeAsync();
     }
 }

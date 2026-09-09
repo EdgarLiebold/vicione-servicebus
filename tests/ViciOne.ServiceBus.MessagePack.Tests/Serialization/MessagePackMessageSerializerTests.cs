@@ -1,6 +1,5 @@
 using System.Text;
 using ViciOne.ServiceBus.Advanced.Serialization;
-using ViciOne.ServiceBus.Introspection;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.MessageData.Values;
 using ViciOne.ServiceBus.MessagePack.Serialization;

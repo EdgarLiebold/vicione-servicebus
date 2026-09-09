@@ -22,8 +22,7 @@ internal sealed class AmbientTransactionBus :
 
     internal override Task AddAsync(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default)
     {
-        if (action == null)
-            throw new ArgumentNullException(nameof(action));
+        ArgumentNullException.ThrowIfNull(action);
 
         cancellationToken.ThrowIfCancellationRequested();
 

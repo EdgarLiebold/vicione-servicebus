@@ -32,6 +32,40 @@ public static class ServiceBusTelemetry
         public const string DeliveryDuration = "vicione.servicebus.messaging.delivery.duration";
         /// <summary>Counts outbox enqueue and delivery outcomes.</summary>
         public const string OutboxMessages = "vicione.servicebus.outbox.messages";
+        /// <summary>Counts durable-send admission outcomes.</summary>
+        public const string DurableSenderAdmission = "vicione.servicebus.durable_sender.admission";
+        /// <summary>Measures the logical retained content size of durable-send admission requests in bytes.</summary>
+        public const string DurableSenderAdmissionSize = "vicione.servicebus.durable_sender.admission.size";
+        /// <summary>Counts durable-send delivery-attempt outcomes.</summary>
+        public const string DurableSenderDelivery = "vicione.servicebus.durable_sender.delivery";
+        /// <summary>Measures durable-send delivery-attempt durations in seconds.</summary>
+        public const string DurableSenderDeliveryDuration = "vicione.servicebus.durable_sender.delivery.duration";
+        /// <summary>Counts process-local durable-send consumer-completion outcomes.</summary>
+        public const string DurableSenderConsumerCompletion = "vicione.servicebus.durable_sender.consumer_completion";
+        /// <summary>Measures process-local durable-send consumer-completion durations in seconds.</summary>
+        public const string DurableSenderConsumerCompletionDuration = "vicione.servicebus.durable_sender.consumer_completion.duration";
+        /// <summary>Counts explicit operator decisions to retain quarantined reliable messages as abandoned.</summary>
+        public const string ReliabilityAbandoned = "vicione.servicebus.reliability.abandoned";
+        /// <summary>Reports the most recently observed number of retained durable-send records.</summary>
+        public const string DurableSenderStored = "vicione.servicebus.durable_sender.stored";
+        /// <summary>Reports the most recently observed logical durable-send content size in bytes.</summary>
+        public const string DurableSenderStoredContentSize = "vicione.servicebus.durable_sender.stored.content.size";
+        /// <summary>Reports the most recently observed number of pending durable sends.</summary>
+        public const string DurableSenderPending = "vicione.servicebus.durable_sender.pending";
+        /// <summary>Reports the most recently observed number of durable sends awaiting retry.</summary>
+        public const string DurableSenderRetryScheduled = "vicione.servicebus.durable_sender.retry_scheduled";
+        /// <summary>Reports the most recently observed number of durable sends awaiting consumer completion.</summary>
+        public const string DurableSenderAwaitingConsumerCompletion = "vicione.servicebus.durable_sender.awaiting_consumer_completion";
+        /// <summary>Reports the most recently observed number of quarantined durable sends.</summary>
+        public const string DurableSenderQuarantined = "vicione.servicebus.durable_sender.quarantined";
+        /// <summary>Reports the age of the oldest pending durable send in seconds.</summary>
+        public const string DurableSenderOldestPendingAge = "vicione.servicebus.durable_sender.oldest_pending.age";
+        /// <summary>Counts serialized-payload admission outcomes.</summary>
+        public const string PayloadAdmission = "vicione.servicebus.payload.admission";
+        /// <summary>Measures serialized application-body sizes in bytes.</summary>
+        public const string PayloadBodySize = "vicione.servicebus.payload.body.size";
+        /// <summary>Measures final transport-envelope sizes in bytes.</summary>
+        public const string PayloadEnvelopeSize = "vicione.servicebus.payload.envelope.size";
     }
 
     /// <summary>Defines the OpenTelemetry attribute names emitted by the service bus.</summary>
@@ -51,6 +85,22 @@ public static class ServiceBusTelemetry
         public const string OutboxOperation = "vicione.servicebus.outbox.operation";
         /// <summary>Records whether an operation succeeded or faulted.</summary>
         public const string Outcome = "vicione.servicebus.outcome";
+        /// <summary>Identifies the typed bus that owns an observation.</summary>
+        public const string Bus = "vicione.servicebus.bus";
+        /// <summary>Identifies a durable-send intent without exposing its payload.</summary>
+        public const string DurableSendId = "vicione.servicebus.durable_send.id";
+        /// <summary>Identifies the stable message contract associated with an observation.</summary>
+        public const string MessageContract = "vicione.servicebus.contract";
+        /// <summary>Records the logical retained content size of a durable send in bytes.</summary>
+        public const string DurableSenderRetainedContentSize = "vicione.servicebus.durable_sender.retained_content.size";
+        /// <summary>Records the one-based durable-send delivery attempt number.</summary>
+        public const string DeliveryAttempt = "vicione.servicebus.delivery.attempt";
+        /// <summary>Indicates whether the payload warning threshold was exceeded.</summary>
+        public const string PayloadWarningThresholdExceeded = "vicione.servicebus.payload.warning_threshold_exceeded";
+        /// <summary>Identifies whether a reliable-messaging observation applies to the inbox or outbox.</summary>
+        public const string ReliabilitySide = "vicione.servicebus.reliability.side";
+        /// <summary>Identifies an individual message using the OpenTelemetry semantic convention.</summary>
+        public const string MessageId = "messaging.message.id";
     }
 
     /// <summary>Defines the OpenTelemetry messaging-system identifiers used by supported transports.</summary>

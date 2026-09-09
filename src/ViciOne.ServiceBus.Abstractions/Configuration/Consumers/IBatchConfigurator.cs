@@ -2,28 +2,28 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Batching is an experimental feature, and may be changed at any time in the future.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Configures collection and delivery of messages as bounded batches.</summary>
+/// <typeparam name="TMessage">The message contract collected into each batch.</typeparam>
 public interface IBatchConfigurator<TMessage> :
     IConsumeConfigurator
     where TMessage : class
 {
-    /// <summary>Set the maximum time to wait for messages before the batch is automatically completed.</summary>
+    /// <summary>Sets the maximum collection interval before a partial batch is delivered.</summary>
     TimeSpan TimeLimit { set; }
 
-    /// <summary>Sets the starting point for the <see cref="TimeLimit"/>.</summary>
+    /// <summary>Sets the message arrival from which <see cref="TimeLimit" /> is measured.</summary>
     BatchTimeLimitStart TimeLimitStart { set; }
 
-    /// <summary>Set the maximum number of messages which can be added to a single batch.</summary>
+    /// <summary>Sets the maximum number of messages in one batch.</summary>
     int MessageLimit { set; }
 
-    /// <summary>Set the maximum number of concurrent batches which can execute at the same time.</summary>
+    /// <summary>Sets the maximum number of completed batches delivered concurrently.</summary>
     int ConcurrencyLimit { set; }
 
-    /// <summary>Specify the consumer factory for the batch message consumer.</summary>
-    /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
-    /// <param name="consumerFactory">The consumer factory.</param>
-    /// <param name="configure">Configure the consumer pipe.</param>
+    /// <summary>Registers the consumer factory that receives completed batches.</summary>
+    /// <typeparam name="TConsumer">The consumer implementation that handles each batch.</typeparam>
+    /// <param name="consumerFactory">The factory that supplies consumer instances.</param>
+    /// <param name="configure">An optional callback that configures the batch consume pipeline.</param>
     void Consumer<TConsumer>(IConsumerFactory<TConsumer> consumerFactory,
         Action<IConsumerMessageConfigurator<TConsumer, Batch<TMessage>>>? configure = null)
         where TConsumer : class, IConsumer<Batch<TMessage>>;

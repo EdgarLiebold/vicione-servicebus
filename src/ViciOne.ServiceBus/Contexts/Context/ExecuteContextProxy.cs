@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ViciOne.ServiceBus.Context;
 
 /// <summary>Forwards execute context operations to an underlying context.</summary>
-/// <typeparam name="TArguments">The arguments type.</typeparam>
+/// <typeparam name="TArguments">The activity argument contract.</typeparam>
 public class ExecuteContextProxy<TArguments> :
     ActivityContextProxy,
     ExecuteContext<TArguments>
@@ -12,18 +12,18 @@ public class ExecuteContextProxy<TArguments> :
 {
     readonly ExecuteContext<TArguments> _context;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="arguments">The arguments.</param>
+    /// <summary>Creates an execute-context view with explicit activity arguments.</summary>
+    /// <param name="context">The execute context to wrap.</param>
+    /// <param name="arguments">The activity arguments exposed by the proxy.</param>
     public ExecuteContextProxy(ExecuteContext<TArguments> context, TArguments arguments)
         : base(context)
     {
         _context = context;
-        Arguments = arguments;
+        Arguments = arguments ?? throw new ArgumentNullException(nameof(arguments));
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Creates a forwarding view over an execute context.</summary>
+    /// <param name="context">The execute context to wrap.</param>
     protected ExecuteContextProxy(ExecuteContext<TArguments> context)
         : base(context)
     {
@@ -31,7 +31,7 @@ public class ExecuteContextProxy<TArguments> :
         Arguments = context.Arguments;
     }
 
-    /// <summary>Gets the arguments.</summary>
+    /// <summary>Gets the activity arguments.</summary>
     public TArguments Arguments { get; }
 
     /// <summary>Gets or sets the result; the value is unset until the activity completes.</summary>
@@ -231,7 +231,7 @@ public class ExecuteContextProxy<TArguments> :
     }
 
     /// <summary>Reports that the operation has faulted.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="exception">The failure that faulted the activity execution.</param>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Faulted(Exception exception)
     {
@@ -239,7 +239,7 @@ public class ExecuteContextProxy<TArguments> :
     }
 
     /// <summary>Reports that the operation has faulted.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="exception">The failure that faulted the activity execution.</param>
     /// <param name="callback">The callback invoked by the operation.</param>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult Faulted(Exception exception, ConfigureFaultedActivityOptionsCallback callback)
@@ -248,7 +248,7 @@ public class ExecuteContextProxy<TArguments> :
     }
 
     /// <summary>Reports a fault together with the supplied routing-slip variables.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="exception">The failure that faulted the activity execution.</param>
     /// <param name="variables">The variables.</param>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult FaultedWithVariables(Exception exception, object variables)
@@ -257,7 +257,7 @@ public class ExecuteContextProxy<TArguments> :
     }
 
     /// <summary>Reports a fault together with the supplied routing-slip variables.</summary>
-    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="exception">The failure that faulted the activity execution.</param>
     /// <param name="variables">The variables.</param>
     /// <returns>The execution result produced by the operation.</returns>
     public ExecutionResult FaultedWithVariables(Exception exception, IEnumerable<KeyValuePair<string, object>> variables)

@@ -4,31 +4,33 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Defines configuration options for vici one service bus health check.</summary>
-/// <typeparam name="TBus">The bus type.</typeparam>
+/// <summary>Stores the .NET health-check registration settings for one bus contract.</summary>
+/// <typeparam name="TBus">The bus contract that owns the health check.</typeparam>
 public sealed class ViciOneServiceBusHealthCheckOptions<TBus> :
     IHealthCheckOptionsConfigurator,
     IHealthCheckOptions
     where TBus : IBus
 {
-    /// <summary>Initializes a new instance.</summary>
+    readonly HashSet<string> _tags = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Initializes an empty option set that uses the bus-derived registration defaults.</summary>
     public ViciOneServiceBusHealthCheckOptions()
     {
-        Tags = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>The health check name. If null the type name of bus instance will be used.</summary>
+    /// <summary>Gets or sets an optional registration name that replaces the bus-derived default.</summary>
     public string? Name { get; set; }
 
     /// <summary>
-    /// The minimal <see cref="HealthStatus" /> that should be reported when the health check fails.
-    /// If null then all statuses from <see cref="HealthStatus.Unhealthy"/> to <see cref="HealthStatus.Healthy"/> will be reported depending on app health.
+    /// Gets or sets the lowest <see cref="HealthStatus"/> value the registration reports. A missing value
+    /// preserves the bus snapshot status without applying a floor.
     /// </summary>
     public HealthStatus? MinimalFailureStatus { get; set; }
 
     /// <summary>
-    /// A list of tags that can be used to filter sets of health checks. If empty, the default tags
-    /// will be used.
+    /// Gets the mutable, case-insensitive registration tags. An empty set selects the built-in readiness tags.
     /// </summary>
-    public HashSet<string> Tags { get; }
+    public ISet<string> Tags => _tags;
+
+    IReadOnlySet<string> IHealthCheckOptions.Tags => _tags;
 }

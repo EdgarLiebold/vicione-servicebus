@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Quartz;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Initializers;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Providers.Configuration;
@@ -171,7 +172,7 @@ public static class QuartzSchedulingExtensions
         configure?.Invoke(options);
         QuartzSchedulerSettings settings = options.CreateSettings(schedulerFactory);
         var observer = new DirectQuartzSchedulerLifecycleObserver(settings);
-        IPartitioner? partitioner = null;
+        PipePartitioner? partitioner = null;
         Uri? inputAddress = null;
 
         try
@@ -179,7 +180,7 @@ public static class QuartzSchedulingExtensions
             configurator.ReceiveEndpoint(settings.QueueName, endpoint =>
             {
                 int partitionCount = settings.ConcurrentMessageLimit ?? settings.PrefetchCount ?? Environment.ProcessorCount;
-                IPartitioner commandPartitioner = configurator.CreatePartitioner(partitionCount);
+                var commandPartitioner = new PipePartitioner(partitionCount);
                 partitioner = commandPartitioner;
                 if (settings.PrefetchCount.HasValue)
                     endpoint.PrefetchCount = settings.PrefetchCount.Value;

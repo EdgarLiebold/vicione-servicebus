@@ -1,6 +1,6 @@
 using System;
 
-using ViciOne.ServiceBus.Diagnostics.Telemetry;
+using ViciOne.ServiceBus.Monitoring.Telemetry;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 

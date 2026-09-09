@@ -29,10 +29,10 @@ internal sealed class CancelScheduledMessageConsumerDefinition<TBus> :
         IConsumerConfigurator<CancelScheduledMessageConsumer<TBus>> consumerConfigurator, IRegistrationContext context)
     {
         consumerConfigurator.Message<CancelScheduledMessage>(message =>
-            message.UsePartitioner(_endpointDefinition.Partition, context => context.Message.TokenId));
+            message.UsePartitioner(_endpointDefinition.Partitioner, context => context.Message.TokenId));
 
         consumerConfigurator.Message<CancelScheduledRecurringMessage>(message =>
-            message.UsePartitioner(_endpointDefinition.Partition, context => Runtime.QuartzTriggerKey.GetPartitionKey(
+            message.UsePartitioner(_endpointDefinition.Partitioner, context => Runtime.QuartzTriggerKey.GetPartitionKey(
                 context.Message.ScheduleId,
                 context.Message.ScheduleGroup)));
     }

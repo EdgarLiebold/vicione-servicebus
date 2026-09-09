@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Diagnostics.Telemetry;
+using ViciOne.ServiceBus.Monitoring.Telemetry;
 using ViciOne.ServiceBus.Providers.Persistence;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;

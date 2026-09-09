@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.JobService;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Middleware.Partitioning;
 using JobServiceState = ViciOne.ServiceBus.JobService.JobService;
 
 namespace ViciOne.ServiceBus.Configuration;
@@ -15,8 +16,8 @@ internal sealed class JobAttemptSagaDefinition :
     readonly JobSagaOptions _options;
     readonly JobSagaSettingsConfigurator _setOptions;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="options">The options that control the operation.</param>
+    /// <summary>Captures the shared job-saga settings used to configure attempt supervision.</summary>
+    /// <param name="options">The validated job-saga settings wrapper.</param>
     public JobAttemptSagaDefinition(IOptions<JobSagaOptions> options)
     {
         ArgumentNullException.ThrowIfNull(options);
@@ -41,7 +42,7 @@ internal sealed class JobAttemptSagaDefinition :
         {
             configurator.ConcurrentMessageLimit = _options.ConcurrentMessageLimit;
 
-            var partition = new Partitioner(_options.ConcurrentMessageLimit.Value, new Murmur3UnsafeHashGenerator());
+            var partition = new PartitionCoordinator(_options.ConcurrentMessageLimit.Value);
 
             configurator.UsePartitioner<StartJobAttempt>(partition, p => p.Message.AttemptId);
             configurator.UsePartitioner<FinalizeJobAttempt>(partition, p => p.Message.AttemptId);

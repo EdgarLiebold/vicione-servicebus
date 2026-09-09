@@ -2,21 +2,21 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts;
 
-/// <summary>Exposes state for event operations.</summary>
+/// <summary>Describes a timestamped event traveling through an event pipeline.</summary>
 public interface EventContext :
     PipeContext
 {
-    /// <summary>The timestamp at which the command was sent.</summary>
+    /// <summary>Gets the UTC time at which the event context was created.</summary>
     DateTimeOffset Timestamp { get; }
 }
 
 
-/// <summary>Exposes state for event operations.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public interface EventContext<out T> :
+/// <summary>Provides the typed payload of a published event.</summary>
+/// <typeparam name="TEvent">The event contract type.</typeparam>
+public interface EventContext<out TEvent> :
     EventContext
-    where T : class
+    where TEvent : class
 {
-    /// <summary>The event object.</summary>
-    T Event { get; }
+    /// <summary>Gets the published event.</summary>
+    TEvent Event { get; }
 }

@@ -36,33 +36,32 @@ internal sealed class BusHealthCheck :
         var data = new Dictionary<string, object>
         {
             ["Endpoints"] = new EndpointDictionary(result.Endpoints.ToDictionary(x => x.Key,
-                x => new Endpoint(Enum.GetName(typeof(BusHealthStatus), x.Value.Status), x.Value.Description)
-            ))
+                x => new Endpoint(Enum.GetName(x.Value.Status), x.Value.Description),
+                StringComparer.Ordinal))
         };
 
-        var minimalHealthcheckLevel = context.Registration.FailureStatus switch
+        BusHealthStatus minimumReportedStatus = context.Registration.FailureStatus switch
         {
             HealthStatus.Healthy => BusHealthStatus.Healthy,
             HealthStatus.Degraded => BusHealthStatus.Degraded,
-            _ => BusHealthStatus.Unhealthy
+            _ => BusHealthStatus.Unhealthy,
         };
 
-        var usedHealthcheckResult = result.Status < minimalHealthcheckLevel ? minimalHealthcheckLevel : result.Status;
+        BusHealthStatus reportedStatus = result.Status < minimumReportedStatus ? minimumReportedStatus : result.Status;
 
-        return Task.FromResult(usedHealthcheckResult switch
+        return Task.FromResult(reportedStatus switch
         {
             BusHealthStatus.Healthy => HealthCheckResult.Healthy(result.Description, data),
             BusHealthStatus.Degraded => HealthCheckResult.Degraded(result.Description, result.Exception, data),
-            _ => HealthCheckResult.Unhealthy(result.Description, result.Exception, data)
+            _ => HealthCheckResult.Unhealthy(result.Description, result.Exception, data),
         });
     }
-
 
     sealed class EndpointDictionary :
         Dictionary<string, Endpoint>
     {
         public EndpointDictionary(IDictionary<string, Endpoint> dictionary)
-            : base(dictionary, StringComparer.OrdinalIgnoreCase)
+            : base(dictionary, StringComparer.Ordinal)
         {
         }
 
@@ -71,7 +70,6 @@ internal sealed class BusHealthCheck :
             return string.Join(", ", this.Select(x => $"{x.Key}: {x.Value}"));
         }
     }
-
 
     sealed class Endpoint
     {

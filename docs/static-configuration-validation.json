@@ -98,7 +98,7 @@
     },
     {
       "type": "CircuitBreakerOptions",
-      "source": "src/ViciOne.ServiceBus/Configuration/CircuitBreakerOptions.cs",
+      "source": "src/ViciOne.ServiceBus/Configuration/CircuitBreaker/CircuitBreakerOptions.cs",
       "boundary": "configuration-materialization",
       "invariantCount": 6,
       "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/CircuitBreakerOptionsTests.cs", "method": "ThresholdConfiguration_AcceptsExactBoundsAndRejectsEveryInvalidValue" },

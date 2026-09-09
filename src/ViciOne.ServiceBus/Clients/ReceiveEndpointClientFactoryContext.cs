@@ -12,7 +12,7 @@ internal class ReceiveEndpointClientFactoryContext :
     /// <summary>Creates a client-factory context for a connected response endpoint.</summary>
     /// <param name="handle">The connected endpoint used to receive responses and resolve destinations.</param>
     /// <param name="defaultTimeout">The default request timeout.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <param name="timeProvider">The time source used to measure request deadlines.</param>
     public ReceiveEndpointClientFactoryContext(
         IHostReceiveEndpointHandle handle,
         RequestTimeout defaultTimeout = default,

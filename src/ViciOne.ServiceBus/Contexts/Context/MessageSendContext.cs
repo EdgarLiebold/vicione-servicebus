@@ -10,8 +10,8 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Carries state for message send operations.</summary>
-/// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+/// <summary>Owns the mutable transport send state for one typed message.</summary>
+/// <typeparam name="TMessage">The outgoing message contract.</typeparam>
 public class MessageSendContext<TMessage> :
     BasePipeContext,
     TransportSendContext<TMessage>
@@ -24,13 +24,13 @@ public class MessageSendContext<TMessage> :
 
     IMessageSerializer _serializer = null!;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Creates send state and assigns time-sortable message identity metadata.</summary>
+    /// <param name="message">The outgoing message.</param>
+    /// <param name="cancellationToken">Cancels the send pipeline.</param>
     public MessageSendContext(TMessage message, CancellationToken cancellationToken = default)
         : base(cancellationToken)
     {
-        Message = message;
+        Message = message ?? throw new ArgumentNullException(nameof(message));
 
         _headers = new DictionarySendHeaders();
 
@@ -44,45 +44,45 @@ public class MessageSendContext<TMessage> :
         _body = new Lazy<MessageBody>(() => GetMessageBody());
     }
 
-    /// <summary>Set to true if the message is being published.</summary>
+    /// <inheritdoc />
     public bool IsPublish { get; set; }
 
-    /// <summary>Gets the body.</summary>
+    /// <inheritdoc />
     public MessageBody Body => _body.Value;
 
-    /// <summary>Gets or sets the delay.</summary>
+    /// <inheritdoc />
     public virtual TimeSpan? Delay { get; set; }
 
-    /// <summary>Gets or sets the message id.</summary>
+    /// <inheritdoc />
     public Guid? MessageId { get; set; }
-    /// <summary>Gets or sets the request id.</summary>
+    /// <inheritdoc />
     public Guid? RequestId { get; set; }
-    /// <summary>Gets or sets the correlation id.</summary>
+    /// <inheritdoc />
     public Guid? CorrelationId { get; set; }
 
-    /// <summary>Gets or sets the conversation id.</summary>
+    /// <inheritdoc />
     public Guid? ConversationId { get; set; }
-    /// <summary>Gets or sets the initiator id.</summary>
+    /// <inheritdoc />
     public Guid? InitiatorId { get; set; }
 
-    /// <summary>Gets or sets the scheduled message id.</summary>
+    /// <inheritdoc />
     public Guid? ScheduledMessageId { get; set; }
 
-    /// <summary>Gets the headers.</summary>
+    /// <inheritdoc />
     public SendHeaders Headers => _headers;
 
-    /// <summary>Gets or sets the source address.</summary>
+    /// <inheritdoc />
     public Uri? SourceAddress { get; set; }
-    /// <summary>Gets or sets the destination address.</summary>
+    /// <inheritdoc />
     public Uri? DestinationAddress { get; set; }
-    /// <summary>Gets or sets the response address.</summary>
+    /// <inheritdoc />
     public Uri? ResponseAddress { get; set; }
-    /// <summary>Gets or sets the fault address.</summary>
+    /// <inheritdoc />
     public Uri? FaultAddress { get; set; }
 
-    /// <summary>Gets or sets the time to live.</summary>
+    /// <inheritdoc />
     public TimeSpan? TimeToLive { get; set; }
-    /// <summary>Gets or sets the sent time.</summary>
+    /// <inheritdoc />
     public DateTimeOffset? SentTime { get; private set; }
 
     internal void SetDurableAdmissionMetadata(Guid idempotencyKey, Guid? correlationId)
@@ -98,10 +98,10 @@ public class MessageSendContext<TMessage> :
         SentTime = null;
     }
 
-    /// <summary>Gets or sets the content type.</summary>
+    /// <inheritdoc />
     public ContentType? ContentType { get; set; }
 
-    /// <summary>Gets or sets the serializer.</summary>
+    /// <inheritdoc />
     public IMessageSerializer Serializer
     {
         get => _serializer;
@@ -116,37 +116,36 @@ public class MessageSendContext<TMessage> :
         }
     }
 
-    /// <summary>Gets or sets the serialization.</summary>
+    /// <inheritdoc />
     public ISerialization Serialization { get; set; } = null!;
-    /// <summary>Gets or sets the supported message types.</summary>
+    /// <inheritdoc />
     public string[] SupportedMessageTypes { get; set; }
 
-    /// <summary>Gets the body length.</summary>
+    /// <inheritdoc />
     public long? BodyLength => _body.IsValueCreated ? _body.Value.Length : default;
 
-    /// <summary>Creates proxy.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The created proxy.</returns>
+    /// <inheritdoc />
     public SendContext<T> CreateProxy<T>(T message)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(message);
         return new SendContextProxy<T>(this, message);
     }
 
-    /// <summary>Gets or sets the durable.</summary>
+    /// <inheritdoc />
     public bool Durable { get; set; } = true;
 
-    /// <summary>Gets the message.</summary>
+    /// <inheritdoc />
     public TMessage Message { get; }
 
-    /// <summary>Gets or sets the mandatory.</summary>
+    /// <inheritdoc />
     public bool Mandatory { get; set; }
 
-    /// <summary>Writes properties to.</summary>
-    /// <param name="properties">The properties.</param>
+    /// <inheritdoc />
     public virtual void WritePropertiesTo(IDictionary<string, object> properties)
     {
+        ArgumentNullException.ThrowIfNull(properties);
+
         if (!Durable)
             properties[PropertyNames.Durable] = false;
         if (Mandatory)
@@ -155,10 +154,11 @@ public class MessageSendContext<TMessage> :
             properties[PropertyNames.Delay] = Delay.Value;
     }
 
-    /// <summary>Reads properties from.</summary>
-    /// <param name="properties">The properties.</param>
+    /// <inheritdoc />
     public virtual void ReadPropertiesFrom(IReadOnlyDictionary<string, object> properties)
     {
+        ArgumentNullException.ThrowIfNull(properties);
+
         Durable = ReadBoolean(properties, PropertyNames.Durable, true);
         Mandatory = ReadBoolean(properties, PropertyNames.Mandatory);
         Delay = ReadTimeSpan(properties, PropertyNames.Delay);
@@ -169,11 +169,11 @@ public class MessageSendContext<TMessage> :
         return Serializer?.GetMessageBody(this) ?? throw new SerializationException("Unable to serialize message, no serializer specified.");
     }
 
-    /// <summary>Reads string.</summary>
-    /// <param name="properties">The properties.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
-    /// <returns>The string produced by the operation.</returns>
+    /// <summary>Reads a UTF-8 or native string value from a transport property bag.</summary>
+    /// <param name="properties">The transport property bag.</param>
+    /// <param name="key">The property key.</param>
+    /// <param name="defaultValue">The value returned when the property is absent or has an unsupported representation.</param>
+    /// <returns>The decoded string, or <paramref name="defaultValue" /> when no supported value is available.</returns>
     protected static string? ReadString(IReadOnlyDictionary<string, object> properties, string key, string? defaultValue = null)
     {
         if (properties.TryGetValue(key, out var value))
@@ -191,10 +191,10 @@ public class MessageSendContext<TMessage> :
         return defaultValue;
     }
 
-    /// <summary>Reads string array.</summary>
-    /// <param name="properties">The properties.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <returns>The string array produced by the operation.</returns>
+    /// <summary>Reads a semicolon-delimited UTF-8 or native string array from a transport property bag.</summary>
+    /// <param name="properties">The transport property bag.</param>
+    /// <param name="key">The property key.</param>
+    /// <returns>The decoded entries, or an empty array when no supported value is available.</returns>
     protected static string[] ReadStringArray(IReadOnlyDictionary<string, object> properties, string key)
     {
         if (properties.TryGetValue(key, out var value))
@@ -212,13 +212,16 @@ public class MessageSendContext<TMessage> :
         return [];
     }
 
-    /// <summary>Reads time span.</summary>
-    /// <param name="properties">The properties.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
-    /// <returns>The time span produced by the operation.</returns>
+    /// <summary>Reads a string-encoded duration from a transport property bag.</summary>
+    /// <param name="properties">The transport property bag.</param>
+    /// <param name="key">The property key.</param>
+    /// <param name="defaultValue">The value returned when the property is absent or invalid.</param>
+    /// <returns>The parsed duration, or <paramref name="defaultValue" /> when parsing is not possible.</returns>
     protected static TimeSpan? ReadTimeSpan(IReadOnlyDictionary<string, object> properties, string key, TimeSpan? defaultValue = null)
     {
+        if (properties.TryGetValue(key, out var storedValue) && storedValue is TimeSpan duration)
+            return duration;
+
         var value = ReadString(properties, key);
 
         if (string.IsNullOrWhiteSpace(value))
@@ -227,12 +230,12 @@ public class MessageSendContext<TMessage> :
         return _timeSpanConverter.TryConvert(value, out var result) ? result : defaultValue;
     }
 
-    /// <summary>Reads enum.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="properties">The properties.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
-    /// <returns>The t produced by the operation.</returns>
+    /// <summary>Reads a case-insensitive enum name from a transport property bag.</summary>
+    /// <typeparam name="T">The enum value type.</typeparam>
+    /// <param name="properties">The transport property bag.</param>
+    /// <param name="key">The property key.</param>
+    /// <param name="defaultValue">The value returned when the property is absent or invalid.</param>
+    /// <returns>The parsed enum value, or <paramref name="defaultValue" /> when parsing is not possible.</returns>
     protected static T? ReadEnum<T>(IReadOnlyDictionary<string, object> properties, string key, T? defaultValue = default)
         where T : struct
     {
@@ -245,11 +248,12 @@ public class MessageSendContext<TMessage> :
         return defaultValue;
     }
 
-    /// <summary>Reads byte.</summary>
-    /// <param name="properties">The properties.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
-    /// <returns>The byte produced by the operation.</returns>
+    /// <summary>Reads a byte-compatible integer from a transport property bag.</summary>
+    /// <param name="properties">The transport property bag.</param>
+    /// <param name="key">The property key.</param>
+    /// <param name="defaultValue">The value returned when the property is absent or invalid.</param>
+    /// <returns>The byte value, or <paramref name="defaultValue" /> when no compatible value is available.</returns>
+    /// <exception cref="OverflowException">The stored integer cannot be represented as a byte.</exception>
     protected static byte ReadByte(IReadOnlyDictionary<string, object> properties, string key, byte defaultValue = default)
     {
         if (!properties.TryGetValue(key, out var value))
@@ -260,38 +264,40 @@ public class MessageSendContext<TMessage> :
 
         var longValue = ReadLong(properties, key);
 
-        return longValue.HasValue ? (byte)longValue.Value : defaultValue;
+        return longValue.HasValue ? checked((byte)longValue.Value) : defaultValue;
     }
 
-    /// <summary>Reads int.</summary>
-    /// <param name="properties">The properties.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
-    /// <returns>The int produced by the operation.</returns>
+    /// <summary>Reads a 32-bit integer from a transport property bag.</summary>
+    /// <param name="properties">The transport property bag.</param>
+    /// <param name="key">The property key.</param>
+    /// <param name="defaultValue">The value returned when the property is absent or invalid.</param>
+    /// <returns>The integer value, or <paramref name="defaultValue" /> when no compatible value is available.</returns>
+    /// <exception cref="OverflowException">The stored integer cannot be represented as a 32-bit integer.</exception>
     protected static int? ReadInt(IReadOnlyDictionary<string, object> properties, string key, int? defaultValue = null)
     {
         var longValue = ReadLong(properties, key);
 
-        return longValue.HasValue ? (int)longValue.Value : defaultValue;
+        return longValue.HasValue ? checked((int)longValue.Value) : defaultValue;
     }
 
-    /// <summary>Reads short.</summary>
-    /// <param name="properties">The properties.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
-    /// <returns>The short produced by the operation.</returns>
+    /// <summary>Reads a 16-bit integer from a transport property bag.</summary>
+    /// <param name="properties">The transport property bag.</param>
+    /// <param name="key">The property key.</param>
+    /// <param name="defaultValue">The value returned when the property is absent or invalid.</param>
+    /// <returns>The integer value, or <paramref name="defaultValue" /> when no compatible value is available.</returns>
+    /// <exception cref="OverflowException">The stored integer cannot be represented as a 16-bit integer.</exception>
     protected static short? ReadShort(IReadOnlyDictionary<string, object> properties, string key, short? defaultValue = null)
     {
         var longValue = ReadLong(properties, key);
 
-        return longValue.HasValue ? (short)longValue.Value : defaultValue;
+        return longValue.HasValue ? checked((short)longValue.Value) : defaultValue;
     }
 
-    /// <summary>Reads long.</summary>
-    /// <param name="properties">The properties.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
-    /// <returns>The long produced by the operation.</returns>
+    /// <summary>Reads a 64-bit integer from a native integer, character, UTF-8, or string property value.</summary>
+    /// <param name="properties">The transport property bag.</param>
+    /// <param name="key">The property key.</param>
+    /// <param name="defaultValue">The value returned when the property is absent or invalid.</param>
+    /// <returns>The integer value, or <paramref name="defaultValue" /> when no compatible value is available.</returns>
     protected static long? ReadLong(IReadOnlyDictionary<string, object> properties, string key, long? defaultValue = null)
     {
         if (properties.TryGetValue(key, out var value))
@@ -322,11 +328,11 @@ public class MessageSendContext<TMessage> :
         return defaultValue;
     }
 
-    /// <summary>Reads boolean.</summary>
-    /// <param name="properties">The properties.</param>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="defaultValue">The value returned when the requested item is absent.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Reads a native Boolean or zero/nonzero integer from a transport property bag.</summary>
+    /// <param name="properties">The transport property bag.</param>
+    /// <param name="key">The property key.</param>
+    /// <param name="defaultValue">The value returned when the property is absent or invalid.</param>
+    /// <returns>The decoded Boolean value, or <paramref name="defaultValue" /> when no compatible value is available.</returns>
     protected static bool ReadBoolean(IReadOnlyDictionary<string, object> properties, string key, bool defaultValue = default)
     {
         if (!properties.TryGetValue(key, out var value))

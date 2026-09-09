@@ -41,7 +41,7 @@ internal sealed partial class ServiceBusRuntime
 
             if (cancellationToken == default)
             {
-                tokenSource = new CancellationTokenSource(ReadyTimeout, _timeProvider);
+                tokenSource = new CancellationTokenSource(DefaultReadinessTimeout, _timeProvider);
                 cancellationToken = tokenSource.Token;
             }
 
@@ -58,7 +58,7 @@ internal sealed partial class ServiceBusRuntime
 
                 try
                 {
-                    using var stopTimeoutTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30), _timeProvider);
+                    using var stopTimeoutTokenSource = new CancellationTokenSource(StartupCleanupTimeout, _timeProvider);
                     await busHandle.StopAsync(stopTimeoutTokenSource.Token).ConfigureAwait(false);
                 }
                 catch (Exception stopException)
@@ -67,6 +67,7 @@ internal sealed partial class ServiceBusRuntime
                 }
 
                 await busHandle.Ready.ConfigureAwait(false);
+                throw;
             }
 
             await _busObservable.PostStartAsync(this, busHandle.Ready).ConfigureAwait(false);
@@ -87,7 +88,7 @@ internal sealed partial class ServiceBusRuntime
                 {
                     LogContext.Warning?.Log(exception, "Bus start faulted: {HostAddress}", _host.Address);
 
-                    using var stopTimeoutTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30), _timeProvider);
+                    using var stopTimeoutTokenSource = new CancellationTokenSource(StartupCleanupTimeout, _timeProvider);
                     await busHandle.StopAsync(stopTimeoutTokenSource.Token).ConfigureAwait(false);
                 }
             }

@@ -67,7 +67,9 @@ public sealed class BackgroundWorkOwnershipTests
 
         string batchConnector = Source("src/ViciOne.ServiceBus/Consumers/Configuration/BatchConsumerMessageConnector.cs");
         Assert.DoesNotContain("Task.Run(", batchConnector, StringComparison.Ordinal);
-        Assert.Contains("_disposeTask = DisposeConsumerFactoryAsync();", batchConnector, StringComparison.Ordinal);
+        Assert.Contains("public ValueTask DisposeAsync() => new(BeginDisconnectAsync());", batchConnector, StringComparison.Ordinal);
+        Assert.Contains("_disposeTask = CompleteDisconnectAsync(disconnectFailure, factoryCleanup);", batchConnector, StringComparison.Ordinal);
+        Assert.Contains("_ = ObserveCleanupFailureAsync(cleanup);", batchConnector, StringComparison.Ordinal);
 
         string gauge = Source("src/ViciOne.ServiceBus/Transports/Fabric/Gauge.cs");
         Assert.DoesNotContain("Task.Run(", gauge, StringComparison.Ordinal);

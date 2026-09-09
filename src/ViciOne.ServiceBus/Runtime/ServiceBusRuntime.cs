@@ -18,10 +18,11 @@ internal sealed partial class ServiceBusRuntime :
     Advanced.IAdvancedPublishEndpoint,
     IMessageRouteProvider
 {
-    /// <summary>
-    /// Defines the default bound for bus startup and for consumers waiting on the on-demand bus endpoint.
-    /// </summary>
-    static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(60);
+    /// <summary>Bounds startup and synchronous connections waiting for the on-demand bus endpoint.</summary>
+    static readonly TimeSpan DefaultReadinessTimeout = TimeSpan.FromSeconds(60);
+
+    /// <summary>Bounds host cleanup after bus startup fails or is canceled.</summary>
+    static readonly TimeSpan StartupCleanupTimeout = TimeSpan.FromSeconds(30);
 
     readonly IBusObserver _busObservable;
     readonly IConsumePipe _consumePipe;

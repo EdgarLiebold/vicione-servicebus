@@ -133,7 +133,11 @@ public sealed class RequestClientOutboxTests
     private sealed class FixedRequestSendEndpoint(ISendEndpoint endpoint) :
         RequestSendEndpoint<InnerRequest>(consumeContext: null)
     {
-        protected override Task<ISendEndpoint> GetSendEndpointAsync() => Task.FromResult(endpoint);
+        protected override Task<ISendEndpoint> GetSendEndpointAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.FromResult(endpoint);
+        }
     }
 
     private sealed class RecordingOutboxContext : OutboxContext

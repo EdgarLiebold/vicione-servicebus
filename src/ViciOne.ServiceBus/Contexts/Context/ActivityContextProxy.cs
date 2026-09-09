@@ -15,7 +15,7 @@ public abstract class ActivityContextProxy :
     /// <summary>Initializes the proxy for the specified activity context.</summary>
     /// <param name="activityContext">The activity context.</param>
     protected ActivityContextProxy(ActivityContext activityContext)
-        : base(activityContext)
+        : base(activityContext ?? throw new ArgumentNullException(nameof(activityContext)))
     {
         _activityContext = activityContext;
     }
