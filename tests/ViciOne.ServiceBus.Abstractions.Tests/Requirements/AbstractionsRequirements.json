@@ -633,29 +633,106 @@
       "requirementId" : "REQ-VSB-SUPERVISOR-LIFECYCLE",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "FaultedChildReadiness_FaultsSupervisorWhileShutdownStillCompletesAsync",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.SupervisorLifecycleTests",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.SupervisorLifecycleTests",
       "variantKey" : "ready-fault-propagation"
    },
    {
       "requirementId" : "REQ-VSB-SUPERVISOR-LIFECYCLE",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "EmptySupervisor_StopsAndCompletesAsync",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.SupervisorLifecycleTests",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.SupervisorLifecycleTests",
       "variantKey" : "empty-stop-completion"
    },
    {
       "requirementId" : "REQ-VSB-SUPERVISOR-LIFECYCLE",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "NestedSupervisors_StopTheirCompleteAgentChainAsync",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.SupervisorLifecycleTests",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.SupervisorLifecycleTests",
       "variantKey" : "nested-shutdown"
    },
    {
       "requirementId" : "REQ-VSB-SUPERVISOR-LIFECYCLE",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "AgentAddedAfterReadiness_IsStillStoppedAndCompletedAsync",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.SupervisorLifecycleTests",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.SupervisorLifecycleTests",
       "variantKey" : "agent-added-after-ready"
+   },
+   {
+      "requirementId" : "REQ-VSB-SUPERVISOR-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Add_RejectsANullAgentWithoutChangingLifecycleCounts",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.SupervisorLifecycleTests",
+      "variantKey" : "null-agent-is-rejected-without-changing-counts"
+   },
+   {
+      "requirementId" : "REQ-VSB-SUPERVISOR-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Add_RejectsMissingAgentSignalsWithoutChangingLifecycleCounts",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.SupervisorLifecycleTests",
+      "variantKey" : "invalid-agent-signals-are-rejected-without-changing-counts"
+   },
+   {
+      "requirementId" : "REQ-VSB-SUPERVISOR-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Add_AfterStoppingBeginsRejectsTheAgentWithoutChangingCountsAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.SupervisorLifecycleTests",
+      "variantKey" : "stopping-supervisor-rejects-new-agent"
+   },
+   {
+      "requirementId" : "REQ-VSB-AGENT-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ConcurrentStopCalls_WaitForOneSharedAttemptAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.AgentLifecycleTests",
+      "variantKey" : "concurrent-stop-callers-share-one-attempt"
+   },
+   {
+      "requirementId" : "REQ-VSB-AGENT-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "CanceledCaller_CanRejoinTheStillOwnedStopAttemptAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.AgentLifecycleTests",
+      "variantKey" : "caller-cancellation-does-not-abandon-owned-stop"
+   },
+   {
+      "requirementId" : "REQ-VSB-AGENT-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "FailedStopAttempt_IsObservedAndCanBeRetriedAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.AgentLifecycleTests",
+      "variantKey" : "failed-stop-remains-retryable"
+   },
+   {
+      "requirementId" : "REQ-VSB-AGENT-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "CompletedStop_RemainsSuccessfulForAnAlreadyCanceledCallerAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.AgentLifecycleTests",
+      "variantKey" : "completed-stop-is-idempotent"
+   },
+   {
+      "requirementId" : "REQ-VSB-AGENT-BOUNDARY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PublicAndProtectedLifecycleBoundaries_RejectMissingInputsAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.AgentLifecycleTests",
+      "variantKey" : "required-inputs-are-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-AGENT-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TerminalSignalTransfers_PreserveTheExactCancellationTokenAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.AgentLifecycleTests",
+      "variantKey" : "terminal-signals-preserve-cancellation-identity"
+   },
+   {
+      "requirementId" : "REQ-VSB-AGENT-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PendingTerminalSignalTransfers_UseTheLatestRegisteredSourceAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.AgentLifecycleTests",
+      "variantKey" : "latest-pending-terminal-source-wins"
+   },
+   {
+      "requirementId" : "REQ-VSB-AGENT-LIFECYCLE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "CompletedTerminalSignalTransfers_CannotBeReplacedAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.AgentLifecycleTests",
+      "variantKey" : "completed-terminal-source-is-authoritative"
    },
    {
       "requirementId" : "REQ-VSB-PIPE-SPECIFICATION",
@@ -1055,6 +1132,13 @@
       "testMethod" : "OrCanceled_RejectsNullTasks",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TaskExtensionsTests",
       "variantKey" : "null-task-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-TASK-OUTCOME-TRANSFER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TrySetFromTask_PreservesCancellationTokenIdentityForBothOverloadsAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.TaskExtensionsTests",
+      "variantKey" : "cancellation-token-identity"
    },
    {
       "requirementId" : "REQ-VSB-SCOPED-PAYLOADS",
@@ -1816,4 +1900,7 @@
   ,{ "requirementId": "REQ-VSB-RUNTIME-TYPE-ACTIVATION", "variantKey": "closed-reference-type-required", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Metadata.ActivationTests", "testMethod": "Activate_RejectsTypesThatCannotSatisfyTheStrategyContract" }
   ,{ "requirementId": "REQ-VSB-RECEIVE-ENDPOINT-HANDLE-API", "variantKey": "canonical-interface-shape", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.ReceiveEndpointHandleApiTests", "testMethod": "ReceiveEndpointHandle_UsesCanonicalInterfaceShape" }
   ,{ "requirementId": "REQ-VSB-HOST-RECEIVE-ENDPOINT-HANDLE-API", "variantKey": "canonical-interface-shape", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.ReceiveEndpointHandleApiTests", "testMethod": "HostReceiveEndpointHandle_UsesCanonicalInterfaceShape" }
+  ,{ "requirementId": "REQ-VSB-AGENT-LIFECYCLE", "variantKey": "lifecycle-callback-failures-cannot-control-stop", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.AgentLifecycleTests", "testMethod": "ThrowingLifecycleCallbacks_CannotPreventOrPoisonSuccessfulShutdownAsync" }
+  ,{ "requirementId": "REQ-VSB-AGENT-LIFECYCLE", "variantKey": "rejected-terminal-source-faults-are-observed", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.AgentLifecycleTests", "testMethod": "RejectedTerminalSignalSources_ObserveFaultsThatArriveAfterRejection" }
+  ,{ "requirementId": "REQ-VSB-SUPERVISOR-LIFECYCLE", "variantKey": "faulted-child-completion-remains-observable", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.SupervisorLifecycleTests", "testMethod": "FaultedChildCompletion_RemainsVisibleToEverySupervisorStopAttemptAsync" }
 ]

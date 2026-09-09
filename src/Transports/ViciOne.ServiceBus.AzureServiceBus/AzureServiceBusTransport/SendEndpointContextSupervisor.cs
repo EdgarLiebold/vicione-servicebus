@@ -1,4 +1,4 @@
-using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;

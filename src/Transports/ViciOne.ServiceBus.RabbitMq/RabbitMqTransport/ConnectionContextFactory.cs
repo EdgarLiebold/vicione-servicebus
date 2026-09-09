@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
-using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.RabbitMq.Configuration;

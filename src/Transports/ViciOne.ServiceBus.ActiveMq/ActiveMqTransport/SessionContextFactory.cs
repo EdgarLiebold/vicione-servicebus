@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.ActiveMq;
@@ -44,7 +44,7 @@ public class SessionContextFactory :
 
     static async Task<SessionContext> CreateSharedSessionAsync(Task<SessionContext> context, CancellationToken cancellationToken)
     {
-        return context.IsCompletedSuccessfully()
+        return context.IsCompletedSuccessfully
             ? new ScopeSessionContext(context.Result, cancellationToken)
             : new ScopeSessionContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }

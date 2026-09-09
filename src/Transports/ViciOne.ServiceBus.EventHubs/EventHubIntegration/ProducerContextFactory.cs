@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.EventHubs;
@@ -47,7 +47,7 @@ public class ProducerContextFactory :
     static async Task<ProducerContext> CreateSharedConnectionAsync(Task<ProducerContext> context,
         CancellationToken cancellationToken)
     {
-        return context.IsCompletedSuccessfully()
+        return context.IsCompletedSuccessfully
             ? new SharedProducerContext(context.Result, cancellationToken)
             : new SharedProducerContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }

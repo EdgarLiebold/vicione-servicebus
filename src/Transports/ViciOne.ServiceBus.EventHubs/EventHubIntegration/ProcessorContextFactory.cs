@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Processor;
-using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Internals;
 
@@ -60,7 +60,7 @@ public class ProcessorContextFactory :
     static async Task<ProcessorContext> CreateSharedConnectionAsync(Task<ProcessorContext> context,
         CancellationToken cancellationToken)
     {
-        return context.IsCompletedSuccessfully()
+        return context.IsCompletedSuccessfully
             ? new SharedProcessorContext(context.Result, cancellationToken)
             : new SharedProcessorContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }

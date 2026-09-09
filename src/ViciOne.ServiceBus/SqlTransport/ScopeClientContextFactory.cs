@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.SqlTransport;
@@ -35,7 +35,7 @@ public class ScopeClientContextFactory :
 
     static async Task<ClientContext> CreateSharedClientContextAsync(Task<ClientContext> context, CancellationToken cancellationToken)
     {
-        return context.IsCompletedSuccessfully()
+        return context.IsCompletedSuccessfully
             ? new ScopeClientContext(context.Result, cancellationToken)
             : new ScopeClientContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }

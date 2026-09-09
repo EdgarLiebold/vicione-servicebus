@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.AzureServiceBus.Middleware;
 using ViciOne.ServiceBus.Internals;
 
@@ -67,7 +67,7 @@ public class SendEndpointContextFactory :
 
     static async Task<SendEndpointContext> CreateSharedContextAsync(Task<SendEndpointContext> context, CancellationToken cancellationToken)
     {
-        return context.IsCompletedSuccessfully()
+        return context.IsCompletedSuccessfully
             ? new SharedSendEndpointContext(context.Result, cancellationToken)
             : new SharedSendEndpointContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }

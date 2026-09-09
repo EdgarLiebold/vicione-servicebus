@@ -17,7 +17,7 @@ internal sealed partial class ServiceBusRuntime
     /// </summary>
     void WaitUntilBusEndpointIsReady()
     {
-        if (_busHandle == null || _receiveEndpoint.Started.IsCompletedSuccessfully())
+        if (_busHandle == null || _receiveEndpoint.Started.IsCompletedSuccessfully)
             return;
 
         var terminal = _terminalFault;

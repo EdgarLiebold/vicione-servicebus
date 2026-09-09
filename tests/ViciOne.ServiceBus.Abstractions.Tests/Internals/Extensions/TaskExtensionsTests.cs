@@ -114,6 +114,26 @@ public sealed class TaskExtensionsTests
         });
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TASK-OUTCOME-TRANSFER", "cancellation-token-identity")]
+    public async Task TrySetFromTask_PreservesCancellationTokenIdentityForBothOverloadsAsync()
+    {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        cancellationTokenSource.Cancel();
+        CancellationToken expected = cancellationTokenSource.Token;
+        var untypedTarget = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var typedTarget = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        untypedTarget.TrySetFromTask(Task.FromCanceled(expected), 27);
+        typedTarget.TrySetFromTask(Task.FromCanceled<int>(expected));
+
+        OperationCanceledException untyped = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => untypedTarget.Task);
+        OperationCanceledException typed = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => typedTarget.Task);
+
+        Assert.Equal(expected, untyped.CancellationToken);
+        Assert.Equal(expected, typed.CancellationToken);
+    }
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void CreateObservedAndControlFaults(string observedMarker, string controlMarker)
     {

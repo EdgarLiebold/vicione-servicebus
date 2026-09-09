@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.ActiveMq.Configuration;
 using ViciOne.ServiceBus.ActiveMq.Middleware;
 using ViciOne.ServiceBus.ActiveMq.Tests.TestDoubles;
 using ViciOne.ServiceBus.ActiveMq.Topology;
-using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Transports;
 using Xunit;

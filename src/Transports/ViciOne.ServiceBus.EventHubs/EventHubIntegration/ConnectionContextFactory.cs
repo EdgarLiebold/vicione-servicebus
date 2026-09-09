@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs.Producer;
-using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.EventHubs.Configuration;
 using ViciOne.ServiceBus.Internals;
 
@@ -44,7 +44,7 @@ public class ConnectionContextFactory :
 
     static async Task<ConnectionContext> CreateSharedConnectionContextAsync(Task<ConnectionContext> context, CancellationToken cancellationToken)
     {
-        return context.IsCompletedSuccessfully()
+        return context.IsCompletedSuccessfully
             ? new SharedConnectionContext(context.Result, cancellationToken)
             : new SharedConnectionContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }

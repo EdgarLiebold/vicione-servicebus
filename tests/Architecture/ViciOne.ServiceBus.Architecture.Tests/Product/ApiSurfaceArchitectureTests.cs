@@ -161,6 +161,55 @@ public sealed class ApiSurfaceArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-API-LAYERING", "lifecycle-spi-is-one-advanced-middleware-family")]
+    public void LifecycleSpi_IsConsolidatedUnderAdvancedMiddleware()
+    {
+        Type[] lifecycleTypes =
+        [
+            typeof(Agent),
+            typeof(AgentExtensions),
+            typeof(IAgent),
+            typeof(IAgent<>),
+            typeof(ISupervisor),
+            typeof(ISupervisor<>),
+            typeof(StopContext),
+            typeof(StopSupervisorContext),
+            typeof(Supervisor),
+            typeof(ActivePipeContext<>),
+            typeof(ActivePipeContextAgent<>),
+            typeof(AsyncPipeContextAgent<>),
+            typeof(AsyncPipeContextFilter<>),
+            typeof(AsyncPipeContextHandle<>),
+            typeof(AsyncPipeContextPipe<>),
+            typeof(ConstantPipeContextHandle<>),
+            typeof(IActivePipeContextAgent<>),
+            typeof(IActivePipeContextHandle<>),
+            typeof(IAsyncPipeContextAgent<>),
+            typeof(IAsyncPipeContextHandle<>),
+            typeof(IPipeContextAgent<>),
+            typeof(IPipeContextFactory<>),
+            typeof(IPipeContextHandle<>),
+            typeof(PipeContextAgent<>),
+            typeof(PipeContextSupervisor<>),
+            typeof(SupervisorExtensions),
+        ];
+
+        Assert.All(lifecycleTypes, type => Assert.Equal("ViciOne.ServiceBus.Advanced.Middleware", type.Namespace));
+
+        Type[] exportedTypes = lifecycleTypes
+            .Select(static type => type.Assembly)
+            .Distinct()
+            .SelectMany(static assembly => assembly.GetExportedTypes())
+            .ToArray();
+        Assert.DoesNotContain(exportedTypes, static type => type.Namespace == "ViciOne.ServiceBus.Agents");
+        Assert.DoesNotContain(exportedTypes, static type => type.FullName is
+            "ViciOne.ServiceBus.Middleware.Agent" or
+            "ViciOne.ServiceBus.Middleware.Supervisor" or
+            "ViciOne.ServiceBus.Advanced.IAsyncPipeContextHandle`1" or
+            "ViciOne.ServiceBus.Advanced.IPipeContextHandle`1");
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-API-BASELINE", "application-root-is-exactly-the-versioned-baseline")]
     public void ApplicationApi_IsExactlyTheVersionedRootNamespaceBaseline()
     {

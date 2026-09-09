@@ -23,8 +23,8 @@ incomplete capability configuration, and unsupported durable transport combinati
 
 Framework extensions use `ViciOne.ServiceBus.Advanced` and its focused child namespaces:
 `Middleware`, `Serialization`, `Topology`, `Observers`, `Registration`, and `Initializers`.
-This layer contains pipe-based overloads, serialized envelopes, consumer definitions, topology
-contracts, observers, and the `IConsumerKind` extension point.
+This layer contains pipe-based overloads, supervised middleware lifecycles, serialized envelopes,
+consumer definitions, topology contracts, observers, and the `IConsumerKind` extension point.
 
 Application code should use this layer only when it intentionally implements a framework extension.
 

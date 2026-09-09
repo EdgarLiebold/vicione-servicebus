@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.AzureServiceBus.Configuration;
 using ViciOne.ServiceBus.AzureServiceBus.Middleware;
 using ViciOne.ServiceBus.Transports;

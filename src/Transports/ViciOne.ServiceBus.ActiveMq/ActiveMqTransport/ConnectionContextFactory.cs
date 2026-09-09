@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Apache.NMS;
 using ViciOne.ServiceBus.ActiveMq.Configuration;
-using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Transports;
 
@@ -89,7 +89,7 @@ public class ConnectionContextFactory :
 
     static async Task<ConnectionContext> CreateSharedConnectionAsync(Task<ConnectionContext> context, CancellationToken cancellationToken)
     {
-        return context.IsCompletedSuccessfully()
+        return context.IsCompletedSuccessfully
             ? new SharedConnectionContext(context.Result, cancellationToken)
             : new SharedConnectionContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }

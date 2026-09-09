@@ -127,7 +127,7 @@ public sealed class SourceFileNamingArchitectureTests
         string coreRoot = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus");
         string[] violations = Directory.EnumerateFiles(coreRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .SelectMany(path => CSharpSyntaxTree.ParseText(File.ReadAllText(path))
-                .GetCompilationUnitRoot()
+                .GetCompilationUnitRoot(TestContext.Current.CancellationToken)
                 .DescendantNodes()
                 .OfType<BaseNamespaceDeclarationSyntax>()
                 .Select(declaration => new
@@ -163,6 +163,68 @@ public sealed class SourceFileNamingArchitectureTests
             .ToArray();
 
         Assert.Equal(expectedFiles, actualFiles);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "lifecycle-spi-files-live-under-advanced-middleware")]
+    public void LifecycleSpiFiles_LiveUnderTheirAdvancedMiddlewareNamespace()
+    {
+        string[] abstractionFiles =
+        [
+            "Agent.cs",
+            "AgentExtensions.cs",
+            "IAgent.cs",
+            "ISupervisor.cs",
+            "StopContext.cs",
+            "StopSupervisorContext.cs",
+            "Supervisor.cs",
+        ];
+        string[] coreFiles =
+        [
+            "ActivePipeContext.cs",
+            "ActivePipeContextAgent.cs",
+            "AsyncPipeContextAgent.cs",
+            "AsyncPipeContextFilter.cs",
+            "AsyncPipeContextHandle.cs",
+            "AsyncPipeContextPipe.cs",
+            "ConstantPipeContextHandle.cs",
+            "IActivePipeContextAgent.cs",
+            "IActivePipeContextHandle.cs",
+            "IAsyncPipeContextAgent.cs",
+            "IAsyncPipeContextHandle.cs",
+            "IPipeContextAgent.cs",
+            "IPipeContextFactory.cs",
+            "IPipeContextHandle.cs",
+            "PipeContextAgent.cs",
+            "PipeContextSupervisor.cs",
+            "SupervisorExtensions.cs",
+        ];
+
+        string abstractionDirectory = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus.Abstractions",
+            "Advanced",
+            "Middleware");
+        string coreDirectory = Path.Combine(
+            RepositoryLayout.Root,
+            "src",
+            "ViciOne.ServiceBus",
+            "Advanced",
+            "Middleware");
+        string[] paths = abstractionFiles.Select(file => Path.Combine(abstractionDirectory, file))
+            .Concat(coreFiles.Select(file => Path.Combine(coreDirectory, file)))
+            .ToArray();
+
+        Assert.All(paths, path =>
+        {
+            Assert.True(File.Exists(path), RepositoryLayout.RelativeToRoot(path));
+            string[] namespaces = ReadNamespaces(path, TestContext.Current.CancellationToken);
+            Assert.Equal(["ViciOne.ServiceBus.Advanced.Middleware"], namespaces);
+        });
+
+        Assert.False(Directory.Exists(Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Agents")));
+        Assert.False(Directory.Exists(Path.Combine(RepositoryLayout.Root, "tests", "ViciOne.ServiceBus.Tests", "Agents")));
     }
 
     [Fact]
@@ -332,6 +394,15 @@ public sealed class SourceFileNamingArchitectureTests
         path.StartsWith(RepositoryLayout.Root + Path.DirectorySeparatorChar, RepositoryLayout.PathComparison)
         && !path.Contains($"{Path.DirectorySeparatorChar}artifacts{Path.DirectorySeparatorChar}", RepositoryLayout.PathComparison)
         && !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", RepositoryLayout.PathComparison);
+
+    private static string[] ReadNamespaces(string path, CancellationToken cancellationToken) =>
+        CSharpSyntaxTree.ParseText(File.ReadAllText(path), cancellationToken: cancellationToken)
+            .GetCompilationUnitRoot(cancellationToken)
+            .DescendantNodes()
+            .OfType<BaseNamespaceDeclarationSyntax>()
+            .Select(static declaration => declaration.Name.ToString())
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
 
     private static bool IsTopLevelType(MemberDeclarationSyntax declaration) =>
         declaration is BaseTypeDeclarationSyntax or DelegateDeclarationSyntax

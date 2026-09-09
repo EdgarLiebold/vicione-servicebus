@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Transports;

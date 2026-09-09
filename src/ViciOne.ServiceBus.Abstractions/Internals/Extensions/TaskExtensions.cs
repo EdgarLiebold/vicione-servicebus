@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Internals;
 
 internal static class TaskExtensions
 {
-    static readonly TimeSpan _defaultTimeout = new TimeSpan(0, 0, 0, 5, 0);
+    static readonly TimeSpan _defaultTimeout = TimeSpan.FromSeconds(5);
 
     public static Task OrCanceledAsync(this Task task, CancellationToken cancellationToken)
     {
@@ -194,16 +194,10 @@ internal static class TaskExtensions
             : "Operation timed out";
     }
 
-    /// <summary>Returns true if a Task was ran to completion (without being cancelled or faulted).</summary>
-    /// <param name="task">The task.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public static bool IsCompletedSuccessfully(this Task task)
-    {
-        return task.Status == TaskStatus.RanToCompletion;
-    }
-
     public static void IgnoreUnobservedExceptions(this Task task)
     {
+        ArgumentNullException.ThrowIfNull(task);
+
         if (task.IsCompleted)
             _ = task.Exception;
         else
@@ -217,10 +211,13 @@ internal static class TaskExtensions
 
     public static void TrySetFromTask<T>(this TaskCompletionSource<T> source, Task task, T value)
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(task);
+
         switch (task)
         {
             case { IsCanceled: true }:
-                source.TrySetCanceled();
+                source.TrySetCanceled(GetCancellationToken(task));
                 break;
             case { IsFaulted: true, Exception.InnerExceptions: not null }:
                 source.TrySetException(task.Exception.InnerExceptions);
@@ -239,10 +236,13 @@ internal static class TaskExtensions
 
     public static void TrySetFromTask<T>(this TaskCompletionSource<T> source, Task<T> task)
     {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(task);
+
         switch (task)
         {
             case { IsCanceled: true }:
-                source.TrySetCanceled();
+                source.TrySetCanceled(GetCancellationToken(task));
                 break;
             case { IsFaulted: true, Exception.InnerExceptions: not null }:
                 source.TrySetException(task.Exception.InnerExceptions);
@@ -259,11 +259,25 @@ internal static class TaskExtensions
         }
     }
 
-    /// <summary>Register a callback on the <paramref name="cancellationToken" /> which completes the resulting task.</summary>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <param name="cancelTask">Receives the cancel task produced by the operation.</param>
-    /// <returns>The cancellation token registration produced by the operation.</returns>
-    /// <exception cref="ArgumentException">Thrown when an argument does not satisfy the operation contract.</exception>
+    static CancellationToken GetCancellationToken(Task task)
+    {
+        try
+        {
+            task.GetAwaiter().GetResult();
+        }
+        catch (OperationCanceledException exception)
+        {
+            return exception.CancellationToken;
+        }
+
+        throw new InvalidOperationException("The task was not canceled.");
+    }
+
+    /// <summary>Registers a callback that completes a task when the supplied token is canceled.</summary>
+    /// <param name="cancellationToken">The cancelable token to observe.</param>
+    /// <param name="cancelTask">Receives the task completed by the callback.</param>
+    /// <returns>The registration that owns the callback.</returns>
+    /// <exception cref="ArgumentException">The token cannot be canceled.</exception>
     static CancellationTokenRegistration RegisterTask(CancellationToken cancellationToken, out Task cancelTask)
     {
         if (!cancellationToken.CanBeCanceled)

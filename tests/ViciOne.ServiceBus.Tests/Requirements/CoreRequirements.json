@@ -167,8 +167,8 @@
   { "requirementId": "REQ-VSB-PROPERTY-PROVIDER-EXCEPTION", "variantKey": "exception-info", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryObjectGraphTests", "testMethod": "ExceptionSource_ProducesObservableExceptionInformationAsync" },
   { "requirementId": "REQ-VSB-PROPERTY-PROVIDER-VARIABLE", "variantKey": "guid-and-string-results", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryVariableTests", "testMethod": "InitializerVariable_ProvidesExactGuidAndStringRepresentationsAsync" },
   { "requirementId": "REQ-VSB-PROPERTY-PROVIDER-FACTORY", "variantKey": "unsupported-source-target-pair", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Initializers.PropertyProviders.PropertyProviderFactoryTests", "testMethod": "UnsupportedSourceTargetPair_ReturnsFalseAndNoProvider" },
-  { "requirementId": "REQ-VSB-PIPE-CONTEXT-CACHE", "variantKey": "fault-invalidates-cache", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorTests", "testMethod": "PipelineFailure_DiscardsTheFaultedContextBeforeTheNextSendAsync" },
-  { "requirementId": "REQ-VSB-PIPE-CONTEXT-CACHE", "variantKey": "explicit-invalidation-recreates-context", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorTests", "testMethod": "ExplicitInvalidation_DiscardsTheContextBeforeTheNextSendAsync" },
+  { "requirementId": "REQ-VSB-PIPE-CONTEXT-CACHE", "variantKey": "fault-invalidates-cache", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorTests", "testMethod": "PipelineFailure_DiscardsTheFaultedContextBeforeTheNextSendAsync" },
+  { "requirementId": "REQ-VSB-PIPE-CONTEXT-CACHE", "variantKey": "explicit-invalidation-recreates-context", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorTests", "testMethod": "ExplicitInvalidation_DiscardsTheContextBeforeTheNextSendAsync" },
   { "requirementId": "REQ-VSB-PIPE-CONTEXT-BINDING", "variantKey": "source-context-and-order", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Configuration.BindPipeSpecificationTests", "testMethod": "SourceContext_IsBoundBeforeTheFollowingPipeSegmentAsync" },
   { "requirementId": "REQ-VSB-CACHE-BUCKET", "variantKey": "push-links-node", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheExpirationTests", "testMethod": "CacheHit_MakesTheEntryMostRecentlyUsedForTheNextEvictionAsync" },
   { "requirementId": "REQ-VSB-CACHE-BUCKET", "variantKey": "used-callback-cannot-decrement-reused-generation", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheExpirationTests", "testMethod": "UsageFromAnEvictedGeneration_CannotRefreshItsReplacementAsync" },
@@ -1548,56 +1548,56 @@
       "requirementId" : "REQ-VSB-PIPE-CONTEXT-IDEMPOTENCY",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "SuccessfulOperation_WhenEveryCleanupStepFails_RemainsSuccessfulAndRunsOnceAsync",
-      "testType" : "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorFailureTests",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorFailureTests",
       "variantKey" : "cleanup-failure-after-success"
    },
    {
       "requirementId" : "REQ-VSB-PIPE-CONTEXT-PRIMARY-FAILURE",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "OperationFailure_WhenDisposeFails_PreservesTheExactOperationFailureAsync",
-      "testType" : "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorFailureTests",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorFailureTests",
       "variantKey" : "dispose-failure"
    },
    {
       "requirementId" : "REQ-VSB-PIPE-CONTEXT-PRIMARY-FAILURE",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "OperationFailure_WhenStopFails_PreservesTheExactOperationFailureAsync",
-      "testType" : "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorFailureTests",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorFailureTests",
       "variantKey" : "stop-failure"
    },
    {
       "requirementId" : "REQ-VSB-PIPE-CONTEXT-PRIMARY-FAILURE",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "OperationFailure_WhenFaultNotificationFails_PreservesTheExactOperationFailureAsync",
-      "testType" : "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorFailureTests",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorFailureTests",
       "variantKey" : "fault-notification-failure"
    },
    {
       "requirementId" : "REQ-VSB-PIPE-CONTEXT-PRIMARY-FAILURE",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "OperationFailure_WhenEveryCleanupStepFails_PreservesTheExactOperationFailureAsync",
-      "testType" : "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorFailureTests",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorFailureTests",
       "variantKey" : "all-cleanup-failures"
    },
    {
       "requirementId" : "REQ-VSB-PIPE-CONTEXT-CLEANUP",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "SuccessfulOperation_StopsThenDisposesWithoutReportingAFaultAsync",
-      "testType" : "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorFailureTests",
-      "variantKey" : "success-order-and-cancellation-token"
+      "testMethod" : "SuccessfulOperation_StopsThenDisposesWithAnIndependentCleanupTokenAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorFailureTests",
+      "variantKey" : "success-order-and-independent-token"
    },
    {
       "requirementId" : "REQ-VSB-PIPE-CONTEXT-CLEANUP",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "OperationFailure_ReportsFaultThenStopsThenDisposesAsync",
-      "testType" : "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorFailureTests",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorFailureTests",
       "variantKey" : "failure-order-and-exception-identity"
    },
    {
       "requirementId" : "REQ-VSB-PIPE-CONTEXT-ACQUISITION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "ContextAcquisitionFailure_IsReportedAndSkipsTheOperationAsync",
-      "testType" : "ViciOne.ServiceBus.Tests.Agents.PipeContextSupervisorFailureTests",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorFailureTests",
       "variantKey" : "context-task-failure"
    },
    {
@@ -3996,8 +3996,8 @@
   ,{ "requirementId": "REQ-VSB-INMEMORY-BACKPRESSURE", "variantKey": "positive-configured-capacity", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests", "testMethod": "NonPositiveCapacity_IsRejectedByTheFabricAndPublicHostConfiguration" }
   ,{ "requirementId": "REQ-VSB-GAUGE-ZERO-ACTIVITY", "variantKey": "removal-awaits-observers", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.GaugeTests", "testMethod": "FinalRemoval_CompletesOnlyAfterTheZeroActivityObserverCompletesAsync" }
   ,{ "requirementId": "REQ-VSB-GAUGE-ZERO-ACTIVITY", "variantKey": "ordered-observer-fault-ownership", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.GaugeTests", "testMethod": "FinalRemoval_InvokesObserversInOrderAndPreservesTheFirstFailureAsync" }
-  ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "start-bridge-publishes-factory-fault", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.SupervisorAgentCreationTests", "testMethod": "StartAgent_TransfersTheExactFactoryFailureToTheOwnedAsyncContextAsync" }
-  ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "start-bridge-publishes-created-context", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.SupervisorAgentCreationTests", "testMethod": "StartAgent_PublishesTheExactCreatedContextAndLeavesItUnderSupervisorLifecycleAsync" }
+  ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "start-bridge-publishes-factory-fault", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.SupervisorAgentCreationTests", "testMethod": "StartAgent_TransfersTheExactFactoryFailureToTheOwnedAsyncContextAsync" }
+  ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "start-bridge-publishes-created-context", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.SupervisorAgentCreationTests", "testMethod": "StartAgent_PublishesTheExactCreatedContextAndLeavesItUnderSupervisorLifecycleAsync" }
   ,{ "requirementId": "REQ-VSB-INMEMORY-BACKGROUND-OWNERSHIP", "variantKey": "stop-awaits-scheduled-delivery", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests", "testMethod": "QueueStop_CancelsAndAwaitsEveryAcceptedScheduledDeliveryAsync" }
   ,{ "requirementId": "REQ-VSB-PUBLIC-SURFACE-OWNERSHIP", "variantKey": "implementation-helpers-are-not-exported", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Architecture.RemovalBoundaryTests", "testMethod": "ImplementationHelpers_AreNotPartOfThePublicProductSurface" }
   ,{ "requirementId": "REQ-VSB-MULTIBUS", "variantKey": "same-request-contract-registrations-are-owner-bound", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests", "testMethod": "SameRequestContractOnTwoBuses_RegistersOneClientPerOwner" }
@@ -4242,27 +4242,34 @@
   ,{ "requirementId": "REQ-VSB-RETRY-FILTER", "variantKey": "typed-filter-leaves-other-exceptions-enabled", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.RetryPolicies.ExceptionFilterContractTests", "testMethod": "TypedFilter_LeavesUnmatchedExceptionTypesEnabledWithoutCallingThePredicate" }
   ,{ "requirementId": "REQ-VSB-RETRY-FILTER", "variantKey": "public-filter-input-boundaries", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.RetryPolicies.ExceptionFilterContractTests", "testMethod": "PublicFilterFactories_RejectNullPredicatesAndInvalidExceptionTypes" }
   ,{ "requirementId": "REQ-VSB-RETRY-FILTER", "variantKey": "filters-reject-null-runtime-exceptions", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.RetryPolicies.ExceptionFilterContractTests", "testMethod": "EveryFilter_RejectsANullRuntimeException" }
-  ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "supervisor-extension-boundaries", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.SupervisorAgentCreationTests", "testMethod": "PublicExtensions_RejectNullSupervisorsHandlesContextsAndFactoriesAsync" }
-  ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "factory-cancellation-token-identity", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.SupervisorAgentCreationTests", "testMethod": "StartAgent_PreservesTheFactoryCancellationTokenAsync" }
+  ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "supervisor-extension-boundaries", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.SupervisorAgentCreationTests", "testMethod": "PublicExtensions_RejectNullSupervisorsHandlesContextsAndFactoriesAsync" }
+  ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "factory-cancellation-token-identity", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.SupervisorAgentCreationTests", "testMethod": "StartAgent_PreservesTheFactoryCancellationTokenAsync" }
+  ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "factory-must-return-context", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.SupervisorAgentCreationTests", "testMethod": "CreateAgent_RejectsAFactoryThatReturnsNoContextAsync" }
   ,{ "requirementId": "REQ-VSB-REQUEST-BOUNDARY", "variantKey": "advanced-request-overloads-reject-null-inputs", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Clients.RequestExtensionsBoundaryTests", "testMethod": "EveryRequestOverload_RejectsItsRequiredInputsBeforeUsingTheBusAsync" }
   ,{ "requirementId": "REQ-VSB-RECURRING-SCHEDULER", "variantKey": "constructors-and-command-values-reject-null", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Scheduling.RecurringSchedulerContractTests", "testMethod": "ConstructorsAndCommandValues_RejectNullCollaborators" }
   ,{ "requirementId": "REQ-VSB-RECURRING-SCHEDULER", "variantKey": "control-identities-reject-null-or-whitespace", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Scheduling.RecurringSchedulerContractTests", "testMethod": "ControlOperations_RejectMissingScheduleIdentifiersAsync" }
   ,{ "requirementId": "REQ-VSB-SERIALIZER-CONTEXT", "variantKey": "public-extensions-reject-invalid-required-inputs", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Serialization.SerializerContextExtensionsBoundaryTests", "testMethod": "PublicExtensions_RejectNullCollaboratorsAndMissingKeys" }
   ,{ "requirementId": "REQ-VSB-REQUEST-FACTORY-FORWARDING", "variantKey": "typed-message-timeout-and-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.GenericRequestClientTests", "testMethod": "TypedCreate_ForwardsMessageTimeoutAndCancellationTokenInContractOrder" }
   ,{ "requirementId": "REQ-VSB-REQUEST-FACTORY-FORWARDING", "variantKey": "initializer-values-timeout-and-token", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.GenericRequestClientTests", "testMethod": "InitializerCreate_ForwardsValuesTimeoutAndCancellationTokenInContractOrder" }
-  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-TERMINALITY", "variantKey": "first-creation-outcome-wins", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextHandleLifecycleTests", "testMethod": "AsyncHandle_FirstCreationOutcomeWinsWithoutThrowingOnLateSignalsAsync" }
-  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-TERMINALITY", "variantKey": "cancellation-token-identity", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextHandleLifecycleTests", "testMethod": "AsyncHandle_CanceledCreationPreservesTheExactCancellationTokenAsync" }
-  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-TERMINALITY", "variantKey": "runtime-failure-identity", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextHandleLifecycleTests", "testMethod": "AsyncHandle_RuntimeFailureRemainsObservableAndWinsOverDisposalAsync" }
-  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-TERMINALITY", "variantKey": "agent-late-cancellation-does-not-stop-created-context", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextHandleLifecycleTests", "testMethod": "AsyncAgent_LateCreationCancellationDoesNotStopAnAlreadyCreatedContextAsync" }
-  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-PIPELINE", "variantKey": "filter-publishes-before-next-and-waits", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextHandleLifecycleTests", "testMethod": "AsyncFilter_PublishesBeforeTheNextStageAndWaitsForAgentCompletionAsync" }
-  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-PIPELINE", "variantKey": "pipe-publishes-after-inner-and-waits", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextHandleLifecycleTests", "testMethod": "AsyncPipe_PublishesAfterTheInnerPipeAndWaitsForAgentCompletionAsync" }
-  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-DISPOSAL", "variantKey": "concurrent-callers-share-success", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextHandleLifecycleTests", "testMethod": "PipeContextAgent_ConcurrentDisposalWaitsForOneSharedSuccessfulOperationAsync" }
-  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-DISPOSAL", "variantKey": "concurrent-callers-share-failure", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextHandleLifecycleTests", "testMethod": "PipeContextAgent_ConcurrentDisposalSharesTheExactFailureAndStillCompletesLifecycleAsync" }
-  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-DISPOSAL", "variantKey": "pending-context-remains-owned", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextHandleLifecycleTests", "testMethod": "PipeContextAgent_DisposalWaitsForAndDisposesAPendingContextAsync" }
-  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-DISPOSAL", "variantKey": "constant-handle-shares-operation", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextHandleLifecycleTests", "testMethod": "ConstantHandle_ConcurrentDisposalSharesOneOperationAndItsExactFailureAsync" }
-  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-BOUNDARY", "variantKey": "constructors-and-methods-reject-null", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextHandleLifecycleTests", "testMethod": "PublicAgentBoundaries_RejectEveryNullRequiredInputAsync" }
-  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-BOUNDARY", "variantKey": "task-result-must-contain-context", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextHandleLifecycleTests", "testMethod": "TaskBackedHandles_RejectACompletedNullContextAsync" }
-  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-BOUNDARY", "variantKey": "factories-must-return-handles", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Agents.PipeContextHandleLifecycleTests", "testMethod": "Supervisor_RejectsFactoriesThatReturnNullHandlesAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-TERMINALITY", "variantKey": "first-creation-outcome-wins", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "AsyncHandle_FirstCreationOutcomeWinsWithoutThrowingOnLateSignalsAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-TERMINALITY", "variantKey": "cancellation-token-identity", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "AsyncHandle_CanceledCreationPreservesTheExactCancellationTokenAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-TERMINALITY", "variantKey": "runtime-failure-identity", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "AsyncHandle_RuntimeFailureRemainsObservableAndWinsOverDisposalAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-TERMINALITY", "variantKey": "runtime-failure-before-creation", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "AsyncHandle_RuntimeFailureBeforeCreationFaultsBothLifecycleSignalsAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-TERMINALITY", "variantKey": "dispose-before-creation-cancels-acquisition", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "AsyncHandle_DisposalBeforeCreationCancelsAcquisitionAndRejectsLateCreationAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-TERMINALITY", "variantKey": "agent-late-cancellation-does-not-stop-created-context", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "AsyncAgent_LateCreationCancellationDoesNotStopAnAlreadyCreatedContextAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-TERMINALITY", "variantKey": "agent-runtime-failure-before-creation", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "AsyncAgent_RuntimeFailureBeforeCreationFaultsAcquisitionAndCompletesShutdownAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-PIPELINE", "variantKey": "filter-publishes-before-next-and-waits", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "AsyncFilter_PublishesBeforeTheNextStageAndWaitsForAgentCompletionAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-PIPELINE", "variantKey": "pipe-publishes-after-inner-and-waits", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "AsyncPipe_PublishesAfterTheInnerPipeAndWaitsForAgentCompletionAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-DISPOSAL", "variantKey": "concurrent-callers-share-success", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "PipeContextAgent_ConcurrentDisposalWaitsForOneSharedSuccessfulOperationAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-DISPOSAL", "variantKey": "concurrent-callers-share-failure", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "PipeContextAgent_ConcurrentDisposalSharesTheExactFailureAndLeavesLifecyclePendingForRetryAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-DISPOSAL", "variantKey": "pending-context-remains-owned", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "PipeContextAgent_DisposalWaitsForAndDisposesAPendingContextAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-DISPOSAL", "variantKey": "constant-handle-shares-operation", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "ConstantHandle_ConcurrentDisposalSharesOneOperationAndItsExactFailureAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-BOUNDARY", "variantKey": "constructors-and-methods-reject-null", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "PublicAgentBoundaries_RejectEveryNullRequiredInputAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-BOUNDARY", "variantKey": "task-result-must-contain-context", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "TaskBackedHandles_RejectACompletedNullContextAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-BOUNDARY", "variantKey": "factories-must-return-handles", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "Supervisor_RejectsFactoriesThatReturnNullHandlesAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-DISPOSAL", "variantKey": "active-agent-disposes-pending-handle", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "ActiveAgent_StopDisposesAPendingHandleWithoutWaitingForContextCreationAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-CLEANUP", "variantKey": "caller-cancellation-does-not-skip-cleanup", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorFailureTests", "testMethod": "CallerCancellationDuringThePipe_DoesNotSkipStopOrDisposalAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-SHUTDOWN", "variantKey": "borrowed-failure-does-not-skip-owned-stop", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorShutdownTests", "testMethod": "BorrowedContextStopFailure_DoesNotSkipOwnedContextShutdownAsync" }
   ,{ "requirementId": "REQ-VSB-FUTURE-CONFIGURATION", "variantKey": "response-requires-terminal-or-pending-behavior", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Futures.FutureConfigurationContractTests", "testMethod": "ResponseWithoutResultOrPendingTracking_IsRejectedDuringConstruction" }
   ,{ "requirementId": "REQ-VSB-FUTURE-CONFIGURATION", "variantKey": "protected-callback-boundaries", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Futures.FutureConfigurationContractTests", "testMethod": "ProtectedConfigurationMethods_RejectNullBeforeChangingTheStateMachine" }
   ,{ "requirementId": "REQ-VSB-FUTURE-API", "variantKey": "greenfield-result-request-fault-method-names", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Futures.FutureConfigurationContractTests", "testMethod": "ConfigurationInterfaces_ExposeOnlyTheGreenfieldFactoryAndInitializerNames" }
@@ -4411,4 +4418,8 @@
   ,{ "requirementId": "REQ-VSB-STATE-MACHINE-GRAPH", "variantKey": "invalid-graph-rejection", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineGraphContractTests", "testMethod": "Graph_RejectsNullDuplicateAndDanglingInputs" }
   ,{ "requirementId": "REQ-VSB-STATE-MACHINE-GRAPH", "variantKey": "semantic-machine-projection-and-internal-visitor", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineGraphContractTests", "testMethod": "GetGraph_ProjectsSemanticNodesWhileKeepingTheConcreteVisitorInternal" }
   ,{ "requirementId": "REQ-VSB-STATE-MACHINE-GRAPH", "variantKey": "catch-activity-contract", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineGraphContractTests", "testMethod": "CatchFaultActivity_ValidatesBehaviorAndExposesHandledExceptionType" }
+  ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "supervisor-must-publish-creation-outcome", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.SupervisorAgentCreationTests", "testMethod": "CreateAgent_RejectsASupervisorThatCompletesWithoutInvokingTheCreationPipeAsync" }
+  ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "outcome-publication-failure-is-observed", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.SupervisorAgentCreationTests", "testMethod": "CreateAgent_SurfacesAnOutcomePublicationFailureInsteadOfLeavingAnUnobservedTaskAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-TERMINALITY", "variantKey": "agent-rejected-late-context-is-disposed", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "AsyncAgent_StopBeforeCreationDisposesAContextProducedAfterShutdownAsync" }
+  ,{ "requirementId": "REQ-VSB-PIPE-CONTEXT-DISPOSAL", "variantKey": "failed-supervised-disposal-can-be-retried", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextHandleLifecycleTests", "testMethod": "PipeContextAgent_FailedSupervisorStopCanRetryTheOwnedDisposalAsync" }
 ]

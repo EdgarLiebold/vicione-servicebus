@@ -83,7 +83,7 @@ public class MessageReceiverCollection<T> :
     public Task<IMessageReceiver<T>> NextAsync(T message, CancellationToken cancellationToken)
     {
         Task<IReceiverLoadBalancer<T>> task = _balancer.Task;
-        if (task.IsCompletedSuccessfully())
+        if (task.IsCompletedSuccessfully)
         {
             IReceiverLoadBalancer<T> balancer = task.GetAwaiter().GetResult();
             IMessageReceiver<T> consumer = balancer.SelectReceiver(message);

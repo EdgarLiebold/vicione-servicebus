@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using ViciOne.ServiceBus.AmazonSqs.Configuration;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.RetryPolicies;
@@ -47,7 +47,7 @@ public class ConnectionContextFactory :
 
     static async Task<ConnectionContext> CreateSharedConnectionAsync(Task<ConnectionContext> context, CancellationToken cancellationToken)
     {
-        return context.IsCompletedSuccessfully()
+        return context.IsCompletedSuccessfully
             ? new SharedConnectionContext(context.Result, cancellationToken)
             : new SharedConnectionContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
