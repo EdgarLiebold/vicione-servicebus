@@ -73,7 +73,7 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
         Assert.Equal(1, scheduled.Attempts);
         Assert.NotNull(scheduled.DueAt);
         Assert.NotNull(scheduled.FailedAt);
-        Assert.Contains(nameof(ExpectedConsumerFailure), scheduled.FailureType, StringComparison.Ordinal);
+        Assert.Equal(typeof(ExpectedConsumerFailure).FullName, scheduled.FailureType);
 
         ReliableInboxEvent delivered = await fixture.Events.ReadAsync(fixture.Timeout, fixture.CancellationToken);
         Assert.Equal(command.CorrelationId, delivered.CorrelationId);
@@ -119,7 +119,7 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
         Assert.Null(quarantined.LeaseExpiresAt);
         Assert.NotNull(quarantined.FailedAt);
         Assert.NotNull(quarantined.QuarantinedAt);
-        Assert.Contains(nameof(ExpectedConsumerFailure), quarantined.FailureType, StringComparison.Ordinal);
+        Assert.Equal(typeof(ExpectedConsumerFailure).FullName, quarantined.FailureType);
         Assert.Equal(3, fixture.Attempts.Count);
         Assert.Equal(0, fixture.Events.Count);
         await using ReliableInboxDbContext verification = fixture.CreateContext();

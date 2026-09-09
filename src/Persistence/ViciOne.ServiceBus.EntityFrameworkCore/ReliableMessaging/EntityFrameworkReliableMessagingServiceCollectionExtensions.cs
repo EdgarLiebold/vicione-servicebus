@@ -12,8 +12,8 @@ using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Providers.Persistence;
 
-
 namespace Microsoft.Extensions.DependencyInjection;
+
 /// <summary>DI registration for the EF Core reliable-messaging persistence provider.</summary>
 public static class EntityFrameworkReliableMessagingServiceCollectionExtensions
 {

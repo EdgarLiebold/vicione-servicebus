@@ -95,7 +95,7 @@ internal sealed class InMemoryReliableInboxContextFactory<TBus> :
             catch (Exception exception)
             {
                 DateTimeOffset failedAt = _timeProvider.GetUtcNow();
-                string failureType = Describe(exception);
+                string failureType = GetFailureTypeName(exception);
                 if (acquisition.Attempt >= _policy.MaximumDeliveryAttempts)
                 {
                     bool quarantined = await _store.QuarantineAsync(
@@ -143,17 +143,10 @@ internal sealed class InMemoryReliableInboxContextFactory<TBus> :
         return TimeSpan.FromTicks(ticks);
     }
 
-    static string Describe(Exception exception)
+    static string GetFailureTypeName(Exception exception)
     {
-        string description;
-        try
-        {
-            description = exception.ToString();
-        }
-        catch
-        {
-            description = exception.GetType().FullName ?? exception.GetType().Name;
-        }
-        return description.Length <= 512 ? description : description[..512];
+        Type exceptionType = exception.GetType();
+        string typeName = exceptionType.FullName ?? exceptionType.Name;
+        return typeName.Length <= 512 ? typeName : typeName[..512];
     }
 }

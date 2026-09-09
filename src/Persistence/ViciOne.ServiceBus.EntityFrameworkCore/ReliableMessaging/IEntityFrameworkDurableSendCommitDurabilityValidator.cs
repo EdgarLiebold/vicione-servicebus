@@ -1,4 +1,3 @@
-
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +15,7 @@ public interface IEntityFrameworkDurableSendCommitDurabilityValidator<TBus>
     /// <summary>Rejects provider settings that cannot guarantee a durable commit before admission returns.</summary>
     /// <param name="dbContext">A context configured for the reliable-messaging database.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after the provider settings have been accepted.</returns>
     Task ValidateAsync(
         DbContext dbContext,
         CancellationToken cancellationToken = default);

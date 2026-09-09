@@ -142,7 +142,7 @@ public sealed class ReliableInMemoryIntegrationTests
             Assert.Equal(messageId, quarantined.Key.MessageId);
             Assert.Equal(ReliableInboxStatus.Quarantined, quarantined.Status);
             Assert.Equal(3, quarantined.Attempts);
-            Assert.Contains(nameof(ExpectedReliableException), quarantined.FailureType, StringComparison.Ordinal);
+            Assert.Equal(typeof(ExpectedReliableException).FullName, quarantined.FailureType);
         }
         finally
         {

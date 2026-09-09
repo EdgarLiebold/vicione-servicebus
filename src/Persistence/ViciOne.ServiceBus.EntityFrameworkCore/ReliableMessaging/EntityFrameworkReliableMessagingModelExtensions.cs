@@ -1,8 +1,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
+
 /// <summary>EF model mapping for the unified ViciOne reliable-messaging store.</summary>
 public static class EntityFrameworkReliableMessagingModelExtensions
 {

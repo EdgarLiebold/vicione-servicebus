@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus.Providers.Persistence;
 
-
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
+
 /// <summary>EF Core persistent durable-send store with atomic retained-storage admission and fenced delivery ownership.</summary>
 /// <typeparam name="TBus">The bus type.</typeparam>
 /// <typeparam name="TDbContext">The db context type.</typeparam>
@@ -724,32 +724,37 @@ internal sealed class EntityFrameworkReliableStore<TBus, TDbContext> :
         bool remove,
         CancellationToken cancellationToken)
     {
+        key.Validate();
         await EnsureInitializedAsync(cancellationToken).ConfigureAwait(false);
         await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
-        ReliableInboxRecord? row = await db.Set<ReliableInboxRecord>().SingleOrDefaultAsync(
-            x => x.StoreKey == _storeKey && x.MessageId == key.MessageId && x.ConsumerId == key.ConsumerId,
-            cancellationToken).ConfigureAwait(false);
         var reference = ReliableMessageReference.Inbox(key);
-        if (row is null)
-            return NotFound(reference);
-        if (row.Status != ReliableInboxStatus.Quarantined)
-            return InvalidState(reference, row.Status);
+        IQueryable<ReliableInboxRecord> quarantined = db.Set<ReliableInboxRecord>()
+            .Where(x => x.StoreKey == _storeKey
+                && x.MessageId == key.MessageId
+                && x.ConsumerId == key.ConsumerId
+                && x.Status == ReliableInboxStatus.Quarantined);
+        int updated = remove
+            ? await quarantined.ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false)
+            : await quarantined.ExecuteUpdateAsync(setters => setters
+                    .SetProperty(x => x.Status, target)
+                    .SetProperty(x => x.DueAt, dueAt?.UtcDateTime)
+                    .SetProperty(
+                        x => x.QuarantinedAt,
+                        x => target == ReliableInboxStatus.Abandoned ? x.QuarantinedAt : null)
+                    .SetProperty(x => x.CompletedAt, completedAt?.UtcDateTime)
+                    .SetProperty(x => x.LeaseToken, (Guid?)null)
+                    .SetProperty(x => x.LeaseExpiresAt, (DateTime?)null),
+                cancellationToken)
+                .ConfigureAwait(false);
+        if (updated == 1)
+            return Applied(reference, ReliableInboxStatus.Quarantined, remove ? "Discarded" : target);
 
-        ReliableInboxStatus previous = row.Status;
-        if (remove)
-            db.Remove(row);
-        else
-        {
-            row.Status = target;
-            row.DueAt = dueAt?.UtcDateTime;
-            row.QuarantinedAt = target == ReliableInboxStatus.Abandoned ? row.QuarantinedAt : null;
-            row.CompletedAt = completedAt?.UtcDateTime;
-            row.LeaseToken = null;
-            row.LeaseExpiresAt = null;
-        }
-
-        await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        return Applied(reference, previous, remove ? "Discarded" : target);
+        ReliableInboxStatus? status = await db.Set<ReliableInboxRecord>().AsNoTracking()
+            .Where(x => x.StoreKey == _storeKey && x.MessageId == key.MessageId && x.ConsumerId == key.ConsumerId)
+            .Select(x => (ReliableInboxStatus?)x.Status)
+            .SingleOrDefaultAsync(cancellationToken)
+            .ConfigureAwait(false);
+        return status.HasValue ? InvalidState(reference, status.Value) : NotFound(reference);
     }
 
     async Task<bool> MutateOwnedAsync(

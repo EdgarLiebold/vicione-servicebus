@@ -386,6 +386,58 @@ public sealed class EntityFrameworkReliableStoreTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX", "concurrent-operator-decisions-have-one-winner")]
+    public async Task Inbox_ConcurrentOperatorDecisionsApplyExactlyOnceAsync()
+    {
+        const int contenderCount = 24;
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(cancellationToken);
+        IInboxStore<ITestBus> store = Assert.IsAssignableFrom<IInboxStore<ITestBus>>(
+            database.CreateStore<ITestBus>("inbox-operator-race", new RecordingValidator()));
+        var key = new ReliableInboxKey(GuidFrom(57), GuidFrom(58));
+        ReliableInboxAcquireResult acquired = await store.AcquireAsync(
+            key,
+            Epoch,
+            TimeSpan.FromMinutes(1),
+            cancellationToken);
+        Assert.True(await store.QuarantineAsync(
+            key,
+            Assert.IsType<ReliableInboxLease>(acquired.Lease),
+            "Tests.Permanent",
+            Epoch,
+            cancellationToken));
+        var start = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task<ReliableMessagingOperationResult>[] contenders = Enumerable.Range(0, contenderCount)
+            .Select(async index =>
+            {
+                await start.Task.WaitAsync(cancellationToken);
+                return (index % 3) switch
+                {
+                    0 => await store.RequeueAsync(key, Epoch.AddMinutes(1), cancellationToken),
+                    1 => await store.DiscardAsync(key, cancellationToken),
+                    _ => await store.AbandonAsync(key, Epoch.AddMinutes(2), cancellationToken),
+                };
+            })
+            .ToArray();
+
+        start.SetResult();
+        ReliableMessagingOperationResult[] results = await Task.WhenAll(contenders);
+
+        ReliableMessagingOperationResult applied = Assert.Single(
+            results,
+            result => result.Disposition == ReliableMessagingOperationDisposition.Applied);
+        Assert.All(
+            results.Where(result => !ReferenceEquals(result, applied)),
+            result => Assert.Contains(
+                result.Disposition,
+                new[]
+                {
+                    ReliableMessagingOperationDisposition.InvalidState,
+                    ReliableMessagingOperationDisposition.NotFound,
+                }));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-DURABLE-CAPACITY", "concurrent-conditional-ledger-admission")]
     public async Task Store_ConcurrentAdmissionsCannotOvershootTheHardLedgerAsync()
     {
