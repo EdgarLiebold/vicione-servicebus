@@ -41,9 +41,15 @@ public sealed class SqlConfigurationTests
         var endpoint = Assert.IsType<SqlReceiveEndpointConfiguration>(
             host.CreateReceiveEndpointConfiguration("invalid queue/name", configurator =>
             {
+                configurator.AutoDeleteOnIdle = TimeSpan.Zero;
                 configurator.PurgeOnStartup = true;
                 configurator.MaintenanceBatchSize = 0;
+                configurator.PollingInterval = TimeSpan.Zero;
+                configurator.LockDuration = TimeSpan.FromMilliseconds(500);
+                configurator.MaxLockDuration = TimeSpan.FromMilliseconds(250);
+                configurator.MaxDeliveryCount = 0;
                 configurator.UnlockDelay = TimeSpan.FromTicks(-1);
+                configurator.SetReceiveMode((SqlReceiveMode)99, 0);
             }));
 
         ValidationResult[] results = endpoint.Validate().ToArray();
@@ -58,5 +64,17 @@ public sealed class SqlConfigurationTests
         Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
             && string.Equals(result.Value, "UnlockDelay", StringComparison.Ordinal)
             && result.Message.Contains("TimeSpan.Zero", StringComparison.Ordinal));
+        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
+            && string.Equals(result.Value, "AutoDeleteOnIdle", StringComparison.Ordinal));
+        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
+            && string.Equals(result.Value, "PollingInterval", StringComparison.Ordinal));
+        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
+            && string.Equals(result.Value, "MaxLockDuration", StringComparison.Ordinal));
+        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
+            && string.Equals(result.Value, "MaxDeliveryCount", StringComparison.Ordinal));
+        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
+            && string.Equals(result.Value, "ConcurrentDeliveryLimit", StringComparison.Ordinal));
+        Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
+            && string.Equals(result.Value, "ReceiveMode", StringComparison.Ordinal));
     }
 }

@@ -4,7 +4,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>Transports sql queue error messages.</summary>
+/// <summary>Moves faulted SQL transport messages to their error queue.</summary>
 public class SqlQueueErrorTransport :
     SqlQueueMoveTransport,
     IErrorTransport
@@ -23,7 +23,9 @@ public class SqlQueueErrorTransport :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(ExceptionReceiveContext context, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); void PreSend(SqlTransportMessage message, SendHeaders headers)
+        cancellationToken.ThrowIfCancellationRequested();
+
+        void AddExceptionDetails(SqlTransportMessage message, SendHeaders headers)
         {
             headers.CopyFrom(context.ExceptionHeaders);
 
@@ -31,6 +33,6 @@ public class SqlQueueErrorTransport :
                 message.ExpirationTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + Defaults.ErrorQueueTimeToLive;
         }
 
-        return MoveAsync(context, PreSend);
+        return MoveAsync(context, AddExceptionDetails, cancellationToken);
     }
 }

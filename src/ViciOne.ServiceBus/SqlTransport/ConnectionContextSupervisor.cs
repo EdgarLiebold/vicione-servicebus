@@ -7,7 +7,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>Supervises the lifecycle of connection context.</summary>
+/// <summary>Owns the shared SQL connection context and creates endpoint-scoped send transports.</summary>
 public class ConnectionContextSupervisor :
     TransportPipeContextSupervisor<ConnectionContext>,
     IConnectionContextSupervisor
@@ -23,8 +23,8 @@ public class ConnectionContextSupervisor :
         IPipeContextFactory<ConnectionContext> connectionContextFactory)
         : base(connectionContextFactory)
     {
-        _hostConfiguration = hostConfiguration;
-        _topologyConfiguration = topologyConfiguration;
+        _hostConfiguration = hostConfiguration ?? throw new ArgumentNullException(nameof(hostConfiguration));
+        _topologyConfiguration = topologyConfiguration ?? throw new ArgumentNullException(nameof(topologyConfiguration));
     }
 
     /// <summary>Normalizes address.</summary>
@@ -32,6 +32,8 @@ public class ConnectionContextSupervisor :
     /// <returns>The uri produced by the operation.</returns>
     public Uri NormalizeAddress(Uri address)
     {
+        ArgumentNullException.ThrowIfNull(address);
+
         return new SqlEndpointAddress(_hostConfiguration.HostAddress, address);
     }
 
@@ -44,7 +46,13 @@ public class ConnectionContextSupervisor :
     public Task<ISendTransport> CreatePublishTransportAsync<T>(SqlReceiveEndpointContext context, Uri? publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Transports.ISendTransport>(cancellationToken); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(publishAddress);
+
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<ISendTransport>(cancellationToken);
+
+        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
         ISqlMessagePublishTopologyConfigurator<T> publishTopology = _topologyConfiguration.Publish.GetMessageTopology<T>();
 
@@ -56,7 +64,7 @@ public class ConnectionContextSupervisor :
 
         var supervisor = new ClientContextSupervisor(context.ClientContextSupervisor);
 
-        return CreateSendTransportAsync(publishAddress!,
+        return CreateSendTransportAsync(publishAddress,
             new TopicSendTransportContext(_hostConfiguration, context, supervisor, configureTopology, settings.EntityName));
     }
 
@@ -67,7 +75,13 @@ public class ConnectionContextSupervisor :
     /// <returns>A task that produces the created value.</returns>
     public Task<ISendTransport> CreateSendTransportAsync(SqlReceiveEndpointContext context, Uri address, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Transports.ISendTransport>(cancellationToken); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(address);
+
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<ISendTransport>(cancellationToken);
+
+        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
         var endpointAddress = new SqlEndpointAddress(_hostConfiguration.HostAddress, address);
 

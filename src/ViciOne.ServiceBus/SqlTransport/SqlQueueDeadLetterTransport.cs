@@ -3,7 +3,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>Transports sql queue dead letter messages.</summary>
+/// <summary>Moves undeliverable SQL transport messages to their dead-letter queue.</summary>
 public class SqlQueueDeadLetterTransport :
     SqlQueueMoveTransport,
     IDeadLetterTransport
@@ -23,11 +23,13 @@ public class SqlQueueDeadLetterTransport :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(ReceiveContext context, string? reason, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); void PreSend(SqlTransportMessage message, SendHeaders headers)
+        cancellationToken.ThrowIfCancellationRequested();
+
+        void AddDeadLetterReason(SqlTransportMessage message, SendHeaders headers)
         {
             headers.Set(MessageHeaders.Reason, reason ?? "Unspecified");
         }
 
-        return MoveAsync(context, PreSend);
+        return MoveAsync(context, AddDeadLetterReason, cancellationToken);
     }
 }

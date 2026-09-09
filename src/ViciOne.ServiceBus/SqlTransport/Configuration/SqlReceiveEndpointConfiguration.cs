@@ -9,7 +9,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
-/// <summary>Stores and validates sql receive endpoint configuration.</summary>
+/// <summary>Builds and validates one SQL transport receive endpoint.</summary>
 public class SqlReceiveEndpointConfiguration :
     ReceiveEndpointConfiguration,
     ISqlReceiveEndpointConfiguration,
@@ -99,8 +99,8 @@ public class SqlReceiveEndpointConfiguration :
         ReceiveEndpoint = receiveEndpoint;
     }
 
-    /// <summary>Validates the current configuration.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <summary>Validates the queue identity, delivery limits, polling, locking, and maintenance settings.</summary>
+    /// <returns>Every configuration failure and startup warning detected for this endpoint.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         if (!IsValidEntityName(_settings.QueueName))
@@ -112,11 +112,29 @@ public class SqlReceiveEndpointConfiguration :
         if (_settings.MaintenanceBatchSize <= 0)
             yield return this.Failure(_settings.QueueName, nameof(_settings.MaintenanceBatchSize), "Must be >= 1");
 
+        if (_settings.AutoDeleteOnIdle.HasValue && _settings.AutoDeleteOnIdle <= TimeSpan.Zero)
+            yield return this.Failure(_settings.QueueName, nameof(_settings.AutoDeleteOnIdle), "Must be greater than zero when specified");
+
+        if (_settings.PollingInterval <= TimeSpan.Zero)
+            yield return this.Failure(_settings.QueueName, nameof(_settings.PollingInterval), "Must be greater than zero");
+
         if (_settings.LockDuration < TimeSpan.FromSeconds(1))
             yield return this.Failure(_settings.QueueName, nameof(_settings.LockDuration), "Must be >= 1 second");
 
+        if (_settings.MaxLockDuration < _settings.LockDuration)
+            yield return this.Failure(_settings.QueueName, nameof(_settings.MaxLockDuration), "Must be greater than or equal to LockDuration");
+
+        if (_settings.MaxDeliveryCount is <= 0)
+            yield return this.Failure(_settings.QueueName, nameof(_settings.MaxDeliveryCount), "Must be greater than zero when specified");
+
         if (_settings.UnlockDelay.HasValue && _settings.UnlockDelay < TimeSpan.Zero)
-            yield return this.Failure(_settings.QueueName, nameof(_settings.UnlockDelay), "Must be > TimeSpan.Zero");
+            yield return this.Failure(_settings.QueueName, nameof(_settings.UnlockDelay), "Must not be less than TimeSpan.Zero");
+
+        if (_settings.ConcurrentDeliveryLimit <= 0)
+            yield return this.Failure(_settings.QueueName, nameof(_settings.ConcurrentDeliveryLimit), "Must be greater than zero");
+
+        if (!Enum.IsDefined(_settings.ReceiveMode))
+            yield return this.Failure(_settings.QueueName, nameof(_settings.ReceiveMode), "Must be a defined SQL receive mode");
 
         foreach (var result in base.Validate())
             yield return result.WithParentKey(_settings.QueueName);

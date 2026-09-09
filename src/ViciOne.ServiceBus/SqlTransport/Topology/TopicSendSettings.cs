@@ -3,28 +3,28 @@ using ViciOne.ServiceBus.SqlTransport.Configuration;
 
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>Defines settings for topic send.</summary>
+/// <summary>Describes a topic destination and the topology required to publish to it.</summary>
 public class TopicSendSettings :
     SqlTopicConfigurator,
     SendSettings
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="address">The address.</param>
+    /// <summary>Creates settings for the topic identified by <paramref name="address" />.</summary>
+    /// <param name="address">The topic address.</param>
     public TopicSendSettings(SqlEndpointAddress address)
         : base(address.Name)
     {
     }
 
-    /// <summary>Gets send address.</summary>
-    /// <param name="hostAddress">The host address.</param>
-    /// <returns>The send address.</returns>
+    /// <summary>Builds the fully qualified topic address on the specified SQL transport host.</summary>
+    /// <param name="hostAddress">The SQL transport host address.</param>
+    /// <returns>The fully qualified topic address.</returns>
     public SqlEndpointAddress GetSendAddress(Uri hostAddress)
     {
-        return new SqlEndpointAddress(hostAddress, TopicName);
+        return new SqlEndpointAddress(hostAddress, TopicName, type: SqlEndpointAddress.AddressType.Topic);
     }
 
-    /// <summary>Gets broker topology.</summary>
-    /// <returns>The broker topology.</returns>
+    /// <summary>Builds the topology that declares this topic as the publish destination.</summary>
+    /// <returns>The topic declaration topology.</returns>
     public BrokerTopology GetBrokerTopology()
     {
         var builder = new PublishEndpointBrokerTopologyBuilder();
@@ -34,9 +34,9 @@ public class TopicSendSettings :
         return builder.BuildBrokerTopology();
     }
 
-    /// <summary>Gets the entity name.</summary>
+    /// <summary>Gets the destination topic name.</summary>
     public string EntityName => TopicName;
 
-    /// <summary>Gets the auto delete on idle.</summary>
+    /// <summary>Gets no idle-deletion interval because SQL transport topics are not auto-deleted.</summary>
     public TimeSpan? AutoDeleteOnIdle => default;
 }

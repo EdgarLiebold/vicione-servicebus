@@ -19949,22 +19949,6 @@ TYPE interface public ViciOne.ServiceBus.SqlTransport.ISqlTransportDatabaseMigra
   METHOD public abstract System.Threading.Tasks.Task CreateInfrastructureAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task CreateSchemaIfNotExistAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task DeleteDatabaseAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.SqlTransport.MessageDelivery
-  CTOR public ViciOne.ServiceBus.SqlTransport.MessageDelivery()
-  PROPERTY System.DateTimeOffset EnqueueTime { public-get; public-set; }
-  PROPERTY System.Guid TransportMessageId { public-get; public-set; }
-  PROPERTY System.Int32 DeliveryCount { public-get; public-set; }
-  PROPERTY System.Int32 MaxDeliveryCount { public-get; public-set; }
-  PROPERTY System.Int32 Priority { public-get; public-set; }
-  PROPERTY System.Int32 QueueId { public-get; public-set; }
-  PROPERTY System.Int64 SessionNumber { public-get; public-set; }
-  PROPERTY System.Nullable<System.DateTimeOffset> ExpirationTime { public-get; public-set; }
-  PROPERTY System.Nullable<System.DateTimeOffset> LastDelivered { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> ConsumerId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Int32> GroupSequenceNumber { public-get; public-set; }
-  PROPERTY System.String GroupId { public-get; public-set; }
-  PROPERTY System.String ReplyToSessionId { public-get; public-set; }
-  PROPERTY System.String TransportHeaders { public-get; public-set; }
 TYPE interface public ViciOne.ServiceBus.SqlTransport.MessageLockContext
   METHOD public abstract System.Threading.Tasks.Task AbandonAsync(System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task CompleteAsync(System.Threading.CancellationToken cancellationToken = null)
@@ -20133,7 +20117,7 @@ TYPE class public ViciOne.ServiceBus.SqlTransport.SqlQueueErrorTransport [base=V
   METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.ExceptionReceiveContext context, System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.SqlTransport.SqlQueueMoveTransport
   CTOR protected ViciOne.ServiceBus.SqlTransport.SqlQueueMoveTransport(System.String queueName, ViciOne.ServiceBus.Providers.Transports.SqlQueueType queueType)
-  METHOD protected System.Threading.Tasks.Task MoveAsync(ViciOne.ServiceBus.Advanced.ReceiveContext context, System.Action<ViciOne.ServiceBus.SqlTransport.SqlTransportMessage,ViciOne.ServiceBus.Advanced.SendHeaders> preSend)
+  METHOD protected System.Threading.Tasks.Task MoveAsync(ViciOne.ServiceBus.Advanced.ReceiveContext context, System.Action<ViciOne.ServiceBus.SqlTransport.SqlTransportMessage,ViciOne.ServiceBus.Advanced.SendHeaders> preSend, System.Threading.CancellationToken cancellationToken)
 TYPE class public ViciOne.ServiceBus.SqlTransport.SqlReceiveContext [sealed,base=ViciOne.ServiceBus.Transports.BaseReceiveContext]
   CTOR public ViciOne.ServiceBus.SqlTransport.SqlReceiveContext(ViciOne.ServiceBus.SqlTransport.SqlTransportMessage message, ViciOne.ServiceBus.SqlTransport.SqlReceiveEndpointContext context, ViciOne.ServiceBus.SqlTransport.ReceiveSettings settings, ViciOne.ServiceBus.SqlTransport.ClientContext clientContext, ViciOne.ServiceBus.SqlTransport.ConnectionContext connectionContext, ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext lockContext)
   METHOD public virtual System.Collections.Generic.IDictionary<System.String,System.Object> GetTransportProperties()

@@ -110,25 +110,4 @@ public class SqlTransportMessage
         return headers;
     }
 
-    HostInfo? GetHost()
-    {
-        if (Host == null)
-            return null;
-
-        return JsonSerializer.Deserialize<HostInfo>(Host, ServiceBusMetadataJson.Options);
-    }
-
-    static Uri? ToUri(string? value)
-    {
-        try
-        {
-            return string.IsNullOrWhiteSpace(value)
-                ? null
-                : new Uri(value);
-        }
-        catch (FormatException)
-        {
-            return default;
-        }
-    }
 }

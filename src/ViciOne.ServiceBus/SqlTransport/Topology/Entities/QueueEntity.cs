@@ -61,7 +61,9 @@ public class QueueEntity :
                 return false;
             if (x.GetType() != y.GetType())
                 return false;
-            return string.Equals(x.QueueName, y.QueueName) && x.AutoDeleteOnIdle == y.AutoDeleteOnIdle;
+            return string.Equals(x.QueueName, y.QueueName, StringComparison.Ordinal)
+                && x.AutoDeleteOnIdle == y.AutoDeleteOnIdle
+                && x.MaxDeliveryCount == y.MaxDeliveryCount;
         }
 
         public int GetHashCode(QueueEntity obj)
@@ -70,6 +72,7 @@ public class QueueEntity :
             {
                 var hashCode = obj.QueueName.GetHashCode();
                 hashCode = (hashCode * 397) ^ obj.AutoDeleteOnIdle.GetHashCode();
+                hashCode = (hashCode * 397) ^ obj.MaxDeliveryCount.GetHashCode();
 
                 return hashCode;
             }
@@ -89,7 +92,7 @@ public class QueueEntity :
                 return false;
             if (x.GetType() != y.GetType())
                 return false;
-            return string.Equals(x.QueueName, y.QueueName);
+            return string.Equals(x.QueueName, y.QueueName, StringComparison.Ordinal);
         }
 
         public int GetHashCode(QueueEntity obj)

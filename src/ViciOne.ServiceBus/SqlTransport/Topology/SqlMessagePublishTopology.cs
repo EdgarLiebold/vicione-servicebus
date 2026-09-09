@@ -71,12 +71,12 @@ public class SqlMessagePublishTopology<TMessage> :
         return builder.BuildBrokerTopology();
     }
 
-    /// <summary>Gets send settings.</summary>
-    /// <param name="hostAddress">The host address.</param>
-    /// <returns>The send settings.</returns>
+    /// <summary>Creates the settings used to publish this message type to its topic.</summary>
+    /// <param name="hostAddress">The SQL transport host address.</param>
+    /// <returns>The topic send settings.</returns>
     public SendSettings GetSendSettings(Uri hostAddress)
     {
-        return new QueueSendSettings(_topic.GetEndpointAddress(hostAddress));
+        return new TopicSendSettings(_topic.GetEndpointAddress(hostAddress));
     }
 
     /// <summary>Adds implemented message configurator to the configuration.</summary>

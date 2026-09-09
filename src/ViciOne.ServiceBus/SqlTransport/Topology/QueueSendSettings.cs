@@ -37,7 +37,7 @@ public class QueueSendSettings :
     {
         var builder = new PublishEndpointBrokerTopologyBuilder();
 
-        builder.CreateQueue(QueueName, AutoDeleteOnIdle);
+        builder.CreateQueue(QueueName, AutoDeleteOnIdle, MaxDeliveryCount);
 
         return builder.BuildBrokerTopology();
     }

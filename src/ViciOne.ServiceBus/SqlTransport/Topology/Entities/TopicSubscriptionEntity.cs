@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -69,7 +70,10 @@ public class TopicSubscriptionEntity :
                 return false;
             if (x.GetType() != y.GetType())
                 return false;
-            return x._source.Equals(y._source) && x.SubscriptionType == y.SubscriptionType && x.RoutingKey == y.RoutingKey;
+            return x._source.Equals(y._source)
+                && x._destination.Equals(y._destination)
+                && x.SubscriptionType == y.SubscriptionType
+                && string.Equals(x.RoutingKey, y.RoutingKey, StringComparison.Ordinal);
         }
 
         public int GetHashCode(TopicSubscriptionEntity obj)
@@ -77,6 +81,7 @@ public class TopicSubscriptionEntity :
             unchecked
             {
                 var hashCode = obj._source.GetHashCode();
+                hashCode = (hashCode * 397) ^ obj._destination.GetHashCode();
                 hashCode = (hashCode * 397) ^ (int)obj.SubscriptionType;
                 hashCode = (hashCode * 397) ^ (obj.RoutingKey != null ? obj.RoutingKey.GetHashCode() : 0);
                 return hashCode;
