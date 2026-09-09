@@ -310,7 +310,7 @@ public sealed class PostgreSqlJobServiceTests
                         .UsePartitionedReceiveMode()
                         .EntityFrameworkRepository(repository =>
                         {
-                            repository.ExistingDbContext<JobServiceSagaDbContext>();
+                            repository.UseExistingDbContext<JobServiceSagaDbContext>();
                             repository.UsePostgres();
                         });
                     configuration.AddJobService(options => options.HeartbeatInterval = TimeSpan.FromSeconds(10))

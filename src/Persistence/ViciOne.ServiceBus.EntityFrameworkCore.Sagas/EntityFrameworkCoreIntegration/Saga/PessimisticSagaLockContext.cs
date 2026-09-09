@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
-/// <summary>Queries the list of saga ids prior to the transaction, and then loads/locks them individually.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <summary>Queries saga identifiers before the transaction and then loads and locks each corresponding row.</summary>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 internal sealed class PessimisticSagaLockContext<TSaga> :
     SagaLockContext<TSaga>
     where TSaga : class, ISaga

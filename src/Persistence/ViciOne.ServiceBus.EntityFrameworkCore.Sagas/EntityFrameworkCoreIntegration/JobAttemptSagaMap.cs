@@ -10,10 +10,10 @@ public class JobAttemptSagaMap :
     readonly bool _optimistic;
 
     /// <summary>Initializes a job-attempt saga mapping with the selected concurrency model.</summary>
-    /// <param name="optimistic"><see langword="true"/> to map <c>RowVersion</c>; otherwise it is ignored.</param>
-    public JobAttemptSagaMap(bool optimistic)
+    /// <param name="useOptimisticConcurrency"><see langword="true"/> to map <c>RowVersion</c>; otherwise it is ignored.</param>
+    public JobAttemptSagaMap(bool useOptimisticConcurrency)
     {
-        _optimistic = optimistic;
+        _optimistic = useOptimisticConcurrency;
     }
 
     /// <summary>Configures job-attempt properties and the cascading job relationship.</summary>

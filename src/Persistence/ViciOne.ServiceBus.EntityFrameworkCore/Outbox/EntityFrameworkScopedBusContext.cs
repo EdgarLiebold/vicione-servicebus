@@ -199,13 +199,6 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
     protected virtual IPublishEndpointProvider GetPublishEndpointProvider() => _bus;
     protected virtual ISendEndpointProvider GetSendEndpointProvider() => _bus;
 
-    bool HasPendingOutboxChanges()
-    {
-        return _dbContext.ChangeTracker.Entries<DurableSendRecord>()
-            .Any(entry => _stagedIds.Contains(entry.Entity.Id)
-                && entry.State is not EntityState.Unchanged and not EntityState.Detached);
-    }
-
     bool WasCommitted() => _stagedIds.Count > 0
         && _dbContext.ChangeTracker.Entries<DurableSendRecord>()
             .Where(entry => _stagedIds.Contains(entry.Entity.Id))

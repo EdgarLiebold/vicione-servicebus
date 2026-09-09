@@ -14,7 +14,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// Configures the Entity Framework Outbox on the bus, which can subsequently be used to configure
     /// the transactional outbox on a receive endpoint.
     /// </summary>
-    /// <typeparam name="TDbContext">The db context type.</typeparam>
+    /// <typeparam name="TDbContext">The EF Core context that stores the default bus outbox.</typeparam>
     /// <param name="configurator">The default-bus registration that receives the transactional store.</param>
     /// <param name="configure">An optional callback that configures persistence, cleanup, and delivery.</param>
     public static void ConfigureEntityFrameworkTransactionalStore<TDbContext>(this IBusRegistrationConfigurator configurator,
@@ -32,7 +32,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// the durable outbox identity, allowing the same DbContext to host isolated outboxes for multiple buses.
     /// </summary>
     /// <typeparam name="TBus">The bus type.</typeparam>
-    /// <typeparam name="TDbContext">The db context type.</typeparam>
+    /// <typeparam name="TDbContext">The EF Core context that stores this bus instance's outbox.</typeparam>
     /// <param name="configurator">The typed-bus registration that receives the transactional store.</param>
     /// <param name="configure">An optional callback that configures persistence, cleanup, and delivery.</param>
     public static void ConfigureEntityFrameworkTransactionalStore<TBus, TDbContext>(this IBusRegistrationConfigurator<TBus> configurator,
@@ -47,7 +47,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     }
 
     /// <summary>Enables EF Core inbox deduplication and receive-side outbox persistence on an endpoint.</summary>
-    /// <typeparam name="TDbContext">The db context type.</typeparam>
+    /// <typeparam name="TDbContext">The EF Core context that stores inbox and receive-side outbox state.</typeparam>
     /// <param name="configurator">The receive endpoint on which the EF Core outbox is enabled.</param>
     /// <param name="context">The registration context used to resolve the DbContext and outbox services.</param>
     /// <param name="configure">An optional callback that configures receive-side outbox behavior.</param>
@@ -107,8 +107,8 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// to the DbContext. If this method is used, the <see cref="AddInboxStateEntity" />, <see cref="AddOutboxStateEntity" />, and
     /// <see cref="AddOutboxMessageEntity" /> methods should not be used.
     /// </summary>
-    /// <param name="modelBuilder">The model builder.</param>
-    /// <param name="callback">Optional, to customize all three entity model builders.</param>
+    /// <param name="modelBuilder">The model being configured.</param>
+    /// <param name="callback">An optional callback applied to each outbox entity mapping.</param>
     public static void AddTransactionalOutboxEntities(this ModelBuilder modelBuilder, Action<EntityTypeBuilder>? callback = null)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
@@ -118,8 +118,8 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     }
 
     /// <summary>Adds the <see cref="InboxState" /> entity to the DbContext. If used, the <see cref="AddTransactionalOutboxEntities" /> method should not be used.</summary>
-    /// <param name="modelBuilder">The model builder.</param>
-    /// <param name="callback">Optional, to customize the entity model builder.</param>
+    /// <param name="modelBuilder">The model to which the inbox state mapping is added.</param>
+    /// <param name="callback">An optional callback that further configures the inbox state mapping.</param>
     public static void AddInboxStateEntity(this ModelBuilder modelBuilder, Action<EntityTypeBuilder<InboxState>>? callback = null)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
@@ -131,7 +131,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     }
 
     /// <summary>Configures the <see cref="InboxState" /> entity using an already created <see cref="ModelBuilder" />.</summary>
-    /// <param name="inbox">The model builder.</param>
+    /// <param name="inbox">The inbox state mapping to configure.</param>
     public static void ConfigureInboxStateEntity(this EntityTypeBuilder<InboxState> inbox)
     {
         ArgumentNullException.ThrowIfNull(inbox);
@@ -165,8 +165,8 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     }
 
     /// <summary>Adds the <see cref="OutboxState" /> entity to the DbContext. If used, the <see cref="AddTransactionalOutboxEntities" /> method should not be used.</summary>
-    /// <param name="modelBuilder">The model builder.</param>
-    /// <param name="callback">Optional, to customize the entity model builder.</param>
+    /// <param name="modelBuilder">The model to which the outbox state mapping is added.</param>
+    /// <param name="callback">An optional callback that further configures the outbox state mapping.</param>
     public static void AddOutboxStateEntity(this ModelBuilder modelBuilder, Action<EntityTypeBuilder<OutboxState>>? callback = null)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
@@ -178,7 +178,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     }
 
     /// <summary>Configures the <see cref="OutboxState" /> entity using an already created <see cref="ModelBuilder" />.</summary>
-    /// <param name="outbox">The model builder.</param>
+    /// <param name="outbox">The outbox state mapping to configure.</param>
     public static void ConfigureOutboxStateEntity(this EntityTypeBuilder<OutboxState> outbox)
     {
         ArgumentNullException.ThrowIfNull(outbox);
@@ -197,8 +197,9 @@ public static class EntityFrameworkOutboxConfigurationExtensions
         outbox.Property(p => p.NextDeliveryTime);
         outbox.Property(p => p.DeliveryAttempts);
         outbox.Property(p => p.LastFailureKind);
+        outbox.Property(p => p.LastFailureCode);
         outbox.Property(p => p.LastFailureTime);
-        outbox.Property(p => p.LastFailure).HasMaxLength(2048);
+        outbox.Property(p => p.LastExceptionType).HasMaxLength(512);
         outbox.Property(p => p.FailedSequenceNumber);
         outbox.Property(p => p.FailedMessageId);
         outbox.Property(p => p.Delivered);
@@ -214,8 +215,8 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     }
 
     /// <summary>Adds the <see cref="OutboxMessage" /> entity to the DbContext. If used, the <see cref="AddTransactionalOutboxEntities" /> method should not be used.</summary>
-    /// <param name="modelBuilder">The model builder.</param>
-    /// <param name="callback">Optional, to customize the entity model builder.</param>
+    /// <param name="modelBuilder">The model to which the outbox message mapping is added.</param>
+    /// <param name="callback">An optional callback that further configures the outbox message mapping.</param>
     public static void AddOutboxMessageEntity(this ModelBuilder modelBuilder, Action<EntityTypeBuilder<OutboxMessage>>? callback = null)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
@@ -227,7 +228,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     }
 
     /// <summary>Configures the <see cref="OutboxMessage" /> entity using an already created <see cref="ModelBuilder" />.</summary>
-    /// <param name="outbox">The model builder.</param>
+    /// <param name="outbox">The outbox message mapping to configure.</param>
     public static void ConfigureOutboxMessageEntity(this EntityTypeBuilder<OutboxMessage> outbox)
     {
         ArgumentNullException.ThrowIfNull(outbox);
@@ -296,10 +297,9 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     }
 
     /// <summary>
-    /// Configures the entity type builder to opt out of Entity Framework conventions.
-    /// This method sets the maximum length of all properties to null, effectively removing any length constraints.
+    /// Clears convention-provided maximum lengths so each outbox mapping declares its storage limits explicitly.
     /// </summary>
-    /// <param name="builder">The EntityTypeBuilder instance to configure.</param>
+    /// <param name="builder">The entity mapping whose convention-provided maximum lengths are cleared.</param>
     internal static void OptOutOfEntityFrameworkConventions(this EntityTypeBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);

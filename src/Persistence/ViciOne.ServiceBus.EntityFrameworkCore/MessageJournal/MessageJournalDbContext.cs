@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.MessageJournal;
+
 /// <summary>Dedicated bounded message-journal context. It is not a ViciOne Suite audit context.</summary>
 public sealed class MessageJournalDbContext : DbContext
 {
@@ -20,12 +21,10 @@ public sealed class MessageJournalDbContext : DbContext
         : base(options)
     {
         ArgumentNullException.ThrowIfNull(options);
-        ArgumentException.ThrowIfNullOrWhiteSpace(tableName);
-        if (schemaName is not null)
-            ArgumentException.ThrowIfNullOrWhiteSpace(schemaName);
-
-        _tableName = tableName;
-        _schemaName = schemaName;
+        _tableName = RelationalIdentifierValidator.Validate(tableName, nameof(tableName));
+        _schemaName = schemaName is null
+            ? null
+            : RelationalIdentifierValidator.Validate(schemaName, nameof(schemaName));
     }
 
     /// <summary>Gets the persisted sanitized journal entries.</summary>

@@ -444,7 +444,7 @@ public sealed class ReliableTransactionalOutboxTests
                     .EntityFrameworkRepository(repository =>
                     {
                         repository.UsePostgres();
-                        repository.ExistingDbContext<ReliableOutboxDbContext>();
+                        repository.UseExistingDbContext<ReliableOutboxDbContext>();
                     });
                 configuration.UsingInMemory((context, bus) =>
                 {

@@ -58,8 +58,9 @@ internal sealed class EntityFrameworkOutboxOperations<TBus, TDbContext> : IEntit
                 x.Created,
                 x.DeliveryAttempts,
                 x.LastFailureKind,
+                x.LastFailureCode,
                 x.LastFailureTime,
-                x.LastFailure,
+                x.LastExceptionType,
                 x.FailedSequenceNumber,
                 x.FailedMessageId))
             .ToListAsync(cancellationToken)
@@ -71,21 +72,27 @@ internal sealed class EntityFrameworkOutboxOperations<TBus, TDbContext> : IEntit
         if (outboxId == Guid.Empty)
             throw new ArgumentException("OutboxId must not be empty.", nameof(outboxId));
 
-        var state = await GetOwnedStateAsync(outboxId, cancellationToken).ConfigureAwait(false);
-        if (state.Status != OutboxDeliveryStatus.Quarantined)
-            throw new InvalidOperationException($"Outbox {outboxId} is not quarantined and cannot be requeued.");
+        int updated = await _dbContext.Set<OutboxState>()
+            .Where(state => state.OutboxId == outboxId
+                && state.BusKey == _busKey
+                && state.Status == OutboxDeliveryStatus.Quarantined)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(state => state.Status, OutboxDeliveryStatus.Pending)
+                .SetProperty(state => state.NextDeliveryTime, (DateTimeOffset?)null)
+                .SetProperty(state => state.DeliveryAttempts, 0)
+                .SetProperty(state => state.LastFailureKind, OutboxFailureKind.None)
+                .SetProperty(state => state.LastFailureCode, OutboxFailureCode.None)
+                .SetProperty(state => state.LastFailureTime, (DateTimeOffset?)null)
+                .SetProperty(state => state.LastExceptionType, (string?)null)
+                .SetProperty(state => state.FailedSequenceNumber, (long?)null)
+                .SetProperty(state => state.FailedMessageId, (Guid?)null)
+                .SetProperty(state => state.Delivered, (DateTimeOffset?)null),
+                cancellationToken)
+            .ConfigureAwait(false);
 
-        state.Status = OutboxDeliveryStatus.Pending;
-        state.NextDeliveryTime = null;
-        state.DeliveryAttempts = 0;
-        state.LastFailureKind = OutboxFailureKind.None;
-        state.LastFailureTime = null;
-        state.LastFailure = null;
-        state.FailedSequenceNumber = null;
-        state.FailedMessageId = null;
-        state.Delivered = null;
+        if (updated == 0)
+            await ThrowForUnavailableMutationAsync(outboxId, "requeued", cancellationToken).ConfigureAwait(false);
 
-        await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         _notification.SignalDelivery();
     }
 
@@ -94,26 +101,58 @@ internal sealed class EntityFrameworkOutboxOperations<TBus, TDbContext> : IEntit
         if (outboxId == Guid.Empty)
             throw new ArgumentException("OutboxId must not be empty.", nameof(outboxId));
 
-        var state = await GetOwnedStateAsync(outboxId, cancellationToken).ConfigureAwait(false);
-        if (state.Status != OutboxDeliveryStatus.Quarantined)
-            throw new InvalidOperationException($"Outbox {outboxId} is not quarantined and cannot be discarded.");
+        int deleted;
+        await using (var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false))
+        {
+            int claimed = await _dbContext.Set<OutboxState>()
+                .Where(state => state.OutboxId == outboxId
+                    && state.BusKey == _busKey
+                    && state.Status == OutboxDeliveryStatus.Quarantined)
+                .ExecuteUpdateAsync(
+                    setters => setters.SetProperty(state => state.Status, OutboxDeliveryStatus.Discarding),
+                    cancellationToken)
+                .ConfigureAwait(false);
 
-        var messages = await _dbContext.Set<OutboxMessage>()
-            .Where(x => x.OutboxId == outboxId)
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            if (claimed == 0)
+            {
+                deleted = 0;
+                await transaction.RollbackAsync(CancellationToken.None).ConfigureAwait(false);
+            }
+            else
+            {
+                await _dbContext.Set<OutboxMessage>()
+                    .Where(message => message.OutboxId == outboxId)
+                    .ExecuteDeleteAsync(cancellationToken)
+                    .ConfigureAwait(false);
+                deleted = await _dbContext.Set<OutboxState>()
+                    .Where(state => state.OutboxId == outboxId
+                        && state.BusKey == _busKey
+                        && state.Status == OutboxDeliveryStatus.Discarding)
+                    .ExecuteDeleteAsync(cancellationToken)
+                    .ConfigureAwait(false);
+                if (deleted != 1)
+                    throw new InvalidOperationException($"Discarding outbox {outboxId} lost its operator-owned state row.");
 
-        _dbContext.RemoveRange(messages);
-        _dbContext.Remove(state);
-        await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        if (deleted == 0)
+            await ThrowForUnavailableMutationAsync(outboxId, "discarded", cancellationToken).ConfigureAwait(false);
     }
 
-    async Task<OutboxState> GetOwnedStateAsync(Guid outboxId, CancellationToken cancellationToken)
+    async Task ThrowForUnavailableMutationAsync(Guid outboxId, string operation, CancellationToken cancellationToken)
     {
-        var state = await _dbContext.Set<OutboxState>()
-            .SingleOrDefaultAsync(x => x.OutboxId == outboxId && x.BusKey == _busKey, cancellationToken)
+        OutboxDeliveryStatus? status = await _dbContext.Set<OutboxState>()
+            .AsNoTracking()
+            .Where(state => state.OutboxId == outboxId && state.BusKey == _busKey)
+            .Select(state => (OutboxDeliveryStatus?)state.Status)
+            .SingleOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        return state ?? throw new KeyNotFoundException($"Outbox {outboxId} was not found for bus '{_busKey}'.");
+        if (status is null)
+            throw new KeyNotFoundException($"Outbox {outboxId} was not found for bus '{_busKey}'.");
+
+        throw new InvalidOperationException($"Outbox {outboxId} has status '{status}' and cannot be {operation}.");
     }
 }

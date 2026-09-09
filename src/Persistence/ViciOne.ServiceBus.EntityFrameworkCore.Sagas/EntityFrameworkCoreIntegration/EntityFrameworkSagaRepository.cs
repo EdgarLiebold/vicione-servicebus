@@ -8,7 +8,7 @@ using ViciOne.ServiceBus.Saga;
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Creates standalone EF Core saga repositories with optimistic or pessimistic concurrency.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 public static class EntityFrameworkSagaRepository<TSaga>
     where TSaga : class, ISaga
 {

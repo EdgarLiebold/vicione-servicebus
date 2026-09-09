@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using ViciOne.ServiceBus.MessageJournal;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.MessageJournal;
+
 /// <summary>
 /// Stores sanitized journal entries in a relational database while enforcing count and age bounds
 /// inside one serializable transaction.
@@ -30,14 +31,13 @@ public sealed class EntityFrameworkMessageJournalStore : IMessageJournalStore
         string? schemaName = null)
     {
         ArgumentNullException.ThrowIfNull(contextOptions);
-        ArgumentException.ThrowIfNullOrWhiteSpace(tableName);
         ArgumentNullException.ThrowIfNull(limits);
-        if (schemaName is not null)
-            ArgumentException.ThrowIfNullOrWhiteSpace(schemaName);
 
         _contextOptions = contextOptions;
-        _tableName = tableName;
-        _schemaName = schemaName;
+        _tableName = RelationalIdentifierValidator.Validate(tableName, nameof(tableName));
+        _schemaName = schemaName is null
+            ? null
+            : RelationalIdentifierValidator.Validate(schemaName, nameof(schemaName));
         Limits = limits;
     }
 
@@ -47,7 +47,7 @@ public sealed class EntityFrameworkMessageJournalStore : IMessageJournalStore
     /// <summary>Removes expired or excess rows and appends one sanitized entry in a serializable transaction.</summary>
     /// <param name="entry">The sanitized journal entry to persist.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when retention, capacity enforcement, and append have committed.</returns>
     public async ValueTask AppendAsync(MessageJournalEntry entry, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(entry);

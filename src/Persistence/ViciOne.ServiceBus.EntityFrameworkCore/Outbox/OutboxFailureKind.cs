@@ -1,6 +1,5 @@
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-
 /// <summary>Classifies the most recent transactional-outbox delivery failure.</summary>
 public enum OutboxFailureKind
 {
@@ -15,5 +14,5 @@ public enum OutboxFailureKind
     /// <summary>The configured maximum number of attempts was reached.</summary>
     RetryLimitExceeded = 4,
     /// <summary>No registered classifier recognized the failure.</summary>
-    Unclassified = 5
+    Unclassified = 5,
 }

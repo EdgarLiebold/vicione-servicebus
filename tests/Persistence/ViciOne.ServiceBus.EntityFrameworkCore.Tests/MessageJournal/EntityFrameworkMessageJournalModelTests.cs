@@ -183,8 +183,11 @@ public sealed class EntityFrameworkMessageJournalModelTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("\t")]
-    [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-CONFIGURATION", "relational-identifiers-reject-whitespace")]
-    public void RelationalIdentifiers_RejectWhitespace(string invalidIdentifier)
+    [InlineData("Journal\nTable")]
+    [InlineData("Journal\0Table")]
+    [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")]
+    [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-CONFIGURATION", "relational-identifiers-reject-unsafe-or-oversized-values")]
+    public void RelationalIdentifiers_RejectUnsafeOrOversizedValues(string invalidIdentifier)
     {
         DbContextOptions<JournalProbeContext> options = new DbContextOptionsBuilder<JournalProbeContext>()
             .UseSqlite("Data Source=:memory:")
@@ -200,11 +203,11 @@ public sealed class EntityFrameworkMessageJournalModelTests
             TimeSpan.FromSeconds(1),
             TimeProvider.System);
 
-        ArgumentException extensionTable = Assert.Throws<ArgumentException>(() =>
+        ArgumentException extensionTable = Assert.ThrowsAny<ArgumentException>(() =>
             configurator.UseEntityFramework(options, invalidIdentifier, limits));
-        ArgumentException extensionSchema = Assert.Throws<ArgumentException>(() =>
+        ArgumentException extensionSchema = Assert.ThrowsAny<ArgumentException>(() =>
             configurator.UseEntityFramework(options, "MessageJournal", limits, invalidIdentifier));
-        ArgumentException directTable = Assert.Throws<ArgumentException>(() =>
+        ArgumentException directTable = Assert.ThrowsAny<ArgumentException>(() =>
             global::ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingInMemory(bus =>
                 bus.UseEntityFrameworkCoreMessageJournal(
                     options,
@@ -212,7 +215,7 @@ public sealed class EntityFrameworkMessageJournalModelTests
                     policy,
                     limits,
                     journalOptions)));
-        ArgumentException directSchema = Assert.Throws<ArgumentException>(() =>
+        ArgumentException directSchema = Assert.ThrowsAny<ArgumentException>(() =>
             global::ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingInMemory(bus =>
                 bus.UseEntityFrameworkCoreMessageJournal(
                     options,
@@ -221,17 +224,17 @@ public sealed class EntityFrameworkMessageJournalModelTests
                     limits,
                     journalOptions,
                     invalidIdentifier)));
-        ArgumentException storeTable = Assert.Throws<ArgumentException>(() =>
+        ArgumentException storeTable = Assert.ThrowsAny<ArgumentException>(() =>
             new EntityFrameworkMessageJournalStore(options, invalidIdentifier, limits));
-        ArgumentException storeSchema = Assert.Throws<ArgumentException>(() =>
+        ArgumentException storeSchema = Assert.ThrowsAny<ArgumentException>(() =>
             new EntityFrameworkMessageJournalStore(options, "MessageJournal", limits, invalidIdentifier));
-        ArgumentException contextTable = Assert.Throws<ArgumentException>(() =>
+        ArgumentException contextTable = Assert.ThrowsAny<ArgumentException>(() =>
             new MessageJournalDbContext(journalContextOptions, invalidIdentifier));
-        ArgumentException contextSchema = Assert.Throws<ArgumentException>(() =>
+        ArgumentException contextSchema = Assert.ThrowsAny<ArgumentException>(() =>
             new MessageJournalDbContext(journalContextOptions, "MessageJournal", invalidIdentifier));
-        ArgumentException mappingTable = Assert.Throws<ArgumentException>(() =>
+        ArgumentException mappingTable = Assert.ThrowsAny<ArgumentException>(() =>
             new MessageJournalMapping(invalidIdentifier));
-        ArgumentException mappingSchema = Assert.Throws<ArgumentException>(() =>
+        ArgumentException mappingSchema = Assert.ThrowsAny<ArgumentException>(() =>
             new MessageJournalMapping("MessageJournal", invalidIdentifier));
 
         Assert.Equal("tableName", extensionTable.ParamName);
@@ -272,12 +275,14 @@ public sealed class EntityFrameworkMessageJournalModelTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("\t")]
-    [RequirementCoverage("REQ-VSB-EF-DURABLE-MODEL", "reliable-schema-rejects-whitespace")]
-    public void ReliableMessagingModel_RejectsWhitespaceSchema(string invalidSchema)
+    [InlineData("Reliable\nSchema")]
+    [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")]
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-MODEL", "reliable-schema-rejects-unsafe-or-oversized-values")]
+    public void ReliableMessagingModel_RejectsUnsafeOrOversizedSchema(string invalidSchema)
     {
         var builder = new ModelBuilder();
 
-        ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+        ArgumentException exception = Assert.ThrowsAny<ArgumentException>(() =>
             builder.AddViciOneReliableMessaging(invalidSchema));
 
         Assert.Equal("schema", exception.ParamName);

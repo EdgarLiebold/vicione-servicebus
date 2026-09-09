@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
 /// <summary>Loads the saga rows selected by a repository query under the configured concurrency strategy.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 internal interface SagaLockContext<TSaga>
     where TSaga : class, ISaga
 {

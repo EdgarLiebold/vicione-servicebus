@@ -36,6 +36,10 @@ public sealed class EntityFrameworkOutboxOperationsTests
 
         Assert.Equal([oldestId, earlierId], entries.Select(x => x.OutboxId));
         Assert.All(entries, x => Assert.Equal(OutboxFailureKind.Permanent, x.FailureKind));
+        Assert.All(entries, x => Assert.Equal(OutboxFailureCode.TransportSendFailed, x.FailureCode));
+        Assert.All(entries, x => Assert.Equal(typeof(InvalidOperationException).FullName, x.ExceptionType));
+        Assert.All(entries, x => Assert.Equal(17, x.FailedSequenceNumber));
+        Assert.All(entries, x => Assert.Equal(Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"), x.FailedMessageId));
         Assert.Equal(0, notification.DeliveredCount);
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             operations.GetQuarantinedAsync(0, TestContext.Current.CancellationToken));
@@ -63,9 +67,10 @@ public sealed class EntityFrameworkOutboxOperationsTests
         Assert.Equal(OutboxDeliveryStatus.Pending, persisted.Status);
         Assert.Equal(0, persisted.DeliveryAttempts);
         Assert.Equal(OutboxFailureKind.None, persisted.LastFailureKind);
+        Assert.Equal(OutboxFailureCode.None, persisted.LastFailureCode);
         Assert.Null(persisted.NextDeliveryTime);
         Assert.Null(persisted.LastFailureTime);
-        Assert.Null(persisted.LastFailure);
+        Assert.Null(persisted.LastExceptionType);
         Assert.Null(persisted.FailedSequenceNumber);
         Assert.Null(persisted.FailedMessageId);
         Assert.Null(persisted.Delivered);
@@ -120,6 +125,70 @@ public sealed class EntityFrameworkOutboxOperationsTests
         Assert.Contains(states, x => x.OutboxId == foreign.OutboxId && x.Status == OutboxDeliveryStatus.Quarantined);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "concurrent-operator-decisions-have-one-winner")]
+    public async Task ConcurrentMutations_ApplyExactlyOneOperatorDecisionAsync()
+    {
+        const int contenderCount = 24;
+        await using ConcurrentOperationsFixture fixture = await ConcurrentOperationsFixture.CreateAsync();
+        Guid outboxId = Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee");
+        await using (OperationsDbContext setupContext = fixture.CreateContext())
+        {
+            setupContext.AddRange(
+                CreateState(outboxId, FirstBusKey, OutboxDeliveryStatus.Quarantined),
+                CreateMessage(1, outboxId));
+            await setupContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        }
+
+        var notification = new RecordingNotification();
+        var start = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task<bool>[] contenders = Enumerable.Range(0, contenderCount)
+            .Select(async index =>
+            {
+                await start.Task.WaitAsync(TestContext.Current.CancellationToken);
+                await using OperationsDbContext dbContext = fixture.CreateContext();
+                var operations = CreateOperations(dbContext, notification);
+
+                try
+                {
+                    if (index % 2 == 0)
+                        await operations.RequeueAsync(outboxId, TestContext.Current.CancellationToken);
+                    else
+                        await operations.DiscardAsync(outboxId, TestContext.Current.CancellationToken);
+
+                    return true;
+                }
+                catch (Exception exception) when (exception is InvalidOperationException or KeyNotFoundException)
+                {
+                    return false;
+                }
+            })
+            .ToArray();
+
+        start.SetResult();
+        bool[] results = await Task.WhenAll(contenders);
+
+        Assert.Single(results, applied => applied);
+        await using OperationsDbContext verificationContext = fixture.CreateContext();
+        OutboxState? state = await verificationContext.Set<OutboxState>()
+            .AsNoTracking()
+            .SingleOrDefaultAsync(TestContext.Current.CancellationToken);
+        OutboxMessage[] messages = await verificationContext.Set<OutboxMessage>()
+            .AsNoTracking()
+            .ToArrayAsync(TestContext.Current.CancellationToken);
+        if (state is null)
+        {
+            Assert.Empty(messages);
+            Assert.Equal(0, notification.DeliveredCount);
+        }
+        else
+        {
+            Assert.Equal(OutboxDeliveryStatus.Pending, state.Status);
+            Assert.Single(messages);
+            Assert.Equal(1, notification.DeliveredCount);
+        }
+    }
+
     private static OutboxState CreateState(Guid id, string busKey, OutboxDeliveryStatus status, DateTimeOffset? created = null)
     {
         DateTimeOffset createdAt = created ?? Created;
@@ -133,8 +202,9 @@ public sealed class EntityFrameworkOutboxOperationsTests
             NextDeliveryTime = createdAt.AddMinutes(1),
             DeliveryAttempts = 4,
             LastFailureKind = OutboxFailureKind.Permanent,
+            LastFailureCode = OutboxFailureCode.TransportSendFailed,
             LastFailureTime = createdAt,
-            LastFailure = "failure",
+            LastExceptionType = typeof(InvalidOperationException).FullName,
             FailedSequenceNumber = 17,
             FailedMessageId = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"),
             Delivered = createdAt
@@ -198,6 +268,40 @@ public sealed class EntityFrameworkOutboxOperationsTests
         {
             await DbContext.DisposeAsync();
             await _connection.DisposeAsync();
+        }
+    }
+
+    private sealed class ConcurrentOperationsFixture : IAsyncDisposable
+    {
+        private readonly DbContextOptions<OperationsDbContext> _options;
+        private readonly string _path;
+
+        private ConcurrentOperationsFixture(string path, DbContextOptions<OperationsDbContext> options)
+        {
+            _path = path;
+            _options = options;
+        }
+
+        public static async Task<ConcurrentOperationsFixture> CreateAsync()
+        {
+            string path = Path.Combine(Path.GetTempPath(), $"vicione-outbox-operations-{Guid.NewGuid():N}.db");
+            DbContextOptions<OperationsDbContext> options = new DbContextOptionsBuilder<OperationsDbContext>()
+                .UseSqlite($"Data Source={path};Default Timeout=30;Pooling=False")
+                .Options;
+            var fixture = new ConcurrentOperationsFixture(path, options);
+            await using OperationsDbContext dbContext = fixture.CreateContext();
+            await dbContext.Database.EnsureCreatedAsync(TestContext.Current.CancellationToken);
+            return fixture;
+        }
+
+        public OperationsDbContext CreateContext() => new(_options);
+
+        public ValueTask DisposeAsync()
+        {
+            File.Delete(_path);
+            File.Delete(_path + "-wal");
+            File.Delete(_path + "-shm");
+            return ValueTask.CompletedTask;
         }
     }
 }

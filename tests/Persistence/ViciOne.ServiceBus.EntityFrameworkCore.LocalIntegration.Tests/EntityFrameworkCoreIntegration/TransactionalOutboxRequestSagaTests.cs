@@ -471,7 +471,7 @@ public sealed class TransactionalOutboxRequestSagaTests
                     .EntityFrameworkRepository(repository =>
                     {
                         repository.UsePostgres();
-                        repository.ExistingDbContext<RequestSagaDbContext>();
+                        repository.UseExistingDbContext<RequestSagaDbContext>();
                     });
             });
 

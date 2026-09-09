@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Loads one saga entity by correlation identifier using a configured EF Core query strategy.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 internal interface ILoadQueryExecutor<TSaga>
     where TSaga : class, ISaga
 {

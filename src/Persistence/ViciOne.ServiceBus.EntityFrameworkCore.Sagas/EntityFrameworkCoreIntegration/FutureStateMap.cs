@@ -10,10 +10,10 @@ public class FutureStateMap :
     readonly bool _optimistic;
 
     /// <summary>Initializes a future-state mapping with the selected concurrency model.</summary>
-    /// <param name="optimistic"><see langword="true"/> to map <c>RowVersion</c>; otherwise it is ignored.</param>
-    public FutureStateMap(bool optimistic)
+    /// <param name="useOptimisticConcurrency"><see langword="true"/> to map <c>RowVersion</c>; otherwise it is ignored.</param>
+    public FutureStateMap(bool useOptimisticConcurrency)
     {
-        _optimistic = optimistic;
+        _optimistic = useOptimisticConcurrency;
     }
 
     /// <summary>Configures future-state scalar, JSON, and concurrency properties.</summary>

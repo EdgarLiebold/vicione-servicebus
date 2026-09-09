@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.EntityFrameworkCore;
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Contains validated transaction and locking settings for one EF Core outbox DbContext.</summary>
-/// <typeparam name="TDbContext">The db context type.</typeparam>
+/// <typeparam name="TDbContext">The DbContext type containing inbox and outbox entities.</typeparam>
 public sealed class EntityFrameworkOutboxOptions<TDbContext>
     where TDbContext : DbContext
 {

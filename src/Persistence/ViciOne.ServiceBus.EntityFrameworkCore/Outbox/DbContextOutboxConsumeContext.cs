@@ -10,11 +10,12 @@ using ViciOne.ServiceBus.Middleware.Outbox;
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Coordinates one receive-side EF Core inbox transaction and its ordered outgoing messages.</summary>
-/// <typeparam name="TDbContext">The db context type.</typeparam>
+/// <typeparam name="TDbContext">The EF Core context containing the inbox and outbox entity sets.</typeparam>
 /// <typeparam name="TMessage">The consumed message contract.</typeparam>
 internal sealed class DbContextOutboxConsumeContext<TDbContext, TMessage> :
     OutboxConsumeContextProxy<TMessage>,
-    DbTransactionContext
+    IDbTransactionContext,
+    IDisposable
     where TDbContext : DbContext
     where TMessage : class
 {
@@ -65,9 +66,15 @@ internal sealed class DbContextOutboxConsumeContext<TDbContext, TMessage> :
     /// <summary>Gets the identifier of the active EF Core transaction.</summary>
     public Guid TransactionId => _transaction.TransactionId;
 
+    /// <summary>Releases the write coordinator owned by this pipeline context.</summary>
+    public void Dispose()
+    {
+        _writeCoordinator.Dispose();
+    }
+
     /// <summary>Persists the current time as the inbox consumption timestamp.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the consumption timestamp has been persisted.</returns>
     public override async Task SetConsumedAsync(CancellationToken cancellationToken = default)
     {
         CancellationToken operationCancellationToken = ResolveOperationCancellationToken(cancellationToken);
@@ -82,7 +89,7 @@ internal sealed class DbContextOutboxConsumeContext<TDbContext, TMessage> :
 
     /// <summary>Persists the current time as the completed outbox-delivery timestamp.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the delivery timestamp has been persisted.</returns>
     public override async Task SetDeliveredAsync(CancellationToken cancellationToken = default)
     {
         CancellationToken operationCancellationToken = ResolveOperationCancellationToken(cancellationToken);
@@ -120,7 +127,7 @@ internal sealed class DbContextOutboxConsumeContext<TDbContext, TMessage> :
     /// <summary>Advances the tracked last-delivered sequence to the supplied message.</summary>
     /// <param name="message">The message to process.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after the tracked inbox state has advanced.</returns>
     public override Task NotifyOutboxMessageDeliveredAsync(OutboxMessageContext message, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -136,7 +143,7 @@ internal sealed class DbContextOutboxConsumeContext<TDbContext, TMessage> :
 
     /// <summary>Deletes every outgoing message associated with this inbox row.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the associated outbox rows have been deleted.</returns>
     public override async Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
         CancellationToken operationCancellationToken = ResolveOperationCancellationToken(cancellationToken);
@@ -153,7 +160,7 @@ internal sealed class DbContextOutboxConsumeContext<TDbContext, TMessage> :
     /// <typeparam name="T">The outgoing message contract.</typeparam>
     /// <param name="context">The send context to serialize and persist.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after the serialized message has been staged in the DbContext.</returns>
     public override Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {

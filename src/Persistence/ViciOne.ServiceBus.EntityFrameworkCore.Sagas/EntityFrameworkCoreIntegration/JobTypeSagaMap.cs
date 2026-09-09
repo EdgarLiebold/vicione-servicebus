@@ -10,10 +10,10 @@ public class JobTypeSagaMap :
     readonly bool _optimistic;
 
     /// <summary>Initializes a job-type saga mapping with the selected concurrency model.</summary>
-    /// <param name="optimistic"><see langword="true"/> to map <c>RowVersion</c>; otherwise it is ignored.</param>
-    public JobTypeSagaMap(bool optimistic)
+    /// <param name="useOptimisticConcurrency"><see langword="true"/> to map <c>RowVersion</c>; otherwise it is ignored.</param>
+    public JobTypeSagaMap(bool useOptimisticConcurrency)
     {
-        _optimistic = optimistic;
+        _optimistic = useOptimisticConcurrency;
     }
 
     /// <summary>Configures job-type limits, JSON collections, and concurrency properties.</summary>

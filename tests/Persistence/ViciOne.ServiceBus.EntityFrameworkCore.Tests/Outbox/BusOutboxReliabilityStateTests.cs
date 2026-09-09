@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,11 +33,13 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Equal(OutboxDeliveryStatus.RetryScheduled, state.Status);
         Assert.Equal(1, state.DeliveryAttempts);
         Assert.Equal(OutboxFailureKind.Unclassified, state.LastFailureKind);
+        Assert.Equal(OutboxFailureCode.TransportSendFailed, state.LastFailureCode);
         Assert.Equal(Now.UtcDateTime, state.LastFailureTime);
         Assert.Equal((Now + TimeSpan.FromSeconds(2)).UtcDateTime, state.NextDeliveryTime);
         Assert.Equal(message.SequenceNumber, state.FailedSequenceNumber);
         Assert.Equal(message.MessageId, state.FailedMessageId);
-        Assert.Contains("unknown", state.LastFailure, StringComparison.Ordinal);
+        Assert.Equal(typeof(InvalidOperationException).FullName, state.LastExceptionType);
+        Assert.DoesNotContain("unknown", state.LastExceptionType, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -54,6 +57,8 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Equal(OutboxDeliveryStatus.Quarantined, state.Status);
         Assert.Equal(3, state.DeliveryAttempts);
         Assert.Equal(OutboxFailureKind.RetryLimitExceeded, state.LastFailureKind);
+        Assert.Equal(OutboxFailureCode.TransportSendFailed, state.LastFailureCode);
+        Assert.Equal(typeof(TimeoutException).FullName, state.LastExceptionType);
         Assert.Null(state.NextDeliveryTime);
         Assert.Equal(message.SequenceNumber, state.FailedSequenceNumber);
         Assert.Equal(message.MessageId, state.FailedMessageId);
@@ -74,6 +79,8 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Equal(OutboxDeliveryStatus.Quarantined, state.Status);
         Assert.Equal(5, state.DeliveryAttempts);
         Assert.Equal(OutboxFailureKind.Permanent, state.LastFailureKind);
+        Assert.Equal(OutboxFailureCode.TransportSendFailed, state.LastFailureCode);
+        Assert.Equal(typeof(TestTransportException).FullName, state.LastExceptionType);
         Assert.Equal(message.SequenceNumber, state.FailedSequenceNumber);
         Assert.Equal(message.MessageId, state.FailedMessageId);
     }
@@ -91,7 +98,7 @@ public sealed class BusOutboxReliabilityStateTests
 
         Assert.Equal(OutboxDeliveryStatus.RetryScheduled, state.Status);
         Assert.Equal(1, state.DeliveryAttempts);
-        Assert.Contains(nameof(FaultingDescriptionException), state.LastFailure, StringComparison.Ordinal);
+        Assert.Equal(typeof(FaultingDescriptionException).FullName, state.LastExceptionType);
     }
 
     [Fact]
@@ -108,7 +115,8 @@ public sealed class BusOutboxReliabilityStateTests
 
         Assert.Equal(OutboxDeliveryStatus.Quarantined, state.Status);
         Assert.Equal(OutboxFailureKind.InvariantViolation, state.LastFailureKind);
-        Assert.Contains(int.MaxValue.ToString(), state.LastFailure, StringComparison.Ordinal);
+        Assert.Equal(OutboxFailureCode.InvalidDeliveryAttemptCount, state.LastFailureCode);
+        Assert.Null(state.LastExceptionType);
         Assert.Null(state.NextDeliveryTime);
     }
 
@@ -177,6 +185,8 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Equal(OutboxDeliveryStatus.Quarantined, persisted.Status);
         Assert.Equal(1, persisted.DeliveryAttempts);
         Assert.Equal(OutboxFailureKind.InvariantViolation, persisted.LastFailureKind);
+        Assert.Equal(OutboxFailureCode.MissingDestinationAddress, persisted.LastFailureCode);
+        Assert.Null(persisted.LastExceptionType);
         Assert.Null(persisted.Delivered);
         Assert.Single(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
     }
@@ -204,7 +214,8 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Equal(OutboxDeliveryStatus.Quarantined, persisted.Status);
         Assert.Equal(1, persisted.DeliveryAttempts);
         Assert.Equal(OutboxFailureKind.InvariantViolation, persisted.LastFailureKind);
-        Assert.Contains("metadata", persisted.LastFailure, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(OutboxFailureCode.MetadataDeserializationFailed, persisted.LastFailureCode);
+        Assert.Equal(typeof(System.Text.Json.JsonException).FullName, persisted.LastExceptionType);
         Assert.Single(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
     }
 
@@ -230,6 +241,28 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Equal(OutboxDeliveryStatus.Delivered, persisted.Status);
         Assert.Equal(Now.UtcDateTime, persisted.Delivered);
         Assert.Equal(42, persisted.LastSequenceNumber);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "endpoint-resolution-observes-delivery-timeout")]
+    public async Task EndpointResolution_UsesTheBoundedDeliveryTokenAsync()
+    {
+        await using DeliveryFixture fixture = await DeliveryFixture.CreateAsync();
+        OutboxState state = CreateState();
+        OutboxMessage message = CreatePersistableMessage(state.OutboxId, new Uri("loopback://localhost/delivery"));
+        fixture.DbContext.AddRange(state, message);
+        await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        fixture.DbContext.ChangeTracker.Clear();
+        state = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
+        IBus bus = DispatchProxy.Create<IBus, RecordingBusProxy>();
+        var busProxy = (RecordingBusProxy)(object)bus;
+        using ServiceProvider provider = CreateProvider(bus);
+        var service = CreateService(provider);
+
+        int delivered = await service.DeliverOutboxMessagesAsync(fixture.DbContext, state, CancellationToken.None);
+
+        Assert.Equal(1, delivered);
+        Assert.True(busProxy.EndpointResolutionToken.CanBeCanceled);
     }
 
     private static EntityFrameworkTransactionalOutboxSource<IBus, DeliveryDbContext> CreateService(
@@ -260,12 +293,12 @@ public sealed class BusOutboxReliabilityStateTests
             BusPersistenceIdentity<IBus>.Create("default"));
     }
 
-    private static ServiceProvider CreateProvider()
+    private static ServiceProvider CreateProvider(IBus? bus = null)
     {
-        IBusControl bus = global::ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingInMemory(_ => { });
+        IBusControl busControl = global::ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingInMemory(_ => { });
         return new ServiceCollection()
-            .AddSingleton<IBus>(bus)
-            .AddSingleton(bus)
+            .AddSingleton(bus ?? busControl)
+            .AddSingleton(busControl)
             .BuildServiceProvider();
     }
 
@@ -323,6 +356,37 @@ public sealed class BusOutboxReliabilityStateTests
         {
             failureKind = TransportSendFailureKind.Permanent;
             return exception is TestTransportException;
+        }
+    }
+
+    private class RecordingBusProxy : DispatchProxy
+    {
+        private static readonly ISendEndpoint Endpoint = DispatchProxy.Create<TestSendEndpoint, SuccessfulSendEndpointProxy>();
+
+        public CancellationToken EndpointResolutionToken { get; private set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name == nameof(ISendEndpointProvider.GetSendEndpointAsync))
+            {
+                EndpointResolutionToken = (CancellationToken)args![1]!;
+                return Task.FromResult(Endpoint);
+            }
+
+            throw new InvalidOperationException($"Unexpected bus member: {targetMethod?.Name ?? "<null>"}.");
+        }
+    }
+
+    private interface TestSendEndpoint : ISendEndpoint, ViciOne.ServiceBus.Advanced.IAdvancedSendEndpoint;
+
+    private class SuccessfulSendEndpointProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name == "SendAsync" && targetMethod.ReturnType == typeof(Task))
+                return Task.CompletedTask;
+
+            throw new InvalidOperationException($"Unexpected send-endpoint member: {targetMethod?.Name ?? "<null>"}.");
         }
     }
 

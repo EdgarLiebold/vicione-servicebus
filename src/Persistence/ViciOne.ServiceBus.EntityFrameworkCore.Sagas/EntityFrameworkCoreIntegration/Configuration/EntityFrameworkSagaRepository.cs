@@ -33,7 +33,7 @@ sealed class EntityFrameworkSagaRepository :
         }
     }
 
-    public DbContext GetDbContext()
+    public DbContext CreateDbContext()
     {
         return new RepositorySagaDbContext(_dbContextOptions, _configurations.Values);
     }
@@ -42,7 +42,6 @@ sealed class EntityFrameworkSagaRepository :
     {
         return new DbContextOptionsBuilder<RepositorySagaDbContext>();
     }
-
 
     sealed class RepositorySagaDbContext : SagaDbContext
     {

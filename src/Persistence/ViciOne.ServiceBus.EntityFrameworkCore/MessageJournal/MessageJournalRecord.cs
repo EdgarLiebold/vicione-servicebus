@@ -3,6 +3,7 @@ using System.Text.Json;
 using ViciOne.ServiceBus.MessageJournal;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.MessageJournal;
+
 /// <summary>Relational persistence representation of a sanitized message-journal entry.</summary>
 public sealed class MessageJournalRecord
 {

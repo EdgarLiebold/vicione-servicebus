@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Configures EF Core inbox deduplication and optional transactional-outbox delivery for a bus.</summary>
 /// <typeparam name="TBus">The bus type.</typeparam>
-/// <typeparam name="TDbContext">The db context type.</typeparam>
+/// <typeparam name="TDbContext">The DbContext type containing inbox and outbox entities.</typeparam>
 internal sealed class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
     IEntityFrameworkOutboxConfigurator
     where TBus : class, IBus

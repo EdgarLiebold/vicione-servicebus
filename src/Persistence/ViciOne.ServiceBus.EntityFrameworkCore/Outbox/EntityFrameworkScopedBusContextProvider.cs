@@ -4,6 +4,7 @@ using System.Linq;
 using ViciOne.ServiceBus.DependencyInjection;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
+
 /// <summary>
 /// Selects the EF bus outbox for a scoped bus. Selection is deterministic: one registration is implicit, multiple
 /// registrations require exactly one explicit default. DbContext-specific APIs bypass this selector entirely.

@@ -15,7 +15,7 @@ using ViciOne.ServiceBus.Saga;
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>Configures DbContext creation, query shape, transactions, and concurrency for an EF Core saga repository.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 internal sealed class EntityFrameworkSagaRepositoryConfigurator<TSaga> :
     IEntityFrameworkSagaRepositoryConfigurator<TSaga>,
     ISpecification
@@ -77,24 +77,24 @@ internal sealed class EntityFrameworkSagaRepositoryConfigurator<TSaga> :
     }
 
     /// <summary>Uses a delegate to create a DbContext for each repository scope.</summary>
-    /// <param name="databaseFactory">The delegate that creates the DbContext.</param>
-    public void DatabaseFactory(Func<DbContext> databaseFactory)
+    /// <param name="dbContextFactory">The delegate that creates the DbContext.</param>
+    public void UseDbContextFactory(Func<DbContext> dbContextFactory)
     {
-        ArgumentNullException.ThrowIfNull(databaseFactory);
-        DatabaseFactory(_ => databaseFactory);
+        ArgumentNullException.ThrowIfNull(dbContextFactory);
+        UseDbContextFactory(_ => dbContextFactory);
     }
 
     /// <summary>Uses dependency injection to obtain a delegate that creates a DbContext for each repository scope.</summary>
-    /// <param name="databaseFactory">A function that resolves the DbContext factory from the active service provider.</param>
-    public void DatabaseFactory(Func<IServiceProvider, Func<DbContext>> databaseFactory)
+    /// <param name="dbContextFactoryResolver">A function that resolves the DbContext factory from the active service provider.</param>
+    public void UseDbContextFactory(Func<IServiceProvider, Func<DbContext>> dbContextFactoryResolver)
     {
-        ArgumentNullException.ThrowIfNull(databaseFactory);
+        ArgumentNullException.ThrowIfNull(dbContextFactoryResolver);
 
         _configureDbContext = configurator =>
         {
             configurator.TryAddScoped<ISagaDbContextFactory<TSaga>>(provider =>
             {
-                Func<DbContext> factory = databaseFactory(provider)
+                Func<DbContext> factory = dbContextFactoryResolver(provider)
                     ?? throw new InvalidOperationException("The saga DbContext-factory resolver returned null.");
 
                 return new DelegateSagaDbContextFactory<TSaga>(factory);
@@ -104,7 +104,7 @@ internal sealed class EntityFrameworkSagaRepositoryConfigurator<TSaga> :
 
     /// <summary>Uses an already registered scoped DbContext without taking ownership of its lifetime.</summary>
     /// <typeparam name="TContext">The registered DbContext type.</typeparam>
-    public void ExistingDbContext<TContext>()
+    public void UseExistingDbContext<TContext>()
         where TContext : DbContext
     {
         _configureDbContext = configurator =>

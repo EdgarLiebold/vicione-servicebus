@@ -199,7 +199,7 @@ public sealed class EntityFrameworkRoutingSlipFuturePersistenceTests
                     configuration.AddSagaRepository<FutureState>()
                         .EntityFrameworkRepository(repository =>
                         {
-                            repository.ExistingDbContext<FutureSagaDbContext>();
+                            repository.UseExistingDbContext<FutureSagaDbContext>();
                             repository.UsePostgres();
                         });
                     configuration.UsingInMemory((context, bus) =>

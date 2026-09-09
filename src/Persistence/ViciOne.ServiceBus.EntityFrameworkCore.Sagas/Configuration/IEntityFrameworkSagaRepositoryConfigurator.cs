@@ -16,7 +16,7 @@ public interface IEntityFrameworkSagaRepositoryConfigurator
     /// <summary>Sets the provider-specific SQL used for pessimistic row locks.</summary>
     ILockStatementProvider LockStatementProvider { set; }
 
-    /// <summary>Add the DbContext to the container, and configure the repository to use it.</summary>
+    /// <summary>Registers a DbContext implementation and configures the repository to use it.</summary>
     /// <typeparam name="TContext">The service type through which the DbContext is resolved.</typeparam>
     /// <typeparam name="TImplementation">The concrete DbContext type.</typeparam>
     /// <param name="optionsAction">An optional callback that configures the concrete DbContext.</param>
@@ -24,20 +24,20 @@ public interface IEntityFrameworkSagaRepositoryConfigurator
         where TContext : DbContext
         where TImplementation : DbContext, TContext;
 
-    /// <summary>Use a simple factory method to create the database.</summary>
-    /// <param name="databaseFactory">The delegate that creates the DbContext.</param>
-    void DatabaseFactory(Func<DbContext> databaseFactory);
+    /// <summary>Uses a delegate to create a DbContext for each repository scope.</summary>
+    /// <param name="dbContextFactory">The delegate that creates the DbContext.</param>
+    void UseDbContextFactory(Func<DbContext> dbContextFactory);
 
-    /// <summary>Use the configuration service provider to resolve the database factory.</summary>
-    /// <param name="databaseFactory">A function that resolves the DbContext factory from the active service provider.</param>
-    void DatabaseFactory(Func<IServiceProvider, Func<DbContext>> databaseFactory);
+    /// <summary>Uses the active service provider to resolve a DbContext factory for each repository scope.</summary>
+    /// <param name="dbContextFactoryResolver">A function that resolves the DbContext factory from the active service provider.</param>
+    void UseDbContextFactory(Func<IServiceProvider, Func<DbContext>> dbContextFactoryResolver);
 
     /// <summary>
     /// Use an existing (already configured in the container) DbContext that will be resolved
     /// within the container scope.
     /// </summary>
     /// <typeparam name="TContext">The registered DbContext type.</typeparam>
-    void ExistingDbContext<TContext>()
+    void UseExistingDbContext<TContext>()
         where TContext : DbContext;
 
     /// <summary>Configures the saga to use optimistic concurrency, with optional transaction support.</summary>
@@ -48,9 +48,8 @@ public interface IEntityFrameworkSagaRepositoryConfigurator
     void SetOptimisticConcurrency(bool useTransaction = true);
 }
 
-
 /// <summary>Adds saga-type-specific EF Core query configuration.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 public interface IEntityFrameworkSagaRepositoryConfigurator<TSaga> :
     IEntityFrameworkSagaRepositoryConfigurator
     where TSaga : class, ISaga

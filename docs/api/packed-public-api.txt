@@ -7414,17 +7414,17 @@ TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.FutureSagaDbContext [ba
   CTOR public ViciOne.ServiceBus.EntityFrameworkCore.FutureSagaDbContext(Microsoft.EntityFrameworkCore.DbContextOptions<ViciOne.ServiceBus.EntityFrameworkCore.FutureSagaDbContext> options)
   PROPERTY System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.EntityFrameworkCore.ISagaClassMap> Configurations { protected-get;  }
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.FutureStateMap [base=ViciOne.ServiceBus.EntityFrameworkCore.SagaClassMap<ViciOne.ServiceBus.Futures.FutureState>]
-  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.FutureStateMap(System.Boolean optimistic)
+  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.FutureStateMap(System.Boolean useOptimisticConcurrency)
   METHOD protected System.Void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<ViciOne.ServiceBus.Futures.FutureState> entity, Microsoft.EntityFrameworkCore.ModelBuilder model)
 TYPE interface public ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepository
-  METHOD public abstract Microsoft.EntityFrameworkCore.DbContext GetDbContext()
+  METHOD public abstract Microsoft.EntityFrameworkCore.DbContext CreateDbContext()
   METHOD public abstract System.Void AddSagaClassMap<TSaga>(ViciOne.ServiceBus.EntityFrameworkCore.ISagaClassMap<TSaga> sagaClassMap)
 TYPE interface public ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkSagaRepositoryConfigurator
   METHOD public abstract System.Void AddDbContext<TContext,TImplementation>(System.Action<System.IServiceProvider,Microsoft.EntityFrameworkCore.DbContextOptionsBuilder<TImplementation>> optionsAction = null)
-  METHOD public abstract System.Void DatabaseFactory(System.Func<Microsoft.EntityFrameworkCore.DbContext> databaseFactory)
-  METHOD public abstract System.Void DatabaseFactory(System.Func<System.IServiceProvider,System.Func<Microsoft.EntityFrameworkCore.DbContext>> databaseFactory)
-  METHOD public abstract System.Void ExistingDbContext<TContext>()
   METHOD public abstract System.Void SetOptimisticConcurrency(System.Boolean useTransaction = true)
+  METHOD public abstract System.Void UseDbContextFactory(System.Func<Microsoft.EntityFrameworkCore.DbContext> dbContextFactory)
+  METHOD public abstract System.Void UseDbContextFactory(System.Func<System.IServiceProvider,System.Func<Microsoft.EntityFrameworkCore.DbContext>> dbContextFactoryResolver)
+  METHOD public abstract System.Void UseExistingDbContext<TContext>()
   PROPERTY System.Data.IsolationLevel IsolationLevel {  public-set; }
   PROPERTY ViciOne.ServiceBus.EntityFrameworkCore.ILockStatementProvider LockStatementProvider {  public-set; }
   PROPERTY ViciOne.ServiceBus.Sagas.ConcurrencyMode ConcurrencyMode {  public-set; }
@@ -7435,20 +7435,20 @@ TYPE interface public ViciOne.ServiceBus.EntityFrameworkCore.ISagaClassMap
   PROPERTY System.Type SagaType { public-get;  }
 TYPE interface public ViciOne.ServiceBus.EntityFrameworkCore.ISagaClassMap<TSaga>
 TYPE interface public ViciOne.ServiceBus.EntityFrameworkCore.ISagaDbContextFactory<TSaga>
-  METHOD public abstract Microsoft.EntityFrameworkCore.DbContext Create()
-  METHOD public abstract Microsoft.EntityFrameworkCore.DbContext CreateScoped<T>(ViciOne.ServiceBus.ConsumeContext<T> context)
-  METHOD public abstract System.Threading.Tasks.ValueTask ReleaseAsync(Microsoft.EntityFrameworkCore.DbContext dbContext, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract Microsoft.EntityFrameworkCore.DbContext CreateDbContext()
+  METHOD public abstract Microsoft.EntityFrameworkCore.DbContext CreateScopedDbContext<T>(ViciOne.ServiceBus.ConsumeContext<T> context)
+  METHOD public abstract System.Threading.Tasks.ValueTask ReleaseAsync(Microsoft.EntityFrameworkCore.DbContext dbContext)
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.JobAttemptSagaMap [base=ViciOne.ServiceBus.EntityFrameworkCore.SagaClassMap<ViciOne.ServiceBus.JobService.JobAttemptSaga>]
-  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.JobAttemptSagaMap(System.Boolean optimistic)
+  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.JobAttemptSagaMap(System.Boolean useOptimisticConcurrency)
   METHOD protected System.Void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<ViciOne.ServiceBus.JobService.JobAttemptSaga> entity, Microsoft.EntityFrameworkCore.ModelBuilder model)
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.JobSagaMap [base=ViciOne.ServiceBus.EntityFrameworkCore.SagaClassMap<ViciOne.ServiceBus.JobService.JobSaga>]
-  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.JobSagaMap(System.Boolean optimistic)
+  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.JobSagaMap(System.Boolean useOptimisticConcurrency)
   METHOD protected System.Void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<ViciOne.ServiceBus.JobService.JobSaga> entity, Microsoft.EntityFrameworkCore.ModelBuilder model)
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.JobServiceSagaDbContext [base=ViciOne.ServiceBus.EntityFrameworkCore.SagaDbContext]
   CTOR public ViciOne.ServiceBus.EntityFrameworkCore.JobServiceSagaDbContext(Microsoft.EntityFrameworkCore.DbContextOptions<ViciOne.ServiceBus.EntityFrameworkCore.JobServiceSagaDbContext> options)
   PROPERTY System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.EntityFrameworkCore.ISagaClassMap> Configurations { protected-get;  }
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.JobTypeSagaMap [base=ViciOne.ServiceBus.EntityFrameworkCore.SagaClassMap<ViciOne.ServiceBus.JobService.JobTypeSaga>]
-  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.JobTypeSagaMap(System.Boolean optimistic)
+  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.JobTypeSagaMap(System.Boolean useOptimisticConcurrency)
   METHOD protected System.Void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<ViciOne.ServiceBus.JobService.JobTypeSaga> entity, Microsoft.EntityFrameworkCore.ModelBuilder model)
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.OptimisticFutureSagaDbContext [base=ViciOne.ServiceBus.EntityFrameworkCore.FutureSagaDbContext]
   CTOR public ViciOne.ServiceBus.EntityFrameworkCore.OptimisticFutureSagaDbContext(Microsoft.EntityFrameworkCore.DbContextOptions<ViciOne.ServiceBus.EntityFrameworkCore.OptimisticFutureSagaDbContext> options)
@@ -7471,8 +7471,6 @@ ASSEMBLY ViciOne.ServiceBus.EntityFrameworkCore VERSION=1.0.0.0
 TYPE class public Microsoft.Extensions.DependencyInjection.EntityFrameworkReliableMessagingServiceCollectionExtensions [static]
   METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddEntityFrameworkReliableStore<TBus,TDbContext>(Microsoft.Extensions.DependencyInjection.IServiceCollection services)
   METHOD public static ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator UseEntityFramework<TDbContext>(ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator configurator)
-TYPE interface public ViciOne.ServiceBus.EntityFrameworkCore.DbTransactionContext
-  PROPERTY System.Guid TransactionId { public-get;  }
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkMessageJournalConfigurationExtensions [static]
   METHOD public static ViciOne.ServiceBus.Advanced.ConnectHandle UseEntityFrameworkCoreMessageJournal(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, Microsoft.EntityFrameworkCore.DbContextOptions contextOptions, System.String tableName, ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy policy, ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits storeLimits, ViciOne.ServiceBus.MessageJournal.MessageJournalOptions journalOptions, System.String schemaName = null)
   METHOD public static ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator UseEntityFramework<TDbContext>(ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator configurator, Microsoft.EntityFrameworkCore.DbContextOptions<TDbContext> contextOptions, System.String tableName, ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits storeLimits, System.String schemaName = null)
@@ -7496,6 +7494,8 @@ TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxOp
   PROPERTY ViciOne.ServiceBus.EntityFrameworkCore.ILockStatementProvider LockStatementProvider { public-get; public-set; }
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkReliableMessagingModelExtensions [static]
   METHOD public static Microsoft.EntityFrameworkCore.ModelBuilder AddViciOneReliableMessaging(Microsoft.EntityFrameworkCore.ModelBuilder modelBuilder, System.String schema = null)
+TYPE interface public ViciOne.ServiceBus.EntityFrameworkCore.IDbTransactionContext
+  PROPERTY System.Guid TransactionId { public-get;  }
 TYPE interface public ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkBusOutboxConfigurator
   METHOD public abstract System.Void UseAsDefault()
   PROPERTY System.Int32 MaximumDeliveryAttempts { public-get; public-set; }
@@ -7575,10 +7575,19 @@ TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.MessageJournal.MessageJ
   PROPERTY ViciOne.ServiceBus.MessageJournal.MessageJournalOutcome Outcome { public-get; public-set; }
 TYPE enum public ViciOne.ServiceBus.EntityFrameworkCore.OutboxDeliveryStatus
   FIELD public System.Int32 value__
-  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxDeliveryStatus Delivered = 2
-  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxDeliveryStatus Pending = 0
-  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxDeliveryStatus Quarantined = 3
-  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxDeliveryStatus RetryScheduled = 1
+  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxDeliveryStatus Delivered = 3
+  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxDeliveryStatus Discarding = 5
+  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxDeliveryStatus Pending = 1
+  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxDeliveryStatus Quarantined = 4
+  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxDeliveryStatus RetryScheduled = 2
+  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxDeliveryStatus Unknown = 0
+TYPE enum public ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureCode
+  FIELD public System.Int32 value__
+  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureCode InvalidDeliveryAttemptCount = 4
+  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureCode MetadataDeserializationFailed = 2
+  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureCode MissingDestinationAddress = 3
+  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureCode None = 0
+  FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureCode TransportSendFailed = 1
 TYPE enum public ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureKind
   FIELD public System.Int32 value__
   FIELD public const ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureKind InvariantViolation = 3
@@ -7612,23 +7621,15 @@ TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.OutboxMessage
   PROPERTY System.Uri ResponseAddress { public-get; public-set; }
   PROPERTY System.Uri SourceAddress { public-get; public-set; }
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.OutboxQuarantineEntry [sealed]
-  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.OutboxQuarantineEntry(System.Guid OutboxId, System.DateTimeOffset Created, System.Int32 DeliveryAttempts, ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureKind FailureKind, System.Nullable<System.DateTimeOffset> FailureTime, System.String Failure, System.Nullable<System.Int64> FailedSequenceNumber, System.Nullable<System.Guid> FailedMessageId)
-  METHOD public System.Boolean Equals(System.Object obj)
-  METHOD public System.Int32 GetHashCode()
-  METHOD public System.String ToString()
-  METHOD public System.Void Deconstruct(out System.Guid OutboxId, out System.DateTimeOffset Created, out System.Int32 DeliveryAttempts, out ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureKind FailureKind, out System.Nullable<System.DateTimeOffset> FailureTime, out System.String Failure, out System.Nullable<System.Int64> FailedSequenceNumber, out System.Nullable<System.Guid> FailedMessageId)
-  METHOD public ViciOne.ServiceBus.EntityFrameworkCore.OutboxQuarantineEntry <Clone>$()
-  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.EntityFrameworkCore.OutboxQuarantineEntry left, ViciOne.ServiceBus.EntityFrameworkCore.OutboxQuarantineEntry right)
-  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.EntityFrameworkCore.OutboxQuarantineEntry left, ViciOne.ServiceBus.EntityFrameworkCore.OutboxQuarantineEntry right)
-  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.EntityFrameworkCore.OutboxQuarantineEntry other)
-  PROPERTY System.DateTimeOffset Created { public-get; public-set; }
-  PROPERTY System.Guid OutboxId { public-get; public-set; }
-  PROPERTY System.Int32 DeliveryAttempts { public-get; public-set; }
-  PROPERTY System.Nullable<System.DateTimeOffset> FailureTime { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> FailedMessageId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Int64> FailedSequenceNumber { public-get; public-set; }
-  PROPERTY System.String Failure { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureKind FailureKind { public-get; public-set; }
+  PROPERTY System.DateTimeOffset Created { public-get;  }
+  PROPERTY System.DateTimeOffset FailureTime { public-get;  }
+  PROPERTY System.Guid FailedMessageId { public-get;  }
+  PROPERTY System.Guid OutboxId { public-get;  }
+  PROPERTY System.Int32 DeliveryAttempts { public-get;  }
+  PROPERTY System.Int64 FailedSequenceNumber { public-get;  }
+  PROPERTY System.String ExceptionType { public-get;  }
+  PROPERTY ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureCode FailureCode { public-get;  }
+  PROPERTY ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureKind FailureKind { public-get;  }
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.OutboxState
   CTOR public ViciOne.ServiceBus.EntityFrameworkCore.OutboxState()
   PROPERTY System.Byte[] RowVersion { public-get; public-set; }
@@ -7643,8 +7644,9 @@ TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.OutboxState
   PROPERTY System.Nullable<System.Int64> FailedSequenceNumber { public-get; public-set; }
   PROPERTY System.Nullable<System.Int64> LastSequenceNumber { public-get; public-set; }
   PROPERTY System.String BusKey { public-get; public-set; }
-  PROPERTY System.String LastFailure { public-get; public-set; }
+  PROPERTY System.String LastExceptionType { public-get; public-set; }
   PROPERTY ViciOne.ServiceBus.EntityFrameworkCore.OutboxDeliveryStatus Status { public-get; public-set; }
+  PROPERTY ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureCode LastFailureCode { public-get; public-set; }
   PROPERTY ViciOne.ServiceBus.EntityFrameworkCore.OutboxFailureKind LastFailureKind { public-get; public-set; }
 TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.PostgresLockStatementProvider [base=ViciOne.ServiceBus.EntityFrameworkCore.SqlLockStatementProvider]
   CTOR public ViciOne.ServiceBus.EntityFrameworkCore.PostgresLockStatementProvider()

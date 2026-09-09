@@ -14,7 +14,7 @@ using ViciOne.ServiceBus.Saga;
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
 /// <summary>Executes saga persistence for one consumed message through a shared EF Core DbContext.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 /// <typeparam name="TMessage">The consumed message contract.</typeparam>
 internal sealed class DbContextSagaRepositoryContext<TSaga, TMessage> :
     ConsumeContextScope<TMessage>,
@@ -136,7 +136,7 @@ internal sealed class DbContextSagaRepositoryContext<TSaga, TMessage> :
     /// <summary>Adds a newly created saga to the DbContext and saves changes.</summary>
     /// <param name="context">The saga consume context containing the new instance.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the new saga has been persisted.</returns>
     public async Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -162,7 +162,7 @@ internal sealed class DbContextSagaRepositoryContext<TSaga, TMessage> :
     /// <summary>Saves tracked changes for an existing saga.</summary>
     /// <param name="context">The saga consume context containing the tracked instance.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the tracked saga changes have been persisted.</returns>
     public async Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -186,7 +186,7 @@ internal sealed class DbContextSagaRepositoryContext<TSaga, TMessage> :
     /// <summary>Deletes the saga instance and saves changes.</summary>
     /// <param name="context">The saga consume context containing the instance to delete.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the saga has been deleted.</returns>
     public async Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -212,7 +212,7 @@ internal sealed class DbContextSagaRepositoryContext<TSaga, TMessage> :
     /// <summary>Completes without changing tracked state.</summary>
     /// <param name="context">The saga consume context whose tracked changes are left untouched.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A completed task, or a canceled task when the effective token is canceled.</returns>
     public Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -226,7 +226,7 @@ internal sealed class DbContextSagaRepositoryContext<TSaga, TMessage> :
     /// <summary>Marks the tracked saga entity unchanged so its pending modifications are not saved.</summary>
     /// <param name="context">The saga consume context whose tracked entity is reverted.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when the tracked saga is marked unchanged.</returns>
     public async Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -266,7 +266,7 @@ internal sealed class DbContextSagaRepositoryContext<TSaga, TMessage> :
 
 
 /// <summary>Executes direct saga loads and queries through one EF Core DbContext.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 internal sealed class DbContextSagaRepositoryContext<TSaga> :
     BasePipeContext,
     QuerySagaRepositoryContext<TSaga>,

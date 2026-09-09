@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.MessageJournal;
+
 /// <summary>Maps the provider-neutral message-journal record to its explicitly selected table.</summary>
 public sealed class MessageJournalMapping : IEntityTypeConfiguration<MessageJournalRecord>
 {
@@ -14,12 +15,10 @@ public sealed class MessageJournalMapping : IEntityTypeConfiguration<MessageJour
     /// <param name="schemaName">The schema, or <see langword="null"/> to use the provider default.</param>
     public MessageJournalMapping(string tableName, string? schemaName = null)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(tableName);
-        if (schemaName is not null)
-            ArgumentException.ThrowIfNullOrWhiteSpace(schemaName);
-
-        _tableName = tableName;
-        _schemaName = schemaName;
+        _tableName = RelationalIdentifierValidator.Validate(tableName, nameof(tableName));
+        _schemaName = schemaName is null
+            ? null
+            : RelationalIdentifierValidator.Validate(schemaName, nameof(schemaName));
     }
 
     /// <summary>Configures keys, indexes, required fields, and the target table.</summary>

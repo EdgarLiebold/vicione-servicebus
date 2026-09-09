@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
 /// <summary>Creates and owns saga DbContext instances through a caller-supplied delegate.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type that scopes the factory registration.</typeparam>
 internal sealed class DelegateSagaDbContextFactory<TSaga> :
     ISagaDbContextFactory<TSaga>
     where TSaga : class, ISaga
@@ -21,7 +21,7 @@ internal sealed class DelegateSagaDbContextFactory<TSaga> :
 
     /// <summary>Creates a DbContext through the configured delegate.</summary>
     /// <returns>A new DbContext that must later be returned through <see cref="ReleaseAsync"/>.</returns>
-    public DbContext Create()
+    public DbContext CreateDbContext()
     {
         return _dbContextFactory()
             ?? throw new InvalidOperationException("The saga DbContext factory returned null.");
@@ -31,24 +31,21 @@ internal sealed class DelegateSagaDbContextFactory<TSaga> :
     /// <typeparam name="T">The consumed message contract.</typeparam>
     /// <param name="context">The active consumption context; the delegate does not receive it.</param>
     /// <returns>A new factory-owned DbContext.</returns>
-    public DbContext CreateScoped<T>(ConsumeContext<T> context)
+    public DbContext CreateScopedDbContext<T>(ConsumeContext<T> context)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        return Create();
+        return CreateDbContext();
     }
 
     /// <summary>Asynchronously disposes a DbContext created by this factory.</summary>
     /// <param name="dbContext">The DbContext to dispose.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public ValueTask ReleaseAsync(DbContext dbContext, CancellationToken cancellationToken = default)
+    /// <returns>The asynchronous disposal operation for the factory-owned context.</returns>
+    public ValueTask ReleaseAsync(DbContext dbContext)
     {
         ArgumentNullException.ThrowIfNull(dbContext);
 
-        return cancellationToken.IsCancellationRequested
-            ? ValueTask.FromCanceled(cancellationToken)
-            : dbContext.DisposeAsync();
+        return dbContext.DisposeAsync();
     }
 }

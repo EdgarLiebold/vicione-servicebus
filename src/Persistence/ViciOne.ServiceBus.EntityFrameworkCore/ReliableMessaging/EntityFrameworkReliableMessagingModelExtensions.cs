@@ -14,7 +14,7 @@ public static class EntityFrameworkReliableMessagingModelExtensions
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
         if (schema is not null)
-            ArgumentException.ThrowIfNullOrWhiteSpace(schema);
+            RelationalIdentifierValidator.Validate(schema, nameof(schema));
 
         var record = modelBuilder.Entity<DurableSendRecord>();
         record.ToTable("vicione_outbox", schema);

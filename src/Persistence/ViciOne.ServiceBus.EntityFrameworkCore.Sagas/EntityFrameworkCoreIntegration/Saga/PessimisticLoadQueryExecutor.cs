@@ -8,7 +8,7 @@ using ViciOne.ServiceBus.EntityFrameworkCore;
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
 /// <summary>Loads a saga through provider-specific row-lock SQL.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 internal sealed class PessimisticLoadQueryExecutor<TSaga> :
     ILoadQueryExecutor<TSaga>
     where TSaga : class, ISaga

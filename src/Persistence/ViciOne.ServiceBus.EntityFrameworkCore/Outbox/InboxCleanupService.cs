@@ -17,7 +17,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// Removes expired inbox entries. Only one process owns cleanup for a given physical inbox table at a time.
 /// The ownership lock is transaction-bound so process death releases it automatically.
 /// </summary>
-/// <typeparam name="TDbContext">The db context type.</typeparam>
+/// <typeparam name="TDbContext">The DbContext type containing the inbox table.</typeparam>
 internal sealed class InboxCleanupService<TDbContext> : BackgroundService
     where TDbContext : DbContext
 {
@@ -55,7 +55,7 @@ internal sealed class InboxCleanupService<TDbContext> : BackgroundService
 
     /// <summary>Polls for expired inbox rows and removes bounded batches while the host is running.</summary>
     /// <param name="stoppingToken">The host-shutdown token.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes when host shutdown stops the cleanup loop.</returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var removed = 0;

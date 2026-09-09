@@ -6,7 +6,7 @@ using ViciOne.ServiceBus.EntityFrameworkCore;
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Configures the correlation identifier as the non-generated key for a saga entity.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 public abstract class SagaClassMap<TSaga> :
     ISagaClassMap<TSaga>
     where TSaga : class, ISaga

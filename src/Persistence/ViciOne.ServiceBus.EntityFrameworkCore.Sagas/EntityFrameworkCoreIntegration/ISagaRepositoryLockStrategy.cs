@@ -9,7 +9,7 @@ using ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>Defines transaction, query, and row-lock behavior for an EF Core saga repository.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 internal interface ISagaRepositoryLockStrategy<TSaga>
     where TSaga : class, ISaga
 {

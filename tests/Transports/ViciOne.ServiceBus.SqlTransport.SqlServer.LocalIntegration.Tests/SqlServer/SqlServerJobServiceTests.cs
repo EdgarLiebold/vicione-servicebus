@@ -308,7 +308,7 @@ public sealed class SqlServerJobServiceTests
                         .UsePartitionedReceiveMode()
                         .EntityFrameworkRepository(repository =>
                         {
-                            repository.ExistingDbContext<JobServiceSagaDbContext>();
+                            repository.UseExistingDbContext<JobServiceSagaDbContext>();
                             repository.UseSqlServer();
                         });
                     configuration.AddJobService(options => options.HeartbeatInterval = TimeSpan.FromSeconds(10))

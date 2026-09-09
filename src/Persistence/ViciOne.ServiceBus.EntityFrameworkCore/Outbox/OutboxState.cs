@@ -26,10 +26,12 @@ public class OutboxState
     public int DeliveryAttempts { get; set; }
     /// <summary>Gets or sets the classification of the most recent failure.</summary>
     public OutboxFailureKind LastFailureKind { get; set; }
+    /// <summary>Gets or sets the stable reason for the most recent failure.</summary>
+    public OutboxFailureCode LastFailureCode { get; set; }
     /// <summary>Gets or sets the UTC time of the most recent failure.</summary>
     public DateTimeOffset? LastFailureTime { get; set; }
-    /// <summary>Gets or sets the bounded diagnostic text for the most recent failure.</summary>
-    public string? LastFailure { get; set; }
+    /// <summary>Gets or sets the exception type associated with the most recent failure, when one exists.</summary>
+    public string? LastExceptionType { get; set; }
     /// <summary>Gets or sets the sequence number of the message that failed.</summary>
     public long? FailedSequenceNumber { get; set; }
     /// <summary>Gets or sets the identifier of the message that failed.</summary>

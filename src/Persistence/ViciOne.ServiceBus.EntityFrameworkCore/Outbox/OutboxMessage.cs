@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
@@ -10,8 +11,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 public class OutboxMessage :
     OutboxMessageContext
 {
-    Headers? _headers;
-    IReadOnlyDictionary<string, object>? _properties;
+    Headers _headers = EmptyHeaders.Instance;
+    IReadOnlyDictionary<string, object> _properties = FrozenDictionary<string, object>.Empty;
 
     /// <summary>Gets or sets the UTC time before which the message must not be sent.</summary>
     public DateTimeOffset? EnqueueTime { get; set; }
@@ -75,12 +76,14 @@ public class OutboxMessage :
     Headers MessageContext.Headers => _headers ?? EmptyHeaders.Instance;
     HostInfo MessageContext.Host => HostMetadataCache.Host;
 
-    IReadOnlyDictionary<string, object> OutboxMessageContext.Properties => _properties!;
+    IReadOnlyDictionary<string, object> OutboxMessageContext.Properties => _properties;
 
     /// <summary>Materializes the persisted headers and transport properties for delivery.</summary>
     /// <param name="deserializer">The metadata deserializer used for both dictionaries.</param>
     public void Deserialize(IObjectDeserializer deserializer)
     {
+        ArgumentNullException.ThrowIfNull(deserializer);
+
         _headers = DeserializerHeaders(deserializer);
         _properties = DeserializerProperties(deserializer);
     }
@@ -98,12 +101,7 @@ public class OutboxMessage :
     {
         Dictionary<string, object>? properties = deserializer.DeserializeDictionary<object>(Properties);
 
-        return properties ?? OutboxMessageStaticData.Empty;
+        return properties?.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase)
+            ?? FrozenDictionary<string, object>.Empty;
     }
-}
-
-
-static class OutboxMessageStaticData
-{
-    public static IReadOnlyDictionary<string, object> Empty { get; } = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 }

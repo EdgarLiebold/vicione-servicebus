@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 public static class EntityFrameworkMessageJournalConfigurationExtensions
 {
     /// <summary>Selects the Entity Framework journal store inside <c>bus.UseMessageJournal(...)</c> without opening a database connection.</summary>
-    /// <typeparam name="TDbContext">The db context type.</typeparam>
+    /// <typeparam name="TDbContext">The DbContext type whose provider options configure the journal store.</typeparam>
     /// <param name="configurator">The journal provider selector on which the EF Core store is selected.</param>
     /// <param name="contextOptions">The preconfigured EF Core options used to create journal contexts.</param>
     /// <param name="tableName">The relational table that stores journal entries.</param>

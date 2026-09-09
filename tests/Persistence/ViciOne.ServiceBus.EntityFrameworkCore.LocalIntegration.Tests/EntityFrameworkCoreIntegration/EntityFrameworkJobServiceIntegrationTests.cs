@@ -259,7 +259,7 @@ public sealed class EntityFrameworkJobServiceIntegrationTests
                     configuration.AddJobSagaStateMachines(options => options.FinalizeCompleted = false)
                         .EntityFrameworkRepository(repository =>
                         {
-                            repository.ExistingDbContext<JobServiceSagaDbContext>();
+                            repository.UseExistingDbContext<JobServiceSagaDbContext>();
                             repository.UsePostgres();
                         });
                     configuration.UsingInMemory((context, bus) =>

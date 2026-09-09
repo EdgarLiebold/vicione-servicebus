@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
 /// <summary>Loads a saga through a tracked EF Core query without explicit row locking.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 internal sealed class OptimisticLoadQueryExecutor<TSaga> :
     ILoadQueryExecutor<TSaga>
     where TSaga : class, ISaga

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
 /// <summary>Defers loading the sagas until the transaction is started.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 internal sealed class OptimisticSagaLockContext<TSaga> :
     SagaLockContext<TSaga>
     where TSaga : class, ISaga

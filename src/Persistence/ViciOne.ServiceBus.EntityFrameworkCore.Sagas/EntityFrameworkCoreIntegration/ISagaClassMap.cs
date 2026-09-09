@@ -13,9 +13,8 @@ public interface ISagaClassMap
     void Configure(ModelBuilder model);
 }
 
-
 /// <summary>Identifies an EF Core saga map for a specific saga type.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 public interface ISagaClassMap<TSaga> :
     ISagaClassMap
     where TSaga : class, ISaga

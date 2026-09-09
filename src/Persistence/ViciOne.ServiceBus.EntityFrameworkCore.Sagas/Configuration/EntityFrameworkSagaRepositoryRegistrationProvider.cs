@@ -16,7 +16,7 @@ internal sealed class EntityFrameworkSagaRepositoryRegistrationProvider :
     }
 
     /// <summary>Registers an EF Core repository for the specified saga type.</summary>
-    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TSaga">The saga state type.</typeparam>
     /// <param name="configurator">The saga registration to associate with an EF Core repository.</param>
     public void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
         where TSaga : class, ISaga

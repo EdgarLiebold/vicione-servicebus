@@ -57,7 +57,7 @@ public sealed class EntityFrameworkProviderConfigurationTests
     public void PessimisticSagaConfiguration_RequiresAnExplicitProvider()
     {
         var configurator = new EntityFrameworkSagaRepositoryConfigurator<ConfigurationSaga>();
-        configurator.ExistingDbContext<ConfigurationDbContext>();
+        configurator.UseExistingDbContext<ConfigurationDbContext>();
 
         ValidationResult failure = Assert.Single(configurator.Validate());
 
@@ -71,7 +71,7 @@ public sealed class EntityFrameworkProviderConfigurationTests
     public void SqliteSagaConfiguration_DoesNotClaimPessimisticRowLocking()
     {
         var configurator = new EntityFrameworkSagaRepositoryConfigurator<ConfigurationSaga>();
-        configurator.ExistingDbContext<ConfigurationDbContext>();
+        configurator.UseExistingDbContext<ConfigurationDbContext>();
 
         configurator.UseSqlite();
 
@@ -88,7 +88,7 @@ public sealed class EntityFrameworkProviderConfigurationTests
             configuration.AddSaga<ConfigurationSaga>().EntityFrameworkRepository(repository =>
             {
                 var concrete = Assert.IsType<EntityFrameworkSagaRepositoryConfigurator<ConfigurationSaga>>(repository);
-                concrete.ExistingDbContext<ConfigurationDbContext>();
+                concrete.UseExistingDbContext<ConfigurationDbContext>();
                 concrete.SetOptimisticConcurrency(true);
                 concrete.SetOptimisticConcurrency(false);
                 concrete.IsolationLevel = IsolationLevel.RepeatableRead;
@@ -118,7 +118,7 @@ public sealed class EntityFrameworkProviderConfigurationTests
             configuration.AddSaga<ConfigurationSaga>().EntityFrameworkRepository(repository =>
             {
                 var concrete = Assert.IsType<EntityFrameworkSagaRepositoryConfigurator<ConfigurationSaga>>(repository);
-                concrete.ExistingDbContext<ConfigurationDbContext>();
+                concrete.UseExistingDbContext<ConfigurationDbContext>();
                 concrete.SetOptimisticConcurrency();
             }));
 
@@ -141,7 +141,7 @@ public sealed class EntityFrameworkProviderConfigurationTests
             configuration.AddSaga<ConfigurationSaga>().EntityFrameworkRepository(repository =>
             {
                 var concrete = Assert.IsType<EntityFrameworkSagaRepositoryConfigurator<ConfigurationSaga>>(repository);
-                concrete.ExistingDbContext<ConfigurationDbContext>();
+                concrete.UseExistingDbContext<ConfigurationDbContext>();
                 concrete.UsePostgres();
                 concrete.IsolationLevel = IsolationLevel.ReadCommitted;
                 concrete.CustomizeQuery(query => query.Where(saga => saga.CorrelationId != Guid.Empty));
@@ -435,9 +435,9 @@ public sealed class EntityFrameworkProviderConfigurationTests
             Action<IServiceProvider, DbContextOptionsBuilder<TImplementation>>? optionsAction = null)
             where TContext : DbContext
             where TImplementation : DbContext, TContext => throw new NotSupportedException();
-        public void DatabaseFactory(Func<DbContext> databaseFactory) => throw new NotSupportedException();
-        public void DatabaseFactory(Func<IServiceProvider, Func<DbContext>> databaseFactory) => throw new NotSupportedException();
-        public void ExistingDbContext<TContext>() where TContext : DbContext => throw new NotSupportedException();
+        public void UseDbContextFactory(Func<DbContext> dbContextFactory) => throw new NotSupportedException();
+        public void UseDbContextFactory(Func<IServiceProvider, Func<DbContext>> dbContextFactoryResolver) => throw new NotSupportedException();
+        public void UseExistingDbContext<TContext>() where TContext : DbContext => throw new NotSupportedException();
 
         public void SetOptimisticConcurrency(bool useTransaction = true)
         {

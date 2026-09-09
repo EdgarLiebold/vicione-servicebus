@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
 {
     /// <summary>Registers an EF Core repository for the saga type.</summary>
-    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TSaga">The saga state type.</typeparam>
     /// <param name="configurator">The saga registration to associate with the EF Core repository.</param>
     /// <param name="configure">The callback that selects the DbContext and concurrency behavior.</param>
     /// <returns>The same saga registration configurator.</returns>
@@ -34,7 +34,7 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
     }
 
     /// <summary>Registers the saga in a shared EF Core repository and optionally configures its entity mapping.</summary>
-    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TSaga">The saga state type.</typeparam>
     /// <param name="configurator">The saga registration to associate with the shared EF Core repository.</param>
     /// <param name="sagaRepository">The shared mapping and DbContext repository.</param>
     /// <param name="configure">An optional callback that configures concurrency and querying.</param>
@@ -52,7 +52,7 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
     }
 
     /// <summary>Registers the saga in a shared EF Core repository using an explicit saga mapping.</summary>
-    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TSaga">The saga state type.</typeparam>
     /// <param name="configurator">The saga registration to associate with the shared EF Core repository.</param>
     /// <param name="sagaRepository">The shared mapping and DbContext repository.</param>
     /// <param name="configure">An optional callback that configures concurrency and querying.</param>
@@ -69,7 +69,7 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
         sagaRepository.AddSagaClassMap(sagaClassMap ?? new ActionSagaClassMap<TSaga>());
         return configurator.EntityFrameworkRepository(cfg =>
         {
-            cfg.DatabaseFactory(sagaRepository.GetDbContext);
+            cfg.UseDbContextFactory(sagaRepository.CreateDbContext);
 
             configure?.Invoke(cfg);
         });
@@ -244,6 +244,7 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
 
         return configurator;
     }
+
     sealed class ActionSagaClassMap<T> : SagaClassMap<T>
         where T : class, ISaga
     {

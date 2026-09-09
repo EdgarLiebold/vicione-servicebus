@@ -15,6 +15,34 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga;
 public sealed class EntityFrameworkSagaRepositoryFactoryTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-FACTORY", "delegate-factory-releases-owned-context")]
+    public async Task DelegateFactory_ReleaseDisposesTheFactoryOwnedContextAsync()
+    {
+        var dbContext = new DisposalTrackingDbContext();
+        var factory = new DelegateSagaDbContextFactory<FactorySaga>(() => dbContext);
+
+        DbContext created = factory.CreateDbContext();
+        await factory.ReleaseAsync(created);
+
+        Assert.Same(dbContext, created);
+        Assert.True(dbContext.DisposeAsyncCalled);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-FACTORY", "container-factory-preserves-container-owned-context")]
+    public async Task ContainerFactory_ReleasePreservesTheContainerOwnedContextAsync()
+    {
+        await using var dbContext = new DisposalTrackingDbContext();
+        var factory = new ContainerSagaDbContextFactory<DisposalTrackingDbContext, FactorySaga>(dbContext);
+
+        DbContext created = factory.CreateDbContext();
+        await factory.ReleaseAsync(created);
+
+        Assert.Same(dbContext, created);
+        Assert.False(dbContext.DisposeAsyncCalled);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-FACTORY", "optimistic-default-is-transactional")]
     public async Task CreateOptimistic_DefaultExecutesTheLoadInsideATransactionAsync()
     {
@@ -150,7 +178,7 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
         Assert.Equal(1, executionStrategy.ExecutionCount);
     }
 
-    private static ConsumeContext<FactoryMessage> CreateConsumeContext(FactoryMessage message, DbTransactionContext transaction)
+    private static ConsumeContext<FactoryMessage> CreateConsumeContext(FactoryMessage message, IDbTransactionContext transaction)
     {
         FactoryConsumeContext context = DispatchProxy.Create<FactoryConsumeContext, ConsumeContextProxy>();
         ((ConsumeContextProxy)(object)context).Configure(message, transaction, TestContext.Current.CancellationToken);
@@ -167,7 +195,7 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
 
     public sealed record FactoryMessage;
 
-    private sealed record TransactionPayload(Guid TransactionId) : DbTransactionContext;
+    private sealed record TransactionPayload(Guid TransactionId) : IDbTransactionContext;
 
     private sealed class FactoryDbContext(DbContextOptions<FactoryDbContext> options) : DbContext(options)
     {
@@ -180,6 +208,17 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
                 entity.ToTable("FactorySagas");
                 entity.HasKey(saga => saga.CorrelationId);
             });
+        }
+    }
+
+    private sealed class DisposalTrackingDbContext : DbContext
+    {
+        public bool DisposeAsyncCalled { get; private set; }
+
+        public override async ValueTask DisposeAsync()
+        {
+            DisposeAsyncCalled = true;
+            await base.DisposeAsync();
         }
     }
 
@@ -255,7 +294,10 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
         public override ValueTask<DbTransaction> TransactionStartedAsync(DbConnection connection, TransactionEndEventData eventData,
             DbTransaction result, CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::System.Data.Common.DbTransaction>(cancellationToken); Interlocked.Increment(ref _startedCount);
+            if (cancellationToken.IsCancellationRequested)
+                return ValueTask.FromCanceled<DbTransaction>(cancellationToken);
+
+            Interlocked.Increment(ref _startedCount);
             return ValueTask.FromResult(result);
         }
     }
@@ -322,9 +364,9 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
         private FactoryMessage _message = null!;
         private ReceiveContext _receiveContext = null!;
         private SerializerContext _serializerContext = null!;
-        private DbTransactionContext _transaction = null!;
+        private IDbTransactionContext _transaction = null!;
 
-        public void Configure(FactoryMessage message, DbTransactionContext transaction, CancellationToken cancellationToken)
+        public void Configure(FactoryMessage message, IDbTransactionContext transaction, CancellationToken cancellationToken)
         {
             _message = message;
             _transaction = transaction;
@@ -386,7 +428,12 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
     {
         public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
             where T : class
-        { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); throw new NotSupportedException(); }
+        {
+            return cancellationToken.IsCancellationRequested
+                ? Task.FromCanceled<ISendEndpoint>(cancellationToken)
+                : throw new NotSupportedException();
+        }
+
         public ConnectHandle ConnectPublishObserver(IPublishObserver observer) => throw new NotSupportedException();
     }
 }

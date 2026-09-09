@@ -10,7 +10,7 @@ using ViciOne.ServiceBus.Saga;
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
 /// <summary>Executes EF Core saga load, query, and consume operations with the configured transaction strategy.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
     ISagaRepositoryContextFactory<TSaga>,
     IQuerySagaRepositoryContextFactory<TSaga>,
@@ -67,7 +67,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var dbContext = _dbContextFactory.Create();
+        var dbContext = _dbContextFactory.CreateDbContext();
         try
         {
             context.Add("persistence", "entity-framework");
@@ -83,7 +83,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
     /// <typeparam name="T">The consumed message contract.</typeparam>
     /// <param name="context">The active consumption context.</param>
     /// <param name="next">The saga repository pipeline to execute.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after the consume pipeline and its transaction have finished.</returns>
     public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
@@ -91,7 +91,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         ArgumentNullException.ThrowIfNull(next);
         context.CancellationToken.ThrowIfCancellationRequested();
 
-        var dbContext = _dbContextFactory.CreateScoped(context);
+        var dbContext = _dbContextFactory.CreateScopedDbContext(context);
         try
         {
             async Task SendCallbackAsync()
@@ -101,7 +101,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
                 await next.SendAsync(repositoryContext).ConfigureAwait(false);
             }
 
-            if (context.TryGetPayload(out DbTransactionContext? _))
+            if (context.TryGetPayload(out IDbTransactionContext? _))
                 await SendCallbackAsync().ConfigureAwait(false);
             else
             {
@@ -116,7 +116,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         }
         finally
         {
-            await _dbContextFactory.ReleaseAsync(dbContext, CancellationToken.None).ConfigureAwait(false);
+            await _dbContextFactory.ReleaseAsync(dbContext).ConfigureAwait(false);
         }
     }
 
@@ -125,7 +125,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
     /// <param name="context">The active consumption context.</param>
     /// <param name="query">The saga filter to execute.</param>
     /// <param name="next">The loaded-saga query pipeline to execute.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <returns>A task that completes after every selected saga has passed through the query pipeline.</returns>
     public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
@@ -134,7 +134,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         ArgumentNullException.ThrowIfNull(next);
         context.CancellationToken.ThrowIfCancellationRequested();
 
-        var dbContext = _dbContextFactory.CreateScoped(context);
+        var dbContext = _dbContextFactory.CreateScopedDbContext(context);
         try
         {
             async Task SendQueryCallbackAsync(SagaLockContext<TSaga> lockContext, SagaRepositoryContext<TSaga, T> repositoryContext)
@@ -146,7 +146,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
                 await next.SendAsync(queryContext).ConfigureAwait(false);
             }
 
-            var hasOuterTransaction = context.TryGetPayload(out DbTransactionContext? _);
+            var hasOuterTransaction = context.TryGetPayload(out IDbTransactionContext? _);
 
             async Task SendQueryAsync()
             {
@@ -174,14 +174,14 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         }
         finally
         {
-            await _dbContextFactory.ReleaseAsync(dbContext, CancellationToken.None).ConfigureAwait(false);
+            await _dbContextFactory.ReleaseAsync(dbContext).ConfigureAwait(false);
         }
     }
 
     async Task<T> ExecuteAsyncMethodAsync<T>(Func<DbContextSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
         where T : class
     {
-        var dbContext = _dbContextFactory.Create();
+        var dbContext = _dbContextFactory.CreateDbContext();
         try
         {
             Task<T> ExecuteAsync()
@@ -204,7 +204,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         }
         finally
         {
-            await _dbContextFactory.ReleaseAsync(dbContext, CancellationToken.None).ConfigureAwait(false);
+            await _dbContextFactory.ReleaseAsync(dbContext).ConfigureAwait(false);
         }
     }
 
@@ -212,7 +212,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         CancellationToken cancellationToken)
         where T : class
     {
-        var dbContext = _dbContextFactory.Create();
+        var dbContext = _dbContextFactory.CreateDbContext();
         try
         {
             Task<T?> ExecuteAsync()
@@ -235,7 +235,7 @@ internal sealed class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         }
         finally
         {
-            await _dbContextFactory.ReleaseAsync(dbContext, CancellationToken.None).ConfigureAwait(false);
+            await _dbContextFactory.ReleaseAsync(dbContext).ConfigureAwait(false);
         }
     }
 
