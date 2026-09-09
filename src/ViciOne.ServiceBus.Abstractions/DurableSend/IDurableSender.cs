@@ -14,11 +14,11 @@ public interface IDurableSender<TBus>
     /// serialization, MessageData and payload-admission path, and commits the resulting intent to durable storage.
     /// A successful receipt confirms only that persistence commit; it does not claim transport or consumer completion.
     /// </summary>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="message">The message to process.</param>
-    /// <param name="options">The options used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the send outcome.</returns>
+    /// <typeparam name="TMessage">The message contract.</typeparam>
+    /// <param name="message">The message to persist for delivery.</param>
+    /// <param name="options">The durable identity and optional delivery metadata.</param>
+    /// <param name="cancellationToken">The token used to cancel admission.</param>
+    /// <returns>A task containing the durable-persistence receipt.</returns>
     Task<DurableSendReceipt> SendAsync<TMessage>(
         TMessage message,
         DurableSendOptions options,
@@ -29,12 +29,12 @@ public interface IDurableSender<TBus>
     /// Uses an explicit destination while retaining the owning bus's normal send-context, serializer, MessageData,
     /// payload-admission and contract-catalog path. A successful receipt confirms only durable persistence commit.
     /// </summary>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="destinationAddress">The destination address used by the operation.</param>
-    /// <param name="message">The message to process.</param>
-    /// <param name="options">The options used by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the send outcome.</returns>
+    /// <typeparam name="TMessage">The message contract.</typeparam>
+    /// <param name="destinationAddress">The explicit absolute transport destination.</param>
+    /// <param name="message">The message to persist for delivery.</param>
+    /// <param name="options">The durable identity and optional delivery metadata.</param>
+    /// <param name="cancellationToken">The token used to cancel admission.</param>
+    /// <returns>A task containing the durable-persistence receipt.</returns>
     Task<DurableSendReceipt> SendAsync<TMessage>(
         Uri destinationAddress,
         TMessage message,

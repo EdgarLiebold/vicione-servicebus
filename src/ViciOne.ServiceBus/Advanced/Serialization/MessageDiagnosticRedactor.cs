@@ -32,9 +32,14 @@ public sealed class MessageDiagnosticRedactor : IMessageDiagnosticRedactor
     /// <param name="memberName">The member name.</param>
     /// <param name="value">The value to render without invoking application-defined string conversion.</param>
     /// <returns>A bounded invariant representation, a redaction marker or a complex-value marker.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="messageType" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException"><paramref name="memberName" /> is empty or contains only white-space characters.</exception>
     public string RenderValue(Type messageType, string? memberName, object? value)
     {
         ArgumentNullException.ThrowIfNull(messageType);
+        if (memberName is not null)
+            ArgumentException.ThrowIfNullOrWhiteSpace(memberName);
+
         MessageSensitivityDescriptor descriptor = _inspector.Inspect(messageType);
         if (descriptor.IsSensitive || memberName is not null && descriptor.IsMemberSensitive(memberName))
             return Redacted;

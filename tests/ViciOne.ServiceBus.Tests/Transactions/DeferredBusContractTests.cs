@@ -20,9 +20,9 @@ public sealed class DeferredBusContractTests
 
         AssertParameter("message", () => bus.PublishAsync<DeferredMessage>(null!, token));
         AssertParameter("message", () => bus.PublishAsync<DeferredMessage>(null!, typedPipe, token));
-        AssertParameter("publishPipe", () => bus.PublishAsync(new DeferredMessage(), (IPipe<PublishContext<DeferredMessage>>)null!, token));
+        AssertParameter("pipe", () => bus.PublishAsync(new DeferredMessage(), (IPipe<PublishContext<DeferredMessage>>)null!, token));
         AssertParameter("message", () => bus.PublishAsync<DeferredMessage>(null!, pipe, token));
-        AssertParameter("publishPipe", () => bus.PublishAsync(new DeferredMessage(), (IPipe<PublishContext>)null!, token));
+        AssertParameter("pipe", () => bus.PublishAsync(new DeferredMessage(), (IPipe<PublishContext>)null!, token));
         AssertParameter("message", () => bus.Advanced().PublishAsync(null!, token));
         AssertParameter("message", () => bus.Advanced().PublishAsync(null!, pipe, token));
         AssertParameter("publishPipe", () => bus.Advanced().PublishAsync(

@@ -28,6 +28,8 @@ public sealed class JsonMessageTypeMappingRegistryTests
     [RequirementCoverage("REQ-VSB-JSON-TYPE-MAPPING", "rejects-nonconforming-implementations-at-registration")]
     public void Registration_RejectsImplementationsThatCannotRepresentTheContract()
     {
+        var factory = new SystemTextJsonConverterFactory();
+
         Assert.Equal("implementationType", Assert.Throws<ArgumentException>(() =>
             JsonMessageTypeMappingRegistry.RegisterOpenGeneric(typeof(GenericContract<>), typeof(UnrelatedImplementation<>))).ParamName);
         Assert.Equal("implementationType", Assert.Throws<ArgumentException>(() =>
@@ -36,6 +38,9 @@ public sealed class JsonMessageTypeMappingRegistryTests
             JsonMessageTypeMappingRegistry.RegisterOpenGeneric(typeof(GenericContract<>), typeof(AbstractGenericImplementation<>))).ParamName);
         Assert.Equal("implementationType", Assert.Throws<ArgumentException>(() =>
             JsonMessageTypeMappingRegistry.Register<ClosedContract, AbstractClosedImplementation>()).ParamName);
+        Assert.Equal("typeToConvert", Assert.Throws<ArgumentNullException>(() => factory.CanConvert(null!)).ParamName);
+        Assert.Equal("typeToConvert", Assert.Throws<ArgumentNullException>(() => factory.CreateConverter(null!, new JsonSerializerOptions())).ParamName);
+        Assert.Equal("options", Assert.Throws<ArgumentNullException>(() => factory.CreateConverter(typeof(GenericContract<int>), null!)).ParamName);
     }
 
     public interface GenericContract<T>

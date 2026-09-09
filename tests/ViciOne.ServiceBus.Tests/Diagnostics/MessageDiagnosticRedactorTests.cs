@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
@@ -104,6 +105,26 @@ public sealed class MessageDiagnosticRedactorTests
         Assert.Equal("f44a3ca3…", _redactor.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), guid));
         Assert.Equal("2026-09-…", _redactor.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), timestamp));
         Assert.Equal("<null>", _redactor.RenderValue(typeof(NormalMessage), nameof(NormalMessage.Value), null));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DIAGNOSTIC-REDACTION", "descriptor-and-rendering-boundaries")]
+    public void DescriptorAndRendering_EnforceOrdinalMemberNamesAndRejectInvalidInput()
+    {
+        FrozenSet<string> caseInsensitiveNames = new[] { "Secret" }.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
+        var descriptor = new MessageSensitivityDescriptor(MessagePayloadSensitivity.Normal, caseInsensitiveNames);
+
+        Assert.True(descriptor.IsMemberSensitive("Secret"));
+        Assert.False(descriptor.IsMemberSensitive("secret"));
+        Assert.Equal("memberName", Assert.Throws<ArgumentNullException>(() => descriptor.IsMemberSensitive(null!)).ParamName);
+        Assert.Equal("memberName", Assert.Throws<ArgumentException>(() => descriptor.IsMemberSensitive(" ")).ParamName);
+        Assert.Equal("sensitiveMembers", Assert.Throws<ArgumentException>(() => new MessageSensitivityDescriptor(
+            MessagePayloadSensitivity.Normal,
+            new[] { " " }.ToFrozenSet(StringComparer.Ordinal))).ParamName);
+        Assert.Equal("memberName", Assert.Throws<ArgumentException>(() => _redactor.RenderValue(
+            typeof(SensitiveMessage),
+            " ",
+            "secret")).ParamName);
     }
 
     [Fact]

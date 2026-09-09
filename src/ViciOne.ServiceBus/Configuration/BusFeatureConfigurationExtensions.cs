@@ -1,10 +1,9 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Places application-owned contract and diagnostic policy declarations inside their owning bus block.</summary>
+/// <summary>Adds application-owned contract and diagnostic capabilities to a bus registration.</summary>
 public static class BusFeatureConfigurationExtensions
 {
     /// <summary>Adds contract declarations owned by the default bus.</summary>
@@ -35,7 +34,7 @@ public static class BusFeatureConfigurationExtensions
         return configurator;
     }
 
-    /// <summary>Enables conservative diagnostic redaction for the default bus.</summary>
+    /// <summary>Registers conservative diagnostic rendering services for the default bus.</summary>
     /// <param name="configurator">The configurator to update.</param>
     /// <returns>The bus registration configurator produced by the operation.</returns>
     public static IBusRegistrationConfigurator Redaction(this IBusRegistrationConfigurator configurator)
@@ -45,7 +44,7 @@ public static class BusFeatureConfigurationExtensions
         return configurator;
     }
 
-    /// <summary>Enables conservative diagnostic redaction for a typed bus.</summary>
+    /// <summary>Registers conservative diagnostic rendering services for a typed bus.</summary>
     /// <typeparam name="TBus">The bus type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     /// <returns>The bus registration configurator produced by the operation.</returns>

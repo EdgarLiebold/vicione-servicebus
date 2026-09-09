@@ -492,6 +492,47 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-PROVIDER-CONTRACT", "invalid-admission-results-fail-closed")]
+    public async Task Admission_InvalidProviderResultsFailClosedAsync()
+    {
+        SerializedDurableSend message = Message(KnownIdentity);
+        DurableSendAdmissionResult[] invalidResults =
+        [
+            default,
+            new(new DurableSendId(GuidFrom(91)), DurableSendAdmissionDisposition.Accepted, 1, message.StorageSize),
+            new(message.Id, DurableSendAdmissionDisposition.Accepted, 0, message.StorageSize),
+            new(message.Id, DurableSendAdmissionDisposition.Accepted, 1, message.StorageSize - 1),
+        ];
+
+        foreach (DurableSendAdmissionResult invalidResult in invalidResults)
+        {
+            IOutboxStore<ITestBus> inner = DurableSenderTestFactory.CreateInMemoryStore<ITestBus>();
+            var store = new ObservingStore(inner)
+            {
+                AdmissionResultOverride = invalidResult,
+            };
+            using ServiceProvider provider = Services(
+                    store,
+                    new FakeTimeProvider(Epoch),
+                    builder => builder.Register<KnownMessage>(KnownIdentity.Name, KnownIdentity.MajorVersion),
+                    options =>
+                    {
+                        options.MaximumStoredCount = 7;
+                        options.MaximumStoredBytes = 23;
+                    })
+                .BuildServiceProvider();
+            IDurableSendAdmission<ITestBus> admission =
+                provider.GetRequiredService<IDurableSendAdmission<ITestBus>>();
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                admission.AdmitAsync(message, TestCancellationToken));
+
+            Assert.Equal(1, store.AdmitCalls);
+            Assert.Equal(0, (await inner.GetSnapshotAsync(TestCancellationToken)).StoredCount);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-ADMISSION-CATALOG", "unknown-contract-rejected-before-store")]
     public async Task Admission_UnknownStableIdentityIsRejectedBeforeAnyStoreMutationAsync()
     {
@@ -825,6 +866,14 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
             .BuildServiceProvider();
         IReliableMessagingOperations<ITestBus> operations =
             provider.GetRequiredService<IReliableMessagingOperations<ITestBus>>();
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            operations.RequeueAsync(default, TestCancellationToken));
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            operations.DiscardAsync(default, TestCancellationToken));
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            operations.AbandonAsync(default, TestCancellationToken));
+
         var key = new ReliableInboxKey(GuidFrom(41), GuidFrom(42));
         ReliableInboxAcquireResult firstAcquire = await inbox.AcquireAsync(
             key,
@@ -1109,6 +1158,7 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
         IOutboxStore<ITestBus>,
         IInboxStore<ITestBus>
     {
+        public DurableSendAdmissionResult? AdmissionResultOverride { get; init; }
         public int AdmitCalls { get; private set; }
         public SerializedDurableSend? LastMessage { get; private set; }
         public DurableSendStoreLimits LastLimits { get; private set; }
@@ -1135,7 +1185,9 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
             LastMessage = message;
             LastLimits = limits;
             LastEnqueuedAt = enqueuedAt;
-            return inner.AdmitAsync(message, limits, enqueuedAt, cancellationToken);
+            return AdmissionResultOverride.HasValue
+                ? Task.FromResult(AdmissionResultOverride.Value)
+                : inner.AdmitAsync(message, limits, enqueuedAt, cancellationToken);
         }
 
         public Task<IReadOnlyList<DurableSendDelivery>> ClaimDueAsync(

@@ -11,6 +11,7 @@ public sealed record MessageSensitivityDescriptor
     /// <param name="sensitiveMembers">The case-sensitive CLR member names that must be redacted.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="payloadSensitivity" /> is not defined.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="sensitiveMembers" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException"><paramref name="sensitiveMembers" /> contains an empty or white-space member name.</exception>
     public MessageSensitivityDescriptor(
         MessagePayloadSensitivity payloadSensitivity,
         FrozenSet<string> sensitiveMembers)
@@ -23,8 +24,19 @@ public sealed record MessageSensitivityDescriptor
                 "Unknown message payload sensitivity value.");
         }
 
+        ArgumentNullException.ThrowIfNull(sensitiveMembers);
+        foreach (string memberName in sensitiveMembers)
+        {
+            if (string.IsNullOrWhiteSpace(memberName))
+            {
+                throw new ArgumentException(
+                    "Sensitive member names cannot be empty or contain only white-space characters.",
+                    nameof(sensitiveMembers));
+            }
+        }
+
         PayloadSensitivity = payloadSensitivity;
-        SensitiveMembers = sensitiveMembers ?? throw new ArgumentNullException(nameof(sensitiveMembers));
+        SensitiveMembers = sensitiveMembers.ToFrozenSet(StringComparer.Ordinal);
     }
 
     /// <summary>Gets the classification applied to the complete payload.</summary>
@@ -39,6 +51,7 @@ public sealed record MessageSensitivityDescriptor
     /// <summary>Determines whether a named CLR member is classified as sensitive.</summary>
     /// <param name="memberName">The case-sensitive CLR member name.</param>
     /// <returns><see langword="true" /> when the member must be redacted.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="memberName" /> is <see langword="null" />.</exception>
     /// <exception cref="ArgumentException"><paramref name="memberName" /> is empty or consists only of white-space characters.</exception>
     public bool IsMemberSensitive(string memberName)
     {

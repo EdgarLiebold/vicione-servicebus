@@ -208,7 +208,7 @@ public sealed class RabbitMqDurableSendAcceptanceTests
                 CorrelationId = correlationId,
             },
             id,
-            Attempt: 1,
+            attempt: 1,
             new UnusedConsumerCompletion(id));
 
     private sealed record DurableAcceptanceMessage(Guid Identity);

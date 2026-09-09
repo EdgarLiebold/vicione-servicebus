@@ -199,6 +199,10 @@ public sealed class SagaTestHarnessBehaviorTests
                 cancellationToken);
             Assert.Equal(sagaId, response.Message.CorrelationId);
             Assert.Equal(sagaId, await sagaHarness.ExistsAsync(sagaId, machine.Responded, timeout, TestContext.Current.CancellationToken));
+            IReceivedMessage<ResponsiveRequest> consumed = await sagaHarness.Consumed
+                .SelectAsync<ResponsiveRequest>(cancellationToken)
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            Assert.Null(consumed.Exception);
 
             Assert.Collection(
                 sagaHarness.Events.Where(observation => observation.SagaId == sagaId),

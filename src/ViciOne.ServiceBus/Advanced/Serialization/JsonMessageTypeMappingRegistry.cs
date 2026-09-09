@@ -7,7 +7,7 @@ using ViciOne.ServiceBus.Serialization.JsonConverters;
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 
-/// <summary>Registers JSON contract-to-implementation mappings contributed by optional capability packages.</summary>
+/// <summary>Provides process-wide JSON contract mappings contributed by optional capability packages.</summary>
 public static class JsonMessageTypeMappingRegistry
 {
     static readonly ConcurrentDictionary<Type, Type> ClosedMappings = new();
@@ -15,7 +15,9 @@ public static class JsonMessageTypeMappingRegistry
 
     /// <summary>Registers a closed message-contract mapping.</summary>
     /// <typeparam name="TContract">The contract type.</typeparam>
-    /// <typeparam name="TImplementation">The implementation type.</typeparam>
+    /// <typeparam name="TImplementation">The concrete serialized representation.</typeparam>
+    /// <exception cref="ArgumentException"><typeparamref name="TImplementation" /> is abstract.</exception>
+    /// <exception cref="InvalidOperationException"><typeparamref name="TContract" /> already has a different mapping.</exception>
     public static void Register<TContract, TImplementation>()
         where TContract : class
         where TImplementation : class, TContract =>
@@ -24,6 +26,9 @@ public static class JsonMessageTypeMappingRegistry
     /// <summary>Registers an open generic message-contract mapping.</summary>
     /// <param name="contractType">The open generic message-contract type.</param>
     /// <param name="implementationType">The open generic concrete implementation type.</param>
+    /// <exception cref="ArgumentNullException">Either argument is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">The arguments are not compatible open generic type definitions.</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="contractType" /> already has a different mapping.</exception>
     public static void RegisterOpenGeneric(Type contractType, Type implementationType) =>
         Register(contractType, implementationType, OpenMappings, requireGenericDefinitions: true);
 

@@ -206,7 +206,7 @@ public sealed class DurableSenderDeliveryTests
     public async Task UnsupportedCompletionMode_FailsClosedIntoInvariantQuarantineAsync()
     {
         IOutboxStore<ITestBus> store = Store();
-        var dispatcher = new ControlledDispatcher(new DurableSendDispatchResult((DurableSendCompletionMode)999));
+        var dispatcher = new ControlledDispatcher(default);
         var time = new FakeTimeProvider(Epoch);
         using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(store, dispatcher, time);
         await AdmitAsync(store);
@@ -224,7 +224,10 @@ public sealed class DurableSenderDeliveryTests
     {
         IOutboxStore<ITestBus> inner = Store();
         var expected = new ExpectedPersistenceException();
-        var store = new MarkDeliveredThrowingStore(inner, expected);
+        var store = new ControlledStore(inner)
+        {
+            MarkDeliveredException = expected,
+        };
         var dispatcher = new ControlledDispatcher(DurableSendDispatchResult.TransportAccepted);
         var time = new FakeTimeProvider(Epoch);
         using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(store, dispatcher, time);
@@ -266,6 +269,37 @@ public sealed class DurableSenderDeliveryTests
         Assert.True(await driver.DeliverDueBatchAsync(TestCancellationToken));
         Assert.Equal(3, dispatcher.DispatchCount);
         Assert.Equal(0, (await SnapshotAsync(store)).StoredCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-PROVIDER-CONTRACT", "invalid-claims-fail-before-first-dispatch")]
+    public async Task ProviderClaims_InvalidBatchesFailBeforeTheFirstDispatchAsync()
+    {
+        DurableSendDelivery first = Delivery(1, Epoch.AddMinutes(1));
+        IReadOnlyList<DurableSendDelivery>[] invalidClaims =
+        [
+            [null!],
+            [Delivery(2, Epoch)],
+            [Delivery(3, Epoch.AddMinutes(1), Epoch.AddMinutes(1))],
+            [first, first with { Lease = new DurableSendLease(GuidFrom(20), Epoch.AddMinutes(1)) }],
+            Enumerable.Range(1, 17).Select(index => Delivery(index, Epoch.AddMinutes(1))).ToArray(),
+        ];
+
+        foreach (IReadOnlyList<DurableSendDelivery> claims in invalidClaims)
+        {
+            var store = new ControlledStore(Store())
+            {
+                ClaimResult = claims,
+            };
+            var dispatcher = new ControlledDispatcher(DurableSendDispatchResult.TransportAccepted);
+            var time = new FakeTimeProvider(Epoch);
+            using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(store, dispatcher, time);
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                driver.DeliverDueBatchAsync(TestCancellationToken));
+
+            Assert.Equal(0, dispatcher.DispatchCount);
+        }
     }
 
     [Fact]
@@ -348,6 +382,19 @@ public sealed class DurableSenderDeliveryTests
         ContentType = "application/octet-stream",
         Body = new byte[] { 1, 2, 3 },
     };
+
+    private static DurableSendDelivery Delivery(
+        int id,
+        DateTimeOffset leaseExpiresAt,
+        DateTimeOffset? dueAt = null) => new()
+        {
+            Message = Message(id) with { DueAt = dueAt },
+            GenerationToken = GuidFrom(id + 100),
+            EnqueuedAt = Epoch,
+            DeliveryAttempts = 0,
+            Status = DurableSendStatus.Pending,
+            Lease = new DurableSendLease(GuidFrom(id + 200), leaseExpiresAt),
+        };
 
     private static Guid GuidFrom(int value) => new(value, 0, 0, new byte[8]);
 
@@ -463,10 +510,11 @@ public sealed class DurableSenderDeliveryTests
         }
     }
 
-    private sealed class MarkDeliveredThrowingStore(
-        IOutboxStore<ITestBus> inner,
-        Exception exception) : IOutboxStore<ITestBus>
+    private sealed class ControlledStore(IOutboxStore<ITestBus> inner) : IOutboxStore<ITestBus>
     {
+        public IReadOnlyList<DurableSendDelivery>? ClaimResult { get; init; }
+        public Exception? MarkDeliveredException { get; init; }
+
         public Task<DurableSendAdmissionResult> AdmitAsync(
             SerializedDurableSend message,
             DurableSendStoreLimits limits,
@@ -478,15 +526,23 @@ public sealed class DurableSenderDeliveryTests
             DateTimeOffset now,
             int maximumCount,
             TimeSpan leaseDuration,
-            CancellationToken cancellationToken = default) =>
-            inner.ClaimDueAsync(now, maximumCount, leaseDuration, cancellationToken);
+            CancellationToken cancellationToken = default) => ClaimResult is { } result
+            ? Task.FromResult(result)
+            : inner.ClaimDueAsync(now, maximumCount, leaseDuration, cancellationToken);
 
         public Task<bool> MarkDeliveredAsync(
             DurableSendId id,
             DurableSendLease lease,
             DateTimeOffset deliveredAt,
             CancellationToken cancellationToken = default)
-        { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<bool>(cancellationToken); return Task.FromException<bool>(exception); }
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled<bool>(cancellationToken);
+
+            return MarkDeliveredException is { } exception
+                ? Task.FromException<bool>(exception)
+                : inner.MarkDeliveredAsync(id, lease, deliveredAt, cancellationToken);
+        }
         public Task<bool> AwaitConsumerCompletionAsync(
             DurableSendId id,
             DurableSendLease lease,

@@ -2437,7 +2437,7 @@ TYPE class public ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException [sea
   CTOR public ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException()
   CTOR public ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException(System.String message)
   CTOR public ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException(System.String message, System.Exception innerException)
-TYPE class public ViciOne.ServiceBus.DurableSendCapacityExceededException [sealed,base=System.Exception]
+TYPE class public ViciOne.ServiceBus.DurableSendCapacityExceededException [sealed,base=ViciOne.ServiceBus.ViciOneServiceBusException]
   CTOR public ViciOne.ServiceBus.DurableSendCapacityExceededException(System.String message, System.Int32 storedCount, System.Int64 storedBytes)
   PROPERTY System.Int32 StoredCount { public-get;  }
   PROPERTY System.Int64 StoredBytes { public-get;  }
@@ -2450,7 +2450,7 @@ TYPE struct public ViciOne.ServiceBus.DurableSendId
   METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.DurableSendId left, ViciOne.ServiceBus.DurableSendId right)
   METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.DurableSendId other)
   PROPERTY System.Guid Value { public-get;  }
-TYPE class public ViciOne.ServiceBus.DurableSendIdentityConflictException [sealed,base=System.Exception]
+TYPE class public ViciOne.ServiceBus.DurableSendIdentityConflictException [sealed,base=ViciOne.ServiceBus.ViciOneServiceBusException]
   CTOR public ViciOne.ServiceBus.DurableSendIdentityConflictException(ViciOne.ServiceBus.DurableSendId id)
   PROPERTY ViciOne.ServiceBus.DurableSendId Id { public-get;  }
 TYPE class public ViciOne.ServiceBus.DurableSendOptions [sealed]
@@ -2466,19 +2466,18 @@ TYPE class public ViciOne.ServiceBus.DurableSendOptions [sealed]
   PROPERTY System.Nullable<System.Guid> CorrelationId { public-get; public-set; }
   PROPERTY ViciOne.ServiceBus.DurableSendId IdempotencyKey { public-get; public-set; }
 TYPE struct public ViciOne.ServiceBus.DurableSendReceipt
-  CTOR public ViciOne.ServiceBus.DurableSendReceipt(ViciOne.ServiceBus.DurableSendId Id, ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionDisposition Disposition, System.Int32 StoredCount, System.Int64 StoredBytes)
+  CTOR public ViciOne.ServiceBus.DurableSendReceipt(ViciOne.ServiceBus.DurableSendId id, ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionDisposition disposition, System.Int32 storedCount, System.Int64 storedBytes)
   METHOD public System.Boolean Equals(System.Object obj)
   METHOD public System.Int32 GetHashCode()
   METHOD public System.String ToString()
-  METHOD public System.Void Deconstruct(out ViciOne.ServiceBus.DurableSendId Id, out ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionDisposition Disposition, out System.Int32 StoredCount, out System.Int64 StoredBytes)
   METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.DurableSendReceipt left, ViciOne.ServiceBus.DurableSendReceipt right)
   METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.DurableSendReceipt left, ViciOne.ServiceBus.DurableSendReceipt right)
   METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.DurableSendReceipt other)
   PROPERTY System.Boolean IsNew { public-get;  }
-  PROPERTY System.Int32 StoredCount { public-get; public-set; }
-  PROPERTY System.Int64 StoredBytes { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.DurableSendId Id { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionDisposition Disposition { public-get; public-set; }
+  PROPERTY System.Int32 StoredCount { public-get;  }
+  PROPERTY System.Int64 StoredBytes { public-get;  }
+  PROPERTY ViciOne.ServiceBus.DurableSendId Id { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionDisposition Disposition { public-get;  }
 TYPE class public ViciOne.ServiceBus.EntityNameAttribute [sealed,base=System.Attribute]
   CTOR public ViciOne.ServiceBus.EntityNameAttribute(System.String entityName)
   PROPERTY System.String EntityName { public-get;  }
@@ -2554,11 +2553,11 @@ TYPE interface public ViciOne.ServiceBus.IMessageContractCatalog
 TYPE interface public ViciOne.ServiceBus.IMessageScheduler
   METHOD public abstract System.Threading.Tasks.Task CancelScheduledSendAsync(ViciOne.ServiceBus.ScheduledMessage scheduled, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<TMessage>> SchedulePublishAsync<TMessage>(System.DateTimeOffset dueAt, TMessage message, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<TMessage>> SchedulePublishAsync<TMessage>(System.TimeSpan delay, TMessage message, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<TMessage>> ScheduleSendAsync<TMessage>(System.Uri destination, System.DateTimeOffset dueAt, TMessage message, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<TMessage>> ScheduleSendAsync<TMessage>(System.Uri destination, System.DateTimeOffset dueAt, TMessage message, ViciOne.ServiceBus.ScheduleOptions options, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<TMessage>> SchedulePublishAsync<TMessage>(System.TimeSpan delay, TMessage message, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<TMessage>> ScheduleSendAsync<TMessage>(System.Uri destination, System.TimeSpan delay, TMessage message, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<TMessage>> ScheduleSendAsync<TMessage>(System.Uri destination, System.TimeSpan delay, TMessage message, ViciOne.ServiceBus.ScheduleOptions options, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<TMessage>> ScheduleSendAsync<TMessage>(System.Uri destination, System.TimeSpan delay, TMessage message, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<TMessage>> ScheduleSendAsync<TMessage>(System.Uri destination, System.TimeSpan delay, TMessage message, ViciOne.ServiceBus.ScheduleOptions options, System.Threading.CancellationToken cancellationToken = null)
   PROPERTY System.TimeProvider TimeProvider { public-get;  }
 TYPE interface public ViciOne.ServiceBus.IOutgoingMessages
   METHOD public abstract System.Threading.Tasks.Task PublishAsync<TMessage>(TMessage message, System.Threading.CancellationToken cancellationToken = null)
@@ -3028,17 +3027,16 @@ TYPE enum public ViciOne.ServiceBus.Operations.DurableSendOperationOutcome
   FIELD public const ViciOne.ServiceBus.Operations.DurableSendOperationOutcome NotQuarantined = 3
   FIELD public const ViciOne.ServiceBus.Operations.DurableSendOperationOutcome Requeued = 0
 TYPE struct public ViciOne.ServiceBus.Operations.DurableSendOperationResult
-  CTOR public ViciOne.ServiceBus.Operations.DurableSendOperationResult(ViciOne.ServiceBus.DurableSendId Id, ViciOne.ServiceBus.Operations.DurableSendOperationOutcome Outcome)
+  CTOR public ViciOne.ServiceBus.Operations.DurableSendOperationResult(ViciOne.ServiceBus.DurableSendId id, ViciOne.ServiceBus.Operations.DurableSendOperationOutcome outcome)
   METHOD public System.Boolean Equals(System.Object obj)
   METHOD public System.Int32 GetHashCode()
   METHOD public System.String ToString()
-  METHOD public System.Void Deconstruct(out ViciOne.ServiceBus.DurableSendId Id, out ViciOne.ServiceBus.Operations.DurableSendOperationOutcome Outcome)
   METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Operations.DurableSendOperationResult left, ViciOne.ServiceBus.Operations.DurableSendOperationResult right)
   METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Operations.DurableSendOperationResult left, ViciOne.ServiceBus.Operations.DurableSendOperationResult right)
   METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Operations.DurableSendOperationResult other)
   PROPERTY System.Boolean IsApplied { public-get;  }
-  PROPERTY ViciOne.ServiceBus.DurableSendId Id { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Operations.DurableSendOperationOutcome Outcome { public-get; public-set; }
+  PROPERTY ViciOne.ServiceBus.DurableSendId Id { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Operations.DurableSendOperationOutcome Outcome { public-get;  }
 TYPE class public ViciOne.ServiceBus.Operations.DurableSendQuarantineEntry [sealed]
   CTOR public ViciOne.ServiceBus.Operations.DurableSendQuarantineEntry()
   METHOD public System.Boolean Equals(System.Object obj)
@@ -3079,15 +3077,30 @@ TYPE enum public ViciOne.ServiceBus.Operations.DurableSendStatus
   FIELD public const ViciOne.ServiceBus.Operations.DurableSendStatus Pending = 0
   FIELD public const ViciOne.ServiceBus.Operations.DurableSendStatus Quarantined = 2
   FIELD public const ViciOne.ServiceBus.Operations.DurableSendStatus RetryScheduled = 1
+TYPE struct public ViciOne.ServiceBus.Operations.DurableSendStoreSnapshot
+  CTOR public ViciOne.ServiceBus.Operations.DurableSendStoreSnapshot(System.Int32 storedCount, System.Int64 storedBytes, System.Int32 pendingCount, System.Int32 retryScheduledCount, System.Int32 awaitingConsumerCompletionCount, System.Int32 quarantinedCount, System.Nullable<System.DateTimeOffset> oldestPendingEnqueuedAt)
+  METHOD public System.Boolean Equals(System.Object obj)
+  METHOD public System.Int32 GetHashCode()
+  METHOD public System.String ToString()
+  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Operations.DurableSendStoreSnapshot left, ViciOne.ServiceBus.Operations.DurableSendStoreSnapshot right)
+  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Operations.DurableSendStoreSnapshot left, ViciOne.ServiceBus.Operations.DurableSendStoreSnapshot right)
+  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Operations.DurableSendStoreSnapshot other)
+  PROPERTY System.Int32 AwaitingConsumerCompletionCount { public-get;  }
+  PROPERTY System.Int32 PendingCount { public-get;  }
+  PROPERTY System.Int32 QuarantinedCount { public-get;  }
+  PROPERTY System.Int32 RetryScheduledCount { public-get;  }
+  PROPERTY System.Int32 StoredCount { public-get;  }
+  PROPERTY System.Int64 StoredBytes { public-get;  }
+  PROPERTY System.Nullable<System.DateTimeOffset> OldestPendingEnqueuedAt { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Operations.IProbeSite
   METHOD public abstract System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
 TYPE interface public ViciOne.ServiceBus.Operations.IReliableMessagingOperations<TBus>
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.DurableSendQuarantinePage> GetOutboxQuarantineAsync(ViciOne.ServiceBus.Operations.DurableSendQuarantineQuery query, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.DurableSendStoreSnapshot> GetSnapshotAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantinePage> GetInboxQuarantineAsync(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineQuery query, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult> AbandonAsync(ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference reference, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult> DiscardAsync(ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference reference, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult> RequeueAsync(ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference reference, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.DurableSendStoreSnapshot> GetSnapshotAsync(System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.ReliableInboxQuarantinePage> GetInboxQuarantineAsync(ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery query, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult> AbandonAsync(ViciOne.ServiceBus.Operations.ReliableMessageReference reference, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult> DiscardAsync(ViciOne.ServiceBus.Operations.ReliableMessageReference reference, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult> RequeueAsync(ViciOne.ServiceBus.Operations.ReliableMessageReference reference, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Operations.ProbeContext
   METHOD public abstract System.Void Add(System.String key, System.Object value)
   METHOD public abstract System.Void Add(System.String key, System.String value)
@@ -3099,6 +3112,97 @@ TYPE class public ViciOne.ServiceBus.Operations.ProbeContextExtensions [static]
   METHOD public static ViciOne.ServiceBus.Operations.ProbeContext CreateConsumerFactoryScope<TConsumer>(ViciOne.ServiceBus.Operations.ProbeContext context, System.String source)
   METHOD public static ViciOne.ServiceBus.Operations.ProbeContext CreateFilterScope(ViciOne.ServiceBus.Operations.ProbeContext context, System.String filterType)
   METHOD public static ViciOne.ServiceBus.Operations.ProbeContext CreateMessageScope(ViciOne.ServiceBus.Operations.ProbeContext context, System.String messageType)
+TYPE struct public ViciOne.ServiceBus.Operations.ReliableInboxKey
+  CTOR public ViciOne.ServiceBus.Operations.ReliableInboxKey(System.Guid MessageId, System.Guid ConsumerId)
+  METHOD public System.Boolean Equals(System.Object obj)
+  METHOD public System.Int32 GetHashCode()
+  METHOD public System.String ToString()
+  METHOD public System.Void Deconstruct(out System.Guid MessageId, out System.Guid ConsumerId)
+  METHOD public ViciOne.ServiceBus.Operations.ReliableInboxKey Validate()
+  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Operations.ReliableInboxKey left, ViciOne.ServiceBus.Operations.ReliableInboxKey right)
+  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Operations.ReliableInboxKey left, ViciOne.ServiceBus.Operations.ReliableInboxKey right)
+  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Operations.ReliableInboxKey other)
+  PROPERTY System.Guid ConsumerId { public-get; public-set; }
+  PROPERTY System.Guid MessageId { public-get; public-set; }
+TYPE class public ViciOne.ServiceBus.Operations.ReliableInboxQuarantineEntry [sealed]
+  CTOR public ViciOne.ServiceBus.Operations.ReliableInboxQuarantineEntry(ViciOne.ServiceBus.Operations.ReliableInboxKey Key, ViciOne.ServiceBus.Operations.ReliableInboxStatus Status, System.Int32 Attempts, System.DateTimeOffset ReceivedAt, System.DateTimeOffset QuarantinedAt, System.String FailureType)
+  METHOD public System.Boolean Equals(System.Object obj)
+  METHOD public System.Int32 GetHashCode()
+  METHOD public System.String ToString()
+  METHOD public System.Void Deconstruct(out ViciOne.ServiceBus.Operations.ReliableInboxKey Key, out ViciOne.ServiceBus.Operations.ReliableInboxStatus Status, out System.Int32 Attempts, out System.DateTimeOffset ReceivedAt, out System.DateTimeOffset QuarantinedAt, out System.String FailureType)
+  METHOD public ViciOne.ServiceBus.Operations.ReliableInboxQuarantineEntry <Clone>$()
+  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Operations.ReliableInboxQuarantineEntry left, ViciOne.ServiceBus.Operations.ReliableInboxQuarantineEntry right)
+  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Operations.ReliableInboxQuarantineEntry left, ViciOne.ServiceBus.Operations.ReliableInboxQuarantineEntry right)
+  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Operations.ReliableInboxQuarantineEntry other)
+  PROPERTY System.DateTimeOffset QuarantinedAt { public-get; public-set; }
+  PROPERTY System.DateTimeOffset ReceivedAt { public-get; public-set; }
+  PROPERTY System.Int32 Attempts { public-get; public-set; }
+  PROPERTY System.String FailureType { public-get; public-set; }
+  PROPERTY ViciOne.ServiceBus.Operations.ReliableInboxKey Key { public-get; public-set; }
+  PROPERTY ViciOne.ServiceBus.Operations.ReliableInboxStatus Status { public-get; public-set; }
+TYPE class public ViciOne.ServiceBus.Operations.ReliableInboxQuarantinePage [sealed]
+  CTOR public ViciOne.ServiceBus.Operations.ReliableInboxQuarantinePage(System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Operations.ReliableInboxQuarantineEntry> entries, ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery next)
+  PROPERTY System.Boolean HasMore { public-get;  }
+  PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Operations.ReliableInboxQuarantineEntry> Entries { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery Next { public-get;  }
+TYPE class public ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery [sealed]
+  CTOR public ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery()
+  METHOD public System.Boolean Equals(System.Object obj)
+  METHOD public System.Int32 GetHashCode()
+  METHOD public System.String ToString()
+  METHOD public ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery <Clone>$()
+  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery left, ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery right)
+  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery left, ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery right)
+  METHOD public static ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery FirstPage(System.Int32 pageSize = 100)
+  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery other)
+  PROPERTY System.Int32 PageSize { public-get; public-set; }
+  PROPERTY System.Nullable<System.DateTimeOffset> AfterQuarantinedAt { public-get; public-set; }
+  PROPERTY System.Nullable<System.Guid> AfterConsumerId { public-get; public-set; }
+  PROPERTY System.Nullable<System.Guid> AfterMessageId { public-get; public-set; }
+TYPE enum public ViciOne.ServiceBus.Operations.ReliableInboxStatus
+  FIELD public System.Int32 value__
+  FIELD public const ViciOne.ServiceBus.Operations.ReliableInboxStatus Abandoned = 4
+  FIELD public const ViciOne.ServiceBus.Operations.ReliableInboxStatus Consumed = 1
+  FIELD public const ViciOne.ServiceBus.Operations.ReliableInboxStatus Processing = 0
+  FIELD public const ViciOne.ServiceBus.Operations.ReliableInboxStatus Quarantined = 3
+  FIELD public const ViciOne.ServiceBus.Operations.ReliableInboxStatus RetryScheduled = 2
+TYPE enum public ViciOne.ServiceBus.Operations.ReliableMessageKind
+  FIELD public System.Int32 value__
+  FIELD public const ViciOne.ServiceBus.Operations.ReliableMessageKind Inbox = 2
+  FIELD public const ViciOne.ServiceBus.Operations.ReliableMessageKind Outbox = 1
+  FIELD public const ViciOne.ServiceBus.Operations.ReliableMessageKind Unknown = 0
+TYPE struct public ViciOne.ServiceBus.Operations.ReliableMessageReference
+  METHOD public System.Boolean Equals(System.Object obj)
+  METHOD public System.Int32 GetHashCode()
+  METHOD public System.String ToString()
+  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Operations.ReliableMessageReference left, ViciOne.ServiceBus.Operations.ReliableMessageReference right)
+  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Operations.ReliableMessageReference left, ViciOne.ServiceBus.Operations.ReliableMessageReference right)
+  METHOD public static ViciOne.ServiceBus.Operations.ReliableMessageReference Inbox(ViciOne.ServiceBus.Operations.ReliableInboxKey key)
+  METHOD public static ViciOne.ServiceBus.Operations.ReliableMessageReference Outbox(ViciOne.ServiceBus.DurableSendId id)
+  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Operations.ReliableMessageReference other)
+  PROPERTY ViciOne.ServiceBus.DurableSendId OutboxId { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Operations.ReliableInboxKey InboxKey { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Operations.ReliableMessageKind Kind { public-get;  }
+TYPE enum public ViciOne.ServiceBus.Operations.ReliableMessagingOperationDisposition
+  FIELD public System.Int32 value__
+  FIELD public const ViciOne.ServiceBus.Operations.ReliableMessagingOperationDisposition Applied = 0
+  FIELD public const ViciOne.ServiceBus.Operations.ReliableMessagingOperationDisposition InvalidState = 2
+  FIELD public const ViciOne.ServiceBus.Operations.ReliableMessagingOperationDisposition NotFound = 1
+TYPE class public ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult [sealed]
+  CTOR public ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult(ViciOne.ServiceBus.Operations.ReliableMessageReference reference, ViciOne.ServiceBus.Operations.ReliableMessagingOperationDisposition disposition, System.String previousState, System.String currentState)
+  FIELD public const System.Int32 MaximumStateNameCharacters = 128
+  METHOD public System.Boolean Equals(System.Object obj)
+  METHOD public System.Int32 GetHashCode()
+  METHOD public System.String ToString()
+  METHOD public ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult <Clone>$()
+  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult left, ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult right)
+  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult left, ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult right)
+  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult other)
+  PROPERTY System.Boolean IsApplied { public-get;  }
+  PROPERTY System.String CurrentState { public-get;  }
+  PROPERTY System.String PreviousState { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Operations.ReliableMessageReference Reference { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Operations.ReliableMessagingOperationDisposition Disposition { public-get;  }
 TYPE class public ViciOne.ServiceBus.PayloadAdmissionException [sealed,base=ViciOne.ServiceBus.ViciOneServiceBusException]
   CTOR public ViciOne.ServiceBus.PayloadAdmissionException(ViciOne.ServiceBus.Advanced.Serialization.PayloadAdmissionStage stage, System.Int64 actualBytes, System.Int64 configuredLimitBytes, System.String message)
   PROPERTY System.Int64 ActualBytes { public-get;  }
@@ -3142,29 +3246,30 @@ TYPE enum public ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionDi
   FIELD public const ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionDisposition AlreadyAccepted = 1
   FIELD public const ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionDisposition AlreadyQuarantined = 2
 TYPE struct public ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionResult
-  CTOR public ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionResult(ViciOne.ServiceBus.DurableSendId Id, ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionDisposition Disposition, System.Int32 StoredCount, System.Int64 StoredBytes)
+  CTOR public ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionResult(ViciOne.ServiceBus.DurableSendId id, ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionDisposition disposition, System.Int32 storedCount, System.Int64 storedBytes)
   METHOD public System.Boolean Equals(System.Object obj)
   METHOD public System.Int32 GetHashCode()
   METHOD public System.String ToString()
-  METHOD public System.Void Deconstruct(out ViciOne.ServiceBus.DurableSendId Id, out ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionDisposition Disposition, out System.Int32 StoredCount, out System.Int64 StoredBytes)
   METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionResult left, ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionResult right)
   METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionResult left, ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionResult right)
   METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionResult other)
   PROPERTY System.Boolean IsNew { public-get;  }
-  PROPERTY System.Int32 StoredCount { public-get; public-set; }
-  PROPERTY System.Int64 StoredBytes { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.DurableSendId Id { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionDisposition Disposition { public-get; public-set; }
+  PROPERTY System.Int32 StoredCount { public-get;  }
+  PROPERTY System.Int64 StoredBytes { public-get;  }
+  PROPERTY ViciOne.ServiceBus.DurableSendId Id { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionDisposition Disposition { public-get;  }
 TYPE enum public ViciOne.ServiceBus.Providers.Persistence.DurableSendCompletionMode
   FIELD public System.Int32 value__
-  FIELD public const ViciOne.ServiceBus.Providers.Persistence.DurableSendCompletionMode ConsumerCompletion = 1
-  FIELD public const ViciOne.ServiceBus.Providers.Persistence.DurableSendCompletionMode TransportAcceptance = 0
+  FIELD public const ViciOne.ServiceBus.Providers.Persistence.DurableSendCompletionMode ConsumerCompletion = 2
+  FIELD public const ViciOne.ServiceBus.Providers.Persistence.DurableSendCompletionMode TransportAcceptance = 1
+  FIELD public const ViciOne.ServiceBus.Providers.Persistence.DurableSendCompletionMode Unknown = 0
 TYPE class public ViciOne.ServiceBus.Providers.Persistence.DurableSendDelivery [sealed]
   CTOR public ViciOne.ServiceBus.Providers.Persistence.DurableSendDelivery()
   METHOD public System.Boolean Equals(System.Object obj)
   METHOD public System.Int32 GetHashCode()
   METHOD public System.String ToString()
   METHOD public ViciOne.ServiceBus.Providers.Persistence.DurableSendDelivery <Clone>$()
+  METHOD public ViciOne.ServiceBus.Providers.Persistence.DurableSendDelivery Validate()
   METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Providers.Persistence.DurableSendDelivery left, ViciOne.ServiceBus.Providers.Persistence.DurableSendDelivery right)
   METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Providers.Persistence.DurableSendDelivery left, ViciOne.ServiceBus.Providers.Persistence.DurableSendDelivery right)
   METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.DurableSendDelivery other)
@@ -3175,32 +3280,28 @@ TYPE class public ViciOne.ServiceBus.Providers.Persistence.DurableSendDelivery [
   PROPERTY ViciOne.ServiceBus.Providers.Persistence.DurableSendLease Lease { public-get; public-set; }
   PROPERTY ViciOne.ServiceBus.Providers.Persistence.SerializedDurableSend Message { public-get; public-set; }
 TYPE struct public ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchContext
-  CTOR public ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchContext(ViciOne.ServiceBus.Providers.Persistence.SerializedDurableSend Message, ViciOne.ServiceBus.DurableSendId DurableSendId, System.Int32 Attempt, ViciOne.ServiceBus.Providers.Persistence.IDurableSendConsumerCompletion ConsumerCompletion)
+  CTOR public ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchContext(ViciOne.ServiceBus.Providers.Persistence.SerializedDurableSend message, ViciOne.ServiceBus.DurableSendId durableSendId, System.Int32 attempt, ViciOne.ServiceBus.Providers.Persistence.IDurableSendConsumerCompletion consumerCompletion)
   METHOD public System.Boolean Equals(System.Object obj)
   METHOD public System.Int32 GetHashCode()
   METHOD public System.String ToString()
-  METHOD public System.Void Deconstruct(out ViciOne.ServiceBus.Providers.Persistence.SerializedDurableSend Message, out ViciOne.ServiceBus.DurableSendId DurableSendId, out System.Int32 Attempt, out ViciOne.ServiceBus.Providers.Persistence.IDurableSendConsumerCompletion ConsumerCompletion)
   METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchContext left, ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchContext right)
   METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchContext left, ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchContext right)
   METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchContext other)
-  PROPERTY System.Int32 Attempt { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.DurableSendId DurableSendId { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.IDurableSendConsumerCompletion ConsumerCompletion { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.SerializedDurableSend Message { public-get; public-set; }
+  PROPERTY System.Int32 Attempt { public-get;  }
+  PROPERTY ViciOne.ServiceBus.DurableSendId DurableSendId { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Providers.Persistence.IDurableSendConsumerCompletion ConsumerCompletion { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Providers.Persistence.SerializedDurableSend Message { public-get;  }
 TYPE struct public ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchResult
-  CTOR public ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchResult(ViciOne.ServiceBus.Providers.Persistence.DurableSendCompletionMode CompletionMode)
+  CTOR public ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchResult(ViciOne.ServiceBus.Providers.Persistence.DurableSendCompletionMode completionMode)
   METHOD public System.Boolean Equals(System.Object obj)
   METHOD public System.Int32 GetHashCode()
   METHOD public System.String ToString()
-  METHOD public System.Void Deconstruct(out ViciOne.ServiceBus.Providers.Persistence.DurableSendCompletionMode CompletionMode)
   METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchResult left, ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchResult right)
   METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchResult left, ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchResult right)
   METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchResult other)
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.DurableSendCompletionMode CompletionMode { public-get; public-set; }
+  PROPERTY ViciOne.ServiceBus.Providers.Persistence.DurableSendCompletionMode CompletionMode { public-get;  }
   PROPERTY ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchResult AwaitConsumerCompletion { public-get;  }
   PROPERTY ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchResult TransportAccepted { public-get;  }
-TYPE class public ViciOne.ServiceBus.Providers.Persistence.DurableSendEnvelopeMetadata [sealed]
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.DurableSendEnvelopeMetadata Instance { public-get;  }
 TYPE struct public ViciOne.ServiceBus.Providers.Persistence.DurableSendLease
   CTOR public ViciOne.ServiceBus.Providers.Persistence.DurableSendLease(System.Guid token, System.DateTimeOffset expiresAt)
   METHOD public System.Boolean Equals(System.Object obj)
@@ -3237,22 +3338,6 @@ TYPE struct public ViciOne.ServiceBus.Providers.Persistence.DurableSendStoreLimi
   METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.DurableSendStoreLimits other)
   PROPERTY System.Int32 MaximumStoredCount { public-get;  }
   PROPERTY System.Int64 MaximumStoredBytes { public-get;  }
-TYPE struct public ViciOne.ServiceBus.Providers.Persistence.DurableSendStoreSnapshot
-  CTOR public ViciOne.ServiceBus.Providers.Persistence.DurableSendStoreSnapshot(System.Int32 StoredCount, System.Int64 StoredBytes, System.Int32 PendingCount, System.Int32 RetryScheduledCount, System.Int32 AwaitingConsumerCompletionCount, System.Int32 QuarantinedCount, System.Nullable<System.DateTimeOffset> OldestPendingEnqueuedAt)
-  METHOD public System.Boolean Equals(System.Object obj)
-  METHOD public System.Int32 GetHashCode()
-  METHOD public System.String ToString()
-  METHOD public System.Void Deconstruct(out System.Int32 StoredCount, out System.Int64 StoredBytes, out System.Int32 PendingCount, out System.Int32 RetryScheduledCount, out System.Int32 AwaitingConsumerCompletionCount, out System.Int32 QuarantinedCount, out System.Nullable<System.DateTimeOffset> OldestPendingEnqueuedAt)
-  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Providers.Persistence.DurableSendStoreSnapshot left, ViciOne.ServiceBus.Providers.Persistence.DurableSendStoreSnapshot right)
-  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Providers.Persistence.DurableSendStoreSnapshot left, ViciOne.ServiceBus.Providers.Persistence.DurableSendStoreSnapshot right)
-  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.DurableSendStoreSnapshot other)
-  PROPERTY System.Int32 AwaitingConsumerCompletionCount { public-get; public-set; }
-  PROPERTY System.Int32 PendingCount { public-get; public-set; }
-  PROPERTY System.Int32 QuarantinedCount { public-get; public-set; }
-  PROPERTY System.Int32 RetryScheduledCount { public-get; public-set; }
-  PROPERTY System.Int32 StoredCount { public-get; public-set; }
-  PROPERTY System.Int64 StoredBytes { public-get; public-set; }
-  PROPERTY System.Nullable<System.DateTimeOffset> OldestPendingEnqueuedAt { public-get; public-set; }
 TYPE interface public ViciOne.ServiceBus.Providers.Persistence.IDurableSendAdmission<TBus>
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionResult> AdmitAsync(ViciOne.ServiceBus.Providers.Persistence.SerializedDurableSend message, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Providers.Persistence.IDurableSendConsumerCompletion
@@ -3261,14 +3346,14 @@ TYPE interface public ViciOne.ServiceBus.Providers.Persistence.IDurableSendConsu
 TYPE interface public ViciOne.ServiceBus.Providers.Persistence.IDurableSendDispatcher<TBus>
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchResult> DispatchAsync(ViciOne.ServiceBus.Providers.Persistence.DurableSendDispatchContext context, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Providers.Persistence.IInboxStore<TBus>
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> CompleteAsync(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey key, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease lease, System.DateTimeOffset consumedAt, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> QuarantineAsync(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey key, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease lease, System.String failureType, System.DateTimeOffset quarantinedAt, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> ScheduleRetryAsync(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey key, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease lease, System.DateTimeOffset dueAt, System.String failureType, System.DateTimeOffset failedAt, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireResult> AcquireAsync(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey key, System.DateTimeOffset now, System.TimeSpan leaseDuration, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantinePage> GetQuarantineAsync(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineQuery query, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult> AbandonAsync(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey key, System.DateTimeOffset abandonedAt, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult> DiscardAsync(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey key, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult> RequeueAsync(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey key, System.DateTimeOffset dueAt, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> CompleteAsync(ViciOne.ServiceBus.Operations.ReliableInboxKey key, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease lease, System.DateTimeOffset consumedAt, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> QuarantineAsync(ViciOne.ServiceBus.Operations.ReliableInboxKey key, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease lease, System.String failureType, System.DateTimeOffset quarantinedAt, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<System.Boolean> ScheduleRetryAsync(ViciOne.ServiceBus.Operations.ReliableInboxKey key, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease lease, System.DateTimeOffset dueAt, System.String failureType, System.DateTimeOffset failedAt, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.ReliableInboxQuarantinePage> GetQuarantineAsync(ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery query, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult> AbandonAsync(ViciOne.ServiceBus.Operations.ReliableInboxKey key, System.DateTimeOffset abandonedAt, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult> DiscardAsync(ViciOne.ServiceBus.Operations.ReliableInboxKey key, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult> RequeueAsync(ViciOne.ServiceBus.Operations.ReliableInboxKey key, System.DateTimeOffset dueAt, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireResult> AcquireAsync(ViciOne.ServiceBus.Operations.ReliableInboxKey key, System.DateTimeOffset now, System.TimeSpan leaseDuration, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Providers.Persistence.IOutboxStore<TBus>
   METHOD public abstract System.Threading.Tasks.Task<System.Boolean> AwaitConsumerCompletionAsync(ViciOne.ServiceBus.DurableSendId id, ViciOne.ServiceBus.Providers.Persistence.DurableSendLease lease, System.Int32 deliveryAttempts, System.DateTimeOffset nextAttemptAt, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task<System.Boolean> CompleteConsumerDeliveryAsync(ViciOne.ServiceBus.DurableSendId id, System.Guid generationToken, System.DateTimeOffset completedAt, System.Threading.CancellationToken cancellationToken = null)
@@ -3279,14 +3364,14 @@ TYPE interface public ViciOne.ServiceBus.Providers.Persistence.IOutboxStore<TBus
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.DurableSendOperationResult> DiscardQuarantinedAsync(ViciOne.ServiceBus.DurableSendId id, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.DurableSendOperationResult> RequeueAsync(ViciOne.ServiceBus.DurableSendId id, System.DateTimeOffset dueAt, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.DurableSendQuarantinePage> GetQuarantineAsync(ViciOne.ServiceBus.Operations.DurableSendQuarantineQuery query, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.DurableSendStoreSnapshot> GetSnapshotAsync(System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionResult> AdmitAsync(ViciOne.ServiceBus.Providers.Persistence.SerializedDurableSend message, ViciOne.ServiceBus.Providers.Persistence.DurableSendStoreLimits limits, System.DateTimeOffset enqueuedAt, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.DurableSendStoreSnapshot> GetSnapshotAsync(System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Providers.Persistence.IReliableDeliverySource<TBus>
   METHOD public abstract System.Threading.Tasks.Task WaitForWorkAsync(System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task<System.Boolean> DeliverDueBatchAsync(System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.Providers.Persistence.IScheduleStore<TBus>
+  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Operations.ReliableMessagingOperationResult> CancelAsync(ViciOne.ServiceBus.DurableSendId id, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmissionResult> ScheduleAsync(ViciOne.ServiceBus.Providers.Persistence.SerializedDurableSend message, ViciOne.ServiceBus.Providers.Persistence.DurableSendStoreLimits limits, System.DateTimeOffset enqueuedAt, System.DateTimeOffset dueAt, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult> CancelAsync(ViciOne.ServiceBus.DurableSendId id, System.Threading.CancellationToken cancellationToken = null)
 TYPE enum public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireDisposition
   FIELD public System.Int32 value__
   FIELD public const ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireDisposition Acquired = 0
@@ -3295,125 +3380,30 @@ TYPE enum public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireDi
   FIELD public const ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireDisposition NotDue = 4
   FIELD public const ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireDisposition Unavailable = 3
 TYPE class public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireResult [sealed]
-  CTOR public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireResult(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey Key, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireDisposition Disposition, System.Nullable<ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease> Lease, System.Int32 Attempt)
+  CTOR public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireResult(ViciOne.ServiceBus.Operations.ReliableInboxKey key, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireDisposition disposition, System.Nullable<ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease> lease, System.Int32 attempt)
   METHOD public System.Boolean Equals(System.Object obj)
   METHOD public System.Int32 GetHashCode()
   METHOD public System.String ToString()
-  METHOD public System.Void Deconstruct(out ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey Key, out ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireDisposition Disposition, out System.Nullable<ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease> Lease, out System.Int32 Attempt)
   METHOD public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireResult <Clone>$()
   METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireResult left, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireResult right)
   METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireResult left, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireResult right)
   METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireResult other)
-  PROPERTY System.Int32 Attempt { public-get; public-set; }
-  PROPERTY System.Nullable<ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease> Lease { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireDisposition Disposition { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey Key { public-get; public-set; }
-TYPE struct public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey
-  CTOR public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey(System.Guid MessageId, System.Guid ConsumerId)
-  METHOD public System.Boolean Equals(System.Object obj)
-  METHOD public System.Int32 GetHashCode()
-  METHOD public System.String ToString()
-  METHOD public System.Void Deconstruct(out System.Guid MessageId, out System.Guid ConsumerId)
-  METHOD public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey Validate()
-  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey left, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey right)
-  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey left, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey right)
-  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey other)
-  PROPERTY System.Guid ConsumerId { public-get; public-set; }
-  PROPERTY System.Guid MessageId { public-get; public-set; }
+  PROPERTY System.Int32 Attempt { public-get;  }
+  PROPERTY System.Nullable<ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease> Lease { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Operations.ReliableInboxKey Key { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Providers.Persistence.ReliableInboxAcquireDisposition Disposition { public-get;  }
 TYPE struct public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease
-  CTOR public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease(System.Guid Token, System.DateTimeOffset ExpiresAt)
+  CTOR public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease(System.Guid token, System.DateTimeOffset expiresAt)
   METHOD public System.Boolean Equals(System.Object obj)
   METHOD public System.Int32 GetHashCode()
   METHOD public System.String ToString()
-  METHOD public System.Void Deconstruct(out System.Guid Token, out System.DateTimeOffset ExpiresAt)
   METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease left, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease right)
   METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease left, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease right)
   METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxLease other)
-  PROPERTY System.DateTimeOffset ExpiresAt { public-get; public-set; }
-  PROPERTY System.Guid Token { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineEntry [sealed]
-  CTOR public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineEntry(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey Key, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxStatus Status, System.Int32 Attempts, System.DateTimeOffset ReceivedAt, System.DateTimeOffset QuarantinedAt, System.String FailureType)
-  METHOD public System.Boolean Equals(System.Object obj)
-  METHOD public System.Int32 GetHashCode()
-  METHOD public System.String ToString()
-  METHOD public System.Void Deconstruct(out ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey Key, out ViciOne.ServiceBus.Providers.Persistence.ReliableInboxStatus Status, out System.Int32 Attempts, out System.DateTimeOffset ReceivedAt, out System.DateTimeOffset QuarantinedAt, out System.String FailureType)
-  METHOD public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineEntry <Clone>$()
-  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineEntry left, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineEntry right)
-  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineEntry left, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineEntry right)
-  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineEntry other)
-  PROPERTY System.DateTimeOffset QuarantinedAt { public-get; public-set; }
-  PROPERTY System.DateTimeOffset ReceivedAt { public-get; public-set; }
-  PROPERTY System.Int32 Attempts { public-get; public-set; }
-  PROPERTY System.String FailureType { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey Key { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.ReliableInboxStatus Status { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantinePage [sealed]
-  CTOR public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantinePage(System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineEntry> Entries, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineQuery Next)
-  METHOD public System.Boolean Equals(System.Object obj)
-  METHOD public System.Int32 GetHashCode()
-  METHOD public System.String ToString()
-  METHOD public System.Void Deconstruct(out System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineEntry> Entries, out ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineQuery Next)
-  METHOD public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantinePage <Clone>$()
-  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantinePage left, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantinePage right)
-  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantinePage left, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantinePage right)
-  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantinePage other)
-  PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineEntry> Entries { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineQuery Next { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineQuery [sealed]
-  CTOR public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineQuery()
-  METHOD public System.Boolean Equals(System.Object obj)
-  METHOD public System.Int32 GetHashCode()
-  METHOD public System.String ToString()
-  METHOD public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineQuery <Clone>$()
-  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineQuery left, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineQuery right)
-  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineQuery left, ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineQuery right)
-  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantineQuery other)
-  PROPERTY System.Int32 PageSize { public-get; public-set; }
-  PROPERTY System.Nullable<System.DateTimeOffset> AfterQuarantinedAt { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> AfterConsumerId { public-get; public-set; }
-  PROPERTY System.Nullable<System.Guid> AfterMessageId { public-get; public-set; }
-TYPE enum public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxStatus
-  FIELD public System.Int32 value__
-  FIELD public const ViciOne.ServiceBus.Providers.Persistence.ReliableInboxStatus Abandoned = 4
-  FIELD public const ViciOne.ServiceBus.Providers.Persistence.ReliableInboxStatus Consumed = 1
-  FIELD public const ViciOne.ServiceBus.Providers.Persistence.ReliableInboxStatus Processing = 0
-  FIELD public const ViciOne.ServiceBus.Providers.Persistence.ReliableInboxStatus Quarantined = 3
-  FIELD public const ViciOne.ServiceBus.Providers.Persistence.ReliableInboxStatus RetryScheduled = 2
-TYPE enum public ViciOne.ServiceBus.Providers.Persistence.ReliableMessageKind
-  FIELD public System.Int32 value__
-  FIELD public const ViciOne.ServiceBus.Providers.Persistence.ReliableMessageKind Inbox = 1
-  FIELD public const ViciOne.ServiceBus.Providers.Persistence.ReliableMessageKind Outbox = 0
-TYPE struct public ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference
-  METHOD public System.Boolean Equals(System.Object obj)
-  METHOD public System.Int32 GetHashCode()
-  METHOD public System.String ToString()
-  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference left, ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference right)
-  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference left, ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference right)
-  METHOD public static ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference Inbox(ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey key)
-  METHOD public static ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference Outbox(ViciOne.ServiceBus.DurableSendId id)
-  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference other)
-  PROPERTY ViciOne.ServiceBus.DurableSendId OutboxId { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.ReliableInboxKey InboxKey { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.ReliableMessageKind Kind { public-get;  }
-TYPE enum public ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationDisposition
-  FIELD public System.Int32 value__
-  FIELD public const ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationDisposition Applied = 0
-  FIELD public const ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationDisposition InvalidState = 2
-  FIELD public const ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationDisposition NotFound = 1
-TYPE class public ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult [sealed]
-  CTOR public ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult(ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference Reference, ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationDisposition Disposition, System.String PreviousState, System.String CurrentState)
-  METHOD public System.Boolean Equals(System.Object obj)
-  METHOD public System.Int32 GetHashCode()
-  METHOD public System.String ToString()
-  METHOD public System.Void Deconstruct(out ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference Reference, out ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationDisposition Disposition, out System.String PreviousState, out System.String CurrentState)
-  METHOD public ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult <Clone>$()
-  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult left, ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult right)
-  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult left, ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult right)
-  METHOD public virtual System.Boolean Equals(ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationResult other)
-  PROPERTY System.String CurrentState { public-get; public-set; }
-  PROPERTY System.String PreviousState { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.ReliableMessageReference Reference { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingOperationDisposition Disposition { public-get; public-set; }
+  PROPERTY System.DateTimeOffset ExpiresAt { public-get;  }
+  PROPERTY System.Guid Token { public-get;  }
+TYPE class public ViciOne.ServiceBus.Providers.Persistence.ReliableInboxQuarantinePagination [static]
+  METHOD public static ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery Validate(ViciOne.ServiceBus.Operations.ReliableInboxQuarantineQuery query)
 TYPE class public ViciOne.ServiceBus.Providers.Persistence.SerializedDurableSend [sealed]
   CTOR public ViciOne.ServiceBus.Providers.Persistence.SerializedDurableSend()
   FIELD public const System.Int32 MaximumContentTypeCharacters = 256
@@ -19502,7 +19492,7 @@ TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.StringDecimalJ
   CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.StringDecimalJsonConverter()
   METHOD public System.Decimal Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
   METHOD public System.Void Write(System.Text.Json.Utf8JsonWriter writer, System.Decimal value, System.Text.Json.JsonSerializerOptions options)
-TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.SystemTextJsonConverterFactory [base=System.Text.Json.Serialization.JsonConverterFactory]
+TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.SystemTextJsonConverterFactory [sealed,base=System.Text.Json.Serialization.JsonConverterFactory]
   CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.SystemTextJsonConverterFactory()
   METHOD public System.Boolean CanConvert(System.Type typeToConvert)
   METHOD public System.Text.Json.Serialization.JsonConverter CreateConverter(System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
@@ -19515,10 +19505,10 @@ TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.SystemTextMess
   PROPERTY System.Byte[] Data { public-get; public-set; }
   PROPERTY System.String Text { public-get; public-set; }
   PROPERTY System.Uri Reference { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.TypeMappingJsonConverter<TType,TImplementation> [sealed,base=System.Text.Json.Serialization.JsonConverter<TType>]
-  CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.TypeMappingJsonConverter<TType,TImplementation>()
-  METHOD public System.Void Write(System.Text.Json.Utf8JsonWriter writer, TType value, System.Text.Json.JsonSerializerOptions options)
-  METHOD public TType Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
+TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.TypeMappingJsonConverter<TContract,TImplementation> [sealed,base=System.Text.Json.Serialization.JsonConverter<TContract>]
+  CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.TypeMappingJsonConverter<TContract,TImplementation>()
+  METHOD public System.Void Write(System.Text.Json.Utf8JsonWriter writer, TContract value, System.Text.Json.JsonSerializerOptions options)
+  METHOD public TContract Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
 TYPE class public ViciOne.ServiceBus.Serialization.JsonConverters.UriDictionarySystemTextJsonConverter<T,TValue> [base=System.Text.Json.Serialization.JsonConverter<T>]
   CTOR public ViciOne.ServiceBus.Serialization.JsonConverters.UriDictionarySystemTextJsonConverter<T,TValue>()
   METHOD protected T ReadInternal(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)

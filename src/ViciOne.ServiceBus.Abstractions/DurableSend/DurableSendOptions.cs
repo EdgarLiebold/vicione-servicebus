@@ -11,10 +11,10 @@ public sealed record DurableSendOptions
     /// </summary>
     public required DurableSendId IdempotencyKey { get; init; }
 
-    /// <summary>Optional correlation identity copied to the canonical send context before serialization.</summary>
+    /// <summary>Gets the optional correlation identity copied to the canonical send context before serialization.</summary>
     public Guid? CorrelationId { get; init; }
 
-    /// <summary>Optional first-delivery time used by the reliable scheduler. Direct durable sends normally leave this unset.</summary>
+    /// <summary>Gets the optional first-delivery time used by the reliable scheduler.</summary>
     public DateTimeOffset? DueAt { get; init; }
 
     internal ScheduleOptions? ScheduledMessageOptions { get; init; }
@@ -23,6 +23,8 @@ public sealed record DurableSendOptions
     {
         if (IdempotencyKey.Value == Guid.Empty)
             throw new ArgumentException("A durable send requires a non-empty idempotency key.", nameof(IdempotencyKey));
+        if (CorrelationId == Guid.Empty)
+            throw new ArgumentException("A durable send correlation id cannot be empty.", nameof(CorrelationId));
 
         return this;
     }

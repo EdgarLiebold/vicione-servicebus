@@ -106,9 +106,9 @@
     },
     {
       "type": "ReliableMessagingOptions<TBus>",
-      "source": "src/ViciOne.ServiceBus/DurableSend/ReliableMessagingOptions.cs",
+      "source": "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
       "boundary": "host-start",
-      "registrationSource": "src/ViciOne.ServiceBus/DurableSend/ReliableMessagingServiceCollectionExtensions.cs",
+      "registrationSource": "src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
       "invariantCount": 12,
       "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs", "method": "Registration_InvalidRuntimePoliciesFailClosedWhenTheTypedSenderMaterializes" },
       "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs", "method": "Admission_RegisteredIdentityUsesTheConfiguredLimitsAndApplicationClockAsync" }
@@ -409,7 +409,7 @@
     {
       "id": "durable-sender-policy",
       "boundary": "host-start",
-      "source": "src/ViciOne.ServiceBus/DurableSend/ReliableMessagingServiceCollectionExtensions.cs",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
       "test": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
       "testMethod": "Registration_InvalidRuntimePoliciesFailClosedWhenTheTypedSenderMaterializes",
       "exception": "OptionsValidationException",
@@ -418,7 +418,7 @@
     {
       "id": "durable-sender-composition",
       "boundary": "host-start",
-      "source": "src/ViciOne.ServiceBus/DurableSend/ReliableMessagingComposition.cs",
+      "source": "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingComposition.cs",
       "test": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
       "testMethod": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
       "exception": "ConfigurationException",

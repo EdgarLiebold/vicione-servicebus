@@ -1,15 +1,15 @@
 using System;
-
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-
 namespace Microsoft.Extensions.DependencyInjection;
-/// <summary>Registers ServiceBus diagnostic sensitivity and redaction services.</summary>
+
+/// <summary>Registers message-sensitivity inspection and bounded diagnostic rendering services.</summary>
 public static class MessageRedactionServiceCollectionExtensions
 {
-    /// <summary>Adds the conservative ServiceBus diagnostic redactor.</summary>
+    /// <summary>Adds the default conservative diagnostic renderer without replacing application registrations.</summary>
     /// <param name="services">The dependency-injection service collection.</param>
-    /// <returns>The service collection produced by the operation.</returns>
+    /// <returns>The supplied service collection.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="services" /> is <see langword="null" />.</exception>
     public static IServiceCollection AddViciOneMessageDiagnosticRedaction(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);

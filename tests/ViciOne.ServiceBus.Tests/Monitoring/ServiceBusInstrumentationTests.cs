@@ -58,13 +58,13 @@ public sealed class ServiceBusInstrumentationTests
 
         instrumentation.PublishDurableSnapshot(
             new DurableSendStoreSnapshot(
-                StoredCount: 11,
-                StoredBytes: 12,
-                PendingCount: 13,
-                RetryScheduledCount: 14,
-                AwaitingConsumerCompletionCount: 15,
-                QuarantinedCount: 16,
-                OldestPendingEnqueuedAt: Epoch.AddSeconds(-17)),
+                storedCount: 29,
+                storedBytes: 12,
+                pendingCount: 13,
+                retryScheduledCount: 4,
+                awaitingConsumerCompletionCount: 5,
+                quarantinedCount: 16,
+                oldestPendingEnqueuedAt: Epoch.AddSeconds(-17)),
             Epoch);
         observations.RecordObservableInstruments();
 
@@ -199,16 +199,16 @@ public sealed class ServiceBusInstrumentationTests
             "accepted",
             "rejected");
 
-        AssertGauge(observations, ServiceBusTelemetry.Metrics.DurableSenderStored, 11);
+        AssertGauge(observations, ServiceBusTelemetry.Metrics.DurableSenderStored, 29);
         AssertGauge(observations, ServiceBusTelemetry.Metrics.DurableSenderStoredContentSize, 12);
         AssertGauge(observations, ServiceBusTelemetry.Metrics.DurableSenderPending, 13);
-        AssertGauge(observations, ServiceBusTelemetry.Metrics.DurableSenderRetryScheduled, 14);
-        AssertGauge(observations, ServiceBusTelemetry.Metrics.DurableSenderAwaitingConsumerCompletion, 15);
+        AssertGauge(observations, ServiceBusTelemetry.Metrics.DurableSenderRetryScheduled, 4);
+        AssertGauge(observations, ServiceBusTelemetry.Metrics.DurableSenderAwaitingConsumerCompletion, 5);
         AssertGauge(observations, ServiceBusTelemetry.Metrics.DurableSenderQuarantined, 16);
         AssertGauge(observations, ServiceBusTelemetry.Metrics.DurableSenderOldestPendingAge, 17);
 
         instrumentation.PublishDurableSnapshot(
-            new DurableSendStoreSnapshot(0, 0, 0, 0, 0, 0, Epoch.AddSeconds(20)),
+            new DurableSendStoreSnapshot(1, 0, 1, 0, 0, 0, Epoch.AddSeconds(20)),
             Epoch);
         observations.RecordObservableInstruments();
         Assert.Equal(0, observations.Measurements

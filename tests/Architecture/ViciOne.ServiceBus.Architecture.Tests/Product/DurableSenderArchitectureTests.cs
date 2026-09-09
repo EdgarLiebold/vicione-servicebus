@@ -31,6 +31,16 @@ public sealed class DurableSenderArchitectureTests
             typeof(DurableSendQuarantineEntry),
             typeof(DurableSendOperationOutcome),
             typeof(DurableSendOperationResult),
+            typeof(DurableSendStoreSnapshot),
+            typeof(ReliableInboxKey),
+            typeof(ReliableInboxQuarantineEntry),
+            typeof(ReliableInboxQuarantinePage),
+            typeof(ReliableInboxQuarantineQuery),
+            typeof(ReliableInboxStatus),
+            typeof(ReliableMessageKind),
+            typeof(ReliableMessageReference),
+            typeof(ReliableMessagingOperationDisposition),
+            typeof(ReliableMessagingOperationResult),
             typeof(IReliableMessagingOperations<>),
         ];
         Assert.All(operationsApi, type => Assert.Equal("ViciOne.ServiceBus.Operations", type.Namespace));
@@ -46,7 +56,6 @@ public sealed class DurableSenderArchitectureTests
             typeof(DurableSendCompletionMode),
             typeof(DurableSendLease),
             typeof(DurableSendStoreLimits),
-            typeof(DurableSendStoreSnapshot),
             typeof(IOutboxStore<>),
             typeof(IDurableSendDispatcher<>),
             typeof(IDurableSendAdmission<>),
@@ -83,7 +92,7 @@ public sealed class DurableSenderArchitectureTests
         Assert.Same(ProductAssemblyFacts.Core, typeof(ReliableMessagingOptions<>).Assembly);
         Assert.DoesNotContain(typeof(SerializedDurableSend).GetProperties(), property => property.PropertyType == typeof(Type));
         Assert.DoesNotContain("AssemblyQualifiedName", Source(
-            "src/ViciOne.ServiceBus.Abstractions/DurableSend/SerializedDurableSend.cs"),
+            "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs"),
             StringComparison.Ordinal);
         string[] forbiddenProviderReferences =
         [
@@ -151,7 +160,7 @@ public sealed class DurableSenderArchitectureTests
             .Select(path => Path.GetRelativePath(RepositoryLayout.Root, path))
             .ToArray();
         Assert.Equal(
-            ["src/ViciOne.ServiceBus/DurableSend/ReliableMessagingDeliveryService.cs"],
+            ["src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs"],
             deliveryLoops);
 
         string[] retiredEntryPoints = ["UseInMemoryOutbox", "AddEntityFrameworkOutbox", "UseBusOutbox"];
@@ -241,7 +250,8 @@ public sealed class DurableSenderArchitectureTests
     [RequirementCoverage("REQ-VSB-EF-DURABLE-ARCHITECTURE", "catalog-and-commit-preflights-precede-persistence")]
     public void AdmissionPreconditions_RunBeforeAnyPersistentMutation()
     {
-        string sender = Source("src/ViciOne.ServiceBus/DurableSend/DurableSendAdmission.cs");
+        string sender = Source(
+            "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendAdmission.cs");
         int catalogLookup = sender.IndexOf("_contractCatalog.TryGetMessageType", StringComparison.Ordinal);
         int storeAdmission = sender.IndexOf("_store\n                .AdmitAsync", StringComparison.Ordinal);
         Assert.True(catalogLookup >= 0);

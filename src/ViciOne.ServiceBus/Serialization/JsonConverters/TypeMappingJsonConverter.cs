@@ -4,19 +4,19 @@ using System.Text.Json.Serialization;
 
 namespace ViciOne.ServiceBus.Serialization.JsonConverters;
 
-/// <summary>Serializes a contract through its registered concrete implementation.</summary>
-/// <typeparam name="TType">The message contract type.</typeparam>
+/// <summary>Deserializes a contract through its registered concrete representation and preserves runtime representations when writing.</summary>
+/// <typeparam name="TContract">The message contract type.</typeparam>
 /// <typeparam name="TImplementation">The concrete serialized representation.</typeparam>
-public sealed class TypeMappingJsonConverter<TType, TImplementation> :
-    JsonConverter<TType>
-    where TImplementation : TType
+public sealed class TypeMappingJsonConverter<TContract, TImplementation> :
+    JsonConverter<TContract>
+    where TImplementation : TContract
 {
     /// <summary>Deserializes the concrete representation as the contract type.</summary>
     /// <param name="reader">The JSON reader positioned at the value.</param>
     /// <param name="typeToConvert">The requested contract type.</param>
     /// <param name="options">The serializer options.</param>
     /// <returns>The deserialized contract value.</returns>
-    public override TType? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override TContract? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return JsonSerializer.Deserialize<TImplementation>(ref reader, options);
     }
@@ -25,11 +25,13 @@ public sealed class TypeMappingJsonConverter<TType, TImplementation> :
     /// <param name="writer">The destination JSON writer.</param>
     /// <param name="value">The contract value to serialize.</param>
     /// <param name="options">The serializer options.</param>
-    public override void Write(Utf8JsonWriter writer, TType value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, TContract value, JsonSerializerOptions options)
     {
-        if (value is TImplementation implementation)
+        if (value is null)
+            writer.WriteNullValue();
+        else if (value is TImplementation implementation)
             JsonSerializer.Serialize(writer, implementation, options);
-        else if (value is object obj)
-            JsonSerializer.Serialize(writer, obj, obj.GetType(), options);
+        else
+            JsonSerializer.Serialize(writer, value, value.GetType(), options);
     }
 }

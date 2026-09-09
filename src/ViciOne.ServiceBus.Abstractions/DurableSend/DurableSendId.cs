@@ -7,6 +7,7 @@ public readonly record struct DurableSendId
 {
     /// <summary>Initializes an idempotency identity from a nonempty UUID.</summary>
     /// <param name="value">The durable-send identity.</param>
+    /// <exception cref="ArgumentException"><paramref name="value" /> is empty.</exception>
     public DurableSendId(Guid value)
     {
         if (value == Guid.Empty)
@@ -18,7 +19,7 @@ public readonly record struct DurableSendId
     /// <summary>Gets the durable-send UUID.</summary>
     public Guid Value { get; }
 
-    /// <summary>Formats the UUID using its canonical lowercase-independent <c>D</c> representation.</summary>
+    /// <summary>Formats the UUID using the canonical <c>D</c> representation.</summary>
     /// <returns>The canonical UUID representation.</returns>
     public override string ToString() => Value.ToString("D");
 }

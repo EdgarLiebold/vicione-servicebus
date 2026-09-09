@@ -14,13 +14,17 @@ public sealed class DurableSendContractsTests
 
         var id = new DurableSendId(idValue);
         var lease = new DurableSendLease(idValue, expiresAt);
+        var inboxLease = new ReliableInboxLease(idValue, expiresAt);
 
         Assert.Equal(idValue, id.Value);
         Assert.Equal("11111111-2222-3333-4444-555555555555", id.ToString());
         Assert.Equal(idValue, lease.Token);
         Assert.Equal(expiresAt, lease.ExpiresAt);
+        Assert.Equal(idValue, inboxLease.Token);
+        Assert.Equal(expiresAt, inboxLease.ExpiresAt);
         Assert.Equal("value", Assert.Throws<ArgumentException>(() => new DurableSendId(Guid.Empty)).ParamName);
         Assert.Equal("token", Assert.Throws<ArgumentException>(() => new DurableSendLease(Guid.Empty, expiresAt)).ParamName);
+        Assert.Equal("token", Assert.Throws<ArgumentException>(() => new ReliableInboxLease(Guid.Empty, expiresAt)).ParamName);
     }
 
     [Fact]
@@ -62,6 +66,12 @@ public sealed class DurableSendContractsTests
         Assert.Throws<ArgumentOutOfRangeException>(() => DurableSendOperationLimits.ValidateQuarantinePageSize(
             DurableSendOperationLimits.AbsoluteMaximumQuarantinePageSize + 1,
             "page"));
+        Assert.Equal("parameterName", Assert.Throws<ArgumentNullException>(() =>
+            DurableSendOperationLimits.ValidateClaimCount(1, null!)).ParamName);
+        Assert.Equal("pageSize", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            DurableSendQuarantineQuery.FirstPage(0)).ParamName);
+        Assert.Equal("pageSize", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            ReliableInboxQuarantineQuery.FirstPage(0)).ParamName);
     }
 
     [Fact]
@@ -72,7 +82,7 @@ public sealed class DurableSendContractsTests
         var message = Message() with
         {
             DestinationAddress = address,
-            ContentType = new string('a', SerializedDurableSend.MaximumContentTypeCharacters),
+            ContentType = ContentTypeWithLength(SerializedDurableSend.MaximumContentTypeCharacters),
             Body = ReadOnlyMemory<byte>.Empty,
             Metadata = ReadOnlyMemory<byte>.Empty,
         };
@@ -105,9 +115,15 @@ public sealed class DurableSendContractsTests
             (valid with { ContentType = " " }).Validate()).ParamName);
         Assert.Equal("ContentType", Assert.Throws<ArgumentException>(() =>
             (valid with { ContentType = "application/json\r\nInjected: true" }).Validate()).ParamName);
+        Assert.Equal("ContentType", Assert.Throws<ArgumentException>(() =>
+            (valid with { ContentType = "not-a-media-type" }).Validate()).ParamName);
         Assert.Equal("ContentType", Assert.Throws<ArgumentOutOfRangeException>(() =>
             (valid with { ContentType = new string('a', SerializedDurableSend.MaximumContentTypeCharacters + 1) })
             .Validate()).ParamName);
+        Assert.Equal("MessageId", Assert.Throws<ArgumentException>(() =>
+            (valid with { MessageId = Guid.Empty }).Validate()).ParamName);
+        Assert.Equal("CorrelationId", Assert.Throws<ArgumentException>(() =>
+            (valid with { CorrelationId = Guid.Empty }).Validate()).ParamName);
     }
 
     [Fact]
@@ -118,7 +134,7 @@ public sealed class DurableSendContractsTests
         {
             Body = new byte[13],
             Metadata = new byte[7],
-            ContentType = new string('x', 200),
+            ContentType = ContentTypeWithLength(200),
             DestinationAddress = new Uri("https://example.test/a/long/transport/address"),
         };
 
@@ -155,6 +171,166 @@ public sealed class DurableSendContractsTests
         Assert.Contains(nameof(DurableSendQuarantineEntry.ContractIdentity), propertyNames);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-SEND-ADMISSION", "provider-result-invariants")]
+    public void ProviderResults_RejectInvalidIdentitiesCountsAndCompletionBoundaries()
+    {
+        SerializedDurableSend message = Message();
+        var completion = new ConsumerCompletion(message.Id);
+        var dispatch = new DurableSendDispatchContext(message, message.Id, 1, completion);
+        var delivery = new DurableSendDelivery
+        {
+            Message = message,
+            GenerationToken = Guid.NewGuid(),
+            EnqueuedAt = DateTimeOffset.Parse("2026-09-03T12:00:00+00:00"),
+            DeliveryAttempts = 0,
+            Status = DurableSendStatus.Pending,
+            Lease = new DurableSendLease(Guid.NewGuid(), DateTimeOffset.Parse("2026-09-03T12:01:00+00:00")),
+        };
+
+        Assert.Equal(message.Id, dispatch.DurableSendId);
+        Assert.Equal(1, dispatch.Attempt);
+        Assert.Same(delivery, delivery.Validate());
+        Assert.Equal("id", Assert.Throws<ArgumentException>(() => new DurableSendAdmissionResult(
+            default,
+            DurableSendAdmissionDisposition.Accepted,
+            0,
+            0)).ParamName);
+        Assert.Equal("disposition", Assert.Throws<ArgumentException>(() => new DurableSendAdmissionResult(
+            message.Id,
+            (DurableSendAdmissionDisposition)999,
+            0,
+            0)).ParamName);
+        Assert.Equal("storedCount", Assert.Throws<ArgumentOutOfRangeException>(() => new DurableSendAdmissionResult(
+            message.Id,
+            DurableSendAdmissionDisposition.Accepted,
+            -1,
+            0)).ParamName);
+        Assert.Equal("id", Assert.Throws<ArgumentException>(() => new DurableSendReceipt(
+            default,
+            DurableSendAdmissionDisposition.Accepted,
+            0,
+            0)).ParamName);
+        Assert.Equal("completionMode", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new DurableSendDispatchResult((DurableSendCompletionMode)999)).ParamName);
+        Assert.Equal("completionMode", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new DurableSendDispatchResult(DurableSendCompletionMode.Unknown)).ParamName);
+        Assert.Equal("attempt", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new DurableSendDispatchContext(message, message.Id, 0, completion)).ParamName);
+        Assert.Equal("durableSendId", Assert.Throws<ArgumentException>(() =>
+            new DurableSendDispatchContext(message, new DurableSendId(Guid.NewGuid()), 1, completion)).ParamName);
+        Assert.Equal("consumerCompletion", Assert.Throws<ArgumentException>(() =>
+            new DurableSendDispatchContext(message, message.Id, 1, new ConsumerCompletion(new DurableSendId(Guid.NewGuid())))).ParamName);
+        Assert.Equal("Status", Assert.Throws<ArgumentException>(() =>
+            (delivery with { Status = DurableSendStatus.Quarantined }).Validate()).ParamName);
+        Assert.Equal("GenerationToken", Assert.Throws<ArgumentException>(() =>
+            (delivery with { GenerationToken = Guid.Empty }).Validate()).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-SEND-CAPACITY", "store-snapshot-state-invariants")]
+    public void StoreSnapshot_RequiresConsistentNonnegativeStateAggregates()
+    {
+        DateTimeOffset oldest = DateTimeOffset.Parse("2026-09-03T12:00:00+00:00");
+        var snapshot = new DurableSendStoreSnapshot(5, 100, 3, 1, 1, 2, oldest);
+
+        Assert.Equal(5, snapshot.StoredCount);
+        Assert.Equal(3, snapshot.PendingCount);
+        Assert.Equal(2, snapshot.QuarantinedCount);
+        Assert.Equal("storedCount", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new DurableSendStoreSnapshot(-1, 0, 0, 0, 0, 0, null)).ParamName);
+        Assert.Throws<ArgumentException>(() => new DurableSendStoreSnapshot(4, 0, 3, 0, 0, 2, oldest));
+        Assert.Throws<ArgumentException>(() => new DurableSendStoreSnapshot(3, 0, 3, 2, 2, 0, oldest));
+        Assert.Equal("oldestPendingEnqueuedAt", Assert.Throws<ArgumentException>(() =>
+            new DurableSendStoreSnapshot(0, 0, 0, 0, 0, 0, oldest)).ParamName);
+        Assert.Equal("oldestPendingEnqueuedAt", Assert.Throws<ArgumentException>(() =>
+            new DurableSendStoreSnapshot(1, 0, 1, 0, 0, 0, null)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-INBOX", "identity-acquisition-and-reference-invariants")]
+    public void InboxAcquisitionAndReferences_RejectImpossibleIdentityAndLeaseCombinations()
+    {
+        var key = new ReliableInboxKey(Guid.NewGuid(), Guid.NewGuid());
+        var lease = new ReliableInboxLease(Guid.NewGuid(), DateTimeOffset.Parse("2026-09-03T12:00:00+00:00"));
+
+        var acquired = new ReliableInboxAcquireResult(key, ReliableInboxAcquireDisposition.Acquired, lease, 1);
+        var consumed = new ReliableInboxAcquireResult(key, ReliableInboxAcquireDisposition.AlreadyConsumed, null, 1);
+        ReliableMessageReference outboxReference = ReliableMessageReference.Outbox(Message().Id);
+        var notFound = new ReliableMessagingOperationResult(
+            outboxReference,
+            ReliableMessagingOperationDisposition.NotFound,
+            null,
+            null);
+
+        Assert.Equal(lease, acquired.Lease);
+        Assert.Null(consumed.Lease);
+        Assert.False(notFound.IsApplied);
+        Assert.Equal("MessageId", Assert.Throws<ArgumentException>(() => new ReliableInboxKey(default, key.ConsumerId).Validate()).ParamName);
+        Assert.Equal("id", Assert.Throws<ArgumentException>(() => ReliableMessageReference.Outbox(default)).ParamName);
+        Assert.Equal("MessageId", Assert.Throws<ArgumentException>(() => ReliableMessageReference.Inbox(default)).ParamName);
+        Assert.Equal("lease", Assert.Throws<ArgumentException>(() => new ReliableInboxAcquireResult(
+            key,
+            ReliableInboxAcquireDisposition.Acquired,
+            null,
+            1)).ParamName);
+        Assert.Equal("lease", Assert.Throws<ArgumentException>(() => new ReliableInboxAcquireResult(
+            key,
+            ReliableInboxAcquireDisposition.Busy,
+            lease,
+            1)).ParamName);
+        Assert.Equal("attempt", Assert.Throws<ArgumentOutOfRangeException>(() => new ReliableInboxAcquireResult(
+            key,
+            ReliableInboxAcquireDisposition.AlreadyConsumed,
+            null,
+            0)).ParamName);
+        Assert.Equal("Kind", Assert.Throws<ArgumentException>(() => default(ReliableMessageReference).Validate()).ParamName);
+        Assert.Equal("disposition", Assert.Throws<ArgumentException>(() => new ReliableMessagingOperationResult(
+            outboxReference,
+            (ReliableMessagingOperationDisposition)999,
+            null,
+            null)).ParamName);
+        Assert.Equal("currentState", Assert.Throws<ArgumentException>(() => new ReliableMessagingOperationResult(
+            outboxReference,
+            ReliableMessagingOperationDisposition.NotFound,
+            null,
+            "Pending")).ParamName);
+        Assert.Equal("previousState", Assert.Throws<ArgumentException>(() => new ReliableMessagingOperationResult(
+            outboxReference,
+            ReliableMessagingOperationDisposition.Applied,
+            " ",
+            "Pending")).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-SEND-QUARANTINE", "immutable-validated-operation-pages")]
+    public void QuarantinePages_SnapshotEntriesAndRejectInvalidEvidence()
+    {
+        DateTimeOffset receivedAt = DateTimeOffset.Parse("2026-09-03T12:00:00+00:00");
+        var key = new ReliableInboxKey(Guid.NewGuid(), Guid.NewGuid());
+        var entry = new ReliableInboxQuarantineEntry(
+            key,
+            ReliableInboxStatus.Quarantined,
+            2,
+            receivedAt,
+            receivedAt.AddMinutes(1),
+            typeof(InvalidOperationException).FullName);
+        var mutableEntries = new List<ReliableInboxQuarantineEntry> { entry };
+        var page = new ReliableInboxQuarantinePage(mutableEntries, null);
+
+        mutableEntries.Clear();
+
+        Assert.Single(page.Entries);
+        Assert.False(page.HasMore);
+        Assert.Throws<NotSupportedException>(() => ((IList<ReliableInboxQuarantineEntry>)page.Entries).Clear());
+        Assert.Equal("Status", Assert.Throws<ArgumentException>(() => new ReliableInboxQuarantinePage(
+            [entry with { Status = ReliableInboxStatus.Processing }],
+            null)).ParamName);
+        Assert.Equal("QuarantinedAt", Assert.Throws<ArgumentException>(() => new ReliableInboxQuarantinePage(
+            [entry with { QuarantinedAt = receivedAt.AddTicks(-1) }],
+            null)).ParamName);
+    }
+
     private static SerializedDurableSend Message() => new()
     {
         Id = new DurableSendId(Guid.Parse("77777777-2222-3333-4444-555555555555")),
@@ -168,5 +344,19 @@ public sealed class DurableSendContractsTests
     {
         const string prefix = "https://example.test/";
         return new Uri(prefix + new string('a', length - prefix.Length));
+    }
+
+    private static string ContentTypeWithLength(int length)
+    {
+        const string prefix = "application/";
+        return prefix + new string('a', length - prefix.Length);
+    }
+
+    private sealed class ConsumerCompletion(DurableSendId durableSendId) : IDurableSendConsumerCompletion
+    {
+        public DurableSendId DurableSendId { get; } = durableSendId;
+
+        public ValueTask<bool> CompleteAsync(CancellationToken cancellationToken = default) =>
+            ValueTask.FromResult(true);
     }
 }

@@ -47,7 +47,7 @@
     {
       "id": "serialized-durable-envelope",
       "disposition": "RETAIN_ADVANCED_HIDDEN",
-      "evidence": "src/ViciOne.ServiceBus.Abstractions/DurableSend/SerializedDurableSend.cs",
+      "evidence": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs",
       "rationale": "A stable byte envelope is required between persistence stores and transport dispatchers, while applications use typed IDurableSender<TBus>.SendAsync."
     },
     {

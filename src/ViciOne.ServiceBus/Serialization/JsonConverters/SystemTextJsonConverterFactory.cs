@@ -12,8 +12,8 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Serialization.JsonConverters;
 
-/// <summary>Creates system text json converter instances.</summary>
-public class SystemTextJsonConverterFactory :
+/// <summary>Creates System.Text.Json converters for message contracts and supported dictionary shapes.</summary>
+public sealed class SystemTextJsonConverterFactory :
     JsonConverterFactory
 {
     static SystemTextJsonConverterFactory()
@@ -33,11 +33,14 @@ public class SystemTextJsonConverterFactory :
         JsonMessageTypeMappingRegistry.Register<MessageEnvelope, JsonMessageEnvelope>();
     }
 
-    /// <summary>Determines whether the current value can convert.</summary>
-    /// <param name="typeToConvert">The type to convert.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether this factory can convert a type.</summary>
+    /// <param name="typeToConvert">The candidate type.</param>
+    /// <returns><see langword="true" /> when the factory supports the type; otherwise, <see langword="false" />.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="typeToConvert" /> is <see langword="null" />.</exception>
     public override bool CanConvert(Type typeToConvert)
     {
+        ArgumentNullException.ThrowIfNull(typeToConvert);
+
         if (typeToConvert.IsGenericType)
         {
             if (typeToConvert.TryGetSingleClosedGenericArguments(typeof(IDictionary<,>), out Type[] elementTypes)
@@ -66,18 +69,20 @@ public class SystemTextJsonConverterFactory :
         if (JsonMessageTypeMappingRegistry.Contains(typeToConvert))
             return true;
 
-        if (IsConvertibleInterfaceType(typeToConvert))
-            return true;
-
-        return false;
+        return IsConvertibleInterfaceType(typeToConvert);
     }
 
-    /// <summary>Creates converter.</summary>
+    /// <summary>Creates the converter for a supported type.</summary>
     /// <param name="typeToConvert">The type to convert.</param>
-    /// <param name="options">The options that control the operation.</param>
-    /// <returns>The created converter.</returns>
+    /// <param name="options">The active serializer options.</param>
+    /// <returns>The converter for <paramref name="typeToConvert" />.</returns>
+    /// <exception cref="ArgumentNullException">Either argument is <see langword="null" />.</exception>
+    /// <exception cref="ViciOneServiceBusException"><paramref name="typeToConvert" /> is not supported.</exception>
     public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
+        ArgumentNullException.ThrowIfNull(typeToConvert);
+        ArgumentNullException.ThrowIfNull(options);
+
         if (JsonMessageTypeMappingRegistry.TryCreateConverter(typeToConvert, out JsonConverter? mappedConverter))
             return mappedConverter;
 
@@ -104,13 +109,13 @@ public class SystemTextJsonConverterFactory :
                     if (elementTypes[0] == typeof(string))
                     {
                         return (JsonConverter)(Activator.CreateInstance(typeof(CaseInsensitiveDictionaryJsonConverter<,>)
-                            .MakeGenericType(typeToConvert, elementTypes[1])) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
+                            .MakeGenericType(typeToConvert, elementTypes[1])) ?? throw new InvalidOperationException("The requested runtime type could not be activated."));
                     }
 
                     if (elementTypes[0] == typeof(Uri))
                     {
                         return (JsonConverter)(Activator.CreateInstance(typeof(UriDictionarySystemTextJsonConverter<,>)
-                            .MakeGenericType(typeToConvert, elementTypes[1])) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
+                            .MakeGenericType(typeToConvert, elementTypes[1])) ?? throw new InvalidOperationException("The requested runtime type could not be activated."));
                     }
                 }
             }
@@ -119,7 +124,7 @@ public class SystemTextJsonConverterFactory :
         if (IsConvertibleInterfaceType(typeToConvert))
         {
             return (JsonConverter)(Activator.CreateInstance(
-                typeof(InterfaceJsonConverter<,>).MakeGenericType(typeToConvert, TypeMetadataCache.GetImplementationType(typeToConvert))) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
+                typeof(InterfaceJsonConverter<,>).MakeGenericType(typeToConvert, TypeMetadataCache.GetImplementationType(typeToConvert))) ?? throw new InvalidOperationException("The requested runtime type could not be activated."));
         }
 
         throw new ViciOneServiceBusException($"Unsupported type for json serialization {TypeCache.GetShortName(typeToConvert)}");

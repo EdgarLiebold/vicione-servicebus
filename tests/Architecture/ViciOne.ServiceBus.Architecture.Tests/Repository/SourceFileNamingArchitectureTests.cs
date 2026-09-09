@@ -24,10 +24,6 @@ public sealed class SourceFileNamingArchitectureTests
         {
             ["src/Transports/ViciOne.ServiceBus.ActiveMq/Configuration/ActiveMqTransportOptions.cs"] = Types(
                 "public enum ActiveMqTransportProtocol`0", "public class ActiveMqTransportOptions`0"),
-            ["src/ViciOne.ServiceBus.Abstractions/DurableSend/DurableSendOperationResult.cs"] = Types(
-                "public enum DurableSendOperationOutcome`0", "public record struct DurableSendOperationResult`0"),
-            ["src/ViciOne.ServiceBus.Abstractions/DurableSend/DurableSendQuarantinePagination.cs"] = Types(
-                "public class DurableSendQuarantinePagination`0", "public record struct DurableSendQuarantineSeek`0"),
             ["src/ViciOne.ServiceBus.Abstractions/Middleware/OneTimeSetupMethod.cs"] = Types(
                 "internal class OneTimeSetupMethod`0", "public interface OneTimeContext`0"),
             ["src/ViciOne.ServiceBus.Abstractions/Transports/ITransportSendFailureClassifier.cs"] = Types(
