@@ -1450,6 +1450,13 @@
    {
       "requirementId" : "REQ-VSB-CONSUMER-INSTANCE-VALIDATION",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConsumerFactories_RejectNullDispatchArgumentsAtTheirBoundaryAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Consumers.InstanceExtensionsTests",
+      "variantKey" : "consumer-factory-dispatch-null-inputs"
+   },
+   {
+      "requirementId" : "REQ-VSB-CONSUMER-INSTANCE-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "PublicInstanceRegistrationAndConnection_RejectNullInputsAtTheirBoundary",
       "testType" : "ViciOne.ServiceBus.Tests.Consumers.InstanceExtensionsTests",
       "variantKey" : "public-boundary-null-inputs"

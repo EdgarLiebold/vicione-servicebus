@@ -22,11 +22,11 @@ public class ScheduleMessageRedeliveryContext<TMessage> :
         _options = options;
     }
 
-    /// <summary>Schedules redelivery.</summary>
-    /// <param name="delay">The delay before the operation is attempted.</param>
-    /// <param name="callback">The callback invoked by the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Schedules the consumed message for redelivery to its receive endpoint.</summary>
+    /// <param name="delay">The delay before the message becomes due for redelivery.</param>
+    /// <param name="callback">An optional action that customizes the scheduled send context.</param>
+    /// <param name="cancellationToken">Cancels scheduling before the message is accepted.</param>
+    /// <returns>A task that completes when the scheduler accepts the redelivery.</returns>
     public Task ScheduleRedeliveryAsync(TimeSpan delay, Action<ConsumeContext, SendContext>? callback, CancellationToken cancellationToken = default)
     {
         var schedulerContext = _context.GetPayload<MessageSchedulerContext>();

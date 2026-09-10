@@ -6,7 +6,7 @@ using ViciOne.ServiceBus.Context;
 namespace ViciOne.ServiceBus.Clients;
 
 /// <summary>Implements request/response operations for one request contract.</summary>
-/// <typeparam name="TRequest">The request type.</typeparam>
+/// <typeparam name="TRequest">The request message contract.</typeparam>
 internal sealed class RequestClient<TRequest> :
     IRequestClient<TRequest>,
     Advanced.IAdvancedRequestClient<TRequest>

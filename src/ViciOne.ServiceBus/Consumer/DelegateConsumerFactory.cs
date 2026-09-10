@@ -4,29 +4,32 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Consumer;
 
-/// <summary>Creates delegate consumer instances.</summary>
-/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
-public class DelegateConsumerFactory<TConsumer> :
+/// <summary>Creates one consumer per delivery through a delegate and releases it after the consumer pipeline completes.</summary>
+/// <typeparam name="TConsumer">The consumer implementation created for each delivery.</typeparam>
+public sealed class DelegateConsumerFactory<TConsumer> :
     IConsumerFactory<TConsumer>
     where TConsumer : class
 {
     readonly Func<TConsumer> _factoryMethod;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="factoryMethod">The factory method.</param>
+    /// <summary>Creates a consumer factory backed by the supplied delegate.</summary>
+    /// <param name="factoryMethod">The delegate that creates a consumer for each delivery.</param>
     public DelegateConsumerFactory(Func<TConsumer> factoryMethod)
     {
         _factoryMethod = factoryMethod ?? throw new ArgumentNullException(nameof(factoryMethod));
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
-    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="next">The next pipeline stage to invoke.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Creates a consumer, invokes its message pipeline, and releases the consumer instance.</summary>
+    /// <typeparam name="TMessage">The consumed message contract.</typeparam>
+    /// <param name="context">The received message and its consume context.</param>
+    /// <param name="next">The consumer pipeline to invoke with the created instance.</param>
+    /// <returns>A task that completes after the consumer pipeline and consumer lifetime have finished.</returns>
     public async Task SendAsync<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         TConsumer? consumer = null;
         try
         {

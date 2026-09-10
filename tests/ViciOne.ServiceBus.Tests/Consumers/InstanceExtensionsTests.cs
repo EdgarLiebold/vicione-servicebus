@@ -1,3 +1,5 @@
+using System.Reflection;
+using ViciOne.ServiceBus.Consumer;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -64,6 +66,38 @@ public sealed class InstanceExtensionsTests
         Assert.Throws<ArgumentNullException>(() => Bus.Factory.CreateUsingInMemory(configurator =>
             configurator.ReceiveEndpoint($"null-instance-{NewId.NextGuid():N}", endpoint => endpoint.Instance((object)null!))));
         Assert.Throws<ArgumentNullException>(() => InstanceExtensions.ConnectInstance(null!, (object)instance));
+        Assert.Equal("consumer", Assert.Throws<ArgumentNullException>(() =>
+            new InstanceConsumerFactory<ObjectInstanceConsumer>(null!)).ParamName);
+        Assert.Equal("factoryMethod", Assert.Throws<ArgumentNullException>(() =>
+            new DelegateConsumerFactory<ObjectInstanceConsumer>(null!)).ParamName);
+        Assert.Equal("objectFactory", Assert.Throws<ArgumentNullException>(() =>
+            new ObjectConsumerFactory<ObjectInstanceConsumer>(null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONSUMER-INSTANCE-VALIDATION", "consumer-factory-dispatch-null-inputs")]
+    public async Task ConsumerFactories_RejectNullDispatchArgumentsAtTheirBoundaryAsync()
+    {
+        ConsumeContext<ObjectInstanceMessage> context =
+            DispatchProxy.Create<ConsumeContext<ObjectInstanceMessage>, UnusedConsumeContextProxy>();
+        IConsumerFactory<ObjectInstanceConsumer>[] factories =
+        [
+            new DefaultConstructorConsumerFactory<ObjectInstanceConsumer>(),
+            new DelegateConsumerFactory<ObjectInstanceConsumer>(() => new ObjectInstanceConsumer()),
+            new InstanceConsumerFactory<ObjectInstanceConsumer>(new ObjectInstanceConsumer()),
+            new ObjectConsumerFactory<ObjectInstanceConsumer>(_ => new ObjectInstanceConsumer()),
+        ];
+
+        foreach (IConsumerFactory<ObjectInstanceConsumer> factory in factories)
+        {
+            ArgumentNullException contextException = await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                factory.SendAsync<ObjectInstanceMessage>(null!, null!));
+            Assert.Equal("context", contextException.ParamName);
+
+            ArgumentNullException nextException = await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                factory.SendAsync(context, null!));
+            Assert.Equal("next", nextException.ParamName);
+        }
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
@@ -126,6 +160,12 @@ public sealed class InstanceExtensionsTests
             Consumed.TrySetResult(this);
             return Task.CompletedTask;
         }
+    }
+
+    private class UnusedConsumeContextProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            throw new InvalidOperationException("The null-boundary test must not invoke the consume context.");
     }
 
 }

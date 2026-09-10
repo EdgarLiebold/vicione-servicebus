@@ -2,7 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Carries state for host execute activity operations.</summary>
+/// <summary>Binds an activity instance to the execution context for its argument contract.</summary>
 /// <typeparam name="TActivity">The execute activity type.</typeparam>
 /// <typeparam name="TArguments">The activity argument contract.</typeparam>
 public class HostExecuteActivityContext<TActivity, TArguments> :

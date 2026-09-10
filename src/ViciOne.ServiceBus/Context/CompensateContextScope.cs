@@ -41,32 +41,32 @@ public class CompensateContextScope<TLog> :
         return _context.Compensated();
     }
 
-    /// <summary>Completes compensation successfully and updates routing-slip variables.</summary>
-    /// <param name="values">The values.</param>
-    /// <returns>The compensation result produced by the operation.</returns>
+    /// <summary>Completes compensation successfully and updates routing-slip variables from an object's readable properties.</summary>
+    /// <param name="values">The object whose readable properties define routing-slip variable updates.</param>
+    /// <returns>A result that updates the variables and continues compensation.</returns>
     public CompensationResult Compensated(object values)
     {
         return _context.Compensated(values);
     }
 
-    /// <summary>Completes compensation successfully and updates routing-slip variables.</summary>
-    /// <param name="variables">The variables.</param>
-    /// <returns>The compensation result produced by the operation.</returns>
+    /// <summary>Completes compensation successfully and applies the supplied routing-slip variable updates.</summary>
+    /// <param name="variables">The routing-slip variable updates.</param>
+    /// <returns>A result that updates the variables and continues compensation.</returns>
     public CompensationResult Compensated(IDictionary<string, object> variables)
     {
         return _context.Compensated(variables);
     }
 
-    /// <summary>Reports a failed result.</summary>
-    /// <returns>The compensation result produced by the operation.</returns>
+    /// <summary>Creates a failed compensation result without an explicit exception.</summary>
+    /// <returns>A result that faults compensation.</returns>
     public CompensationResult Failed()
     {
         return _context.Failed();
     }
 
-    /// <summary>Reports a failed result.</summary>
+    /// <summary>Creates a failed compensation result for the supplied exception.</summary>
     /// <param name="exception">The failure that prevented compensation from completing.</param>
-    /// <returns>The compensation result produced by the operation.</returns>
+    /// <returns>A result that faults compensation.</returns>
     public CompensationResult Failed(Exception exception)
     {
         return _context.Failed(exception);

@@ -16766,16 +16766,16 @@ TYPE class public ViciOne.ServiceBus.Configuration.ViciOneServiceBusHealthCheckO
 TYPE class public ViciOne.ServiceBus.Configuration.ViciOneServiceBusHealthCheckOptionsExtensions [static]
   METHOD public static ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator ConfigureHealthCheckOptions(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.IHealthCheckOptionsConfigurator> configure)
   METHOD public static ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator<TBus> ConfigureHealthCheckOptions<TBus>(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator<TBus> configurator, System.Action<ViciOne.ServiceBus.Configuration.IHealthCheckOptionsConfigurator> configure)
-TYPE class public ViciOne.ServiceBus.Consumer.DefaultConstructorConsumerFactory<TConsumer>
+TYPE class public ViciOne.ServiceBus.Consumer.DefaultConstructorConsumerFactory<TConsumer> [sealed]
   CTOR public ViciOne.ServiceBus.Consumer.DefaultConstructorConsumerFactory<TConsumer>()
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(ViciOne.ServiceBus.ConsumeContext<T> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,T>> next)
-TYPE class public ViciOne.ServiceBus.Consumer.DelegateConsumerFactory<TConsumer>
+  METHOD public virtual System.Threading.Tasks.Task SendAsync<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,TMessage>> next)
+TYPE class public ViciOne.ServiceBus.Consumer.DelegateConsumerFactory<TConsumer> [sealed]
   CTOR public ViciOne.ServiceBus.Consumer.DelegateConsumerFactory<TConsumer>(System.Func<TConsumer> factoryMethod)
   METHOD public virtual System.Threading.Tasks.Task SendAsync<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,TMessage>> next)
-TYPE class public ViciOne.ServiceBus.Consumer.InstanceConsumerFactory<TConsumer>
+TYPE class public ViciOne.ServiceBus.Consumer.InstanceConsumerFactory<TConsumer> [sealed]
   CTOR public ViciOne.ServiceBus.Consumer.InstanceConsumerFactory<TConsumer>(TConsumer consumer)
   METHOD public virtual System.Threading.Tasks.Task SendAsync<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,TMessage>> next)
-TYPE class public ViciOne.ServiceBus.Consumer.ObjectConsumerFactory<TConsumer>
+TYPE class public ViciOne.ServiceBus.Consumer.ObjectConsumerFactory<TConsumer> [sealed]
   CTOR public ViciOne.ServiceBus.Consumer.ObjectConsumerFactory<TConsumer>(System.Func<System.Type,System.Object> objectFactory)
   METHOD public virtual System.Threading.Tasks.Task SendAsync<TMessage>(ViciOne.ServiceBus.ConsumeContext<TMessage> context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.ConsumerConsumeContext<TConsumer,TMessage>> next)
 TYPE class public ViciOne.ServiceBus.Context.ActivityContextProxy [abstract,base=ViciOne.ServiceBus.Context.ConsumeContextProxy]
@@ -17054,8 +17054,8 @@ TYPE class public ViciOne.ServiceBus.Context.MediatorConsumeContext<TMessage> [b
   PROPERTY TMessage Message { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Headers Headers { public-get;  }
   PROPERTY ViciOne.ServiceBus.HostInfo Host { public-get;  }
-TYPE class public ViciOne.ServiceBus.Context.MediatorSendMessageContext<T>
-  CTOR public ViciOne.ServiceBus.Context.MediatorSendMessageContext<T>(ViciOne.ServiceBus.Advanced.SendContext<T> context)
+TYPE class public ViciOne.ServiceBus.Context.MediatorSendMessageContext<TMessage>
+  CTOR public ViciOne.ServiceBus.Context.MediatorSendMessageContext<TMessage>(ViciOne.ServiceBus.Advanced.SendContext<TMessage> context)
   PROPERTY System.Nullable<System.DateTimeOffset> ExpirationTime { public-get;  }
   PROPERTY System.Nullable<System.DateTimeOffset> SentTime { public-get;  }
   PROPERTY System.Nullable<System.Guid> ConversationId { public-get;  }
@@ -17165,11 +17165,11 @@ TYPE class public ViciOne.ServiceBus.Context.MessageSendContext<TMessage> [base=
   PROPERTY ViciOne.ServiceBus.Advanced.SendHeaders Headers { public-get;  }
   PROPERTY ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer Serializer { public-get; public-set; }
   PROPERTY ViciOne.ServiceBus.Advanced.Serialization.ISerialization Serialization { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Context.NoLockReceiveContext
-  FIELD public static readonly ViciOne.ServiceBus.Transports.ReceiveLockContext Instance
+TYPE class public ViciOne.ServiceBus.Context.NoLockReceiveContext [sealed]
   METHOD public virtual System.Threading.Tasks.Task CompleteAsync(System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Threading.Tasks.Task FaultedAsync(System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Threading.Tasks.Task ValidateLockStatusAsync(System.Threading.CancellationToken cancellationToken = null)
+  PROPERTY ViciOne.ServiceBus.Transports.ReceiveLockContext Instance { public-get;  }
 TYPE class public ViciOne.ServiceBus.Context.ReceiveContextProxy [abstract]
   CTOR protected ViciOne.ServiceBus.Context.ReceiveContextProxy(ViciOne.ServiceBus.Advanced.ReceiveContext context)
   METHOD public virtual System.Boolean HasPayloadType(System.Type contextType)

@@ -4,16 +4,16 @@ using ViciOne.ServiceBus.Metadata;
 namespace ViciOne.ServiceBus.Context;
 
 /// <summary>Projects mediator send metadata through the transport-independent message-context contract.</summary>
-/// <typeparam name="T">The message contract.</typeparam>
-public class MediatorSendMessageContext<T> :
+/// <typeparam name="TMessage">The message contract.</typeparam>
+public class MediatorSendMessageContext<TMessage> :
     MessageContext
-    where T : class
+    where TMessage : class
 {
-    readonly SendContext<T> _context;
+    readonly SendContext<TMessage> _context;
 
     /// <summary>Creates a message-context view over a mediator send context.</summary>
     /// <param name="context">The mediator send context to project.</param>
-    public MediatorSendMessageContext(SendContext<T> context)
+    public MediatorSendMessageContext(SendContext<TMessage> context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }

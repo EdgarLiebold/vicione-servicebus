@@ -5,11 +5,11 @@ using ViciOne.ServiceBus.Transports;
 namespace ViciOne.ServiceBus.Context;
 
 /// <summary>Provides no-op settlement for transports that do not hold receive locks.</summary>
-public class NoLockReceiveContext :
+public sealed class NoLockReceiveContext :
     ReceiveLockContext
 {
     /// <summary>Gets the shared stateless receive-lock context.</summary>
-    public static readonly ReceiveLockContext Instance = new NoLockReceiveContext();
+    public static ReceiveLockContext Instance { get; } = new NoLockReceiveContext();
 
     NoLockReceiveContext()
     {

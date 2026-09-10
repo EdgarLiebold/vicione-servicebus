@@ -2,7 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus.Context;
 
-/// <summary>Carries state for host compensate activity operations.</summary>
+/// <summary>Binds a compensation activity instance to the context for its recorded compensation log.</summary>
 /// <typeparam name="TActivity">The compensation activity type.</typeparam>
 /// <typeparam name="TLog">The compensation log contract.</typeparam>
 public class HostCompensateActivityContext<TActivity, TLog> :

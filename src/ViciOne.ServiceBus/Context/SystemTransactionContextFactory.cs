@@ -6,7 +6,7 @@ internal sealed class SystemTransactionContextFactory : ITransactionContextFacto
 {
     public static SystemTransactionContextFactory Instance { get; } = new();
 
-    private SystemTransactionContextFactory()
+    SystemTransactionContextFactory()
     {
     }
 

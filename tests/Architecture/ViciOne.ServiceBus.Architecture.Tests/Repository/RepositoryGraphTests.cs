@@ -386,13 +386,18 @@ public sealed class RepositoryGraphTests
             .Where(path =>
             {
                 string[] segments = path.Split('/');
-                return segments.Zip(segments.Skip(1), StringComparer.Ordinal.Equals).Any(equal => equal);
+                return segments.Zip(segments.Skip(1), static (left, right) =>
+                        StringComparer.OrdinalIgnoreCase.Equals(NormalizeDirectoryConcept(left), NormalizeDirectoryConcept(right)))
+                    .Any(static equal => equal);
             })
             .OrderBy(path => path, StringComparer.Ordinal)
             .ToArray();
 
         Assert.Empty(repeatedSegments);
     }
+
+    private static string NormalizeDirectoryConcept(string segment) =>
+        segment.EndsWith('s') && segment.Length > 1 ? segment[..^1] : segment;
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SOURCE-LAYOUT", "every-product-compile-source-is-physically-project-owned")]
