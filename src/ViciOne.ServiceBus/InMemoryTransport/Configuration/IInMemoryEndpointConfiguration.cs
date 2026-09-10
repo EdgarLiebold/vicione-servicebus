@@ -2,10 +2,10 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>Defines in memory endpoint configuration.</summary>
-public interface IInMemoryEndpointConfiguration :
+/// <summary>Exposes the topology associated with an in-memory endpoint configuration.</summary>
+internal interface IInMemoryEndpointConfiguration :
     IEndpointConfiguration
 {
-    /// <summary>Gets the topology.</summary>
+    /// <summary>Gets the endpoint's in-memory topology.</summary>
     new IInMemoryTopologyConfiguration Topology { get; }
 }

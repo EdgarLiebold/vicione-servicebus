@@ -4,7 +4,7 @@ using ViciOne.ServiceBus.Configuration;
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
 /// <summary>Builds an in-memory bus from host, endpoint, and topology configuration.</summary>
-public class InMemoryBusFactoryConfigurator :
+internal sealed class InMemoryBusFactoryConfigurator :
     BusFactoryConfigurator,
     IInMemoryBusFactoryConfigurator,
     IBusFactory
@@ -36,12 +36,13 @@ public class InMemoryBusFactoryConfigurator :
     }
 
     /// <summary>Configures in-memory publish topology for a message contract.</summary>
-    /// <typeparam name="T">The message contract type.</typeparam>
+    /// <typeparam name="TMessage">The message contract.</typeparam>
     /// <param name="configureTopology">An optional callback that configures publish topology.</param>
-    public void Publish<T>(Action<IInMemoryMessagePublishTopologyConfigurator<T>>? configureTopology)
-        where T : class
+    public void Publish<TMessage>(Action<IInMemoryMessagePublishTopologyConfigurator<TMessage>>? configureTopology)
+        where TMessage : class
     {
-        IInMemoryMessagePublishTopologyConfigurator<T> configurator = _busConfiguration.Topology.Publish.GetMessageTopology<T>();
+        IInMemoryMessagePublishTopologyConfigurator<TMessage> configurator =
+            _busConfiguration.Topology.Publish.GetMessageTopology<TMessage>();
 
         configureTopology?.Invoke(configurator);
     }

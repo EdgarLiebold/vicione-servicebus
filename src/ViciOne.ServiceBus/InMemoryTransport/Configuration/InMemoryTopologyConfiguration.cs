@@ -5,8 +5,8 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>Stores and validates in memory topology configuration.</summary>
-public class InMemoryTopologyConfiguration :
+/// <summary>Composes message, send, publish, and consume topology for one in-memory endpoint scope.</summary>
+internal sealed class InMemoryTopologyConfiguration :
     IInMemoryTopologyConfiguration
 {
     readonly InMemoryConsumeTopology _consumeTopology;
@@ -14,11 +14,11 @@ public class InMemoryTopologyConfiguration :
     readonly IInMemoryPublishTopologyConfigurator _publishTopology;
     readonly ISendTopologyConfigurator _sendTopology;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="messageTopology">The message topology.</param>
+    /// <summary>Creates root topology over a mutable message-topology registry.</summary>
+    /// <param name="messageTopology">The message topology shared by send, publish, and consume conventions.</param>
     public InMemoryTopologyConfiguration(IMessageTopologyConfigurator messageTopology)
     {
-        _messageTopology = messageTopology;
+        _messageTopology = messageTopology ?? throw new ArgumentNullException(nameof(messageTopology));
 
         _sendTopology = new SendTopology();
         _sendTopology.ConnectSendTopologyConfigurationObserver(new DelegateSendTopologyConfigurationObserver(GlobalTopology.Send));
@@ -33,10 +33,11 @@ public class InMemoryTopologyConfiguration :
         _consumeTopology = new InMemoryConsumeTopology(messageTopology, _publishTopology);
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="topologyConfiguration">The topology configuration.</param>
+    /// <summary>Creates endpoint topology that shares message, send, and publish state with a parent.</summary>
+    /// <param name="topologyConfiguration">The parent topology configuration.</param>
     public InMemoryTopologyConfiguration(IInMemoryTopologyConfiguration topologyConfiguration)
     {
+        ArgumentNullException.ThrowIfNull(topologyConfiguration);
         _messageTopology = topologyConfiguration.Message;
         _sendTopology = topologyConfiguration.Send;
         _publishTopology = topologyConfiguration.Publish;
@@ -52,8 +53,8 @@ public class InMemoryTopologyConfiguration :
     IInMemoryPublishTopologyConfigurator IInMemoryTopologyConfiguration.Publish => _publishTopology;
     IInMemoryConsumeTopologyConfigurator IInMemoryTopologyConfiguration.Consume => _consumeTopology;
 
-    /// <summary>Validates the current configuration.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <summary>Validates send, publish, and consume topology in dependency order.</summary>
+    /// <returns>All topology validation failures.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return _sendTopology.Validate()

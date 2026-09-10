@@ -1,4 +1,4 @@
-using ViciOne.ServiceBus.InMemoryTransport;
+using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.SqlTransport;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -19,7 +19,7 @@ public sealed class SqlSendContextTests
         Assert.True(sqlContext.TrySetPriority(100));
         Assert.Null(sqlContext.Priority);
 
-        SendContext nonSqlContext = new InMemorySendContext<Message>(new Message());
+        SendContext nonSqlContext = new MessageSendContext<Message>(new Message());
         Assert.False(nonSqlContext.TrySetPriority(7));
         Assert.Throws<InvalidOperationException>(() => nonSqlContext.SetPriority(7));
         Assert.Throws<ArgumentNullException>(() => SqlSendContextExtensions.SetPriority(null!, 7));

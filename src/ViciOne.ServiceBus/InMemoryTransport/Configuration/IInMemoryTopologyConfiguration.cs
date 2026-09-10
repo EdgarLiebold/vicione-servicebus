@@ -2,13 +2,13 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>Defines in memory topology configuration.</summary>
-public interface IInMemoryTopologyConfiguration :
+/// <summary>Combines transport-independent topology with in-memory publish and consume topology.</summary>
+internal interface IInMemoryTopologyConfiguration :
     ITopologyConfiguration
 {
-    /// <summary>Gets the publish.</summary>
+    /// <summary>Gets mutable in-memory publish topology.</summary>
     new IInMemoryPublishTopologyConfigurator Publish { get; }
 
-    /// <summary>Gets the consume.</summary>
+    /// <summary>Gets mutable in-memory consume topology.</summary>
     new IInMemoryConsumeTopologyConfigurator Consume { get; }
 }

@@ -5,8 +5,8 @@ using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>Stores and validates in memory receive endpoint configuration.</summary>
-public class InMemoryReceiveEndpointConfiguration :
+/// <summary>Owns configuration and topology for one named in-memory receive endpoint.</summary>
+internal sealed class InMemoryReceiveEndpointConfiguration :
     ReceiveEndpointConfiguration,
     IInMemoryReceiveEndpointConfiguration,
     IInMemoryReceiveEndpointConfigurator
@@ -15,20 +15,23 @@ public class InMemoryReceiveEndpointConfiguration :
     readonly IInMemoryHostConfiguration _hostConfiguration;
     readonly string _queueName;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="hostConfiguration">The host configuration.</param>
-    /// <param name="queueName">The queue name.</param>
-    /// <param name="endpointConfiguration">The endpoint configuration.</param>
+    /// <summary>Creates a receive endpoint configuration for a named queue.</summary>
+    /// <param name="hostConfiguration">The host that owns the endpoint.</param>
+    /// <param name="queueName">The non-empty queue name.</param>
+    /// <param name="endpointConfiguration">The inherited pipeline and topology configuration.</param>
     public InMemoryReceiveEndpointConfiguration(IInMemoryHostConfiguration hostConfiguration, string queueName,
         IInMemoryEndpointConfiguration endpointConfiguration)
-        : base(hostConfiguration, endpointConfiguration)
+        : base(
+            hostConfiguration ?? throw new ArgumentNullException(nameof(hostConfiguration)),
+            endpointConfiguration ?? throw new ArgumentNullException(nameof(endpointConfiguration)))
     {
         _hostConfiguration = hostConfiguration;
 
-        _queueName = queueName ?? throw new ArgumentNullException(nameof(queueName));
-        _endpointConfiguration = endpointConfiguration ?? throw new ArgumentNullException(nameof(endpointConfiguration));
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+        _queueName = queueName;
+        _endpointConfiguration = endpointConfiguration;
 
-        HostAddress = hostConfiguration?.HostAddress ?? throw new ArgumentNullException(nameof(hostConfiguration.HostAddress));
+        HostAddress = hostConfiguration.HostAddress;
 
         InputAddress = new InMemoryEndpointAddress(hostConfiguration.HostAddress, queueName);
 
@@ -39,23 +42,24 @@ public class InMemoryReceiveEndpointConfiguration :
 
     IInMemoryTopologyConfiguration IInMemoryEndpointConfiguration.Topology => _endpointConfiguration.Topology;
 
-    /// <summary>Gets the host address.</summary>
+    /// <summary>Gets the owning host's loopback address.</summary>
     public override Uri HostAddress { get; }
 
-    /// <summary>Gets the input address.</summary>
+    /// <summary>Gets the endpoint queue's canonical input address.</summary>
     public override Uri InputAddress { get; }
 
-    /// <summary>Creates receive endpoint context.</summary>
-    /// <returns>The created receive endpoint context.</returns>
+    /// <summary>Materializes the receive pipeline into a runtime endpoint context.</summary>
+    /// <returns>The configured runtime endpoint context.</returns>
     public override ReceiveEndpointContext CreateReceiveEndpointContext()
     {
         return CreateInMemoryReceiveEndpointContext();
     }
 
-    /// <summary>Builds the configured component.</summary>
-    /// <param name="host">The host.</param>
+    /// <summary>Builds and registers the receive endpoint with its host.</summary>
+    /// <param name="host">The host that owns the endpoint lifecycle.</param>
     public void Build(IHost host)
     {
+        ArgumentNullException.ThrowIfNull(host);
         var context = CreateInMemoryReceiveEndpointContext();
 
         var transport = new InMemoryReceiveTransport(context, _queueName);
@@ -67,29 +71,28 @@ public class InMemoryReceiveEndpointConfiguration :
         ReceiveEndpoint = receiveEndpoint;
     }
 
-    /// <summary>Binds the configured entities.</summary>
-    /// <param name="exchangeName">The exchange name.</param>
-    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
-    /// <param name="routingKey">The routing key.</param>
+    /// <summary>Binds a named exchange to this endpoint's queue.</summary>
+    /// <param name="exchangeName">The non-empty source exchange name.</param>
+    /// <param name="exchangeType">The source exchange routing behavior.</param>
+    /// <param name="routingKey">The optional direct or topic routing key.</param>
     public void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default)
     {
-        if (exchangeName == null)
-            throw new ArgumentNullException(nameof(exchangeName));
+        ArgumentException.ThrowIfNullOrWhiteSpace(exchangeName);
 
         _endpointConfiguration.Topology.Consume.Bind(exchangeName, exchangeType, routingKey);
     }
 
-    /// <summary>Binds the configured entities.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
-    /// <param name="routingKey">The routing key.</param>
-    public void Bind<T>(ExchangeType exchangeType, string? routingKey = default)
-        where T : class
+    /// <summary>Binds the exchange for a message contract to this endpoint's queue.</summary>
+    /// <typeparam name="TMessage">The message contract.</typeparam>
+    /// <param name="exchangeType">The source exchange routing behavior.</param>
+    /// <param name="routingKey">The optional direct or topic routing key.</param>
+    public void Bind<TMessage>(ExchangeType exchangeType, string? routingKey = default)
+        where TMessage : class
     {
-        _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Bind(exchangeType, routingKey);
+        _endpointConfiguration.Topology.Consume.GetMessageTopology<TMessage>().Bind(exchangeType, routingKey);
     }
 
-    InMemoryReceiveEndpointContext CreateInMemoryReceiveEndpointContext()
+    IInMemoryReceiveEndpointContext CreateInMemoryReceiveEndpointContext()
     {
         var builder = new InMemoryReceiveEndpointBuilder(_hostConfiguration, this);
 

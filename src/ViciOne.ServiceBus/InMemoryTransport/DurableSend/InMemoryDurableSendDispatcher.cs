@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Serialization;
 
-namespace ViciOne.ServiceBus.Providers.Transports;
+namespace ViciOne.ServiceBus.InMemoryTransport.DurableSend;
 
 /// <summary>
-/// Dispatches a retained serialized message into the volatile InMemory transport and reports consumer completion as
-/// the only valid local completion boundary.
+/// Dispatches a retained serialized message into the volatile in-memory transport and reports completion only after
+/// a consumer completes its full receive pipeline.
 /// </summary>
-/// <typeparam name="TBus">The bus type.</typeparam>
+/// <typeparam name="TBus">The bus contract.</typeparam>
 internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatcher<TBus>
     where TBus : class, IBus
 {
@@ -29,6 +29,8 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
         DurableSendDispatchContext context,
         CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         SerializedDurableSend message = context.Message.Validate();
         IMessageContractCatalog contractCatalog =
             ReliableMessagingComposition.RequireExactlyOne<IMessageContractCatalog, TBus>(
@@ -57,13 +59,14 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
             Type messageType,
             DurableSendDispatchContext dispatchContext)
         {
-            _message = message;
-            _messageType = messageType;
+            _message = message ?? throw new ArgumentNullException(nameof(message));
+            _messageType = messageType ?? throw new ArgumentNullException(nameof(messageType));
             _dispatchContext = dispatchContext;
         }
 
         public Task SendAsync(SendContext<SerializedMessageBody> context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             var contentType = new ContentType(_message.ContentType);
             context.Serializer = new CopyBodySerializer(contentType, new MemoryMessageBody(_message.Body));
             context.ContentType = contentType;
@@ -82,6 +85,9 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
         }
 
         public void Probe(ProbeContext context)
-            => context.CreateFilterScope("inMemoryDurableSend");
+        {
+            ArgumentNullException.ThrowIfNull(context);
+            context.CreateFilterScope("inMemoryDurableSend");
+        }
     }
 }

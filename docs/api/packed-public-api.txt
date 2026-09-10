@@ -17515,237 +17515,6 @@ TYPE class public ViciOne.ServiceBus.DependencyInjection.SetScopedConsumeContext
 TYPE class public ViciOne.ServiceBus.DependencyInjection.TypedScopedConsumeContextProvider [base=ViciOne.ServiceBus.DependencyInjection.ScopedConsumeContextProvider]
   CTOR public ViciOne.ServiceBus.DependencyInjection.TypedScopedConsumeContextProvider(ViciOne.ServiceBus.DependencyInjection.IScopedConsumeContextProvider global)
   METHOD public System.IDisposable PushContext(ViciOne.ServiceBus.ConsumeContext context)
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.Configuration.ExchangeBindingConsumeTopologySpecification
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.Configuration.ExchangeBindingConsumeTopologySpecification(System.String exchange, ViciOne.ServiceBus.Transports.Fabric.ExchangeType exchangeType, System.String routingKey)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IMessageFabricConsumeTopologyBuilder builder)
-TYPE interface public ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryBusConfiguration
-  METHOD public abstract ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryEndpointConfiguration CreateEndpointConfiguration(System.Boolean isBusEndpoint = false)
-  PROPERTY ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryEndpointConfiguration BusEndpointConfiguration { public-get;  }
-  PROPERTY ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryHostConfiguration HostConfiguration { public-get;  }
-TYPE interface public ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryConsumeTopologySpecification
-  METHOD public abstract System.Void Apply(ViciOne.ServiceBus.Configuration.IMessageFabricConsumeTopologyBuilder builder)
-TYPE interface public ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryEndpointConfiguration
-  PROPERTY ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryTopologyConfiguration Topology { public-get;  }
-TYPE interface public ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryHostConfiguration
-  METHOD public abstract System.Void ApplyEndpointDefinition(ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IEndpointDefinition definition)
-  METHOD public abstract ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(System.String queueName, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configure = null)
-  METHOD public abstract ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(System.String queueName, ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryEndpointConfiguration endpointConfiguration, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configure = null)
-  PROPERTY System.Int32 QueueCapacity { public-get;  }
-  PROPERTY System.Uri BaseAddress {  public-set; }
-  PROPERTY ViciOne.ServiceBus.InMemoryTransport.IInMemoryTransportProvider TransportProvider { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Providers.Transports.IInMemoryBusTopology Topology { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Providers.Transports.IInMemoryHostConfigurator Configurator { public-get;  }
-TYPE interface public ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryReceiveEndpointConfiguration
-  METHOD public abstract System.Void Build(ViciOne.ServiceBus.Transports.IHost host)
-  PROPERTY ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator Configurator { public-get;  }
-TYPE interface public ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryTopologyConfiguration
-  PROPERTY ViciOne.ServiceBus.Providers.Transports.IInMemoryConsumeTopologyConfigurator Consume { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Providers.Transports.IInMemoryPublishTopologyConfigurator Publish { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryBusConfiguration [base=ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryEndpointConfiguration]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryBusConfiguration(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryTopologyConfiguration topologyConfiguration, System.Uri baseAddress)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectBusObserver(ViciOne.ServiceBus.Advanced.Observers.IBusObserver observer)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectEndpointConfigurationObserver(ViciOne.ServiceBus.Configuration.IEndpointConfigurationObserver observer)
-  PROPERTY ViciOne.ServiceBus.Advanced.MessageRouteTable MessageRoutes { public-get;  }
-  PROPERTY ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryEndpointConfiguration BusEndpointConfiguration { public-get;  }
-  PROPERTY ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryHostConfiguration HostConfiguration { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryBusFactoryConfigurator [base=ViciOne.ServiceBus.Configuration.BusFactoryConfigurator]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryBusFactoryConfigurator(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryBusConfiguration busConfiguration)
-  METHOD public virtual System.Void Host(System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryHostConfigurator> configure)
-  METHOD public virtual System.Void Host(System.String virtualHost, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryHostConfigurator> configure)
-  METHOD public virtual System.Void Host(System.Uri baseAddress, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryHostConfigurator> configure)
-  METHOD public virtual System.Void Publish(System.Type messageType, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator> configure = null)
-  METHOD public virtual System.Void Publish<T>(System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator<T>> configureTopology)
-  METHOD public virtual System.Void ReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint)
-  METHOD public virtual System.Void ReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configureEndpoint)
-  METHOD public virtual System.Void ReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public virtual System.Void ReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public virtual ViciOne.ServiceBus.Configuration.IReceiveEndpointConfiguration CreateBusEndpointConfiguration(System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure)
-  PROPERTY ViciOne.ServiceBus.Providers.Transports.IInMemoryPublishTopologyConfigurator PublishTopology { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryEndpointConfiguration [base=ViciOne.ServiceBus.Configuration.EndpointConfiguration]
-  CTOR protected ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryEndpointConfiguration(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryTopologyConfiguration topologyConfiguration)
-  METHOD public virtual ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryEndpointConfiguration CreateEndpointConfiguration(System.Boolean isBusEndpoint)
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryHostConfiguration [base=ViciOne.ServiceBus.Configuration.BaseHostConfiguration<ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryReceiveEndpointConfiguration,ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator>]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryHostConfiguration(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryBusConfiguration busConfiguration, System.Uri baseAddress, ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryTopologyConfiguration topologyConfiguration)
-  METHOD public System.Void ReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configureEndpoint)
-  METHOD public System.Void ReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public ViciOne.ServiceBus.Configuration.IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configure)
-  METHOD public ViciOne.ServiceBus.Transports.IHost Build()
-  METHOD public virtual System.Void ApplyEndpointDefinition(ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator configurator, ViciOne.ServiceBus.Configuration.IEndpointDefinition definition)
-  METHOD public virtual ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(System.String queueName, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configure)
-  METHOD public virtual ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(System.String queueName, ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryEndpointConfiguration endpointConfiguration, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configure)
-  PROPERTY System.Int32 QueueCapacity {  public-set; }
-  PROPERTY System.Uri BaseAddress {  public-set; }
-  PROPERTY System.Uri HostAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.Middleware.IRetryPolicy ReceiveTransportRetryPolicy { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.Topology.IBusTopology Topology { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryReceiveEndpointBuilder [base=ViciOne.ServiceBus.Configuration.ReceiveEndpointBuilder]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryReceiveEndpointBuilder(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryHostConfiguration hostConfiguration, ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryReceiveEndpointConfiguration configuration)
-  METHOD public ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumePipe<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe, ViciOne.ServiceBus.Advanced.Middleware.ConnectPipeOptions options)
-  METHOD public ViciOne.ServiceBus.InMemoryTransport.InMemoryReceiveEndpointContext CreateReceiveEndpointContext()
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryReceiveEndpointConfiguration [base=ViciOne.ServiceBus.Configuration.ReceiveEndpointConfiguration]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryReceiveEndpointConfiguration(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryHostConfiguration hostConfiguration, System.String queueName, ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryEndpointConfiguration endpointConfiguration)
-  METHOD public ViciOne.ServiceBus.Transports.ReceiveEndpointContext CreateReceiveEndpointContext()
-  METHOD public virtual System.Void Bind(System.String exchangeName, ViciOne.ServiceBus.Transports.Fabric.ExchangeType exchangeType = FanOut, System.String routingKey = null)
-  METHOD public virtual System.Void Bind<T>(ViciOne.ServiceBus.Transports.Fabric.ExchangeType exchangeType, System.String routingKey = null)
-  METHOD public virtual System.Void Build(ViciOne.ServiceBus.Transports.IHost host)
-  PROPERTY System.Uri HostAddress { public-get;  }
-  PROPERTY System.Uri InputAddress { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryRegistrationBusFactory [base=ViciOne.ServiceBus.Configuration.TransportRegistrationBusFactory<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator>]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryRegistrationBusFactory(System.Uri baseAddress, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator> configure)
-  METHOD protected ViciOne.ServiceBus.Transports.IBusInstance CreateBusInstance(ViciOne.ServiceBus.IBusControl bus, ViciOne.ServiceBus.Transports.IHost<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> host, ViciOne.ServiceBus.Configuration.IHostConfiguration hostConfiguration, ViciOne.ServiceBus.Configuration.IBusRegistrationContext context)
-  METHOD public ViciOne.ServiceBus.Transports.IBusInstance CreateBus(ViciOne.ServiceBus.Configuration.IBusRegistrationContext context, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.IBusInstanceSpecification> specifications, System.String busName)
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryTopologyConfiguration
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryTopologyConfiguration(ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator messageTopology)
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryTopologyConfiguration(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryTopologyConfiguration topologyConfiguration)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.Configuration.InvalidInMemoryConsumeTopologySpecification
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.Configuration.InvalidInMemoryConsumeTopologySpecification(System.String key, System.String message)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IMessageFabricConsumeTopologyBuilder builder)
-TYPE interface public ViciOne.ServiceBus.InMemoryTransport.IInMemoryDelayProvider
-  METHOD public abstract System.Threading.Tasks.Task DelayAsync(System.DateTimeOffset delayUntil, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task DelayAsync(System.TimeSpan delay, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Void Advance(System.TimeSpan duration)
-  PROPERTY System.DateTimeOffset UtcNow { public-get;  }
-TYPE interface public ViciOne.ServiceBus.InMemoryTransport.IInMemoryHost
-  PROPERTY ViciOne.ServiceBus.InMemoryTransport.IInMemoryDelayProvider DelayProvider { public-get;  }
-TYPE interface public ViciOne.ServiceBus.InMemoryTransport.IInMemoryTransportProvider
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Transports.ISendTransport> CreatePublishTransportAsync<T>(ViciOne.ServiceBus.Transports.ReceiveEndpointContext context, System.Uri publishAddress, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Transports.ISendTransport> CreateSendTransportAsync(ViciOne.ServiceBus.Transports.ReceiveEndpointContext context, System.Uri address, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Uri NormalizeAddress(System.Uri address)
-  PROPERTY ViciOne.ServiceBus.Transports.Fabric.IMessageFabric<ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportContext,ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage> MessageFabric { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryBusInstance [base=ViciOne.ServiceBus.Transports.TransportBusInstance<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator>]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryBusInstance(ViciOne.ServiceBus.IBusControl busControl, ViciOne.ServiceBus.Transports.IHost<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> host, ViciOne.ServiceBus.Configuration.IHostConfiguration hostConfiguration, ViciOne.ServiceBus.Configuration.IBusRegistrationContext busRegistrationContext)
-  METHOD public virtual System.Threading.Tasks.Task DelayAsync(System.DateTimeOffset delayUntil, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task DelayAsync(System.TimeSpan delay, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Void Advance(System.TimeSpan duration)
-  PROPERTY System.DateTimeOffset UtcNow { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryBusTopology [base=ViciOne.ServiceBus.Transports.BusTopology]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryBusTopology(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryHostConfiguration hostConfiguration, ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryTopologyConfiguration configuration)
-  METHOD public virtual ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopology<T> Publish<T>()
-TYPE interface public ViciOne.ServiceBus.InMemoryTransport.InMemoryConsumeContext
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryConsumeTopology [base=ViciOne.ServiceBus.Advanced.Topology.ConsumeTopology]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryConsumeTopology(ViciOne.ServiceBus.Advanced.Topology.IMessageTopology messageTopology, ViciOne.ServiceBus.Providers.Transports.IInMemoryPublishTopologyConfigurator publishTopology)
-  METHOD protected ViciOne.ServiceBus.Configuration.IMessageConsumeTopologyConfigurator CreateMessageTopology<T>()
-  METHOD public System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void AddSpecification(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryConsumeTopologySpecification specification)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IMessageFabricConsumeTopologyBuilder builder)
-  METHOD public virtual System.Void Bind(System.String exchangeName, ViciOne.ServiceBus.Transports.Fabric.ExchangeType exchangeType = FanOut, System.String routingKey = null)
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryDelayProvider [sealed]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryDelayProvider()
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryDelayProvider(System.TimeProvider timeProvider)
-  METHOD public virtual System.Threading.Tasks.Task DelayAsync(System.DateTimeOffset delayUntil, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task DelayAsync(System.TimeSpan delay, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  METHOD public virtual System.Void Advance(System.TimeSpan duration)
-  PROPERTY System.DateTimeOffset UtcNow { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryDeliveryContext
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryDeliveryContext(ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage message, System.DateTimeOffset utcNow, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Boolean WasAlreadyDelivered(ViciOne.ServiceBus.Transports.Fabric.IMessageSink<ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage> sink)
-  METHOD public virtual System.Void Delivered(ViciOne.ServiceBus.Transports.Fabric.IMessageSink<ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage> sink)
-  PROPERTY System.Nullable<System.DateTimeOffset> EnqueueTime { public-get;  }
-  PROPERTY System.Nullable<System.Int64> ReceiverId { public-get;  }
-  PROPERTY System.String RoutingKey { public-get;  }
-  PROPERTY System.Threading.CancellationToken CancellationToken { public-get;  }
-  PROPERTY ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage Message { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryHost [base=ViciOne.ServiceBus.Transports.BaseHost]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryHost(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryHostConfiguration hostConfiguration, ViciOne.ServiceBus.Providers.Transports.IInMemoryBusTopology busTopology)
-  METHOD protected System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-  METHOD protected ViciOne.ServiceBus.Advanced.Middleware.IAgent[] GetAgentHandles()
-  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> configureEndpoint = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(System.String queueName, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configure = null)
-  METHOD public virtual ViciOne.ServiceBus.Advanced.IHostReceiveEndpointHandle ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition definition, ViciOne.ServiceBus.Advanced.IEndpointNameFormatter endpointNameFormatter, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> configureEndpoint = null)
-  PROPERTY ViciOne.ServiceBus.InMemoryTransport.IInMemoryDelayProvider DelayProvider { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryMessageConsumeTopology<TMessage> [base=ViciOne.ServiceBus.Advanced.Topology.MessageConsumeTopology<TMessage>]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryMessageConsumeTopology<TMessage>(ViciOne.ServiceBus.Advanced.Topology.IMessageTopology<TMessage> messageTopology, ViciOne.ServiceBus.Providers.Transports.IInMemoryPublishTopologyConfigurator publishTopology)
-  METHOD public System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IMessageFabricConsumeTopologyBuilder builder)
-  METHOD public virtual System.Void Bind(System.Nullable<ViciOne.ServiceBus.Transports.Fabric.ExchangeType> exchangeType, System.String routingKey = null)
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryMessageDeadLetterTransport [base=ViciOne.ServiceBus.InMemoryTransport.InMemoryMessageMoveTransport]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryMessageDeadLetterTransport(ViciOne.ServiceBus.Transports.Fabric.IMessageExchange<ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage> exchange, ViciOne.ServiceBus.InMemoryTransport.IInMemoryDelayProvider delayProvider)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.ReceiveContext context, System.String reason, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryMessageErrorTransport [base=ViciOne.ServiceBus.InMemoryTransport.InMemoryMessageMoveTransport]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryMessageErrorTransport(ViciOne.ServiceBus.Transports.Fabric.IMessageExchange<ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage> exchange, ViciOne.ServiceBus.InMemoryTransport.IInMemoryDelayProvider delayProvider)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.ExceptionReceiveContext context, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryMessageMoveTransport
-  CTOR protected ViciOne.ServiceBus.InMemoryTransport.InMemoryMessageMoveTransport(ViciOne.ServiceBus.Transports.Fabric.IMessageExchange<ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage> exchange, ViciOne.ServiceBus.InMemoryTransport.IInMemoryDelayProvider delayProvider)
-  METHOD protected System.Threading.Tasks.Task MoveAsync(ViciOne.ServiceBus.Advanced.ReceiveContext context, System.Action<ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage,ViciOne.ServiceBus.Advanced.SendHeaders> preSend)
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryMessagePublishTopology<TMessage> [base=ViciOne.ServiceBus.Topology.MessagePublishTopology<TMessage>]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryMessagePublishTopology<TMessage>(ViciOne.ServiceBus.Configuration.IPublishTopologyConfigurator publishTopology, ViciOne.ServiceBus.Advanced.Topology.IMessageTopology<TMessage> messageTopology)
-  METHOD public System.Boolean TryGetPublishAddress(System.Uri baseAddress, out System.Uri publishAddress)
-  METHOD public System.Void AddImplementedMessageConfigurator<T>(ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator<T> configurator, System.Boolean direct)
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.Configuration.IMessageFabricPublishTopologyBuilder builder)
-  PROPERTY ViciOne.ServiceBus.Transports.Fabric.ExchangeType ExchangeType { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryPublishTopology [base=ViciOne.ServiceBus.Topology.PublishTopology]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryPublishTopology(ViciOne.ServiceBus.Advanced.Topology.IMessageTopology messageTopology)
-  METHOD protected ViciOne.ServiceBus.Configuration.IMessagePublishTopologyConfigurator CreateMessageTopology<T>()
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryPublishTransportProvider
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryPublishTransportProvider(ViciOne.ServiceBus.InMemoryTransport.IInMemoryTransportProvider transportProvider, ViciOne.ServiceBus.Transports.ReceiveEndpointContext context)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Transports.ISendTransport> GetPublishTransportAsync<T>(System.Uri publishAddress, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryReceiveContext [sealed,base=ViciOne.ServiceBus.Transports.BaseReceiveContext]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryReceiveContext(ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage message, ViciOne.ServiceBus.InMemoryTransport.InMemoryReceiveEndpointContext receiveEndpointContext)
-  METHOD public virtual System.Collections.Generic.IDictionary<System.String,System.Object> GetTransportProperties()
-  PROPERTY System.String ActivitySystem { public-get;  }
-  PROPERTY System.String RoutingKey { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Advanced.MessageBody Body { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Transports.IHeaderProvider HeaderProvider { protected-get;  }
-TYPE interface public ViciOne.ServiceBus.InMemoryTransport.InMemoryReceiveEndpointContext
-  METHOD public abstract System.Void ConfigureTopology()
-  PROPERTY ViciOne.ServiceBus.Advanced.Topology.ISendTopology Send { public-get;  }
-  PROPERTY ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportContext TransportContext { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Transports.Fabric.IMessageFabric<ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportContext,ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage> MessageFabric { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryReceiveTransport
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryReceiveTransport(ViciOne.ServiceBus.InMemoryTransport.InMemoryReceiveEndpointContext context, System.String queueName)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemorySendContext<T> [base=ViciOne.ServiceBus.Context.MessageSendContext<T>]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemorySendContext<T>(T message, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Void ReadPropertiesFrom(System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object> properties)
-  METHOD public System.Void WritePropertiesTo(System.Collections.Generic.IDictionary<System.String,System.Object> properties)
-  PROPERTY System.String RoutingKey { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemorySendTransportContext [base=ViciOne.ServiceBus.Transports.BaseSendTransportContext]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemorySendTransportContext(ViciOne.ServiceBus.Configuration.IHostConfiguration hostConfiguration, ViciOne.ServiceBus.Transports.ReceiveEndpointContext context, ViciOne.ServiceBus.Transports.Fabric.IMessageExchange<ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage> exchange, ViciOne.ServiceBus.InMemoryTransport.IInMemoryDelayProvider delayProvider)
-  METHOD public System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SendContext<T>> CreateSendContextAsync<T>(T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.PipeContext> pipe, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task SendAsync<T>(ViciOne.ServiceBus.Advanced.PipeContext transportContext, ViciOne.ServiceBus.Advanced.SendContext<T> sendContext, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Advanced.SendContext<T>> CreateSendContextAsync<T>(ViciOne.ServiceBus.Advanced.PipeContext context, T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-  PROPERTY System.String ActivitySystem { public-get;  }
-  PROPERTY System.String EntityName { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemorySendTransportProvider
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemorySendTransportProvider(ViciOne.ServiceBus.InMemoryTransport.IInMemoryTransportProvider transportProvider, ViciOne.ServiceBus.Transports.ReceiveEndpointContext context)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Transports.ISendTransport> GetSendTransportAsync(System.Uri address, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Uri NormalizeAddress(System.Uri address)
-TYPE interface public ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportContext
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage(System.Guid messageId, System.Byte[] body, System.String contentType)
-  PROPERTY System.Byte[] Body { public-get;  }
-  PROPERTY System.Guid MessageId { public-get;  }
-  PROPERTY System.Int32 DeliveryCount { public-get; public-set; }
-  PROPERTY System.Int64 SequenceNumber { public-get;  }
-  PROPERTY System.Nullable<System.TimeSpan> Delay { public-get; public-set; }
-  PROPERTY System.String RoutingKey { public-get; public-set; }
-  PROPERTY ViciOne.ServiceBus.Advanced.SendHeaders Headers { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportProvider [sealed,base=ViciOne.ServiceBus.Advanced.Middleware.Agent]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportProvider(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryHostConfiguration hostConfiguration, ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryTopologyConfiguration topologyConfiguration)
-  METHOD protected System.Threading.Tasks.Task StopAgentAsync(ViciOne.ServiceBus.Advanced.Middleware.StopContext context)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Transports.ISendTransport> CreatePublishTransportAsync<T>(ViciOne.ServiceBus.Transports.ReceiveEndpointContext receiveEndpointContext, System.Uri publishAddress, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Transports.ISendTransport> CreateSendTransportAsync(ViciOne.ServiceBus.Transports.ReceiveEndpointContext receiveEndpointContext, System.Uri address, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Uri NormalizeAddress(System.Uri address)
-  METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-  PROPERTY ViciOne.ServiceBus.Transports.Fabric.IMessageFabric<ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportContext,ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage> MessageFabric { public-get;  }
-TYPE class public ViciOne.ServiceBus.InMemoryTransport.TransportInMemoryReceiveEndpointContext [base=ViciOne.ServiceBus.Transports.BaseReceiveEndpointContext]
-  CTOR public ViciOne.ServiceBus.InMemoryTransport.TransportInMemoryReceiveEndpointContext(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryHostConfiguration hostConfiguration, ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryReceiveEndpointConfiguration configuration)
-  METHOD protected ViciOne.ServiceBus.Transports.IPublishTransportProvider CreatePublishTransportProvider()
-  METHOD protected ViciOne.ServiceBus.Transports.ISendTransportProvider CreateSendTransportProvider()
-  METHOD public System.Exception ConvertException(System.Exception exception, System.String message)
-  METHOD public System.Void AddConsumeAgent(ViciOne.ServiceBus.Advanced.Middleware.IAgent agent)
-  METHOD public System.Void AddSendAgent(ViciOne.ServiceBus.Advanced.Middleware.IAgent agent)
-  METHOD public virtual System.Void ConfigureTopology()
-  PROPERTY ViciOne.ServiceBus.Advanced.Topology.ISendTopology Send { public-get;  }
-  PROPERTY ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportContext TransportContext { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Transports.Fabric.IMessageFabric<ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportContext,ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage> MessageFabric { public-get;  }
 TYPE class public ViciOne.ServiceBus.Initializers.Contexts.BaseInitializeContext [base=ViciOne.ServiceBus.Middleware.BasePipeContext]
   CTOR public ViciOne.ServiceBus.Initializers.Contexts.BaseInitializeContext(System.Threading.CancellationToken cancellationToken)
   METHOD public virtual System.Boolean TryGetParent<T>(out ViciOne.ServiceBus.Initializers.InitializeContext<T> parentContext)
@@ -19157,64 +18926,31 @@ TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactor
   METHOD public abstract System.Void Host(System.String virtualHost, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryHostConfigurator> configure = null)
   METHOD public abstract System.Void Host(System.Uri baseAddress, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryHostConfigurator> configure = null)
   METHOD public abstract System.Void Publish(System.Type messageType, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator> configure = null)
-  METHOD public abstract System.Void Publish<T>(System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator<T>> configureTopology = null)
+  METHOD public abstract System.Void Publish<TMessage>(System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator<TMessage>> configureTopology = null)
   PROPERTY ViciOne.ServiceBus.Providers.Transports.IInMemoryPublishTopologyConfigurator PublishTopology { public-get;  }
-TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryBusTopology
-  METHOD public abstract ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopology<T> Publish<T>()
-TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryConsumeTopology
-  METHOD public abstract System.Void Apply(ViciOne.ServiceBus.Configuration.IMessageFabricConsumeTopologyBuilder builder)
-  METHOD public abstract ViciOne.ServiceBus.Providers.Transports.IInMemoryMessageConsumeTopology<T> GetMessageTopology<T>()
-TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryConsumeTopologyConfigurator
-  METHOD public abstract System.Void AddSpecification(ViciOne.ServiceBus.InMemoryTransport.Configuration.IInMemoryConsumeTopologySpecification specification)
-  METHOD public abstract System.Void Bind(System.String exchangeName, ViciOne.ServiceBus.Transports.Fabric.ExchangeType exchangeType = FanOut, System.String routingKey = null)
-  METHOD public abstract ViciOne.ServiceBus.Providers.Transports.IInMemoryMessageConsumeTopologyConfigurator<T> GetMessageTopology<T>()
+TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryDelayProvider
+  METHOD public abstract System.Threading.Tasks.Task DelayAsync(System.DateTimeOffset delayUntil, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Threading.Tasks.Task DelayAsync(System.TimeSpan delay, System.Threading.CancellationToken cancellationToken = null)
+  METHOD public abstract System.Void Advance(System.TimeSpan duration)
+  PROPERTY System.DateTimeOffset UtcNow { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryHostConfigurator
   PROPERTY System.Int32 QueueCapacity {  public-set; }
-TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryMessageConsumeTopology<TMessage>
-TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryMessageConsumeTopologyConfigurator
-  METHOD public abstract System.Void Apply(ViciOne.ServiceBus.Configuration.IMessageFabricConsumeTopologyBuilder builder)
-TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryMessageConsumeTopologyConfigurator<TMessage>
-  METHOD public abstract System.Void Bind(System.Nullable<ViciOne.ServiceBus.Transports.Fabric.ExchangeType> exchangeType = null, System.String routingKey = null)
-TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopology
-  METHOD public abstract System.Void Apply(ViciOne.ServiceBus.Configuration.IMessageFabricPublishTopologyBuilder builder)
-TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopology<TMessage>
-  PROPERTY ViciOne.ServiceBus.Transports.Fabric.ExchangeType ExchangeType { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator<TMessage>
   PROPERTY ViciOne.ServiceBus.Transports.Fabric.ExchangeType ExchangeType {  public-set; }
-TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryPublishTopology
-  METHOD public abstract ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopology<T> GetMessageTopology<T>()
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryPublishTopologyConfigurator
   METHOD public abstract ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator GetMessageTopology(System.Type messageType)
-  METHOD public abstract ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator<T> GetMessageTopology<T>()
+  METHOD public abstract ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator<TMessage> GetMessageTopology<TMessage>()
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator
   METHOD public abstract System.Void Bind(System.String exchangeName, ViciOne.ServiceBus.Transports.Fabric.ExchangeType exchangeType = FanOut, System.String routingKey = null)
-  METHOD public abstract System.Void Bind<T>(ViciOne.ServiceBus.Transports.Fabric.ExchangeType exchangeType = FanOut, System.String routingKey = null)
+  METHOD public abstract System.Void Bind<TMessage>(ViciOne.ServiceBus.Transports.Fabric.ExchangeType exchangeType = FanOut, System.String routingKey = null)
 TYPE class public ViciOne.ServiceBus.Providers.Transports.InMemoryBus [static]
-  METHOD public static ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator CreateMessageTopology()
   METHOD public static ViciOne.ServiceBus.IBusControl Create(System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator> configure)
   METHOD public static ViciOne.ServiceBus.IBusControl Create(System.Uri baseAddress, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator> configure)
-TYPE struct public ViciOne.ServiceBus.Providers.Transports.InMemoryEndpointAddress
-  CTOR public ViciOne.ServiceBus.Providers.Transports.InMemoryEndpointAddress(System.Uri hostAddress, System.String exchangeName, System.Boolean bindToQueue = false, System.String queueName = null, ViciOne.ServiceBus.Transports.Fabric.ExchangeType exchangeType = FanOut)
-  CTOR public ViciOne.ServiceBus.Providers.Transports.InMemoryEndpointAddress(System.Uri hostAddress, System.Uri address)
-  FIELD public readonly System.Boolean BindToQueue
-  FIELD public readonly System.String Host
-  FIELD public readonly System.String Name
-  FIELD public readonly System.String QueueName
-  FIELD public readonly System.String Scheme
-  FIELD public readonly System.String VirtualHost
-  FIELD public readonly ViciOne.ServiceBus.Transports.Fabric.ExchangeType ExchangeType
-  METHOD public static System.Uri op_Implicit(in ViciOne.ServiceBus.Providers.Transports.InMemoryEndpointAddress address)
-TYPE struct public ViciOne.ServiceBus.Providers.Transports.InMemoryHostAddress
-  CTOR public ViciOne.ServiceBus.Providers.Transports.InMemoryHostAddress(System.Uri address)
-  FIELD public readonly System.String Host
-  FIELD public readonly System.String Scheme
-  FIELD public readonly System.String VirtualHost
-  METHOD public static System.Uri op_Implicit(in ViciOne.ServiceBus.Providers.Transports.InMemoryHostAddress address)
 TYPE class public ViciOne.ServiceBus.Providers.Transports.InMemoryPublishTopologyConfigurationExtensions [static]
   METHOD public static System.Void AddPublishMessageTypes(ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator configurator, System.Collections.Generic.IEnumerable<System.Type> messageTypes, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator,System.Type> configure = null)
   METHOD public static System.Void AddPublishMessageTypesFromNamespaceContaining(ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator configurator, System.Type type, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator,System.Type> configure = null, System.Func<System.Type,System.Boolean> filter = null)
-  METHOD public static System.Void AddPublishMessageTypesFromNamespaceContaining<T>(ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator configurator, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator,System.Type> configure = null, System.Func<System.Type,System.Boolean> filter = null)
+  METHOD public static System.Void AddPublishMessageTypesFromNamespaceContaining<TMarker>(ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator configurator, System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryMessagePublishTopologyConfigurator,System.Type> configure = null, System.Func<System.Type,System.Boolean> filter = null)
 TYPE class public ViciOne.ServiceBus.RetryPolicies.BaseRetryContext<TContext>
   CTOR protected ViciOne.ServiceBus.RetryPolicies.BaseRetryContext<TContext>(TContext context, System.Exception exception, System.Int32 retryCount, System.Threading.CancellationToken cancellationToken)
   METHOD public virtual System.Threading.Tasks.Task PreRetryAsync(System.Threading.CancellationToken cancellationToken = null)
@@ -20085,7 +19821,7 @@ TYPE interface public ViciOne.ServiceBus.Transports.Fabric.IMessageFabric<TConte
   METHOD public abstract System.Void QueueDeclare(TContext context, System.String name)
   METHOD public abstract ViciOne.ServiceBus.Transports.Fabric.IMessageExchange<T> GetExchange(TContext context, System.String name, ViciOne.ServiceBus.Transports.Fabric.ExchangeType exchangeType = FanOut)
   METHOD public abstract ViciOne.ServiceBus.Transports.Fabric.IMessageQueue<TContext,T> GetQueue(TContext context, System.String name)
-  PROPERTY ViciOne.ServiceBus.InMemoryTransport.IInMemoryDelayProvider DelayProvider { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Providers.Transports.IInMemoryDelayProvider DelayProvider { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Transports.Fabric.IMessageFabricObserver<TContext>
   METHOD public abstract System.Void ExchangeBindingCreated(TContext context, System.String source, System.String destination, System.String routingKey = null)
   METHOD public abstract System.Void ExchangeDeclared(TContext context, System.String name, ViciOne.ServiceBus.Transports.Fabric.ExchangeType exchangeType)
@@ -20130,7 +19866,7 @@ TYPE class public ViciOne.ServiceBus.Transports.Fabric.MessageFabric<TContext,T>
   METHOD public virtual ViciOne.ServiceBus.Advanced.ConnectHandle ConnectMessageFabricObserver(ViciOne.ServiceBus.Transports.Fabric.IMessageFabricObserver<TContext> observer)
   METHOD public virtual ViciOne.ServiceBus.Transports.Fabric.IMessageExchange<T> GetExchange(TContext context, System.String name, ViciOne.ServiceBus.Transports.Fabric.ExchangeType exchangeType)
   METHOD public virtual ViciOne.ServiceBus.Transports.Fabric.IMessageQueue<TContext,T> GetQueue(TContext context, System.String name)
-  PROPERTY ViciOne.ServiceBus.InMemoryTransport.IInMemoryDelayProvider DelayProvider { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Providers.Transports.IInMemoryDelayProvider DelayProvider { public-get;  }
 TYPE class public ViciOne.ServiceBus.Transports.Fabric.MessageFabricConsumeTopologyBuilder<TContext,T>
   CTOR public ViciOne.ServiceBus.Transports.Fabric.MessageFabricConsumeTopologyBuilder<TContext,T>(TContext context, ViciOne.ServiceBus.Transports.Fabric.IMessageFabric<TContext,T> fabric)
   METHOD public virtual System.Void ExchangeBind(System.String source, System.String destination, System.String routingKey)
@@ -20164,7 +19900,7 @@ TYPE class public ViciOne.ServiceBus.Transports.Fabric.MessageFanOutExchange<T>
   PROPERTY System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Transports.Fabric.IMessageSink<T>> Sinks { public-get;  }
   PROPERTY System.String Name { public-get;  }
 TYPE class public ViciOne.ServiceBus.Transports.Fabric.MessageQueue<TContext,T> [base=ViciOne.ServiceBus.Advanced.Middleware.Agent]
-  CTOR public ViciOne.ServiceBus.Transports.Fabric.MessageQueue<TContext,T>(ViciOne.ServiceBus.Transports.Fabric.IMessageFabricObserver<TContext> observer, System.String name, ViciOne.ServiceBus.InMemoryTransport.IInMemoryDelayProvider delayProvider, System.Int32 capacity = 1024)
+  CTOR public ViciOne.ServiceBus.Transports.Fabric.MessageQueue<TContext,T>(ViciOne.ServiceBus.Transports.Fabric.IMessageFabricObserver<TContext> observer, System.String name, ViciOne.ServiceBus.Providers.Transports.IInMemoryDelayProvider delayProvider, System.Int32 capacity = 1024)
   METHOD protected System.Threading.Tasks.Task StopAgentAsync(ViciOne.ServiceBus.Advanced.Middleware.StopContext context)
   METHOD public virtual System.Threading.Tasks.Task DeliverAsync(ViciOne.ServiceBus.Transports.Fabric.DeliveryContext<T> context, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)

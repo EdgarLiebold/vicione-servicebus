@@ -2,8 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;

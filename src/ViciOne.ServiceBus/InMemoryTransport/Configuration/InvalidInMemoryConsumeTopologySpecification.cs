@@ -3,32 +3,35 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>Describes requirements for invalid in memory consume topology.</summary>
-public class InvalidInMemoryConsumeTopologySpecification :
+/// <summary>Preserves a consume-topology validation failure until configuration is validated.</summary>
+internal sealed class InvalidInMemoryConsumeTopologySpecification :
     IInMemoryConsumeTopologySpecification
 {
     readonly string _key;
     readonly string _message;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a named validation failure.</summary>
+    /// <param name="key">The configuration member associated with the failure.</param>
+    /// <param name="message">The validation failure description.</param>
     public InvalidInMemoryConsumeTopologySpecification(string key, string message)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+        ArgumentException.ThrowIfNullOrWhiteSpace(message);
         _key = key;
         _message = message;
     }
 
-    /// <summary>Validates the current configuration.</summary>
-    /// <returns>The validation failures.</returns>
+    /// <summary>Returns the preserved consume-topology failure.</summary>
+    /// <returns>A sequence containing the failure.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield return this.Failure(_key, _message);
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="builder">The builder that receives the configuration.</param>
+    /// <summary>Leaves topology unchanged because this specification represents invalid configuration.</summary>
+    /// <param name="builder">The consume topology builder that remains unchanged.</param>
     public void Apply(IMessageFabricConsumeTopologyBuilder builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
     }
 }

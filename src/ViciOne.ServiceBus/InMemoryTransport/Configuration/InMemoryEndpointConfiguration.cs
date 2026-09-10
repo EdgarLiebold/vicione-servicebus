@@ -2,33 +2,36 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>Stores and validates in memory endpoint configuration.</summary>
-public class InMemoryEndpointConfiguration :
+/// <summary>Owns transport-independent pipelines and in-memory topology for an endpoint scope.</summary>
+internal class InMemoryEndpointConfiguration :
     EndpointConfiguration,
     IInMemoryEndpointConfiguration
 {
     readonly IInMemoryTopologyConfiguration _topologyConfiguration;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="topologyConfiguration">The topology configuration.</param>
+    /// <summary>Creates a root endpoint configuration over the supplied topology.</summary>
+    /// <param name="topologyConfiguration">The in-memory topology owned by the endpoint scope.</param>
     protected InMemoryEndpointConfiguration(IInMemoryTopologyConfiguration topologyConfiguration)
-        : base(topologyConfiguration)
+        : base(topologyConfiguration ?? throw new ArgumentNullException(nameof(topologyConfiguration)))
     {
         _topologyConfiguration = topologyConfiguration;
     }
 
     InMemoryEndpointConfiguration(IInMemoryEndpointConfiguration parentConfiguration, IInMemoryTopologyConfiguration topologyConfiguration,
         bool isBusEndpoint)
-        : base(parentConfiguration, topologyConfiguration, isBusEndpoint)
+        : base(
+            parentConfiguration ?? throw new ArgumentNullException(nameof(parentConfiguration)),
+            topologyConfiguration ?? throw new ArgumentNullException(nameof(topologyConfiguration)),
+            isBusEndpoint)
     {
         _topologyConfiguration = topologyConfiguration;
     }
 
     IInMemoryTopologyConfiguration IInMemoryEndpointConfiguration.Topology => _topologyConfiguration;
 
-    /// <summary>Creates endpoint configuration.</summary>
-    /// <param name="isBusEndpoint">The is bus endpoint.</param>
-    /// <returns>The created endpoint configuration.</returns>
+    /// <summary>Creates a child endpoint configuration that inherits this scope's pipelines.</summary>
+    /// <param name="isBusEndpoint">Whether the child represents the bus endpoint.</param>
+    /// <returns>An independently materialized child configuration.</returns>
     public IInMemoryEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
     {
         return CreateChildConfiguration(this, isBusEndpoint);

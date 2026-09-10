@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Observables;
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
 /// <summary>Owns the endpoint, host, routing, and observer configuration for one in-memory bus.</summary>
-public class InMemoryBusConfiguration :
+internal sealed class InMemoryBusConfiguration :
     InMemoryEndpointConfiguration,
     IInMemoryBusConfiguration
 {

@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using ViciOne.ServiceBus.InMemoryTransport;
+using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;

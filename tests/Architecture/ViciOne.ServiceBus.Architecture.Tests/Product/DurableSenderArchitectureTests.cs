@@ -122,9 +122,9 @@ public sealed class DurableSenderArchitectureTests
             "ViciOne.ServiceBus.Providers.Persistence.DurableSendConsumerCompletion`1",
             "ViciOne.ServiceBus.Configuration.ReliableMessagingConfigurator`1",
             "ViciOne.ServiceBus.Configuration.BusCompositionStartupValidator`1",
-            "ViciOne.ServiceBus.Providers.Transports.InMemoryDurableSendDispatcher`1",
-            "ViciOne.ServiceBus.Providers.Transports.InMemoryDurableSendCompletionFilter",
-            "ViciOne.ServiceBus.Providers.Transports.InMemoryDurableSendContext",
+            "ViciOne.ServiceBus.InMemoryTransport.DurableSend.InMemoryDurableSendDispatcher`1",
+            "ViciOne.ServiceBus.InMemoryTransport.DurableSend.InMemoryDurableSendCompletionFilter",
+            "ViciOne.ServiceBus.InMemoryTransport.DurableSend.InMemoryDurableSendContext",
         ];
 
         foreach (string name in implementationNames)
@@ -135,7 +135,7 @@ public sealed class DurableSenderArchitectureTests
         }
 
         Type transportMessage = ProductAssemblyFacts.Core.GetType(
-            "ViciOne.ServiceBus.InMemoryTransport.InMemoryTransportMessage",
+            "ViciOne.ServiceBus.InMemoryTransport.Runtime.InMemoryTransportMessage",
             throwOnError: true)!;
         PropertyInfo capability = transportMessage.GetProperty(
             "DurableSendContext",

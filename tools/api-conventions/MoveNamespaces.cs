@@ -94,7 +94,7 @@ HashSet<string> advancedContractFiles = new(StringComparer.Ordinal)
 
 HashSet<string> configurationEntryPointFiles = new(StringComparer.Ordinal)
 {
-    "src/ViciOne.ServiceBus/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+    "src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
     "src/Transports/ViciOne.ServiceBus.ActiveMq/Configuration/ActiveMqBusFactoryConfiguratorExtensions.cs",
     "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
     "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureBusFactory.cs",

@@ -117,7 +117,7 @@ public sealed class ApiSurfaceArchitectureTests
 
         (string Path, string Method)[] transportSelectionEntryPoints =
         [
-            ("src/ViciOne.ServiceBus/InMemoryTransport/InMemoryConfigurationExtensions.cs", "public static void UsingInMemory"),
+            ("src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs", "public static void UsingInMemory"),
             ("src/Transports/ViciOne.ServiceBus.ActiveMq/Configuration/ActiveMqBusFactoryConfiguratorExtensions.cs", "public static void UsingActiveMq"),
             ("src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs", "public static void UsingAmazonSqs"),
             ("src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/AzureBusFactory.cs", "public static IBusControl CreateUsingServiceBus"),
@@ -138,6 +138,7 @@ public sealed class ApiSurfaceArchitectureTests
         [
             Path.Combine(RepositoryLayout.Root, "src", "Transports"),
             Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "InMemoryTransport"),
+            Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "Configuration", "InMemoryTransport"),
         ];
         Regex transportSelector = new(
             @"public\s+static[^\r\n{;]*\b(?:Using|CreateUsing)[A-Za-z0-9_]*\s*\(",

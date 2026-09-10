@@ -6,7 +6,7 @@ using ViciOne.ServiceBus.Util;
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
 /// <summary>Owns in-memory host settings, topology, endpoint registrations, and the shared message fabric.</summary>
-public class InMemoryHostConfiguration :
+internal sealed class InMemoryHostConfiguration :
     BaseHostConfiguration<IInMemoryReceiveEndpointConfiguration, IInMemoryReceiveEndpointConfigurator>,
     IInMemoryHostConfiguration,
     IInMemoryHostConfigurator
@@ -22,12 +22,14 @@ public class InMemoryHostConfiguration :
     /// <param name="baseAddress">The base address for in-memory endpoints, or <see langword="null"/> for <c>loopback://localhost/</c>.</param>
     /// <param name="topologyConfiguration">The topology configuration shared by endpoints and the message fabric.</param>
     public InMemoryHostConfiguration(IInMemoryBusConfiguration busConfiguration, Uri? baseAddress, IInMemoryTopologyConfiguration topologyConfiguration)
-        : base(busConfiguration)
+        : base(busConfiguration ?? throw new ArgumentNullException(nameof(busConfiguration)))
     {
         _busConfiguration = busConfiguration;
 
-        _hostAddress = baseAddress ?? new Uri("loopback://localhost/");
-        _topology = new InMemoryBusTopology(this, topologyConfiguration);
+        _hostAddress = NormalizeHostAddress(baseAddress ?? new Uri("loopback://localhost/"));
+        _topology = new InMemoryBusTopology(
+            this,
+            topologyConfiguration ?? throw new ArgumentNullException(nameof(topologyConfiguration)));
 
         ReceiveTransportRetryPolicy = Retry.CreatePolicy(x =>
         {
@@ -47,10 +49,10 @@ public class InMemoryHostConfiguration :
     /// <summary>Gets the policy used to retry transient receive-transport connection failures.</summary>
     public override IRetryPolicy ReceiveTransportRetryPolicy { get; }
 
-    /// <summary>Sets the base address used to resolve in-memory endpoints, defaulting a null value to <c>loopback://localhost/</c>.</summary>
+    /// <summary>Sets the validated loopback address used to resolve in-memory endpoints.</summary>
     public Uri BaseAddress
     {
-        set => _hostAddress = value ?? new Uri("loopback://localhost/");
+        set => _hostAddress = NormalizeHostAddress(value ?? throw new ArgumentNullException(nameof(value)));
     }
 
     /// <summary>Sets the positive maximum number of messages buffered by each in-memory queue.</summary>
@@ -116,6 +118,7 @@ public class InMemoryHostConfiguration :
     public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IInMemoryReceiveEndpointConfigurator>? configureEndpoint = null)
     {
+        ArgumentNullException.ThrowIfNull(definition);
         var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
 
         ReceiveEndpoint(queueName, configurator =>
@@ -130,6 +133,8 @@ public class InMemoryHostConfiguration :
     /// <param name="configureEndpoint">The callback applied before the endpoint is registered.</param>
     public override void ReceiveEndpoint(string queueName, Action<IInMemoryReceiveEndpointConfigurator> configureEndpoint)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+        ArgumentNullException.ThrowIfNull(configureEndpoint);
         CreateReceiveEndpointConfiguration(queueName, configureEndpoint);
     }
 
@@ -156,5 +161,10 @@ public class InMemoryHostConfiguration :
             endpointConfiguration.Build(host);
 
         return host;
+    }
+
+    static Uri NormalizeHostAddress(Uri address)
+    {
+        return new InMemoryHostAddress(address);
     }
 }

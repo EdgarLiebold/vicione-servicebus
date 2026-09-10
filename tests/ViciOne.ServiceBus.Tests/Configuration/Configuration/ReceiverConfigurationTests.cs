@@ -1,6 +1,6 @@
 using ViciOne.ServiceBus.Configuration;
-using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
+using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Transports;
 using Xunit;

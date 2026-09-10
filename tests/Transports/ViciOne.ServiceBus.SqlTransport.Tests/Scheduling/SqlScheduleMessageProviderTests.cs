@@ -1,5 +1,5 @@
 using System.Reflection;
-using ViciOne.ServiceBus.InMemoryTransport;
+using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.SqlTransport.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -26,7 +26,7 @@ public sealed class SqlScheduleMessageProviderTests
             Pipe.Empty<SendContext<Probe>>(),
             TestContext.Current.CancellationToken);
 
-        SendContext context = Assert.IsType<InMemorySendContext<Probe>>(
+        SendContext context = Assert.IsType<MessageSendContext<Probe>>(
             ((ScheduleEndpointProxy)(object)endpoint).Context);
         Assert.NotEqual(Guid.Empty, scheduled.TokenId);
         Assert.Equal(scheduled.TokenId, context.ScheduledMessageId);
@@ -96,7 +96,7 @@ public sealed class SqlScheduleMessageProviderTests
             if (targetMethod.Name == "SendAsync"
                 && args is [Probe message, IPipe<SendContext<Probe>> pipe, CancellationToken _])
             {
-                var context = new InMemorySendContext<Probe>(message);
+                var context = new MessageSendContext<Probe>(message);
                 Context = context;
                 return pipe.SendAsync(context);
             }

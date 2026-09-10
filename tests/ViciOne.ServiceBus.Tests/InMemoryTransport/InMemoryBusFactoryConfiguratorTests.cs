@@ -1,7 +1,10 @@
+using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
-using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
+using ViciOne.ServiceBus.InMemoryTransport.Topology;
+using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports.Fabric;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.InMemoryTransport;
@@ -23,6 +26,43 @@ public sealed class InMemoryBusFactoryConfiguratorTests
         configurator.AutoStart = false;
 
         Assert.False(specification.AutoStart);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "host-and-publish-callbacks-apply-exactly-once")]
+    public void HostAndPublishConfiguration_AppliesEveryCallbackToTheOwnedConfiguration()
+    {
+        (InMemoryBusFactoryConfigurator configurator, InMemoryBusConfiguration bus) = CreateConfigurator();
+        var hostCallbacks = 0;
+        var typedPublishCallbacks = 0;
+        var runtimePublishCallbacks = 0;
+
+        configurator.Host(host =>
+        {
+            hostCallbacks++;
+            host.QueueCapacity = 17;
+        });
+        configurator.Host(new Uri("loopback://custom/"), _ => hostCallbacks++);
+        configurator.Host("tenant-blue", _ => hostCallbacks++);
+        configurator.Publish<ConfiguredMessage>(publish =>
+        {
+            typedPublishCallbacks++;
+            publish.ExchangeType = ExchangeType.Direct;
+        });
+        configurator.Publish(typeof(RuntimeConfiguredMessage), _ => runtimePublishCallbacks++);
+
+        Assert.Equal(3, hostCallbacks);
+        Assert.Equal(1, typedPublishCallbacks);
+        Assert.Equal(1, runtimePublishCallbacks);
+        Assert.Equal(17, bus.HostConfiguration.QueueCapacity);
+        Assert.Equal(new Uri("loopback://custom/tenant-blue"), bus.HostConfiguration.HostAddress);
+        Assert.Equal(
+            ExchangeType.Direct,
+            ((IInMemoryMessagePublishTopology<ConfiguredMessage>)
+                configurator.PublishTopology.GetMessageTopology<ConfiguredMessage>()).ExchangeType);
+        Assert.Same(
+            configurator.PublishTopology.GetMessageTopology<RuntimeConfiguredMessage>(),
+            configurator.PublishTopology.GetMessageTopology(typeof(RuntimeConfiguredMessage)));
     }
 
     [Fact]
@@ -86,7 +126,9 @@ public sealed class InMemoryBusFactoryConfiguratorTests
             configurator.ReceiveEndpoint("queue", (Action<IReceiveEndpointConfigurator>)null!)).ParamName);
 
         Assert.Equal("configure", Assert.Throws<ArgumentNullException>(() => InMemoryBus.Create(null!)).ParamName);
-        Assert.Equal("configure", Assert.Throws<ArgumentNullException>(() => InMemoryBus.Create(null, null!)).ParamName);
+        Assert.Equal("baseAddress", Assert.Throws<ArgumentNullException>(() => InMemoryBus.Create(null!, _ => { })).ParamName);
+        Assert.Equal("configure", Assert.Throws<ArgumentNullException>(() =>
+            InMemoryBus.Create(new Uri("loopback://localhost/"), null!)).ParamName);
         Assert.Equal("selector", Assert.Throws<ArgumentNullException>(() =>
             InMemoryConfigurationExtensions.CreateUsingInMemory(null!, _ => { })).ParamName);
         Assert.Equal("baseAddress", Assert.Throws<ArgumentNullException>(() =>
@@ -95,8 +137,12 @@ public sealed class InMemoryBusFactoryConfiguratorTests
             InMemoryConfigurationExtensions.CreateUsingInMemory(Bus.Factory, (Action<IInMemoryBusFactoryConfigurator>)null!)).ParamName);
         Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
             InMemoryConfigurationExtensions.UsingInMemory(null!, (Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>?)null)).ParamName);
+        Assert.Equal("baseAddress", Assert.Throws<ArgumentNullException>(() =>
+            InMemoryConfigurationExtensions.UsingInMemory(CreateRegistrationConfigurator(), null!, null)).ParamName);
         Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
             InMemoryConfigurationExtensions.UsingInMemory<ITestBus>(null!, (Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>?)null)).ParamName);
+        Assert.Equal("baseAddress", Assert.Throws<ArgumentNullException>(() =>
+            InMemoryConfigurationExtensions.UsingInMemory<ITestBus>(CreateTypedRegistrationConfigurator(), null!, null)).ParamName);
     }
 
     private static (InMemoryBusFactoryConfigurator Configurator, InMemoryBusConfiguration Bus) CreateConfigurator()
@@ -104,6 +150,26 @@ public sealed class InMemoryBusFactoryConfiguratorTests
         var topology = new InMemoryTopologyConfiguration(InMemoryBus.CreateMessageTopology());
         var bus = new InMemoryBusConfiguration(topology, new Uri("loopback://localhost/"));
         return (new InMemoryBusFactoryConfigurator(bus), bus);
+    }
+
+    private static IBusRegistrationConfigurator CreateRegistrationConfigurator()
+    {
+        var services = new ServiceCollection();
+        IBusRegistrationConfigurator? configurator = null;
+
+        services.AddViciOneServiceBus(value => configurator = value);
+
+        return Assert.IsAssignableFrom<IBusRegistrationConfigurator>(configurator);
+    }
+
+    private static IBusRegistrationConfigurator<ITestBus> CreateTypedRegistrationConfigurator()
+    {
+        var services = new ServiceCollection();
+        IBusRegistrationConfigurator<ITestBus>? configurator = null;
+
+        services.AddViciOneServiceBus<ITestBus>(value => configurator = value);
+
+        return Assert.IsAssignableFrom<IBusRegistrationConfigurator<ITestBus>>(configurator);
     }
 
     private sealed class FailingCreationObserver : IBusObserver
@@ -135,5 +201,9 @@ public sealed class InMemoryBusFactoryConfiguratorTests
 
     private sealed class ExpectedObservationException : Exception;
 
-    private interface ITestBus : IBus;
+    private sealed record ConfiguredMessage;
+
+    private sealed record RuntimeConfiguredMessage;
+
+    public interface ITestBus : IBus;
 }

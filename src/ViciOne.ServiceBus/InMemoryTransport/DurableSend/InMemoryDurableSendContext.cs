@@ -1,16 +1,16 @@
 using System;
 
-namespace ViciOne.ServiceBus.Providers.Transports;
+namespace ViciOne.ServiceBus.InMemoryTransport.DurableSend;
 
 /// <summary>
-/// Process-local durable-send state carried by the InMemory transport. This object is a pipeline payload only and is
-/// deliberately excluded from transport headers and the serialized message body.
+/// Carries process-local durable-send completion state as an in-memory pipeline payload. The state is never written
+/// to transport headers or the serialized message body.
 /// </summary>
-/// <param name="DurableSendId">The durable send id.</param>
-/// <param name="ContractIdentity">The contract identity.</param>
-/// <param name="Attempt">The attempt.</param>
-/// <param name="Metadata">The metadata.</param>
-/// <param name="ConsumerCompletion">The consumer completion.</param>
+/// <param name="DurableSendId">The durable-send operation identifier.</param>
+/// <param name="ContractIdentity">The stable message-contract identity.</param>
+/// <param name="Attempt">The one-based delivery attempt.</param>
+/// <param name="Metadata">The immutable reliable-envelope metadata.</param>
+/// <param name="ConsumerCompletion">The capability used to persist successful consumer completion.</param>
 internal sealed record InMemoryDurableSendContext(
     DurableSendId DurableSendId,
     MessageContractIdentity ContractIdentity,

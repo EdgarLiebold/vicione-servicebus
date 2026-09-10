@@ -1,5 +1,5 @@
 using System.Reflection;
-using ViciOne.ServiceBus.InMemoryTransport;
+using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;

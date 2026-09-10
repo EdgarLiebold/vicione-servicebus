@@ -1,4 +1,4 @@
-using ViciOne.ServiceBus.InMemoryTransport;
+using ViciOne.ServiceBus.Providers.Transports;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 

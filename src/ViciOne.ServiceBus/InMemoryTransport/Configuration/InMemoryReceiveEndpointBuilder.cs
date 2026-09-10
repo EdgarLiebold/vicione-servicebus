@@ -2,27 +2,27 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>Builds in memory receive endpoint components.</summary>
-public class InMemoryReceiveEndpointBuilder :
+/// <summary>Builds an in-memory receive pipeline and its message-topology bindings.</summary>
+internal sealed class InMemoryReceiveEndpointBuilder :
     ReceiveEndpointBuilder
 {
     readonly IInMemoryReceiveEndpointConfiguration _configuration;
     readonly IInMemoryHostConfiguration _hostConfiguration;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="hostConfiguration">The host configuration.</param>
-    /// <param name="configuration">The callback used to configure the component.</param>
+    /// <summary>Creates a builder for one receive endpoint configuration.</summary>
+    /// <param name="hostConfiguration">The host that owns the endpoint.</param>
+    /// <param name="configuration">The receive endpoint configuration to materialize.</param>
     public InMemoryReceiveEndpointBuilder(IInMemoryHostConfiguration hostConfiguration, IInMemoryReceiveEndpointConfiguration configuration)
-        : base(configuration)
+        : base(configuration ?? throw new ArgumentNullException(nameof(configuration)))
     {
-        _hostConfiguration = hostConfiguration;
+        _hostConfiguration = hostConfiguration ?? throw new ArgumentNullException(nameof(hostConfiguration));
         _configuration = configuration;
     }
 
-    /// <summary>Connects consume pipe.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="pipe">The pipeline stages to apply.</param>
-    /// <param name="options">The options that control the operation.</param>
+    /// <summary>Connects a consume pipe and adds its message exchange binding when requested.</summary>
+    /// <typeparam name="T">The consumed message contract.</typeparam>
+    /// <param name="pipe">The consume pipe to connect.</param>
+    /// <param name="options">The options that control topology configuration.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public override ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
     {
@@ -36,11 +36,11 @@ public class InMemoryReceiveEndpointBuilder :
         return base.ConnectConsumePipe(pipe, options);
     }
 
-    /// <summary>Creates receive endpoint context.</summary>
-    /// <returns>The created receive endpoint context.</returns>
-    public InMemoryReceiveEndpointContext CreateReceiveEndpointContext()
+    /// <summary>Creates the runtime endpoint context and adds the host topology as a payload.</summary>
+    /// <returns>The configured runtime endpoint context.</returns>
+    public IInMemoryReceiveEndpointContext CreateReceiveEndpointContext()
     {
-        var context = new TransportInMemoryReceiveEndpointContext(_hostConfiguration, _configuration);
+        var context = new InMemoryReceiveEndpointContext(_hostConfiguration, _configuration);
 
         context.GetOrAddPayload(() => _hostConfiguration.Topology);
 

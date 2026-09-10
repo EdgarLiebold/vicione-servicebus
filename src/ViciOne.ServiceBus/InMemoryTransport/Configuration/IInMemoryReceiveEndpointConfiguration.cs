@@ -3,15 +3,15 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>Defines in memory receive endpoint configuration.</summary>
-public interface IInMemoryReceiveEndpointConfiguration :
+/// <summary>Builds one configured in-memory receive endpoint.</summary>
+internal interface IInMemoryReceiveEndpointConfiguration :
     IReceiveEndpointConfiguration,
     IInMemoryEndpointConfiguration
 {
-    /// <summary>Gets the configurator.</summary>
+    /// <summary>Gets the transport-specific endpoint configurator.</summary>
     IInMemoryReceiveEndpointConfigurator Configurator { get; }
 
-    /// <summary>Builds the configured component.</summary>
-    /// <param name="host">The host.</param>
+    /// <summary>Builds and registers the receive endpoint with a host.</summary>
+    /// <param name="host">The host that owns the endpoint lifecycle.</param>
     void Build(IHost host);
 }

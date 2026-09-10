@@ -2,9 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.Internals.GraphValidation;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Providers.Transports;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 

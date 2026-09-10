@@ -8,7 +8,6 @@ using Quartz.Impl;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Context;
-using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.Operations;
 using ViciOne.ServiceBus.Quartz.Runtime;
 using ViciOne.ServiceBus.Serialization;
@@ -81,7 +80,7 @@ public sealed class QuartzScheduledMessageSendPipeTests
             supportedMessageTypes,
             timeProvider);
         supportedMessageTypes[0] = "urn:message:mutated";
-        var sendContext = new InMemorySendContext<SerializedMessageBody>(new SerializedMessageBody())
+        var sendContext = new RoutingSendContext<SerializedMessageBody>(new SerializedMessageBody())
         {
             Serialization = serialization,
         };
@@ -165,7 +164,7 @@ public sealed class QuartzScheduledMessageSendPipeTests
             DestinationAddress,
             [],
             TimeProvider.System);
-        var sendContext = new InMemorySendContext<SerializedMessageBody>(new SerializedMessageBody())
+        var sendContext = new RoutingSendContext<SerializedMessageBody>(new SerializedMessageBody())
         {
             Serialization = new SerializationConfiguration().CreateSerializerCollection(),
         };
@@ -214,6 +213,20 @@ public sealed class QuartzScheduledMessageSendPipeTests
     }
 
     private sealed record ScheduledPayload(string Value);
+
+    private sealed class RoutingSendContext<TMessage>(TMessage message) :
+        MessageSendContext<TMessage>(message),
+        RoutingKeySendContext
+        where TMessage : class
+    {
+        public string? RoutingKey { get; set; }
+
+        public override void ReadPropertiesFrom(IReadOnlyDictionary<string, object> properties)
+        {
+            base.ReadPropertiesFrom(properties);
+            RoutingKey = ReadString(properties, "RoutingKey");
+        }
+    }
 
     private class NoOpDispatchProxy : DispatchProxy
     {

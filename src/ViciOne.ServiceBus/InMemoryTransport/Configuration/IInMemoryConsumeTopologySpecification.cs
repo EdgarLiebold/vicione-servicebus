@@ -2,11 +2,11 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
-/// <summary>Describes requirements for in memory consume topology.</summary>
-public interface IInMemoryConsumeTopologySpecification :
+/// <summary>Validates and applies one in-memory consume-topology operation.</summary>
+internal interface IInMemoryConsumeTopologySpecification :
     ISpecification
 {
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="builder">The builder that receives the configuration.</param>
+    /// <summary>Applies the operation to a consume topology builder.</summary>
+    /// <param name="builder">The consume topology builder to update.</param>
     void Apply(IMessageFabricConsumeTopologyBuilder builder);
 }

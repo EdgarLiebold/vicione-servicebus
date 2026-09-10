@@ -45,7 +45,7 @@ public sealed class InboundMessageLimitsArchitectureTests
     [Fact]
     [RequirementCoverage("REQ-VSB-INBOUND-MESSAGE-LIMITS", "in-memory")]
     public void InMemoryReceivePath_RejectsOversizedWireBodiesBeforeDeserialization() =>
-        AssertGuardedTransportBody("src/ViciOne.ServiceBus/InMemoryTransport/InMemoryReceiveContext.cs");
+        AssertGuardedTransportBody("src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveContext.cs");
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INBOUND-MESSAGE-LIMITS", "mediator")]
