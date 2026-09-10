@@ -12,8 +12,8 @@ public sealed class BackgroundWorkOwnershipTests
         "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/AmazonSqsMessageReceiver.cs",
         "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/BatchCheckpointer.cs",
         "src/ViciOne.ServiceBus.JobService/Runtime/JobProgressBuffer.cs",
-        "src/ViciOne.ServiceBus/SqlTransport/Middleware/SqlMessageReceiver.cs",
-        "src/ViciOne.ServiceBus/SqlTransport/SqlReceiveLockContext.cs",
+        "src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/SqlMessageReceiver.cs",
+        "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
         "src/ViciOne.ServiceBus/Transports/Fabric/MessageQueue.cs",
     ];
 

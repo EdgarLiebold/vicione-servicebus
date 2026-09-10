@@ -77,4 +77,29 @@ public sealed class SqlConfigurationTests
         Assert.Contains(results, result => result.Disposition == ValidationResultDisposition.Failure
             && string.Equals(result.Value, "ReceiveMode", StringComparison.Ordinal));
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SQL-PARTITIONED-RECEIVE", "transport-neutral-capability-selects-sql-partitioning")]
+    public void PartitionedReceiveCapability_SelectsSqlPartitionedMode()
+    {
+        var topology = new SqlTopologyConfiguration(SqlBusFactory.CreateMessageTopology());
+        var bus = new SqlBusConfiguration(topology);
+        var host = Assert.IsType<SqlHostConfiguration>(bus.HostConfiguration);
+        host.Settings = new SqlServerSqlHostSettings(new SqlTransportOptions
+        {
+            Host = "localhost",
+            Database = "transport_tests",
+            Schema = "transport",
+            Username = "test_user",
+            Password = "test_password",
+        });
+        var endpoint = Assert.IsType<SqlReceiveEndpointConfiguration>(
+            host.CreateReceiveEndpointConfiguration("partitioned_jobs", null));
+
+        var partitionedConfigurator = Assert.IsAssignableFrom<IPartitionedReceiveEndpointConfigurator>(endpoint);
+        partitionedConfigurator.SetPartitionedReceive();
+
+        Assert.Equal(SqlReceiveMode.Partitioned, endpoint.Settings.ReceiveMode);
+        Assert.Equal(1, endpoint.Settings.ConcurrentDeliveryLimit);
+    }
 }

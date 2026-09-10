@@ -62,6 +62,8 @@ public sealed class ProductProjectMetadataTests
                 "Saga persistence contracts and state-machine execution for ViciOne.ServiceBus.",
             ["ViciOne.ServiceBus.SignalR"] =
                 "SignalR scale-out backplane integration for ViciOne.ServiceBus.",
+            ["ViciOne.ServiceBus.SqlTransport"] =
+                "Provider-neutral SQL queue, topic, scheduling, and delivery runtime for ViciOne.ServiceBus.",
             ["ViciOne.ServiceBus.SqlTransport.PostgreSql"] =
                 "PostgreSQL-backed queue and topic transport integration for ViciOne.ServiceBus.",
             ["ViciOne.ServiceBus.SqlTransport.SqlServer"] =

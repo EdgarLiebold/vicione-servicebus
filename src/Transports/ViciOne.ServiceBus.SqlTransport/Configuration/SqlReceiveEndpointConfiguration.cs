@@ -236,6 +236,11 @@ public class SqlReceiveEndpointConfiguration :
         _settings.ReceiveMode = mode;
     }
 
+    void IPartitionedReceiveEndpointConfigurator.SetPartitionedReceive()
+    {
+        SetReceiveMode(SqlReceiveMode.Partitioned);
+    }
+
     /// <summary>Configures client.</summary>
     /// <param name="configure">The callback used to configure the component.</param>
     public void ConfigureClient(Action<IPipeConfigurator<ClientContext>>? configure)

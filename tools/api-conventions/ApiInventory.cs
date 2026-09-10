@@ -43,6 +43,7 @@ string[] products =
     "ViciOne.ServiceBus.AzureServiceBus.Testing",
     "ViciOne.ServiceBus.EventHubs",
     "ViciOne.ServiceBus.EventHubs.Testing",
+    "ViciOne.ServiceBus.SqlTransport",
     "ViciOne.ServiceBus.SqlTransport.PostgreSql",
     "ViciOne.ServiceBus.SqlTransport.SqlServer",
     "ViciOne.ServiceBus.EntityFrameworkCore",

@@ -64,8 +64,8 @@ public sealed class InboundMessageLimitsArchitectureTests
     static void AssertGuardedSqlProvider(string providerProject)
     {
         string project = Read(providerProject);
-        Assert.Contains("ViciOne.ServiceBus.csproj", project, StringComparison.Ordinal);
-        AssertGuardedTransportBody("src/ViciOne.ServiceBus/SqlTransport/SqlReceiveContext.cs");
+        Assert.Contains("ViciOne.ServiceBus.SqlTransport.csproj", project, StringComparison.Ordinal);
+        AssertGuardedTransportBody("src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveContext.cs");
     }
 
     static void AssertGuardedTransportBody(string receiveContextPath)

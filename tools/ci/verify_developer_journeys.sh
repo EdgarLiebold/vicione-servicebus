@@ -147,6 +147,7 @@ expected_packages=(
   "ViciOne.ServiceBus.RabbitMq.1.0.0.nupkg"
   "ViciOne.ServiceBus.RabbitMq.Testing.1.0.0.nupkg"
   "ViciOne.ServiceBus.SignalR.1.0.0.nupkg"
+  "ViciOne.ServiceBus.SqlTransport.1.0.0.nupkg"
   "ViciOne.ServiceBus.SqlTransport.PostgreSql.1.0.0.nupkg"
   "ViciOne.ServiceBus.SqlTransport.SqlServer.1.0.0.nupkg"
   "ViciOne.ServiceBus.StateMachineVisualizer.1.0.0.nupkg"
@@ -222,4 +223,4 @@ elif ! cmp -s "$committed_public_api_contract" "$public_api_contract"; then
   exit 1
 fi
 
-printf 'Developer journey package-consumer gate passed: 18 scenarios, 30 freshly packed ViciOne packages, 3 isolated provider testing consumers executed, and 29 runtime package APIs match the committed baseline.\n'
+printf 'Developer journey package-consumer gate passed: 18 scenarios, 31 freshly packed ViciOne packages, 3 isolated provider testing consumers executed, and 30 runtime package APIs match the committed baseline.\n'

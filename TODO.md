@@ -42,7 +42,6 @@ architectural boundary:
 - `src/ViciOne.ServiceBus/InMemoryTransport/InMemoryTransport`;
 - `src/ViciOne.ServiceBus/JobService/JobService`;
 - `src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine`;
-- `src/ViciOne.ServiceBus/SqlTransport/SqlTransport`;
 - `src/ViciOne.ServiceBus/Topology/Topology`.
 
 Before moving anything, inventory path-sensitive build inputs, generated files, `CallerFilePath`

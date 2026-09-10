@@ -48,7 +48,7 @@ public static class JobSagaBusConfigurationExtensions
         configurator.SendTopology.UsePartitionKeyFormatter<GetJobAttemptStatus>(x => x.Message.JobId.ToString("N"));
     }
 
-    /// <summary>Configures all job coordination endpoints to use SQL transport partitioned receive mode.</summary>
+    /// <summary>Configures every job coordination endpoint to process independent partition-key streams.</summary>
     /// <param name="configurator">The configurator to update.</param>
     /// <returns>The supplied job coordination configurator.</returns>
     public static IJobSagaRegistrationConfigurator UsePartitionedReceiveMode(this IJobSagaRegistrationConfigurator configurator)
@@ -59,8 +59,16 @@ public static class JobSagaBusConfigurationExtensions
         {
             e.AddConfigureEndpointCallback(cfg =>
             {
-                if (cfg is ISqlReceiveEndpointConfigurator sql)
-                    sql.SetReceiveMode(SqlReceiveMode.Partitioned);
+                if (cfg is not IPartitionedReceiveEndpointConfigurator partitionedConfigurator)
+                {
+                    throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                        "Job service",
+                        cfg.InputAddress.ToString(),
+                        $"The receive endpoint configurator '{cfg.GetType().FullName}' does not support partitioned receive processing.",
+                        "Use a transport that supports partitioned receive processing, or omit UsePartitionedReceiveMode."));
+                }
+
+                partitionedConfigurator.SetPartitionedReceive();
             });
         });
     }

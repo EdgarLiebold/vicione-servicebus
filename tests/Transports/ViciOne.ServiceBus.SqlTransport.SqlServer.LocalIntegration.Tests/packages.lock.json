@@ -473,12 +473,18 @@
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
+      "vicione.servicebus.sqltransport": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
       "vicione.servicebus.sqltransport.postgresql": {
         "type": "Project",
         "dependencies": {
           "Dapper": "[2.1.79, )",
           "Npgsql": "[10.0.3, )",
-          "ViciOne.ServiceBus": "[1.0.0, )"
+          "ViciOne.ServiceBus.SqlTransport": "[1.0.0, )"
         }
       },
       "vicione.servicebus.sqltransport.sqlserver": {
@@ -486,7 +492,7 @@
         "dependencies": {
           "Dapper": "[2.1.79, )",
           "Microsoft.Data.SqlClient": "[7.0.2, )",
-          "ViciOne.ServiceBus": "[1.0.0, )"
+          "ViciOne.ServiceBus.SqlTransport": "[1.0.0, )"
         }
       },
       "vicione.servicebus.testing": {

@@ -60,6 +60,28 @@ public sealed class JobServiceEndpointConfigurationTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-ENDPOINT-CONFIGURATION", "partitioned-receive-rejects-unsupported-transport")]
+    public void PartitionedReceiveMode_RejectsATransportWithoutTheCapability()
+    {
+        using ServiceProvider provider = new ServiceCollection()
+            .AddViciOneServiceBus(configuration =>
+            {
+                configuration.Limits(MessageLimits.Conservative);
+                configuration.SetInMemorySagaRepositoryProvider();
+                configuration.AddJobSagaStateMachines()
+                    .UsePartitionedReceiveMode();
+                configuration.UsingInMemory((context, bus) => bus.ConfigureEndpoints(context));
+            })
+            .BuildServiceProvider();
+
+        ConfigurationException exception = Assert.Throws<ConfigurationException>(
+            () => provider.GetRequiredService<IBusControl>());
+
+        Assert.Contains("does not support partitioned receive processing", exception.Message, StringComparison.Ordinal);
+        Assert.Contains("Use a transport that supports partitioned receive processing", exception.Message, StringComparison.Ordinal);
+    }
+
     private static Dictionary<string, HashSet<string>> FiltersByEndpoint(IBusControl bus)
     {
         IProbeResult probe = bus.GetProbeResult();

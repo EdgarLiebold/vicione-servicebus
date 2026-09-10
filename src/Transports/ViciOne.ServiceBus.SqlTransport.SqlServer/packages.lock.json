@@ -223,6 +223,12 @@
       "vicione.servicebus.abstractions": {
         "type": "Project"
       },
+      "vicione.servicebus.sqltransport": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
       "FastExpressionCompiler": {
         "type": "CentralTransitive",
         "requested": "[5.4.1, )",

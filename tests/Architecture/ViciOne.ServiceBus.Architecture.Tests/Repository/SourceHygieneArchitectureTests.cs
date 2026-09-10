@@ -94,7 +94,7 @@ public sealed partial class SourceHygieneArchitectureTests
             new("src/Transports/ViciOne.ServiceBus.ActiveMq/", ActiveMqForeignVocabulary(), "ActiveMQ topic and selector vocabulary"),
             new("src/Transports/ViciOne.ServiceBus.AmazonSqs/", AmazonSqsForeignVocabulary(), "Amazon SNS/SQS topic, subscription, and queue vocabulary"),
             new("src/Transports/ViciOne.ServiceBus.AzureServiceBus/", AzureServiceBusForeignVocabulary(), "Azure topic, subscription, rule, and queue vocabulary"),
-            new("src/ViciOne.ServiceBus/SqlTransport/", SqlTransportForeignVocabulary(), "SQL topic, subscription, routing-key, and queue vocabulary"),
+            new("src/Transports/ViciOne.ServiceBus.SqlTransport/", SqlTransportForeignVocabulary(), "SQL topic, subscription, routing-key, and queue vocabulary"),
         ];
 
         string[] violations = ProductComments()

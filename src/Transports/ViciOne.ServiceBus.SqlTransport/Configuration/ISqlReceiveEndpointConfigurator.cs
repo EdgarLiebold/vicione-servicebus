@@ -6,6 +6,7 @@ namespace ViciOne.ServiceBus.Providers.Transports;
 /// <summary>Configure a database transport receive endpoint.</summary>
 public interface ISqlReceiveEndpointConfigurator :
     IReceiveEndpointConfigurator,
+    IPartitionedReceiveEndpointConfigurator,
     ISqlQueueEndpointConfigurator
 {
     /// <summary>

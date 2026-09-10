@@ -21,6 +21,7 @@ public sealed class ProviderCapabilityMatrixTests
         string[] expectedTransportProjects = Directory
             .GetFiles(Path.Combine(RepositoryLayout.Root, "src", "Transports"), "*.csproj", SearchOption.AllDirectories)
             .Where(static path => !path.Contains(".Testing", StringComparison.Ordinal))
+            .Where(static path => Path.GetFileNameWithoutExtension(path) != "ViciOne.ServiceBus.SqlTransport")
             .Append(Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "ViciOne.ServiceBus.csproj"))
             .Append(Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.SignalR", "ViciOne.ServiceBus.SignalR.csproj"))
             .Select(RepositoryLayout.RelativeToRoot)

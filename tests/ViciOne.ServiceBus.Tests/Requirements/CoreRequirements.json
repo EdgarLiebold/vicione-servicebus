@@ -3309,6 +3309,13 @@
       "variantKey" : "registration-context-outbox-on-all-job-sagas"
    },
    {
+      "requirementId" : "REQ-VSB-JOB-ENDPOINT-CONFIGURATION",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PartitionedReceiveMode_RejectsATransportWithoutTheCapability",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.Configuration.JobServiceEndpointConfigurationTests",
+      "variantKey" : "partitioned-receive-rejects-unsupported-transport"
+   },
+   {
       "requirementId" : "REQ-VSB-JOB-SAGA-PERSISTENCE",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "NewJobTypeSaga_InitializesEveryPersistedCollection",

@@ -38,6 +38,7 @@
     <PackageReference Include="ViciOne.ServiceBus.RabbitMq.Testing" Version="1.0.0" />
     <PackageReference Include="ViciOne.ServiceBus.Sagas" Version="1.0.0" />
     <PackageReference Include="ViciOne.ServiceBus.SignalR" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.SqlTransport" Version="1.0.0" />
     <PackageReference Include="ViciOne.ServiceBus.SqlTransport.PostgreSql" Version="1.0.0" />
     <PackageReference Include="ViciOne.ServiceBus.SqlTransport.SqlServer" Version="1.0.0" />
     <PackageReference Include="ViciOne.ServiceBus.StateMachineVisualizer" Version="1.0.0" />

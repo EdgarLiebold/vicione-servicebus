@@ -26,6 +26,7 @@ are deliberately absent here rather than listed as if they still shipped.
 * [ViciOne.ServiceBus.AmazonSqs](https://nuget.org/packages/ViciOne.ServiceBus.AmazonSqs/)
 * [ViciOne.ServiceBus.AzureServiceBus](https://nuget.org/packages/ViciOne.ServiceBus.AzureServiceBus/)
 * [ViciOne.ServiceBus.RabbitMq](https://nuget.org/packages/ViciOne.ServiceBus.RabbitMq/)
+* [ViciOne.ServiceBus.SqlTransport](https://nuget.org/packages/ViciOne.ServiceBus.SqlTransport/)
 * [ViciOne.ServiceBus.SqlTransport.PostgreSql](https://nuget.org/packages/ViciOne.ServiceBus.SqlTransport.PostgreSql/)
 * [ViciOne.ServiceBus.SqlTransport.SqlServer](https://nuget.org/packages/ViciOne.ServiceBus.SqlTransport.SqlServer/)
 

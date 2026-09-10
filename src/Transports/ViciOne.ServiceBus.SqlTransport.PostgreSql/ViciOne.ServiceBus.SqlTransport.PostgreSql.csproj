@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="..\ViciOne.ServiceBus.SqlTransport\ViciOne.ServiceBus.SqlTransport.csproj" />
   </ItemGroup>
 
   <ItemGroup>

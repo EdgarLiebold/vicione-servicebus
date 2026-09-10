@@ -56,6 +56,7 @@ public sealed class DeveloperJourneyArchitectureTests
         "ViciOne.ServiceBus.RabbitMq.Testing",
         "ViciOne.ServiceBus.Sagas",
         "ViciOne.ServiceBus.SignalR",
+        "ViciOne.ServiceBus.SqlTransport",
         "ViciOne.ServiceBus.SqlTransport.PostgreSql",
         "ViciOne.ServiceBus.SqlTransport.SqlServer",
         "ViciOne.ServiceBus.StateMachineVisualizer",
