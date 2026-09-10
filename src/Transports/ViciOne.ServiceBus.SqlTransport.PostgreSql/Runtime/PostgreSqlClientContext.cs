@@ -491,27 +491,4 @@ internal sealed class PostgreSqlClientContext :
         return result == messageDeliveryId;
     }
 
-    async Task<T> ExecuteDatabaseOperationAsync<T>(
-        Func<IDbConnection, IDbTransaction, CancellationToken, Task<T>> operation,
-        CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(operation);
-
-        if (!CancellationToken.CanBeCanceled)
-        {
-            return await _context.QueryAsync(
-                (connection, transaction) => operation(connection, transaction, cancellationToken), cancellationToken).ConfigureAwait(false);
-        }
-
-        if (!cancellationToken.CanBeCanceled || cancellationToken == CancellationToken)
-        {
-            return await _context.QueryAsync(
-                (connection, transaction) => operation(connection, transaction, CancellationToken), CancellationToken).ConfigureAwait(false);
-        }
-
-        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
-
-        return await _context.QueryAsync(
-            (connection, transaction) => operation(connection, transaction, linkedSource.Token), linkedSource.Token).ConfigureAwait(false);
-    }
 }

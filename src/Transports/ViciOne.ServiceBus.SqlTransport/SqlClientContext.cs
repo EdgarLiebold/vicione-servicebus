@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Middleware;
@@ -7,49 +8,51 @@ using ViciOne.ServiceBus.SqlTransport.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>Carries state for sql client operations.</summary>
+/// <summary>Defines provider operations executed within one supervised SQL client lifetime.</summary>
 public abstract class SqlClientContext :
     ScopePipeContext,
     ClientContext
 {
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <summary>Initializes a client for a supervised connection context.</summary>
+    /// <param name="context">The provider connection context.</param>
+    /// <param name="cancellationToken">The token that ends the client lifetime.</param>
     protected SqlClientContext(ConnectionContext context, CancellationToken cancellationToken)
         : base(context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         ConnectionContext = context;
         CancellationToken = cancellationToken;
     }
 
-    /// <summary>Gets the cancellation token.</summary>
+    /// <summary>Gets the token that ends this client lifetime.</summary>
     public override CancellationToken CancellationToken { get; }
 
-    /// <summary>Gets the connection context.</summary>
+    /// <summary>Gets the provider connection context used by this client.</summary>
     public ConnectionContext ConnectionContext { get; }
 
-    /// <summary>Creates queue.</summary>
-    /// <param name="queue">The queue.</param>
+    /// <summary>Creates or resolves a queue.</summary>
+    /// <param name="queue">The queue topology definition.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the created value.</returns>
     public abstract Task<long> CreateQueueAsync(Queue queue, CancellationToken cancellationToken = default);
-    /// <summary>Creates topic.</summary>
-    /// <param name="topic">The topic.</param>
+    /// <summary>Creates or resolves a topic.</summary>
+    /// <param name="topic">The topic topology definition.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the created value.</returns>
     public abstract Task<long> CreateTopicAsync(Topic topic, CancellationToken cancellationToken = default);
-    /// <summary>Creates topic subscription.</summary>
-    /// <param name="subscription">The subscription.</param>
+    /// <summary>Creates or resolves a topic-to-topic subscription.</summary>
+    /// <param name="subscription">The subscription topology definition.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the created value.</returns>
     public abstract Task<long> CreateTopicSubscriptionAsync(TopicToTopicSubscription subscription, CancellationToken cancellationToken = default);
-    /// <summary>Creates queue subscription.</summary>
-    /// <param name="subscription">The subscription.</param>
+    /// <summary>Creates or resolves a topic-to-queue subscription.</summary>
+    /// <param name="subscription">The subscription topology definition.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the created value.</returns>
     public abstract Task<long> CreateQueueSubscriptionAsync(TopicToQueueSubscription subscription, CancellationToken cancellationToken = default);
-    /// <summary>Purges queue.</summary>
-    /// <param name="queueName">The queue name.</param>
+    /// <summary>Removes pending deliveries from a primary queue.</summary>
+    /// <param name="queueName">The primary queue name.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the purge queue outcome.</returns>
     public abstract Task<long> PurgeQueueAsync(string queueName, CancellationToken cancellationToken);
@@ -72,7 +75,7 @@ public abstract class SqlClientContext :
     public abstract Task PublishAsync<T>(string topicName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>Receives messages.</summary>
+    /// <summary>Acquires a batch of eligible deliveries.</summary>
     /// <param name="queueName">The queue name.</param>
     /// <param name="mode">The mode.</param>
     /// <param name="messageLimit">The message limit.</param>
@@ -83,30 +86,30 @@ public abstract class SqlClientContext :
     public abstract Task<IEnumerable<SqlTransportMessage>> ReceiveMessagesAsync(string queueName, SqlReceiveMode mode, int messageLimit, int concurrentLimit,
         TimeSpan lockDuration, CancellationToken cancellationToken = default);
 
-    /// <summary>Converts this value to uch queue.</summary>
+    /// <summary>Updates a queue's last-used timestamp.</summary>
     /// <param name="queueName">The queue name.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public abstract Task TouchQueueAsync(string queueName, CancellationToken cancellationToken = default);
-    /// <summary>Moves to the dead-letter destination queue.</summary>
+    /// <summary>Moves exhausted deliveries to the dead-letter queue.</summary>
     /// <param name="queueName">The queue name.</param>
     /// <param name="messageCount">The message count.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the dead letter queue outcome.</returns>
     public abstract Task<int?> DeadLetterQueueAsync(string queueName, int messageCount, CancellationToken cancellationToken = default);
 
-    /// <summary>Deletes message.</summary>
+    /// <summary>Completes a locked delivery.</summary>
     /// <param name="lockId">The lock id.</param>
     /// <param name="messageDeliveryId">The message delivery id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the delete message outcome.</returns>
     public abstract Task<bool> DeleteMessageAsync(Guid lockId, long messageDeliveryId, CancellationToken cancellationToken = default);
-    /// <summary>Deletes scheduled message.</summary>
+    /// <summary>Cancels an untouched scheduled message.</summary>
     /// <param name="tokenId">The token id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the delete scheduled message outcome.</returns>
     public abstract Task<bool> DeleteScheduledMessageAsync(Guid tokenId, CancellationToken cancellationToken);
-    /// <summary>Moves message.</summary>
+    /// <summary>Moves a locked delivery to another queue category.</summary>
     /// <param name="lockId">The lock id.</param>
     /// <param name="messageDeliveryId">The message delivery id.</param>
     /// <param name="queueName">The queue name.</param>
@@ -117,7 +120,7 @@ public abstract class SqlClientContext :
     /// <returns>A task that produces the move message outcome.</returns>
     public abstract Task<bool> MoveMessageAsync(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType, DateTimeOffset? expirationTime,
         SendHeaders sendHeaders, CancellationToken cancellationToken = default);
-    /// <summary>Renews lock.</summary>
+    /// <summary>Renews a delivery lock.</summary>
     /// <param name="lockId">The lock id.</param>
     /// <param name="messageDeliveryId">The message delivery id.</param>
     /// <param name="duration">The duration.</param>
@@ -132,4 +135,33 @@ public abstract class SqlClientContext :
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the unlock outcome.</returns>
     public abstract Task<bool> UnlockAsync(Guid lockId, long messageDeliveryId, TimeSpan delay, SendHeaders sendHeaders, CancellationToken cancellationToken = default);
+
+    /// <summary>Executes a provider command governed by both the client lifetime and the caller's cancellation token.</summary>
+    /// <typeparam name="T">The command result type.</typeparam>
+    /// <param name="operation">The database operation to execute inside the provider transaction.</param>
+    /// <param name="cancellationToken">The caller's cancellation token.</param>
+    /// <returns>The database operation result.</returns>
+    protected async Task<T> ExecuteDatabaseOperationAsync<T>(
+        Func<IDbConnection, IDbTransaction, CancellationToken, Task<T>> operation,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+
+        if (!CancellationToken.CanBeCanceled)
+        {
+            return await ConnectionContext.QueryAsync(
+                (connection, transaction) => operation(connection, transaction, cancellationToken), cancellationToken).ConfigureAwait(false);
+        }
+
+        if (!cancellationToken.CanBeCanceled || cancellationToken == CancellationToken)
+        {
+            return await ConnectionContext.QueryAsync(
+                (connection, transaction) => operation(connection, transaction, CancellationToken), CancellationToken).ConfigureAwait(false);
+        }
+
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+
+        return await ConnectionContext.QueryAsync(
+            (connection, transaction) => operation(connection, transaction, linkedSource.Token), linkedSource.Token).ConfigureAwait(false);
+    }
 }

@@ -14,17 +14,17 @@ using ViciOne.ServiceBus.Util;
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
 /// <summary>Coordinates SQL Server connections, transactions, retries, and transport maintenance.</summary>
-public class SqlServerDbConnectionContext :
+internal sealed class SqlServerConnectionContext :
     BasePipeContext,
     ConnectionContext,
     IAsyncDisposable
 {
     readonly TaskExecutor _executor;
     readonly ISqlHostConfiguration _hostConfiguration;
-    readonly SqlServerSqlHostSettings _hostSettings;
+    readonly SqlServerHostSettings _hostSettings;
     readonly IRetryPolicy _retryPolicy;
 
-    static SqlServerDbConnectionContext()
+    static SqlServerConnectionContext()
     {
         DefaultTypeMap.MatchNamesWithUnderscores = true;
         SqlMapper.AddTypeHandler(new UriTypeHandler());
@@ -33,12 +33,14 @@ public class SqlServerDbConnectionContext :
     /// <summary>Initializes a SQL Server connection context and registers its maintenance agent when enabled.</summary>
     /// <param name="hostConfiguration">The SQL host configuration.</param>
     /// <param name="supervisor">The supervisor that owns the maintenance agent.</param>
-    public SqlServerDbConnectionContext(ISqlHostConfiguration hostConfiguration, ITransportSupervisor<ConnectionContext> supervisor)
-        : base(supervisor.Stopped)
+    public SqlServerConnectionContext(ISqlHostConfiguration hostConfiguration, ITransportSupervisor<ConnectionContext> supervisor)
+        : base(GetStoppedToken(supervisor))
     {
+        ArgumentNullException.ThrowIfNull(hostConfiguration);
+
         _hostConfiguration = hostConfiguration;
 
-        _hostSettings = hostConfiguration.Settings as SqlServerSqlHostSettings
+        _hostSettings = hostConfiguration.Settings as SqlServerHostSettings
             ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("SQL transport", "unknown", "The host settings were not of the expected type", "Correct the named configuration before starting the host"));
 
         _retryPolicy = Retry.CreatePolicy(x => x.Immediate(10).Handle<SqlException>(ex => IsTransient(ex)));
@@ -83,6 +85,8 @@ public class SqlServerDbConnectionContext :
     /// <returns>The value returned by <paramref name="callback" /> after the transaction commits.</returns>
     public Task<T> QueryAsync<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(callback);
+
         return _executor.ExecuteAsync(() =>
         {
             return _retryPolicy.RetryAsync(async () =>
@@ -115,17 +119,18 @@ public class SqlServerDbConnectionContext :
 
     /// <summary>Releases the resources owned by this instance.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
         TransportLogMessages.DisconnectedHost(_hostConfiguration.HostAddress.ToString());
+        return ValueTask.CompletedTask;
     }
 
     /// <summary>Creates and opens a SQL Server transport connection.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The open SQL Server transport connection.</returns>
-    public async Task<ISqlServerSqlTransportConnection> CreateConnectionAsync(CancellationToken cancellationToken)
+    public async Task<ISqlServerTransportConnection> CreateConnectionAsync(CancellationToken cancellationToken)
     {
-        var connection = new SqlServerSqlTransportConnection(_hostSettings.GetConnectionString());
+        var connection = new SqlServerTransportConnection(_hostSettings.GetConnectionString());
 
         await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
@@ -159,15 +164,20 @@ public class SqlServerDbConnectionContext :
         };
     }
 
+    static CancellationToken GetStoppedToken(ITransportSupervisor<ConnectionContext> supervisor)
+    {
+        ArgumentNullException.ThrowIfNull(supervisor);
+        return supervisor.Stopped;
+    }
 
-    class MaintenanceAgent :
+    sealed class MaintenanceAgent :
         Agent
     {
-        readonly SqlServerDbConnectionContext _context;
+        readonly SqlServerConnectionContext _context;
         readonly ISqlHostConfiguration _hostConfiguration;
         readonly ILogContext? _logContext;
 
-        public MaintenanceAgent(SqlServerDbConnectionContext context, ISqlHostConfiguration hostConfiguration)
+        public MaintenanceAgent(SqlServerConnectionContext context, ISqlHostConfiguration hostConfiguration)
         {
             _context = context;
             _hostConfiguration = hostConfiguration;
@@ -204,7 +214,7 @@ public class SqlServerDbConnectionContext :
                     {
                         await Task.Delay(maintenanceInterval, _context.GetTimeProvider(), Stopping);
                     }
-                    catch (OperationCanceledException)
+                    catch (OperationCanceledException) when (Stopping.IsCancellationRequested)
                     {
                         await ExecuteAsync<long>(processMetricsSql, new
                         {
@@ -237,7 +247,7 @@ public class SqlServerDbConnectionContext :
                         }
                     }, Stopping, Stopping);
                 }
-                catch (OperationCanceledException)
+                catch (OperationCanceledException) when (Stopping.IsCancellationRequested)
                 {
                 }
                 catch (Exception exception)

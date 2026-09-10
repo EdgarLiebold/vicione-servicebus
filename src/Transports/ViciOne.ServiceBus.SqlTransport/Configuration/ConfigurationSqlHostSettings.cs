@@ -4,14 +4,12 @@ using System.Data;
 
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
-/// <summary>Defines settings for configuration sql host.</summary>
+/// <summary>Stores the provider-neutral connection and maintenance settings used to build a SQL transport host.</summary>
 public abstract class ConfigurationSqlHostSettings :
     SqlHostSettings
 {
-    readonly Lazy<Uri> _hostAddress;
-
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="address">The address.</param>
+    /// <summary>Initializes the settings from an absolute SQL transport host address.</summary>
+    /// <param name="address">The host address to project onto these settings.</param>
     protected ConfigurationSqlHostSettings(Uri address)
         : this()
     {
@@ -34,7 +32,7 @@ public abstract class ConfigurationSqlHostSettings :
         Area = hostAddress.Area;
     }
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Initializes the settings with transport defaults.</summary>
     protected ConfigurationSqlHostSettings()
     {
         VirtualHost = "/";
@@ -42,8 +40,6 @@ public abstract class ConfigurationSqlHostSettings :
         IsolationLevel = IsolationLevel.RepeatableRead;
 
         ConnectionLimit = 10;
-
-        _hostAddress = new Lazy<Uri>(FormatHostAddress);
 
         MaintenanceEnabled = true;
         MaintenanceInterval = TimeSpan.FromSeconds(5);
@@ -89,13 +85,13 @@ public abstract class ConfigurationSqlHostSettings :
     /// <summary>Gets or sets the area.</summary>
     public string? Area { get; set; }
 
-    /// <summary>Creates connection context factory.</summary>
-    /// <param name="configuration">The callback used to configure the component.</param>
-    /// <returns>The created connection context factory.</returns>
+    /// <summary>Creates the provider connection factory for a validated host configuration.</summary>
+    /// <param name="configuration">The host configuration that owns the connection lifecycle.</param>
+    /// <returns>The provider connection-context factory.</returns>
     public abstract ConnectionContextFactory CreateConnectionContextFactory(ISqlHostConfiguration configuration);
 
-    /// <summary>Gets the host address.</summary>
-    public Uri HostAddress => _hostAddress.Value;
+    /// <summary>Gets an address that reflects the current host settings.</summary>
+    public Uri HostAddress => FormatHostAddress();
 
     /// <summary>Validates the current configuration.</summary>
     /// <returns>The validation failures.</returns>
@@ -106,6 +102,18 @@ public abstract class ConfigurationSqlHostSettings :
 
         if (ConnectionLimit < 1)
             yield return this.Failure("ConnectionLimit", "must be >= 1");
+
+        if (Port is <= 0 or > 65535)
+            yield return this.Failure("Port", "must be between 1 and 65535 when specified");
+
+        if (MaintenanceInterval <= TimeSpan.Zero)
+            yield return this.Failure("MaintenanceInterval", "must be greater than zero");
+
+        if (QueueCleanupInterval <= TimeSpan.Zero)
+            yield return this.Failure("QueueCleanupInterval", "must be greater than zero");
+
+        if (MaintenanceBatchSize < 1)
+            yield return this.Failure("MaintenanceBatchSize", "must be >= 1");
     }
 
     static string UriDecode(string uri)

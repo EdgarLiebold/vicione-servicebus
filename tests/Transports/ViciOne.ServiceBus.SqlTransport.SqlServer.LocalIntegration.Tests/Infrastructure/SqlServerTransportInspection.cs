@@ -59,6 +59,15 @@ internal static class SqlServerTransportInspection
             cancellationToken,
             ("schema", schema));
 
+    public static Task<IReadOnlyList<string>> SchemaProceduresAsync(
+        this SqlConnection connection,
+        string schema,
+        CancellationToken cancellationToken) =>
+        connection.StringsAsync(
+            "SELECT p.name FROM sys.procedures p JOIN sys.schemas s ON s.schema_id = p.schema_id WHERE s.name = @schema",
+            cancellationToken,
+            ("schema", schema));
+
     public static async Task<bool> DatabaseExistsAsync(
         this SqlConnection connection,
         string database,

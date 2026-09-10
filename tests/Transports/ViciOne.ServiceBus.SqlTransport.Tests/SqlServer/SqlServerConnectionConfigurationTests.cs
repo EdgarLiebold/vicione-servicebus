@@ -13,7 +13,7 @@ public sealed class SqlServerConnectionConfigurationTests
     {
         SqlTransportOptions options = Options(@"localhost\instance");
 
-        SqlConnectionStringBuilder builder = SqlServerSqlTransportConnection.CreateBuilder(options);
+        SqlConnectionStringBuilder builder = SqlServerTransportConnection.CreateBuilder(options);
 
         Assert.Equal(@"localhost\instance", builder.DataSource);
     }
@@ -25,7 +25,7 @@ public sealed class SqlServerConnectionConfigurationTests
         SqlTransportOptions options = Options("localhost");
         options.Port = 8675;
 
-        SqlConnectionStringBuilder builder = SqlServerSqlTransportConnection.CreateBuilder(options);
+        SqlConnectionStringBuilder builder = SqlServerTransportConnection.CreateBuilder(options);
 
         Assert.Equal("localhost,8675", builder.DataSource);
     }
@@ -34,7 +34,7 @@ public sealed class SqlServerConnectionConfigurationTests
     [RequirementCoverage("OBL-R0-SQL-0043", "native-owner")]
     public void HostSettings_PreserveLocalDbDataSourceAndNormalizeBusHost()
     {
-        var settings = new SqlServerSqlHostSettings(Options("(LocalDb)"));
+        var settings = new SqlServerHostSettings(Options("(LocalDb)"));
         var builder = new SqlConnectionStringBuilder(settings.GetConnectionString());
 
         Assert.Equal("(LocalDb)", builder.DataSource);
@@ -45,7 +45,7 @@ public sealed class SqlServerConnectionConfigurationTests
     [RequirementCoverage("OBL-R0-SQL-0044", "native-owner")]
     public void ConnectionBuilder_OmitsUnspecifiedSqlServerPort()
     {
-        SqlConnectionStringBuilder builder = SqlServerSqlTransportConnection.CreateBuilder(Options("localhost"));
+        SqlConnectionStringBuilder builder = SqlServerTransportConnection.CreateBuilder(Options("localhost"));
 
         Assert.Equal("localhost", builder.DataSource);
         Assert.DoesNotContain("localhost,", builder.ConnectionString, StringComparison.OrdinalIgnoreCase);
@@ -53,43 +53,66 @@ public sealed class SqlServerConnectionConfigurationTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0128", "native-owner")]
-    public void ConnectionBuilder_MergesExplicitOptionsOverConnectionStringAndBackfillsMissingValues()
+    public void ConnectionBuilder_MergesExplicitOptionsWithoutMutatingOptionsOrWeakeningCertificateValidation()
     {
         var optionsOnly = Options("option-host");
         optionsOnly.Database = "option-db";
         optionsOnly.Username = "option-user";
         optionsOnly.Password = "option-password";
-        SqlConnectionStringBuilder fromOptions = SqlServerSqlTransportConnection.CreateBuilder(optionsOnly);
+        SqlConnectionStringBuilder fromOptions = SqlServerTransportConnection.CreateBuilder(optionsOnly);
 
         var connectionOnly = new SqlTransportOptions
         {
             ConnectionString = "Data Source=connection-host,1544;Initial Catalog=connection-db;User ID=connection-user;Password=connection-password;TrustServerCertificate=False",
         };
-        SqlConnectionStringBuilder fromConnection = SqlServerSqlTransportConnection.CreateBuilder(connectionOnly);
+        SqlConnectionStringBuilder fromConnection = SqlServerTransportConnection.CreateBuilder(connectionOnly);
 
         var conflicting = Options("option-host");
         conflicting.Database = "option-db";
         conflicting.Username = "option-user";
         conflicting.Password = "option-password";
         conflicting.ConnectionString = "Data Source=connection-host,1544;Initial Catalog=connection-db;User ID=connection-user;Password=connection-password;TrustServerCertificate=False";
-        SqlConnectionStringBuilder merged = SqlServerSqlTransportConnection.CreateBuilder(conflicting);
+        SqlConnectionStringBuilder merged = SqlServerTransportConnection.CreateBuilder(conflicting);
 
         Assert.Equal("option-host", fromOptions.DataSource);
         Assert.Equal("connection-host,1544", fromConnection.DataSource);
-        Assert.Equal("connection-host", connectionOnly.Host);
-        Assert.Equal(1544, connectionOnly.Port);
-        Assert.Equal("connection-db", connectionOnly.Database);
-        Assert.Equal("connection-user", connectionOnly.Username);
-        Assert.Equal("connection-password", connectionOnly.Password);
+        Assert.Null(connectionOnly.Host);
+        Assert.Null(connectionOnly.Port);
+        Assert.Null(connectionOnly.Database);
+        Assert.Null(connectionOnly.Username);
+        Assert.Null(connectionOnly.Password);
         Assert.Equal("transport", connectionOnly.Schema);
         Assert.Equal("transport", connectionOnly.Role);
         Assert.Equal("option-host", merged.DataSource);
         Assert.Equal("option-db", merged.InitialCatalog);
         Assert.Equal("option-user", merged.UserID);
         Assert.Equal("option-password", merged.Password);
-        Assert.True(fromOptions.TrustServerCertificate);
-        Assert.True(fromConnection.TrustServerCertificate);
-        Assert.True(merged.TrustServerCertificate);
+        Assert.False(fromOptions.TrustServerCertificate);
+        Assert.False(fromConnection.TrustServerCertificate);
+        Assert.False(merged.TrustServerCertificate);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SQLSERVER-HOST-PROJECTION", "current-settings-are-used-without-security-downgrade")]
+    public void HostSettings_RebuildConnectionStringFromCurrentValuesAndPreserveSecurityOptions()
+    {
+        var settings = new SqlServerHostSettings(
+            "Data Source=initial;Initial Catalog=before;User ID=old;Password=old-password;TrustServerCertificate=False");
+
+        settings.Host = "current";
+        settings.InstanceName = "named";
+        settings.Port = 1444;
+        settings.Database = "after";
+        settings.Username = "new";
+        settings.Password = "new-password";
+
+        var builder = new SqlConnectionStringBuilder(settings.GetConnectionString());
+
+        Assert.Equal(@"current\named,1444", builder.DataSource);
+        Assert.Equal("after", builder.InitialCatalog);
+        Assert.Equal("new", builder.UserID);
+        Assert.Equal("new-password", builder.Password);
+        Assert.False(builder.TrustServerCertificate);
     }
 
     private static SqlTransportOptions Options(string host) => new()

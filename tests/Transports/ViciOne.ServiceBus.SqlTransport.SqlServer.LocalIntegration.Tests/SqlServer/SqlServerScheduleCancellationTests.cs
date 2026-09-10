@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.Data.SqlClient;
 using ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -18,6 +19,56 @@ public sealed class SqlServerScheduleCancellationTests
     [RequirementCoverage("OBL-R0-SQL-0065", "sqlserver-native-owner")]
     public Task CallerCancellation_DeletesThePersistedFutureDeliveryAsync() =>
         AssertCancellationAsync(cancelInsideConsumer: false);
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SQLSERVER-SCHEDULE-CANCELLATION", "one-touched-delivery-preserves-the-entire-published-message")]
+    public async Task Cancellation_PreservesEveryPublishedDeliveryWhenAnyDeliveryHasStartedAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
+            "cancel-multi-delivery",
+            cancellationToken);
+        await using SqlConnection connection = fixture.CreateConnection();
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        string topicName = fixture.Name("scheduled-topic");
+        string firstQueue = fixture.Name("first-input");
+        string secondQueue = fixture.Name("second-input");
+        Guid schedulingToken = Guid.NewGuid();
+        await ExecuteScalarAsync(connection, fixture.Schema, "CreateTopic", cancellationToken, ("TopicName", topicName));
+        await ExecuteScalarAsync(connection, fixture.Schema, "CreateQueue", cancellationToken, ("QueueName", firstQueue));
+        await ExecuteScalarAsync(connection, fixture.Schema, "CreateQueue", cancellationToken, ("QueueName", secondQueue));
+        await ExecuteScalarAsync(connection, fixture.Schema, "CreateQueueSubscription", cancellationToken,
+            ("SourceTopicName", topicName), ("DestinationQueueName", firstQueue));
+        await ExecuteScalarAsync(connection, fixture.Schema, "CreateQueueSubscription", cancellationToken,
+            ("SourceTopicName", topicName), ("DestinationQueueName", secondQueue));
+        long published = await ExecuteScalarAsync(connection, fixture.Schema, "PublishMessage", cancellationToken,
+            ("entityName", topicName), ("transportMessageId", Guid.NewGuid()), ("messageId", Guid.NewGuid()),
+            ("sentTime", DateTimeOffset.UtcNow), ("delay", 60), ("schedulingTokenId", schedulingToken));
+        Assert.Equal(2, published);
+        await using (var markStarted = new SqlCommand(
+            $"UPDATE TOP (1) [{fixture.Schema}].[MessageDelivery] SET DeliveryCount = 1 "
+            + "WHERE TransportMessageId = (SELECT TransportMessageId FROM "
+            + $"[{fixture.Schema}].[Message] WHERE SchedulingTokenId = @tokenId)",
+            connection))
+        {
+            markStarted.Parameters.AddWithValue("tokenId", schedulingToken);
+            Assert.Equal(1, await markStarted.ExecuteNonQueryAsync(cancellationToken));
+        }
+
+        await using var cancel = new SqlCommand($"[{fixture.Schema}].[DeleteScheduledMessage]", connection)
+        {
+            CommandType = CommandType.StoredProcedure,
+        };
+        cancel.Parameters.AddWithValue("tokenId", schedulingToken);
+        object? deleted = await cancel.ExecuteScalarAsync(cancellationToken);
+
+        Assert.Null(deleted);
+        Assert.Equal(new PersistedSchedule(1, 2, 2), await PersistedStateAsync(
+            connection,
+            fixture.Schema,
+            schedulingToken,
+            cancellationToken));
+    }
 
     private static async Task AssertCancellationAsync(bool cancelInsideConsumer)
     {
@@ -133,6 +184,22 @@ public sealed class SqlServerScheduleCancellationTests
             Convert.ToInt32(reader.GetValue(2)));
         Assert.False(await reader.ReadAsync(cancellationToken));
         return result;
+    }
+
+    private static async Task<long> ExecuteScalarAsync(
+        SqlConnection connection,
+        string schema,
+        string procedure,
+        CancellationToken cancellationToken,
+        params (string Name, object Value)[] parameters)
+    {
+        await using var command = new SqlCommand($"[{schema}].[{procedure}]", connection)
+        {
+            CommandType = CommandType.StoredProcedure,
+        };
+        foreach ((string name, object value) in parameters)
+            command.Parameters.AddWithValue(name, value);
+        return Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
     }
 
     private sealed record ScheduleState(

@@ -3,7 +3,7 @@ using System.Data;
 
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
-/// <summary>Configures sql host.</summary>
+/// <summary>Applies fluent host configuration to provider-owned SQL transport settings.</summary>
 public abstract class SqlHostConfigurator :
     ISqlHostConfigurator
 {
@@ -13,6 +13,8 @@ public abstract class SqlHostConfigurator :
     /// <param name="settings">The settings that control the operation.</param>
     protected SqlHostConfigurator(ConfigurationSqlHostSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(settings);
+
         _settings = settings;
     }
 

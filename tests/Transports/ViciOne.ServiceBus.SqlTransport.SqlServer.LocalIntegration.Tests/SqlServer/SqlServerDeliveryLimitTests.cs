@@ -26,6 +26,24 @@ public sealed class SqlServerDeliveryLimitTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SQLSERVER-QUEUE-REDECLARATION", "omitted-delivery-limit-preserves-the-existing-value")]
+    public async Task QueueRedeclaration_WithoutALimitPreservesTheConfiguredDeliveryLimitAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
+            "delivery-limit-update",
+            cancellationToken);
+        string queueName = fixture.Name("limited-input");
+        await using SqlConnection connection = fixture.CreateConnection();
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+
+        await CreateQueueDirectAsync(connection, fixture.Schema, queueName, 3, cancellationToken);
+        await CreateQueueDirectAsync(connection, fixture.Schema, queueName, null, cancellationToken);
+
+        Assert.Equal(3, await QueueMaxDeliveryCountAsync(connection, fixture.Schema, queueName, cancellationToken));
+    }
+
+    [Fact]
     [RequirementCoverage("OBL-R0-SQL-0095", "sqlserver-native-owner")]
     public async Task ExhaustedDelivery_IsExcludedFromFetchAndMovedByDeadLetterMaintenanceAsync()
     {
@@ -163,6 +181,23 @@ public sealed class SqlServerDeliveryLimitTests
         return Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken));
     }
 
+    private static async Task CreateQueueDirectAsync(
+        SqlConnection connection,
+        string schema,
+        string queueName,
+        int? maxDeliveryCount,
+        CancellationToken cancellationToken)
+    {
+        await using var command = new SqlCommand($"[{schema}].[CreateQueue]", connection)
+        {
+            CommandType = CommandType.StoredProcedure,
+        };
+        command.Parameters.AddWithValue("QueueName", queueName);
+        if (maxDeliveryCount.HasValue)
+            command.Parameters.AddWithValue("MaxDeliveryCount", maxDeliveryCount.Value);
+        Assert.True(Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken)) > 0);
+    }
+
     private static async Task InsertDeliveryAsync(
         SqlConnection connection,
         string schema,
@@ -171,7 +206,7 @@ public sealed class SqlServerDeliveryLimitTests
         DateTimeOffset expirationTime,
         CancellationToken cancellationToken)
     {
-        await using var command = new SqlCommand($"[{schema}].[SendMessageV2]", connection)
+        await using var command = new SqlCommand($"[{schema}].[SendMessage]", connection)
         {
             CommandType = CommandType.StoredProcedure,
         };

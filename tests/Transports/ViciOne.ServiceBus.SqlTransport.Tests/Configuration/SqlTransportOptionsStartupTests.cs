@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using ViciOne.ServiceBus.SqlTransport;
 using ViciOne.ServiceBus.Providers.Transports;
+using ViciOne.ServiceBus.SqlTransport;
 using ViciOne.ServiceBus.SqlTransport.PostgreSql;
 using ViciOne.ServiceBus.SqlTransport.SqlServer;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;

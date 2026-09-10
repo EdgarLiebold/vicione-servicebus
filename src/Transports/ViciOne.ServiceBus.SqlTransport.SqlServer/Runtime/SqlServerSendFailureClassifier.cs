@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 /// <summary>Classifies SQL Server send failures from the provider's numeric error codes.</summary>
-public sealed class SqlServerSendFailureClassifier : ITransportSendFailureClassifier
+internal sealed class SqlServerSendFailureClassifier : ITransportSendFailureClassifier
 {
     /// <inheritdoc />
     public bool TryClassify(Exception exception, out TransportSendFailureKind failureKind)
@@ -31,7 +31,7 @@ public sealed class SqlServerSendFailureClassifier : ITransportSendFailureClassi
     }
 
     internal static TransportSendFailureKind ClassifyErrorNumber(int errorNumber) =>
-        SqlServerDbConnectionContext.IsTransientErrorNumber(errorNumber)
+        SqlServerConnectionContext.IsTransientErrorNumber(errorNumber)
             ? TransportSendFailureKind.Transient
             : TransportSendFailureKind.Permanent;
 }

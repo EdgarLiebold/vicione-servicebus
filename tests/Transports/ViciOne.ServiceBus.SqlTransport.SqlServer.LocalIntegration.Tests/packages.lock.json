@@ -57,15 +57,6 @@
         "resolved": "10.9.0",
         "contentHash": "0If8xc915BgRpYmKB9tOOOprvHMt8Tue6kiD8ARgVf8Ok6PNUxkJScKT7QUp7+RllR4RN2DNACgaxioy9BJxeQ=="
       },
-      "Npgsql": {
-        "type": "Direct",
-        "requested": "[10.0.3, )",
-        "resolved": "10.0.3",
-        "contentHash": "7nb5YzXuvWWJxB0J8DiyL3we+X4FOctZrt0fIBnucOIaIevFEEwGQVZKtiu9olXdlNAK1eNgqSral6r/jlhI4w==",
-        "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.0"
-        }
-      },
       "xunit.v3.mtp-v2": {
         "type": "Direct",
         "requested": "[4.0.0, )",
@@ -477,14 +468,6 @@
         "type": "Project",
         "dependencies": {
           "ViciOne.ServiceBus": "[1.0.0, )"
-        }
-      },
-      "vicione.servicebus.sqltransport.postgresql": {
-        "type": "Project",
-        "dependencies": {
-          "Dapper": "[2.1.79, )",
-          "Npgsql": "[10.0.3, )",
-          "ViciOne.ServiceBus.SqlTransport": "[1.0.0, )"
         }
       },
       "vicione.servicebus.sqltransport.sqlserver": {

@@ -3,16 +3,15 @@ using ViciOne.ServiceBus.SqlTransport.Configuration;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
-/// <summary>Configures SQL Server-specific settings for a SQL transport host.</summary>
-public class SqlServerSqlHostConfigurator :
-    SqlHostConfigurator,
-    ISqlServerSqlHostConfigurator
+/// <summary>Projects SQL Server connection values onto a SQL transport host.</summary>
+internal sealed class SqlServerHostConfigurator :
+    SqlHostConfigurator
 {
-    readonly SqlServerSqlHostSettings _settings;
+    readonly SqlServerHostSettings _settings;
 
     /// <summary>Initializes the configurator with existing SQL Server host settings.</summary>
     /// <param name="settings">The settings to configure.</param>
-    public SqlServerSqlHostConfigurator(SqlServerSqlHostSettings settings)
+    public SqlServerHostConfigurator(SqlServerHostSettings settings)
         : base(settings)
     {
         _settings = settings;
@@ -20,22 +19,22 @@ public class SqlServerSqlHostConfigurator :
 
     /// <summary>Initializes the configurator from a SQL Server host address.</summary>
     /// <param name="hostAddress">The SQL Server host address.</param>
-    public SqlServerSqlHostConfigurator(Uri hostAddress)
-        : this(new SqlServerSqlHostSettings(hostAddress))
+    public SqlServerHostConfigurator(Uri hostAddress)
+        : this(new SqlServerHostSettings(hostAddress))
     {
     }
 
     /// <summary>Initializes the configurator from SQL transport options.</summary>
     /// <param name="options">The SQL transport options.</param>
-    public SqlServerSqlHostConfigurator(SqlTransportOptions options)
-        : this(new SqlServerSqlHostSettings(options))
+    public SqlServerHostConfigurator(SqlTransportOptions options)
+        : this(new SqlServerHostSettings(options))
     {
     }
 
     /// <summary>Initializes the configurator from a SQL Server connection string.</summary>
     /// <param name="connectionString">The SQL Server connection string.</param>
-    public SqlServerSqlHostConfigurator(string connectionString)
-        : this(new SqlServerSqlHostSettings(connectionString))
+    public SqlServerHostConfigurator(string connectionString)
+        : this(new SqlServerHostSettings(connectionString))
     {
     }
 

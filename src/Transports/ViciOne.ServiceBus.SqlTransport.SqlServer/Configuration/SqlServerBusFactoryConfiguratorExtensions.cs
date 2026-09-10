@@ -15,6 +15,8 @@ public static class SqlServerBusFactoryConfiguratorExtensions
     public static void UsingSqlServer(this IBusRegistrationConfigurator configurator,
         Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, SqlServerSendFailureClassifier>());
         configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
         {
@@ -34,6 +36,9 @@ public static class SqlServerBusFactoryConfiguratorExtensions
     public static void UsingSqlServer(this IBusRegistrationConfigurator configurator, string connectionString,
         Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
         configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, SqlServerSendFailureClassifier>());
         configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
         {

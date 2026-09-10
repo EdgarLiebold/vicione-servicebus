@@ -6,15 +6,15 @@ using ViciOne.ServiceBus.SqlTransport.Configuration;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
-/// <summary>Defines SQL Server connection and maintenance settings for a SQL transport host.</summary>
-public class SqlServerSqlHostSettings :
+/// <summary>Builds provider runtime settings from SQL Server addresses, options, and connection strings.</summary>
+internal sealed class SqlServerHostSettings :
     ConfigurationSqlHostSettings
 {
-    SqlConnectionStringBuilder? _builder;
+    SqlConnectionStringBuilder? _baseBuilder;
 
     /// <summary>Initializes the settings from a SQL Server host address.</summary>
     /// <param name="hostAddress">The SQL Server host address.</param>
-    public SqlServerSqlHostSettings(Uri hostAddress)
+    public SqlServerHostSettings(Uri hostAddress)
         : base(hostAddress)
     {
         var address = new SqlHostAddress(hostAddress);
@@ -25,16 +25,18 @@ public class SqlServerSqlHostSettings :
 
     /// <summary>Initializes the settings from a SQL Server connection string.</summary>
     /// <param name="connectionString">The SQL Server connection string.</param>
-    public SqlServerSqlHostSettings(string connectionString)
+    public SqlServerHostSettings(string connectionString)
     {
         ConnectionString = connectionString;
     }
 
     /// <summary>Initializes the settings from SQL transport options.</summary>
     /// <param name="options">The SQL transport options.</param>
-    public SqlServerSqlHostSettings(SqlTransportOptions options)
+    public SqlServerHostSettings(SqlTransportOptions options)
     {
-        var builder = SqlServerSqlTransportConnection.CreateBuilder(options);
+        ArgumentNullException.ThrowIfNull(options);
+
+        var builder = SqlServerTransportConnection.CreateBuilder(options);
 
         ParseDataSource(builder.DataSource);
 
@@ -44,7 +46,7 @@ public class SqlServerSqlHostSettings :
         Username = builder.UserID;
         Password = builder.Password;
 
-        _builder = builder;
+        _baseBuilder = builder;
 
         if (options.ConnectionLimit.HasValue)
             ConnectionLimit = options.ConnectionLimit.Value;
@@ -57,6 +59,8 @@ public class SqlServerSqlHostSettings :
     {
         set
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(value);
+
             var builder = new SqlConnectionStringBuilder(value);
 
             ParseDataSource(builder.DataSource);
@@ -66,7 +70,7 @@ public class SqlServerSqlHostSettings :
 
             Database = builder.InitialCatalog;
 
-            _builder = builder;
+            _baseBuilder = builder;
         }
     }
 
@@ -82,15 +86,14 @@ public class SqlServerSqlHostSettings :
     /// <returns>The SQL Server connection string.</returns>
     public string GetConnectionString()
     {
-        var builder = _builder ??= new SqlConnectionStringBuilder
-        {
-            DataSource = FormatDataSource(),
-            UserID = Username,
-            Password = Password,
-            InitialCatalog = Database,
-            TrustServerCertificate = true
-        };
+        var builder = _baseBuilder is null
+            ? new SqlConnectionStringBuilder()
+            : new SqlConnectionStringBuilder(_baseBuilder.ConnectionString);
 
+        builder.DataSource = FormatDataSource();
+        builder.UserID = Username;
+        builder.Password = Password;
+        builder.InitialCatalog = Database;
         return builder.ToString();
     }
 
@@ -119,7 +122,7 @@ public class SqlServerSqlHostSettings :
             Host = TrimHost(host);
     }
 
-    string? TrimHost(string? host)
+    static string? TrimHost(string? host)
     {
         if (host == null)
             return null;
@@ -131,10 +134,9 @@ public class SqlServerSqlHostSettings :
         return hostSplit.Length == 1 ? hostSplit[0] : hostSplit[1];
     }
 
-    string? FormatDataSource()
+    string FormatDataSource()
     {
-        if (string.IsNullOrWhiteSpace(Host))
-            return null;
+        ArgumentException.ThrowIfNullOrWhiteSpace(Host);
 
         var sb = new StringBuilder();
         sb.Append(Host);

@@ -6,15 +6,17 @@ using ViciOne.ServiceBus.SqlTransport.SqlServer;
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
 /// <summary>Provides SQL Server database migration registration extensions.</summary>
-public static class SqlServerDbTransportConfigurationExtensions
+public static class SqlServerTransportConfigurationExtensions
 {
     /// <summary>Registers the SQL Server migration hosted service with create and delete switches.</summary>
     /// <param name="services">The dependency-injection service collection.</param>
     /// <param name="create">Whether to create the database, schema, and transport infrastructure.</param>
-    /// <param name="delete">Whether to delete the transport database before creation.</param>
+    /// <param name="delete">Whether to delete the transport database during application shutdown.</param>
     /// <returns>The same service collection.</returns>
     public static IServiceCollection AddSqlServerMigrationHostedService(this IServiceCollection services, bool create = true, bool delete = false)
     {
+        ArgumentNullException.ThrowIfNull(services);
+
         services.AddSqlServerMigrationHostedService(options =>
         {
             options.CreateDatabase = create;
@@ -32,6 +34,8 @@ public static class SqlServerDbTransportConfigurationExtensions
     /// <returns>The same service collection.</returns>
     public static IServiceCollection AddSqlServerMigrationHostedService(this IServiceCollection services, Action<SqlTransportMigrationOptions>? configure)
     {
+        ArgumentNullException.ThrowIfNull(services);
+
         services.AddTransient<ISqlTransportDatabaseMigrator, SqlServerDatabaseMigrator>();
 
         services.AddOptions<SqlTransportOptions>()

@@ -33,7 +33,7 @@ public sealed class SqlServerConfigurationAndRetryTests
     [RequirementCoverage("OBL-R0-SQL-0109", "sqlserver-native-owner")]
     public void TransientErrorNumberSetIsClosed(int errorNumber, bool expected)
     {
-        Assert.Equal(expected, SqlServerDbConnectionContext.IsTransientErrorNumber(errorNumber));
+        Assert.Equal(expected, SqlServerConnectionContext.IsTransientErrorNumber(errorNumber));
     }
 
     [Fact]
@@ -42,18 +42,18 @@ public sealed class SqlServerConfigurationAndRetryTests
     {
         var timeProvider = new FakeTimeProvider(StartTime);
         TimeSpan pollingInterval = TimeSpan.FromMinutes(2);
-        Task firstQueue = SqlServerDbConnectionContext.DelayUntilMessageReadyAsync(
+        Task firstQueue = SqlServerConnectionContext.DelayUntilMessageReadyAsync(
             17,
             pollingInterval,
             timeProvider,
             CancellationToken.None);
-        Task secondQueue = SqlServerDbConnectionContext.DelayUntilMessageReadyAsync(
+        Task secondQueue = SqlServerConnectionContext.DelayUntilMessageReadyAsync(
             9_999,
             pollingInterval,
             timeProvider,
             CancellationToken.None);
         using var cancellation = new CancellationTokenSource();
-        Task canceled = SqlServerDbConnectionContext.DelayUntilMessageReadyAsync(
+        Task canceled = SqlServerConnectionContext.DelayUntilMessageReadyAsync(
             17,
             pollingInterval,
             timeProvider,

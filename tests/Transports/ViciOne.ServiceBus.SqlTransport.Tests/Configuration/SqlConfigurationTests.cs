@@ -11,7 +11,7 @@ public sealed class SqlConfigurationTests
     [RequirementCoverage("OBL-R0-SQL-0021", "native-owner")]
     public void SqlServerOptions_BracketIpv6HostInBusAddress()
     {
-        var settings = new SqlServerSqlHostSettings(new SqlTransportOptions
+        var settings = new SqlServerHostSettings(new SqlTransportOptions
         {
             Host = "::1",
             Database = "transport_tests",
@@ -30,7 +30,7 @@ public sealed class SqlConfigurationTests
         var topology = new SqlTopologyConfiguration(SqlBusFactory.CreateMessageTopology());
         var bus = new SqlBusConfiguration(topology);
         var host = Assert.IsType<SqlHostConfiguration>(bus.HostConfiguration);
-        host.Settings = new SqlServerSqlHostSettings(new SqlTransportOptions
+        host.Settings = new SqlServerHostSettings(new SqlTransportOptions
         {
             Host = "localhost",
             Database = "transport_tests",
@@ -85,7 +85,7 @@ public sealed class SqlConfigurationTests
         var topology = new SqlTopologyConfiguration(SqlBusFactory.CreateMessageTopology());
         var bus = new SqlBusConfiguration(topology);
         var host = Assert.IsType<SqlHostConfiguration>(bus.HostConfiguration);
-        host.Settings = new SqlServerSqlHostSettings(new SqlTransportOptions
+        host.Settings = new SqlServerHostSettings(new SqlTransportOptions
         {
             Host = "localhost",
             Database = "transport_tests",

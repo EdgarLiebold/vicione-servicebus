@@ -83,11 +83,11 @@ public sealed class PostgreSqlDeliveryStateTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0114", "postgresql-native-owner")]
-    public async Task PurgeQueue_RemovesDeliveriesAndOrphanedMessagesAcrossAllThreeQueueTypesAsync()
+    public async Task PurgeQueue_RemovesOnlyPrimaryDeliveriesAndPreservesErrorAndDeadLetterRowsAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
-            "purge-all-types",
+            "purge-isolation",
             cancellationToken);
         string queueName = fixture.Name("purge-input");
         await DeclareQueueAsync(fixture, queueName, cancellationToken);
@@ -120,13 +120,14 @@ public sealed class PostgreSqlDeliveryStateTests
         Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 2, cancellationToken));
         Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 3, cancellationToken));
 
-        Assert.Equal(3, await PurgeAsync(connection, fixture.Schema, queueName, cancellationToken));
+        Assert.Equal(1, await PurgeAsync(connection, fixture.Schema, queueName, cancellationToken));
 
         Assert.Equal(0, await connection.DeliveryCountAsync(fixture.Schema, queueName, 1, cancellationToken));
-        Assert.Equal(0, await connection.DeliveryCountAsync(fixture.Schema, queueName, 2, cancellationToken));
-        Assert.Equal(0, await connection.DeliveryCountAsync(fixture.Schema, queueName, 3, cancellationToken));
-        foreach (StateMessage message in messages)
-            Assert.Equal(0, await connection.MessageCountAsync(fixture.Schema, message.Id, cancellationToken));
+        Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 2, cancellationToken));
+        Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 3, cancellationToken));
+        Assert.Equal(0, await connection.MessageCountAsync(fixture.Schema, messages[0].Id, cancellationToken));
+        Assert.Equal(1, await connection.MessageCountAsync(fixture.Schema, messages[1].Id, cancellationToken));
+        Assert.Equal(1, await connection.MessageCountAsync(fixture.Schema, messages[2].Id, cancellationToken));
     }
 
     [Fact]

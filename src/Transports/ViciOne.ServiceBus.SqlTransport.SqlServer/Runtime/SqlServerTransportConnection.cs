@@ -1,17 +1,20 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
-/// <summary>Wraps a <see cref="SqlConnection" /> for SQL Server SQL transport operations.</summary>
-public class SqlServerSqlTransportConnection :
-    ISqlServerSqlTransportConnection
+/// <summary>Owns a <see cref="SqlConnection" /> used by the SQL Server transport runtime.</summary>
+internal sealed class SqlServerTransportConnection :
+    ISqlServerTransportConnection
 {
     /// <summary>Initializes the wrapper with a new SQL Server connection.</summary>
     /// <param name="connectionString">The SQL Server connection string.</param>
-    public SqlServerSqlTransportConnection(string connectionString)
+    public SqlServerTransportConnection(string connectionString)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
         Connection = new SqlConnection(connectionString);
     }
 
@@ -22,9 +25,7 @@ public class SqlServerSqlTransportConnection :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
-        Connection.Dispose();
-
-        return default;
+        return Connection.DisposeAsync();
     }
 
     /// <summary>Opens the underlying SQL Server connection.</summary>
@@ -40,15 +41,14 @@ public class SqlServerSqlTransportConnection :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CloseAsync(CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); Connection.Close();
-
-        return Task.CompletedTask;
+        cancellationToken.ThrowIfCancellationRequested();
+        return Connection.CloseAsync();
     }
 
     /// <summary>Creates an administrative connection to the SQL Server <c>master</c> database.</summary>
     /// <param name="options">The transport and optional administrator credentials.</param>
     /// <returns>A connection configured for system-database migration operations.</returns>
-    public static SqlServerSqlTransportConnection GetSystemDatabaseConnection(SqlTransportOptions options)
+    public static SqlServerTransportConnection GetSystemDatabaseConnection(SqlTransportOptions options)
     {
         var builder = CreateBuilder(options);
 
@@ -59,13 +59,13 @@ public class SqlServerSqlTransportConnection :
         if (!string.IsNullOrWhiteSpace(options.AdminPassword))
             builder.Password = options.AdminPassword;
 
-        return new SqlServerSqlTransportConnection(builder.ToString());
+        return new SqlServerTransportConnection(builder.ToString());
     }
 
     /// <summary>Creates an administrative connection to the configured transport database.</summary>
     /// <param name="options">The transport and optional administrator credentials.</param>
     /// <returns>A connection configured for database migration operations.</returns>
-    public static SqlServerSqlTransportConnection GetDatabaseAdminConnection(SqlTransportOptions options)
+    public static SqlServerTransportConnection GetDatabaseAdminConnection(SqlTransportOptions options)
     {
         var builder = CreateBuilder(options);
 
@@ -74,67 +74,44 @@ public class SqlServerSqlTransportConnection :
         if (!string.IsNullOrWhiteSpace(options.AdminPassword))
             builder.Password = options.AdminPassword;
 
-        return new SqlServerSqlTransportConnection(builder.ToString());
+        return new SqlServerTransportConnection(builder.ToString());
     }
 
     /// <summary>Creates a connection to the configured transport database.</summary>
     /// <param name="options">The transport connection options.</param>
     /// <returns>A connection configured with the transport credentials.</returns>
-    public static SqlServerSqlTransportConnection GetDatabaseConnection(SqlTransportOptions options)
+    public static SqlServerTransportConnection GetDatabaseConnection(SqlTransportOptions options)
     {
         var builder = CreateBuilder(options);
 
-        return new SqlServerSqlTransportConnection(builder.ToString());
+        return new SqlServerTransportConnection(builder.ToString());
     }
 
-    /// <summary>Combines a connection string and explicit options into a SQL Server connection-string builder.</summary>
-    /// <param name="options">The options to apply. Missing connection fields and provider defaults are written back to this instance.</param>
+    /// <summary>Combines a connection string and explicit options into a new SQL Server connection-string builder.</summary>
+    /// <param name="options">The options to project without modifying the source object.</param>
     /// <returns>The resulting SQL Server connection-string builder.</returns>
     public static SqlConnectionStringBuilder CreateBuilder(SqlTransportOptions options)
     {
-        var builder = new SqlConnectionStringBuilder(options.ConnectionString) { TrustServerCertificate = true };
+        ArgumentNullException.ThrowIfNull(options);
+
+        var builder = new SqlConnectionStringBuilder(options.ConnectionString);
 
         if (!string.IsNullOrWhiteSpace(options.Host))
-            builder.DataSource = options.FormatDataSource();
-        else if (!string.IsNullOrWhiteSpace(builder.DataSource))
-            (options.Host, options.Port) = ParseDataSource(builder.DataSource);
+            builder.DataSource = FormatDataSource(options.Host, options.Port);
 
         if (!string.IsNullOrWhiteSpace(options.Database))
             builder.InitialCatalog = options.Database;
-        else if (!string.IsNullOrWhiteSpace(builder.InitialCatalog))
-            options.Database = builder.InitialCatalog;
 
         if (!string.IsNullOrWhiteSpace(options.Username))
             builder.UserID = options.Username;
-        else if (!string.IsNullOrWhiteSpace(builder.UserID))
-            options.Username = builder.UserID;
         if (!string.IsNullOrWhiteSpace(options.Password))
             builder.Password = options.Password;
-        else if (!string.IsNullOrWhiteSpace(builder.Password))
-            options.Password = builder.Password;
-
-        if (string.IsNullOrWhiteSpace(options.Schema))
-            options.Schema = "transport";
-
-        if (string.IsNullOrWhiteSpace(options.Role))
-            options.Role = "transport";
 
         return builder;
     }
 
-    static (string? host, int? port) ParseDataSource(string? source)
+    static string FormatDataSource(string host, int? port)
     {
-        var split = source?.Split(',');
-        if (split?.Length == 2)
-        {
-            var host = split[0].Trim();
-
-            if (int.TryParse(split[1].Trim(), out var port))
-                return (host, port);
-
-            return (host, null);
-        }
-
-        return (source?.Trim(), null);
+        return port.HasValue ? $"{host},{port.Value}" : host;
     }
 }

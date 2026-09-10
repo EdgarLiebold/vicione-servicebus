@@ -26,7 +26,7 @@ internal sealed class SqlServerTestDatabase : IAsyncDisposable
 
     public SqlTransportOptions Options { get; }
 
-    public string ConnectionString => SqlServerSqlTransportConnection.CreateBuilder(Options).ConnectionString;
+    public string ConnectionString => SqlServerTransportConnection.CreateBuilder(Options).ConnectionString;
 
     public string ServerConnectionString { get; }
 
@@ -53,6 +53,14 @@ internal sealed class SqlServerTestDatabase : IAsyncDisposable
             "vsbms",
             typeof(SqlServerTestDatabase).Assembly.GetName().Name!,
             $"{purpose}-{Guid.NewGuid():N}");
+        var serverBuilder = new SqlConnectionStringBuilder
+        {
+            DataSource = $"{provider.Host},{provider.Port}",
+            InitialCatalog = provider.Database,
+            UserID = provider.UserName,
+            Password = provider.Password,
+            TrustServerCertificate = true,
+        };
         var transportOptions = new SqlTransportOptions
         {
             Host = provider.Host,
@@ -64,14 +72,7 @@ internal sealed class SqlServerTestDatabase : IAsyncDisposable
             Password = provider.Password,
             AdminUsername = provider.UserName,
             AdminPassword = provider.Password,
-        };
-        var serverBuilder = new SqlConnectionStringBuilder
-        {
-            DataSource = $"{provider.Host},{provider.Port}",
-            InitialCatalog = provider.Database,
-            UserID = provider.UserName,
-            Password = provider.Password,
-            TrustServerCertificate = true,
+            ConnectionString = serverBuilder.ConnectionString,
         };
         var fixture = new SqlServerTestDatabase(
             transportOptions,

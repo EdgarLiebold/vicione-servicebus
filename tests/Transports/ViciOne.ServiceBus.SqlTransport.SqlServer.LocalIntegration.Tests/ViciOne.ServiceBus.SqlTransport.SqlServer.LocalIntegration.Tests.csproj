@@ -14,14 +14,12 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
-    <PackageReference Include="Npgsql" />
     <PackageReference Include="xunit.v3.mtp-v2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../../../src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj" />
     <ProjectReference Include="../../../src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
-    <ProjectReference Include="../../../src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj" />
     <ProjectReference Include="../../../src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj" />
     <ProjectReference Include="../../../src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj" />
     <ProjectReference Include="../../../src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj" />

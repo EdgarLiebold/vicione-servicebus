@@ -108,8 +108,8 @@ public sealed class SqlServerMaintenanceAndTopologyTests
     }
 
     [Theory]
-    [InlineData("SendMessageV2")]
-    [InlineData("PublishMessageV2")]
+    [InlineData("SendMessage")]
+    [InlineData("PublishMessage")]
     [InlineData("DeleteMessage")]
     [InlineData("TouchQueue")]
     [InlineData("DeadLetterMessages")]
@@ -126,7 +126,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
 
         switch (procedure)
         {
-            case "SendMessageV2":
+            case "SendMessage":
                 {
                     await CreateQueueAsync(connection, fixture.Schema, entityName, cancellationToken);
                     long deliveryId = await SendAsync(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
@@ -134,7 +134,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
                     Assert.Equal(1, await DeliveryIdCountAsync(connection, fixture.Schema, deliveryId, cancellationToken));
                     break;
                 }
-            case "PublishMessageV2":
+            case "PublishMessage":
                 {
                     string queueName = fixture.Name("publish-destination");
                     await CreateTopicAsync(connection, fixture.Schema, entityName, cancellationToken);
@@ -215,6 +215,59 @@ public sealed class SqlServerMaintenanceAndTopologyTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SQLSERVER-TOPOLOGY-CONCURRENCY", "topic-and-subscription-declarations-are-idempotent")]
+    public async Task ConcurrentTopicAndSubscriptionDeclarations_ReturnOneIdentityPerTopologyElementAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
+            "concurrent-topology",
+            cancellationToken);
+        string source = fixture.Name("source");
+        string destination = fixture.Name("destination");
+        string queue = fixture.Name("queue");
+
+        long[] sourceIds = await InvokeConcurrentlyAsync(connection =>
+            CreateTopicAsync(connection, fixture.Schema, source, cancellationToken));
+        await using (SqlConnection setup = fixture.CreateConnection())
+        {
+            await setup.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+            _ = await CreateTopicAsync(setup, fixture.Schema, destination, cancellationToken);
+            _ = await CreateQueueAsync(setup, fixture.Schema, queue, cancellationToken);
+        }
+
+        long[] topicSubscriptionIds = await InvokeConcurrentlyAsync(connection =>
+            CreateTopicSubscriptionAsync(connection, fixture.Schema, source, destination, cancellationToken));
+        long[] queueSubscriptionIds = await InvokeConcurrentlyAsync(connection =>
+            CreateQueueSubscriptionAsync(connection, fixture.Schema, source, queue, cancellationToken));
+
+        Assert.Single(sourceIds.Distinct());
+        Assert.Single(topicSubscriptionIds.Distinct());
+        Assert.Single(queueSubscriptionIds.Distinct());
+
+        async Task<long[]> InvokeConcurrentlyAsync(Func<SqlConnection, Task<long>> operation)
+        {
+            var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            var allReady = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            int ready = 0;
+
+            async Task<long> InvokeAsync()
+            {
+                await using SqlConnection connection = fixture.CreateConnection();
+                await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+                if (Interlocked.Increment(ref ready) == 8)
+                    allReady.TrySetResult();
+                await release.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
+                return await operation(connection);
+            }
+
+            Task<long>[] declarations = Enumerable.Range(0, 8).Select(_ => InvokeAsync()).ToArray();
+            await allReady.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
+            release.SetResult();
+            return await Task.WhenAll(declarations).WaitAsync(fixture.OperationTimeout, cancellationToken);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("OBL-R0-SQL-0123", "sqlserver-native-owner")]
     public async Task DeletingMiddleTopicRemovesIncomingAndOutgoingSubscriptionsAsync()
     {
@@ -242,6 +295,39 @@ public sealed class SqlServerMaintenanceAndTopologyTests
 
         Assert.Equal(0, await SubscriptionCountAsync(connection, fixture.Schema, middleId, cancellationToken));
         Assert.Equal(2, await TopicCountAsync(connection, fixture.Schema, sourceId, destinationId, cancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SQLSERVER-TOPIC-GRAPH", "unique-topic-identity-and-cycle-safe-publish")]
+    public async Task CyclicTopicGraph_UsesUniqueTopicsAndCreatesOneDeliveryPerQueueAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
+            "topic-cycle",
+            cancellationToken);
+        await using SqlConnection connection = fixture.CreateConnection();
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        string source = fixture.Name("source");
+        string peer = fixture.Name("peer");
+        string queue = fixture.Name("destination");
+        _ = await CreateTopicAsync(connection, fixture.Schema, source, cancellationToken);
+        _ = await CreateTopicAsync(connection, fixture.Schema, peer, cancellationToken);
+        _ = await CreateQueueAsync(connection, fixture.Schema, queue, cancellationToken);
+        _ = await CreateTopicSubscriptionAsync(connection, fixture.Schema, source, peer, cancellationToken);
+        _ = await CreateTopicSubscriptionAsync(connection, fixture.Schema, peer, source, cancellationToken);
+        _ = await CreateQueueSubscriptionAsync(connection, fixture.Schema, source, queue, cancellationToken);
+        _ = await CreateQueueSubscriptionAsync(connection, fixture.Schema, peer, queue, cancellationToken);
+
+        long deliveryCount = await PublishAsync(
+            connection,
+            fixture.Schema,
+            source,
+            Guid.NewGuid(),
+            cancellationToken);
+
+        Assert.True(await TopicIndexIsUniqueAsync(connection, fixture.Schema, cancellationToken));
+        Assert.Equal(1, deliveryCount);
+        Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queue, 1, cancellationToken));
     }
 
     private static async Task WaitForProcedureExecutionAsync(
@@ -285,7 +371,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         string schema,
         string queueName,
         CancellationToken cancellationToken) =>
-        await ExecuteScalarAsync(connection, schema, "CreateQueueV2", cancellationToken, ("QueueName", queueName));
+        await ExecuteScalarAsync(connection, schema, "CreateQueue", cancellationToken, ("QueueName", queueName));
 
     private static async Task<long> CreateQueueWithTransientRetryAsync(
         SqlConnection connection,
@@ -303,7 +389,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
             }
             catch (SqlException exception) when (
                 attempt < retryLimit
-                && SqlServerDbConnectionContext.IsTransientErrorNumber(exception.Number))
+                && SqlServerConnectionContext.IsTransientErrorNumber(exception.Number))
             {
                 // The product uses the same immediate, bounded transient retry policy. The test invokes
                 // the procedure directly so that it can synchronize all declarations at the database
@@ -344,7 +430,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         string queueName,
         Guid messageId,
         CancellationToken cancellationToken) =>
-        await ExecuteScalarAsync(connection, schema, "SendMessageV2", cancellationToken,
+        await ExecuteScalarAsync(connection, schema, "SendMessage", cancellationToken,
             ("entityName", queueName), ("transportMessageId", Guid.NewGuid()), ("messageId", messageId),
             ("sentTime", DateTimeOffset.UtcNow));
 
@@ -354,7 +440,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         string topicName,
         Guid messageId,
         CancellationToken cancellationToken) =>
-        await ExecuteScalarAsync(connection, schema, "PublishMessageV2", cancellationToken,
+        await ExecuteScalarAsync(connection, schema, "PublishMessage", cancellationToken,
             ("entityName", topicName), ("transportMessageId", Guid.NewGuid()), ("messageId", messageId),
             ("sentTime", DateTimeOffset.UtcNow));
 
@@ -470,6 +556,18 @@ public sealed class SqlServerMaintenanceAndTopologyTests
             "SELECT is_unique FROM sys.indexes WHERE object_id = OBJECT_ID(@table) AND name = 'IX_Queue_Name_Type'",
             connection);
         command.Parameters.AddWithValue("table", $"[{schema}].[Queue]");
+        return Convert.ToBoolean(await command.ExecuteScalarAsync(cancellationToken));
+    }
+
+    private static async Task<bool> TopicIndexIsUniqueAsync(
+        SqlConnection connection,
+        string schema,
+        CancellationToken cancellationToken)
+    {
+        await using var command = new SqlCommand(
+            "SELECT is_unique FROM sys.indexes WHERE object_id = OBJECT_ID(@table) AND name = 'IX_Topic_Name'",
+            connection);
+        command.Parameters.AddWithValue("table", $"[{schema}].[Topic]");
         return Convert.ToBoolean(await command.ExecuteScalarAsync(cancellationToken));
     }
 

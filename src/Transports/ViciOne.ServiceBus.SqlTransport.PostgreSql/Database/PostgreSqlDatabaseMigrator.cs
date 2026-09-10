@@ -384,7 +384,8 @@ internal sealed class PostgreSqlDatabaseMigrator :
                     USING (SELECT mdx.message_delivery_id
                            FROM "{0}".message_delivery mdx
                                INNER JOIN "{0}".queue q on mdx.queue_id = q.Id
-                           WHERE q.name = queue_name) mds
+                           WHERE q.name = queue_name
+                             AND q.type = 1) mds
                     WHERE md.message_delivery_id = mds.message_delivery_id
                     RETURNING md.transport_message_id)
                 SELECT COUNT(*), array_agg(msgs.transport_message_id)

@@ -110,11 +110,11 @@ python3 tools/ci/run_broker_category.py \
     --minimum-expected-tests 326 --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
-python3 tools/ci/run_broker_category.py --broker postgres --broker mssql --command -- \
+python3 tools/ci/run_broker_category.py --broker mssql --command -- \
   dotnet test --solution ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx \
     -c Release --no-build --no-restore \
     --results-directory artifacts/test-results/sqlserver-local-integration \
-    --minimum-expected-tests 60 --max-parallel-test-modules 1
+    --minimum-expected-tests 68 --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
 python3 tools/ci/run_broker_category.py --broker servicebus --command -- \

@@ -20,6 +20,31 @@ public sealed class SqlServerProvisioningTests
         "topicsubscription",
     ];
 
+    private static readonly string[] RequiredProcedures =
+    [
+        "createqueue",
+        "createqueuesubscription",
+        "createtopic",
+        "createtopicsubscription",
+        "deadlettermessages",
+        "deletemessage",
+        "deletescheduledmessage",
+        "fetchmessages",
+        "fetchmessagespartitioned",
+        "movemessage",
+        "processmetrics",
+        "publishmessage",
+        "purgequeue",
+        "purgetopology",
+        "removeorphanedmessages",
+        "renewmessagelock",
+        "requeuemessage",
+        "requeuemessages",
+        "sendmessage",
+        "touchqueue",
+        "unlockmessage",
+    ];
+
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0040", "sqlserver-native-owner")]
     public async Task ExplicitInstanceAndPort_AreProjectedIntoConnectionAndBusAddressesAsync()
@@ -38,7 +63,7 @@ public sealed class SqlServerProvisioningTests
             Username = fixture.Options.Username,
             Password = fixture.Options.Password,
         };
-        var settings = new SqlServerSqlHostSettings(projectedOptions);
+        var settings = new SqlServerHostSettings(projectedOptions);
         IBusControl bus = SqlBusFactory.Create(fixture.ConfigureHost);
         bool started = false;
 
@@ -47,7 +72,7 @@ public sealed class SqlServerProvisioningTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
 
-            Assert.Equal("localhost\\instance,3381", SqlServerSqlTransportConnection.CreateBuilder(projectedOptions).DataSource);
+            Assert.Equal("localhost\\instance,3381", SqlServerTransportConnection.CreateBuilder(projectedOptions).DataSource);
             Assert.Equal("localhost", settings.HostAddress.Host);
             Assert.Equal(3381, settings.HostAddress.Port);
             Assert.Equal("instance", QueryValue(settings.HostAddress, "instance"));
@@ -77,7 +102,7 @@ public sealed class SqlServerProvisioningTests
             Username = fixture.Options.Username,
             Password = fixture.Options.Password,
         };
-        var settings = new SqlServerSqlHostSettings(projectedOptions);
+        var settings = new SqlServerHostSettings(projectedOptions);
         IBusControl bus = SqlBusFactory.Create(fixture.ConfigureHost);
         bool started = false;
 
@@ -86,7 +111,7 @@ public sealed class SqlServerProvisioningTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
 
-            Assert.Equal("localhost\\instance", SqlServerSqlTransportConnection.CreateBuilder(projectedOptions).DataSource);
+            Assert.Equal("localhost\\instance", SqlServerTransportConnection.CreateBuilder(projectedOptions).DataSource);
             Assert.Equal("db://localhost", settings.HostAddress.GetLeftPart(UriPartial.Authority));
             Assert.Equal("instance", QueryValue(settings.HostAddress, "instance"));
             Assert.Equal(fixture.Options.Host, bus.Address.Host);
@@ -116,6 +141,23 @@ public sealed class SqlServerProvisioningTests
         Assert.Contains("ix_messagedelivery_fetch", indices);
         Assert.Contains("ix_queue_name_type", indices);
         Assert.Contains("ix_messagedelivery_transportmessageid", indices);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SQLSERVER-ROUTINE-NAMES", "provisioning-exposes-only-unversioned-provider-procedures")]
+    public async Task Provisioning_ExposesOnlyTheUnversionedProviderProcedureSetAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
+            "procedure-contract",
+            cancellationToken);
+        await using SqlConnection connection = fixture.CreateConnection();
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+
+        IReadOnlyList<string> procedures = await connection.SchemaProceduresAsync(fixture.Schema, cancellationToken);
+
+        Assert.Equal(RequiredProcedures, procedures);
+        Assert.DoesNotContain(procedures, procedure => procedure.EndsWith("v2", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]

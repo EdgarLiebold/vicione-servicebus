@@ -216,7 +216,7 @@ public sealed class SqlMessageReceiver :
 
             await delayTask.ConfigureAwait(false);
         }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException) when (cancellationTokenSource.IsCancellationRequested)
         {
         }
         finally

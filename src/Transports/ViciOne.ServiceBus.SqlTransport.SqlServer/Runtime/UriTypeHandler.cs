@@ -4,14 +4,16 @@ using Dapper;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
-/// <summary>Maps database text values to non-null URI instances.</summary>
-public class UriTypeHandler : SqlMapper.TypeHandler<Uri>
+/// <summary>Maps SQL Server text columns to transport URI values.</summary>
+internal sealed class UriTypeHandler : SqlMapper.TypeHandler<Uri>
 {
     /// <summary>Writes a URI as its string representation to a database parameter.</summary>
     /// <param name="parameter">The database parameter to update.</param>
     /// <param name="value">The URI, or <see langword="null" /> for a database null.</param>
     public override void SetValue(IDbDataParameter parameter, Uri? value)
     {
+        ArgumentNullException.ThrowIfNull(parameter);
+
         parameter.DbType = DbType.String;
         parameter.Value = value != null ? value.ToString() : DBNull.Value;
     }

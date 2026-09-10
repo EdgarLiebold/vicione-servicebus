@@ -1,37 +1,34 @@
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>Defines configuration options for sql transport.</summary>
+/// <summary>Configures a provider-backed SQL transport connection and its maintenance behavior.</summary>
 public sealed class SqlTransportOptions
 {
-    /// <summary>Gets or sets the host.</summary>
+    /// <summary>Gets or sets the database server host name.</summary>
     public string? Host { get; set; }
-    /// <summary>Gets or sets the port.</summary>
+    /// <summary>Gets or sets the optional TCP port.</summary>
     public int? Port { get; set; }
-    /// <summary>Gets or sets the database.</summary>
+    /// <summary>Gets or sets the transport database name.</summary>
     public string? Database { get; set; }
-    /// <summary>Gets or sets the schema.</summary>
-    public string? Schema { get; set; }
-    /// <summary>Gets or sets the role.</summary>
-    public string? Role { get; set; }
-    /// <summary>Gets or sets the username.</summary>
+    /// <summary>Gets or sets the schema that contains transport objects.</summary>
+    public string? Schema { get; set; } = "transport";
+    /// <summary>Gets or sets the database role granted access to transport objects.</summary>
+    public string? Role { get; set; } = "transport";
+    /// <summary>Gets or sets the transport login name.</summary>
     public string? Username { get; set; }
-    /// <summary>Gets or sets the password.</summary>
+    /// <summary>Gets or sets the transport login password.</summary>
     public string? Password { get; set; }
 
-    /// <summary>Gets or sets the admin username.</summary>
+    /// <summary>Gets or sets the optional administrator login used only for provisioning.</summary>
     public string? AdminUsername { get; set; }
-    /// <summary>Gets or sets the admin password.</summary>
+    /// <summary>Gets or sets the optional administrator password used only for provisioning.</summary>
     public string? AdminPassword { get; set; }
 
-    /// <summary>Optional, if specified, will be parsed to capture additional properties on the connection.</summary>
+    /// <summary>Gets or sets a provider connection string. Explicit properties override corresponding connection-string values.</summary>
     public string? ConnectionString { get; set; }
 
-    /// <summary>If specified, changes the connection limit from the default value (10).</summary>
+    /// <summary>Gets or sets the maximum number of concurrent database operations, or <see langword="null" /> to use the transport default.</summary>
     public int? ConnectionLimit { get; set; }
 
-    /// <summary>
-    /// Disable maintenance and cleanup jobs (metrics consolidation, topology cleanup, etc.)
-    /// Should typically be left to the default (false), reserved for use cases such as delegating maintenance activities explicitly as application quantities grow.
-    /// </summary>
+    /// <summary>Gets or sets whether automatic metric consolidation and topology cleanup are disabled.</summary>
     public bool DisableMaintenance { get; set; }
 }
