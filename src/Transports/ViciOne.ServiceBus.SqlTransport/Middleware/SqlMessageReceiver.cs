@@ -26,13 +26,13 @@ public sealed class SqlMessageReceiver :
     DateTime? _lastMaintenance;
     DateTime? _lastTouched;
 
-    /// <summary>Fetches messages from the SQL transport and dispatches them to the receive pipeline.</summary>
-    /// <param name="client">The model context for the consumer.</param>
-    /// <param name="context">The topology.</param>
+    /// <summary>Creates and starts a receiver for one SQL queue endpoint.</summary>
+    /// <param name="client">The SQL client used for polling, settlement, and maintenance.</param>
+    /// <param name="context">The receive endpoint that owns dispatch and receiver lifetime.</param>
     public SqlMessageReceiver(ClientContext client, SqlReceiveEndpointContext context)
-        : base(context)
+        : base(context ?? throw new ArgumentNullException(nameof(context)))
     {
-        _client = client;
+        _client = client ?? throw new ArgumentNullException(nameof(client));
         _context = context;
         _timeProvider = context.GetTimeProvider();
 
@@ -84,7 +84,7 @@ public sealed class SqlMessageReceiver :
             while (!IsStopping)
                 await algorithm.RunAsync((messageLimit, token) => ReceiveMessagesAsync(messageLimit, token), (m, c) => HandleAsync(m, c), Stopping).ConfigureAwait(false);
         }
-        catch (OperationCanceledException exception) when (exception.CancellationToken == Stopping)
+        catch (OperationCanceledException) when (IsStopping)
         {
         }
         catch (Exception exception)
@@ -95,33 +95,53 @@ public sealed class SqlMessageReceiver :
 
     async Task HandleMessageAsync(SqlTransportMessage message, SqlReceiveLockContext lockContext)
     {
-        if (IsStopping)
-            return;
-
-        if (message.ExpirationTime.HasValue && message.ExpirationTime.Value < _timeProvider.GetUtcNow().UtcDateTime)
+        try
         {
-            if (_receiveSettings.DeadLetterExpiredMessages)
-                await lockContext.ExpiredAsync().ConfigureAwait(false);
+            if (IsStopping)
+            {
+                await ReleaseFetchedMessageDuringShutdownAsync(lockContext).ConfigureAwait(false);
+                return;
+            }
+
+            if (message.ExpirationTime.HasValue && message.ExpirationTime.Value <= _timeProvider.GetUtcNow().UtcDateTime)
+            {
+                if (_receiveSettings.DeadLetterExpiredMessages)
+                    await lockContext.ExpiredAsync().ConfigureAwait(false);
+                else
+                    await lockContext.CompleteAsync().ConfigureAwait(false);
+            }
             else
-                await lockContext.CompleteAsync().ConfigureAwait(false);
+            {
+                var context = new SqlReceiveContext(message, _context, _receiveSettings, _client, _client.ConnectionContext, lockContext);
+                try
+                {
+                    await DispatchAsync(message.TransportMessageId, context, lockContext).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    context.LogTransportFaulted(exception);
+                }
+                finally
+                {
+                    context.Dispose();
+                }
+            }
         }
-        else
+        finally
         {
-            var context = new SqlReceiveContext(message, _context, _receiveSettings, _client, _client.ConnectionContext, lockContext);
-            try
-            {
-                await DispatchAsync(message.TransportMessageId, context, lockContext).ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                context.LogTransportFaulted(exception);
-            }
-            finally
-            {
-                context.Dispose();
-            }
-
             MessageHandled();
+        }
+    }
+
+    async Task ReleaseFetchedMessageDuringShutdownAsync(SqlReceiveLockContext lockContext)
+    {
+        try
+        {
+            await lockContext.ScheduleRedeliveryAsync(TimeSpan.Zero, null, CancellationToken.None).ConfigureAwait(false);
+        }
+        catch (Exception exception) when (exception is OperationCanceledException or ObjectDisposedException or TransportException)
+        {
+            LogContext.Debug?.Log(exception, "Could not release a fetched SQL message while the receiver was stopping");
         }
     }
 
@@ -159,10 +179,10 @@ public sealed class SqlMessageReceiver :
                     }
                 }
             }
-            catch (ObjectDisposedException)
+            catch (ObjectDisposedException) when (IsStopping)
             {
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested || IsStopping)
             {
             }
             catch (TimeoutException)
@@ -174,7 +194,7 @@ public sealed class SqlMessageReceiver :
 
             return messages;
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested || IsStopping)
         {
             return [];
         }
@@ -196,7 +216,7 @@ public sealed class SqlMessageReceiver :
 
             await delayTask.ConfigureAwait(false);
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
         }
         finally

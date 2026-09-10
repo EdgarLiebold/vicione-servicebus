@@ -67,7 +67,7 @@ public class SqlHostConfiguration :
     public void ApplyEndpointDefinition(ISqlReceiveEndpointConfigurator configurator, IEndpointDefinition definition)
     {
         if (definition.IsTemporary)
-            configurator.AutoDeleteOnIdle = Defaults.TemporaryAutoDeleteOnIdle;
+            configurator.AutoDeleteOnIdle = SqlTransportDefaults.TemporaryQueueAutoDeleteOnIdle;
 
         base.ApplyEndpointDefinition(configurator, definition);
     }

@@ -9,6 +9,8 @@ namespace ViciOne.ServiceBus.SqlTransport;
 public class SqlTransportMessage
 {
     SendHeaders? _headers;
+    string? _serializedHeaders;
+    string? _serializedTransportHeaders;
     SendHeaders? _transportHeaders;
 
     /// <summary>Gets or sets the transport message id.</summary>
@@ -33,8 +35,16 @@ public class SqlTransportMessage
     /// <summary>Gets or sets the routing key.</summary>
     public string? RoutingKey { get; set; }
 
-    /// <summary>Gets or sets the transport headers.</summary>
-    public string? TransportHeaders { get; set; }
+    /// <summary>Gets or sets the serialized transport-owned headers.</summary>
+    public string? TransportHeaders
+    {
+        get => _serializedTransportHeaders;
+        set
+        {
+            _serializedTransportHeaders = value;
+            _transportHeaders = null;
+        }
+    }
 
     /// <summary>Gets or sets the content type.</summary>
     public string? ContentType { get; set; }
@@ -45,8 +55,16 @@ public class SqlTransportMessage
     /// <summary>Gets or sets the binary body.</summary>
     public byte[]? BinaryBody { get; set; }
 
-    /// <summary>Gets or sets the headers.</summary>
-    public string? Headers { get; set; }
+    /// <summary>Gets or sets the serialized application headers.</summary>
+    public string? Headers
+    {
+        get => _serializedHeaders;
+        set
+        {
+            _serializedHeaders = value;
+            _headers = null;
+        }
+    }
     /// <summary>Gets or sets the host.</summary>
     public string? Host { get; set; }
 
@@ -80,14 +98,14 @@ public class SqlTransportMessage
     /// <returns>The headers.</returns>
     public SendHeaders GetHeaders()
     {
-        return _headers ??= DeserializeHeaders(Headers);
+        return _headers ??= DeserializeHeaders(_serializedHeaders);
     }
 
     /// <summary>Gets transport headers.</summary>
     /// <returns>The transport headers.</returns>
     public SendHeaders GetTransportHeaders()
     {
-        return _transportHeaders ??= DeserializeHeaders(TransportHeaders);
+        return _transportHeaders ??= DeserializeHeaders(_serializedTransportHeaders);
     }
 
     /// <summary>Deserializes headers.</summary>

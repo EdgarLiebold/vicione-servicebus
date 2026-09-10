@@ -1,3 +1,5 @@
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SqlTransport.Middleware;
@@ -6,6 +8,7 @@ namespace ViciOne.ServiceBus.SqlTransport.Middleware;
 public class PurgeOnStartupFilter :
     IFilter<ClientContext>
 {
+    readonly SemaphoreSlim _purgeGate;
     readonly string _queueName;
     bool _queueAlreadyPurged;
 
@@ -13,7 +16,10 @@ public class PurgeOnStartupFilter :
     /// <param name="queueName">The queue name.</param>
     public PurgeOnStartupFilter(string queueName)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+
         _queueName = queueName;
+        _purgeGate = new SemaphoreSlim(1, 1);
     }
 
     void IProbeSite.Probe(ProbeContext context)
@@ -30,15 +36,25 @@ public class PurgeOnStartupFilter :
 
     async Task PurgeIfRequestedAsync(ClientContext context, string queueName)
     {
-        if (!_queueAlreadyPurged)
+        await _purgeGate.WaitAsync(context.CancellationToken).ConfigureAwait(false);
+
+        try
         {
+            if (_queueAlreadyPurged)
+            {
+                LogContext.Debug?.Log("Queue {QueueName} was purged at startup, skipping", queueName);
+                return;
+            }
+
             await context.PurgeQueueAsync(queueName, context.CancellationToken).ConfigureAwait(false);
 
             LogContext.Debug?.Log("Purged queue {QueueName}", queueName);
 
             _queueAlreadyPurged = true;
         }
-        else
-            LogContext.Debug?.Log("Queue {QueueName} was purged at startup, skipping", queueName);
+        finally
+        {
+            _purgeGate.Release();
+        }
     }
 }

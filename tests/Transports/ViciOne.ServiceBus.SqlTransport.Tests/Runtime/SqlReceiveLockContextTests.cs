@@ -37,7 +37,50 @@ public sealed class SqlReceiveLockContextTests
         Assert.Equal(0, ((LockClientContextProxy)(object)client).UnlockCallCount);
     }
 
-    private static SqlReceiveLockContext CreateContext(ClientContext client)
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SQL-LOCK-TRANSITION", "concurrent-terminal-operations-settle-exactly-once")]
+    public async Task ConcurrentTerminalOperations_SettleTheDeliveryExactlyOnceAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var client = Client(unlockResult: true, holdDelete: true);
+        var proxy = (LockClientContextProxy)(object)client;
+        var context = CreateContext(client);
+
+        Task complete = context.CompleteAsync(cancellationToken);
+        await proxy.DeleteEntered.WaitAsync(cancellationToken);
+
+        Task faulted = context.FaultedAsync(new InvalidOperationException("consumer failed"), cancellationToken);
+        await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
+
+        Assert.Equal(1, proxy.DeleteCallCount);
+        Assert.Equal(0, proxy.UnlockCallCount);
+        Assert.False(faulted.IsCompleted);
+
+        proxy.ReleaseDelete();
+        await Task.WhenAll(complete, faulted);
+
+        Assert.Equal(1, proxy.DeleteCallCount);
+        Assert.Equal(0, proxy.UnlockCallCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SQL-LOCK-TRANSITION", "terminal-settlement-cancels-in-flight-renewal")]
+    public async Task CompleteAsync_CancelsAnInFlightProviderRenewalAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var client = Client(unlockResult: true, blockRenewal: true);
+        var proxy = (LockClientContextProxy)(object)client;
+        var context = CreateContext(client, new TestReceiveSettings(TimeSpan.Zero));
+
+        await proxy.RenewEntered.WaitAsync(cancellationToken);
+        await context.CompleteAsync(cancellationToken).WaitAsync(TimeSpan.FromSeconds(2), cancellationToken);
+
+        Assert.True(proxy.RenewalToken.CanBeCanceled);
+        Assert.True(proxy.RenewalToken.IsCancellationRequested);
+        Assert.Equal(1, proxy.DeleteCallCount);
+    }
+
+    private static SqlReceiveLockContext CreateContext(ClientContext client, ReceiveSettings? settings = null)
     {
         var message = new SqlTransportMessage
         {
@@ -47,18 +90,31 @@ public sealed class SqlReceiveLockContextTests
             TransportHeaders = "[]",
         };
 
-        return new SqlReceiveLockContext(InputAddress, message, new TestReceiveSettings(), client, TimeProvider.System);
+        return new SqlReceiveLockContext(InputAddress, message, settings ?? new TestReceiveSettings(), client, TimeProvider.System);
     }
 
-    private static ClientContext Client(bool unlockResult)
+    private static ClientContext Client(bool unlockResult, bool holdDelete = false, bool blockRenewal = false)
     {
         ClientContext client = DispatchProxy.Create<ClientContext, LockClientContextProxy>();
-        ((LockClientContextProxy)(object)client).UnlockResult = unlockResult;
+        var proxy = (LockClientContextProxy)(object)client;
+        proxy.UnlockResult = unlockResult;
+        proxy.HoldDelete = holdDelete;
+        proxy.BlockRenewal = blockRenewal;
         return client;
     }
 
     private class LockClientContextProxy : DispatchProxy
     {
+        readonly TaskCompletionSource<bool> _deleteCompletion = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        readonly TaskCompletionSource _deleteEntered = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        readonly TaskCompletionSource _renewEntered = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public bool BlockRenewal { get; set; }
+        public Task DeleteEntered => _deleteEntered.Task;
+        public int DeleteCallCount { get; private set; }
+        public bool HoldDelete { get; set; }
+        public Task RenewEntered => _renewEntered.Task;
+        public CancellationToken RenewalToken { get; private set; }
         public bool UnlockResult { get; set; }
         public int UnlockCallCount { get; private set; }
 
@@ -70,8 +126,32 @@ public sealed class SqlReceiveLockContextTests
             {
                 "get_CancellationToken" => CancellationToken.None,
                 "UnlockAsync" => UnlockAsync(),
+                "DeleteMessageAsync" => DeleteMessageAsync(),
+                "RenewLockAsync" => RenewLockAsync(args),
                 _ => throw new NotSupportedException(targetMethod.Name),
             };
+        }
+
+        public void ReleaseDelete() => _deleteCompletion.TrySetResult(true);
+
+        private Task<bool> DeleteMessageAsync()
+        {
+            DeleteCallCount++;
+            _deleteEntered.TrySetResult();
+            return HoldDelete ? _deleteCompletion.Task : Task.FromResult(true);
+        }
+
+        private Task<bool> RenewLockAsync(object?[]? args)
+        {
+            if (!BlockRenewal)
+                return Task.FromResult(true);
+
+            RenewalToken = (CancellationToken)args![3]!;
+            _renewEntered.TrySetResult();
+
+            var completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            RenewalToken.Register(() => completion.TrySetCanceled(RenewalToken));
+            return completion.Task;
         }
 
         private Task<bool> UnlockAsync()
@@ -81,7 +161,7 @@ public sealed class SqlReceiveLockContextTests
         }
     }
 
-    private sealed class TestReceiveSettings : ReceiveSettings
+    private sealed class TestReceiveSettings(TimeSpan? lockDuration = null) : ReceiveSettings
     {
         public string QueueName => "input";
         public TimeSpan? AutoDeleteOnIdle => null;
@@ -92,7 +172,7 @@ public sealed class SqlReceiveLockContextTests
         public int ConcurrentDeliveryLimit => 1;
         public SqlReceiveMode ReceiveMode => SqlReceiveMode.Normal;
         public bool PurgeOnStartup => false;
-        public TimeSpan LockDuration => TimeSpan.FromHours(1);
+        public TimeSpan LockDuration => lockDuration ?? TimeSpan.FromHours(1);
         public TimeSpan PollingInterval => TimeSpan.FromSeconds(1);
         public TimeSpan? UnlockDelay => null;
         public TimeSpan MaxLockDuration => TimeSpan.FromHours(2);

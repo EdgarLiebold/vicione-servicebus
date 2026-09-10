@@ -39,10 +39,13 @@ public class QueueSendTransportContext :
     /// <summary>Gets the activity system.</summary>
     public override string ActivitySystem => "db";
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <summary>Adds the supervised SQL client lifecycle to the transport probe.</summary>
+    /// <param name="context">The probe context to populate.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
+        _supervisor.Probe(context);
     }
 
     /// <summary>Creates send context.</summary>
@@ -62,11 +65,11 @@ public class QueueSendTransportContext :
         return sendContext;
     }
 
-    /// <summary>Gets agent handles.</summary>
-    /// <returns>The agent handles.</returns>
+    /// <summary>Gets the client supervisor owned by this queue transport.</summary>
+    /// <returns>The transport's supervised client agent.</returns>
     public override IEnumerable<IAgent> GetAgentHandles()
     {
-        return new IAgent[] { };
+        return [_supervisor];
     }
 
     /// <summary>Sends a message to the configured destination.</summary>

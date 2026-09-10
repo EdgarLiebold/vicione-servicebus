@@ -50,7 +50,7 @@ public class SqlConsumeTopology :
         foreach (var specification in _specifications)
             specification.Apply(builder);
 
-        ForEach<IDbMessageConsumeTopologyConfigurator>(x => x.Apply(builder));
+        ForEach<ISqlMessageConsumeTopologySpecification>(x => x.Apply(builder));
     }
 
     /// <summary>Subscribes to the configured event source.</summary>

@@ -1,8 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.SqlTransport;
 using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.SqlTransport.PostgreSql;
 using ViciOne.ServiceBus.SqlTransport.SqlServer;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 namespace ViciOne.ServiceBus.SqlTransport.Tests.Configuration;
@@ -39,6 +42,21 @@ public sealed class SqlTransportOptionsStartupTests
         using ServiceProvider provider = Provider(databaseProvider, null);
 
         provider.GetRequiredService<IStartupValidator>().Validate();
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SQL-MIGRATION-LIFECYCLE", "constructor-rejects-missing-services-and-options")]
+    public void MigrationHostedService_RejectsMissingDependenciesAtConstruction()
+    {
+        var migrator = new NoopMigrator();
+        var logger = NullLogger<SqlTransportMigrationHostedService>.Instance;
+        IOptions<SqlTransportMigrationOptions> migrationOptions = Options.Create(new SqlTransportMigrationOptions());
+        IOptions<SqlTransportOptions> transportOptions = Options.Create(new SqlTransportOptions());
+
+        Assert.Throws<ArgumentNullException>(() => new SqlTransportMigrationHostedService(null!, logger, migrationOptions, transportOptions));
+        Assert.Throws<ArgumentNullException>(() => new SqlTransportMigrationHostedService(migrator, null!, migrationOptions, transportOptions));
+        Assert.Throws<ArgumentNullException>(() => new SqlTransportMigrationHostedService(migrator, logger, null!, transportOptions));
+        Assert.Throws<ArgumentNullException>(() => new SqlTransportMigrationHostedService(migrator, logger, migrationOptions, null!));
     }
 
     static ServiceProvider Provider(DatabaseProvider provider, InvalidOption? invalid)
@@ -84,5 +102,16 @@ public sealed class SqlTransportOptionsStartupTests
         Port,
         ConnectionLimit,
         NoOperation,
+    }
+
+    private sealed class NoopMigrator : ISqlTransportDatabaseMigrator
+    {
+        public Task CreateDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task CreateSchemaIfNotExistAsync(SqlTransportOptions options, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task CreateInfrastructureAsync(SqlTransportOptions options, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task DeleteDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 }

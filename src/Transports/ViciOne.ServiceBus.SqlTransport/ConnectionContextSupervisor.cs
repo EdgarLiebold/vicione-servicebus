@@ -91,7 +91,7 @@ public class ConnectionContextSupervisor :
 
         var supervisor = new ClientContextSupervisor(context.ClientContextSupervisor);
 
-        return CreateSendTransportAsync(endpointAddress, endpointAddress.Type == SqlEndpointAddress.AddressType.Queue
+        return CreateSendTransportAsync(endpointAddress, endpointAddress.Kind == SqlEndpointKind.Queue
             ? new QueueSendTransportContext(_hostConfiguration, context, supervisor, configureTopology, settings.EntityName)
             : new TopicSendTransportContext(_hostConfiguration, context, supervisor, configureTopology, settings.EntityName));
     }

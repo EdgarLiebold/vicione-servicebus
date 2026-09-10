@@ -6,9 +6,8 @@ using ViciOne.ServiceBus.Internals;
 namespace ViciOne.ServiceBus.Providers.Transports;
 
 /// <summary>
-/// The database host address is composed of specific parts
-/// db://localhost/virtual_host_name.scope
-/// db://localhost/.scope
+/// Identifies one logical SQL transport host using the form
+/// <c>db://server/virtual_host.area</c>.
 /// <list type="table">
 /// <listheader>
 /// <term>Fragment</term>
@@ -34,33 +33,41 @@ namespace ViciOne.ServiceBus.Providers.Transports;
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct SqlHostAddress
 {
-    /// <summary>Exposes the db scheme used by the containing type.</summary>
-    public const string DbScheme = "db";
-
     const string InstanceNameKey = "instance";
+    internal const string SchemeName = "db";
 
-    /// <summary>Exposes the scheme used by the containing type.</summary>
-    public readonly string Scheme;
-    /// <summary>Exposes the host used by the containing type.</summary>
-    public readonly string Host;
-    /// <summary>Exposes the port used by the containing type.</summary>
-    public readonly int? Port;
-    /// <summary>Exposes the instance name used by the containing type.</summary>
-    public readonly string? InstanceName;
-    /// <summary>Exposes the virtual host used by the containing type.</summary>
-    public readonly string VirtualHost;
-    /// <summary>Exposes the area used by the containing type.</summary>
-    public readonly string? Area;
+    /// <summary>Gets the SQL transport URI scheme.</summary>
+    public string Scheme { get; }
+    /// <summary>Gets the database server host.</summary>
+    public string Host { get; }
+    /// <summary>Gets the optional database server port.</summary>
+    public int? Port { get; }
+    /// <summary>Gets the optional SQL Server instance name.</summary>
+    public string? InstanceName { get; }
+    /// <summary>Gets the logical transport namespace hosted by the database.</summary>
+    public string VirtualHost { get; }
+    /// <summary>Gets the optional queue area within the virtual host.</summary>
+    public string? Area { get; }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="address">The address.</param>
+    /// <summary>Parses an absolute SQL transport host address.</summary>
+    /// <param name="address">The absolute host address to parse.</param>
     public SqlHostAddress(Uri address)
     {
+        ArgumentNullException.ThrowIfNull(address);
+        if (!address.IsAbsoluteUri)
+            throw new ArgumentException("The SQL host address must be absolute.", nameof(address));
+
         var scheme = address.Scheme.ToLowerInvariant();
         switch (scheme)
         {
-            case DbScheme:
-                ParseLeft(address, out Scheme, out Host, out Port, out VirtualHost, out Area);
+            case SchemeName:
+                ParseLeft(address, out string parsedScheme, out string parsedHost, out int? parsedPort,
+                    out string parsedVirtualHost, out string? parsedArea);
+                Scheme = parsedScheme;
+                Host = parsedHost;
+                Port = parsedPort;
+                VirtualHost = parsedVirtualHost;
+                Area = parsedArea;
                 break;
 
             default:
@@ -72,22 +79,36 @@ public readonly struct SqlHostAddress
             switch (key)
             {
                 case InstanceNameKey when !string.IsNullOrWhiteSpace(value):
-                    InstanceName = value;
+                    InstanceName = Uri.UnescapeDataString(value);
                     break;
             }
         }
+
+        if (string.IsNullOrWhiteSpace(Host))
+            throw new SqlEndpointAddressException(address, "A database server host is required.");
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="host">The host.</param>
-    /// <param name="instanceName">The instance name.</param>
-    /// <param name="port">The port.</param>
-    /// <param name="virtualHost">The virtual host.</param>
-    /// <param name="area">The area.</param>
+    /// <summary>Creates a SQL transport host address from validated components.</summary>
+    /// <param name="host">The database server host.</param>
+    /// <param name="instanceName">The optional SQL Server instance name.</param>
+    /// <param name="port">The optional database server port.</param>
+    /// <param name="virtualHost">The logical transport namespace.</param>
+    /// <param name="area">The optional queue area.</param>
     public SqlHostAddress(string host, string? instanceName, int? port, string virtualHost, string? area)
     {
-        Scheme = DbScheme;
-        Host = host;
+        ArgumentException.ThrowIfNullOrWhiteSpace(host);
+        ArgumentException.ThrowIfNullOrWhiteSpace(virtualHost);
+        if (port is <= 0 or > 65535)
+            throw new ArgumentOutOfRangeException(nameof(port), port, "The SQL host port must be between 1 and 65535.");
+        if (instanceName != null && string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("The SQL Server instance name cannot be empty or whitespace.", nameof(instanceName));
+        if (virtualHost != "/" && !IsValidSymbol(virtualHost))
+            throw new ArgumentException("The virtual host must start with a letter or underscore and contain only letters, digits, or underscores.", nameof(virtualHost));
+        if (area != null && !IsValidSymbol(area))
+            throw new ArgumentException("The area must start with a letter or underscore and contain only letters, digits, or underscores.", nameof(area));
+
+        Scheme = SchemeName;
+        Host = host.Trim();
         InstanceName = instanceName;
         Port = port;
         VirtualHost = virtualHost;
@@ -135,22 +156,31 @@ public readonly struct SqlHostAddress
             return ("/", null);
 
         if (!IsValidSymbol(virtualHost))
-            throw new SqlEndpointAddressException(address, "Virtual host must be alphanumeric");
+            throw new SqlEndpointAddressException(address,
+                "The virtual host must start with a letter or underscore and contain only letters, digits, or underscores.");
 
         if (string.IsNullOrWhiteSpace(area))
             return (virtualHost, null);
 
         if (!IsValidSymbol(area))
-            throw new SqlEndpointAddressException(address, "Area must be alphanumeric");
+            throw new SqlEndpointAddressException(address,
+                "The area must start with a letter or underscore and contain only letters, digits, or underscores.");
 
         return (virtualHost, area);
     }
 
-    /// <summary>Converts a value to <see cref="Uri" />.</summary>
-    /// <param name="address">The address.</param>
-    /// <returns>The value produced by the operation.</returns>
+    /// <summary>Formats a validated SQL host address as an absolute URI.</summary>
+    /// <param name="address">The SQL host address.</param>
+    /// <returns>The absolute SQL transport URI.</returns>
     public static implicit operator Uri(in SqlHostAddress address)
     {
+        if (string.IsNullOrWhiteSpace(address.Scheme)
+            || string.IsNullOrWhiteSpace(address.Host)
+            || string.IsNullOrWhiteSpace(address.VirtualHost))
+        {
+            throw new InvalidOperationException("The SQL host address has not been initialized.");
+        }
+
         var path = address.VirtualHost == "/" ? "/" : Uri.EscapeDataString(address.VirtualHost);
         if (!string.IsNullOrWhiteSpace(address.Area))
             path += "." + Uri.EscapeDataString(address.Area);
@@ -164,7 +194,7 @@ public readonly struct SqlHostAddress
         };
 
 
-        builder.Query += string.Join("&", address.GetQueryStringOptions());
+        builder.Query = string.Join("&", address.GetQueryStringOptions());
 
         return builder.Uri;
     }
@@ -174,7 +204,7 @@ public readonly struct SqlHostAddress
     IEnumerable<string> GetQueryStringOptions()
     {
         if (!string.IsNullOrEmpty(InstanceName))
-            yield return $"{InstanceNameKey}={InstanceName}";
+            yield return $"{InstanceNameKey}={Uri.EscapeDataString(InstanceName)}";
     }
 
     static bool IsValidSymbol(string? className)

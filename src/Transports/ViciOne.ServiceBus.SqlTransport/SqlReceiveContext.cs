@@ -24,7 +24,13 @@ public sealed class SqlReceiveContext :
     /// <param name="lockContext">The lock context.</param>
     public SqlReceiveContext(SqlTransportMessage message, SqlReceiveEndpointContext context, ReceiveSettings settings, ClientContext clientContext,
         ConnectionContext connectionContext, SqlReceiveLockContext lockContext)
-        : base(message.DeliveryCount > 0, context, settings, clientContext, connectionContext, lockContext)
+        : base(
+            (message ?? throw new ArgumentNullException(nameof(message))).DeliveryCount > 0,
+            context ?? throw new ArgumentNullException(nameof(context)),
+            settings ?? throw new ArgumentNullException(nameof(settings)),
+            clientContext ?? throw new ArgumentNullException(nameof(clientContext)),
+            connectionContext ?? throw new ArgumentNullException(nameof(connectionContext)),
+            lockContext ?? throw new ArgumentNullException(nameof(lockContext)))
     {
         TransportMessage = message;
 
@@ -40,7 +46,7 @@ public sealed class SqlReceiveContext :
     protected override IHeaderProvider HeaderProvider => _headerProvider ??= new SqlHeaderProvider(TransportMessage);
 
     /// <summary>Gets the sequence number.</summary>
-    public ulong? SequenceNumber => (ulong)DeliveryMessageId;
+    public ulong? SequenceNumber => checked((ulong)DeliveryMessageId);
 
     /// <summary>Gets the transport message.</summary>
     public SqlTransportMessage TransportMessage { get; }
@@ -73,17 +79,17 @@ public sealed class SqlReceiveContext :
     /// <returns>The transport properties.</returns>
     public IDictionary<string, object>? GetTransportProperties()
     {
-        var properties = new Lazy<Dictionary<string, object>>(() => new Dictionary<string, object>());
+        Dictionary<string, object>? properties = null;
 
         if (!string.IsNullOrWhiteSpace(RoutingKey))
-            properties.Value[SqlTransportPropertyNames.RoutingKey] = RoutingKey!;
+            (properties ??= [])[SqlTransportPropertyNames.RoutingKey] = RoutingKey;
 
         if (!string.IsNullOrWhiteSpace(PartitionKey))
-            properties.Value[SqlTransportPropertyNames.PartitionKey] = PartitionKey!;
+            (properties ??= [])[SqlTransportPropertyNames.PartitionKey] = PartitionKey;
 
         if (Priority != 100)
-            properties.Value[SqlTransportPropertyNames.Priority] = Priority;
+            (properties ??= [])[SqlTransportPropertyNames.Priority] = Priority;
 
-        return properties.IsValueCreated ? properties.Value : null;
+        return properties;
     }
 }

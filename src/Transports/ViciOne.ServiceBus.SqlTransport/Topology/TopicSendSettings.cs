@@ -20,7 +20,7 @@ public class TopicSendSettings :
     /// <returns>The fully qualified topic address.</returns>
     public SqlEndpointAddress GetSendAddress(Uri hostAddress)
     {
-        return new SqlEndpointAddress(hostAddress, TopicName, type: SqlEndpointAddress.AddressType.Topic);
+        return new SqlEndpointAddress(hostAddress, TopicName, kind: SqlEndpointKind.Topic);
     }
 
     /// <summary>Builds the topology that declares this topic as the publish destination.</summary>

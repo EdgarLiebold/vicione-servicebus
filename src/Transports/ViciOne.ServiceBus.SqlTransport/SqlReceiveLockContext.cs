@@ -16,10 +16,11 @@ public class SqlReceiveLockContext :
     readonly Uri _inputAddress;
     readonly SqlTransportMessage _message;
     readonly Task? _renewLockTask;
+    readonly SemaphoreSlim _settlementGate;
     readonly ReceiveSettings _settings;
     readonly DateTime _startedAt;
     readonly TimeProvider _timeProvider;
-    volatile bool _locked;
+    int _locked;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="inputAddress">The input address.</param>
@@ -43,7 +44,8 @@ public class SqlReceiveLockContext :
         _settings = settings;
         _clientContext = clientContext;
         _activeTokenSource = new CancellationTokenSource();
-        _locked = true;
+        _settlementGate = new SemaphoreSlim(1, 1);
+        _locked = 1;
 
         if (_message.LockId.HasValue)
             _renewLockTask = RenewLockAsync();
@@ -54,7 +56,7 @@ public class SqlReceiveLockContext :
     /// <param name="callback">An optional send-context callback, which native SQL lock release cannot represent.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task ScheduleRedeliveryAsync(TimeSpan delay, Action<ConsumeContext, SendContext>? callback, CancellationToken cancellationToken = default)
+    public Task ScheduleRedeliveryAsync(TimeSpan delay, Action<ConsumeContext, SendContext>? callback, CancellationToken cancellationToken = default)
     {
         if (delay < TimeSpan.Zero)
             throw new ArgumentOutOfRangeException(nameof(delay), delay, "The redelivery delay cannot be negative.");
@@ -63,16 +65,8 @@ public class SqlReceiveLockContext :
             throw new NotSupportedException(
                 "The SQL transport reschedules a delivery by releasing its database lock and cannot apply a send-context callback.");
         }
-        if (_locked == false)
-            return;
-
-        _activeTokenSource.Cancel();
-
-        try
+        return SettleAsync(async () =>
         {
-            if (_renewLockTask != null)
-                await _renewLockTask.ConfigureAwait(false);
-
             _clientContext.CancellationToken.ThrowIfCancellationRequested();
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -90,38 +84,20 @@ public class SqlReceiveLockContext :
                 transportHeaders,
                 cancellationToken).ConfigureAwait(false);
 
-            _locked = false;
             if (!unlocked)
                 throw LockLost("reschedule");
 
             LogContext.Debug?.Log("RESEND {DestinationAddress} {MessageId} (delay: {Delay})", _inputAddress, _message.MessageId, delay);
-        }
-        catch
-        {
-            _locked = false;
-            throw;
-        }
-        finally
-        {
-            _activeTokenSource.Dispose();
-        }
+        }, cancellationToken);
     }
 
     /// <summary>Marks the current operation as complete.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task CompleteAsync(CancellationToken cancellationToken = default)
+    public Task CompleteAsync(CancellationToken cancellationToken = default)
     {
-        if (_locked == false)
-            return;
-
-        _activeTokenSource.Cancel();
-
-        try
+        return SettleAsync(async () =>
         {
-            if (_renewLockTask != null)
-                await _renewLockTask.ConfigureAwait(false);
-
             cancellationToken.ThrowIfCancellationRequested();
             if (!_message.LockId.HasValue)
                 throw LockLost("complete");
@@ -131,39 +107,21 @@ public class SqlReceiveLockContext :
                 _message.MessageDeliveryId,
                 cancellationToken).ConfigureAwait(false);
 
-            _locked = false;
             if (!deleted)
                 throw LockLost("complete");
-        }
-        catch
-        {
-            _locked = false;
-            throw;
-        }
-        finally
-        {
-            _activeTokenSource.Dispose();
-        }
+        }, cancellationToken);
     }
 
     /// <summary>Reports that the operation has faulted.</summary>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
+    public Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(exception);
 
-        if (_locked == false)
-            return;
-
-        _activeTokenSource.Cancel();
-
-        try
+        return SettleAsync(async () =>
         {
-            if (_renewLockTask != null)
-                await _renewLockTask.ConfigureAwait(false);
-
             _clientContext.CancellationToken.ThrowIfCancellationRequested();
             cancellationToken.ThrowIfCancellationRequested();
             if (!_message.LockId.HasValue)
@@ -186,19 +144,9 @@ public class SqlReceiveLockContext :
                 headers,
                 cancellationToken).ConfigureAwait(false);
 
-            _locked = false;
             if (!unlocked)
                 throw LockLost("release after a fault");
-        }
-        catch
-        {
-            _locked = false;
-            throw;
-        }
-        finally
-        {
-            _activeTokenSource.Dispose();
-        }
+        }, cancellationToken);
     }
 
     /// <summary>Validates lock status.</summary>
@@ -208,7 +156,7 @@ public class SqlReceiveLockContext :
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (_locked)
+        if (Volatile.Read(ref _locked) == 1)
             return Task.CompletedTask;
 
         throw LockLost("validate");
@@ -247,16 +195,8 @@ public class SqlReceiveLockContext :
         ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
         ArgumentNullException.ThrowIfNull(transportHeaders);
 
-        if (_locked == false)
-            return;
-
-        _activeTokenSource.Cancel();
-
-        try
+        await SettleAsync(async () =>
         {
-            if (_renewLockTask != null)
-                await _renewLockTask.ConfigureAwait(false);
-
             _clientContext.CancellationToken.ThrowIfCancellationRequested();
             cancellationToken.ThrowIfCancellationRequested();
             if (!_message.LockId.HasValue)
@@ -271,19 +211,9 @@ public class SqlReceiveLockContext :
                 transportHeaders,
                 cancellationToken).ConfigureAwait(false);
 
-            _locked = false;
             if (!moved)
                 throw LockLost("move");
-        }
-        catch
-        {
-            _locked = false;
-            throw;
-        }
-        finally
-        {
-            _activeTokenSource.Dispose();
-        }
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     async Task RenewLockAsync()
@@ -313,12 +243,16 @@ public class SqlReceiveLockContext :
 
                 if (_message.LockId.HasValue)
                 {
-                    if (!await _clientContext.RenewLockAsync(_message.LockId.Value, _message.MessageDeliveryId, duration).ConfigureAwait(false))
+                    if (!await _clientContext.RenewLockAsync(
+                            _message.LockId.Value,
+                            _message.MessageDeliveryId,
+                            duration,
+                            _activeTokenSource.Token).ConfigureAwait(false))
                     {
                         LogContext.Warning?.Log("Message Lock Lost: {InputAddress} - {MessageDeliveryId} ({LockId})", _inputAddress,
                             _message.MessageDeliveryId, _message.LockId);
 
-                        _locked = false;
+                        Volatile.Write(ref _locked, 0);
 
                         break;
                     }
@@ -333,17 +267,46 @@ public class SqlReceiveLockContext :
             {
                 delay = TimeSpan.Zero;
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException) when (_activeTokenSource.IsCancellationRequested)
             {
                 break;
             }
             catch (Exception exception)
             {
-                _locked = false;
+                Volatile.Write(ref _locked, 0);
                 LogContext.Warning?.Log(exception, "Message lock renewal failed: {InputAddress} {MessageDeliveryId} {LockId}", _inputAddress,
                     _message.MessageDeliveryId, _message.LockId);
                 break;
             }
+        }
+    }
+
+    async Task SettleAsync(Func<Task> settle, CancellationToken cancellationToken)
+    {
+        await _settlementGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+
+        try
+        {
+            if (Interlocked.CompareExchange(ref _locked, 0, 1) != 1)
+                return;
+
+            _activeTokenSource.Cancel();
+
+            try
+            {
+                if (_renewLockTask != null)
+                    await _renewLockTask.ConfigureAwait(false);
+
+                await settle().ConfigureAwait(false);
+            }
+            finally
+            {
+                _activeTokenSource.Dispose();
+            }
+        }
+        finally
+        {
+            _settlementGate.Release();
         }
     }
 

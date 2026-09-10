@@ -21,8 +21,8 @@ public class ConfigureSqlTopologyFilter<TSettings> :
     /// <param name="context">The context associated with the operation.</param>
     public ConfigureSqlTopologyFilter(TSettings settings, BrokerTopology brokerTopology, SqlReceiveEndpointContext? context = null)
     {
-        _settings = settings;
-        _brokerTopology = brokerTopology;
+        _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        _brokerTopology = brokerTopology ?? throw new ArgumentNullException(nameof(brokerTopology));
         _context = context;
     }
 
@@ -32,7 +32,10 @@ public class ConfigureSqlTopologyFilter<TSettings> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ClientContext context, IPipe<ClientContext> next)
     {
-        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await context.OneTimeSetupAsync<ConfigureTopologyContext<TSettings>>(() =>
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        OneTimeContext<TopologySetup> oneTimeContext = await context.OneTimeSetupAsync<TopologySetup>(() =>
         {
             context.GetOrAddPayload(() => _settings);
 
@@ -55,6 +58,8 @@ public class ConfigureSqlTopologyFilter<TSettings> :
     /// <param name="context">The context associated with the operation.</param>
     public void Probe(ProbeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var scope = context.CreateFilterScope("configureTopology");
 
         _brokerTopology.Probe(scope);
@@ -105,5 +110,9 @@ public class ConfigureSqlTopologyFilter<TSettings> :
         SqlLogMessages.CreateQueue(queue);
 
         return context.CreateQueueAsync(queue);
+    }
+
+    sealed class TopologySetup
+    {
     }
 }

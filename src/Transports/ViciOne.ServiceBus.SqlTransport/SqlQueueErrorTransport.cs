@@ -30,7 +30,7 @@ public class SqlQueueErrorTransport :
             headers.CopyFrom(context.ExceptionHeaders);
 
             if (message.ExpirationTime.HasValue)
-                message.ExpirationTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + Defaults.ErrorQueueTimeToLive;
+                message.ExpirationTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + SqlTransportDefaults.ErrorQueueTimeToLive;
         }
 
         return MoveAsync(context, AddExceptionDetails, cancellationToken);

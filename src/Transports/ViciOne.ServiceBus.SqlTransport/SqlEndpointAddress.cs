@@ -1,125 +1,153 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ViciOne.ServiceBus.Initializers;
-using ViciOne.ServiceBus.Initializers.TypeConverters;
+using System.Globalization;
 using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>Represents a sql endpoint address.</summary>
+/// <summary>Identifies a SQL transport queue or topic within a logical host.</summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct SqlEndpointAddress
 {
     const string InstanceNameKey = "instance";
     const string AutoDeleteKey = "autodelete";
-    const string TypeKey = "type";
+    const string KindKey = "kind";
 
+    /// <summary>Gets the SQL transport URI scheme.</summary>
+    public string Scheme { get; }
+    /// <summary>Gets the database server host.</summary>
+    public string Host { get; }
+    /// <summary>Gets the optional SQL Server instance name.</summary>
+    public string? InstanceName { get; }
+    /// <summary>Gets the optional database server port.</summary>
+    public int? Port { get; }
+    /// <summary>Gets the logical transport namespace.</summary>
+    public string VirtualHost { get; }
+    /// <summary>Gets the optional queue area.</summary>
+    public string? Area { get; }
+    /// <summary>Gets the queue or topic name.</summary>
+    public string Name { get; }
+    /// <summary>Gets the optional queue idle period after which the queue is deleted.</summary>
+    public TimeSpan? AutoDeleteOnIdle { get; }
+    /// <summary>Gets the destination kind.</summary>
+    public SqlEndpointKind Kind { get; }
 
-    /// <summary>Specifies the available address type values.</summary>
-    public enum AddressType
+    /// <summary>Resolves a queue, topic, or absolute SQL endpoint address against a host.</summary>
+    /// <param name="hostAddress">The absolute SQL transport host address.</param>
+    /// <param name="address">The endpoint address to resolve.</param>
+    /// <param name="kind">The destination kind used when the address does not specify one.</param>
+    public SqlEndpointAddress(Uri hostAddress, Uri address, SqlEndpointKind kind = SqlEndpointKind.Queue)
     {
-        /// <summary>Indicates queue.</summary>
-        Queue = 0,
-        /// <summary>Indicates topic.</summary>
-        Topic = 1
-    }
+        ArgumentNullException.ThrowIfNull(hostAddress);
+        ArgumentNullException.ThrowIfNull(address);
+        ValidateKind(kind, nameof(kind));
 
-
-    static readonly ITypeConverter<AddressType, string> _parseConverter = new EnumTypeConverter<AddressType>();
-
-    /// <summary>Exposes the scheme used by the containing type.</summary>
-    public readonly string Scheme;
-    /// <summary>Exposes the host used by the containing type.</summary>
-    public readonly string Host;
-    /// <summary>Exposes the instance name used by the containing type.</summary>
-    public readonly string? InstanceName;
-    /// <summary>Exposes the port used by the containing type.</summary>
-    public readonly int? Port;
-    /// <summary>Exposes the virtual host used by the containing type.</summary>
-    public readonly string VirtualHost;
-    /// <summary>Exposes the area used by the containing type.</summary>
-    public readonly string? Area;
-    /// <summary>Exposes the name used by the containing type.</summary>
-    public readonly string Name;
-
-    /// <summary>Exposes the auto delete on idle used by the containing type.</summary>
-    public readonly TimeSpan? AutoDeleteOnIdle;
-    /// <summary>Exposes the type used by the containing type.</summary>
-    public readonly AddressType Type;
-
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="hostAddress">The host address.</param>
-    /// <param name="address">The address.</param>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    public SqlEndpointAddress(Uri hostAddress, Uri address, AddressType type = AddressType.Queue)
-    {
         Port = default;
 
         AutoDeleteOnIdle = null;
-        Type = type;
+        Kind = kind;
 
-        ParseLeft(hostAddress, out Scheme, out Host, out InstanceName, out Port, out VirtualHost, out Area);
+        ParseLeft(hostAddress, out string parsedScheme, out string parsedHost, out string? parsedInstanceName,
+            out int? parsedPort, out string parsedVirtualHost, out string? parsedArea);
+        Scheme = parsedScheme;
+        Host = parsedHost;
+        InstanceName = parsedInstanceName;
+        Port = parsedPort;
+        VirtualHost = parsedVirtualHost;
+        Area = parsedArea;
 
         var scheme = address.Scheme.ToLowerInvariant();
+        string endpointName;
         switch (scheme)
         {
-            case SqlHostAddress.DbScheme:
+            case SqlHostAddress.SchemeName:
 
-                address.ParseHostPathAndEntityName(out _, out Name!);
+                address.ParseHostPathAndEntityName(out _, out endpointName!);
 
-                if (string.IsNullOrWhiteSpace(Name))
+                if (string.IsNullOrWhiteSpace(endpointName))
                     throw new SqlEndpointAddressException(address, "Endpoint name must be specified");
                 break;
 
             case "queue":
-                Name = address.AbsolutePath;
+                endpointName = address.AbsolutePath;
                 break;
 
             case "topic":
                 Area = default;
-                Name = address.AbsolutePath;
-                Type = AddressType.Topic;
+                endpointName = address.AbsolutePath;
+                Kind = SqlEndpointKind.Topic;
                 break;
 
             default:
                 throw new SqlEndpointAddressException(address, "Scheme is not supported");
         }
 
+        Name = endpointName;
+
         foreach (var (key, value) in address.SplitQueryString())
         {
             switch (key)
             {
-                case AutoDeleteKey when int.TryParse(value, out var result):
-                    AutoDeleteOnIdle = TimeSpan.FromSeconds(result);
+                case AutoDeleteKey:
+                    if (!double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double seconds)
+                        || !double.IsFinite(seconds)
+                        || seconds <= 0
+                        || seconds > TimeSpan.MaxValue.TotalSeconds)
+                    {
+                        throw new SqlEndpointAddressException(address, "The auto-delete interval must be a positive number of seconds.");
+                    }
+
+                    AutoDeleteOnIdle = TimeSpan.FromSeconds(seconds);
                     break;
 
-                case TypeKey when value != null && _parseConverter.TryConvert(value, out var result):
-                    Type = result;
+                case KindKey:
+                    if (!Enum.TryParse(value, true, out SqlEndpointKind parsedKind) || !Enum.IsDefined(parsedKind))
+                        throw new SqlEndpointAddressException(address, "The endpoint kind must be either queue or topic.");
+
+                    Kind = parsedKind;
                     break;
             }
         }
 
-        if (Type != AddressType.Queue && AutoDeleteOnIdle.HasValue)
-            AutoDeleteOnIdle = null;
+        ValidateName(Name, address);
+
+        if (Kind == SqlEndpointKind.Topic && AutoDeleteOnIdle.HasValue)
+            throw new SqlEndpointAddressException(address, "Topics do not support an auto-delete interval.");
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="hostAddress">The host address.</param>
-    /// <param name="name">The name.</param>
-    /// <param name="autoDeleteOnIdle">The auto delete on idle.</param>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    public SqlEndpointAddress(Uri hostAddress, string name, TimeSpan? autoDeleteOnIdle = null, AddressType type = AddressType.Queue)
+    /// <summary>Creates a queue or topic address from validated components.</summary>
+    /// <param name="hostAddress">The absolute SQL transport host address.</param>
+    /// <param name="name">The queue or topic name.</param>
+    /// <param name="autoDeleteOnIdle">The optional queue idle period after which the queue is deleted.</param>
+    /// <param name="kind">The destination kind.</param>
+    public SqlEndpointAddress(Uri hostAddress, string name, TimeSpan? autoDeleteOnIdle = null, SqlEndpointKind kind = SqlEndpointKind.Queue)
     {
-        ParseLeft(hostAddress, out Scheme, out Host, out InstanceName, out Port, out VirtualHost, out Area);
+        ArgumentNullException.ThrowIfNull(hostAddress);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ValidateKind(kind, nameof(kind));
+        if (autoDeleteOnIdle <= TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(autoDeleteOnIdle), autoDeleteOnIdle, "The auto-delete interval must be greater than zero.");
+        if (kind == SqlEndpointKind.Topic && autoDeleteOnIdle.HasValue)
+            throw new ArgumentException("Topics do not support an auto-delete interval.", nameof(autoDeleteOnIdle));
+
+        ParseLeft(hostAddress, out string parsedScheme, out string parsedHost, out string? parsedInstanceName,
+            out int? parsedPort, out string parsedVirtualHost, out string? parsedArea);
+        Scheme = parsedScheme;
+        Host = parsedHost;
+        InstanceName = parsedInstanceName;
+        Port = parsedPort;
+        VirtualHost = parsedVirtualHost;
+        Area = parsedArea;
 
         Name = name;
+        ValidateName(Name, hostAddress);
 
-        AutoDeleteOnIdle = type == AddressType.Queue ? autoDeleteOnIdle : null;
+        AutoDeleteOnIdle = autoDeleteOnIdle;
 
-        Type = type;
+        Kind = kind;
 
-        if (type == AddressType.Topic)
+        if (kind == SqlEndpointKind.Topic)
             Area = default;
     }
 
@@ -135,13 +163,21 @@ public readonly struct SqlEndpointAddress
         area = hostAddress.Area;
     }
 
-    /// <summary>Converts a value to <see cref="Uri" />.</summary>
-    /// <param name="address">The address.</param>
-    /// <returns>The value produced by the operation.</returns>
+    /// <summary>Formats a validated SQL endpoint address as an absolute URI.</summary>
+    /// <param name="address">The SQL endpoint address.</param>
+    /// <returns>The absolute SQL transport URI.</returns>
     public static implicit operator Uri(in SqlEndpointAddress address)
     {
+        if (string.IsNullOrWhiteSpace(address.Scheme)
+            || string.IsNullOrWhiteSpace(address.Host)
+            || string.IsNullOrWhiteSpace(address.VirtualHost)
+            || string.IsNullOrWhiteSpace(address.Name))
+        {
+            throw new InvalidOperationException("The SQL endpoint address has not been initialized.");
+        }
+
         var path = address.VirtualHost == "/" ? "/" : Uri.EscapeDataString(address.VirtualHost);
-        if (!string.IsNullOrWhiteSpace(address.Area) && address.Type == AddressType.Queue)
+        if (!string.IsNullOrWhiteSpace(address.Area) && address.Kind == SqlEndpointKind.Queue)
             path += "." + Uri.EscapeDataString(address.Area);
         if (path[path.Length - 1] != '/')
             path += '/';
@@ -155,7 +191,7 @@ public readonly struct SqlEndpointAddress
             Path = path
         };
 
-        builder.Query += string.Join("&", address.GetQueryStringOptions());
+        builder.Query = string.Join("&", address.GetQueryStringOptions());
 
         return builder.Uri;
     }
@@ -164,13 +200,34 @@ public readonly struct SqlEndpointAddress
 
     IEnumerable<string> GetQueryStringOptions()
     {
-        if (AutoDeleteOnIdle.HasValue && Type == AddressType.Queue)
-            yield return $"{AutoDeleteKey}={AutoDeleteOnIdle.Value.TotalSeconds:F0}";
+        if (AutoDeleteOnIdle.HasValue && Kind == SqlEndpointKind.Queue)
+            yield return $"{AutoDeleteKey}={AutoDeleteOnIdle.Value.TotalSeconds.ToString("R", CultureInfo.InvariantCulture)}";
 
-        if (Type != AddressType.Queue)
-            yield return $"{TypeKey}=topic";
+        if (Kind != SqlEndpointKind.Queue)
+            yield return $"{KindKey}=topic";
 
         if (!string.IsNullOrEmpty(InstanceName))
-            yield return $"{InstanceNameKey}={InstanceName}";
+            yield return $"{InstanceNameKey}={Uri.EscapeDataString(InstanceName)}";
+    }
+
+    static void ValidateKind(SqlEndpointKind kind, string parameterName)
+    {
+        if (!Enum.IsDefined(kind))
+            throw new ArgumentOutOfRangeException(parameterName, kind, "The endpoint kind must be either queue or topic.");
+    }
+
+    static void ValidateName(string name, Uri address)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new SqlEndpointAddressException(address, "An endpoint name is required.");
+
+        foreach (char character in name)
+        {
+            if (!(char.IsLetterOrDigit(character) || character is '-' or '_' or '.' or ':'))
+            {
+                throw new SqlEndpointAddressException(address,
+                    "The endpoint name may contain only letters, digits, hyphens, underscores, periods, and colons.");
+            }
+        }
     }
 }

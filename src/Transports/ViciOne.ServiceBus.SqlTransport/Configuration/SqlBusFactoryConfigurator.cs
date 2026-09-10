@@ -23,7 +23,8 @@ public class SqlBusFactoryConfigurator :
         _hostConfiguration = busConfiguration.HostConfiguration;
 
         var queueName = busConfiguration.Topology.Consume.CreateTemporaryQueueName("bus");
-        _settings = new SqlReceiveSettings(busConfiguration.BusEndpointConfiguration, queueName, Defaults.TemporaryAutoDeleteOnIdle);
+        _settings = new SqlReceiveSettings(busConfiguration.BusEndpointConfiguration, queueName,
+            SqlTransportDefaults.TemporaryQueueAutoDeleteOnIdle);
     }
 
     /// <summary>Creates bus endpoint configuration.</summary>

@@ -16,13 +16,13 @@ public sealed class SqlTopologyInvariantTests
         var source = new SqlEndpointAddress(
             HostAddress,
             "events",
-            type: SqlEndpointAddress.AddressType.Topic);
+            kind: SqlEndpointKind.Topic);
         var settings = new TopicSendSettings(source);
 
         var actual = settings.GetSendAddress(HostAddress);
 
-        Assert.Equal(SqlEndpointAddress.AddressType.Topic, actual.Type);
-        Assert.Equal(new Uri("db://localhost/transport/events?type=topic"), (Uri)actual);
+        Assert.Equal(SqlEndpointKind.Topic, actual.Kind);
+        Assert.Equal(new Uri("db://localhost/transport/events?kind=topic"), (Uri)actual);
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public sealed class SqlTopologyInvariantTests
         SendSettings settings = configuration.Publish.GetMessageTopology<Event>().GetSendSettings(HostAddress);
 
         Assert.IsType<TopicSendSettings>(settings);
-        Assert.Equal(SqlEndpointAddress.AddressType.Topic, settings.GetSendAddress(HostAddress).Type);
+        Assert.Equal(SqlEndpointKind.Topic, settings.GetSendAddress(HostAddress).Kind);
     }
 
     [Fact]

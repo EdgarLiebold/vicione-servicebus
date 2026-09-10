@@ -13,7 +13,6 @@ public interface ISqlMessagePublishTopologyConfigurator<TMessage> :
 
 /// <summary>Configures sql message publish topology.</summary>
 public interface ISqlMessagePublishTopologyConfigurator :
-    IMessagePublishTopologyConfigurator,
-    ISqlTopicConfigurator
+    IMessagePublishTopologyConfigurator
 {
 }

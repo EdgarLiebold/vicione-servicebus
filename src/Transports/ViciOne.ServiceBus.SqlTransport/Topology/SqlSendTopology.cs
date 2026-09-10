@@ -29,7 +29,7 @@ public class SqlSendTopology :
     /// <returns>The send settings.</returns>
     public SendSettings GetSendSettings(SqlEndpointAddress address)
     {
-        return address.Type == SqlEndpointAddress.AddressType.Queue
+        return address.Kind == SqlEndpointKind.Queue
             ? new QueueSendSettings(address)
             : new TopicSendSettings(address);
     }

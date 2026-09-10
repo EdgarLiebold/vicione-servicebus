@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.SqlTransport.Topology;
 public class SqlMessageConsumeTopology<TMessage> :
     MessageConsumeTopology<TMessage>,
     ISqlMessageConsumeTopologyConfigurator<TMessage>,
-    IDbMessageConsumeTopologyConfigurator
+    ISqlMessageConsumeTopologySpecification
     where TMessage : class
 {
     readonly ISqlMessagePublishTopology<TMessage> _publishTopology;

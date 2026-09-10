@@ -6,7 +6,7 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
 
-/// <summary>Creates sql bus instances.</summary>
+/// <summary>Creates standalone buses backed by a configured SQL transport provider.</summary>
 public static class SqlBusFactory
 {
     /// <summary>Create a bus using the database transport.</summary>
@@ -14,6 +14,8 @@ public static class SqlBusFactory
     /// <returns>The newly created instance.</returns>
     public static IBusControl Create(Action<ISqlBusFactoryConfigurator> configure)
     {
+        ArgumentNullException.ThrowIfNull(configure);
+
         var topologyConfiguration = new SqlTopologyConfiguration(CreateMessageTopology());
         var busConfiguration = new SqlBusConfiguration(topologyConfiguration);
 
@@ -24,8 +26,8 @@ public static class SqlBusFactory
         return configurator.Build(busConfiguration);
     }
 
-    /// <summary>Creates message topology.</summary>
-    /// <returns>The created message topology.</returns>
+    /// <summary>Creates the SQL transport's default message topology and entity-name formatter.</summary>
+    /// <returns>A new mutable message-topology configuration.</returns>
     public static IMessageTopologyConfigurator CreateMessageTopology()
     {
         return new MessageTopology(Cached.EntityNameFormatter);

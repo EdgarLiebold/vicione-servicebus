@@ -53,7 +53,7 @@ public class SqlReceiveEndpointConfiguration :
     /// <returns>The created receive endpoint context.</returns>
     public override ReceiveEndpointContext CreateReceiveEndpointContext()
     {
-        return CreateDbReceiveEndpointContext();
+        return CreateSqlReceiveEndpointContext();
     }
 
     ISqlTopologyConfiguration ISqlEndpointConfiguration.Topology => _endpointConfiguration.Topology;
@@ -62,7 +62,7 @@ public class SqlReceiveEndpointConfiguration :
     /// <param name="host">The host.</param>
     public void Build(IHost host)
     {
-        var context = CreateDbReceiveEndpointContext();
+        var context = CreateSqlReceiveEndpointContext();
 
         _clientConfigurator.UseFilter(new ConfigureSqlTopologyFilter<ReceiveSettings>(_settings, context.BrokerTopology, context));
 
@@ -253,7 +253,7 @@ public class SqlReceiveEndpointConfiguration :
         return _regex.Match(name).Success;
     }
 
-    SqlReceiveEndpointContext CreateDbReceiveEndpointContext()
+    SqlReceiveEndpointContext CreateSqlReceiveEndpointContext()
     {
         var builder = new SqlReceiveEndpointBuilder(_hostConfiguration, this);
 

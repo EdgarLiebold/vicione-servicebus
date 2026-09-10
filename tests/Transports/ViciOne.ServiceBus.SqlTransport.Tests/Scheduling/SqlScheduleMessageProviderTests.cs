@@ -34,6 +34,37 @@ public sealed class SqlScheduleMessageProviderTests
         Assert.Equal(scheduled.TokenId.ToString("D"), header);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SQL-SCHEDULE-ARGUMENTS", "public-scheduling-boundary-rejects-invalid-input")]
+    public async Task PublicOperations_RejectInvalidArgumentsBeforeResolvingTransportStateAsync()
+    {
+        ISendEndpointProvider endpoints = DispatchProxy.Create<ISendEndpointProvider, UnsupportedProxy>();
+        ISqlHostConfiguration hostConfiguration = DispatchProxy.Create<ISqlHostConfiguration, UnsupportedProxy>();
+        var provider = new SqlScheduleMessageProvider(hostConfiguration, endpoints);
+        var destination = new Uri("db://localhost/transport/scheduled");
+        var message = new Probe();
+        IPipe<SendContext<Probe>> pipe = Pipe.Empty<SendContext<Probe>>();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            provider.ScheduleSendAsync(null!, DateTimeOffset.UtcNow, message, pipe, cancellationToken));
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            provider.ScheduleSendAsync(destination, DateTimeOffset.UtcNow, null!, pipe, cancellationToken));
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            provider.ScheduleSendAsync(destination, DateTimeOffset.UtcNow, message, null!, cancellationToken));
+        await Assert.ThrowsAsync<ArgumentException>(() => provider.CancelScheduledSendAsync(Guid.Empty, cancellationToken));
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            provider.CancelScheduledSendAsync(null!, Guid.NewGuid(), cancellationToken));
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            provider.CancelScheduledSendAsync(destination, Guid.Empty, cancellationToken));
+
+        ConsumeContext consumeContext = DispatchProxy.Create<ConsumeContext, MissingPayloadProxy>();
+        var consumeProvider = new SqlScheduleMessageProvider(consumeContext);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            consumeProvider.CancelScheduledSendAsync(Guid.NewGuid(), cancellationToken));
+    }
+
     private sealed record Probe;
 
     private interface AdvancedScheduleEndpoint :
@@ -78,5 +109,21 @@ public sealed class SqlScheduleMessageProviderTests
     {
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
             throw new NotSupportedException(targetMethod?.Name);
+    }
+
+    private class MissingPayloadProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+
+            if (targetMethod.Name == "TryGetPayload" && targetMethod.IsGenericMethod)
+            {
+                args![0] = null;
+                return false;
+            }
+
+            throw new NotSupportedException(targetMethod.Name);
+        }
     }
 }

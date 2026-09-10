@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
 /// <summary>Configures sql topic.</summary>
 public class SqlTopicConfigurator :
-    ISqlTopicConfigurator,
     Topic
 {
     /// <summary>Initializes a new instance.</summary>
@@ -23,6 +22,6 @@ public class SqlTopicConfigurator :
     /// <returns>The endpoint address.</returns>
     public SqlEndpointAddress GetEndpointAddress(Uri hostAddress)
     {
-        return new SqlEndpointAddress(hostAddress, TopicName, type: SqlEndpointAddress.AddressType.Topic);
+        return new SqlEndpointAddress(hostAddress, TopicName, kind: SqlEndpointKind.Topic);
     }
 }

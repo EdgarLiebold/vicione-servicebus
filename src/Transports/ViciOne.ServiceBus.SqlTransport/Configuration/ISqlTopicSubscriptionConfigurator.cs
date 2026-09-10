@@ -1,8 +1,7 @@
 namespace ViciOne.ServiceBus.Providers.Transports;
 
 /// <summary>Configures the topic subscription for the receive endpoint.</summary>
-public interface ISqlTopicSubscriptionConfigurator :
-    ISqlTopicConfigurator
+public interface ISqlTopicSubscriptionConfigurator
 {
     /// <summary>Gets or sets the subscription type.</summary>
     SqlSubscriptionType SubscriptionType { set; }

@@ -51,6 +51,11 @@ public class SqlScheduleMessageProvider :
         CancellationToken cancellationToken)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(pipe);
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
@@ -76,6 +81,10 @@ public class SqlScheduleMessageProvider :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CancelScheduledSendAsync(Guid tokenId, CancellationToken cancellationToken)
     {
+        if (tokenId == Guid.Empty)
+            throw new ArgumentException("The scheduling token cannot be empty.", nameof(tokenId));
+        cancellationToken.ThrowIfCancellationRequested();
+
         return _cancel(async clientContext =>
         {
             var deleted = await clientContext.DeleteScheduledMessageAsync(tokenId, cancellationToken).ConfigureAwait(false);
@@ -91,6 +100,11 @@ public class SqlScheduleMessageProvider :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        if (tokenId == Guid.Empty)
+            throw new ArgumentException("The scheduling token cannot be empty.", nameof(tokenId));
+        cancellationToken.ThrowIfCancellationRequested();
+
         return _cancel(async clientContext =>
         {
             var deleted = await clientContext.DeleteScheduledMessageAsync(tokenId, cancellationToken).ConfigureAwait(false);
@@ -101,14 +115,20 @@ public class SqlScheduleMessageProvider :
 
     Task RetryUsingContextAsync(Func<ClientContext, Task> callback, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(callback);
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (!_context!.TryGetPayload(out ClientContext? clientContext))
-            throw new ArgumentException("The client context was not available", nameof(_context));
+            throw new InvalidOperationException("The consume context does not contain an active SQL client context.");
 
         return callback(clientContext);
     }
 
     Task RetryUsingHostConfigurationAsync(Func<ClientContext, Task> callback, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(callback);
+        cancellationToken.ThrowIfCancellationRequested();
+
         ISqlHostConfiguration hostConfiguration = _hostConfiguration!;
         var pipe = new ClientContextPipe(callback, cancellationToken);
 
@@ -125,12 +145,15 @@ public class SqlScheduleMessageProvider :
 
         public ClientContextPipe(Func<ClientContext, Task> callback, CancellationToken cancellationToken)
         {
-            _callback = callback;
+            _callback = callback ?? throw new ArgumentNullException(nameof(callback));
             _cancellationToken = cancellationToken;
         }
 
         public Task SendAsync(ConnectionContext context)
         {
+            ArgumentNullException.ThrowIfNull(context);
+            _cancellationToken.ThrowIfCancellationRequested();
+
             var clientContext = context.CreateClientContext(_cancellationToken);
 
             return _callback(clientContext);
@@ -138,6 +161,8 @@ public class SqlScheduleMessageProvider :
 
         public void Probe(ProbeContext context)
         {
+            ArgumentNullException.ThrowIfNull(context);
+
             context.CreateScope("sql-schedule-message-client");
         }
     }

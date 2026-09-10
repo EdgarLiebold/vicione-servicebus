@@ -1,28 +1,35 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>Provides sql header services.</summary>
+/// <summary>Projects persisted SQL message metadata through the receive-header abstraction.</summary>
 public class SqlHeaderProvider :
     IHeaderProvider
 {
     readonly SqlTransportMessage _message;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Creates a header provider for one materialized SQL transport message.</summary>
+    /// <param name="message">The transport message whose metadata is exposed.</param>
     public SqlHeaderProvider(SqlTransportMessage message)
     {
-        _message = message;
+        _message = message ?? throw new ArgumentNullException(nameof(message));
     }
 
-    /// <summary>Gets all.</summary>
-    /// <returns>The all.</returns>
+    /// <summary>Enumerates application and transport headers once, with transport-owned values taking precedence.</summary>
+    /// <returns>The merged case-insensitive header set.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
-        return _message.GetHeaders().GetAll().Concat(_message.GetTransportHeaders().GetAll());
+        var headers = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (KeyValuePair<string, object> header in _message.GetHeaders().GetAll())
+            headers[header.Key] = header.Value;
+        foreach (KeyValuePair<string, object> header in _message.GetTransportHeaders().GetAll())
+            headers[header.Key] = header.Value;
+
+        return headers;
     }
 
     /// <summary>Attempts to get header.</summary>
@@ -31,6 +38,8 @@ public class SqlHeaderProvider :
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
         switch (key)
         {
             case MessageHeaders.ContentType:
