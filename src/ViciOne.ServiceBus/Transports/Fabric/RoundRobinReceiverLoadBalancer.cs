@@ -1,28 +1,31 @@
-using System.Collections.Generic;
-using System.Threading;
-
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>Balances work across round robin receiver instances.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class RoundRobinReceiverLoadBalancer<T> :
-    IReceiverLoadBalancer<T>
-    where T : class
+/// <summary>Selects connected receivers in a stable round-robin sequence.</summary>
+/// <typeparam name="TMessage">The message type accepted by the receivers.</typeparam>
+internal sealed class RoundRobinReceiverLoadBalancer<TMessage> :
+    IReceiverLoadBalancer<TMessage>
+    where TMessage : class
 {
     Receiver _current;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="receivers">The receivers.</param>
-    public RoundRobinReceiverLoadBalancer(IMessageReceiver<T>[] receivers)
+    /// <summary>Initializes a load balancer over the specified receiver snapshot.</summary>
+    /// <param name="receivers">The receivers included in the rotation.</param>
+    public RoundRobinReceiverLoadBalancer(IMessageReceiver<TMessage>[] receivers)
     {
-        _current = BuildList(receivers.Copy().Shuffle());
+        ArgumentNullException.ThrowIfNull(receivers);
+        if (receivers.Length == 0)
+            throw new ArgumentException("At least one receiver is required.", nameof(receivers));
+        if (Array.Exists(receivers, static receiver => receiver is null))
+            throw new ArgumentException("The receiver collection cannot contain null entries.", nameof(receivers));
+
+        _current = BuildRing(receivers);
     }
 
-    /// <summary>Selects receiver.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The selected receiver.</returns>
-    public IMessageReceiver<T> SelectReceiver(T message)
+    /// <inheritdoc />
+    public IMessageReceiver<TMessage> SelectReceiver(TMessage message)
     {
+        ArgumentNullException.ThrowIfNull(message);
+
         Receiver selected;
         do
         {
@@ -33,31 +36,30 @@ public class RoundRobinReceiverLoadBalancer<T> :
         return selected.Current;
     }
 
-    static Receiver BuildList(IReadOnlyList<IMessageReceiver<T>> receivers)
+    static Receiver BuildRing(IReadOnlyList<IMessageReceiver<TMessage>> receivers)
     {
         var first = new Receiver(receivers[0]);
-        var last = first;
-        for (var i = 1; i < receivers.Count; i++)
+        Receiver last = first;
+        for (var index = 1; index < receivers.Count; index++)
         {
-            var consumer = new Receiver(receivers[i]);
-            last.Next = consumer;
-            last = consumer;
+            var next = new Receiver(receivers[index]);
+            last.Next = next;
+            last = next;
         }
 
         last.Next = first;
-
-        return last;
+        return first;
     }
 
-
-    class Receiver
+    sealed class Receiver
     {
-        public Receiver(IMessageReceiver<T> current)
+        public Receiver(IMessageReceiver<TMessage> current)
         {
             Current = current;
+            Next = this;
         }
 
-        public IMessageReceiver<T> Current { get; }
-        public Receiver Next { get; set; } = null!;
+        public IMessageReceiver<TMessage> Current { get; }
+        public Receiver Next { get; set; }
     }
 }

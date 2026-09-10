@@ -1,95 +1,82 @@
-using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Providers.Transports;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>Builds message fabric publish topology components.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-/// <typeparam name="T">The value type.</typeparam>
-public class MessageFabricPublishTopologyBuilder<TContext, T> :
+/// <summary>Forwards publish-topology declarations to a message fabric.</summary>
+/// <typeparam name="TMessage">The message envelope type carried by the fabric.</typeparam>
+internal sealed class MessageFabricPublishTopologyBuilder<TMessage> :
     IMessageFabricPublishTopologyBuilder
-    where TContext : class
-    where T : class
+    where TMessage : class
 {
-    readonly TContext _context;
-    readonly IMessageFabric<TContext, T> _messageFabric;
+    readonly IMessageFabric<TMessage> _messageFabric;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="messageFabric">The message fabric.</param>
-    public MessageFabricPublishTopologyBuilder(TContext context, IMessageFabric<TContext, T> messageFabric)
+    /// <summary>Initializes a builder for the specified fabric.</summary>
+    /// <param name="messageFabric">The fabric that receives declarations.</param>
+    public MessageFabricPublishTopologyBuilder(IMessageFabric<TMessage> messageFabric)
     {
-        _context = context;
+        ArgumentNullException.ThrowIfNull(messageFabric);
         _messageFabric = messageFabric;
     }
 
-    /// <summary>Gets or sets the exchange name.</summary>
-    public string ExchangeName { get; set; } = null!;
-    /// <summary>Gets or sets the exchange type.</summary>
-    public ExchangeType ExchangeType { get; set; }
+    /// <inheritdoc />
+    public string? ExchangeName { get; set; }
+    /// <inheritdoc />
+    public InMemoryExchangeType ExchangeType { get; set; }
 
-    /// <summary>Creates implemented builder.</summary>
-    /// <returns>The created implemented builder.</returns>
+    /// <inheritdoc />
     public IMessageFabricPublishTopologyBuilder CreateImplementedBuilder()
     {
         return new ImplementedBuilder(this);
     }
 
-    /// <summary>Binds the configured exchange.</summary>
-    /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination.</param>
-    /// <param name="routingKey">The routing key.</param>
+    /// <inheritdoc />
     public void ExchangeBind(string source, string destination, string? routingKey)
     {
-        _messageFabric.ExchangeBind(_context, source, destination, routingKey);
+        _messageFabric.ExchangeBind(source, destination, routingKey);
     }
 
-    /// <summary>Binds the configured queue.</summary>
-    /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination.</param>
+    /// <inheritdoc />
     public void QueueBind(string source, string destination)
     {
-        _messageFabric.QueueBind(_context, source, destination);
+        _messageFabric.QueueBind(source, destination);
     }
 
-    /// <summary>Declares the configured exchange.</summary>
-    /// <param name="name">The name.</param>
-    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
-    public void ExchangeDeclare(string name, ExchangeType exchangeType)
+    /// <inheritdoc />
+    public void ExchangeDeclare(string name, InMemoryExchangeType exchangeType)
     {
-        _messageFabric.ExchangeDeclare(_context, name, exchangeType);
+        _messageFabric.ExchangeDeclare(name, exchangeType);
     }
 
-    /// <summary>Declares the configured queue.</summary>
-    /// <param name="name">The name.</param>
+    /// <inheritdoc />
     public void QueueDeclare(string name)
     {
-        _messageFabric.QueueDeclare(_context, name);
+        _messageFabric.QueueDeclare(name);
     }
 
-
-    class ImplementedBuilder :
+    sealed class ImplementedBuilder :
         IMessageFabricPublishTopologyBuilder
     {
         readonly IMessageFabricPublishTopologyBuilder _builder;
-        string _exchangeName = null!;
+        string? _exchangeName;
 
         public ImplementedBuilder(IMessageFabricPublishTopologyBuilder builder)
         {
+            ArgumentNullException.ThrowIfNull(builder);
             _builder = builder;
         }
 
-        public string ExchangeName
+        public string? ExchangeName
         {
             get => _exchangeName;
             set
             {
                 _exchangeName = value;
-                if (_builder.ExchangeName != null)
-                    _builder.ExchangeBind(_builder.ExchangeName, _exchangeName, _builder.ExchangeType == ExchangeType.Topic ? "#" : default);
+                if (_builder.ExchangeName is { } source && _exchangeName is { } destination)
+                    _builder.ExchangeBind(source, destination, _builder.ExchangeType == InMemoryExchangeType.Topic ? "#" : default);
             }
         }
 
-        public ExchangeType ExchangeType { get; set; }
+        public InMemoryExchangeType ExchangeType { get; set; }
 
         public void ExchangeBind(string source, string destination, string? routingKey)
         {
@@ -101,7 +88,7 @@ public class MessageFabricPublishTopologyBuilder<TContext, T> :
             _builder.QueueBind(source, destination);
         }
 
-        public void ExchangeDeclare(string name, ExchangeType exchangeType)
+        public void ExchangeDeclare(string name, InMemoryExchangeType exchangeType)
         {
             _builder.ExchangeDeclare(name, exchangeType);
         }

@@ -12,19 +12,18 @@ public sealed class MessageFabricTests
     [RequirementCoverage("REQ-VSB-MESSAGE-FABRIC-BINDING", "acyclic-exchange-and-queue-graph")]
     public async Task AcyclicBindingGraph_ConnectsEveryDeclaredDestinationAsync()
     {
-        var fabric = new MessageFabric<object, FabricMessage>();
-        var context = new object();
+        var fabric = new MessageFabric<FabricMessage>();
 
         try
         {
-            fabric.ExchangeBind(context, "Namespace.A", "input-exchange", null!);
-            fabric.ExchangeBind(context, "Namespace.B", "input-exchange", null!);
-            fabric.QueueBind(context, "input-exchange", "input-queue");
+            fabric.ExchangeBind("Namespace.A", "input-exchange", null);
+            fabric.ExchangeBind("Namespace.B", "input-exchange", null);
+            fabric.QueueBind("input-exchange", "input-queue");
 
-            IMessageExchange<FabricMessage> namespaceA = fabric.GetExchange(context, "Namespace.A", ExchangeType.FanOut);
-            IMessageExchange<FabricMessage> namespaceB = fabric.GetExchange(context, "Namespace.B", ExchangeType.FanOut);
-            IMessageExchange<FabricMessage> inputExchange = fabric.GetExchange(context, "input-exchange", ExchangeType.FanOut);
-            IMessageQueue<object, FabricMessage> inputQueue = fabric.GetQueue(context, "input-queue");
+            IMessageExchange<FabricMessage> namespaceA = fabric.GetExchange("Namespace.A", InMemoryExchangeType.FanOut);
+            IMessageExchange<FabricMessage> namespaceB = fabric.GetExchange("Namespace.B", InMemoryExchangeType.FanOut);
+            IMessageExchange<FabricMessage> inputExchange = fabric.GetExchange("input-exchange", InMemoryExchangeType.FanOut);
+            IMessageQueue<FabricMessage> inputQueue = fabric.GetQueue("input-queue");
 
             Assert.Same(inputExchange, Assert.Single(namespaceA.Sinks));
             Assert.Same(inputExchange, Assert.Single(namespaceB.Sinks));
@@ -41,25 +40,135 @@ public sealed class MessageFabricTests
     [RequirementCoverage("REQ-VSB-MESSAGE-FABRIC-BINDING", "cycle-rejected-without-partial-edge")]
     public async Task CyclicBinding_IsRejectedWithoutChangingTheGraphAsync()
     {
-        var fabric = new MessageFabric<object, FabricMessage>();
-        var context = new object();
+        var fabric = new MessageFabric<FabricMessage>();
 
         try
         {
-            fabric.ExchangeBind(context, "Namespace.A", "input-exchange", null!);
-            fabric.ExchangeBind(context, "Namespace.B", "input-exchange", null!);
-            fabric.ExchangeBind(context, "input-exchange", "output-exchange", null!);
+            fabric.ExchangeBind("Namespace.A", "input-exchange", null);
+            fabric.ExchangeBind("Namespace.B", "input-exchange", null);
+            fabric.ExchangeBind("input-exchange", "output-exchange", null);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
-                fabric.ExchangeBind(context, "output-exchange", "Namespace.A", null!));
+                fabric.ExchangeBind("output-exchange", "Namespace.A", null));
 
-            Assert.Equal("The exchange binding would create a cycle in the messaging fabric.", exception.Message);
-            IMessageExchange<FabricMessage> namespaceA = fabric.GetExchange(context, "Namespace.A", ExchangeType.FanOut);
-            IMessageExchange<FabricMessage> inputExchange = fabric.GetExchange(context, "input-exchange", ExchangeType.FanOut);
-            IMessageExchange<FabricMessage> outputExchange = fabric.GetExchange(context, "output-exchange", ExchangeType.FanOut);
+            Assert.Equal("The exchange binding would create a cycle in the message fabric.", exception.Message);
+            IMessageExchange<FabricMessage> namespaceA = fabric.GetExchange("Namespace.A", InMemoryExchangeType.FanOut);
+            IMessageExchange<FabricMessage> inputExchange = fabric.GetExchange("input-exchange", InMemoryExchangeType.FanOut);
+            IMessageExchange<FabricMessage> outputExchange = fabric.GetExchange("output-exchange", InMemoryExchangeType.FanOut);
             Assert.Same(inputExchange, Assert.Single(namespaceA.Sinks));
             Assert.Same(outputExchange, Assert.Single(inputExchange.Sinks));
             Assert.Empty(outputExchange.Sinks);
+        }
+        finally
+        {
+            await fabric.StopAsync(CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-FABRIC-BINDING", "declaration-contract-and-routing-type-consistency")]
+    public async Task ExchangeDeclaration_RejectsInvalidInputsAndConflictingRoutingBehaviorAsync()
+    {
+        var fabric = new MessageFabric<FabricMessage>();
+
+        try
+        {
+            fabric.ExchangeDeclare("orders", InMemoryExchangeType.Direct);
+
+            InvalidOperationException conflict = Assert.Throws<InvalidOperationException>(() =>
+                fabric.ExchangeDeclare("ORDERS", InMemoryExchangeType.Topic));
+            ArgumentOutOfRangeException unsupported = Assert.Throws<ArgumentOutOfRangeException>(() =>
+                fabric.ExchangeDeclare("unsupported", (InMemoryExchangeType)42));
+            fabric.ExchangeDeclare("topic", InMemoryExchangeType.Topic);
+            fabric.QueueDeclare("declared-queue");
+
+            Assert.Contains("already declared as Direct", conflict.Message, StringComparison.Ordinal);
+            Assert.Equal("exchangeType", unsupported.ParamName);
+            Assert.Equal(InMemoryExchangeType.Topic, fabric.GetExchange("topic", InMemoryExchangeType.Topic).ExchangeType);
+            Assert.Equal("declared-queue", fabric.GetQueue("declared-queue").Name);
+            Assert.Equal("name", Assert.Throws<ArgumentException>(() =>
+                fabric.ExchangeDeclare(" ", InMemoryExchangeType.Direct)).ParamName);
+            Assert.Equal("name", Assert.Throws<ArgumentException>(() => fabric.QueueDeclare(" ")).ParamName);
+            Assert.Equal("name", Assert.Throws<ArgumentException>(() => fabric.GetQueue(" ")).ParamName);
+            Assert.Equal("source", Assert.Throws<ArgumentException>(() =>
+                fabric.ExchangeBind(" ", "destination", null)).ParamName);
+            Assert.Equal("destination", Assert.Throws<ArgumentException>(() =>
+                fabric.ExchangeBind("source", " ", null)).ParamName);
+            Assert.Equal("source", Assert.Throws<ArgumentException>(() =>
+                fabric.QueueBind(" ", "queue")).ParamName);
+            Assert.Equal("destination", Assert.Throws<ArgumentException>(() =>
+                fabric.QueueBind("source", " ")).ParamName);
+            Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => fabric.Probe(null!)).ParamName);
+            Assert.NotNull(fabric.GetProbeResult(TestContext.Current.CancellationToken));
+        }
+        finally
+        {
+            await fabric.StopAsync(CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-FABRIC-BINDING", "case-insensitive-idempotent-bindings")]
+    public async Task RepeatedBindings_AreIdempotentAndEntityNamesAreCaseInsensitiveAsync()
+    {
+        var fabric = new MessageFabric<FabricMessage>();
+
+        try
+        {
+            fabric.ExchangeBind("source", "destination", null);
+            fabric.ExchangeBind("SOURCE", "DESTINATION", null);
+            fabric.ExchangeBind("source", "destination", "ignored-by-fan-out");
+            fabric.QueueBind("destination", "queue");
+            fabric.QueueBind("DESTINATION", "QUEUE");
+
+            fabric.ExchangeDeclare("direct", InMemoryExchangeType.Direct);
+            fabric.ExchangeBind("direct", "direct-destination", null);
+            fabric.ExchangeBind("DIRECT", "DIRECT-DESTINATION", string.Empty);
+
+            IMessageExchange<FabricMessage> source = fabric.GetExchange(
+                "Source",
+                InMemoryExchangeType.FanOut);
+            IMessageExchange<FabricMessage> destination = fabric.GetExchange(
+                "Destination",
+                InMemoryExchangeType.FanOut);
+
+            Assert.Single(source.Sinks);
+            Assert.Single(destination.Sinks);
+            Assert.Single(fabric.GetExchange("direct", InMemoryExchangeType.Direct).Sinks);
+            Assert.Equal("destination", Assert.Throws<ArgumentException>(() =>
+                fabric.ExchangeBind("same", "SAME", null)).ParamName);
+        }
+        finally
+        {
+            await fabric.StopAsync(CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-FABRIC-BINDING", "diamond-topology-single-delivery")]
+    public async Task DiamondTopology_DeliversToTheSharedDestinationExactlyOnceAsync()
+    {
+        var fabric = new MessageFabric<FabricMessage>();
+        var sink = new RecordingSink();
+
+        try
+        {
+            fabric.ExchangeBind("root", "left", null);
+            fabric.ExchangeBind("root", "right", null);
+            fabric.ExchangeBind("left", "destination", null);
+            fabric.ExchangeBind("right", "destination", null);
+            IMessageExchange<FabricMessage> root = fabric.GetExchange("root", InMemoryExchangeType.FanOut);
+            IMessageExchange<FabricMessage> destination = fabric.GetExchange(
+                "destination",
+                InMemoryExchangeType.FanOut);
+            using ConnectHandle connection = destination.Connect(sink, null);
+            var delivery = new FabricDelivery("message", TestContext.Current.CancellationToken);
+
+            await root.DeliverAsync(delivery, TestContext.Current.CancellationToken);
+
+            Assert.Equal(["message"], sink.Values);
+            Assert.True(delivery.IsReserved(destination));
+            Assert.True(delivery.IsReserved(sink));
         }
         finally
         {
@@ -73,14 +182,18 @@ public sealed class MessageFabricTests
     {
         TimeSpan timeout = TimeSpan.FromSeconds(10);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        var fabric = new MessageFabric<object, FabricMessage>(queueCapacity: 1);
-        var context = new object();
-        IMessageQueue<object, FabricMessage> queue = fabric.GetQueue(context, "bounded-immediate");
+        var fabric = new MessageFabric<FabricMessage>(queueCapacity: 1);
+        IMessageQueue<FabricMessage> queue = fabric.GetQueue("bounded-immediate");
         var receiver = new BlockingRecordingReceiver(expectedCount: 3);
-        queue.ConnectMessageReceiver(context, receiver);
+        queue.ConnectMessageReceiver(receiver);
 
         try
         {
+            Assert.Equal("receiver", Assert.Throws<ArgumentNullException>(() => queue.ConnectMessageReceiver(null!)).ParamName);
+            Assert.Equal("context", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                queue.DeliverAsync(null!, TestContext.Current.CancellationToken))).ParamName);
+            Assert.NotNull(queue.GetProbeResult(TestContext.Current.CancellationToken));
+
             await queue.DeliverAsync(new FabricDelivery("first", cancellationToken), TestContext.Current.CancellationToken);
             await receiver.FirstDeliveryStarted.WaitAsync(timeout, cancellationToken);
             await queue.DeliverAsync(new FabricDelivery("second", cancellationToken), TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
@@ -107,11 +220,10 @@ public sealed class MessageFabricTests
     {
         TimeSpan timeout = TimeSpan.FromSeconds(10);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        var fabric = new MessageFabric<object, FabricMessage>(queueCapacity: 1);
-        var context = new object();
-        IMessageQueue<object, FabricMessage> queue = fabric.GetQueue(context, "bounded-scheduled");
+        var fabric = new MessageFabric<FabricMessage>(queueCapacity: 1);
+        IMessageQueue<FabricMessage> queue = fabric.GetQueue("bounded-scheduled");
         var receiver = new RecordingReceiver(expectedCount: 2);
-        queue.ConnectMessageReceiver(context, receiver);
+        queue.ConnectMessageReceiver(receiver);
         var delayProvider = Assert.IsType<InMemoryDelayProvider>(fabric.DelayProvider);
         DateTimeOffset enqueueTime = delayProvider.UtcNow.AddMinutes(1);
 
@@ -140,11 +252,10 @@ public sealed class MessageFabricTests
     {
         TimeSpan timeout = TimeSpan.FromSeconds(10);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        var fabric = new MessageFabric<object, FabricMessage>(queueCapacity: 1);
-        var context = new object();
-        IMessageQueue<object, FabricMessage> queue = fabric.GetQueue(context, "bounded-scheduled-cancellation");
+        var fabric = new MessageFabric<FabricMessage>(queueCapacity: 1);
+        IMessageQueue<FabricMessage> queue = fabric.GetQueue("bounded-scheduled-cancellation");
         var receiver = new RecordingReceiver(expectedCount: 1);
-        queue.ConnectMessageReceiver(context, receiver);
+        queue.ConnectMessageReceiver(receiver);
         var delayProvider = Assert.IsType<InMemoryDelayProvider>(fabric.DelayProvider);
         DateTimeOffset enqueueTime = delayProvider.UtcNow.AddMinutes(1);
         using var source = new CancellationTokenSource();
@@ -170,13 +281,108 @@ public sealed class MessageFabricTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-BACKPRESSURE", "scheduled-operation-cancellation")]
+    public async Task ScheduledCapacityWait_HonorsAndPreservesTheOperationTokenAsync()
+    {
+        TimeSpan timeout = TimeSpan.FromSeconds(10);
+        var fabric = new MessageFabric<FabricMessage>(queueCapacity: 1);
+        IMessageQueue<FabricMessage> queue = fabric.GetQueue("operation-cancellation");
+        var receiver = new RecordingReceiver(expectedCount: 1);
+        queue.ConnectMessageReceiver(receiver);
+        var delayProvider = Assert.IsType<InMemoryDelayProvider>(fabric.DelayProvider);
+        DateTimeOffset enqueueTime = delayProvider.UtcNow.AddMinutes(1);
+        using var operation = new CancellationTokenSource();
+
+        try
+        {
+            await queue.DeliverAsync(
+                new FabricDelivery("accepted", TestContext.Current.CancellationToken, enqueueTime),
+                TestContext.Current.CancellationToken);
+            Task blocked = queue.DeliverAsync(
+                new FabricDelivery("canceled", TestContext.Current.CancellationToken, enqueueTime),
+                operation.Token);
+
+            operation.Cancel();
+            OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => blocked);
+            delayProvider.Advance(TimeSpan.FromMinutes(1));
+            await receiver.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
+
+            Assert.Equal(operation.Token, actual.CancellationToken);
+            Assert.Equal(["accepted"], receiver.Values);
+        }
+        finally
+        {
+            await fabric.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-BACKPRESSURE", "dispatcher-continues-after-receiver-fault")]
+    public async Task QueueDispatcher_ContinuesAfterAReceiverFaultAsync()
+    {
+        TimeSpan timeout = TimeSpan.FromSeconds(10);
+        var fabric = new MessageFabric<FabricMessage>();
+        IMessageQueue<FabricMessage> queue = fabric.GetQueue("receiver-fault");
+        var receiver = new FailOnceReceiver();
+        queue.ConnectMessageReceiver(receiver);
+
+        try
+        {
+            await queue.DeliverAsync(
+                new FabricDelivery("fault", TestContext.Current.CancellationToken),
+                TestContext.Current.CancellationToken);
+            await queue.DeliverAsync(
+                new FabricDelivery("success", TestContext.Current.CancellationToken),
+                TestContext.Current.CancellationToken);
+            await receiver.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
+
+            Assert.Equal(2, receiver.Attempts);
+            Assert.Equal(["success"], receiver.Values);
+        }
+        finally
+        {
+            await fabric.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-BACKPRESSURE", "canceled-dispatch-does-not-reach-receiver")]
+    public async Task CanceledMessageWaitingForAReceiver_IsDiscardedBeforeDispatchAsync()
+    {
+        TimeSpan timeout = TimeSpan.FromSeconds(10);
+        var fabric = new MessageFabric<FabricMessage>();
+        IMessageQueue<FabricMessage> queue = fabric.GetQueue("canceled-dispatch");
+        using var canceled = new CancellationTokenSource();
+
+        try
+        {
+            await queue.DeliverAsync(
+                new FabricDelivery("canceled", canceled.Token),
+                TestContext.Current.CancellationToken);
+            canceled.Cancel();
+
+            var receiver = new RecordingReceiver(expectedCount: 1);
+            queue.ConnectMessageReceiver(receiver);
+            await queue.DeliverAsync(
+                new FabricDelivery("delivered", TestContext.Current.CancellationToken),
+                TestContext.Current.CancellationToken);
+            await receiver.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
+
+            Assert.Equal(["delivered"], receiver.Values);
+        }
+        finally
+        {
+            await fabric.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-BACKGROUND-OWNERSHIP", "stop-awaits-scheduled-delivery")]
     public async Task QueueStop_CancelsAndAwaitsEveryAcceptedScheduledDeliveryAsync()
     {
         TimeSpan timeout = TimeSpan.FromSeconds(10);
         var delayProvider = new ControlledDelayProvider();
-        var queue = new MessageQueue<object, FabricMessage>(
-            new PassiveFabricObserver(),
+        var queue = new MessageQueue<FabricMessage>(
             "owned-scheduled-delivery",
             delayProvider,
             capacity: 1);
@@ -199,11 +405,43 @@ public sealed class MessageFabricTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-BACKGROUND-OWNERSHIP", "stop-cancels-blocked-admission-and-drains-buffer")]
+    public async Task QueueStop_CancelsBlockedAdmissionAndCompletesWithBufferedMessagesAsync()
+    {
+        TimeSpan timeout = TimeSpan.FromSeconds(10);
+        var delayProvider = new InMemoryDelayProvider();
+        var queue = new MessageQueue<FabricMessage>("stop-with-buffered-messages", delayProvider, capacity: 1);
+        var receiver = new BlockingRecordingReceiver(expectedCount: 3);
+        queue.ConnectMessageReceiver(receiver);
+
+        await queue.DeliverAsync(
+            new FabricDelivery("active", TestContext.Current.CancellationToken),
+            TestContext.Current.CancellationToken);
+        await receiver.FirstDeliveryStarted.WaitAsync(timeout, TestContext.Current.CancellationToken);
+        await queue.DeliverAsync(
+            new FabricDelivery("buffered", TestContext.Current.CancellationToken),
+            TestContext.Current.CancellationToken);
+        Task blockedAdmission = queue.DeliverAsync(
+            new FabricDelivery("blocked", TestContext.Current.CancellationToken),
+            TestContext.Current.CancellationToken);
+
+        Assert.False(blockedAdmission.IsCompleted);
+
+        Task stop = queue.StopAsync(CancellationToken.None);
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => blockedAdmission);
+        await stop.WaitAsync(timeout, CancellationToken.None);
+
+        Assert.Equal(queue.Stopping, exception.CancellationToken);
+        Assert.True(stop.IsCompletedSuccessfully);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-BACKPRESSURE", "positive-configured-capacity")]
     public void NonPositiveCapacity_IsRejectedByTheFabricAndPublicHostConfiguration()
     {
+        var delayProvider = new InMemoryDelayProvider();
         ArgumentOutOfRangeException direct = Assert.Throws<ArgumentOutOfRangeException>(() =>
-            new MessageFabric<object, FabricMessage>(queueCapacity: 0));
+            new MessageFabric<FabricMessage>(queueCapacity: 0));
         ArgumentOutOfRangeException configured = Assert.Throws<ArgumentOutOfRangeException>(() =>
             Bus.Factory.CreateUsingInMemory(configuration => configuration.Host(host => host.QueueCapacity = -1)));
 
@@ -211,6 +449,12 @@ public sealed class MessageFabricTests
         Assert.Equal(0, direct.ActualValue);
         Assert.Equal("value", configured.ParamName);
         Assert.Equal(-1, configured.ActualValue);
+        Assert.Equal("name", Assert.Throws<ArgumentException>(() =>
+            new MessageQueue<FabricMessage>(" ", delayProvider)).ParamName);
+        Assert.Equal("delayProvider", Assert.Throws<ArgumentNullException>(() =>
+            new MessageQueue<FabricMessage>("queue", null!)).ParamName);
+        Assert.Equal("capacity", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new MessageQueue<FabricMessage>("queue", delayProvider, 0)).ParamName);
     }
 
     private sealed record FabricMessage(string Value);
@@ -218,7 +462,7 @@ public sealed class MessageFabricTests
     private sealed class FabricDelivery(
         string value,
         CancellationToken cancellationToken,
-        DateTimeOffset? enqueueTime = null) : DeliveryContext<FabricMessage>
+        DateTimeOffset? enqueueTime = null) : IMessageDeliveryContext<FabricMessage>
     {
         private readonly HashSet<IMessageSink<FabricMessage>> _delivered = [];
 
@@ -226,11 +470,37 @@ public sealed class MessageFabricTests
         public FabricMessage Message { get; } = new(value);
         public string? RoutingKey => null;
         public DateTimeOffset? EnqueueTime { get; } = enqueueTime;
-        public long? ReceiverId => null;
 
-        public bool WasAlreadyDelivered(IMessageSink<FabricMessage> sink) => _delivered.Contains(sink);
+        public bool IsReserved(IMessageSink<FabricMessage> sink)
+        {
+            lock (_delivered)
+                return _delivered.Contains(sink);
+        }
 
-        public void Delivered(IMessageSink<FabricMessage> sink) => _delivered.Add(sink);
+        public bool TryReserveDelivery(IMessageSink<FabricMessage> sink)
+        {
+            ArgumentNullException.ThrowIfNull(sink);
+            lock (_delivered)
+                return _delivered.Add(sink);
+        }
+    }
+
+    private sealed class RecordingSink : IMessageSink<FabricMessage>
+    {
+        private readonly ConcurrentQueue<string> _values = new();
+
+        public string[] Values => _values.ToArray();
+
+        public Task DeliverAsync(IMessageDeliveryContext<FabricMessage> context, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            _values.Enqueue(context.Message.Value);
+            return Task.CompletedTask;
+        }
+
+        public void Probe(ProbeContext context)
+        {
+        }
     }
 
     private sealed class RecordingReceiver(int expectedCount) : IMessageReceiver<FabricMessage>
@@ -244,7 +514,8 @@ public sealed class MessageFabricTests
 
         public Task DeliverAsync(FabricMessage message, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _values.Enqueue(message.Value);
+            cancellationToken.ThrowIfCancellationRequested();
+            _values.Enqueue(message.Value);
             if (Interlocked.Increment(ref _received) == expectedCount)
                 _completed.TrySetResult();
 
@@ -292,6 +563,32 @@ public sealed class MessageFabricTests
         }
     }
 
+    private sealed class FailOnceReceiver : IMessageReceiver<FabricMessage>
+    {
+        private readonly TaskCompletionSource _completed = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly ConcurrentQueue<string> _values = new();
+        private int _attempts;
+
+        public int Attempts => Volatile.Read(ref _attempts);
+        public Task Completed => _completed.Task;
+        public string[] Values => _values.ToArray();
+
+        public Task DeliverAsync(FabricMessage message, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (Interlocked.Increment(ref _attempts) == 1)
+                throw new InvalidOperationException("Expected receiver failure.");
+
+            _values.Enqueue(message.Value);
+            _completed.TrySetResult();
+            return Task.CompletedTask;
+        }
+
+        public void Probe(ProbeContext context)
+        {
+        }
+    }
+
     private sealed class ControlledDelayProvider : IInMemoryDelayProvider
     {
         private readonly TaskCompletionSource _cancellationRequested =
@@ -324,26 +621,5 @@ public sealed class MessageFabricTests
         {
             _delay.TrySetCanceled(_cancellationToken);
         }
-    }
-
-    private sealed class PassiveFabricObserver : IMessageFabricObserver<object>
-    {
-        public void ExchangeDeclared(object context, string name, ExchangeType exchangeType)
-        {
-        }
-
-        public void ExchangeBindingCreated(object context, string source, string destination, string? routingKey = null)
-        {
-        }
-
-        public void QueueDeclared(object context, string name)
-        {
-        }
-
-        public void QueueBindingCreated(object context, string source, string destination)
-        {
-        }
-
-        public TopologyHandle ConsumerConnected(object context, TopologyHandle handle, string queueName) => handle;
     }
 }

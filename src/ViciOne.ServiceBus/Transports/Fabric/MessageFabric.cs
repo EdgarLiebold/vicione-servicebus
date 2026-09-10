@@ -1,212 +1,263 @@
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using ViciOne.ServiceBus.Internals.GraphValidation;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Providers.Transports;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>Provides the in-process message fabric for message.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-/// <typeparam name="T">The value type.</typeparam>
-public class MessageFabric<TContext, T> :
+/// <summary>Owns the exchanges and queues used by one in-memory transport instance.</summary>
+/// <typeparam name="TMessage">The message envelope type carried by the fabric.</typeparam>
+internal sealed class MessageFabric<TMessage> :
     Supervisor,
-    IMessageFabric<TContext, T>
-    where T : class
-    where TContext : class
+    IMessageFabric<TMessage>
+    where TMessage : class
 {
-    readonly InMemoryDelayProvider _delayProvider;
-    readonly ConcurrentDictionary<string, IMessageExchange<T>> _exchanges;
-    readonly MessageFabricObservable<TContext> _observers;
-    readonly int _queueCapacity;
-    readonly ConcurrentDictionary<string, IMessageQueue<TContext, T>> _queues;
+    static readonly StringComparer EntityNameComparer = StringComparer.OrdinalIgnoreCase;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="queueCapacity">The queue capacity.</param>
+    readonly InMemoryDelayProvider _delayProvider;
+    readonly HashSet<ExchangeBinding> _exchangeBindings = new(ExchangeBindingComparer.Instance);
+    readonly Dictionary<string, IMessageExchange<TMessage>> _exchanges = new(EntityNameComparer);
+    readonly object _topologyLock = new();
+    readonly int _queueCapacity;
+    readonly HashSet<QueueBinding> _queueBindings = new(QueueBindingComparer.Instance);
+    readonly Dictionary<string, IMessageQueue<TMessage>> _queues = new(EntityNameComparer);
+
+    /// <summary>Initializes a fabric with the maximum number of messages admitted by each queue.</summary>
+    /// <param name="queueCapacity">The capacity assigned to each declared queue.</param>
     public MessageFabric(int queueCapacity = 1024)
     {
         if (queueCapacity <= 0)
             throw new ArgumentOutOfRangeException(nameof(queueCapacity), queueCapacity, "Queue capacity must be greater than zero.");
 
         _queueCapacity = queueCapacity;
-        _observers = new MessageFabricObservable<TContext>();
         _delayProvider = new InMemoryDelayProvider();
-
-        _exchanges = new ConcurrentDictionary<string, IMessageExchange<T>>(StringComparer.OrdinalIgnoreCase);
-        _queues = new ConcurrentDictionary<string, IMessageQueue<TContext, T>>(StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>Gets the delay provider.</summary>
+    /// <inheritdoc />
     public IInMemoryDelayProvider DelayProvider => _delayProvider;
 
-    /// <summary>Declares the configured exchange.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="name">The name.</param>
-    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
-    public void ExchangeDeclare(TContext context, string name, ExchangeType exchangeType)
+    /// <inheritdoc />
+    public void ExchangeDeclare(string name, InMemoryExchangeType exchangeType)
     {
-        GetOrAddExchange(context, name, exchangeType);
+        ValidateName(name);
+        ValidateExchangeType(exchangeType);
+
+        lock (_topologyLock)
+            GetOrAddExchange(name, exchangeType, requireTypeMatch: true);
     }
 
-    /// <summary>Binds the configured exchange.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination.</param>
-    /// <param name="routingKey">The routing key.</param>
-    public void ExchangeBind(TContext context, string source, string destination, string? routingKey)
+    /// <inheritdoc />
+    public void ExchangeBind(string source, string destination, string? routingKey)
     {
-        if (source.Equals(destination))
-            throw new ArgumentException("The source and destination exchange cannot be the same: " + source);
+        ValidateName(source);
+        ArgumentException.ThrowIfNullOrWhiteSpace(destination);
 
-        IMessageExchange<T> sourceExchange = GetOrAddExchange(context, source, ExchangeType.FanOut);
+        if (EntityNameComparer.Equals(source, destination))
+            throw new ArgumentException("The source and destination exchange must be different.", nameof(destination));
 
-        IMessageExchange<T> destinationExchange = GetOrAddExchange(context, destination, ExchangeType.FanOut);
+        lock (_topologyLock)
+        {
+            IMessageExchange<TMessage> sourceExchange = GetOrAddExchange(
+                source,
+                InMemoryExchangeType.FanOut,
+                requireTypeMatch: false);
+            IMessageExchange<TMessage> destinationExchange = GetOrAddExchange(
+                destination,
+                InMemoryExchangeType.FanOut,
+                requireTypeMatch: false);
+            string? effectiveRoutingKey = sourceExchange.ExchangeType == InMemoryExchangeType.FanOut
+                || string.IsNullOrEmpty(routingKey)
+                    ? null
+                    : routingKey;
+            var binding = new ExchangeBinding(source, destination, effectiveRoutingKey);
+            if (_exchangeBindings.Contains(binding))
+                return;
 
-        ValidateBinding(destinationExchange, sourceExchange);
-
-        _observers.ExchangeBindingCreated(context, source, destination, routingKey);
-
-        sourceExchange.Connect(destinationExchange, routingKey);
+            ValidateBinding(destinationExchange, sourceExchange);
+            sourceExchange.Connect(destinationExchange, effectiveRoutingKey);
+            _exchangeBindings.Add(binding);
+        }
     }
 
-    /// <summary>Declares the configured queue.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="name">The name.</param>
-    public void QueueDeclare(TContext context, string name)
+    /// <inheritdoc />
+    public void QueueDeclare(string name)
     {
-        GetOrAddQueue(context, name);
+        ValidateName(name);
+
+        lock (_topologyLock)
+            GetOrAddQueue(name);
     }
 
-    /// <summary>Binds the configured queue.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination.</param>
-    public void QueueBind(TContext context, string source, string destination)
+    /// <inheritdoc />
+    public void QueueBind(string source, string destination)
     {
-        IMessageExchange<T> sourceExchange = GetOrAddExchange(context, source, ExchangeType.FanOut);
+        ValidateName(source);
+        ArgumentException.ThrowIfNullOrWhiteSpace(destination);
 
-        IMessageQueue<TContext, T> destinationQueue = GetOrAddQueue(context, destination);
+        lock (_topologyLock)
+        {
+            var binding = new QueueBinding(source, destination);
+            if (_queueBindings.Contains(binding))
+                return;
 
-        ValidateBinding(destinationQueue, sourceExchange);
+            IMessageExchange<TMessage> sourceExchange = GetOrAddExchange(
+                source,
+                InMemoryExchangeType.FanOut,
+                requireTypeMatch: false);
+            IMessageQueue<TMessage> destinationQueue = GetOrAddQueue(destination);
 
-        _observers.QueueBindingCreated(context, source, destination);
-
-        sourceExchange.Connect(destinationQueue, null);
+            ValidateBinding(destinationQueue, sourceExchange);
+            sourceExchange.Connect(destinationQueue, null);
+            _queueBindings.Add(binding);
+        }
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <inheritdoc />
     public void Probe(ProbeContext context)
     {
-        var scope = context.CreateScope("messageFabric");
-        foreach (IMessageExchange<T> exchange in _exchanges.Values)
+        ArgumentNullException.ThrowIfNull(context);
+
+        IMessageExchange<TMessage>[] exchanges;
+        IMessageQueue<TMessage>[] queues;
+        lock (_topologyLock)
+        {
+            exchanges = [.. _exchanges.Values];
+            queues = [.. _queues.Values];
+        }
+
+        ProbeContext scope = context.CreateScope("messageFabric");
+        foreach (IMessageExchange<TMessage> exchange in exchanges)
             exchange.Probe(scope);
 
-        foreach (IMessageQueue<TContext, T> queue in _queues.Values)
+        foreach (IMessageQueue<TMessage> queue in queues)
             queue.Probe(scope);
     }
 
-    /// <summary>Gets exchange.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="name">The name.</param>
-    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
-    /// <returns>The exchange.</returns>
-    public IMessageExchange<T> GetExchange(TContext context, string name, ExchangeType exchangeType)
+    /// <inheritdoc />
+    public IMessageExchange<TMessage> GetExchange(string name, InMemoryExchangeType exchangeType)
     {
-        return GetOrAddExchange(context, name, exchangeType);
+        ValidateName(name);
+        ValidateExchangeType(exchangeType);
+
+        lock (_topologyLock)
+            return GetOrAddExchange(name, exchangeType, requireTypeMatch: true);
     }
 
-    /// <summary>Gets queue.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="name">The name.</param>
-    /// <returns>The queue.</returns>
-    public IMessageQueue<TContext, T> GetQueue(TContext context, string name)
+    /// <inheritdoc />
+    public IMessageQueue<TMessage> GetQueue(string name)
     {
-        return GetOrAddQueue(context, name);
+        ValidateName(name);
+
+        lock (_topologyLock)
+            return GetOrAddQueue(name);
     }
 
-    /// <summary>Connects message fabric observer.</summary>
-    /// <param name="observer">The observer to connect.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
-    public ConnectHandle ConnectMessageFabricObserver(IMessageFabricObserver<TContext> observer)
-    {
-        return _observers.Connect(observer);
-    }
-
-    /// <summary>Stops supervisor.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <inheritdoc />
     protected override async Task StopSupervisorAsync(StopSupervisorContext context)
     {
         await base.StopSupervisorAsync(context).ConfigureAwait(false);
-
         await _delayProvider.DisposeAsync().ConfigureAwait(false);
     }
 
-    IMessageQueue<TContext, T> GetOrAddQueue(TContext context, string name)
+    IMessageExchange<TMessage> GetOrAddExchange(
+        string name,
+        InMemoryExchangeType exchangeType,
+        bool requireTypeMatch)
     {
-        MessageQueue<TContext, T>? created = null;
-        IMessageQueue<TContext, T> queue = _queues.GetOrAdd(name, x =>
+        if (_exchanges.TryGetValue(name, out IMessageExchange<TMessage>? existing))
         {
-            created = new MessageQueue<TContext, T>(_observers, name, _delayProvider, _queueCapacity);
+            if (requireTypeMatch && existing.ExchangeType != exchangeType)
+            {
+                throw new InvalidOperationException(
+                    $"Exchange '{name}' is already declared as {existing.ExchangeType} and cannot be redeclared as {exchangeType}.");
+            }
 
-            return created;
-        });
-
-        if (created != null && queue == created)
-        {
-            Add(created);
-
-            _observers.QueueDeclared(context, name);
+            return existing;
         }
 
-        return queue;
-    }
-
-    IMessageExchange<T> GetOrAddExchange(TContext context, string name, ExchangeType exchangeType)
-    {
-        IMessageExchange<T>? created = null;
-        IMessageExchange<T> exchange = _exchanges.GetOrAdd(name, x =>
+        IMessageExchange<TMessage> exchange = exchangeType switch
         {
-            created = exchangeType switch
-            {
-                ExchangeType.FanOut => new MessageFanOutExchange<T>(name),
-                ExchangeType.Direct => new MessageDirectExchange<T>(name),
-                ExchangeType.Topic => new MessageTopicExchange<T>(name),
-                _ => throw new ArgumentException($"Unsupported exchange type: {exchangeType}", nameof(exchangeType))
-            };
+            InMemoryExchangeType.FanOut => new FanOutMessageExchange<TMessage>(name),
+            InMemoryExchangeType.Direct => new DirectMessageExchange<TMessage>(name),
+            InMemoryExchangeType.Topic => new TopicMessageExchange<TMessage>(name),
+            _ => throw new ArgumentOutOfRangeException(nameof(exchangeType), exchangeType, "The exchange type is not supported.")
+        };
 
-            return created;
-        });
-
-        if (created != null && exchange == created)
-            _observers.ExchangeDeclared(context, name, exchangeType);
-
+        _exchanges.Add(name, exchange);
         return exchange;
     }
 
-    void ValidateBinding(IMessageSink<T> destination, IMessageSink<T> sourceExchange)
+    IMessageQueue<TMessage> GetOrAddQueue(string name)
+    {
+        if (_queues.TryGetValue(name, out IMessageQueue<TMessage>? existing))
+            return existing;
+
+        var queue = new MessageQueue<TMessage>(name, _delayProvider, _queueCapacity);
+        _queues.Add(name, queue);
+        Add(queue);
+        return queue;
+    }
+
+    void ValidateBinding(IMessageSink<TMessage> destination, IMessageSink<TMessage> sourceExchange)
     {
         try
         {
-            var graph = new DependencyGraph<IMessageSink<T>>(_exchanges.Count + 1);
-            var exchanges = new List<IMessageExchange<T>>(_exchanges.Values);
-            foreach (IMessageExchange<T> exchange in exchanges)
+            var graph = new DependencyGraph<IMessageSink<TMessage>>(_exchanges.Count + 1);
+            foreach (IMessageExchange<TMessage> exchange in _exchanges.Values)
             {
-                var sinks = new List<IMessageSink<T>>(exchange.Sinks);
-                foreach (IMessageSink<T> sink in sinks)
+                foreach (IMessageSink<TMessage> sink in exchange.Sinks)
                     graph.Add(sink, exchange);
             }
 
             graph.Add(destination, sourceExchange);
-
             graph.EnsureGraphIsAcyclic();
         }
         catch (CyclicGraphException exception)
         {
-            throw new InvalidOperationException("The exchange binding would create a cycle in the messaging fabric.", exception);
+            throw new InvalidOperationException("The exchange binding would create a cycle in the message fabric.", exception);
         }
+    }
+
+    static void ValidateName(
+        string name,
+        [CallerArgumentExpression(nameof(name))] string? parameterName = null) =>
+        ArgumentException.ThrowIfNullOrWhiteSpace(name, parameterName);
+
+    static void ValidateExchangeType(InMemoryExchangeType exchangeType)
+    {
+        if (!Enum.IsDefined(exchangeType))
+            throw new ArgumentOutOfRangeException(nameof(exchangeType), exchangeType, "The exchange type is not supported.");
+    }
+
+    readonly record struct ExchangeBinding(string Source, string Destination, string? RoutingKey);
+
+    sealed class ExchangeBindingComparer : IEqualityComparer<ExchangeBinding>
+    {
+        public static ExchangeBindingComparer Instance { get; } = new();
+
+        public bool Equals(ExchangeBinding x, ExchangeBinding y) =>
+            EntityNameComparer.Equals(x.Source, y.Source)
+            && EntityNameComparer.Equals(x.Destination, y.Destination)
+            && StringComparer.Ordinal.Equals(x.RoutingKey, y.RoutingKey);
+
+        public int GetHashCode(ExchangeBinding value) => HashCode.Combine(
+            EntityNameComparer.GetHashCode(value.Source),
+            EntityNameComparer.GetHashCode(value.Destination),
+            value.RoutingKey is null ? 0 : StringComparer.Ordinal.GetHashCode(value.RoutingKey));
+    }
+
+    readonly record struct QueueBinding(string Source, string Destination);
+
+    sealed class QueueBindingComparer : IEqualityComparer<QueueBinding>
+    {
+        public static QueueBindingComparer Instance { get; } = new();
+
+        public bool Equals(QueueBinding x, QueueBinding y) =>
+            EntityNameComparer.Equals(x.Source, y.Source)
+            && EntityNameComparer.Equals(x.Destination, y.Destination);
+
+        public int GetHashCode(QueueBinding value) => HashCode.Combine(
+            EntityNameComparer.GetHashCode(value.Source),
+            EntityNameComparer.GetHashCode(value.Destination));
     }
 }

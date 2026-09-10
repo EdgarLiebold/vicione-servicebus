@@ -311,6 +311,27 @@ public sealed class ApiSurfaceArchitectureTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-API-LAYERING", "in-memory-contract-hides-fabric-runtime")]
+    public void InMemoryApi_ExposesRoutingChoiceWithoutExportingFabricRuntime()
+    {
+        Assert.True(typeof(InMemoryExchangeType).IsPublic);
+        Assert.Equal("ViciOne.ServiceBus.Providers.Transports", typeof(InMemoryExchangeType).Namespace);
+        Assert.DoesNotContain(ProductAssemblyFacts.Core.GetExportedTypes(), static type =>
+            type.Namespace == "ViciOne.ServiceBus.Transports.Fabric");
+
+        string[] internalRuntimeTypes =
+        [
+            "ViciOne.ServiceBus.Transports.Fabric.MessageFabric`1",
+            "ViciOne.ServiceBus.Transports.Fabric.MessageQueue`1",
+            "ViciOne.ServiceBus.Transports.Fabric.DirectMessageExchange`1",
+            "ViciOne.ServiceBus.Transports.Fabric.FanOutMessageExchange`1",
+            "ViciOne.ServiceBus.Transports.Fabric.TopicMessageExchange`1",
+        ];
+        Assert.All(internalRuntimeTypes, typeName =>
+            Assert.False(ProductAssemblyFacts.Core.GetType(typeName, throwOnError: true)!.IsPublic));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-API-LAYERING", "batch-contracts-hide-collector-runtime")]
     public void BatchApi_ExposesContractsAndConfigurationWithoutRuntimeMechanics()
     {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
@@ -9,19 +10,19 @@ internal sealed class ExchangeBindingConsumeTopologySpecification :
     IInMemoryConsumeTopologySpecification
 {
     readonly string _exchange;
-    readonly ExchangeType _exchangeType;
+    readonly InMemoryExchangeType _exchangeType;
     readonly string? _routingKey;
 
     /// <summary>Creates a validated consume-topology binding.</summary>
     /// <param name="exchange">The source exchange name.</param>
     /// <param name="exchangeType">The source exchange routing behavior.</param>
     /// <param name="routingKey">The optional direct or topic routing key.</param>
-    public ExchangeBindingConsumeTopologySpecification(string exchange, ExchangeType exchangeType, string? routingKey)
+    public ExchangeBindingConsumeTopologySpecification(string exchange, InMemoryExchangeType exchangeType, string? routingKey)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(exchange);
         if (!Enum.IsDefined(exchangeType))
             throw new ArgumentOutOfRangeException(nameof(exchangeType), exchangeType, "The exchange type is not supported.");
-        if (exchangeType == ExchangeType.FanOut && routingKey is not null)
+        if (exchangeType == InMemoryExchangeType.FanOut && routingKey is not null)
             throw new ArgumentException("A fan-out exchange does not accept a routing key.", nameof(routingKey));
 
         _exchange = exchange;

@@ -1,4 +1,5 @@
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Topology;
@@ -11,7 +12,7 @@ internal interface IInMemoryMessagePublishTopology<TMessage> :
     where TMessage : class
 {
     /// <summary>Gets the exchange routing behavior.</summary>
-    ExchangeType ExchangeType { get; }
+    InMemoryExchangeType ExchangeType { get; }
 }
 
 

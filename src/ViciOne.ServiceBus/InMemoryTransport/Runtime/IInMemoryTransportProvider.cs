@@ -12,7 +12,7 @@ internal interface IInMemoryTransportProvider :
     IProbeSite
 {
     /// <summary>Gets the message fabric shared by the provider's endpoints.</summary>
-    IMessageFabric<IInMemoryTransportContext, InMemoryTransportMessage> MessageFabric { get; }
+    IMessageFabric<InMemoryTransportMessage> MessageFabric { get; }
 
     /// <summary>Creates a send transport for an address within this provider's host boundary.</summary>
     /// <param name="context">The endpoint context that supplies serialization and observers.</param>

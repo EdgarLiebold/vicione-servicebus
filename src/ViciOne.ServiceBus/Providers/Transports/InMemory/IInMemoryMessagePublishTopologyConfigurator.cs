@@ -1,5 +1,3 @@
-using ViciOne.ServiceBus.Transports.Fabric;
-
 namespace ViciOne.ServiceBus.Providers.Transports;
 
 /// <summary>Configures how an in-memory exchange publishes one message contract.</summary>
@@ -10,7 +8,7 @@ public interface IInMemoryMessagePublishTopologyConfigurator<TMessage> :
     where TMessage : class
 {
     /// <summary>Sets the exchange routing behavior.</summary>
-    ExchangeType ExchangeType { set; }
+    InMemoryExchangeType ExchangeType { set; }
 }
 
 

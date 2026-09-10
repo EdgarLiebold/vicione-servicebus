@@ -13,7 +13,7 @@ internal sealed class InMemoryTransportProvider :
     IInMemoryTransportProvider
 {
     readonly IInMemoryHostConfiguration _hostConfiguration;
-    readonly IMessageFabric<IInMemoryTransportContext, InMemoryTransportMessage> _messageFabric;
+    readonly IMessageFabric<InMemoryTransportMessage> _messageFabric;
     readonly IInMemoryTopologyConfiguration _topologyConfiguration;
 
     /// <summary>Creates a transport provider for one host configuration.</summary>
@@ -24,13 +24,13 @@ internal sealed class InMemoryTransportProvider :
         _hostConfiguration = hostConfiguration ?? throw new ArgumentNullException(nameof(hostConfiguration));
         _topologyConfiguration = topologyConfiguration ?? throw new ArgumentNullException(nameof(topologyConfiguration));
 
-        _messageFabric = new MessageFabric<IInMemoryTransportContext, InMemoryTransportMessage>(hostConfiguration.QueueCapacity);
+        _messageFabric = new MessageFabric<InMemoryTransportMessage>(hostConfiguration.QueueCapacity);
 
         SetReady();
     }
 
     /// <summary>Gets the message fabric shared by the host's endpoints.</summary>
-    public IMessageFabric<IInMemoryTransportContext, InMemoryTransportMessage> MessageFabric => _messageFabric;
+    public IMessageFabric<InMemoryTransportMessage> MessageFabric => _messageFabric;
 
     /// <summary>Creates a send transport for an address within this provider's host boundary.</summary>
     /// <param name="receiveEndpointContext">The endpoint context that supplies serialization and observers.</param>
@@ -53,7 +53,7 @@ internal sealed class InMemoryTransportProvider :
 
         TransportLogMessages.CreateSendTransport(address);
 
-        IMessageExchange<InMemoryTransportMessage> exchange = _messageFabric.GetExchange(this, endpointAddress.Name, endpointAddress.ExchangeType);
+        IMessageExchange<InMemoryTransportMessage> exchange = _messageFabric.GetExchange(endpointAddress.Name, endpointAddress.ExchangeType);
 
         var context = new InMemorySendTransportContext(_hostConfiguration, receiveEndpointContext, exchange, _messageFabric.DelayProvider);
 
@@ -112,6 +112,6 @@ internal sealed class InMemoryTransportProvider :
     void ApplyTopologyToMessageFabric<T>(IInMemoryMessagePublishTopology<T> publishTopology)
         where T : class
     {
-        publishTopology.Apply(new MessageFabricPublishTopologyBuilder<IInMemoryTransportContext, InMemoryTransportMessage>(this, _messageFabric));
+        publishTopology.Apply(new MessageFabricPublishTopologyBuilder<InMemoryTransportMessage>(_messageFabric));
     }
 }

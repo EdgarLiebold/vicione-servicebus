@@ -3191,25 +3191,123 @@
       "variantKey" : "cycle-rejected-without-partial-edge"
    },
    {
-      "requirementId" : "REQ-VSB-TOPIC-EXCHANGE-ROUTING",
+      "requirementId" : "REQ-VSB-MESSAGE-FABRIC-BINDING",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "HashPattern_DeliversTheRoutedMessageAsync",
-      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageTopicExchangeTests",
-      "variantKey" : "hash-pattern"
+      "testMethod" : "ExchangeDeclaration_RejectsInvalidInputsAndConflictingRoutingBehaviorAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests",
+      "variantKey" : "declaration-contract-and-routing-type-consistency"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-FABRIC-BINDING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RepeatedBindings_AreIdempotentAndEntityNamesAreCaseInsensitiveAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests",
+      "variantKey" : "case-insensitive-idempotent-bindings"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-FABRIC-BINDING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DiamondTopology_DeliversToTheSharedDestinationExactlyOnceAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests",
+      "variantKey" : "diamond-topology-single-delivery"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-FABRIC-BINDING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DirectExchange_DeliversOnlyToTheExactRoutingKeyAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageExchangeTests",
+      "variantKey" : "direct-exact-routing"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-FABRIC-BINDING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DirectExchange_UsesItsComparerAndHonorsDisconnectionAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageExchangeTests",
+      "variantKey" : "direct-routing-comparer-and-connection-lifetime"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-FABRIC-BINDING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FanOutExchange_DeliversOnceToEachDistinctSinkAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageExchangeTests",
+      "variantKey" : "fan-out-single-delivery-per-sink"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-FABRIC-BINDING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Exchanges_RejectEveryMissingRequiredInputAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageExchangeTests",
+      "variantKey" : "exchange-required-inputs"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-FABRIC-BINDING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConsumeBuilder_ForwardsEveryTopologyOperationToItsFabricAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTopologyBuilderTests",
+      "variantKey" : "consume-builder-forwards-complete-topology"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-FABRIC-BINDING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "PublishBuilder_ComposesNestedImplementedContractTopologyAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTopologyBuilderTests",
+      "variantKey" : "publish-builder-composes-implemented-contracts"
    },
    {
       "requirementId" : "REQ-VSB-TOPIC-EXCHANGE-ROUTING",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "SingleSegmentWildcard_DeliversOnlyTheMatchingRouteAsync",
-      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageTopicExchangeTests",
+      "testMethod" : "HashWildcard_MatchesZeroOrMoreSegmentsAtAnyPositionAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.TopicMessageExchangeTests",
+      "variantKey" : "hash-wildcard-at-any-segment"
+   },
+   {
+      "requirementId" : "REQ-VSB-TOPIC-EXCHANGE-ROUTING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "StarWildcard_MatchesExactlyOneSegmentAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.TopicMessageExchangeTests",
       "variantKey" : "single-segment-wildcard"
    },
    {
       "requirementId" : "REQ-VSB-TOPIC-EXCHANGE-ROUTING",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "ThreeSegmentWildcard_DeliversOnlyTheMatchingRouteAsync",
-      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageTopicExchangeTests",
-      "variantKey" : "three-segment-wildcard"
+      "testMethod" : "EmptyPattern_MatchesOnlyAnEmptyRoutingKeyAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.TopicMessageExchangeTests",
+      "variantKey" : "empty-pattern-matches-empty-route"
+   },
+   {
+      "requirementId" : "REQ-VSB-TOPIC-EXCHANGE-ROUTING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "OverlappingPatterns_DeliverToTheSameSinkOnlyOnceAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.TopicMessageExchangeTests",
+      "variantKey" : "overlapping-patterns-deliver-once"
+   },
+   {
+      "requirementId" : "REQ-VSB-TOPIC-EXCHANGE-ROUTING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ConfiguredComparer_AppliesToPatternsAndLiteralSegmentsAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.TopicMessageExchangeTests",
+      "variantKey" : "custom-segment-comparer"
+   },
+   {
+      "requirementId" : "REQ-VSB-TOPIC-EXCHANGE-ROUTING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "InvalidPattern_IsRejectedBeforeAConnectionIsCreated",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.TopicMessageExchangeTests",
+      "variantKey" : "invalid-pattern-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-TOPIC-EXCHANGE-ROUTING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "InvalidRoutingKey_IsRejectedBeforeDeliveryAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.TopicMessageExchangeTests",
+      "variantKey" : "invalid-routing-key-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-TOPIC-EXCHANGE-ROUTING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DisconnectedPattern_StopsReceivingMessagesAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Transports.Fabric.TopicMessageExchangeTests",
+      "variantKey" : "connection-lifetime"
    },
    {
       "requirementId" : "REQ-VSB-SEND-TOPOLOGY",
@@ -4017,12 +4115,14 @@
   ,{ "requirementId": "REQ-VSB-INMEMORY-BACKPRESSURE", "variantKey": "immediate-queue-capacity-and-fifo", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests", "testMethod": "ImmediateQueueCapacity_BlocksTheNextProducerAndPreservesFifoDeliveryAsync" }
   ,{ "requirementId": "REQ-VSB-INMEMORY-BACKPRESSURE", "variantKey": "scheduled-admission-capacity", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests", "testMethod": "ScheduledDeliveryCapacity_BlocksUntilTheOwnedDelayCompletesAsync" }
   ,{ "requirementId": "REQ-VSB-INMEMORY-BACKPRESSURE", "variantKey": "scheduled-admission-cancellation", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests", "testMethod": "ScheduledCapacityWait_PreservesTheCanceledProducerTokenAndAddsNoDeliveryAsync" }
+  ,{ "requirementId": "REQ-VSB-INMEMORY-BACKPRESSURE", "variantKey": "scheduled-operation-cancellation", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests", "testMethod": "ScheduledCapacityWait_HonorsAndPreservesTheOperationTokenAsync" }
+  ,{ "requirementId": "REQ-VSB-INMEMORY-BACKPRESSURE", "variantKey": "dispatcher-continues-after-receiver-fault", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests", "testMethod": "QueueDispatcher_ContinuesAfterAReceiverFaultAsync" }
+  ,{ "requirementId": "REQ-VSB-INMEMORY-BACKPRESSURE", "variantKey": "canceled-dispatch-does-not-reach-receiver", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests", "testMethod": "CanceledMessageWaitingForAReceiver_IsDiscardedBeforeDispatchAsync" }
   ,{ "requirementId": "REQ-VSB-INMEMORY-BACKPRESSURE", "variantKey": "positive-configured-capacity", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests", "testMethod": "NonPositiveCapacity_IsRejectedByTheFabricAndPublicHostConfiguration" }
-  ,{ "requirementId": "REQ-VSB-GAUGE-ZERO-ACTIVITY", "variantKey": "removal-awaits-observers", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.GaugeTests", "testMethod": "FinalRemoval_CompletesOnlyAfterTheZeroActivityObserverCompletesAsync" }
-  ,{ "requirementId": "REQ-VSB-GAUGE-ZERO-ACTIVITY", "variantKey": "ordered-observer-fault-ownership", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.GaugeTests", "testMethod": "FinalRemoval_InvokesObserversInOrderAndPreservesTheFirstFailureAsync" }
   ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "start-bridge-publishes-factory-fault", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.SupervisorAgentCreationTests", "testMethod": "StartAgent_TransfersTheExactFactoryFailureToTheOwnedAsyncContextAsync" }
   ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "start-bridge-publishes-created-context", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.SupervisorAgentCreationTests", "testMethod": "StartAgent_PublishesTheExactCreatedContextAndLeavesItUnderSupervisorLifecycleAsync" }
   ,{ "requirementId": "REQ-VSB-INMEMORY-BACKGROUND-OWNERSHIP", "variantKey": "stop-awaits-scheduled-delivery", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests", "testMethod": "QueueStop_CancelsAndAwaitsEveryAcceptedScheduledDeliveryAsync" }
+  ,{ "requirementId": "REQ-VSB-INMEMORY-BACKGROUND-OWNERSHIP", "variantKey": "stop-cancels-blocked-admission-and-drains-buffer", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageFabricTests", "testMethod": "QueueStop_CancelsBlockedAdmissionAndCompletesWithBufferedMessagesAsync" }
   ,{ "requirementId": "REQ-VSB-PUBLIC-SURFACE-OWNERSHIP", "variantKey": "implementation-helpers-are-not-exported", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Architecture.RemovalBoundaryTests", "testMethod": "ImplementationHelpers_AreNotPartOfThePublicProductSurface" }
   ,{ "requirementId": "REQ-VSB-MULTIBUS", "variantKey": "same-request-contract-registrations-are-owner-bound", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests", "testMethod": "SameRequestContractOnTwoBuses_RegistersOneClientPerOwner" }
   ,{ "requirementId": "REQ-VSB-MULTIBUS", "variantKey": "duplicate-request-client-rejected-within-owner", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests", "testMethod": "DuplicateRequestClientOnOneBus_IsRejectedDuringConfiguration" }
@@ -4573,6 +4673,11 @@
   ,{ "requirementId": "REQ-VSB-INMEMORY-CONFIGURATION", "variantKey": "endpoint-address-rejects-malformed-options", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryTransportBoundaryTests", "testMethod": "EndpointAddress_RejectsMalformedOrContradictoryAddresses" }
   ,{ "requirementId": "REQ-VSB-INMEMORY-CONFIGURATION", "variantKey": "endpoint-address-explicit-input-contract", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryTransportBoundaryTests", "testMethod": "EndpointAddress_ValidatesEveryRequiredExplicitInput" }
   ,{ "requirementId": "REQ-VSB-INMEMORY-ENDPOINT-CONCURRENCY", "variantKey": "delivery-sink-tracking-is-thread-safe", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryTransportBoundaryTests", "testMethod": "DeliveryContext_TracksConcurrentSinkCompletionsWithoutLosingEntries" }
+  ,{ "requirementId": "REQ-VSB-INMEMORY-ENDPOINT-CONCURRENCY", "variantKey": "receiver-wait-cancellation", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageReceiverCollectionTests", "testMethod": "NextAsync_WithNoConnectedReceiver_PreservesCancellationAsync" }
+  ,{ "requirementId": "REQ-VSB-INMEMORY-ENDPOINT-CONCURRENCY", "variantKey": "receiver-wait-completes-on-connection", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageReceiverCollectionTests", "testMethod": "NextAsync_WithNoConnectedReceiver_CompletesWhenAReceiverConnectsAsync" }
+  ,{ "requirementId": "REQ-VSB-INMEMORY-ENDPOINT-CONCURRENCY", "variantKey": "deterministic-round-robin", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageReceiverCollectionTests", "testMethod": "MultipleReceivers_AreSelectedInConnectionOrderAsync" }
+  ,{ "requirementId": "REQ-VSB-INMEMORY-ENDPOINT-CONCURRENCY", "variantKey": "disconnect-rebuilds-receiver-selection", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageReceiverCollectionTests", "testMethod": "Disconnect_RebuildsSelectionAndIsIdempotentAsync" }
+  ,{ "requirementId": "REQ-VSB-INMEMORY-ENDPOINT-CONCURRENCY", "variantKey": "receiver-selection-required-inputs", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Transports.Fabric.MessageReceiverCollectionTests", "testMethod": "ReceiverSelection_RejectsEveryInvalidRequiredInput" }
   ,{ "requirementId": "REQ-VSB-INMEMORY-DELAY", "variantKey": "delivery-delay-preserves-clock-offset", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryTransportBoundaryTests", "testMethod": "DeliveryContext_ResolvesDelayWithoutDiscardingTheClockOffset" }
   ,{ "requirementId": "REQ-VSB-INMEMORY-CONFIGURATION", "variantKey": "publish-contract-discovery-and-explicit-registration", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryTransportBoundaryTests", "testMethod": "PublishTopologyDiscovery_RegistersOnlyAcceptedContractsExactlyOnce" }
   ,{ "requirementId": "REQ-VSB-INMEMORY-CONFIGURATION", "variantKey": "publish-contract-registration-required-inputs", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.InMemoryTransport.InMemoryTransportBoundaryTests", "testMethod": "PublishTopologyDiscovery_RejectsEveryMissingRequiredInput" }

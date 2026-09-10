@@ -1,19 +1,16 @@
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>Defines the operations required by message queue.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-/// <typeparam name="T">The value type.</typeparam>
-public interface IMessageQueue<in TContext, T> :
-    IMessageSink<T>
-    where TContext : class
-    where T : class
+/// <summary>Buffers in-memory messages and dispatches them to connected receivers.</summary>
+/// <typeparam name="TMessage">The message envelope type stored by the queue.</typeparam>
+internal interface IMessageQueue<TMessage> :
+    IMessageSink<TMessage>
+    where TMessage : class
 {
-    /// <summary>Gets the name.</summary>
+    /// <summary>Gets the queue name.</summary>
     string Name { get; }
 
-    /// <summary>Connects message receiver.</summary>
-    /// <param name="nodeContext">The node context.</param>
-    /// <param name="receiver">The receiver.</param>
+    /// <summary>Connects a receiver to the queue.</summary>
+    /// <param name="receiver">The receiver to connect.</param>
     /// <returns>A handle that disconnects the registration.</returns>
-    TopologyHandle ConnectMessageReceiver(TContext nodeContext, IMessageReceiver<T> receiver);
+    ITopologyHandle ConnectMessageReceiver(IMessageReceiver<TMessage> receiver);
 }

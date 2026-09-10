@@ -45,14 +45,13 @@ internal sealed class InMemoryReceiveTransport :
     {
         _context.ConfigureTopology();
 
-        IMessageQueue<IInMemoryTransportContext, InMemoryTransportMessage> queue =
-            _context.MessageFabric.GetQueue(_context.TransportContext, _queueName);
+        IMessageQueue<InMemoryTransportMessage> queue = _context.MessageFabric.GetQueue(_queueName);
 
-        IDeadLetterTransport deadLetterTransport = new InMemoryMessageDeadLetterTransport(_context.MessageFabric.GetExchange(_context.TransportContext,
+        IDeadLetterTransport deadLetterTransport = new InMemoryMessageDeadLetterTransport(_context.MessageFabric.GetExchange(
             _context.Send.DeadLetterQueueNameFormatter.FormatDeadLetterQueueName(_queueName)), _context.MessageFabric.DelayProvider);
         _context.AddOrUpdatePayload(() => deadLetterTransport, _ => deadLetterTransport);
 
-        IErrorTransport errorTransport = new InMemoryMessageErrorTransport(_context.MessageFabric.GetExchange(_context.TransportContext,
+        IErrorTransport errorTransport = new InMemoryMessageErrorTransport(_context.MessageFabric.GetExchange(
             _context.Send.ErrorQueueNameFormatter.FormatErrorQueueName(_queueName)), _context.MessageFabric.DelayProvider);
         _context.AddOrUpdatePayload(() => errorTransport, _ => errorTransport);
 
@@ -83,7 +82,6 @@ internal sealed class InMemoryReceiveTransport :
         return _context.ConnectSendObserver(observer);
     }
 
-
     sealed class ReceiveTransportAgent :
         ConsumerAgent<long>,
         ReceiveTransportHandle,
@@ -91,11 +89,11 @@ internal sealed class InMemoryReceiveTransport :
     {
         readonly IInMemoryReceiveEndpointContext _context;
         readonly TaskExecutor _executor;
-        readonly IMessageQueue<IInMemoryTransportContext, InMemoryTransportMessage> _queue;
+        readonly IMessageQueue<InMemoryTransportMessage> _queue;
         readonly Task _startupTask;
-        TopologyHandle _topologyHandle = null!;
+        ITopologyHandle? _topologyHandle;
 
-        public ReceiveTransportAgent(IInMemoryReceiveEndpointContext context, IMessageQueue<IInMemoryTransportContext, InMemoryTransportMessage> queue)
+        public ReceiveTransportAgent(IInMemoryReceiveEndpointContext context, IMessageQueue<InMemoryTransportMessage> queue)
             : base(context)
         {
             _context = context;
@@ -150,7 +148,7 @@ internal sealed class InMemoryReceiveTransport :
             {
                 await _context.DependenciesReady.OrCanceledAsync(Stopping).ConfigureAwait(false);
 
-                _topologyHandle = _queue.ConnectMessageReceiver(_context.TransportContext, this);
+                _topologyHandle = _queue.ConnectMessageReceiver(this);
 
                 await _context.TransportObservers.NotifyReadyAsync(_context.InputAddress).ConfigureAwait(false);
 

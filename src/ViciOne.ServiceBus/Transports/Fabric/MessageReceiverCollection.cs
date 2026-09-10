@@ -1,153 +1,130 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>Stores a collection of message receiver values.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class MessageReceiverCollection<T> :
+/// <summary>Maintains the receivers connected to a queue and exposes their current load balancer.</summary>
+/// <typeparam name="TMessage">The message type accepted by the receivers.</typeparam>
+internal sealed class MessageReceiverCollection<TMessage> :
     IProbeSite
-    where T : class
+    where TMessage : class
 {
-    readonly LoadBalancerFactory<T> _balancerFactory;
-    readonly Dictionary<long, IMessageReceiver<T>> _receivers;
-    TaskCompletionSource<IReceiverLoadBalancer<T>> _balancer;
+    readonly ReceiverLoadBalancerFactory<TMessage> _balancerFactory;
+    readonly Dictionary<long, IMessageReceiver<TMessage>> _receivers = [];
+    TaskCompletionSource<IReceiverLoadBalancer<TMessage>> _balancer = TaskCompletionSources.Create<IReceiverLoadBalancer<TMessage>>();
     long _nextId;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="balancerFactory">The balancer factory.</param>
-    public MessageReceiverCollection(LoadBalancerFactory<T> balancerFactory)
+    /// <summary>Initializes the collection with the factory used when multiple receivers are connected.</summary>
+    /// <param name="balancerFactory">The factory that creates a load balancer for a receiver snapshot.</param>
+    public MessageReceiverCollection(ReceiverLoadBalancerFactory<TMessage> balancerFactory)
     {
+        ArgumentNullException.ThrowIfNull(balancerFactory);
         _balancerFactory = balancerFactory;
-
-        _balancer = TaskCompletionSources.Create<IReceiverLoadBalancer<T>>();
-        _receivers = new Dictionary<long, IMessageReceiver<T>>();
     }
 
-    /// <summary>Writes diagnostic information to the probe context.</summary>
-    /// <param name="context">The context associated with the operation.</param>
+    /// <inheritdoc />
     public void Probe(ProbeContext context)
     {
-        IMessageReceiver<T>[] connected;
+        ArgumentNullException.ThrowIfNull(context);
+
+        IMessageReceiver<TMessage>[] connected;
         lock (_receivers)
-            connected = _receivers.Values.ToArray();
+            connected = [.. _receivers.Values];
 
         if (connected.Length == 0)
             return;
 
-        var scope = context.CreateScope("receiver");
-
-        for (var i = 0; i < connected.Length; i++)
-            connected[i].Probe(scope);
+        ProbeContext scope = context.CreateScope("receivers");
+        foreach (IMessageReceiver<TMessage> receiver in connected)
+            receiver.Probe(scope);
     }
 
-    /// <summary>Connects the configured observer or endpoint.</summary>
-    /// <param name="receiver">The receiver.</param>
-    /// <returns>A handle that disconnects the registration.</returns>
-    public TopologyHandle Connect(IMessageReceiver<T> receiver)
+    /// <summary>Connects a receiver and rebuilds the load balancer for the resulting receiver set.</summary>
+    /// <param name="receiver">The receiver to connect.</param>
+    /// <returns>A handle that disconnects the receiver.</returns>
+    public ITopologyHandle Connect(IMessageReceiver<TMessage> receiver)
     {
-        if (receiver == null)
-            throw new ArgumentNullException(nameof(receiver));
+        ArgumentNullException.ThrowIfNull(receiver);
 
         lock (_receivers)
         {
-            var id = ++_nextId;
-
+            long id = checked(++_nextId);
             _receivers.Add(id, receiver);
-
-            IMessageReceiver<T>[] connected = _receivers.Values.ToArray();
-
-            IReceiverLoadBalancer<T> balancer = connected.Length == 1
-                ? new SingleReceiverLoadBalancer<T>(connected[0])
-                : _balancerFactory(connected);
-
-            if (!_balancer.TrySetResult(balancer))
-            {
-                _balancer = TaskCompletionSources.Create<IReceiverLoadBalancer<T>>();
-                _balancer.SetResult(balancer);
-            }
-
-            return new Handle(id, this);
+            PublishBalancer();
+            return new ReceiverConnection(id, this);
         }
     }
 
-    /// <summary>Advances to the next value.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces the next outcome.</returns>
-    public Task<IMessageReceiver<T>> NextAsync(T message, CancellationToken cancellationToken)
+    /// <summary>Waits for a receiver when necessary and selects one for the message.</summary>
+    /// <param name="message">The message being dispatched.</param>
+    /// <param name="cancellationToken">The token that cancels the wait.</param>
+    /// <returns>The selected receiver.</returns>
+    public Task<IMessageReceiver<TMessage>> NextAsync(TMessage message, CancellationToken cancellationToken)
     {
-        Task<IReceiverLoadBalancer<T>> task = _balancer.Task;
-        if (task.IsCompletedSuccessfully)
-        {
-            IReceiverLoadBalancer<T> balancer = task.GetAwaiter().GetResult();
-            IMessageReceiver<T> consumer = balancer.SelectReceiver(message);
+        ArgumentNullException.ThrowIfNull(message);
+        cancellationToken.ThrowIfCancellationRequested();
 
-            return Task.FromResult(consumer);
-        }
-
-        async Task<IMessageReceiver<T>> NextAsync()
-        {
-            IReceiverLoadBalancer<T> balancer = await _balancer.Task.OrCanceledAsync(cancellationToken).ConfigureAwait(false);
-
-            return balancer.SelectReceiver(message);
-        }
-
-        return NextAsync();
-    }
-
-    /// <summary>Attempts to get receiver.</summary>
-    /// <param name="id">The id.</param>
-    /// <param name="consumer">Receives the consumer produced by the operation.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool TryGetReceiver(long id, [NotNullWhen(true)] out IMessageReceiver<T>? consumer)
-    {
+        Task<IReceiverLoadBalancer<TMessage>> task;
         lock (_receivers)
-            return _receivers.TryGetValue(id, out consumer);
+            task = _balancer.Task;
+
+        if (task.IsCompletedSuccessfully)
+            return Task.FromResult(task.Result.SelectReceiver(message));
+
+        return SelectAfterConnectionAsync(task, message, cancellationToken);
+    }
+
+    static async Task<IMessageReceiver<TMessage>> SelectAfterConnectionAsync(
+        Task<IReceiverLoadBalancer<TMessage>> balancerTask,
+        TMessage message,
+        CancellationToken cancellationToken)
+    {
+        IReceiverLoadBalancer<TMessage> balancer = await balancerTask.OrCanceledAsync(cancellationToken).ConfigureAwait(false);
+        return balancer.SelectReceiver(message);
     }
 
     void Disconnect(long id)
     {
         lock (_receivers)
         {
-            _receivers.Remove(id);
-
-            _balancer = TaskCompletionSources.Create<IReceiverLoadBalancer<T>>();
-
-            IMessageReceiver<T>[] connected = _receivers.Values.ToArray();
-            if (connected.Length <= 0)
+            if (!_receivers.Remove(id))
                 return;
 
-            IReceiverLoadBalancer<T> balancer = connected.Length == 1
-                ? new SingleReceiverLoadBalancer<T>(connected[0])
-                : _balancerFactory(connected);
+            _balancer = TaskCompletionSources.Create<IReceiverLoadBalancer<TMessage>>();
+            PublishBalancer();
+        }
+    }
 
+    void PublishBalancer()
+    {
+        IMessageReceiver<TMessage>[] connected = [.. _receivers.Values];
+        if (connected.Length == 0)
+            return;
+
+        IReceiverLoadBalancer<TMessage> balancer = connected.Length == 1
+            ? new SingleReceiverLoadBalancer<TMessage>(connected[0])
+            : _balancerFactory(connected);
+
+        if (!_balancer.TrySetResult(balancer))
+        {
+            _balancer = TaskCompletionSources.Create<IReceiverLoadBalancer<TMessage>>();
             _balancer.SetResult(balancer);
         }
     }
 
-
-    class Handle :
-        TopologyHandle
+    sealed class ReceiverConnection :
+        ITopologyHandle
     {
-        readonly MessageReceiverCollection<T> _connectable;
+        readonly MessageReceiverCollection<TMessage> _collection;
 
-        public Handle(long id, MessageReceiverCollection<T> connectable)
+        public ReceiverConnection(long id, MessageReceiverCollection<TMessage> collection)
         {
             Id = id;
-            _connectable = connectable;
+            _collection = collection;
         }
 
         public long Id { get; }
 
-        public void Disconnect()
-        {
-            _connectable.Disconnect(Id);
-        }
+        public void Disconnect() => _collection.Disconnect(Id);
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 

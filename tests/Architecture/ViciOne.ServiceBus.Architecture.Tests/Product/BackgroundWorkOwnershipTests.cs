@@ -71,10 +71,6 @@ public sealed class BackgroundWorkOwnershipTests
         Assert.Contains("_disposeTask = CompleteDisconnectAsync(disconnectFailure, factoryCleanup);", batchConnector, StringComparison.Ordinal);
         Assert.Contains("_ = ObserveCleanupFailureAsync(cleanup);", batchConnector, StringComparison.Ordinal);
 
-        string gauge = Source("src/ViciOne.ServiceBus/Transports/Fabric/Gauge.cs");
-        Assert.DoesNotContain("Task.Run(", gauge, StringComparison.Ordinal);
-        Assert.Contains("public Task RemoveAsync(CancellationToken cancellationToken = default)", gauge, StringComparison.Ordinal);
-
         string activeMqConsumer = Source(
             "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Middleware/ActiveMqConsumerFilter.cs");
         Assert.DoesNotContain(".ContinueWith(", activeMqConsumer, StringComparison.Ordinal);

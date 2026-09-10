@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
+using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Topology;
@@ -42,7 +43,7 @@ internal sealed class InMemoryMessageConsumeTopology<TMessage> :
     /// <summary>Binds the message contract's publish exchange to the receive endpoint.</summary>
     /// <param name="exchangeType">An exchange routing override, or <see langword="null" /> to use publish topology.</param>
     /// <param name="routingKey">The optional direct or topic routing key.</param>
-    public void Bind(ExchangeType? exchangeType, string? routingKey = default)
+    public void Bind(InMemoryExchangeType? exchangeType, string? routingKey = default)
     {
         if (!IsBindableMessageType)
         {

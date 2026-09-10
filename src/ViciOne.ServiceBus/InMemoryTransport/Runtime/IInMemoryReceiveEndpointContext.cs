@@ -11,7 +11,7 @@ internal interface IInMemoryReceiveEndpointContext :
     ISendTopology Send { get; }
 
     /// <summary>Gets the host's shared message fabric.</summary>
-    IMessageFabric<IInMemoryTransportContext, InMemoryTransportMessage> MessageFabric { get; }
+    IMessageFabric<InMemoryTransportMessage> MessageFabric { get; }
 
     /// <summary>Gets the host-specific context that isolates fabric entities.</summary>
     IInMemoryTransportContext TransportContext { get; }

@@ -1,25 +1,25 @@
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>Balances work across single receiver instances.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public class SingleReceiverLoadBalancer<T> :
-    IReceiverLoadBalancer<T>
-    where T : class
+/// <summary>Always selects the sole connected receiver.</summary>
+/// <typeparam name="TMessage">The message type accepted by the receiver.</typeparam>
+internal sealed class SingleReceiverLoadBalancer<TMessage> :
+    IReceiverLoadBalancer<TMessage>
+    where TMessage : class
 {
-    readonly IMessageReceiver<T> _receiver;
+    readonly IMessageReceiver<TMessage> _receiver;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="receiver">The receiver.</param>
-    public SingleReceiverLoadBalancer(IMessageReceiver<T> receiver)
+    /// <summary>Initializes a load balancer for one receiver.</summary>
+    /// <param name="receiver">The receiver selected for every message.</param>
+    public SingleReceiverLoadBalancer(IMessageReceiver<TMessage> receiver)
     {
+        ArgumentNullException.ThrowIfNull(receiver);
         _receiver = receiver;
     }
 
-    /// <summary>Selects receiver.</summary>
-    /// <param name="message">The message to process.</param>
-    /// <returns>The selected receiver.</returns>
-    public IMessageReceiver<T> SelectReceiver(T message)
+    /// <inheritdoc />
+    public IMessageReceiver<TMessage> SelectReceiver(TMessage message)
     {
+        ArgumentNullException.ThrowIfNull(message);
         return _receiver;
     }
 }

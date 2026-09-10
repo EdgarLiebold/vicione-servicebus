@@ -56,14 +56,14 @@ public sealed class InMemoryTransportBoundaryTests
         var topic = new InMemoryEndpointAddress(HostAddress, new Uri("topic:notifications"));
 
         Assert.Equal("orders", queue.Name);
-        Assert.Equal(ExchangeType.FanOut, queue.ExchangeType);
+        Assert.Equal(InMemoryExchangeType.FanOut, queue.ExchangeType);
         Assert.Equal(new Uri("loopback://localhost/tenant/orders"), (Uri)queue);
 
         Assert.Equal("events", exchange.Name);
-        Assert.Equal(ExchangeType.Direct, exchange.ExchangeType);
+        Assert.Equal(InMemoryExchangeType.Direct, exchange.ExchangeType);
         Assert.Equal(new Uri("loopback://localhost/tenant/events?type=Direct"), (Uri)exchange);
 
-        Assert.Equal(ExchangeType.Topic, topic.ExchangeType);
+        Assert.Equal(InMemoryExchangeType.Topic, topic.ExchangeType);
         Assert.Equal(new Uri("loopback://localhost/tenant/notifications?type=Topic"), (Uri)topic);
     }
 
@@ -82,7 +82,7 @@ public sealed class InMemoryTransportBoundaryTests
             HostAddress,
             new Uri("loopback://localhost/tenant/orders?type=topic"));
         Assert.Equal("orders", matching.Name);
-        Assert.Equal(ExchangeType.Topic, matching.ExchangeType);
+        Assert.Equal(InMemoryExchangeType.Topic, matching.ExchangeType);
     }
 
     [Theory]
@@ -90,6 +90,7 @@ public sealed class InMemoryTransportBoundaryTests
     [InlineData("exchange:orders?bind=true")]
     [InlineData("exchange:orders?queue=orders.worker")]
     [InlineData("exchange:orders?type=invalid")]
+    [InlineData("exchange:orders?type=1")]
     [InlineData("exchange:orders?type=direct&type=topic")]
     [InlineData("topic:orders?type=direct")]
     [InlineData("exchange:")]
@@ -108,7 +109,7 @@ public sealed class InMemoryTransportBoundaryTests
         Assert.Equal("exchangeName", Assert.Throws<ArgumentException>(() =>
             new InMemoryEndpointAddress(HostAddress, " ")).ParamName);
         Assert.Equal("exchangeType", Assert.Throws<ArgumentOutOfRangeException>(() =>
-            new InMemoryEndpointAddress(HostAddress, "orders", exchangeType: (ExchangeType)42)).ParamName);
+            new InMemoryEndpointAddress(HostAddress, "orders", exchangeType: (InMemoryExchangeType)42)).ParamName);
     }
 
     [Fact]
@@ -122,11 +123,10 @@ public sealed class InMemoryTransportBoundaryTests
         var context = new InMemoryDeliveryContext(message, DateTimeOffset.UtcNow, CancellationToken.None);
         RecordingSink[] sinks = Enumerable.Range(0, 512).Select(_ => new RecordingSink()).ToArray();
 
-        Parallel.ForEach(sinks, context.Delivered);
+        Parallel.ForEach(sinks, sink => Assert.True(context.TryReserveDelivery(sink)));
 
-        Assert.All(sinks, sink => Assert.True(context.WasAlreadyDelivered(sink)));
-        Assert.Equal("sink", Assert.Throws<ArgumentNullException>(() => context.Delivered(null!)).ParamName);
-        Assert.Equal("sink", Assert.Throws<ArgumentNullException>(() => context.WasAlreadyDelivered(null!)).ParamName);
+        Assert.All(sinks, sink => Assert.False(context.TryReserveDelivery(sink)));
+        Assert.Equal("sink", Assert.Throws<ArgumentNullException>(() => context.TryReserveDelivery(null!)).ParamName);
     }
 
     [Fact]
@@ -217,21 +217,21 @@ public sealed class InMemoryTransportBoundaryTests
         Assert.Equal("builder", Assert.Throws<ArgumentNullException>(() =>
             topology.Apply(null!)).ParamName);
 
-        topology.Bind("source", ExchangeType.Direct, "tenant-a");
+        topology.Bind("source", InMemoryExchangeType.Direct, "tenant-a");
         topology.AddSpecification(new InvalidInMemoryConsumeTopologySpecification("binding", "invalid"));
         IInMemoryMessageConsumeTopologyConfigurator<DiscoveryMessageOne> configurable =
             ((IInMemoryConsumeTopologyConfigurator)topology).GetMessageTopology<DiscoveryMessageOne>();
         IInMemoryMessageConsumeTopology<DiscoveryMessageOne> readable =
             ((IInMemoryConsumeTopology)topology).GetMessageTopology<DiscoveryMessageOne>();
-        configurable.Bind(ExchangeType.Topic, "events.*");
+        configurable.Bind(InMemoryExchangeType.Topic, "events.*");
 
         var builder = new RecordingConsumeTopologyBuilder("destination", "input");
         topology.Apply(builder);
 
         Assert.Same(configurable, readable);
         Assert.Equal(2, builder.Declarations.Count);
-        Assert.Contains(("source", ExchangeType.Direct), builder.Declarations);
-        Assert.Contains(builder.Declarations, declaration => declaration.Type == ExchangeType.Topic);
+        Assert.Contains(("source", InMemoryExchangeType.Direct), builder.Declarations);
+        Assert.Contains(builder.Declarations, declaration => declaration.Type == InMemoryExchangeType.Topic);
         Assert.Equal(2, builder.ExchangeBindings.Count);
         Assert.Contains(("source", "destination", "tenant-a"), builder.ExchangeBindings);
         Assert.Contains(builder.ExchangeBindings, binding =>
@@ -251,14 +251,14 @@ public sealed class InMemoryTransportBoundaryTests
         Assert.Equal("message", Assert.Throws<ArgumentException>(() =>
             new InvalidInMemoryConsumeTopologySpecification("binding", " ")).ParamName);
         Assert.Equal("exchange", Assert.Throws<ArgumentException>(() =>
-            new ExchangeBindingConsumeTopologySpecification(" ", ExchangeType.Direct, null)).ParamName);
+            new ExchangeBindingConsumeTopologySpecification(" ", InMemoryExchangeType.Direct, null)).ParamName);
         Assert.Equal("exchangeType", Assert.Throws<ArgumentOutOfRangeException>(() =>
-            new ExchangeBindingConsumeTopologySpecification("source", (ExchangeType)42, null)).ParamName);
+            new ExchangeBindingConsumeTopologySpecification("source", (InMemoryExchangeType)42, null)).ParamName);
         Assert.Equal("routingKey", Assert.Throws<ArgumentException>(() =>
-            new ExchangeBindingConsumeTopologySpecification("source", ExchangeType.FanOut, "invalid")).ParamName);
+            new ExchangeBindingConsumeTopologySpecification("source", InMemoryExchangeType.FanOut, "invalid")).ParamName);
 
         var invalid = new InvalidInMemoryConsumeTopologySpecification("binding", "invalid");
-        var valid = new ExchangeBindingConsumeTopologySpecification("source", ExchangeType.Direct, "tenant-a");
+        var valid = new ExchangeBindingConsumeTopologySpecification("source", InMemoryExchangeType.Direct, "tenant-a");
         var builder = new RecordingConsumeTopologyBuilder("destination", "input");
 
         Assert.Equal("builder", Assert.Throws<ArgumentNullException>(() => invalid.Apply(null!)).ParamName);
@@ -266,7 +266,7 @@ public sealed class InMemoryTransportBoundaryTests
         invalid.Apply(builder);
         valid.Apply(builder);
 
-        Assert.Equal(("source", ExchangeType.Direct), Assert.Single(builder.Declarations));
+        Assert.Equal(("source", InMemoryExchangeType.Direct), Assert.Single(builder.Declarations));
         Assert.Equal(("source", "destination", "tenant-a"), Assert.Single(builder.ExchangeBindings));
         Assert.Empty(builder.QueueBindings);
         Assert.Empty(valid.Validate());
@@ -291,7 +291,7 @@ public sealed class InMemoryTransportBoundaryTests
 
     private sealed class RecordingSink : IMessageSink<InMemoryTransportMessage>
     {
-        public Task DeliverAsync(DeliveryContext<InMemoryTransportMessage> context, CancellationToken cancellationToken = default) =>
+        public Task DeliverAsync(IMessageDeliveryContext<InMemoryTransportMessage> context, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
 
         public void Probe(ProbeContext context)
@@ -301,7 +301,7 @@ public sealed class InMemoryTransportBoundaryTests
 
     private sealed class RecordingConsumeTopologyBuilder(string exchange, string queue) : IMessageFabricConsumeTopologyBuilder
     {
-        public List<(string Name, ExchangeType Type)> Declarations { get; } = [];
+        public List<(string Name, InMemoryExchangeType Type)> Declarations { get; } = [];
 
         public List<(string Source, string Destination, string? RoutingKey)> ExchangeBindings { get; } = [];
 
@@ -316,7 +316,7 @@ public sealed class InMemoryTransportBoundaryTests
 
         public void QueueBind(string source, string destination) => QueueBindings.Add((source, destination));
 
-        public void ExchangeDeclare(string name, ExchangeType exchangeType) =>
+        public void ExchangeDeclare(string name, InMemoryExchangeType exchangeType) =>
             Declarations.Add((name, exchangeType));
 
         public void QueueDeclare(string name)

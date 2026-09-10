@@ -1,4 +1,5 @@
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
@@ -13,7 +14,7 @@ internal interface IInMemoryMessageConsumeTopologyConfigurator<TMessage> :
     /// <summary>Adds the publish-exchange binding for this message contract.</summary>
     /// <param name="exchangeType">An exchange routing override, or <see langword="null" /> to use publish topology.</param>
     /// <param name="routingKey">The optional direct or topic routing key.</param>
-    void Bind(ExchangeType? exchangeType = default, string? routingKey = null);
+    void Bind(InMemoryExchangeType? exchangeType = default, string? routingKey = null);
 }
 
 

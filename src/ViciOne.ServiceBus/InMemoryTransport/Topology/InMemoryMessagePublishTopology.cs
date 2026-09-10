@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Topology;
 using ViciOne.ServiceBus.Transports.Fabric;
 
@@ -29,7 +30,7 @@ internal sealed class InMemoryMessagePublishTopology<TMessage> :
     }
 
     /// <summary>Gets or sets the exchange routing behavior.</summary>
-    public ExchangeType ExchangeType { get; set; }
+    public InMemoryExchangeType ExchangeType { get; set; }
 
     /// <summary>Declares the message exchange and its implemented-contract bindings.</summary>
     /// <param name="builder">The publish topology builder to update.</param>
@@ -43,8 +44,8 @@ internal sealed class InMemoryMessagePublishTopology<TMessage> :
 
         builder.ExchangeDeclare(exchangeName, ExchangeType);
 
-        if (builder.ExchangeName != null)
-            builder.ExchangeBind(builder.ExchangeName, exchangeName, builder.ExchangeType == ExchangeType.Topic ? "#" : default);
+        if (builder.ExchangeName is { } sourceExchange)
+            builder.ExchangeBind(sourceExchange, exchangeName, builder.ExchangeType == InMemoryExchangeType.Topic ? "#" : default);
         else
         {
             builder.ExchangeName = exchangeName;

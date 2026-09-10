@@ -1,60 +1,54 @@
-using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Providers.Transports;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>Builds message fabric consume topology components.</summary>
-/// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
-/// <typeparam name="T">The value type.</typeparam>
-public class MessageFabricConsumeTopologyBuilder<TContext, T> :
+/// <summary>Forwards receive-endpoint topology declarations to a message fabric.</summary>
+/// <typeparam name="TMessage">The message envelope type carried by the fabric.</typeparam>
+internal sealed class MessageFabricConsumeTopologyBuilder<TMessage> :
     IMessageFabricConsumeTopologyBuilder
-    where TContext : class
-    where T : class
+    where TMessage : class
 {
-    readonly TContext _context;
-    readonly IMessageFabric<TContext, T> _fabric;
+    readonly IMessageFabric<TMessage> _fabric;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="fabric">The fabric.</param>
-    public MessageFabricConsumeTopologyBuilder(TContext context, IMessageFabric<TContext, T> fabric)
+    /// <summary>Initializes a builder for the specified fabric and receive endpoint entities.</summary>
+    /// <param name="fabric">The fabric that receives declarations.</param>
+    /// <param name="exchange">The receive endpoint exchange name.</param>
+    /// <param name="queue">The receive endpoint queue name.</param>
+    public MessageFabricConsumeTopologyBuilder(IMessageFabric<TMessage> fabric, string exchange, string queue)
     {
-        _context = context;
+        ArgumentNullException.ThrowIfNull(fabric);
+        ArgumentException.ThrowIfNullOrWhiteSpace(exchange);
+        ArgumentException.ThrowIfNullOrWhiteSpace(queue);
         _fabric = fabric;
+        Exchange = exchange;
+        Queue = queue;
     }
 
-    /// <summary>Gets or sets the exchange.</summary>
-    public string Exchange { get; set; } = null!;
-    /// <summary>Gets or sets the queue.</summary>
-    public string Queue { get; set; } = null!;
-    /// <summary>Binds the configured exchange.</summary>
-    /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination.</param>
-    /// <param name="routingKey">The routing key.</param>
+    /// <inheritdoc />
+    public string Exchange { get; }
+    /// <inheritdoc />
+    public string Queue { get; }
+    /// <inheritdoc />
     public void ExchangeBind(string source, string destination, string? routingKey)
     {
-        _fabric.ExchangeBind(_context, source, destination, routingKey);
+        _fabric.ExchangeBind(source, destination, routingKey);
     }
 
-    /// <summary>Binds the configured queue.</summary>
-    /// <param name="source">The source value.</param>
-    /// <param name="destination">The destination.</param>
+    /// <inheritdoc />
     public void QueueBind(string source, string destination)
     {
-        _fabric.QueueBind(_context, source, destination);
+        _fabric.QueueBind(source, destination);
     }
 
-    /// <summary>Declares the configured exchange.</summary>
-    /// <param name="name">The name.</param>
-    /// <param name="exchangeType">The runtime exchange type used by the operation.</param>
-    public void ExchangeDeclare(string name, ExchangeType exchangeType)
+    /// <inheritdoc />
+    public void ExchangeDeclare(string name, InMemoryExchangeType exchangeType)
     {
-        _fabric.ExchangeDeclare(_context, name, exchangeType);
+        _fabric.ExchangeDeclare(name, exchangeType);
     }
 
-    /// <summary>Declares the configured queue.</summary>
-    /// <param name="name">The name.</param>
+    /// <inheritdoc />
     public void QueueDeclare(string name)
     {
-        _fabric.QueueDeclare(_context, name);
+        _fabric.QueueDeclare(name);
     }
 }

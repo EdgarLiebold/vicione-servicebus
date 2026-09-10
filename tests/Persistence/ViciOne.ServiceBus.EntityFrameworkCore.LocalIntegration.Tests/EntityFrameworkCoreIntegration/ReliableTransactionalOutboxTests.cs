@@ -264,8 +264,8 @@ public sealed class ReliableTransactionalOutboxTests
                 throw new InvalidOperationException("Reliable routing-key tests require the in-memory transport configurator.");
 
             inMemory.ConfigureConsumeTopology = false;
-            inMemory.Bind<ReliableEvent>(ExchangeType.Direct, "alpha");
-            inMemory.Bind<ReliableEvent>(ExchangeType.Direct, "beta");
+            inMemory.Bind<ReliableEvent>(InMemoryExchangeType.Direct, "alpha");
+            inMemory.Bind<ReliableEvent>(InMemoryExchangeType.Direct, "beta");
         }
     }
 
@@ -448,7 +448,7 @@ public sealed class ReliableTransactionalOutboxTests
                     });
                 configuration.UsingInMemory((context, bus) =>
                 {
-                    bus.Publish<ReliableEvent>(topology => topology.ExchangeType = ExchangeType.Direct);
+                    bus.Publish<ReliableEvent>(topology => topology.ExchangeType = InMemoryExchangeType.Direct);
                     bus.ConfigureEndpoints(context);
                 });
             });

@@ -72,12 +72,12 @@ public sealed class InMemoryScheduledPublishTests
     [RequirementCoverage("REQ-VSB-INMEMORY-SCHEDULED-PUBLISH", "inline-delay-registration")]
     public void DelayedDelivery_RegistersBeforeReturningWithoutAThreadPoolDispatch()
     {
-        MethodInfo deliver = typeof(MessageQueue<,>).GetMethod(nameof(MessageQueue<object, object>.DeliverAsync))
+        MethodInfo deliver = typeof(MessageQueue<>).GetMethod(nameof(MessageQueue<object>.DeliverAsync))
             ?? throw new InvalidOperationException("MessageQueue.Deliver was not found.");
         Type stateMachineDefinition = deliver.GetCustomAttribute<AsyncStateMachineAttribute>()?.StateMachineType
             ?? throw new InvalidOperationException("MessageQueue.Deliver is not an async state machine.");
         Type stateMachine = stateMachineDefinition.IsGenericTypeDefinition
-            ? stateMachineDefinition.MakeGenericType(typeof(object), typeof(object))
+            ? stateMachineDefinition.MakeGenericType(typeof(object))
             : stateMachineDefinition;
         MethodInfo moveNext = stateMachine.GetMethod(
             nameof(IAsyncStateMachine.MoveNext),
@@ -89,7 +89,7 @@ public sealed class InMemoryScheduledPublishTests
         Assert.Contains(calls, method =>
             method.Name == "DeliverWithDelayAsync"
             && method.DeclaringType?.IsGenericType == true
-            && method.DeclaringType.GetGenericTypeDefinition() == typeof(MessageQueue<,>));
+            && method.DeclaringType.GetGenericTypeDefinition() == typeof(MessageQueue<>));
         Assert.DoesNotContain(calls, method =>
             method.Name == nameof(Task.Run)
             && method.DeclaringType == typeof(Task));

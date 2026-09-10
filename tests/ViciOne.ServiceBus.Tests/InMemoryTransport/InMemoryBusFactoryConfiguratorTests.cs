@@ -47,7 +47,7 @@ public sealed class InMemoryBusFactoryConfiguratorTests
         configurator.Publish<ConfiguredMessage>(publish =>
         {
             typedPublishCallbacks++;
-            publish.ExchangeType = ExchangeType.Direct;
+            publish.ExchangeType = InMemoryExchangeType.Direct;
         });
         configurator.Publish(typeof(RuntimeConfiguredMessage), _ => runtimePublishCallbacks++);
 
@@ -57,7 +57,7 @@ public sealed class InMemoryBusFactoryConfiguratorTests
         Assert.Equal(17, bus.HostConfiguration.QueueCapacity);
         Assert.Equal(new Uri("loopback://custom/tenant-blue"), bus.HostConfiguration.HostAddress);
         Assert.Equal(
-            ExchangeType.Direct,
+            InMemoryExchangeType.Direct,
             ((IInMemoryMessagePublishTopology<ConfiguredMessage>)
                 configurator.PublishTopology.GetMessageTopology<ConfiguredMessage>()).ExchangeType);
         Assert.Same(

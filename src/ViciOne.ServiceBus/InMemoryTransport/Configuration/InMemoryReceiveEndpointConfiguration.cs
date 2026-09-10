@@ -1,5 +1,6 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Transports.Fabric;
 
@@ -75,7 +76,10 @@ internal sealed class InMemoryReceiveEndpointConfiguration :
     /// <param name="exchangeName">The non-empty source exchange name.</param>
     /// <param name="exchangeType">The source exchange routing behavior.</param>
     /// <param name="routingKey">The optional direct or topic routing key.</param>
-    public void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default)
+    public void Bind(
+        string exchangeName,
+        InMemoryExchangeType exchangeType = InMemoryExchangeType.FanOut,
+        string? routingKey = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(exchangeName);
 
@@ -86,7 +90,7 @@ internal sealed class InMemoryReceiveEndpointConfiguration :
     /// <typeparam name="TMessage">The message contract.</typeparam>
     /// <param name="exchangeType">The source exchange routing behavior.</param>
     /// <param name="routingKey">The optional direct or topic routing key.</param>
-    public void Bind<TMessage>(ExchangeType exchangeType, string? routingKey = default)
+    public void Bind<TMessage>(InMemoryExchangeType exchangeType, string? routingKey = default)
         where TMessage : class
     {
         _endpointConfiguration.Topology.Consume.GetMessageTopology<TMessage>().Bind(exchangeType, routingKey);

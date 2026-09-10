@@ -1,5 +1,6 @@
 using System;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
+using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Transports.Fabric;
 
@@ -28,7 +29,7 @@ internal sealed class InMemoryReceiveEndpointContext :
     /// <summary>Gets the endpoint's send topology.</summary>
     public ISendTopology Send => _configuration.Topology.Send;
     /// <summary>Gets the host's shared message fabric.</summary>
-    public IMessageFabric<IInMemoryTransportContext, InMemoryTransportMessage> MessageFabric => _hostConfiguration.TransportProvider.MessageFabric;
+    public IMessageFabric<InMemoryTransportMessage> MessageFabric => _hostConfiguration.TransportProvider.MessageFabric;
     /// <summary>Gets the host-specific context that isolates fabric entities.</summary>
     public IInMemoryTransportContext TransportContext => _hostConfiguration.TransportProvider;
 
@@ -58,16 +59,13 @@ internal sealed class InMemoryReceiveEndpointContext :
     /// <summary>Declares the endpoint queue and exchange before applying consume bindings.</summary>
     public void ConfigureTopology()
     {
-        var builder = new MessageFabricConsumeTopologyBuilder<IInMemoryTransportContext, InMemoryTransportMessage>(_hostConfiguration.TransportProvider,
-            MessageFabric);
-
         var name = _configuration.InputAddress.GetEndpointName()
             ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive endpoint", "unknown", "The in-memory input address must contain an endpoint name.", "Correct the named configuration before starting the host"));
 
-        builder.Exchange = name;
-        builder.ExchangeDeclare(name, ExchangeType.FanOut);
+        var builder = new MessageFabricConsumeTopologyBuilder<InMemoryTransportMessage>(MessageFabric, name, name);
 
-        builder.Queue = name;
+        builder.ExchangeDeclare(name, InMemoryExchangeType.FanOut);
+
         builder.QueueDeclare(name);
 
         builder.QueueBind(builder.Exchange, builder.Queue);

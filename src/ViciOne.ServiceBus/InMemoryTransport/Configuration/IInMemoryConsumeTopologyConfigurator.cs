@@ -1,5 +1,5 @@
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
-using ViciOne.ServiceBus.Transports.Fabric;
+using ViciOne.ServiceBus.Providers.Transports;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
@@ -22,5 +22,8 @@ internal interface IInMemoryConsumeTopologyConfigurator :
     /// <param name="exchangeName">The non-empty source exchange name.</param>
     /// <param name="exchangeType">The source exchange routing behavior.</param>
     /// <param name="routingKey">The optional direct or topic routing key.</param>
-    void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default);
+    void Bind(
+        string exchangeName,
+        InMemoryExchangeType exchangeType = InMemoryExchangeType.FanOut,
+        string? routingKey = default);
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
+using ViciOne.ServiceBus.Providers.Transports;
 using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Topology;
@@ -47,7 +48,10 @@ internal sealed class InMemoryConsumeTopology :
     /// <param name="exchangeName">The non-empty source exchange name.</param>
     /// <param name="exchangeType">The source exchange routing behavior.</param>
     /// <param name="routingKey">The optional direct or topic routing key.</param>
-    public void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default)
+    public void Bind(
+        string exchangeName,
+        InMemoryExchangeType exchangeType = InMemoryExchangeType.FanOut,
+        string? routingKey = default)
     {
         var specification = new ExchangeBindingConsumeTopologySpecification(exchangeName, exchangeType, routingKey);
 

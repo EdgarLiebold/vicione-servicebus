@@ -1,12 +1,12 @@
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
-/// <summary>Defines the operations required by receiver load balancer.</summary>
-/// <typeparam name="T">The value type.</typeparam>
-public interface IReceiverLoadBalancer<in T>
-    where T : class
+/// <summary>Selects a connected receiver for each queued message.</summary>
+/// <typeparam name="TMessage">The message type.</typeparam>
+internal interface IReceiverLoadBalancer<in TMessage>
+    where TMessage : class
 {
-    /// <summary>Selects receiver.</summary>
-    /// <param name="message">The message to process.</param>
+    /// <summary>Selects the receiver for a message.</summary>
+    /// <param name="message">The message being dispatched.</param>
     /// <returns>The selected receiver.</returns>
-    IMessageReceiver<T> SelectReceiver(T message);
+    IMessageReceiver<TMessage> SelectReceiver(TMessage message);
 }

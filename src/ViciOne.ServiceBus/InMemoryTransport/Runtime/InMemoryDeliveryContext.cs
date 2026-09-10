@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.InMemoryTransport.Runtime;
 
 /// <summary>Tracks one in-memory fabric delivery and the sinks that have accepted it.</summary>
 internal sealed class InMemoryDeliveryContext :
-    DeliveryContext<InMemoryTransportMessage>
+    IMessageDeliveryContext<InMemoryTransportMessage>
 {
     readonly HashSet<IMessageSink<InMemoryTransportMessage>> _delivered;
     readonly object _deliveredLock;
@@ -36,25 +36,13 @@ internal sealed class InMemoryDeliveryContext :
     public string? RoutingKey => Message.RoutingKey;
     /// <summary>Gets the absolute enqueue time for a delayed message.</summary>
     public DateTimeOffset? EnqueueTime => _enqueueTime;
-    /// <summary>Gets the optional receiver identifier; in-memory deliveries are not receiver-pinned.</summary>
-    public long? ReceiverId => default;
-
-    /// <summary>Determines whether the message has already been delivered to the specified sink.</summary>
-    /// <param name="sink">The candidate sink.</param>
-    /// <returns><see langword="true" /> when the sink already accepted this delivery; otherwise, <see langword="false" />.</returns>
-    public bool WasAlreadyDelivered(IMessageSink<InMemoryTransportMessage> sink)
+    /// <summary>Atomically reserves a sink for this dispatch.</summary>
+    /// <param name="sink">The sink to reserve.</param>
+    /// <returns><see langword="true" /> when this call reserved the sink; otherwise, <see langword="false" />.</returns>
+    public bool TryReserveDelivery(IMessageSink<InMemoryTransportMessage> sink)
     {
         ArgumentNullException.ThrowIfNull(sink);
         lock (_deliveredLock)
-            return _delivered.Contains(sink);
-    }
-
-    /// <summary>Records that the message was delivered to the specified sink.</summary>
-    /// <param name="sink">The sink that accepted the delivery.</param>
-    public void Delivered(IMessageSink<InMemoryTransportMessage> sink)
-    {
-        ArgumentNullException.ThrowIfNull(sink);
-        lock (_deliveredLock)
-            _delivered.Add(sink);
+            return _delivered.Add(sink);
     }
 }

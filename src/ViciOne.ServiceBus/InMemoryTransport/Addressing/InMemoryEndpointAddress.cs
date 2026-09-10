@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using ViciOne.ServiceBus.Internals;
-using ViciOne.ServiceBus.Transports.Fabric;
+using ViciOne.ServiceBus.Providers.Transports;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Addressing;
 
@@ -26,7 +26,7 @@ internal readonly struct InMemoryEndpointAddress
         VirtualHost = configuredHost.VirtualHost;
         Name = string.Empty;
 
-        ExchangeType = ExchangeType.FanOut;
+        ExchangeType = InMemoryExchangeType.FanOut;
 
         var addressScheme = address.Scheme.ToLowerInvariant();
         switch (addressScheme)
@@ -47,7 +47,7 @@ internal readonly struct InMemoryEndpointAddress
 
             case "topic":
                 Name = Uri.UnescapeDataString(address.AbsolutePath);
-                ExchangeType = ExchangeType.Topic;
+                ExchangeType = InMemoryExchangeType.Topic;
                 break;
 
             default:
@@ -76,7 +76,7 @@ internal readonly struct InMemoryEndpointAddress
             }
         }
 
-        if (addressScheme == "topic" && ExchangeType != ExchangeType.Topic)
+        if (addressScheme == "topic" && ExchangeType != InMemoryExchangeType.Topic)
             throw new ArgumentException("A topic address cannot declare a non-topic exchange type.", nameof(address));
     }
 
@@ -84,7 +84,10 @@ internal readonly struct InMemoryEndpointAddress
     /// <param name="hostAddress">The configured in-memory host address.</param>
     /// <param name="exchangeName">The destination exchange name.</param>
     /// <param name="exchangeType">The routing behavior of the exchange.</param>
-    public InMemoryEndpointAddress(Uri hostAddress, string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut)
+    public InMemoryEndpointAddress(
+        Uri hostAddress,
+        string exchangeName,
+        InMemoryExchangeType exchangeType = InMemoryExchangeType.FanOut)
     {
         ArgumentNullException.ThrowIfNull(hostAddress);
         ArgumentException.ThrowIfNullOrWhiteSpace(exchangeName);
@@ -113,7 +116,7 @@ internal readonly struct InMemoryEndpointAddress
     public string Name { get; }
 
     /// <summary>Gets the exchange routing behavior.</summary>
-    public ExchangeType ExchangeType { get; }
+    public InMemoryExchangeType ExchangeType { get; }
 
     /// <summary>Converts the normalized endpoint address to its absolute URI.</summary>
     /// <param name="address">The normalized in-memory endpoint address.</param>
@@ -155,11 +158,12 @@ internal readonly struct InMemoryEndpointAddress
         }
     }
 
-    static ExchangeType ParseExchangeType(string? value, Uri address)
+    static InMemoryExchangeType ParseExchangeType(string? value, Uri address)
     {
         if (!string.IsNullOrWhiteSpace(value)
-            && Enum.TryParse(value, true, out ExchangeType result)
-            && Enum.IsDefined(result))
+            && Enum.TryParse(value, true, out InMemoryExchangeType result)
+            && Enum.IsDefined(result)
+            && string.Equals(value, Enum.GetName(result), StringComparison.OrdinalIgnoreCase))
             return result;
 
         throw new ArgumentException($"The in-memory address option '{ExchangeTypeKey}' has an unsupported value '{value}'.", nameof(address));
@@ -167,7 +171,7 @@ internal readonly struct InMemoryEndpointAddress
 
     IEnumerable<string> GetQueryStringOptions()
     {
-        if (ExchangeType != ExchangeType.FanOut)
+        if (ExchangeType != InMemoryExchangeType.FanOut)
             yield return $"{ExchangeTypeKey}={ExchangeType}";
     }
 }
