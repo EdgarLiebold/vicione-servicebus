@@ -27,7 +27,7 @@ public sealed class InMemoryReceiveEndpointConcurrencyTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.PrefetchCount = concurrencyLimit;
             configurator.ConcurrentMessageLimit = concurrencyLimit;
@@ -107,7 +107,7 @@ public sealed class InMemoryReceiveEndpointConcurrencyTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.PrefetchCount = concurrencyLimit + 1;
             configurator.ConcurrentMessageLimit = concurrencyLimit;

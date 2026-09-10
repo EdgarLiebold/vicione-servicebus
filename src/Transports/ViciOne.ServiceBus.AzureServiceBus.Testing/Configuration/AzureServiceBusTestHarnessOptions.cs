@@ -1,8 +1,8 @@
 namespace ViciOne.ServiceBus.AzureServiceBus.Testing;
 
-/// <summary>Configures namespace cleanup for the Azure Service Bus test harness.</summary>
+/// <summary>Controls startup preparation performed by the Azure Service Bus test harness.</summary>
 public sealed class AzureServiceBusTestHarnessOptions
 {
-    /// <summary>Gets or sets whether the hosted service deletes all topics and queues from the configured namespace when it starts.</summary>
-    public bool CleanNamespace { get; set; }
+    /// <summary>Gets or sets whether startup deletes every topic and queue from the configured namespace.</summary>
+    public bool CleanNamespaceOnStart { get; set; }
 }

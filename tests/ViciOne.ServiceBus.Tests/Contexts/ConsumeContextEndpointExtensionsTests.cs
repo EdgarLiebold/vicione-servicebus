@@ -108,7 +108,7 @@ public sealed class ConsumeContextEndpointExtensionsTests
             TestTimeout = operationTimeout,
         };
         harness.BeginTestScope();
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<UpdateMemberAddressCommand>(
                 _ => Task.FromException(new ExpectedHandlerException()));
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -185,7 +185,7 @@ public sealed class ConsumeContextEndpointExtensionsTests
         harness.BeginTestScope();
         var derivedContextObserved = new TaskCompletionSource<ConsumeContext<DerivedFaultCommand>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<BaseFaultCommand>(context =>
             {
                 if (!context.TryGetMessage(out ConsumeContext<DerivedFaultCommand>? derivedContext))

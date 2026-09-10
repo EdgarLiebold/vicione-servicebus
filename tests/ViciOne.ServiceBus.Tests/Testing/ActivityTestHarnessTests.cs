@@ -28,8 +28,8 @@ public sealed class ActivityTestHarnessTests
             FailingArguments>();
         var executeConfigured = 0;
         var compensateConfigured = 0;
-        activity.OnConfigureExecuteReceiveEndpoint += _ => Interlocked.Increment(ref executeConfigured);
-        activity.OnConfigureCompensateReceiveEndpoint += _ => Interlocked.Increment(ref compensateConfigured);
+        activity.ExecuteReceiveEndpointConfiguring += _ => Interlocked.Increment(ref executeConfigured);
+        activity.CompensateReceiveEndpointConfiguring += _ => Interlocked.Increment(ref compensateConfigured);
 
         await harness.StartAsync(cancellationToken);
         try
@@ -86,7 +86,7 @@ public sealed class ActivityTestHarnessTests
             ExecuteOnlyActivity,
             ExecuteOnlyArguments>(_ => new ExecuteOnlyActivity(executed));
         var executeConfigured = 0;
-        activity.OnConfigureExecuteReceiveEndpoint += _ => Interlocked.Increment(ref executeConfigured);
+        activity.ExecuteReceiveEndpointConfiguring += _ => Interlocked.Increment(ref executeConfigured);
 
         await harness.StartAsync(cancellationToken);
         try

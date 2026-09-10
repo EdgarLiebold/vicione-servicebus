@@ -54,6 +54,11 @@ public class ConnectionContextFactory :
                 connectionContext.Lifetime.Invalidate(args);
             }
 
+            // Application shutdown is raised by the connection disposal already in progress.
+            // Re-entering the same context stop here would make CloseAsync wait for itself.
+            if (args.Initiator == ShutdownInitiator.Application)
+                return Task.CompletedTask;
+
             return contextHandle.StopAsync(args.ReplyText);
         }
 

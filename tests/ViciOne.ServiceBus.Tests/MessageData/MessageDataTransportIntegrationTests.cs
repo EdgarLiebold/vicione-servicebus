@@ -49,12 +49,12 @@ public sealed class MessageDataTransportIntegrationTests
             timeout,
             storedRepository,
             new MessageDataPolicy(alwaysWriteToRepository: true, threshold: 1));
-        inlineHarness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<PolicyEnvelope>(context =>
+        inlineHarness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Handler<PolicyEnvelope>(context =>
         {
             inlineObserved.TrySetResult(context.Message.Text.Address);
             return Task.CompletedTask;
         });
-        storedHarness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<PolicyEnvelope>(context =>
+        storedHarness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Handler<PolicyEnvelope>(context =>
         {
             storedObserved.TrySetResult(context.Message.Text.Address);
             return Task.CompletedTask;
@@ -87,7 +87,7 @@ public sealed class MessageDataTransportIntegrationTests
         var repository = new InMemoryMessageDataRepository();
         var observed = new TaskCompletionSource<TransportSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-inline", timeout, repository, policy);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TransportEnvelope>(context =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Handler<TransportEnvelope>(context =>
             ObserveAsync(observed, async () =>
             {
                 await using Stream stream = MessageDataTestSupport.Require(await context.Message.Stream.Value, nameof(context.Message.Stream));
@@ -139,7 +139,7 @@ public sealed class MessageDataTransportIntegrationTests
         var repository = new FileSystemMessageDataRepository(directory);
         var observed = new TaskCompletionSource<TransportSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-stored", timeout, repository, policy);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TransportEnvelope>(context =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Handler<TransportEnvelope>(context =>
             ObserveAsync(observed, async () =>
             {
                 await using Stream stream = MessageDataTestSupport.Require(await context.Message.Stream.Value, nameof(context.Message.Stream));
@@ -198,7 +198,7 @@ public sealed class MessageDataTransportIntegrationTests
             1024 * 1024);
         var observed = new TaskCompletionSource<TransportSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-encrypted", timeout, repository, policy);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TransportEnvelope>(context =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Handler<TransportEnvelope>(context =>
             ObserveAsync(observed, async () =>
             {
                 await using Stream stream = MessageDataTestSupport.Require(await context.Message.Stream.Value, nameof(context.Message.Stream));
@@ -255,7 +255,7 @@ public sealed class MessageDataTransportIntegrationTests
         var repository = new InMemoryMessageDataRepository();
         var observed = new TaskCompletionSource<ReferenceSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-references", timeout, repository);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<ReferenceEnvelope>(context =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Handler<ReferenceEnvelope>(context =>
             ObserveAsync(observed, async () =>
             {
                 await using Stream stream = MessageDataTestSupport.Require(await context.Message.Stream.Value, nameof(context.Message.Stream));
@@ -331,7 +331,7 @@ public sealed class MessageDataTransportIntegrationTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryBus += configurator => configurator.UseMessageData(repository, policy);
+        harness.InMemoryBusConfiguring += configurator => configurator.UseMessageData(repository, policy);
         return harness;
     }
 

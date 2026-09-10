@@ -20,7 +20,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
         var repository = new InMemoryMessageDataRepository();
         var observed = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-message-data");
-        harness.OnConfigureInMemoryBus += configurator => configurator.UseMessageData(repository);
+        harness.InMemoryBusConfiguring += configurator => configurator.UseMessageData(repository);
         ExecuteActivityTestHarness<MessageDataActivity, MessageDataArguments> activity = harness.ExecuteActivity<
             MessageDataActivity,
             MessageDataArguments>(_ => new MessageDataActivity(observed));
@@ -122,7 +122,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var observed = new TaskCompletionSource<PayloadEnumeration?>(TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-nullable-enum");
-        harness.OnConfigureInMemoryBus += configurator => configurator.ConfigureJsonSerializerOptions(options =>
+        harness.InMemoryBusConfiguring += configurator => configurator.ConfigureJsonSerializerOptions(options =>
         {
             options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             return options;
@@ -222,7 +222,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var observed = new TaskCompletionSource<OpaquePointSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-custom-converter");
-        harness.OnConfigureInMemoryBus += configurator => configurator.ConfigureJsonSerializerOptions(options =>
+        harness.InMemoryBusConfiguring += configurator => configurator.ConfigureJsonSerializerOptions(options =>
         {
             options.Converters.Add(new OpaquePointConverter());
             return options;

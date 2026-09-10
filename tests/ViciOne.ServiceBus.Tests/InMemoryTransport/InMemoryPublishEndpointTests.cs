@@ -20,7 +20,7 @@ public sealed class InMemoryPublishEndpointTests
             TestInactivityTimeout = timeout,
         };
         var recorder = new PublishRecorder(expectedCount: 7);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.Handler<ConcretePublished>(recorder.RecordConcreteAsync);
             endpoint.Handler<DynamicPublished>(recorder.RecordDynamicAsync);

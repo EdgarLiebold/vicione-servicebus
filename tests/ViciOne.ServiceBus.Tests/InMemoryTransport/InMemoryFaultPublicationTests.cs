@@ -20,7 +20,7 @@ public sealed class InMemoryFaultPublicationTests
         using var harness = CreateHarness("event-fanout", timeout);
         var recorder = new EventRecorder(expectedCount: 4);
         DateTime timestamp = new(2031, 2, 3, 4, 5, 6, DateTimeKind.Utc);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.Handler<EventCommand>(async context =>
             {
@@ -71,7 +71,7 @@ public sealed class InMemoryFaultPublicationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness("fault-storm", timeout);
         var recorder = new FaultRecorder(StormSize);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.PrefetchCount = ConcurrentDeliveries;
             endpoint.ConcurrentMessageLimit = ConcurrentDeliveries;

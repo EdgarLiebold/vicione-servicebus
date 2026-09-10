@@ -100,7 +100,7 @@ public sealed class ReceiveObserverTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expected = new InvalidOperationException("post-consume middleware failed");
         using var harness = CreateHarness(timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.AddPrePipeSpecification(
                 new FilterPipeSpecification<ConsumeContext>(new PostConsumeFailureFilter(expected)));

@@ -25,7 +25,7 @@ public sealed class StatePropertyConverterTests
             TaskCreationOptions.RunContinuationsAsynchronously);
         var faulted = new TaskCompletionSource<ConsumeContext<Fault<StateTransitionStarted>>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.StateMachineSaga(machine, repository);
             configurator.Handler<StateTransitionPublished>(context =>

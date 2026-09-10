@@ -219,7 +219,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness(
             useRawJson ? "courier-subscription-raw" : "courier-subscription-envelope");
         if (useRawJson)
-            harness.OnConfigureInMemoryBus += configurator => configurator.UseRawJsonSerializer();
+            harness.InMemoryBusConfiguring += configurator => configurator.UseRawJsonSerializer();
         ExecuteActivityTestHarness<CustomEventActivity, CustomEventArguments> activity = harness.ExecuteActivity<
             CustomEventActivity,
             CustomEventArguments>();

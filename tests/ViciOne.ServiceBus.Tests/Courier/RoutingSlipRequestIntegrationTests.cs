@@ -20,7 +20,7 @@ public sealed class RoutingSlipRequestIntegrationTests
             RequestActivityArguments>();
         var requestProxy = new SuccessfulRequestProxy(() => activity.ExecuteAddress);
         var responseProxy = new SuccessfulResponseProxy();
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.Instance(requestProxy);
             endpoint.Instance(responseProxy);
@@ -62,7 +62,7 @@ public sealed class RoutingSlipRequestIntegrationTests
             RequestActivityArguments>();
         var requestProxy = new FaultingRequestProxy(() => activity.ExecuteAddress);
         var responseProxy = new StandardFaultResponseProxy();
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.Instance(requestProxy);
             endpoint.Instance(responseProxy);
@@ -104,8 +104,8 @@ public sealed class RoutingSlipRequestIntegrationTests
             RequestActivityArguments>();
         var requestProxy = new FaultingRequestProxy(() => activity.ExecuteAddress);
         var responseProxy = new RetryingFaultResponseProxy();
-        harness.OnConfigureInMemoryBus += bus => bus.ConfigureDelayedMessageScheduler();
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryBusConfiguring += bus => bus.ConfigureDelayedMessageScheduler();
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.Instance(requestProxy);
             endpoint.Instance(responseProxy);
@@ -148,7 +148,7 @@ public sealed class RoutingSlipRequestIntegrationTests
             RequestActivityArguments>();
         var requestProxy = new FaultingRequestProxy(() => activity.ExecuteAddress);
         var responseProxy = new DeclaredFaultResponseProxy();
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.Instance(requestProxy);
             endpoint.Instance(responseProxy);

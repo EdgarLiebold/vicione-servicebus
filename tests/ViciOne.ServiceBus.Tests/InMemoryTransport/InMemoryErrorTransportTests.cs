@@ -19,9 +19,9 @@ public sealed class InMemoryErrorTransportTests
             TaskCreationOptions.RunContinuationsAsynchronously);
         var movedCount = 0;
         string errorQueueName = $"{harness.InputQueueName}_error";
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
             endpoint.Handler<ErrorMessage>(_ => Task.FromException(new SerializationException("intentional error move")));
-        harness.OnConfigureInMemoryBus += configurator =>
+        harness.InMemoryBusConfiguring += configurator =>
             configurator.ReceiveEndpoint(errorQueueName, endpoint => endpoint.Handler<ErrorMessage>(context =>
             {
                 Interlocked.Increment(ref movedCount);
@@ -83,7 +83,7 @@ public sealed class InMemoryErrorTransportTests
         var movedCount = 0;
         string errorQueueName = $"{harness.InputQueueName}_error";
         var attempts = 0;
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.PublishFaults = false;
             endpoint.UseMessageRetry(retry => retry.Immediate(5));
@@ -93,7 +93,7 @@ public sealed class InMemoryErrorTransportTests
                 return Task.FromException(new DisabledFaultException());
             });
         };
-        harness.OnConfigureInMemoryBus += configurator =>
+        harness.InMemoryBusConfiguring += configurator =>
             configurator.ReceiveEndpoint(errorQueueName, endpoint => endpoint.Handler<DisabledFaultMessage>(context =>
             {
                 Interlocked.Increment(ref movedCount);

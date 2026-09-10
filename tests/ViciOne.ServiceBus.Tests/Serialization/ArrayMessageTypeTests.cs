@@ -21,7 +21,7 @@ public sealed class ArrayMessageTypeTests
         harness.BeginTestScope();
         var receivedMessage = new TaskCompletionSource<ConsumeContext<ArrayMessageItem[]>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<ArrayMessageItem[]>(context =>
             {
                 receivedMessage.TrySetResult(context);

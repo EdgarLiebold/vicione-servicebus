@@ -55,7 +55,7 @@ public sealed class EndpointConventionIntegrationTests
         var overridden = NewSignal<ConsumeContext<ConcreteOverrideMessage>>();
         var overrideAtInput = 0;
 
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.Handler<FullAddressMessage>(context => CompleteAsync(full, context));
             endpoint.Handler<ShortAddressMessage>(context => CompleteAsync(shortAddress, context));
@@ -67,7 +67,7 @@ public sealed class EndpointConventionIntegrationTests
                 return Task.CompletedTask;
             });
         };
-        harness.OnConfigureInMemoryBus += bus =>
+        harness.InMemoryBusConfiguring += bus =>
         {
             bus.Route<FullAddressMessage>(harness.InputQueueAddress);
             bus.Route<ShortAddressMessage>(new Uri($"queue:{harness.InputQueueName}"));
@@ -138,11 +138,11 @@ public sealed class EndpointConventionIntegrationTests
         var firstReceived = NewSignal<ConsumeContext<BusOwnedRouteMessage>>();
         var secondReceived = NewSignal<ConsumeContext<BusOwnedRouteMessage>>();
 
-        first.OnConfigureInMemoryBus += bus => bus.Route<BusOwnedRouteMessage>(first.InputQueueAddress);
-        second.OnConfigureInMemoryBus += bus => bus.Route<BusOwnedRouteMessage>(second.InputQueueAddress);
-        first.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        first.InMemoryBusConfiguring += bus => bus.Route<BusOwnedRouteMessage>(first.InputQueueAddress);
+        second.InMemoryBusConfiguring += bus => bus.Route<BusOwnedRouteMessage>(second.InputQueueAddress);
+        first.InMemoryReceiveEndpointConfiguring += endpoint =>
             endpoint.Handler<BusOwnedRouteMessage>(context => CompleteAsync(firstReceived, context));
-        second.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        second.InMemoryReceiveEndpointConfiguring += endpoint =>
             endpoint.Handler<BusOwnedRouteMessage>(context => CompleteAsync(secondReceived, context));
 
         await first.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
@@ -184,7 +184,7 @@ public sealed class EndpointConventionIntegrationTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryBus += bus =>
+        harness.InMemoryBusConfiguring += bus =>
         {
             bus.Route<FirstRouteContract>(new Uri(harness.BaseAddress, "first"));
             bus.Route<SecondRouteContract>(new Uri(harness.BaseAddress, "second"));
@@ -218,7 +218,7 @@ public sealed class EndpointConventionIntegrationTests
             TestInactivityTimeout = timeout,
         };
         Uri destination = harness.InputQueueAddress;
-        harness.OnConfigureInMemoryBus += bus =>
+        harness.InMemoryBusConfiguring += bus =>
         {
             bus.Route<DuplicateRouteMessage>(destination);
             bus.Route<DuplicateRouteMessage>(destination);
@@ -227,7 +227,7 @@ public sealed class EndpointConventionIntegrationTests
                 bus.Route<DuplicateRouteMessage>(new Uri(harness.BaseAddress, "other")));
             Assert.Contains(nameof(DuplicateRouteMessage), exception.Message, StringComparison.Ordinal);
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
             endpoint.Handler<DuplicateRouteMessage>(_ => Task.CompletedTask);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
@@ -254,7 +254,7 @@ public sealed class EndpointConventionIntegrationTests
         };
         var providerCalls = 0;
         var received = NewSignal<ConsumeContext<DynamicRouteMessage>>();
-        harness.OnConfigureInMemoryBus += bus =>
+        harness.InMemoryBusConfiguring += bus =>
         {
             bus.Route<DynamicRouteMessage>(() =>
             {
@@ -265,7 +265,7 @@ public sealed class EndpointConventionIntegrationTests
             Assert.Throws<ConfigurationException>(() =>
                 bus.Route<DynamicRouteMessage>(() => harness.InputQueueAddress));
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
             endpoint.Handler<DynamicRouteMessage>(context => CompleteAsync(received, context));
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
@@ -296,7 +296,7 @@ public sealed class EndpointConventionIntegrationTests
             TestInactivityTimeout = timeout,
         };
         IInMemoryBusFactoryConfigurator? captured = null;
-        harness.OnConfigureInMemoryBus += bus =>
+        harness.InMemoryBusConfiguring += bus =>
         {
             captured = bus;
             bus.Route<FrozenRouteMessage>(harness.InputQueueAddress);

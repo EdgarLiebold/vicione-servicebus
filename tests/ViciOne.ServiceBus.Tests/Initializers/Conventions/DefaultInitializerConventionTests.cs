@@ -22,7 +22,7 @@ public sealed class DefaultInitializerConventionTests
         harness.BeginTestScope();
         var received = new TaskCompletionSource<ConsumeContext<HeaderInitializedMessage>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<HeaderInitializedMessage>(context =>
             {
                 received.TrySetResult(context);

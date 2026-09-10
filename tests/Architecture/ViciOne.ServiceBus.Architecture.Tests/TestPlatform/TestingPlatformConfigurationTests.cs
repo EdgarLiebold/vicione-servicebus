@@ -24,8 +24,8 @@ public sealed class TestingPlatformConfigurationTests
     private const int ExpectedUnitTestFloor = 4900;
     private const int ExpectedLocalIntegrationTestFloor = 332;
     private const int ExpectedSqlServerLocalIntegrationTestFloor = 68;
-    private const int ExpectedAzureServiceBusLocalIntegrationTestFloor = 24;
-    private const int ExpectedRabbitMqLocalIntegrationTestFloor = 27;
+    private const int ExpectedAzureServiceBusLocalIntegrationTestFloor = 25;
+    private const int ExpectedRabbitMqLocalIntegrationTestFloor = 28;
 
     [Fact]
     public void CanonicalConfiguration_TurnsSkipsAndWarningsIntoFailures()

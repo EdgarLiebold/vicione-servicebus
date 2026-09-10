@@ -27,7 +27,7 @@ public sealed class ExpiredForwardingOutboxTests
         var outbox = new RecordingOutboxSendContext();
         Uri forwardAddress = new(harness.BaseAddress, "persistent-outbox-forward");
 
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<ForwardMessage>(async context =>
             {
                 DateTimeOffset expiration = Assert.IsType<DateTimeOffset>(context.ExpirationTime).ToUniversalTime();

@@ -20,7 +20,7 @@ public sealed class InMemoryOutboxFaultTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.UseVolatileOutbox();
             configurator.Handler<OutboxRequest>(async context =>

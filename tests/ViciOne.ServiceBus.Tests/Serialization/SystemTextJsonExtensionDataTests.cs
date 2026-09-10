@@ -35,7 +35,7 @@ public sealed class SystemTextJsonExtensionDataTests
             TestTimeout = operationTimeout,
         };
         harness.BeginTestScope();
-        harness.OnConfigureInMemoryBus += configurator =>
+        harness.InMemoryBusConfiguring += configurator =>
         {
             if (mode == JsonTransportMode.Raw)
             {
@@ -52,7 +52,7 @@ public sealed class SystemTextJsonExtensionDataTests
                 return options;
             });
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.Handler<ExtensibleMessage>(context =>
             {

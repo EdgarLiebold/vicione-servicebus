@@ -69,7 +69,7 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
         var attempts = new AttemptRecorder();
         var machine = new OutboxMachine(attempts);
         var repository = new InMemorySagaRepository<OutboxState>();
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.UseMessageRetry(retry => retry.Immediate(5));
             endpoint.UseVolatileOutbox();

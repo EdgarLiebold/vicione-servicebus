@@ -170,7 +170,7 @@ public sealed class MessageJournalIntegrationTests
         TimeSpan timeout = OperationTimeout;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness("journal-outbox-envelope", timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.UseVolatileOutbox();
             configurator.Handler<OutboxRequest>(context =>

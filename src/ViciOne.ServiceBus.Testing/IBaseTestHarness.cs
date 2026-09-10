@@ -4,42 +4,42 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>Defines the operations required by base test harness.</summary>
+/// <summary>Defines shared timing, cancellation, observation, and activity-recording services for bus test harnesses.</summary>
 public interface IBaseTestHarness :
     IConsumeObserverConnector,
     IPublishObserverConnector,
     ISendObserverConnector
 {
-    /// <summary>Gets or sets the test timeout.</summary>
+    /// <summary>Gets or sets the maximum duration of a test scope.</summary>
     TimeSpan TestTimeout { get; set; }
-    /// <summary>Gets or sets the test inactivity timeout.</summary>
+    /// <summary>Gets or sets the period of bus inactivity after which inactivity observers complete.</summary>
     TimeSpan TestInactivityTimeout { get; set; }
-    /// <summary>Gets the time provider.</summary>
+    /// <summary>Gets the time provider used by harness timers.</summary>
     TimeProvider TimeProvider { get; }
-    /// <summary>Gets the context save mode.</summary>
+    /// <summary>Gets the policy that controls which observed message contexts are retained.</summary>
     TestContextSaveMode ContextSaveMode { get; }
-    /// <summary>Gets the maximum saved contexts.</summary>
+    /// <summary>Gets the maximum retained context count used by bounded retention.</summary>
     int MaximumSavedContexts { get; }
 
-    /// <summary>CancellationToken that is canceled when the test is being aborted.</summary>
+    /// <summary>Gets the token canceled when the current test scope expires or is explicitly canceled.</summary>
     CancellationToken CancellationToken { get; }
 
-    /// <summary>CancellationToken that is cancelled when the test inactivity timeout has elapsed with no bus activity.</summary>
+    /// <summary>Gets the token canceled after the configured interval contains no observed bus activity.</summary>
     CancellationToken InactivityToken { get; }
 
-    /// <summary>Task that is completed when the bus inactivity timeout has elapsed with no bus activity.</summary>
-    public Task InactivityTask { get; }
+    /// <summary>Gets the task that completes after the configured interval contains no observed bus activity.</summary>
+    Task InactivityTask { get; }
 
-    /// <summary>Gets the consumed.</summary>
+    /// <summary>Gets messages consumed since the harness was started.</summary>
     IReceivedMessageList Consumed { get; }
-    /// <summary>Gets the published.</summary>
+    /// <summary>Gets messages published since the harness was started.</summary>
     IPublishedMessageList Published { get; }
-    /// <summary>Gets the sent.</summary>
+    /// <summary>Gets messages sent since the harness was started.</summary>
     ISentMessageList Sent { get; }
 
-    /// <summary>Sets the <see cref="CancellationToken" />, canceling the test execution.</summary>
+    /// <summary>Cancels the current test scope and tasks bound to it.</summary>
     void Cancel();
 
-    /// <summary>Force the inactivity task to complete.</summary>
+    /// <summary>Completes the inactivity observer without waiting for its timeout.</summary>
     void ForceInactive();
 }

@@ -24,7 +24,7 @@ public sealed class InMemorySendEndpointTests
         };
         var delivered = new TaskCompletionSource<TransportPropertyObservation>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
             endpoint.Handler<TransportPropertyMessage>(context =>
             {
                 Assert.True(context.TryGetPayload(out TransportReceiveContext? transportContext));
@@ -79,7 +79,7 @@ public sealed class InMemorySendEndpointTests
             TestInactivityTimeout = timeout,
         };
         var recorder = new SendRecorder(expectedCount: 7);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.Handler<InterfaceSent>(recorder.RecordInterfaceAsync);
             endpoint.Handler<DynamicSent>(recorder.RecordDynamicAsync);

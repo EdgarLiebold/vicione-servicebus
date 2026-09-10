@@ -227,4 +227,68 @@ public sealed class TestHarnessTimeProviderTests
 
         Assert.True(harness.InactivityToken.IsCancellationRequested);
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-TIME", "non-positive-timeouts-rejected")]
+    public void TimeoutConfiguration_RejectsEveryNonPositiveDuration()
+    {
+        using var harness = new InMemoryTestHarness();
+
+        Assert.Equal("value", Assert.Throws<ArgumentOutOfRangeException>(() => harness.TestTimeout = TimeSpan.Zero).ParamName);
+        Assert.Equal("value", Assert.Throws<ArgumentOutOfRangeException>(() => harness.TestTimeout = TimeSpan.FromTicks(-1)).ParamName);
+        Assert.Equal("value", Assert.Throws<ArgumentOutOfRangeException>(() => harness.TestTimeout = Timeout.InfiniteTimeSpan).ParamName);
+        Assert.Equal("value", Assert.Throws<ArgumentOutOfRangeException>(() => harness.TestInactivityTimeout = TimeSpan.Zero).ParamName);
+        Assert.Equal("value", Assert.Throws<ArgumentOutOfRangeException>(() => harness.TestInactivityTimeout = TimeSpan.FromTicks(-1)).ParamName);
+        Assert.Equal("value", Assert.Throws<ArgumentOutOfRangeException>(() => harness.TestInactivityTimeout = Timeout.InfiniteTimeSpan).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-RETENTION", "undefined-save-mode-rejected")]
+    public void ContextRetention_RejectsUndefinedSaveModes()
+    {
+        using var harness = new InMemoryTestHarness();
+
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            harness.ContextSaveMode = (TestContextSaveMode)int.MaxValue);
+
+        Assert.Equal("value", exception.ParamName);
+        Assert.Equal((TestContextSaveMode)int.MaxValue, exception.ActualValue);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "disposed-harness-rejects-new-operations")]
+    public void DisposedHarness_RejectsEveryOperationThatRequiresOwnedState()
+    {
+        var harness = new InMemoryTestHarness();
+        harness.Dispose();
+
+        Assert.Throws<ObjectDisposedException>(harness.BeginTestScope);
+        Assert.Throws<ObjectDisposedException>(() => harness.TestCancellationToken);
+        Assert.Throws<ObjectDisposedException>(() => harness.InactivityObserver);
+        Assert.Throws<ObjectDisposedException>(harness.Cancel);
+        Assert.Throws<ObjectDisposedException>(harness.ForceInactive);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "completion-observes-scope-and-caller-cancellation")]
+    public async Task CompletionSource_ObservesBothHarnessAndCallerCancellationAsync()
+    {
+        using var callerCancellation = new CancellationTokenSource();
+        using var harness = new AsyncHarnessProbe();
+
+        Task<int> callerTask = harness.CreateTaskForTestAsync<int>(callerCancellation.Token);
+        callerCancellation.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => callerTask);
+
+        harness.BeginTestScope();
+        Task<int> harnessTask = harness.CreateTaskForTestAsync<int>(CancellationToken.None);
+        harness.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => harnessTask);
+    }
+
+    private sealed class AsyncHarnessProbe : AsyncTestHarness
+    {
+        public Task<T> CreateTaskForTestAsync<T>(CancellationToken cancellationToken) =>
+            CreateTask<T>(cancellationToken).Task;
+    }
 }

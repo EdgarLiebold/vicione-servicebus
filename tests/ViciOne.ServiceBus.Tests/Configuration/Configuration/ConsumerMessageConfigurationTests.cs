@@ -20,7 +20,7 @@ public sealed class ConsumerMessageConfigurationTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
             endpoint.Consumer(
                 () => consumer,
                 configuration => configuration.UseFilter(new AroundConsumerFilter(observation)));
@@ -60,7 +60,7 @@ public sealed class ConsumerMessageConfigurationTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             void Configure(IConsumerConfigurator<LayeredConsumer> consumerConfiguration)
             {

@@ -104,7 +104,7 @@ public sealed class TransformPipelineTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var transformed = new TaskCompletionSource<TransformMessage>(TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CreateHarness(timeout, "class");
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.UseTransform<TransformMessage>(specification => specification.Get<FullTransform>());
             endpoint.Handler<TransformMessage>(context =>
@@ -139,7 +139,7 @@ public sealed class TransformPipelineTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CreateHarness(timeout, $"bus-{configureSend}-{dispatchSend}");
         HandlerTestHarness<TransformMessage> handler = harness.Handler<TransformMessage>();
-        harness.OnConfigureInMemoryBus += bus =>
+        harness.InMemoryBusConfiguring += bus =>
         {
             void Configure(ITransformConfigurator<TransformMessage> transform)
             {
@@ -183,7 +183,7 @@ public sealed class TransformPipelineTests
         var beforeTransform = new TaskCompletionSource<TransformMessage>(TaskCreationOptions.RunContinuationsAsynchronously);
         var afterTransform = new TaskCompletionSource<TransformMessage>(TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CreateHarness(timeout, $"endpoint-{replace}");
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.UseExecute(context =>
             {
@@ -233,7 +233,7 @@ public sealed class TransformPipelineTests
         var unmodified = new TaskCompletionSource<ITransformContract>(TaskCreationOptions.RunContinuationsAsynchronously);
         var transformed = new TaskCompletionSource<ITransformContract>(TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CreateHarness(timeout, $"handler-{replace}");
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.Handler<ITransformContract>(
                 context =>

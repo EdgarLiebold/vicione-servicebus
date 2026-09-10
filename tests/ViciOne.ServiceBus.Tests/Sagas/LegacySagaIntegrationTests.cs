@@ -22,7 +22,7 @@ public sealed class LegacySagaIntegrationTests
         var messageLayer = new TaskCompletionSource<Guid>(TaskCreationOptions.RunContinuationsAsynchronously);
         var combinedLayer = new TaskCompletionSource<(Guid SagaId, Guid MessageId)>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("pipe-layers", timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Saga(repository, saga =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Saga(repository, saga =>
         {
             saga.UseExecute(context => sagaLayer.TrySetResult(context.Saga.CorrelationId));
             saga.Message<FilteredStart>(message =>
@@ -58,7 +58,7 @@ public sealed class LegacySagaIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var repository = new InMemorySagaRepository<NewOrExistingSaga>();
         using var harness = CreateHarness("new-or-existing", timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Saga(repository);
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Saga(repository);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         Guid initiatedByEvent = NewId.NextGuid();
@@ -92,7 +92,7 @@ public sealed class LegacySagaIntegrationTests
         var dependency = new SagaDependency(NewId.NextGuid());
         var repository = new InMemorySagaRepository<InjectedSaga>();
         using var harness = CreateHarness("injection", timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Saga(
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Saga(
             repository,
             saga => saga.UseExecute(context => context.Saga.Dependency = dependency));
 
@@ -163,7 +163,7 @@ public sealed class LegacySagaIntegrationTests
         var machine = new RepositoryLifecycleMachine();
         ISagaRepository<RepositoryState> repository = CreateRepository<RepositoryState>();
         using var harness = CreateHarness("repository", timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.StateMachineSaga(machine, repository);
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.StateMachineSaga(machine, repository);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         Guid correlationId = NewId.NextGuid();
@@ -199,7 +199,7 @@ public sealed class LegacySagaIntegrationTests
         var machine = new InsertOnInitialMachine();
         ISagaRepository<RepositoryState> repository = CreateRepository<RepositoryState>();
         using var harness = CreateHarness("insert-on-initial", timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.StateMachineSaga(machine, repository);
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.StateMachineSaga(machine, repository);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         Guid[] ids = [NewId.NextGuid(), NewId.NextGuid()];
@@ -238,7 +238,7 @@ public sealed class LegacySagaIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var repository = new InMemorySagaRepository<DuplicateSaga>();
         using var harness = CreateHarness("duplicate", timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Saga(repository);
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Saga(repository);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         Guid correlationId = NewId.NextGuid();

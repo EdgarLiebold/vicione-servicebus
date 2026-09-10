@@ -18,7 +18,7 @@ public sealed class InstanceExtensionsTests
         var runtimeFactoryInstance = new RuntimeFactoryConsumer();
         Type? requestedFactoryType = null;
         using var harness = CreateHarness(timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.Instance((object)objectInstance);
             endpoint.Consumer(() => delegateInstance);

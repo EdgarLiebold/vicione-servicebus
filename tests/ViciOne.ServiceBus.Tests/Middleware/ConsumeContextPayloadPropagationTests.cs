@@ -22,7 +22,7 @@ public sealed class ConsumeContextPayloadPropagationTests
         var inbound = NewSignal<ConsumeContext<InboundSend>>();
         var outbound = NewSignal<ConsumeContext<OutboundSend>>();
 
-        harness.OnConfigureInMemoryBus += bus =>
+        harness.InMemoryBusConfiguring += bus =>
         {
             bus.Route<OutboundSend>(harness.InputQueueAddress);
             bus.ConfigureSend(send =>
@@ -31,7 +31,7 @@ public sealed class ConsumeContextPayloadPropagationTests
                 send.ConnectSendPipeSpecificationObserver(new SendPayloadSpecificationObserver());
             });
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.UseExecute(context => context.GetOrAddPayload(() => new PayloadMarker("hello")));
             endpoint.Handler<InboundSend>(async context =>
@@ -78,12 +78,12 @@ public sealed class ConsumeContextPayloadPropagationTests
         var inbound = NewSignal<ConsumeContext<InboundPublish>>();
         var outbound = NewSignal<ConsumeContext<OutboundPublish>>();
 
-        harness.OnConfigureInMemoryBus += bus => bus.ConfigurePublish(publish =>
+        harness.InMemoryBusConfiguring += bus => bus.ConfigurePublish(publish =>
         {
             publish.UseExecute(context => context.Headers.Set("root-payload", Describe(context)));
             publish.ConnectPublishPipeSpecificationObserver(new PublishPayloadSpecificationObserver());
         });
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.UseExecute(context => context.GetOrAddPayload(() => new PayloadMarker("hello")));
             endpoint.Handler<InboundPublish>(async context =>

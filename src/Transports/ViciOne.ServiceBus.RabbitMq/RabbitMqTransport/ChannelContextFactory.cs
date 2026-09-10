@@ -36,12 +36,17 @@ public class ChannelContextFactory :
 
         Task HandleShutdownAsync(object sender, ShutdownEventArgs args)
         {
-            // Preserve the broker reason and defer disposal until every active channel lease has finished.
+            // Preserve the close reason and defer disposal until every active channel lease has finished.
             if (context.Status == TaskStatus.RanToCompletion && context.Result is RabbitMqChannelContext channelContext)
             {
                 channelContext.ConnectionContext.TopologyEntityCache.Invalidate();
                 channelContext.Lifetime.Invalidate(args);
             }
+
+            // An application close is emitted by the disposal already in progress. Waiting for the
+            // same context to stop from this callback would make CloseAsync await its own disposal.
+            if (args.Initiator == ShutdownInitiator.Application)
+                return Task.CompletedTask;
 
             return asyncContext.StopAsync(args.ReplyText);
         }

@@ -18,7 +18,7 @@ public sealed class ConsumerAndSagaConcurrencyTests
         var endpointArrivals = 0;
         using var harness = CreateHarness("consumer-concurrency", timeout);
         var consumer = new LimitedConsumer(probe);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.ConcurrentMessageLimit = 3;
             endpoint.UseExecute(_ =>
@@ -73,7 +73,7 @@ public sealed class ConsumerAndSagaConcurrencyTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness("partitioned-consumer-concurrency", timeout);
         var consumer = new PartitionedConsumer();
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.ConcurrentMessageLimit = 3;
             endpoint.Consumer(() => consumer, configuration =>
@@ -116,7 +116,7 @@ public sealed class ConsumerAndSagaConcurrencyTests
         var endpointArrivals = 0;
         using var harness = CreateHarness("saga-concurrency", timeout);
         LimitedSaga.Probe = probe;
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.ConcurrentMessageLimit = 3;
             endpoint.UseExecute(_ =>

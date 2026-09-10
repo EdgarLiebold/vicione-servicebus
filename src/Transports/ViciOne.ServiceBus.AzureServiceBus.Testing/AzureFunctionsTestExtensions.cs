@@ -1,14 +1,13 @@
 using System;
-using System.Reflection;
 using System.Threading.Tasks;
-using Azure.Core.Amqp;
 using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.AzureServiceBus;
 using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.Testing;
 
-namespace ViciOne.ServiceBus.Testing;
+namespace ViciOne.ServiceBus.AzureServiceBus.Testing;
 
 /// <summary>Provides Azure Functions test-harness integration.</summary>
 public static class AzureFunctionsTestExtensions
@@ -42,21 +41,11 @@ public static class AzureFunctionsTestExtensions
 
         var body = ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(message);
 
-        var messageBody = new AmqpMessageBody([new BinaryData(body.GetBytes()).ToMemory()]);
-        var annotatedMessage = new AmqpAnnotatedMessage(messageBody)
-        {
-            Header = { DeliveryCount = 1 },
-            Properties =
-            {
-                MessageId = new AmqpMessageId(NewId.NextGuid().ToString()),
-                ContentType = SystemTextJsonRawMessageSerializer.JsonContentType.MediaType
-            }
-        };
-
-        ConstructorInfo constructor = typeof(ServiceBusReceivedMessage).GetConstructor(
-            BindingFlags.NonPublic | BindingFlags.Instance, null, [typeof(AmqpAnnotatedMessage)], null)
-            ?? throw new InvalidOperationException("The Azure Service Bus received-message constructor is unavailable.");
-        var receivedMessage = (ServiceBusReceivedMessage)constructor.Invoke([annotatedMessage]);
+        ServiceBusReceivedMessage receivedMessage = ServiceBusModelFactory.ServiceBusReceivedMessage(
+            body: new BinaryData(body.GetBytes()),
+            messageId: NewId.NextGuid().ToString(),
+            contentType: SystemTextJsonRawMessageSerializer.JsonContentType.MediaType,
+            deliveryCount: 1);
 
         var receiver = harness.Scope.ServiceProvider.GetRequiredService<IMessageReceiver>();
         var formatter = harness.Scope.ServiceProvider.GetService<IEndpointNameFormatter>() ?? DefaultEndpointNameFormatter.Instance;

@@ -102,7 +102,7 @@ public sealed class InMemoryOutboxCheckpointTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.UseVolatileOutbox();
             configurator.Handler<CheckpointOwnerCommand>(async context =>
@@ -161,7 +161,7 @@ public sealed class InMemoryOutboxCheckpointTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.UseVolatileOutbox();
             configurator.Handler<CheckpointCommand>(async context =>

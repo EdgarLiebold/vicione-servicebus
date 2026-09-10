@@ -2,10 +2,10 @@ using System;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>Provides a test harness for execute activity test.</summary>
-/// <typeparam name="TActivity">The activity type.</typeparam>
-/// <typeparam name="TArguments">The arguments type.</typeparam>
-public class ExecuteActivityTestHarness<TActivity, TArguments>
+/// <summary>Configures an execute endpoint for an execute-only routing-slip activity under test.</summary>
+/// <typeparam name="TActivity">The execute activity implementation.</typeparam>
+/// <typeparam name="TArguments">The execute arguments.</typeparam>
+public sealed class ExecuteActivityTestHarness<TActivity, TArguments>
     where TActivity : class, IExecuteActivity<TArguments>
     where TArguments : class
 {
@@ -13,13 +13,17 @@ public class ExecuteActivityTestHarness<TActivity, TArguments>
     readonly Action<IExecuteActivityConfigurator<TActivity, TArguments>> _configureExecute;
     Uri? _executeAddress;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="testHarness">The test harness.</param>
-    /// <param name="activityFactory">The activity factory.</param>
-    /// <param name="configureExecute">The configure execute.</param>
+    /// <summary>Registers an execute activity factory with the supplied bus test harness.</summary>
+    /// <param name="testHarness">The bus harness that hosts the execute endpoint.</param>
+    /// <param name="activityFactory">The factory that creates activity instances.</param>
+    /// <param name="configureExecute">Configuration applied to the execute activity.</param>
     public ExecuteActivityTestHarness(BusTestHarness testHarness, IExecuteActivityFactory<TActivity, TArguments> activityFactory,
         Action<IExecuteActivityConfigurator<TActivity, TArguments>> configureExecute)
     {
+        ArgumentNullException.ThrowIfNull(testHarness);
+        ArgumentNullException.ThrowIfNull(activityFactory);
+        ArgumentNullException.ThrowIfNull(configureExecute);
+
         _configureExecute = configureExecute;
         _activityFactory = activityFactory;
 
@@ -27,24 +31,24 @@ public class ExecuteActivityTestHarness<TActivity, TArguments>
 
         ExecuteQueueName = BuildQueueName("execute");
 
-        testHarness.OnConfigureBus += ConfigureBus;
+        testHarness.BusConfiguring += ConfigureBus;
     }
 
-    /// <summary>Gets or sets the execute queue name.</summary>
-    public string ExecuteQueueName { get; private set; }
-    /// <summary>Gets or sets the name.</summary>
-    public string Name { get; private set; }
-    /// <summary>Gets the execute address.</summary>
+    /// <summary>Gets the execute queue name.</summary>
+    public string ExecuteQueueName { get; }
+    /// <summary>Gets the activity name without its conventional <c>Activity</c> suffix.</summary>
+    public string Name { get; }
+    /// <summary>Gets the execute endpoint address after bus configuration completes.</summary>
     public Uri ExecuteAddress => _executeAddress ?? throw new InvalidOperationException("The execute activity test harness has not been configured.");
 
-    /// <summary>Occurs when on configure execute receive endpoint.</summary>
-    public event Action<IReceiveEndpointConfigurator>? OnConfigureExecuteReceiveEndpoint;
+    /// <summary>Occurs while the execute receive endpoint is being configured.</summary>
+    public event Action<IReceiveEndpointConfigurator>? ExecuteReceiveEndpointConfiguring;
 
     void ConfigureBus(IBusFactoryConfigurator configurator)
     {
         configurator.ReceiveEndpoint(ExecuteQueueName, x =>
         {
-            OnConfigureExecuteReceiveEndpoint?.Invoke(x);
+            ExecuteReceiveEndpointConfiguring?.Invoke(x);
 
             x.ExecuteActivityHost(_activityFactory, _configureExecute);
 
@@ -55,8 +59,8 @@ public class ExecuteActivityTestHarness<TActivity, TArguments>
     static string GetActivityName()
     {
         var name = typeof(TActivity).Name;
-        if (name.EndsWith("Activity"))
-            name = name.Substring(0, name.Length - "Activity".Length);
+        if (name.EndsWith("Activity", StringComparison.Ordinal))
+            name = name[..^"Activity".Length];
         return name;
     }
 

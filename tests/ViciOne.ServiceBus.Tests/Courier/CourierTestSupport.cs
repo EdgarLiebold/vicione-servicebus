@@ -58,7 +58,7 @@ internal sealed class CourierMessageRecorder<T> : IDisposable
 
             return Task.CompletedTask;
         });
-        harness.OnConfigureInMemoryReceiveEndpoint += _configure;
+        harness.InMemoryReceiveEndpointConfiguring += _configure;
     }
 
     public Task WaitAsync(TimeSpan timeout, CancellationToken cancellationToken) =>
@@ -67,7 +67,7 @@ internal sealed class CourierMessageRecorder<T> : IDisposable
     public void Dispose()
     {
         if (_harness is not null && _configure is not null)
-            _harness.OnConfigureInMemoryReceiveEndpoint -= _configure;
+            _harness.InMemoryReceiveEndpointConfiguring -= _configure;
 
         _configure = null;
         _harness = null;

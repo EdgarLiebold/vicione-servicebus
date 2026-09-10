@@ -17,7 +17,7 @@ public sealed class RoutingSlipFaultIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var observed = new TaskCompletionSource<DateTimeOffset>(TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-fault-delay");
-        harness.OnConfigureInMemoryBus += bus => bus.ConfigureDelayedMessageScheduler();
+        harness.InMemoryBusConfiguring += bus => bus.ConfigureDelayedMessageScheduler();
         ActivityTestHarness<ObservingCompensationCourierActivity, CourierArguments, CourierLog> compensating = harness.Activity<
             ObservingCompensationCourierActivity,
             CourierArguments,

@@ -1,6 +1,7 @@
 using global::Azure.Messaging.ServiceBus;
 using global::Azure.Messaging.ServiceBus.Administration;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.AzureServiceBus.Testing;
 using ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;

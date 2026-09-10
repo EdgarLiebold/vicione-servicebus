@@ -24,7 +24,7 @@ public sealed class RequestClientOutboxTests
         };
         var consumed = new TaskCompletionSource<ConsumeContext<InnerRequest>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<InnerRequest>(context =>
             {
                 consumed.TrySetResult(context);
@@ -72,7 +72,7 @@ public sealed class RequestClientOutboxTests
         var events = new ConcurrentQueue<string>();
         var sideEffectSeen = new TaskCompletionSource<ConsumeContext<DeferredSideEffect>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.UseVolatileOutbox();
             configurator.Consumer(() => new OuterConsumer(harness.Bus, events));

@@ -66,7 +66,7 @@
       "type": "AzureServiceBusTestHarnessOptions",
       "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/Configuration/AzureServiceBusTestHarnessOptions.cs",
       "boundary": "host-start",
-      "registrationSource": "src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/Configuration/ServiceBusDependencyInjectionTestingExtensions.cs",
+      "registrationSource": "src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/Configuration/AzureServiceBusDependencyInjectionTestingExtensions.cs",
       "invariantCount": 0,
       "negativeTest": null,
       "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTestHarnessOptionsStartupTests.cs", "method": "HarnessOptions_AreBoundToTheStartupValidator" }

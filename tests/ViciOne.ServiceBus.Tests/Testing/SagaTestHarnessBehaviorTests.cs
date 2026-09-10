@@ -89,7 +89,7 @@ public sealed class SagaTestHarnessBehaviorTests
             TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness(timeout);
         var machine = new RequestStateMachine(new Uri(harness.BaseAddress, "execute-request"));
-        harness.OnConfigureInMemoryBus += configurator => configurator.ReceiveEndpoint("execute-request", endpoint =>
+        harness.InMemoryBusConfiguring += configurator => configurator.ReceiveEndpoint("execute-request", endpoint =>
             endpoint.Handler<ExecuteRequest>(context =>
             {
                 requestReceived.TrySetResult(context);

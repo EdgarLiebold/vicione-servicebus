@@ -60,13 +60,13 @@ public sealed class SystemTextJsonRuntimeIsolationTests
             TestInactivityTimeout = timeout,
         };
         harness.BeginTestScope();
-        harness.OnConfigureInMemoryBus += configuration =>
+        harness.InMemoryBusConfiguring += configuration =>
             configuration.ConfigureJsonSerializerOptions(options =>
             {
                 options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
                 return options;
             });
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.ConfigureJsonSerializerOptions(options =>
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.RabbitMq.Testing;
 using ViciOne.ServiceBus.Testing;
 
 namespace ViciOne.ServiceBus.Diagnostics;

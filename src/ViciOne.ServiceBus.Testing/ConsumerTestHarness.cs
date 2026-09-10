@@ -3,8 +3,8 @@ using ViciOne.ServiceBus.Testing.Implementations;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>Provides a test harness for consumer test.</summary>
-/// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
+/// <summary>Registers a consumer under test and records the messages delivered to it.</summary>
+/// <typeparam name="TConsumer">The consumer implementation.</typeparam>
 public class ConsumerTestHarness<TConsumer> :
     IConsumerTestHarness<TConsumer>
     where TConsumer : class, IConsumer
@@ -13,58 +13,66 @@ public class ConsumerTestHarness<TConsumer> :
     readonly ReceivedMessageList _consumed;
     readonly IConsumerFactory<TConsumer> _consumerFactory;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="testHarness">The test harness.</param>
-    /// <param name="consumerFactory">The consumer factory.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
-    /// <param name="queueName">The queue name.</param>
+    /// <summary>Registers a configured consumer with either the default endpoint or a named endpoint.</summary>
+    /// <param name="testHarness">The bus harness that hosts the consumer.</param>
+    /// <param name="consumerFactory">The factory that creates consumer instances.</param>
+    /// <param name="configure">Configuration applied to the consumer.</param>
+    /// <param name="queueName">The named endpoint queue, or <see langword="null"/> for the default endpoint.</param>
     public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory,
         Action<IConsumerConfigurator<TConsumer>> configure, string? queueName)
         : this(testHarness, consumerFactory, queueName)
     {
+        ArgumentNullException.ThrowIfNull(configure);
         _configure = configure;
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="testHarness">The test harness.</param>
-    /// <param name="consumerFactory">The consumer factory.</param>
-    /// <param name="queueName">The queue name.</param>
+    /// <summary>Registers a consumer with either the default endpoint or a named endpoint.</summary>
+    /// <param name="testHarness">The bus harness that hosts the consumer.</param>
+    /// <param name="consumerFactory">The factory that creates consumer instances.</param>
+    /// <param name="queueName">The named endpoint queue, or <see langword="null"/> for the default endpoint.</param>
     public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory, string? queueName)
         : this(testHarness, consumerFactory)
     {
-        if (string.IsNullOrWhiteSpace(queueName))
-            testHarness.OnConfigureReceiveEndpoint += ConfigureReceiveEndpoint;
+        if (queueName == null)
+            testHarness.ReceiveEndpointConfiguring += ConfigureReceiveEndpoint;
         else
-            testHarness.OnConfigureBus += configurator => ConfigureNamedReceiveEndpoint(configurator, queueName);
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+            testHarness.BusConfiguring += configurator => ConfigureNamedReceiveEndpoint(configurator, queueName);
+        }
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="testHarness">The test harness.</param>
-    /// <param name="consumerFactory">The consumer factory.</param>
-    /// <param name="configure">The callback used to configure the component.</param>
+    /// <summary>Registers a configured consumer with the default receive endpoint.</summary>
+    /// <param name="testHarness">The bus harness that hosts the consumer.</param>
+    /// <param name="consumerFactory">The factory that creates consumer instances.</param>
+    /// <param name="configure">Configuration applied to the consumer.</param>
     public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory,
         Action<IConsumerConfigurator<TConsumer>> configure)
         : this(testHarness, consumerFactory)
     {
+        ArgumentNullException.ThrowIfNull(configure);
         _configure = configure;
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="testHarness">The test harness.</param>
-    /// <param name="consumerFactory">The consumer factory.</param>
+    /// <summary>Creates the consumer observer used by the harness.</summary>
+    /// <param name="testHarness">The bus harness that hosts the consumer.</param>
+    /// <param name="consumerFactory">The factory that creates consumer instances.</param>
     public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory)
     {
+        ArgumentNullException.ThrowIfNull(testHarness);
+        ArgumentNullException.ThrowIfNull(consumerFactory);
+
         _consumerFactory = consumerFactory;
 
         _consumed = new ReceivedMessageList(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
         ((ITestContextRetention)_consumed).ConfigureRetention(testHarness.ContextSaveMode, testHarness.MaximumSavedContexts);
     }
 
-    /// <summary>Gets the consumed.</summary>
+    /// <summary>Gets messages delivered to the consumer.</summary>
     public IReceivedMessageList Consumed => _consumed;
 
-    /// <summary>Configures receive endpoint.</summary>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Attaches the consumer observer to the default receive endpoint.</summary>
+    /// <param name="configurator">The receive-endpoint configurator.</param>
     protected virtual void ConfigureReceiveEndpoint(IReceiveEndpointConfigurator configurator)
     {
         var decorator = new TestConsumerFactoryDecorator<TConsumer>(_consumerFactory, _consumed);
@@ -72,9 +80,9 @@ public class ConsumerTestHarness<TConsumer> :
         configurator.Consumer(decorator, c => _configure?.Invoke(c));
     }
 
-    /// <summary>Configures named receive endpoint.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="queueName">The queue name.</param>
+    /// <summary>Adds a named receive endpoint containing the observed consumer.</summary>
+    /// <param name="configurator">The bus configurator.</param>
+    /// <param name="queueName">The endpoint queue name.</param>
     protected virtual void ConfigureNamedReceiveEndpoint(IBusFactoryConfigurator configurator, string queueName)
     {
         configurator.ReceiveEndpoint(queueName, x =>

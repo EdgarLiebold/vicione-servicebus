@@ -26,7 +26,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         ExecuteActivityTestHarness<RedeliverThenFaultActivity, RedeliveryArguments> failing = harness.ExecuteActivity<
             RedeliverThenFaultActivity,
             RedeliveryArguments>(_ => new RedeliverThenFaultActivity(redeliveryAttempts));
-        failing.OnConfigureExecuteReceiveEndpoint += endpoint => endpoint.UseDelayedRedelivery(
+        failing.ExecuteReceiveEndpointConfiguring += endpoint => endpoint.UseDelayedRedelivery(
             redelivery => redelivery.Interval(1, TimeSpan.Zero));
         using var compensated = new CourierMessageRecorder<RoutingSlipActivityCompensated>(1);
         using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
@@ -72,7 +72,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         ExecuteActivityTestHarness<RetryThenCompleteActivity, RetryArguments> activity = harness.ExecuteActivity<
             RetryThenCompleteActivity,
             RetryArguments>(_ => new RetryThenCompleteActivity(attempts));
-        activity.OnConfigureExecuteReceiveEndpoint += endpoint =>
+        activity.ExecuteReceiveEndpointConfiguring += endpoint =>
             endpoint.UseMessageRetry(retry => retry.Immediate(2));
         using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(1);
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
@@ -123,7 +123,7 @@ public sealed class RoutingSlipRetryIntegrationTests
             RetryLog>(
             _ => new RetryThenCompensateActivity(attempts),
             _ => new RetryThenCompensateActivity(attempts));
-        compensating.OnConfigureCompensateReceiveEndpoint += endpoint =>
+        compensating.CompensateReceiveEndpointConfiguring += endpoint =>
             endpoint.UseMessageRetry(retry => retry.Immediate(2));
         ExecuteActivityTestHarness<TerminalFaultActivity, RetryArguments> failing = harness.ExecuteActivity<
             TerminalFaultActivity,
@@ -182,7 +182,7 @@ public sealed class RoutingSlipRetryIntegrationTests
             TaskCreationOptions.RunContinuationsAsynchronously);
         string subscriptionQueue = $"courier-compensation-subscription-{NewId.NextGuid():N}";
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-compensation-failed");
-        harness.OnConfigureInMemoryBus += configurator => configurator.ReceiveEndpoint(subscriptionQueue, endpoint =>
+        harness.InMemoryBusConfiguring += configurator => configurator.ReceiveEndpoint(subscriptionQueue, endpoint =>
         {
             endpoint.ConfigureConsumeTopology = false;
             endpoint.Handler<RoutingSlipActivityCompensationFailed>(context =>
@@ -202,7 +202,7 @@ public sealed class RoutingSlipRetryIntegrationTests
             RetryLog>(
             _ => new AlwaysFailingCompensationActivity(attempts),
             _ => new AlwaysFailingCompensationActivity(attempts));
-        compensating.OnConfigureCompensateReceiveEndpoint += endpoint =>
+        compensating.CompensateReceiveEndpointConfiguring += endpoint =>
             endpoint.UseMessageRetry(retry => retry.Immediate(2));
         ExecuteActivityTestHarness<TerminalFaultActivity, RetryArguments> failing = harness.ExecuteActivity<
             TerminalFaultActivity,
@@ -292,7 +292,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         ExecuteActivityTestHarness<RedeliverThenFaultActivity, RedeliveryArguments> activity = harness.ExecuteActivity<
             RedeliverThenFaultActivity,
             RedeliveryArguments>(_ => new RedeliverThenFaultActivity(attempts));
-        activity.OnConfigureExecuteReceiveEndpoint += endpoint => endpoint.UseDelayedRedelivery(
+        activity.ExecuteReceiveEndpointConfiguring += endpoint => endpoint.UseDelayedRedelivery(
             redelivery => redelivery.Interval(redeliveryCount, TimeSpan.Zero));
         using var activityFaulted = new CourierMessageRecorder<RoutingSlipActivityFaulted>(1);
         using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
@@ -345,7 +345,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         ExecuteActivityTestHarness<RetryThenFaultActivity, RetryArguments> activity = harness.ExecuteActivity<
             RetryThenFaultActivity,
             RetryArguments>(_ => new RetryThenFaultActivity(attempts));
-        activity.OnConfigureExecuteReceiveEndpoint += endpoint =>
+        activity.ExecuteReceiveEndpointConfiguring += endpoint =>
             endpoint.UseMessageRetry(retry => retry.Immediate(2));
         using var activityFaulted = new CourierMessageRecorder<RoutingSlipActivityFaulted>(1);
         using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);

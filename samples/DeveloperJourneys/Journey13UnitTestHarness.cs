@@ -22,11 +22,11 @@ public static class Journey13UnitTestHarness
 
     public static IServiceCollection ConfigureProviderHarnesses(IServiceCollection services)
     {
-        services.ConfigureServiceBusTestOptions(options => options.CleanNamespace = false);
-        services.ConfigureRabbitMqTestOptions(options =>
+        services.AddAzureServiceBusTestHarness(options => options.CleanNamespaceOnStart = false);
+        services.AddRabbitMqTestHarness(options =>
         {
-            options.CleanVirtualHost = false;
-            options.CreateVirtualHostIfNotExists = false;
+            options.CleanVirtualHostOnStart = false;
+            options.CreateVirtualHostIfMissing = false;
         });
 
         return services;

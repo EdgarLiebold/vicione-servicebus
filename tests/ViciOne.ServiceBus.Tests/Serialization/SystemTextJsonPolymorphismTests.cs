@@ -66,7 +66,7 @@ public sealed class SystemTextJsonPolymorphismTests
             TestTimeout = operationTimeout,
         };
         harness.BeginTestScope();
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.Handler<TMessage>(context =>
             {

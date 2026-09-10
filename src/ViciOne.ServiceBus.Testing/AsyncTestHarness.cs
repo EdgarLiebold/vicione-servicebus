@@ -7,7 +7,7 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>Provides a test harness for async test.</summary>
+/// <summary>Provides timeout, cancellation, inactivity, and observation-retention services for asynchronous test harnesses.</summary>
 public abstract class AsyncTestHarness :
     IDisposable
 {
@@ -16,17 +16,20 @@ public abstract class AsyncTestHarness :
     readonly object _scopeLock;
     CancellationToken _cancellationToken;
     CancellationTokenSource? _cancellationTokenSource;
+    TestContextSaveMode _contextSaveMode;
     int _maximumSavedContexts;
+    TimeSpan _testInactivityTimeout;
+    TimeSpan _testTimeout;
     bool _disposed;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Initializes a harness that uses the system time provider.</summary>
     protected AsyncTestHarness()
         : this(TimeProvider.System)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <summary>Initializes a harness that uses the specified time provider.</summary>
+    /// <param name="timeProvider">The time provider used for timeout and inactivity timers.</param>
     protected AsyncTestHarness(TimeProvider timeProvider)
     {
         TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
@@ -52,7 +55,7 @@ public abstract class AsyncTestHarness :
     /// </para>
     /// <para>
     /// A live source keeps its identity and only has its deadline moved. That matters, because a
-    /// fixture typically creates its expected tasks through <see cref="GetTask{T}" /> while it is
+    /// fixture typically creates its expected tasks through <see cref="GetTask{T}()" /> while it is
     /// being set up, and those tasks are bound to the token that existed then. An expired or
     /// explicitly cancelled source is never revived; the next test starts from a fresh one.
     /// </para>
@@ -62,6 +65,8 @@ public abstract class AsyncTestHarness :
     {
         lock (_scopeLock)
         {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+
             if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
             {
                 _cancellationTokenSource.CancelAfter(TestTimeout);
@@ -74,18 +79,19 @@ public abstract class AsyncTestHarness :
         }
     }
 
-    /// <summary>CancellationToken that is canceled when the test is being aborted.</summary>
+    /// <summary>Gets the token that is canceled when the current test scope expires or is explicitly canceled.</summary>
     public CancellationToken TestCancellationToken
     {
         get
         {
             lock (_scopeLock)
             {
+                ObjectDisposedException.ThrowIf(_disposed, this);
+
                 if (_cancellationToken == CancellationToken.None)
                 {
                     _cancellationTokenSource = new CancellationTokenSource(TestTimeout, TimeProvider);
                     _cancellationToken = _cancellationTokenSource.Token;
-
                 }
 
                 return _cancellationToken;
@@ -93,28 +99,42 @@ public abstract class AsyncTestHarness :
         }
     }
 
-    /// <summary>Task that is completed when the bus inactivity timeout has elapsed with no bus activity.</summary>
-    public Task InactivityTask => _inactivityObserver.Value.InactivityTask;
+    /// <summary>Gets the task that completes after the configured interval contains no observed bus activity.</summary>
+    public Task InactivityTask => GetInactivityObserver().InactivityTask;
 
-    /// <summary>CancellationToken that is cancelled when the test inactivity timeout has elapsed with no bus activity.</summary>
-    public CancellationToken InactivityToken => _inactivityObserver.Value.InactivityToken;
+    /// <summary>Gets the token that is canceled after the configured interval contains no observed bus activity.</summary>
+    public CancellationToken InactivityToken => GetInactivityObserver().InactivityToken;
 
-    /// <summary>Gets the inactivity observer.</summary>
-    public IInactivityObserver InactivityObserver => _inactivityObserver.Value;
+    /// <summary>Gets the observer that resets the inactivity interval when bus activity is reported.</summary>
+    public IInactivityObserver InactivityObserver => GetInactivityObserver();
 
-    /// <summary>Timeout for the test, used for any delay timers.</summary>
-    public TimeSpan TestTimeout { get; set; }
+    /// <summary>Gets or sets the maximum duration of a test scope.</summary>
+    public TimeSpan TestTimeout
+    {
+        get => _testTimeout;
+        set => _testTimeout = ValidatePositiveTimeout(value);
+    }
 
-    /// <summary>Timeout specifying the elapsed time with no bus activity after which the test could be completed.</summary>
-    public TimeSpan TestInactivityTimeout { get; set; }
+    /// <summary>Gets or sets the period of bus inactivity after which inactivity observers complete.</summary>
+    public TimeSpan TestInactivityTimeout
+    {
+        get => _testInactivityTimeout;
+        set => _testInactivityTimeout = ValidatePositiveTimeout(value);
+    }
 
-    /// <summary>Gets the time provider.</summary>
+    /// <summary>Gets the time provider used for harness timers.</summary>
     public TimeProvider TimeProvider { get; }
 
-    /// <summary>Gets or sets the context save mode.</summary>
-    public TestContextSaveMode ContextSaveMode { get; set; }
+    /// <summary>Gets or sets the policy that controls which observed message contexts are retained.</summary>
+    public TestContextSaveMode ContextSaveMode
+    {
+        get => _contextSaveMode;
+        set => _contextSaveMode = Enum.IsDefined(value)
+            ? value
+            : throw new ArgumentOutOfRangeException(nameof(value), value, "The context save mode is not defined.");
+    }
 
-    /// <summary>Gets or sets the maximum saved contexts.</summary>
+    /// <summary>Gets or sets the maximum number of contexts retained when bounded retention is enabled.</summary>
     public int MaximumSavedContexts
     {
         get => _maximumSavedContexts;
@@ -133,6 +153,8 @@ public abstract class AsyncTestHarness :
             _disposed = true;
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = null;
+            _cancellationToken = CancellationToken.None;
         }
 
         // Disposal terminates the fixture-lifetime inactivity loop.
@@ -142,52 +164,96 @@ public abstract class AsyncTestHarness :
         _harnessLifetime.Dispose();
     }
 
-    /// <summary>Forces the test to be cancelled, aborting any awaiting tasks.</summary>
+    /// <summary>Cancels the current test scope and any harness tasks bound to it.</summary>
     public void Cancel()
     {
         CancellationTokenSource? source;
         lock (_scopeLock)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
             source = _cancellationTokenSource;
+        }
 
-        // Timeout cancellation is scoped to the currently running test.
         source?.Cancel();
     }
 
-    /// <summary>Forces inactive.</summary>
+    /// <summary>Completes the inactivity observer without waiting for its timeout.</summary>
     public void ForceInactive()
     {
-        _inactivityObserver.Value.ForceInactive();
+        GetInactivityObserver().ForceInactive();
     }
 
-    /// <summary>Returns a task completion that is automatically canceled when the test is canceled.</summary>
-    /// <typeparam name="T">The task type.</typeparam>
-    /// <returns>The task.</returns>
+    /// <summary>Creates a completion source that is canceled with the current test scope.</summary>
+    /// <typeparam name="T">The result type.</typeparam>
+    /// <returns>A completion source whose continuations run asynchronously.</returns>
     public TaskCompletionSource<T> GetTask<T>()
     {
         TaskCompletionSource<T> source = TaskCompletionSources.Create<T>();
-        CancellationToken cancellationToken = TestCancellationToken;
-
-        if (cancellationToken.IsCancellationRequested)
-            source.TrySetCanceled(cancellationToken);
-        else
-            cancellationToken.Register(static state => ((TaskCompletionSource<T>)state!).TrySetCanceled(), source);
+        RegisterCancellation(source, TestCancellationToken);
 
         return source;
     }
 
-    /// <summary>Gets consume observer.</summary>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <returns>The consume observer.</returns>
+    /// <summary>Creates a completion source canceled by either the current test scope or the supplied token.</summary>
+    /// <typeparam name="T">The result type.</typeparam>
+    /// <param name="cancellationToken">An additional token that can cancel the completion source.</param>
+    /// <returns>A completion source whose continuations run asynchronously.</returns>
+    protected TaskCompletionSource<T> CreateTask<T>(CancellationToken cancellationToken)
+    {
+        TaskCompletionSource<T> source = GetTask<T>();
+        if (cancellationToken.CanBeCanceled && cancellationToken != TestCancellationToken)
+            RegisterCancellation(source, cancellationToken);
+
+        return source;
+    }
+
+    /// <summary>Creates an observer that exposes completion tasks for one consumed, skipped, or faulted message.</summary>
+    /// <typeparam name="T">The consumed message type.</typeparam>
+    /// <returns>A message observer bound to the current test scope.</returns>
     public TestConsumeMessageObserver<T> GetConsumeObserver<T>()
         where T : class
     {
         return new TestConsumeMessageObserver<T>(GetTask<T>(), GetTask<T>(), GetTask<T>());
     }
 
-    /// <summary>Gets consume observer.</summary>
-    /// <returns>The consume observer.</returns>
+    /// <summary>Creates an observer that records consumed message contexts until the harness becomes inactive.</summary>
+    /// <returns>A consume observer configured with this harness's timeouts.</returns>
     public TestConsumeObserver GetConsumeObserver()
     {
         return new TestConsumeObserver(TestTimeout, InactivityToken, TimeProvider);
+    }
+
+    static TimeSpan ValidatePositiveTimeout(TimeSpan value)
+    {
+        return value > TimeSpan.Zero && value != Timeout.InfiniteTimeSpan
+            ? value
+            : throw new ArgumentOutOfRangeException(nameof(value), value, "The timeout must be greater than zero.");
+    }
+
+    static void RegisterCancellation<T>(TaskCompletionSource<T> source, CancellationToken cancellationToken)
+    {
+        CancellationTokenRegistration registration = cancellationToken.Register(
+            static state =>
+            {
+                var registrationState = ((TaskCompletionSource<T> Source, CancellationToken Token))state!;
+                registrationState.Source.TrySetCanceled(registrationState.Token);
+            },
+            (source, cancellationToken));
+
+        _ = source.Task.ContinueWith(
+            static (_, state) => ((CancellationTokenRegistration)state!).Dispose(),
+            registration,
+            CancellationToken.None,
+            TaskContinuationOptions.ExecuteSynchronously,
+            TaskScheduler.Default);
+    }
+
+    AsyncInactivityObserver GetInactivityObserver()
+    {
+        lock (_scopeLock)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            return _inactivityObserver.Value;
+        }
     }
 }

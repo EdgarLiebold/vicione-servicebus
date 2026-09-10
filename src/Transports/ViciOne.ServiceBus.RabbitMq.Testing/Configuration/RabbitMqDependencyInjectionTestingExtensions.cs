@@ -6,27 +6,35 @@ using ViciOne.ServiceBus.Testing;
 
 namespace ViciOne.ServiceBus.RabbitMq.Testing;
 
-/// <summary>Registers RabbitMQ test-harness startup preparation in dependency injection.</summary>
+/// <summary>Registers RabbitMQ test-harness services.</summary>
 public static class RabbitMqDependencyInjectionTestingExtensions
 {
-    /// <summary>Configures broker preparation performed before the RabbitMQ test host starts.</summary>
+    /// <summary>Registers virtual-host preparation performed before the RabbitMQ test host starts.</summary>
     /// <param name="services">The dependency-injection service collection.</param>
-    /// <param name="configure">An optional callback that selects virtual-host creation, cleanup, and post-creation configuration.</param>
+    /// <param name="configure">The callback that selects virtual-host creation, cleanup, and post-cleanup configuration.</param>
     /// <returns>The same service collection, for fluent registration.</returns>
-    public static IServiceCollection ConfigureRabbitMqTestOptions(this IServiceCollection services, Action<RabbitMqTestHarnessOptions>? configure)
+    public static IServiceCollection AddRabbitMqTestHarness(
+        this IServiceCollection services,
+        Action<RabbitMqTestHarnessOptions> configure)
     {
-        var descriptor = services.FirstOrDefault(x => x.ServiceType == typeof(IBus));
-        if (descriptor != null)
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "RabbitMQ Test Options must be configured before calling AddViciOneServiceBus", "Correct the named configuration before starting the host"));
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configure);
+
+        if (services.Any(static descriptor => descriptor.ServiceType == typeof(IBus)))
+        {
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "RabbitMQ",
+                    "unknown",
+                    "RabbitMQ test-harness services must be registered before AddViciOneServiceBus",
+                    "Register the test harness before registering the bus"));
+        }
 
         services.AddOptions<RabbitMqTestHarnessOptions>()
-            .Configure(options =>
-            {
-                configure?.Invoke(options);
-            })
+            .Configure(configure)
             .Validate(
-                static options => !options.ForceCleanRootVirtualHost || options.CleanVirtualHost,
-                "RabbitMQ test harness for bus 'default': ForceCleanRootVirtualHost requires CleanVirtualHost. Enable CleanVirtualHost or disable the force flag.")
+                static options => !options.AllowRootVirtualHostCleanup || options.CleanVirtualHostOnStart,
+                "RabbitMQ test harness for bus 'default': AllowRootVirtualHostCleanup requires CleanVirtualHostOnStart.")
             .ValidateOnStart();
 
         services.AddHostedService<RabbitMqTestHarnessHostedService>();

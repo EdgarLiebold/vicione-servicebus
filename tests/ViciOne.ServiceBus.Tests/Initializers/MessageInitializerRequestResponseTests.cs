@@ -66,7 +66,7 @@ public sealed class MessageInitializerRequestResponseTests
             TestTimeout = operationTimeout,
         };
         harness.BeginTestScope();
-        harness.OnConfigureInMemoryReceiveEndpoint += configure;
+        harness.InMemoryReceiveEndpointConfiguring += configure;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         try

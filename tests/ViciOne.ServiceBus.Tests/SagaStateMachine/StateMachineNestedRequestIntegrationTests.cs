@@ -96,8 +96,8 @@ public sealed class StateMachineNestedRequestIntegrationTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.UseVolatileOutbox();
-        harness.OnConfigureInMemoryBus += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.UseVolatileOutbox();
+        harness.InMemoryBusConfiguring += configurator =>
         {
             configurator.ReceiveEndpoint("request-state", endpoint => endpoint.StateMachineSaga(
                 new RequestStateMachine(),

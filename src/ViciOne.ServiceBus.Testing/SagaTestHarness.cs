@@ -2,8 +2,8 @@ using ViciOne.ServiceBus.Testing.Implementations;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>Provides a test harness for saga test.</summary>
-/// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+/// <summary>Registers a saga repository under test and records consumed, created, and existing saga instances.</summary>
+/// <typeparam name="TSaga">The saga state type.</typeparam>
 public class SagaTestHarness<TSaga> :
     BaseSagaTestHarness<TSaga>,
     ISagaTestHarness<TSaga>
@@ -13,16 +13,19 @@ public class SagaTestHarness<TSaga> :
     readonly SagaList<TSaga> _created;
     readonly SagaList<TSaga> _sagas;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="testHarness">The test harness.</param>
-    /// <param name="repository">The repository.</param>
-    /// <param name="querySagaRepository">The query saga repository.</param>
-    /// <param name="loadSagaRepository">The load saga repository.</param>
-    /// <param name="queueName">The queue name.</param>
+    /// <summary>Registers an observed saga repository with either the default endpoint or a named endpoint.</summary>
+    /// <param name="testHarness">The bus harness that hosts the saga endpoint.</param>
+    /// <param name="repository">The saga repository to decorate.</param>
+    /// <param name="querySagaRepository">An optional repository used to query saga identifiers.</param>
+    /// <param name="loadSagaRepository">An optional repository used to load saga instances.</param>
+    /// <param name="queueName">The named endpoint queue, or <see langword="null"/> for the default endpoint.</param>
     public SagaTestHarness(BusTestHarness testHarness, ISagaRepository<TSaga> repository, IQuerySagaRepository<TSaga>? querySagaRepository,
         ILoadSagaRepository<TSaga>? loadSagaRepository, string? queueName)
         : base(querySagaRepository, loadSagaRepository, testHarness.TestTimeout, testHarness.TimeProvider)
     {
+        ArgumentNullException.ThrowIfNull(testHarness);
+        ArgumentNullException.ThrowIfNull(repository);
+
         _consumed = new ReceivedMessageList(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
         _created = new SagaList<TSaga>(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
         _sagas = new SagaList<TSaga>(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
@@ -32,32 +35,35 @@ public class SagaTestHarness<TSaga> :
 
         TestRepository = new TestSagaRepositoryDecorator<TSaga>(repository, _consumed, _created, _sagas);
 
-        if (string.IsNullOrWhiteSpace(queueName))
-            testHarness.OnConfigureReceiveEndpoint += ConfigureReceiveEndpoint;
+        if (queueName == null)
+            testHarness.ReceiveEndpointConfiguring += ConfigureReceiveEndpoint;
         else
-            testHarness.OnConfigureBus += configurator => ConfigureNamedReceiveEndpoint(configurator, queueName);
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+            testHarness.BusConfiguring += configurator => ConfigureNamedReceiveEndpoint(configurator, queueName);
+        }
     }
 
-    /// <summary>Gets the test repository.</summary>
+    /// <summary>Gets the repository decorator that records saga activity.</summary>
     protected TestSagaRepositoryDecorator<TSaga> TestRepository { get; }
 
-    /// <summary>Gets the consumed.</summary>
+    /// <summary>Gets messages delivered through the saga repository.</summary>
     public IReceivedMessageList Consumed => _consumed;
-    /// <summary>Gets the sagas.</summary>
+    /// <summary>Gets saga instances observed by the repository.</summary>
     public ISagaList<TSaga> Sagas => _sagas;
-    /// <summary>Gets the created.</summary>
+    /// <summary>Gets saga instances created by the repository.</summary>
     public ISagaList<TSaga> Created => _created;
 
-    /// <summary>Configures receive endpoint.</summary>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Attaches the observed saga repository to the default receive endpoint.</summary>
+    /// <param name="configurator">The receive-endpoint configurator.</param>
     protected virtual void ConfigureReceiveEndpoint(IReceiveEndpointConfigurator configurator)
     {
         configurator.Saga(TestRepository);
     }
 
-    /// <summary>Configures named receive endpoint.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    /// <param name="queueName">The queue name.</param>
+    /// <summary>Adds a named receive endpoint containing the observed saga repository.</summary>
+    /// <param name="configurator">The bus configurator.</param>
+    /// <param name="queueName">The endpoint queue name.</param>
     protected virtual void ConfigureNamedReceiveEndpoint(IBusFactoryConfigurator configurator, string queueName)
     {
         configurator.ReceiveEndpoint(queueName, x =>

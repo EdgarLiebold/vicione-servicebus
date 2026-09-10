@@ -18,7 +18,7 @@ public sealed class StateMachineTransportIntegrationTests
         Uri observerAddress = new(harness.BaseAddress, observerName);
         var recorder = new TransportRecorder();
         var machine = new TransportMachine(observerAddress);
-        harness.OnConfigureInMemoryBus += configurator => configurator.ReceiveEndpoint(
+        harness.InMemoryBusConfiguring += configurator => configurator.ReceiveEndpoint(
             observerName,
             endpoint =>
             {
@@ -110,7 +110,7 @@ public sealed class StateMachineTransportIntegrationTests
         var suspended = new TaskCompletionSource<ConsumeContext<NoTopologySuspend>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
         var machine = new NoTopologyMachine();
-        harness.OnConfigureInMemoryBus += configurator => configurator.ReceiveEndpoint(
+        harness.InMemoryBusConfiguring += configurator => configurator.ReceiveEndpoint(
             observerName,
             endpoint => endpoint.Handler<NoTopologySuspend>(context =>
             {
@@ -157,7 +157,7 @@ public sealed class StateMachineTransportIntegrationTests
         string serviceName = $"rule-service-{NewId.NextGuid():N}";
         Uri serviceAddress = new(harness.BaseAddress, serviceName);
         var machine = new EnterRequestMachine(serviceAddress);
-        harness.OnConfigureInMemoryBus += configurator => configurator.ReceiveEndpoint(
+        harness.InMemoryBusConfiguring += configurator => configurator.ReceiveEndpoint(
             serviceName,
             endpoint => endpoint.Handler<ExecuteRule>(context =>
                 context.RespondAsync(new ExecuteRuleResponse(context.Message.CorrelationId, "executed"))));

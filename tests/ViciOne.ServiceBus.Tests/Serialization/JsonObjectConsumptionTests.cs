@@ -22,7 +22,7 @@ public sealed class JsonObjectConsumptionTests
             TestTimeout = operationTimeout,
         };
         harness.BeginTestScope();
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<JsonObject>(context =>
             {
                 received.TrySetResult(context.Message);

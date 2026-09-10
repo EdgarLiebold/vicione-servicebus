@@ -164,7 +164,7 @@ public sealed class StateMachineConcurrencyIntegrationTests
         var machine = new PartitionMachine();
         var repository = new InMemorySagaRepository<PartitionState>();
         var recorder = new PartitionPipeRecorder();
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.StateMachineSaga(
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.StateMachineSaga(
             machine,
             repository,
             saga =>
@@ -207,7 +207,7 @@ public sealed class StateMachineConcurrencyIntegrationTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness("choir", timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.UseMessageRetry(retry => retry.Immediate(5));
             endpoint.UseVolatileOutbox();

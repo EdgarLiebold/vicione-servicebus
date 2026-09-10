@@ -52,7 +52,7 @@ public sealed class ForwardMessageTests
         var forwardDeliveryCount = 0;
         Uri forwardAddress = new(harness.BaseAddress, "forward");
 
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<ForwardCommand>(async context =>
             {
                 interfaceDelivery.TrySetResult(context);
@@ -61,7 +61,7 @@ public sealed class ForwardMessageTests
 
                 await context.ForwardAsync(forwardAddress, projectionPipe).ConfigureAwait(false);
             });
-        harness.OnConfigureInMemoryBus += configurator =>
+        harness.InMemoryBusConfiguring += configurator =>
             configurator.ReceiveEndpoint("forward", endpoint =>
                 endpoint.Handler<ForwardMessage>(context =>
                 {
@@ -224,7 +224,7 @@ public sealed class ForwardMessageTests
         Uri forwardAddress = new(harness.BaseAddress, "replacement-forward");
         var observer = new DestinationSendObserver(forwardAddress);
 
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<ForwardMessage>(async context =>
             {
                 ExpireConsumeContext(context.Advanced());
@@ -234,7 +234,7 @@ public sealed class ForwardMessageTests
                     .ConfigureAwait(false);
                 sourceCompleted.TrySetResult();
             });
-        harness.OnConfigureInMemoryBus += configurator =>
+        harness.InMemoryBusConfiguring += configurator =>
             configurator.ReceiveEndpoint("replacement-forward", endpoint =>
                 endpoint.Handler<ForwardReplacement>(_ =>
                 {
@@ -287,7 +287,7 @@ public sealed class ForwardMessageTests
         Uri forwardAddress = new(harness.BaseAddress, "expired-forward");
         var observer = new DestinationSendObserver(forwardAddress);
 
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<ForwardMessage>(async context =>
             {
                 TimeProvider timeProvider = ExpireConsumeContext(context.Advanced());
@@ -305,7 +305,7 @@ public sealed class ForwardMessageTests
                     .ConfigureAwait(false);
                 sourceCompleted.TrySetResult(context);
             });
-        harness.OnConfigureInMemoryBus += configurator =>
+        harness.InMemoryBusConfiguring += configurator =>
             configurator.ReceiveEndpoint("expired-forward", endpoint =>
                 endpoint.Handler<ForwardMessage>(_ =>
                 {
@@ -369,7 +369,7 @@ public sealed class ForwardMessageTests
             TaskCreationOptions.RunContinuationsAsynchronously);
         Uri forwardAddress = new(harness.BaseAddress, "expiration-forward");
 
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<ForwardMessage>(async context =>
             {
                 TimeProvider timeProvider = simulateExpiredInheritedExpiration
@@ -391,7 +391,7 @@ public sealed class ForwardMessageTests
                 await context.ForwardAsync(forwardAddress, forwardingPipe).ConfigureAwait(false);
                 forwardWindow.TrySetResult(new ForwardTimeWindow(startedAtUtc, timeProvider.GetUtcNow()));
             });
-        harness.OnConfigureInMemoryBus += configurator =>
+        harness.InMemoryBusConfiguring += configurator =>
             configurator.ReceiveEndpoint("expiration-forward", endpoint =>
                 endpoint.Handler<ForwardMessage>(context =>
                 {

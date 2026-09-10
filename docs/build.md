@@ -121,14 +121,14 @@ python3 tools/ci/run_broker_category.py --broker servicebus --command -- \
   dotnet test --solution ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx \
     -c Release --no-build --no-restore \
     --results-directory artifacts/test-results/azure-servicebus-local-integration \
-    --minimum-expected-tests 24 --max-parallel-test-modules 1
+    --minimum-expected-tests 25 --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
 python3 tools/ci/run_broker_category.py --broker rabbitmq --command -- \
   dotnet test --solution ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx \
     -c Release --no-build --no-restore \
     --results-directory artifacts/test-results/rabbitmq-local-integration \
-    --minimum-expected-tests 27 --max-parallel-test-modules 1
+    --minimum-expected-tests 28 --max-parallel-test-modules 1
 ```
 
 Restore and build the selected provider solution before running its command, using the same

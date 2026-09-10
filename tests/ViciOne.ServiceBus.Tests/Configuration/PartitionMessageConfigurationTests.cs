@@ -22,7 +22,7 @@ public sealed class PartitionMessageConfigurationTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             if (explicitKey)
             {
@@ -75,7 +75,7 @@ public sealed class PartitionMessageConfigurationTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             if (explicitKey)
             {
@@ -139,7 +139,7 @@ public sealed class PartitionMessageConfigurationTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.UsePartitioner<PartitionedMessage>(partitioner, context => context.Message.CorrelationId);
             endpoint.Handler<PartitionedMessage>(_ =>
@@ -177,7 +177,7 @@ public sealed class PartitionMessageConfigurationTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.UseMessagePartitioner(4);
             endpoint.Handler<PartitionedMessage>(_ =>
@@ -323,7 +323,7 @@ public sealed class PartitionMessageConfigurationTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.UseMessagePartitioner(4);
             endpoint.Batch<PartitionedMessage>(batch =>

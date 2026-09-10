@@ -322,6 +322,69 @@ public sealed class InMemoryTestHarnessBehaviorTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "public-boundaries-and-repeated-start")]
+    public async Task PublicBoundaries_RejectInvalidInputsAndRepeatedStartAsync()
+    {
+        Assert.Equal("virtualHost", Assert.Throws<ArgumentException>(() => new InMemoryTestHarness(" ")).ParamName);
+
+        TimeSpan timeout = OperationTimeout();
+        using var harness = CreateHarness(timeout);
+        Assert.Equal("observer", Assert.Throws<ArgumentNullException>(() => harness.ConnectConsumeObserver(null!)).ParamName);
+        Assert.Equal("observer", Assert.Throws<ArgumentNullException>(() => harness.ConnectPublishObserver(null!)).ParamName);
+        Assert.Equal("observer", Assert.Throws<ArgumentNullException>(() => harness.ConnectSendObserver(null!)).ParamName);
+        Assert.Equal("destinationAddress", Assert.Throws<ArgumentNullException>(() =>
+            harness.CreateRequestClient<RequestMessage>(null!)).ParamName);
+        Assert.Equal("address", Assert.Throws<ArgumentNullException>(() =>
+        {
+            _ = harness.GetSendEndpointAsync(null!, TestContext.Current.CancellationToken);
+        }).ParamName);
+        Assert.Equal("filter", Assert.Throws<ArgumentNullException>(() =>
+        {
+            _ = harness.SubscribeHandlerAsync<RequestMessage>(null!, TestContext.Current.CancellationToken);
+        }).ParamName);
+
+        await harness.StartAsync(TestContext.Current.CancellationToken);
+        try
+        {
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                harness.StartAsync(TestContext.Current.CancellationToken));
+            Assert.Contains("already been started", exception.Message, StringComparison.Ordinal);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+
+        Assert.Throws<InvalidOperationException>(() => harness.BusControl);
+        Assert.DoesNotContain(
+            typeof(InMemoryTestHarness).GetMethods(),
+            method => method.Name == "ConnectRequestClientAsync");
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "subscription-caller-cancellation")]
+    public async Task SubscribeHandlerAsync_RemainsCancelableAfterRegistrationAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        using var harness = CreateHarness(timeout);
+        await harness.StartAsync(TestContext.Current.CancellationToken);
+        try
+        {
+            using var cancellationSource = new CancellationTokenSource();
+            Task<ConsumeContext<RequestMessage>> pending = harness.SubscribeHandlerAsync<RequestMessage>(cancellationSource.Token);
+
+            cancellationSource.Cancel();
+
+            OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => pending);
+            Assert.Equal(cancellationSource.Token, exception.CancellationToken);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;

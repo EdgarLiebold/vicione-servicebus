@@ -22,7 +22,7 @@ public sealed class SystemTextJsonConstructorBindingTests
             TestTimeout = operationTimeout,
         };
         harness.BeginTestScope();
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<ConstructorBoundRequest>(context =>
                 context.RespondAsync(new ConstructorBoundResponse(
                     context.Message.Message,

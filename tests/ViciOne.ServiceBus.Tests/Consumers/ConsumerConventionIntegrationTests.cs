@@ -41,7 +41,7 @@ public sealed class ConsumerConventionIntegrationTests
         var first = new TaskCompletionSource<FirstHandled>(TaskCreationOptions.RunContinuationsAsynchronously);
         var second = new TaskCompletionSource<SecondHandled>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("custom", timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             Assert.True(ConsumerConvention.Register<MessageOnlyConsumerConvention>());
             endpoint.Consumer(typeof(MessageOnlyHandler), _ => new MessageOnlyHandler(first, second));
@@ -74,7 +74,7 @@ public sealed class ConsumerConventionIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var received = new TaskCompletionSource<DefaultHandled>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("default", timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
             endpoint.Consumer(typeof(DefaultHandler), _ => new DefaultHandler(received));
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);

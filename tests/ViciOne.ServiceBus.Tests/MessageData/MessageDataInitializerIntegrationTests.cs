@@ -42,7 +42,7 @@ public sealed class MessageDataInitializerIntegrationTests
         var repository = new InMemoryMessageDataRepository();
         var observedAddress = new TaskCompletionSource<Uri>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-object", timeout, repository, StoredPolicy());
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<ObjectRequest>(async context =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Handler<ObjectRequest>(async context =>
         {
             SpecialPayload value = MessageDataTestSupport.Require(await context.Message.Payload.Value, nameof(context.Message.Payload));
             observedAddress.TrySetResult(MessageDataTestSupport.Require(context.Message.Payload.Address, nameof(context.Message.Payload)));
@@ -90,7 +90,7 @@ public sealed class MessageDataInitializerIntegrationTests
         var repository = new InMemoryMessageDataRepository();
         var observed = new TaskCompletionSource<NestedSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-nested-array", timeout, repository, StoredPolicy());
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<Documents>(async context =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Handler<Documents>(async context =>
         {
             observed.TrySetResult(new NestedSnapshot(
                 context.Message.Bodies.Select(document => document.FileName).ToArray(),
@@ -138,7 +138,7 @@ public sealed class MessageDataInitializerIntegrationTests
         var repository = new InMemoryMessageDataRepository();
         var observed = new TaskCompletionSource<InputAddresses>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-initializer", timeout, repository, StoredPolicy());
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TRequest>(async context =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Handler<TRequest>(async context =>
         {
             if (context.Message.StringData is not { HasValue: true })
                 throw new MessageDataException("StringData was required.");
@@ -216,7 +216,7 @@ public sealed class MessageDataInitializerIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var repository = new InMemoryMessageDataRepository();
         using var harness = CreateHarness("message-data-missing", timeout, repository, StoredPolicy());
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TRequest>(context =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Handler<TRequest>(context =>
         {
             if (context.Message.StringData is not { HasValue: true })
                 throw new MessageDataException("StringData was required.");
@@ -262,7 +262,7 @@ public sealed class MessageDataInitializerIntegrationTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryBus += configurator => configurator.UseMessageData(repository, policy);
+        harness.InMemoryBusConfiguring += configurator => configurator.UseMessageData(repository, policy);
         return harness;
     }
 

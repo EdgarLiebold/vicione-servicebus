@@ -237,9 +237,9 @@ public sealed class BatchDeliveryIntegrationTests
         };
         var moved = NewSignal<ConsumeContext<ErrorBatchItem>>();
         string errorQueue = $"{harness.InputQueueName}_error";
-        harness.OnConfigureInMemoryBus += bus => bus.ReceiveEndpoint(errorQueue, endpoint =>
+        harness.InMemoryBusConfiguring += bus => bus.ReceiveEndpoint(errorQueue, endpoint =>
             endpoint.Handler<ErrorBatchItem>(context => CompleteAsync(moved, context)));
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Batch<ErrorBatchItem>(batch =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Batch<ErrorBatchItem>(batch =>
         {
             batch.MessageLimit = messageLimit;
             batch.TimeLimit = TimeSpan.FromMilliseconds(50);
@@ -312,7 +312,7 @@ public sealed class BatchDeliveryIntegrationTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.ConcurrentMessageLimit = batchSize * 4;
             endpoint.Batch<ExactlyOnceItem>(batch =>

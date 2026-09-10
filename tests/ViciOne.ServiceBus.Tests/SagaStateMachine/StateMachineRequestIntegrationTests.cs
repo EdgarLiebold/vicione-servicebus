@@ -27,8 +27,8 @@ public sealed class StateMachineRequestIntegrationTests
         string serviceEndpointName = $"validation-{NewId.NextGuid():N}";
         Uri serviceAddress = new(harness.BaseAddress, serviceEndpointName);
         var machine = new CompositeRequestMachine(serviceAddress);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.UseVolatileOutbox();
-        harness.OnConfigureInMemoryBus += configurator => configurator.ReceiveEndpoint(
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.UseVolatileOutbox();
+        harness.InMemoryBusConfiguring += configurator => configurator.ReceiveEndpoint(
             serviceEndpointName,
             endpoint =>
             {
@@ -109,7 +109,7 @@ public sealed class StateMachineRequestIntegrationTests
         string serviceEndpointName = $"multi-service-{NewId.NextGuid():N}";
         Uri serviceAddress = new(harness.BaseAddress, serviceEndpointName);
         var machine = new MultiResponseMachine(serviceAddress);
-        harness.OnConfigureInMemoryBus += configurator => configurator.ReceiveEndpoint(
+        harness.InMemoryBusConfiguring += configurator => configurator.ReceiveEndpoint(
             serviceEndpointName,
             endpoint => endpoint.Handler<ValidateMember>(context => responseKind switch
             {

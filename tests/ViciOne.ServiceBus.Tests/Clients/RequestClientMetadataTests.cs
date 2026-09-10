@@ -258,7 +258,7 @@ public sealed class RequestClientMetadataTests
                 context.CancellationToken);
             await context.RespondAsync(new MetadataResponse(context.Message.CorrelationId, "completed"));
         });
-        harness.OnConfigureInMemoryBus += configurator =>
+        harness.InMemoryBusConfiguring += configurator =>
             configurator.ReceiveEndpoint("request-client-audit", endpoint =>
             {
                 endpoint.Handler<PublishedSideEffect>(context =>

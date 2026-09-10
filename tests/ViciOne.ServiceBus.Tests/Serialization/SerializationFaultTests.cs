@@ -24,7 +24,7 @@ public sealed class SerializationFaultTests
         TimeSpan operationTimeout = GetOperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness("request-serialization-fault", operationTimeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<SerializationFailureRequest>(
                 _ => Task.FromException(new SerializationException(ConsumerFailureMessage)));
 
@@ -77,7 +77,7 @@ public sealed class SerializationFaultTests
             TaskCreationOptions.RunContinuationsAsynchronously);
         var faulted = new TaskCompletionSource<ConsumeContext<ReceiveFault>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.Handler<UnreadableMessage>(context =>
             {
@@ -137,7 +137,7 @@ public sealed class SerializationFaultTests
             TaskCreationOptions.RunContinuationsAsynchronously);
         var faulted = new TaskCompletionSource<ConsumeContext<ReceiveFault>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.Handler<MalformedOrder>(context =>
             {

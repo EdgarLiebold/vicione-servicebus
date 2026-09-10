@@ -134,7 +134,7 @@ public sealed class CorrelationIdConventionTests
     public async Task ExplicitMessageTopologySelector_PrecedesEveryBuiltInConventionAsync()
     {
         using var harness = CreateHarness();
-        harness.OnConfigureInMemoryBus += configurator =>
+        harness.InMemoryBusConfiguring += configurator =>
             configurator.Send<ExplicitSelectorMessage>(topology =>
                 topology.UseCorrelationId(message => message.TransactionId));
         HandlerTestHarness<ExplicitSelectorMessage> handler = harness.Handler<ExplicitSelectorMessage>();

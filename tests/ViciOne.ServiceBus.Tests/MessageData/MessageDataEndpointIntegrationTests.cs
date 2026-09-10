@@ -18,8 +18,8 @@ public sealed class MessageDataEndpointIntegrationTests
         var observations = new ConcurrentDictionary<Guid, TaskCompletionSource<LargePayloadSnapshot>>();
         var deliveryCounts = new ConcurrentDictionary<Guid, int>();
         using var harness = CreateHarness("message-data-large-json", timeout, repository, StoredPolicy());
-        harness.OnConfigureInMemoryBus += configurator => configurator.UseJsonSerializer();
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<LargePayloadEvent>(async context =>
+        harness.InMemoryBusConfiguring += configurator => configurator.UseJsonSerializer();
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Handler<LargePayloadEvent>(async context =>
         {
             if (!observations.TryGetValue(context.Message.CorrelationId, out TaskCompletionSource<LargePayloadSnapshot>? completion))
                 throw new InvalidOperationException($"Unexpected payload correlation: {context.Message.CorrelationId}");
@@ -90,7 +90,7 @@ public sealed class MessageDataEndpointIntegrationTests
         var observed = new TaskCompletionSource<PublishedSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         var deliveryCount = 0;
         using var harness = CreateHarness("message-data-publish", timeout, repository, StoredPolicy());
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<DocumentPublished>(async context =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Handler<DocumentPublished>(async context =>
         {
             try
             {
@@ -136,18 +136,16 @@ public sealed class MessageDataEndpointIntegrationTests
         }
     }
 
-    [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-REQUEST", "created-and-connected-client-response-data")]
-    public async Task RequestResponse_LoadsTheExactStoredValueForCreatedAndConnectedClientsAsync(bool connectedClient)
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-REQUEST", "harness-client-response-data")]
+    public async Task RequestResponse_LoadsTheExactStoredValueThroughTheHarnessClientAsync()
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var repository = new InMemoryMessageDataRepository();
         var handlerCalls = 0;
         using var harness = CreateHarness("message-data-request", timeout, repository, StoredPolicy());
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<DataRequest>(context =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.Handler<DataRequest>(context =>
         {
             Interlocked.Increment(ref handlerCalls);
             return context.Advanced().RespondAsync<DataResponse>(new
@@ -164,9 +162,7 @@ public sealed class MessageDataEndpointIntegrationTests
         var stopped = false;
         try
         {
-            IRequestClient<DataRequest> client = connectedClient
-                ? await harness.ConnectRequestClientAsync<DataRequest>(TestContext.Current.CancellationToken)
-                : harness.Bus.CreateRequestClient<DataRequest>(harness.InputQueueAddress, new RequestTimeout(timeout));
+            IRequestClient<DataRequest> client = harness.CreateRequestClient<DataRequest>();
 
             Response<DataResponse> response = await client.Advanced().GetResponseAsync<DataResponse>(values: new
             {
@@ -205,7 +201,7 @@ public sealed class MessageDataEndpointIntegrationTests
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryBus += configurator => configurator.UseMessageData(repository, policy);
+        harness.InMemoryBusConfiguring += configurator => configurator.UseMessageData(repository, policy);
         return harness;
     }
 

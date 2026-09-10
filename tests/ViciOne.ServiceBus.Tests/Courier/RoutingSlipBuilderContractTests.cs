@@ -350,7 +350,7 @@ public sealed class RoutingSlipBuilderContractTests
         var received = new TaskCompletionSource<ConsumeContext<RoutingSlip>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-serialization");
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
             endpoint.Handler<RoutingSlip>(context =>
             {
                 received.TrySetResult(context);

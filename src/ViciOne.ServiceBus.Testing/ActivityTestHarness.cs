@@ -2,11 +2,11 @@ using System;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>Provides a test harness for activity test.</summary>
-/// <typeparam name="TActivity">The activity type.</typeparam>
-/// <typeparam name="TArguments">The arguments type.</typeparam>
-/// <typeparam name="TLog">The log type.</typeparam>
-public class ActivityTestHarness<TActivity, TArguments, TLog>
+/// <summary>Configures execute and compensation endpoints for a routing-slip activity under test.</summary>
+/// <typeparam name="TActivity">The activity implementation.</typeparam>
+/// <typeparam name="TArguments">The execute arguments.</typeparam>
+/// <typeparam name="TLog">The compensation log.</typeparam>
+public sealed class ActivityTestHarness<TActivity, TArguments, TLog>
     where TActivity : class, IActivity<TArguments, TLog>
     where TArguments : class
     where TLog : class
@@ -17,15 +17,20 @@ public class ActivityTestHarness<TActivity, TArguments, TLog>
     Uri? _compensateAddress;
     Uri? _executeAddress;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="testHarness">The test harness.</param>
-    /// <param name="activityFactory">The activity factory.</param>
-    /// <param name="configureExecute">The configure execute.</param>
-    /// <param name="configureCompensate">The configure compensate.</param>
+    /// <summary>Registers an activity factory with the supplied bus test harness.</summary>
+    /// <param name="testHarness">The bus harness that hosts the activity endpoints.</param>
+    /// <param name="activityFactory">The factory that creates activity instances.</param>
+    /// <param name="configureExecute">Configuration applied to the execute activity.</param>
+    /// <param name="configureCompensate">Configuration applied to the compensation activity.</param>
     public ActivityTestHarness(BusTestHarness testHarness, IActivityFactory<TActivity, TArguments, TLog> activityFactory,
         Action<IExecuteActivityConfigurator<TActivity, TArguments>> configureExecute,
         Action<ICompensateActivityConfigurator<TActivity, TLog>> configureCompensate)
     {
+        ArgumentNullException.ThrowIfNull(testHarness);
+        ArgumentNullException.ThrowIfNull(activityFactory);
+        ArgumentNullException.ThrowIfNull(configureExecute);
+        ArgumentNullException.ThrowIfNull(configureCompensate);
+
         _configureExecute = configureExecute;
         _configureCompensate = configureCompensate;
         _activityFactory = activityFactory;
@@ -35,30 +40,30 @@ public class ActivityTestHarness<TActivity, TArguments, TLog>
         ExecuteQueueName = BuildQueueName("execute");
         CompensateQueueName = BuildQueueName("compensate");
 
-        testHarness.OnConfigureBus += ConfigureBus;
+        testHarness.BusConfiguring += ConfigureBus;
     }
 
-    /// <summary>Gets or sets the execute queue name.</summary>
-    public string ExecuteQueueName { get; private set; }
-    /// <summary>Gets or sets the compensate queue name.</summary>
-    public string CompensateQueueName { get; private set; }
-    /// <summary>Gets the compensate address.</summary>
+    /// <summary>Gets the execute queue name.</summary>
+    public string ExecuteQueueName { get; }
+    /// <summary>Gets the compensation queue name.</summary>
+    public string CompensateQueueName { get; }
+    /// <summary>Gets the compensation endpoint address after bus configuration completes.</summary>
     public Uri CompensateAddress => _compensateAddress ?? throw new InvalidOperationException("The activity test harness has not been configured.");
-    /// <summary>Gets or sets the name.</summary>
-    public string Name { get; private set; }
-    /// <summary>Gets the execute address.</summary>
+    /// <summary>Gets the activity name without its conventional <c>Activity</c> suffix.</summary>
+    public string Name { get; }
+    /// <summary>Gets the execute endpoint address after bus configuration completes.</summary>
     public Uri ExecuteAddress => _executeAddress ?? throw new InvalidOperationException("The activity test harness has not been configured.");
 
-    /// <summary>Occurs when on configure execute receive endpoint.</summary>
-    public event Action<IReceiveEndpointConfigurator>? OnConfigureExecuteReceiveEndpoint;
-    /// <summary>Occurs when on configure compensate receive endpoint.</summary>
-    public event Action<IReceiveEndpointConfigurator>? OnConfigureCompensateReceiveEndpoint;
+    /// <summary>Occurs while the execute receive endpoint is being configured.</summary>
+    public event Action<IReceiveEndpointConfigurator>? ExecuteReceiveEndpointConfiguring;
+    /// <summary>Occurs while the compensation receive endpoint is being configured.</summary>
+    public event Action<IReceiveEndpointConfigurator>? CompensateReceiveEndpointConfiguring;
 
     void ConfigureBus(IBusFactoryConfigurator configurator)
     {
         configurator.ReceiveEndpoint(CompensateQueueName, x =>
         {
-            OnConfigureCompensateReceiveEndpoint?.Invoke(x);
+            CompensateReceiveEndpointConfiguring?.Invoke(x);
 
             x.CompensateActivityHost(_activityFactory, _configureCompensate);
 
@@ -67,7 +72,7 @@ public class ActivityTestHarness<TActivity, TArguments, TLog>
 
         configurator.ReceiveEndpoint(ExecuteQueueName, x =>
         {
-            OnConfigureExecuteReceiveEndpoint?.Invoke(x);
+            ExecuteReceiveEndpointConfiguring?.Invoke(x);
 
             x.ExecuteActivityHost(CompensateAddress, _activityFactory, _configureExecute);
 
@@ -78,8 +83,8 @@ public class ActivityTestHarness<TActivity, TArguments, TLog>
     static string GetActivityName()
     {
         var name = typeof(TActivity).Name;
-        if (name.EndsWith("Activity"))
-            name = name.Substring(0, name.Length - "Activity".Length);
+        if (name.EndsWith("Activity", StringComparison.Ordinal))
+            name = name[..^"Activity".Length];
         return name;
     }
 

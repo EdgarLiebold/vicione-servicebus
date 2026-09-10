@@ -19,7 +19,7 @@ public sealed class StateMachinePolicyIntegrationTests
         var machine = new ConfigurationScopeMachine();
         var repository = new InMemorySagaRepository<ConfigurationScopeState>();
         var recorder = new ConfigurationScopeRecorder();
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.StateMachineSaga(
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.StateMachineSaga(
             machine,
             repository,
             saga =>
@@ -66,7 +66,7 @@ public sealed class StateMachinePolicyIntegrationTests
         var machine = new RetryStatusMachine();
         var repository = new InMemorySagaRepository<RetryStatusState>();
         var retryObserver = new GatedRetryObserver();
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.ConcurrentMessageLimit = 2;
             endpoint.UseMessageRetry(retry =>
@@ -167,7 +167,7 @@ public sealed class StateMachinePolicyIntegrationTests
         var attempts = new AttemptRecorder();
         var machine = new RetryIgnoreMachine(attempts);
         var retryObserver = new CountingRetryObserver();
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.UseMessageRetry(retry =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint => endpoint.UseMessageRetry(retry =>
         {
             retry.Ignore<ExpectedIgnoredFailure>();
             retry.Immediate(2);

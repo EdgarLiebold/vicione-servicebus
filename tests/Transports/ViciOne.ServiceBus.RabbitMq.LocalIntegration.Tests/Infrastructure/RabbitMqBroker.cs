@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using RabbitMQ.Client;
 using ViciOne.ServiceBus.RabbitMq.Configuration;
+using ViciOne.ServiceBus.RabbitMq.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 
 namespace ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests.Infrastructure;
@@ -110,6 +111,34 @@ internal sealed class RabbitMqBroker : IDisposable
     };
 
     public CancellationTokenSource OperationCancellation() => new(OperationTimeout);
+
+    public RabbitMqTestHarness CreateTestHarness(string virtualHost)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(virtualHost);
+        return new RabbitMqTestHarness
+        {
+            HostAddress = new UriBuilder(
+                RabbitMqHostAddress.RabbitMqScheme,
+                Address.Host,
+                Address.Port,
+                virtualHost).Uri,
+            Username = _userName,
+            Password = _password,
+            ManagementPort = _management.BaseAddress!.Port,
+        };
+    }
+
+    public Task DeleteVirtualHostAsync(string virtualHost, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(virtualHost);
+        return DeleteEntityAsync($"api/vhosts/{Uri.EscapeDataString(virtualHost)}", cancellationToken);
+    }
+
+    public Task<bool> VirtualHostQueueExistsAsync(string virtualHost, string queueName, CancellationToken cancellationToken) =>
+        VirtualHostEntityExistsAsync("queues", virtualHost, queueName, cancellationToken);
+
+    public Task<bool> VirtualHostExchangeExistsAsync(string virtualHost, string exchangeName, CancellationToken cancellationToken) =>
+        VirtualHostEntityExistsAsync("exchanges", virtualHost, exchangeName, cancellationToken);
 
     public async Task<uint> QueueMessageCountAsync(string queueName, CancellationToken cancellationToken)
     {
@@ -416,6 +445,25 @@ internal sealed class RabbitMqBroker : IDisposable
             .WaitAsync(OperationTimeout, cancellationToken);
         if (response.StatusCode is not (HttpStatusCode.NoContent or HttpStatusCode.NotFound))
             response.EnsureSuccessStatusCode();
+    }
+
+    private async Task<bool> VirtualHostEntityExistsAsync(
+        string entityType,
+        string virtualHost,
+        string entityName,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(virtualHost);
+        ArgumentException.ThrowIfNullOrWhiteSpace(entityName);
+        using HttpResponseMessage response = await _management.GetAsync(
+                $"api/{entityType}/{Uri.EscapeDataString(virtualHost)}/{Uri.EscapeDataString(entityName)}",
+                cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        if (response.StatusCode == HttpStatusCode.NotFound)
+            return false;
+
+        response.EnsureSuccessStatusCode();
+        return true;
     }
 
     private async Task DeleteOwnedAsync(string collectionPath, string nameProperty, CancellationToken cancellationToken)

@@ -22,7 +22,7 @@ public sealed class ConsumeObserverTests
         using var harness = CreateHarness(timeout, timeProvider);
         TestConsumeMessageObserver<ObservedMessage> typed = harness.GetConsumeObserver<ObservedMessage>();
         TestConsumeObserver untyped = harness.GetConsumeObserver();
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<ObservedMessage>(_ => Task.CompletedTask);
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
@@ -70,7 +70,7 @@ public sealed class ConsumeObserverTests
         using var harness = CreateHarness(timeout, new FakeTimeProvider(ObservationTime));
         TestConsumeMessageObserver<FailingObservedMessage> typed = harness.GetConsumeObserver<FailingObservedMessage>();
         TestConsumeObserver untyped = harness.GetConsumeObserver();
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<FailingObservedMessage>(_ => Task.FromException(expected));
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
@@ -110,7 +110,7 @@ public sealed class ConsumeObserverTests
         using var harness = CreateHarness(timeout, new FakeTimeProvider(ObservationTime));
         TestConsumeMessageObserver<ConsumerObservedMessage> observer = harness.GetConsumeObserver<ConsumerObservedMessage>();
         var consumed = new TaskCompletionSource<ConsumerObservedMessage>(TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Consumer(() => new ObservedConsumer(consumed));
 
         await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);

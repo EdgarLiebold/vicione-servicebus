@@ -2,10 +2,10 @@ using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.RabbitMq.Testing;
 
 var services = new ServiceCollection();
-IServiceCollection configured = services.ConfigureRabbitMqTestOptions(options =>
+IServiceCollection configured = services.AddRabbitMqTestHarness(options =>
 {
-    options.CleanVirtualHost = false;
-    options.CreateVirtualHostIfNotExists = false;
+    options.CleanVirtualHostOnStart = false;
+    options.CreateVirtualHostIfMissing = false;
 });
 
 if (!ReferenceEquals(services, configured) || services.Count == 0)

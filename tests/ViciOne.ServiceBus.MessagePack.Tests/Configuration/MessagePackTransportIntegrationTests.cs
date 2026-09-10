@@ -186,7 +186,7 @@ public sealed class MessagePackTransportIntegrationTests
         Uri forwardAddress = new(harness.BaseAddress, "messagepack-expiration-forward");
         var observer = new DestinationSendObserver(forwardAddress);
 
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<ForwardExpirationMessage>(async context =>
             {
                 DateTimeOffset expiration = Assert.IsType<DateTimeOffset>(context.ExpirationTime).ToUniversalTime();
@@ -201,7 +201,7 @@ public sealed class MessagePackTransportIntegrationTests
                     .ConfigureAwait(false);
                 sourceCompleted.TrySetResult(context);
             });
-        harness.OnConfigureInMemoryBus += configurator =>
+        harness.InMemoryBusConfiguring += configurator =>
         {
             configurator.ClearSerialization();
             configurator.UseMessagePackSerializer();

@@ -16,14 +16,14 @@ public sealed class MessageObserverTests
         var marker = new ObserverMarker();
         var observer = new RecordingMessageObserver();
         using var harness = CreateHarness(timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Observer(observer, observerConfigurator =>
                 observerConfigurator.UseExecute(context => context.GetOrAddPayload(() => marker)));
 
         await harness.StartAsync(cancellationToken);
         try
         {
-            IRequestClient<ObservedRequest> client = await harness.ConnectRequestClientAsync<ObservedRequest>(TestContext.Current.CancellationToken);
+            IRequestClient<ObservedRequest> client = harness.CreateRequestClient<ObservedRequest>();
             var request = new ObservedRequest(NewId.NextGuid(), "request");
 
             Response<ObservedResponse> response = await client.GetResponseAsync<ObservedResponse>(request, cancellationToken);
@@ -54,7 +54,7 @@ public sealed class MessageObserverTests
         var observer = new RecordingMessageObserver(expected);
         using var harness = CreateHarness(timeout);
         var followingPipeCalls = 0;
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.Observer(observer);
             configurator.Handler<ObservedRequest>(_ =>

@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
 namespace ViciOne.ServiceBus.Testing;
 
-/// <summary>Provides a test harness for in memory test.</summary>
+/// <summary>Hosts an isolated in-memory bus and records its message activity for tests.</summary>
 public class InMemoryTestHarness :
     BusTestHarness
 {
@@ -15,113 +16,97 @@ public class InMemoryTestHarness :
     readonly string _inputQueueName;
     readonly IEnumerable<IBusInstanceSpecification> _specifications;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="virtualHost">The virtual host.</param>
+    /// <summary>Creates a harness using the system time provider and no additional bus specifications.</summary>
+    /// <param name="virtualHost">An optional path segment that isolates the in-memory transport address.</param>
     public InMemoryTestHarness(string? virtualHost = null)
         : this(virtualHost, Enumerable.Empty<IBusInstanceSpecification>())
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="timeProvider">The time source used by the operation.</param>
-    /// <param name="virtualHost">The virtual host.</param>
+    /// <summary>Creates a harness using the specified time provider and no additional bus specifications.</summary>
+    /// <param name="timeProvider">The time source used by test timeouts and inactivity detection.</param>
+    /// <param name="virtualHost">An optional path segment that isolates the in-memory transport address.</param>
     public InMemoryTestHarness(TimeProvider timeProvider, string? virtualHost = null)
         : this(virtualHost, Enumerable.Empty<IBusInstanceSpecification>(), timeProvider)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="virtualHost">The virtual host.</param>
-    /// <param name="specifications">The specifications.</param>
+    /// <summary>Creates a harness using the specified bus-instance specifications.</summary>
+    /// <param name="virtualHost">An optional path segment that isolates the in-memory transport address.</param>
+    /// <param name="specifications">The specifications applied when the bus is built.</param>
     public InMemoryTestHarness(string? virtualHost, IEnumerable<IBusInstanceSpecification> specifications)
         : this(virtualHost, specifications, TimeProvider.System)
     {
     }
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="virtualHost">The virtual host.</param>
-    /// <param name="specifications">The specifications.</param>
-    /// <param name="timeProvider">The time source used by the operation.</param>
+    /// <summary>Creates a harness using the specified bus-instance specifications and time provider.</summary>
+    /// <param name="virtualHost">An optional path segment that isolates the in-memory transport address.</param>
+    /// <param name="specifications">The specifications applied when the bus is built.</param>
+    /// <param name="timeProvider">The time source used by test timeouts and inactivity detection.</param>
     public InMemoryTestHarness(string? virtualHost, IEnumerable<IBusInstanceSpecification> specifications, TimeProvider timeProvider)
         : base(timeProvider)
     {
+        ArgumentNullException.ThrowIfNull(specifications);
+        if (virtualHost != null)
+            ArgumentException.ThrowIfNullOrWhiteSpace(virtualHost);
+
         BaseAddress = new Uri("loopback://localhost/");
-        if (!string.IsNullOrWhiteSpace(virtualHost))
+        if (virtualHost != null)
             BaseAddress = new Uri(BaseAddress, virtualHost.Trim('/') + '/');
 
         _inputQueueName = "input_queue";
         _busConfiguration = new InMemoryBusConfiguration(new InMemoryTopologyConfiguration(InMemoryBus.CreateMessageTopology()), BaseAddress);
-        _specifications = specifications ?? throw new ArgumentNullException(nameof(specifications));
+        _specifications = specifications;
 
         InputQueueAddress = new Uri(BaseAddress, _inputQueueName);
     }
 
-    /// <summary>Gets the base address.</summary>
+    /// <summary>Gets the root transport address used by the in-memory bus.</summary>
     public Uri BaseAddress { get; }
 
-    /// <summary>Gets the input queue address.</summary>
+    /// <summary>Gets the transport address of the harness receive queue.</summary>
     public override Uri InputQueueAddress { get; }
-    /// <summary>Gets the input queue name.</summary>
+    /// <summary>Gets the name of the harness receive queue.</summary>
     public override string InputQueueName => _inputQueueName;
 
     internal IHostConfiguration HostConfiguration => _busConfiguration.HostConfiguration;
 
-    /// <summary>Occurs when on configure in memory bus.</summary>
-    public event Action<IInMemoryBusFactoryConfigurator>? OnConfigureInMemoryBus;
-    /// <summary>Occurs when on configure in memory receive endpoint.</summary>
-    public event Action<IInMemoryReceiveEndpointConfigurator>? OnConfigureInMemoryReceiveEndpoint;
-    /// <summary>Occurs when on in memory bus configured.</summary>
-    public event Action<IInMemoryBusFactoryConfigurator>? OnInMemoryBusConfigured;
+    /// <summary>Occurs while the harness configures the in-memory bus factory.</summary>
+    public event Action<IInMemoryBusFactoryConfigurator>? InMemoryBusConfiguring;
+    /// <summary>Occurs while the harness configures its in-memory receive endpoint.</summary>
+    public event Action<IInMemoryReceiveEndpointConfigurator>? InMemoryReceiveEndpointConfiguring;
+    /// <summary>Occurs after the in-memory bus factory has been fully configured.</summary>
+    public event Action<IInMemoryBusFactoryConfigurator>? InMemoryBusConfigured;
 
-    /// <summary>Configures in memory bus.</summary>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Applies subscribers' configuration to the in-memory bus.</summary>
+    /// <param name="configurator">The in-memory bus configurator.</param>
     protected virtual void ConfigureInMemoryBus(IInMemoryBusFactoryConfigurator configurator)
     {
-        OnConfigureInMemoryBus?.Invoke(configurator);
+        InMemoryBusConfiguring?.Invoke(configurator);
     }
 
-    /// <summary>Configures in memory receive endpoint.</summary>
-    /// <param name="configurator">The configurator to update.</param>
+    /// <summary>Applies subscribers' configuration to the in-memory receive endpoint.</summary>
+    /// <param name="configurator">The in-memory receive-endpoint configurator.</param>
     protected virtual void ConfigureInMemoryReceiveEndpoint(IInMemoryReceiveEndpointConfigurator configurator)
     {
-        OnConfigureInMemoryReceiveEndpoint?.Invoke(configurator);
+        InMemoryReceiveEndpointConfiguring?.Invoke(configurator);
     }
 
-    /// <summary>Reports that in memory bus has been configured.</summary>
-    /// <param name="configurator">The configurator to update.</param>
-    protected virtual void InMemoryBusConfigured(IInMemoryBusFactoryConfigurator configurator)
+    /// <summary>Notifies subscribers after in-memory bus configuration has completed.</summary>
+    /// <param name="configurator">The completed in-memory bus configurator.</param>
+    protected virtual void NotifyInMemoryBusConfigured(IInMemoryBusFactoryConfigurator configurator)
     {
-        OnInMemoryBusConfigured?.Invoke(configurator);
+        InMemoryBusConfigured?.Invoke(configurator);
     }
 
-    /// <summary>Connects request client.</summary>
-    /// <typeparam name="TRequest">The request type.</typeparam>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces a handle that disconnects the registration.</returns>
-    public virtual Task<IRequestClient<TRequest>> ConnectRequestClientAsync<TRequest>(CancellationToken cancellationToken = default)
-        where TRequest : class
-    {
-        return ConnectRequestClientAsync<TRequest>(InputQueueAddress, cancellationToken: cancellationToken);
-    }
-
-    /// <summary>Connects request client.</summary>
-    /// <typeparam name="TRequest">The request type.</typeparam>
-    /// <param name="destinationAddress">The destination address.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that produces a handle that disconnects the registration.</returns>
-    public virtual Task<IRequestClient<TRequest>> ConnectRequestClientAsync<TRequest>(Uri destinationAddress, CancellationToken cancellationToken = default)
-        where TRequest : class
+    /// <summary>Builds the configured in-memory bus.</summary>
+    /// <param name="cancellationToken">Cancellation checked before synchronous bus construction begins.</param>
+    /// <returns>A task whose result is the configured bus control.</returns>
+    protected override Task<IBusControl> CreateBusAsync(CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested)
-            return Task.FromCanceled<IRequestClient<TRequest>>(cancellationToken);
+            return Task.FromCanceled<IBusControl>(cancellationToken);
 
-        return Task.FromResult(Bus.CreateRequestClient<TRequest>(destinationAddress, new RequestTimeout(TestTimeout)));
-    }
-
-    /// <summary>Creates bus.</summary>
-    /// <returns>A task that produces the created value.</returns>
-    protected override async Task<IBusControl> CreateBusAsync()
-    {
         var configurator = new InMemoryBusFactoryConfigurator(_busConfiguration);
 
         ConfigureBus(configurator);
@@ -135,10 +120,10 @@ public class InMemoryTestHarness :
             ConfigureInMemoryReceiveEndpoint(e);
         });
 
-        BusConfigured(configurator);
+        NotifyBusConfigured(configurator);
 
-        InMemoryBusConfigured(configurator);
+        NotifyInMemoryBusConfigured(configurator);
 
-        return configurator.Build(_busConfiguration, _specifications);
+        return Task.FromResult(configurator.Build(_busConfiguration, _specifications));
     }
 }

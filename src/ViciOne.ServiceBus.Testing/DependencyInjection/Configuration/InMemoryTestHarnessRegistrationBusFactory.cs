@@ -6,34 +6,38 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Creates in memory test harness registration bus instances.</summary>
-public class InMemoryTestHarnessRegistrationBusFactory :
+/// <summary>Creates dependency-injection bus instances backed by an in-memory test harness.</summary>
+internal sealed class InMemoryTestHarnessRegistrationBusFactory :
     IRegistrationBusFactory
 {
     readonly string? _virtualHost;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="virtualHost">The virtual host.</param>
+    /// <summary>Creates a factory for the optionally isolated in-memory virtual host.</summary>
+    /// <param name="virtualHost">An optional transport path segment that isolates the harness.</param>
     public InMemoryTestHarnessRegistrationBusFactory(string? virtualHost = null)
     {
         _virtualHost = virtualHost;
     }
 
-    /// <summary>Creates bus.</summary>
-    /// <param name="context">The context associated with the operation.</param>
-    /// <param name="specifications">The specifications.</param>
-    /// <param name="busName">The bus name.</param>
-    /// <returns>The created bus.</returns>
+    /// <summary>Creates the configured test-harness bus instance.</summary>
+    /// <param name="context">The registration context used to resolve services and configure endpoints.</param>
+    /// <param name="specifications">The specifications applied while building the bus.</param>
+    /// <param name="busName">The logical registration name of the bus.</param>
+    /// <returns>A bus instance owned by the test harness.</returns>
     public IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(specifications);
+        ArgumentException.ThrowIfNullOrWhiteSpace(busName);
+
         var timeProvider = context.GetService(typeof(TimeProvider)) as TimeProvider ?? TimeProvider.System;
         var inMemoryTestHarness = new InMemoryTestHarness(_virtualHost, specifications, timeProvider);
 
-        inMemoryTestHarness.OnConfigureInMemoryBus += configurator =>
+        inMemoryTestHarness.InMemoryBusConfiguring += _ =>
         {
             LogContext.ConfigureCurrentLogContextIfNull(context);
         };
-        inMemoryTestHarness.OnInMemoryBusConfigured += configurator =>
+        inMemoryTestHarness.InMemoryBusConfigured += configurator =>
         {
             configurator.ConfigureEndpoints(context);
         };

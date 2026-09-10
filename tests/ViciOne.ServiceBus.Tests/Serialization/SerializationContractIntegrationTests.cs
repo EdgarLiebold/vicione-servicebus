@@ -322,12 +322,12 @@ public sealed class SerializationContractIntegrationTests
             TestInactivityTimeout = timeout,
         };
         harness.BeginTestScope();
-        harness.OnConfigureInMemoryBus += transport =>
+        harness.InMemoryBusConfiguring += transport =>
         {
             transport.ClearSerialization();
             transport.UseRawJsonSerializer(RawSerializerOptions.All);
         };
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
             endpoint.Handler<RawCommandContract>(context =>
             {
                 Interlocked.Increment(ref receiveCount);

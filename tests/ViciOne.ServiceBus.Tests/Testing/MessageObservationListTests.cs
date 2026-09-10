@@ -20,7 +20,7 @@ public sealed class MessageObservationListTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.Handler<ObservedMessage>(_ => Task.CompletedTask);
             configurator.Handler<OtherMessage>(_ => Task.CompletedTask);
@@ -115,7 +115,7 @@ public sealed class MessageObservationListTests
         var consumed = new TaskCompletionSource<ConsumeContext<ObservedMessage>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness(timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
         {
             configurator.Handler<ObservedMessage>(context =>
             {

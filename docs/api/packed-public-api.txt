@@ -5750,31 +5750,28 @@ TYPE interface public ViciOne.ServiceBus.Azure.Table.IAzureTableSagaRepositoryCo
   METHOD public abstract System.Void UseTableClientFactory(System.Func<System.IServiceProvider,Azure.Data.Tables.TableClient> tableClientFactory)
 
 ASSEMBLY ViciOne.ServiceBus.AzureServiceBus.Testing VERSION=1.0.0.0
-TYPE class public ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarnessOptions [sealed]
-  CTOR public ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarnessOptions()
-  PROPERTY System.Boolean CleanNamespace { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.AzureServiceBus.Testing.ServiceBusDependencyInjectionTestingExtensions [static]
-  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection ConfigureServiceBusTestOptions(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarnessOptions> configure)
-TYPE class public ViciOne.ServiceBus.Testing.AzureFunctionsTestExtensions [static]
+TYPE class public ViciOne.ServiceBus.AzureServiceBus.Testing.AzureFunctionsTestExtensions [static]
   METHOD public static System.Threading.Tasks.Task HandleConsumerAsync<TConsumer>(ViciOne.ServiceBus.Testing.ITestHarness harness, System.Object message, System.Threading.CancellationToken cancellationToken = null)
   METHOD public static ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator AddAzureFunctionsTestComponents(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator)
-TYPE class public ViciOne.ServiceBus.Testing.AzureServiceBusTestHarness [base=ViciOne.ServiceBus.Testing.BusTestHarness]
-  CTOR public ViciOne.ServiceBus.Testing.AzureServiceBusTestHarness(System.Uri serviceUri, Azure.AzureNamedKeyCredential namedKeyCredential, System.String inputQueueName = null)
-  EVENT System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusBusFactoryConfigurator> OnConfigureServiceBusBus { public-add; public-remove; }
-  EVENT System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator> OnConfigureServiceBusReceiveEndpoint { public-add; public-remove; }
-  METHOD protected System.Threading.Tasks.Task<ViciOne.ServiceBus.IBusControl> CreateBusAsync()
-  METHOD protected virtual System.Void ConfigureServiceBusBus(ViciOne.ServiceBus.AzureServiceBus.IServiceBusBusFactoryConfigurator configurator)
-  METHOD protected virtual System.Void ConfigureServiceBusReceiveEndpoint(ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator configurator)
+TYPE class public ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusDependencyInjectionTestingExtensions [static]
+  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddAzureServiceBusTestHarness(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarnessOptions> configure)
+TYPE class public ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness [base=ViciOne.ServiceBus.Testing.BusTestHarness]
+  CTOR public ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness(System.Uri serviceUri, Azure.AzureNamedKeyCredential namedKeyCredential, System.String inputQueueName = null)
+  EVENT System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusBusFactoryConfigurator> AzureServiceBusConfiguring { public-add; public-remove; }
+  EVENT System.Action<ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator> AzureServiceBusReceiveEndpointConfiguring { public-add; public-remove; }
+  METHOD protected System.Threading.Tasks.Task<ViciOne.ServiceBus.IBusControl> CreateBusAsync(System.Threading.CancellationToken cancellationToken)
+  METHOD protected virtual Azure.Messaging.ServiceBus.Administration.ServiceBusAdministrationClient CreateAdministrationClient()
+  METHOD protected virtual System.Void ConfigureAzureServiceBus(ViciOne.ServiceBus.AzureServiceBus.IServiceBusBusFactoryConfigurator configurator)
+  METHOD protected virtual System.Void ConfigureAzureServiceBusReceiveEndpoint(ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator configurator)
   METHOD public System.Threading.Tasks.Task CleanAsync(System.Threading.CancellationToken cancellationToken = null)
   PROPERTY Azure.AzureNamedKeyCredential NamedKeyCredential { public-get;  }
-  PROPERTY System.Boolean ConfigureMessageScheduler { public-get; public-set; }
+  PROPERTY System.Boolean UseMessageScheduler { public-get; public-set; }
   PROPERTY System.String InputQueueName { public-get;  }
   PROPERTY System.Uri HostAddress { public-get;  }
   PROPERTY System.Uri InputQueueAddress { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.AzureServiceBusTestHarnessHostedService
-  CTOR public ViciOne.ServiceBus.Testing.AzureServiceBusTestHarnessHostedService(Microsoft.Extensions.Options.IOptions<ViciOne.ServiceBus.AzureServiceBus.AzureServiceBusTransportOptions> transportOptions, Microsoft.Extensions.Options.IOptions<ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarnessOptions> testOptions, Microsoft.Extensions.Logging.ILogger<ViciOne.ServiceBus.Testing.AzureServiceBusTestHarnessHostedService> logger)
-  METHOD public virtual System.Threading.Tasks.Task StartAsync(System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task StopAsync(System.Threading.CancellationToken cancellationToken)
+TYPE class public ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarnessOptions [sealed]
+  CTOR public ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarnessOptions()
+  PROPERTY System.Boolean CleanNamespaceOnStart { public-get; public-set; }
 
 ASSEMBLY ViciOne.ServiceBus.AzureServiceBus VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.AzureServiceBus.AzureServiceBusSendContext<T> [base=ViciOne.ServiceBus.Context.MessageSendContext<T>]
@@ -9042,26 +9039,20 @@ TYPE class public ViciOne.ServiceBus.Quartz.QuartzSchedulingExtensions [static]
 
 ASSEMBLY ViciOne.ServiceBus.RabbitMq.Testing VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqDependencyInjectionTestingExtensions [static]
-  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection ConfigureRabbitMqTestOptions(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarnessOptions> configure)
-TYPE class public ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarnessOptions [sealed]
-  CTOR public ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarnessOptions()
-  PROPERTY System.Boolean CleanVirtualHost { public-get; public-set; }
-  PROPERTY System.Boolean CreateVirtualHostIfNotExists { public-get; public-set; }
-  PROPERTY System.Boolean ForceCleanRootVirtualHost { public-get; public-set; }
-  PROPERTY System.Func<RabbitMQ.Client.IChannel,System.Threading.Tasks.Task> ConfigureVirtualHostCallback { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.Testing.RabbitMqTestHarness [base=ViciOne.ServiceBus.Testing.BusTestHarness]
-  CTOR public ViciOne.ServiceBus.Testing.RabbitMqTestHarness(System.String inputQueueName = null)
-  EVENT System.Action<ViciOne.ServiceBus.RabbitMq.IRabbitMqBusFactoryConfigurator> OnConfigureRabbitMqBus { public-add; public-remove; }
-  EVENT System.Action<ViciOne.ServiceBus.RabbitMq.IRabbitMqHostConfigurator> OnConfigureRabbitMqHost { public-add; public-remove; }
-  EVENT System.Action<ViciOne.ServiceBus.RabbitMq.IRabbitMqReceiveEndpointConfigurator> OnConfigureRabbitMqReceiveEndpoint { public-add; public-remove; }
-  EVENT System.Func<RabbitMQ.Client.IChannel,System.Threading.Tasks.Task> OnCleanupVirtualHost { public-add; public-remove; }
+  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddRabbitMqTestHarness(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarnessOptions> configure)
+TYPE class public ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarness [base=ViciOne.ServiceBus.Testing.BusTestHarness]
+  CTOR public ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarness(System.String inputQueueName = null)
+  EVENT System.Action<ViciOne.ServiceBus.RabbitMq.IRabbitMqBusFactoryConfigurator> RabbitMqConfiguring { public-add; public-remove; }
+  EVENT System.Action<ViciOne.ServiceBus.RabbitMq.IRabbitMqHostConfigurator> RabbitMqHostConfiguring { public-add; public-remove; }
+  EVENT System.Action<ViciOne.ServiceBus.RabbitMq.IRabbitMqReceiveEndpointConfigurator> RabbitMqReceiveEndpointConfiguring { public-add; public-remove; }
   FIELD public const System.String HostVariable = "VICIONE_SERVICEBUS_RMQ_HOST"
   FIELD public const System.String ManagementPortVariable = "VICIONE_SERVICEBUS_RMQ_MGMT_PORT"
   FIELD public const System.String PasswordVariable = "VICIONE_SERVICEBUS_RMQ_PASS"
   FIELD public const System.String PortVariable = "VICIONE_SERVICEBUS_RMQ_PORT"
   FIELD public const System.String UsernameVariable = "VICIONE_SERVICEBUS_RMQ_USER"
-  METHOD protected System.Threading.Tasks.Task<ViciOne.ServiceBus.IBusControl> CreateBusAsync()
-  METHOD protected virtual System.Threading.Tasks.Task CleanupVirtualHostAsync(RabbitMQ.Client.IChannel channel)
+  METHOD protected System.Threading.Tasks.Task<ViciOne.ServiceBus.IBusControl> CreateBusAsync(System.Threading.CancellationToken cancellationToken)
+  METHOD protected virtual System.Net.Http.HttpClient CreateManagementHttpClient()
+  METHOD protected virtual System.Threading.Tasks.Task RunCustomCleanupAsync(RabbitMQ.Client.IChannel channel, System.Threading.CancellationToken cancellationToken)
   METHOD protected virtual System.Void ConfigureHost(ViciOne.ServiceBus.RabbitMq.IRabbitMqBusFactoryConfigurator configurator)
   METHOD protected virtual System.Void ConfigureRabbitMqBus(ViciOne.ServiceBus.RabbitMq.IRabbitMqBusFactoryConfigurator configurator)
   METHOD protected virtual System.Void ConfigureRabbitMqHost(ViciOne.ServiceBus.RabbitMq.IRabbitMqHostConfigurator configurator)
@@ -9069,19 +9060,21 @@ TYPE class public ViciOne.ServiceBus.Testing.RabbitMqTestHarness [base=ViciOne.S
   METHOD public System.Threading.Tasks.Task CleanAsync(System.Threading.CancellationToken cancellationToken = null)
   METHOD public System.Threading.Tasks.Task RecreateVirtualHostAsync(System.Threading.CancellationToken cancellationToken = null)
   METHOD public ViciOne.ServiceBus.RabbitMq.RabbitMqHostSettings GetHostSettings()
-  PROPERTY System.Boolean CleanVirtualHost { public-get; public-set; }
+  PROPERTY System.Boolean CleanVirtualHostOnStart { public-get; public-set; }
+  PROPERTY System.Func<RabbitMQ.Client.IChannel,System.Threading.CancellationToken,System.Threading.Tasks.Task> CleanupVirtualHostAsync { public-get; public-set; }
   PROPERTY System.Int32 ManagementPort { public-get; public-set; }
+  PROPERTY System.String ClusterNodeAddress { public-get; public-set; }
   PROPERTY System.String InputQueueName { public-get;  }
-  PROPERTY System.String NodeHostName { public-get; public-set; }
   PROPERTY System.String Password { public-get; public-set; }
   PROPERTY System.String Username { public-get; public-set; }
   PROPERTY System.Uri HostAddress { public-get; public-set; }
   PROPERTY System.Uri InputQueueAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Transports.IMessageNameFormatter NameFormatter { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.RabbitMqTestHarnessHostedService
-  CTOR public ViciOne.ServiceBus.Testing.RabbitMqTestHarnessHostedService(Microsoft.Extensions.Options.IOptions<ViciOne.ServiceBus.RabbitMq.RabbitMqTransportOptions> transportOptions, Microsoft.Extensions.Options.IOptions<ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarnessOptions> testOptions, Microsoft.Extensions.Logging.ILogger<ViciOne.ServiceBus.Testing.RabbitMqTestHarnessHostedService> logger)
-  METHOD public virtual System.Threading.Tasks.Task StartAsync(System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task StopAsync(System.Threading.CancellationToken cancellationToken)
+TYPE class public ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarnessOptions [sealed]
+  CTOR public ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarnessOptions()
+  PROPERTY System.Boolean AllowRootVirtualHostCleanup { public-get; public-set; }
+  PROPERTY System.Boolean CleanVirtualHostOnStart { public-get; public-set; }
+  PROPERTY System.Boolean CreateVirtualHostIfMissing { public-get; public-set; }
+  PROPERTY System.Func<RabbitMQ.Client.IChannel,System.Threading.CancellationToken,System.Threading.Tasks.Task> ConfigureVirtualHostAsync { public-get; public-set; }
 
 ASSEMBLY ViciOne.ServiceBus.RabbitMq VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.Configuration.RabbitMqBusFactoryConfiguratorExtensions [static]
@@ -12973,89 +12966,15 @@ ASSEMBLY ViciOne.ServiceBus.SqlTransport.SqlServer VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.Configuration.SqlServerBusFactoryConfiguratorExtensions [static]
   METHOD public static System.Void UsingSqlServer(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator> configure = null)
   METHOD public static System.Void UsingSqlServer(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.String connectionString, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator> configure = null)
-TYPE interface public ViciOne.ServiceBus.SqlTransport.SqlServer.ISqlServerSqlHostConfigurator
-TYPE interface public ViciOne.ServiceBus.SqlTransport.SqlServer.ISqlServerSqlTransportConnection
-  PROPERTY Microsoft.Data.SqlClient.SqlConnection Connection { public-get;  }
-TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerClientContext [base=ViciOne.ServiceBus.SqlTransport.SqlClientContext]
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerClientContext(ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerDbConnectionContext context, System.Threading.CancellationToken cancellationToken)
-  METHOD public System.Threading.Tasks.Task PublishAsync<T>(System.String topicName, ViciOne.ServiceBus.SqlTransport.SqlMessageSendContext<T> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task SendAsync<T>(System.String queueName, ViciOne.ServiceBus.SqlTransport.SqlMessageSendContext<T> context, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task TouchQueueAsync(System.String queueName, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Boolean> DeleteMessageAsync(System.Guid lockId, System.Int64 messageDeliveryId, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Boolean> DeleteScheduledMessageAsync(System.Guid tokenId, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Boolean> MoveMessageAsync(System.Guid lockId, System.Int64 messageDeliveryId, System.String queueName, ViciOne.ServiceBus.Providers.Transports.SqlQueueType queueType, System.Nullable<System.DateTimeOffset> expirationTime, ViciOne.ServiceBus.Advanced.SendHeaders sendHeaders, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Boolean> RenewLockAsync(System.Guid lockId, System.Int64 messageDeliveryId, System.TimeSpan duration, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Boolean> UnlockAsync(System.Guid lockId, System.Int64 messageDeliveryId, System.TimeSpan delay, ViciOne.ServiceBus.Advanced.SendHeaders sendHeaders, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.SqlTransport.SqlTransportMessage>> ReceiveMessagesAsync(System.String queueName, ViciOne.ServiceBus.Providers.Transports.SqlReceiveMode mode, System.Int32 messageLimit, System.Int32 concurrentLimit, System.TimeSpan lockDuration, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Int64> CreateQueueAsync(ViciOne.ServiceBus.SqlTransport.Topology.Queue queue, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Int64> CreateQueueSubscriptionAsync(ViciOne.ServiceBus.SqlTransport.Topology.TopicToQueueSubscription subscription, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Int64> CreateTopicAsync(ViciOne.ServiceBus.SqlTransport.Topology.Topic topic, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Int64> CreateTopicSubscriptionAsync(ViciOne.ServiceBus.SqlTransport.Topology.TopicToTopicSubscription subscription, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Int64> PurgeQueueAsync(System.String queueName, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task<System.Nullable<System.Int32>> DeadLetterQueueAsync(System.String queueName, System.Int32 messageCount, System.Threading.CancellationToken cancellationToken = null)
-TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerConnectionContextFactory [base=ViciOne.ServiceBus.SqlTransport.ConnectionContextFactory]
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerConnectionContextFactory(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration hostConfiguration)
-  METHOD protected ViciOne.ServiceBus.SqlTransport.ConnectionContext CreateConnection(ViciOne.ServiceBus.Transports.ITransportSupervisor<ViciOne.ServiceBus.SqlTransport.ConnectionContext> supervisor)
-TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerDatabaseMigrator
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerDatabaseMigrator(Microsoft.Extensions.Logging.ILogger<ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerDatabaseMigrator> logger)
-  METHOD public virtual System.Threading.Tasks.Task CreateDatabaseAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task CreateInfrastructureAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task CreateSchemaIfNotExistAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task DeleteDatabaseAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken)
-TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerDbConnectionContext [base=ViciOne.ServiceBus.Middleware.BasePipeContext]
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerDbConnectionContext(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration hostConfiguration, ViciOne.ServiceBus.Transports.ITransportSupervisor<ViciOne.ServiceBus.SqlTransport.ConnectionContext> supervisor)
-  METHOD public System.Threading.Tasks.Task<ViciOne.ServiceBus.SqlTransport.SqlServer.ISqlServerSqlTransportConnection> CreateConnectionAsync(System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.Task<T> QueryAsync<T>(System.Func<System.Data.IDbConnection,System.Data.IDbTransaction,System.Threading.Tasks.Task<T>> callback, System.Threading.CancellationToken cancellationToken)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  METHOD public virtual ViciOne.ServiceBus.SqlTransport.ClientContext CreateClientContext(System.Threading.CancellationToken cancellationToken)
-  PROPERTY System.Data.IsolationLevel IsolationLevel { public-get;  }
-  PROPERTY System.String Schema { public-get;  }
-  PROPERTY System.Uri HostAddress { public-get;  }
-  PROPERTY ViciOne.ServiceBus.Providers.Transports.ISqlBusTopology Topology { public-get;  }
-TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerDbTransportConfigurationExtensions [static]
-  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddSqlServerMigrationHostedService(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<ViciOne.ServiceBus.Providers.Transports.SqlTransportMigrationOptions> configure)
-  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddSqlServerMigrationHostedService(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Boolean create = true, System.Boolean delete = false)
 TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerHostConfigurationExtensions [static]
   METHOD public static System.Void UseSqlServer(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator configurator, System.String connectionString, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlHostConfigurator> configure = null)
   METHOD public static System.Void UseSqlServer(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator configurator, System.Uri hostAddress, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlHostConfigurator> configure = null)
   METHOD public static System.Void UseSqlServer(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator configurator, ViciOne.ServiceBus.Configuration.IBusRegistrationContext context, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlHostConfigurator> configure = null)
-TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSendFailureClassifier [sealed]
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSendFailureClassifier()
-  METHOD public virtual System.Boolean TryClassify(System.Exception exception, out ViciOne.ServiceBus.Providers.Transports.TransportSendFailureKind failureKind)
-TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlHostConfigurator [base=ViciOne.ServiceBus.SqlTransport.Configuration.SqlHostConfigurator]
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlHostConfigurator(System.String connectionString)
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlHostConfigurator(System.Uri hostAddress)
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlHostConfigurator(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlHostConfigurator(ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlHostSettings settings)
-  PROPERTY System.String ConnectionString {  public-set; }
-  PROPERTY ViciOne.ServiceBus.Providers.Transports.SqlHostSettings Settings { public-get;  }
-TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlHostSettings [base=ViciOne.ServiceBus.SqlTransport.Configuration.ConfigurationSqlHostSettings]
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlHostSettings(System.String connectionString)
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlHostSettings(System.Uri hostAddress)
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlHostSettings(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-  METHOD public System.String GetConnectionString()
-  METHOD public ViciOne.ServiceBus.SqlTransport.ConnectionContextFactory CreateConnectionContextFactory(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration hostConfiguration)
-  PROPERTY System.String ConnectionString {  public-set; }
-TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlTransportConnection
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlTransportConnection(System.String connectionString)
-  METHOD public System.Threading.Tasks.Task CloseAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public System.Threading.Tasks.Task OpenAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public static Microsoft.Data.SqlClient.SqlConnectionStringBuilder CreateBuilder(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-  METHOD public static ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlTransportConnection GetDatabaseAdminConnection(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-  METHOD public static ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlTransportConnection GetDatabaseConnection(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-  METHOD public static ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlTransportConnection GetSystemDatabaseConnection(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-  METHOD public virtual System.Threading.Tasks.ValueTask DisposeAsync()
-  PROPERTY Microsoft.Data.SqlClient.SqlConnection Connection { public-get;  }
-TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerSqlTransportOptionsExtensions [static]
-  METHOD public static System.String FormatDataSource(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options)
-TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.UriTypeHandler [base=Dapper.SqlMapper.TypeHandler<System.Uri>]
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlServer.UriTypeHandler()
-  METHOD public System.Uri Parse(System.Object value)
-  METHOD public System.Void SetValue(System.Data.IDbDataParameter parameter, System.Uri value)
+TYPE class public ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerTransportConfigurationExtensions [static]
+  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddSqlServerMigrationHostedService(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<ViciOne.ServiceBus.Providers.Transports.SqlTransportMigrationOptions> configure)
+  METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddSqlServerMigrationHostedService(Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Boolean create = true, System.Boolean delete = false)
 
 ASSEMBLY ViciOne.ServiceBus.SqlTransport VERSION=1.0.0.0
-TYPE interface public ViciOne.ServiceBus.Providers.Transports.IDbMessageConsumeTopologyConfigurator
-  METHOD public abstract System.Void Apply(ViciOne.ServiceBus.SqlTransport.Topology.IReceiveEndpointBrokerTopologyBuilder builder)
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator
   METHOD public abstract System.Void Host(ViciOne.ServiceBus.Providers.Transports.SqlHostSettings settings)
   METHOD public abstract System.Void OverrideDefaultBusEndpointQueueName(System.String value)
@@ -13106,7 +13025,6 @@ TYPE interface public ViciOne.ServiceBus.Providers.Transports.ISqlMessagePublish
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.ISqlMessagePublishTopologyConfigurator
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.ISqlMessagePublishTopologyConfigurator<TMessage>
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.ISqlMessageSendTopology<TMessage>
-TYPE interface public ViciOne.ServiceBus.Providers.Transports.ISqlMessageSendTopologyConfigurator
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.ISqlMessageSendTopologyConfigurator<TMessage>
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.ISqlPublishTopology
   METHOD public abstract ViciOne.ServiceBus.Providers.Transports.ISqlMessagePublishTopology<T> GetMessageTopology<T>()
@@ -13139,12 +13057,9 @@ TYPE interface public ViciOne.ServiceBus.Providers.Transports.ISqlSendTopology
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.ISqlSendTopologyConfigurator
   PROPERTY System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlQueueConfigurator> ConfigureDeadLetterSettings {  public-set; }
   PROPERTY System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlQueueConfigurator> ConfigureErrorSettings {  public-set; }
-TYPE interface public ViciOne.ServiceBus.Providers.Transports.ISqlTopicConfigurator
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.ISqlTopicSubscriptionConfigurator
   PROPERTY System.String RoutingKey {  public-set; }
   PROPERTY ViciOne.ServiceBus.Providers.Transports.SqlSubscriptionType SubscriptionType {  public-set; }
-TYPE interface public ViciOne.ServiceBus.Providers.Transports.ISqlTopicToTopicBindingConfigurator
-  METHOD public abstract System.Void Subscribe(System.String topicName, System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlTopicToTopicBindingConfigurator> configure = null)
 TYPE class public ViciOne.ServiceBus.Providers.Transports.SqlBusFactory [static]
   METHOD public static ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator CreateMessageTopology()
   METHOD public static ViciOne.ServiceBus.IBusControl Create(System.Action<ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator> configure)
@@ -13157,37 +13072,36 @@ TYPE delegate public ViciOne.ServiceBus.Providers.Transports.SqlConfigureEndpoin
   METHOD public virtual System.Void EndInvoke(System.IAsyncResult result)
   METHOD public virtual System.Void Invoke(ViciOne.ServiceBus.Configuration.IRegistrationContext context, System.String queueName, ViciOne.ServiceBus.Providers.Transports.ISqlReceiveEndpointConfigurator configurator)
 TYPE struct public ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddress
-  CTOR public ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddress(System.Uri hostAddress, System.String name, System.Nullable<System.TimeSpan> autoDeleteOnIdle = null, ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddress.AddressType type = Queue)
-  CTOR public ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddress(System.Uri hostAddress, System.Uri address, ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddress.AddressType type = Queue)
-  FIELD public readonly System.Nullable<System.Int32> Port
-  FIELD public readonly System.Nullable<System.TimeSpan> AutoDeleteOnIdle
-  FIELD public readonly System.String Area
-  FIELD public readonly System.String Host
-  FIELD public readonly System.String InstanceName
-  FIELD public readonly System.String Name
-  FIELD public readonly System.String Scheme
-  FIELD public readonly System.String VirtualHost
-  FIELD public readonly ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddress.AddressType Type
+  CTOR public ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddress(System.Uri hostAddress, System.String name, System.Nullable<System.TimeSpan> autoDeleteOnIdle = null, ViciOne.ServiceBus.Providers.Transports.SqlEndpointKind kind = Queue)
+  CTOR public ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddress(System.Uri hostAddress, System.Uri address, ViciOne.ServiceBus.Providers.Transports.SqlEndpointKind kind = Queue)
   METHOD public static System.Uri op_Implicit(in ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddress address)
-TYPE enum public ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddress.AddressType
-  FIELD public System.Int32 value__
-  FIELD public const ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddress.AddressType Queue = 0
-  FIELD public const ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddress.AddressType Topic = 1
+  PROPERTY System.Nullable<System.Int32> Port { public-get;  }
+  PROPERTY System.Nullable<System.TimeSpan> AutoDeleteOnIdle { public-get;  }
+  PROPERTY System.String Area { public-get;  }
+  PROPERTY System.String Host { public-get;  }
+  PROPERTY System.String InstanceName { public-get;  }
+  PROPERTY System.String Name { public-get;  }
+  PROPERTY System.String Scheme { public-get;  }
+  PROPERTY System.String VirtualHost { public-get;  }
+  PROPERTY ViciOne.ServiceBus.Providers.Transports.SqlEndpointKind Kind { public-get;  }
 TYPE class public ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddressException [sealed,base=ViciOne.ServiceBus.AbstractUriException]
   CTOR public ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddressException()
   CTOR public ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddressException(System.Uri address, System.String message)
   CTOR public ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddressException(System.Uri address, System.String message, System.Exception innerException)
+TYPE enum public ViciOne.ServiceBus.Providers.Transports.SqlEndpointKind
+  FIELD public System.Int32 value__
+  FIELD public const ViciOne.ServiceBus.Providers.Transports.SqlEndpointKind Queue = 0
+  FIELD public const ViciOne.ServiceBus.Providers.Transports.SqlEndpointKind Topic = 1
 TYPE struct public ViciOne.ServiceBus.Providers.Transports.SqlHostAddress
   CTOR public ViciOne.ServiceBus.Providers.Transports.SqlHostAddress(System.String host, System.String instanceName, System.Nullable<System.Int32> port, System.String virtualHost, System.String area)
   CTOR public ViciOne.ServiceBus.Providers.Transports.SqlHostAddress(System.Uri address)
-  FIELD public const System.String DbScheme = "db"
-  FIELD public readonly System.Nullable<System.Int32> Port
-  FIELD public readonly System.String Area
-  FIELD public readonly System.String Host
-  FIELD public readonly System.String InstanceName
-  FIELD public readonly System.String Scheme
-  FIELD public readonly System.String VirtualHost
   METHOD public static System.Uri op_Implicit(in ViciOne.ServiceBus.Providers.Transports.SqlHostAddress address)
+  PROPERTY System.Nullable<System.Int32> Port { public-get;  }
+  PROPERTY System.String Area { public-get;  }
+  PROPERTY System.String Host { public-get;  }
+  PROPERTY System.String InstanceName { public-get;  }
+  PROPERTY System.String Scheme { public-get;  }
+  PROPERTY System.String VirtualHost { public-get;  }
 TYPE interface public ViciOne.ServiceBus.Providers.Transports.SqlHostSettings
   METHOD public abstract ViciOne.ServiceBus.SqlTransport.ConnectionContextFactory CreateConnectionContextFactory(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration configuration)
   PROPERTY System.Boolean MaintenanceEnabled { public-get;  }
@@ -13333,8 +13247,6 @@ TYPE interface public ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConf
   PROPERTY ViciOne.ServiceBus.Providers.Transports.ISqlBusTopology Topology { public-get;  }
   PROPERTY ViciOne.ServiceBus.Providers.Transports.SqlHostSettings Settings { public-get; public-set; }
   PROPERTY ViciOne.ServiceBus.SqlTransport.IConnectionContextSupervisor ConnectionContextSupervisor { public-get;  }
-TYPE interface public ViciOne.ServiceBus.SqlTransport.Configuration.ISqlPublishTopologySpecification
-  METHOD public abstract System.Void Apply(ViciOne.ServiceBus.SqlTransport.Topology.IPublishEndpointBrokerTopologyBuilder builder)
 TYPE interface public ViciOne.ServiceBus.SqlTransport.Configuration.ISqlReceiveEndpointConfiguration
   METHOD public abstract System.Void Build(ViciOne.ServiceBus.Transports.IHost host)
   PROPERTY ViciOne.ServiceBus.SqlTransport.ReceiveSettings Settings { public-get;  }
@@ -13429,8 +13341,6 @@ TYPE class public ViciOne.ServiceBus.SqlTransport.Configuration.SqlQueueConfigur
   PROPERTY System.Nullable<System.Int32> MaxDeliveryCount { public-get; public-set; }
   PROPERTY System.Nullable<System.TimeSpan> AutoDeleteOnIdle { public-get; public-set; }
   PROPERTY System.String QueueName { public-get; public-set; }
-TYPE class public ViciOne.ServiceBus.SqlTransport.Configuration.SqlQueueSubscriptionConfigurator [base=ViciOne.ServiceBus.SqlTransport.Configuration.SqlTopicSubscriptionConfigurator]
-  CTOR protected ViciOne.ServiceBus.SqlTransport.Configuration.SqlQueueSubscriptionConfigurator(System.String topicName, ViciOne.ServiceBus.Providers.Transports.SqlSubscriptionType subscriptionType = All, System.Nullable<System.TimeSpan> autoDeleteOnIdle = null, System.String routingKey = null)
 TYPE class public ViciOne.ServiceBus.SqlTransport.Configuration.SqlReceiveEndpointBuilder [base=ViciOne.ServiceBus.Configuration.ReceiveEndpointBuilder]
   CTOR public ViciOne.ServiceBus.SqlTransport.Configuration.SqlReceiveEndpointBuilder(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration hostConfiguration, ViciOne.ServiceBus.SqlTransport.Configuration.ISqlReceiveEndpointConfiguration configuration)
   METHOD public ViciOne.ServiceBus.Advanced.ConnectHandle ConnectConsumePipe<T>(ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.ConsumeContext<T>> pipe, ViciOne.ServiceBus.Advanced.Middleware.ConnectPipeOptions options)
@@ -13489,10 +13399,6 @@ TYPE class public ViciOne.ServiceBus.SqlTransport.Configuration.SqlTopologyConfi
   CTOR public ViciOne.ServiceBus.SqlTransport.Configuration.SqlTopologyConfiguration(ViciOne.ServiceBus.Configuration.IMessageTopologyConfigurator messageTopology)
   CTOR public ViciOne.ServiceBus.SqlTransport.Configuration.SqlTopologyConfiguration(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlTopologyConfiguration topologyConfiguration)
   METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-TYPE class public ViciOne.ServiceBus.SqlTransport.Configuration.TopicSubscriptionPublishTopologySpecification [base=ViciOne.ServiceBus.SqlTransport.Configuration.SqlTopicSubscriptionConfigurator]
-  CTOR public ViciOne.ServiceBus.SqlTransport.Configuration.TopicSubscriptionPublishTopologySpecification(System.String topicName, ViciOne.ServiceBus.Providers.Transports.SqlSubscriptionType subscriptionType = All, System.String routingKey = null)
-  METHOD public virtual System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
-  METHOD public virtual System.Void Apply(ViciOne.ServiceBus.SqlTransport.Topology.IPublishEndpointBrokerTopologyBuilder builder)
 TYPE interface public ViciOne.ServiceBus.SqlTransport.ConnectionContext
   METHOD public abstract System.Threading.Tasks.Task DelayUntilMessageReadyAsync(System.Int64 queueId, System.TimeSpan timeout, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken)
   METHOD public abstract System.Threading.Tasks.Task<T> QueryAsync<T>(System.Func<System.Data.IDbConnection,System.Data.IDbTransaction,System.Threading.Tasks.Task<T>> callback, System.Threading.CancellationToken cancellationToken)
@@ -13511,22 +13417,9 @@ TYPE class public ViciOne.ServiceBus.SqlTransport.ConnectionContextSupervisor [b
   METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Transports.ISendTransport> CreatePublishTransportAsync<T>(ViciOne.ServiceBus.SqlTransport.SqlReceiveEndpointContext context, System.Uri publishAddress, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.Transports.ISendTransport> CreateSendTransportAsync(ViciOne.ServiceBus.SqlTransport.SqlReceiveEndpointContext context, System.Uri address, System.Threading.CancellationToken cancellationToken = null)
   METHOD public virtual System.Uri NormalizeAddress(System.Uri address)
-TYPE interface public ViciOne.ServiceBus.SqlTransport.DeadLetterSettings
-  METHOD public abstract ViciOne.ServiceBus.SqlTransport.Topology.BrokerTopology GetBrokerTopology()
-TYPE class public ViciOne.ServiceBus.SqlTransport.Defaults [static]
-  PROPERTY System.TimeSpan AutoDeleteOnIdle { public-get;  }
-  PROPERTY System.TimeSpan DefaultMessageTimeToLive { public-get;  }
-  PROPERTY System.TimeSpan ErrorQueueTimeToLive { public-get;  }
-  PROPERTY System.TimeSpan LockDuration { public-get;  }
-  PROPERTY System.TimeSpan MaxAutoRenewDuration { public-get;  }
-  PROPERTY System.TimeSpan SessionIdleTimeout { public-get;  }
-  PROPERTY System.TimeSpan ShutdownTimeout { public-get;  }
-  PROPERTY System.TimeSpan TemporaryAutoDeleteOnIdle { public-get;  }
 TYPE interface public ViciOne.ServiceBus.SqlTransport.EntitySettings
   PROPERTY System.Nullable<System.TimeSpan> AutoDeleteOnIdle { public-get;  }
   PROPERTY System.String EntityName { public-get;  }
-TYPE interface public ViciOne.ServiceBus.SqlTransport.ErrorSettings
-  METHOD public abstract ViciOne.ServiceBus.SqlTransport.Topology.BrokerTopology GetBrokerTopology()
 TYPE class public ViciOne.ServiceBus.SqlTransport.HostInfoCache [static]
   PROPERTY System.String HostInfoJson { public-get;  }
 TYPE interface public ViciOne.ServiceBus.SqlTransport.IClientContextSupervisor
@@ -13534,8 +13427,6 @@ TYPE interface public ViciOne.ServiceBus.SqlTransport.IConnectionContextSupervis
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Transports.ISendTransport> CreatePublishTransportAsync<T>(ViciOne.ServiceBus.SqlTransport.SqlReceiveEndpointContext context, System.Uri publishAddress, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.Transports.ISendTransport> CreateSendTransportAsync(ViciOne.ServiceBus.SqlTransport.SqlReceiveEndpointContext context, System.Uri address, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Uri NormalizeAddress(System.Uri address)
-TYPE interface public ViciOne.ServiceBus.SqlTransport.IQueueNotificationListener
-  METHOD public abstract System.Threading.Tasks.Task MessageReadyAsync(System.String queueName, System.Threading.CancellationToken cancellationToken = null)
 TYPE interface public ViciOne.ServiceBus.SqlTransport.ISqlHost
 TYPE interface public ViciOne.ServiceBus.SqlTransport.ISqlTransportConnection
 TYPE interface public ViciOne.ServiceBus.SqlTransport.ISqlTransportDatabaseMigrator
@@ -13543,16 +13434,10 @@ TYPE interface public ViciOne.ServiceBus.SqlTransport.ISqlTransportDatabaseMigra
   METHOD public abstract System.Threading.Tasks.Task CreateInfrastructureAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task CreateSchemaIfNotExistAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task DeleteDatabaseAsync(ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions options, System.Threading.CancellationToken cancellationToken = null)
-TYPE interface public ViciOne.ServiceBus.SqlTransport.MessageLockContext
-  METHOD public abstract System.Threading.Tasks.Task AbandonAsync(System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task CompleteAsync(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task DeadLetterAsync(System.Exception exception, System.Threading.CancellationToken cancellationToken = null)
-  METHOD public abstract System.Threading.Tasks.Task DeadLetterAsync(System.Threading.CancellationToken cancellationToken = null)
 TYPE class public ViciOne.ServiceBus.SqlTransport.Middleware.ConfigureSqlTopologyFilter<TSettings>
   CTOR public ViciOne.ServiceBus.SqlTransport.Middleware.ConfigureSqlTopologyFilter<TSettings>(TSettings settings, ViciOne.ServiceBus.SqlTransport.Topology.BrokerTopology brokerTopology, ViciOne.ServiceBus.SqlTransport.SqlReceiveEndpointContext context = null)
   METHOD public virtual System.Threading.Tasks.Task SendAsync(ViciOne.ServiceBus.SqlTransport.ClientContext context, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.SqlTransport.ClientContext> next)
   METHOD public virtual System.Void Probe(ViciOne.ServiceBus.Operations.ProbeContext context)
-TYPE interface public ViciOne.ServiceBus.SqlTransport.Middleware.ConfigureTopologyContext<T>
 TYPE class public ViciOne.ServiceBus.SqlTransport.Middleware.PurgeOnStartupFilter
   CTOR public ViciOne.ServiceBus.SqlTransport.Middleware.PurgeOnStartupFilter(System.String queueName)
 TYPE class public ViciOne.ServiceBus.SqlTransport.Middleware.SqlConsumerFilter
@@ -13563,8 +13448,6 @@ TYPE class public ViciOne.ServiceBus.SqlTransport.Middleware.SqlMessageReceiver 
   METHOD public System.Void MessageHandled()
 TYPE class public ViciOne.ServiceBus.SqlTransport.Middleware.SqlMessageSchedulerFilter
   CTOR public ViciOne.ServiceBus.SqlTransport.Middleware.SqlMessageSchedulerFilter()
-TYPE interface public ViciOne.ServiceBus.SqlTransport.NotificationContext
-  METHOD public abstract ViciOne.ServiceBus.Advanced.ConnectHandle ConnectNotificationSink(System.String queueName, ViciOne.ServiceBus.SqlTransport.IQueueNotificationListener listener)
 TYPE class public ViciOne.ServiceBus.SqlTransport.QueueSendTransportContext [base=ViciOne.ServiceBus.Transports.BaseSendTransportContext]
   CTOR public ViciOne.ServiceBus.SqlTransport.QueueSendTransportContext(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration hostConfiguration, ViciOne.ServiceBus.Transports.ReceiveEndpointContext receiveEndpointContext, ViciOne.ServiceBus.SqlTransport.IClientContextSupervisor supervisor, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.SqlTransport.ClientContext> configureTopologyPipe, System.String entityName)
   METHOD public System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Advanced.Middleware.IAgent> GetAgentHandles()
@@ -13657,6 +13540,7 @@ TYPE class public ViciOne.ServiceBus.SqlTransport.SharedConnectionContext [base=
   PROPERTY System.Uri HostAddress { public-get;  }
 TYPE class public ViciOne.ServiceBus.SqlTransport.SqlClientContext [abstract,base=ViciOne.ServiceBus.Middleware.ScopePipeContext]
   CTOR protected ViciOne.ServiceBus.SqlTransport.SqlClientContext(ViciOne.ServiceBus.SqlTransport.ConnectionContext context, System.Threading.CancellationToken cancellationToken)
+  METHOD protected System.Threading.Tasks.Task<T> ExecuteDatabaseOperationAsync<T>(System.Func<System.Data.IDbConnection,System.Data.IDbTransaction,System.Threading.CancellationToken,System.Threading.Tasks.Task<T>> operation, System.Threading.CancellationToken cancellationToken)
   METHOD public abstract System.Threading.Tasks.Task PublishAsync<T>(System.String topicName, ViciOne.ServiceBus.SqlTransport.SqlMessageSendContext<T> context, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task SendAsync<T>(System.String queueName, ViciOne.ServiceBus.SqlTransport.SqlMessageSendContext<T> context, System.Threading.CancellationToken cancellationToken = null)
   METHOD public abstract System.Threading.Tasks.Task TouchQueueAsync(System.String queueName, System.Threading.CancellationToken cancellationToken = null)
@@ -13777,7 +13661,7 @@ TYPE class public ViciOne.ServiceBus.SqlTransport.SqlTransportMessage
   PROPERTY System.Uri ResponseAddress { public-get; public-set; }
   PROPERTY System.Uri SourceAddress { public-get; public-set; }
 TYPE class public ViciOne.ServiceBus.SqlTransport.SqlTransportMigrationHostedService
-  CTOR public ViciOne.ServiceBus.SqlTransport.SqlTransportMigrationHostedService(ViciOne.ServiceBus.SqlTransport.ISqlTransportDatabaseMigrator migrator, Microsoft.Extensions.Logging.ILogger<ViciOne.ServiceBus.SqlTransport.SqlTransportMigrationHostedService> logger, Microsoft.Extensions.Options.IOptions<ViciOne.ServiceBus.Providers.Transports.SqlTransportMigrationOptions> options, Microsoft.Extensions.Options.IOptions<ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions> dbOptions)
+  CTOR public ViciOne.ServiceBus.SqlTransport.SqlTransportMigrationHostedService(ViciOne.ServiceBus.SqlTransport.ISqlTransportDatabaseMigrator migrator, Microsoft.Extensions.Logging.ILogger<ViciOne.ServiceBus.SqlTransport.SqlTransportMigrationHostedService> logger, Microsoft.Extensions.Options.IOptions<ViciOne.ServiceBus.Providers.Transports.SqlTransportMigrationOptions> options, Microsoft.Extensions.Options.IOptions<ViciOne.ServiceBus.Providers.Transports.SqlTransportOptions> transportOptions)
   METHOD public virtual System.Threading.Tasks.Task StartAsync(System.Threading.CancellationToken cancellationToken)
   METHOD public virtual System.Threading.Tasks.Task StopAsync(System.Threading.CancellationToken cancellationToken)
 TYPE class public ViciOne.ServiceBus.SqlTransport.TopicSendTransportContext [base=ViciOne.ServiceBus.Transports.BaseSendTransportContext]
@@ -13941,8 +13825,6 @@ TYPE interface public ViciOne.ServiceBus.SqlTransport.Topology.TopicToTopicSubsc
   PROPERTY ViciOne.ServiceBus.Providers.Transports.SqlSubscriptionType SubscriptionType { public-get;  }
   PROPERTY ViciOne.ServiceBus.SqlTransport.Topology.Topic Destination { public-get;  }
   PROPERTY ViciOne.ServiceBus.SqlTransport.Topology.Topic Source { public-get;  }
-TYPE class public ViciOne.ServiceBus.SqlTransport.Topology.TopologyLayoutExtensions [static]
-  METHOD public static System.Void LogResult(ViciOne.ServiceBus.SqlTransport.Topology.BrokerTopology layout)
 
 ASSEMBLY ViciOne.ServiceBus.StateMachineVisualizer VERSION=1.0.0.0
 TYPE class public ViciOne.ServiceBus.StateMachineVisualizer.StateMachineGraphvizGenerator [sealed]
@@ -13965,9 +13847,6 @@ TYPE class public Microsoft.Extensions.DependencyInjection.DependencyInjectionTe
   METHOD public static System.Void AddSagaStateMachineContainerTestHarness<TStateMachine,T>(Microsoft.Extensions.DependencyInjection.IServiceCollection services)
   METHOD public static ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator SetTestContextSaveMode(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, ViciOne.ServiceBus.Testing.TestContextSaveMode saveMode, System.Int32 maximumSavedContexts = 4096)
   METHOD public static ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator SetTestTimeouts(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator, System.Nullable<System.TimeSpan> testTimeout = null, System.Nullable<System.TimeSpan> testInactivityTimeout = null)
-TYPE class public ViciOne.ServiceBus.Configuration.InMemoryTestHarnessRegistrationBusFactory
-  CTOR public ViciOne.ServiceBus.Configuration.InMemoryTestHarnessRegistrationBusFactory(System.String virtualHost = null)
-  METHOD public virtual ViciOne.ServiceBus.Transports.IBusInstance CreateBus(ViciOne.ServiceBus.Configuration.IBusRegistrationContext context, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.IBusInstanceSpecification> specifications, System.String busName)
 TYPE class public ViciOne.ServiceBus.Configuration.TestHarnessRegistrationConfigurator
   CTOR public ViciOne.ServiceBus.Configuration.TestHarnessRegistrationConfigurator(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator configurator)
   METHOD public System.Void SetSagaRepositoryProvider(ViciOne.ServiceBus.Configuration.ISagaRepositoryRegistrationProvider provider)
@@ -14076,10 +13955,10 @@ TYPE class public ViciOne.ServiceBus.Testing.ActiveTestResult [sealed]
   PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.IPublishedMessage> Published { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.IReceivedMessage> Consumed { public-get;  }
   PROPERTY System.Collections.Generic.IReadOnlyList<ViciOne.ServiceBus.Testing.ISentMessage> Sent { public-get;  }
-TYPE class public ViciOne.ServiceBus.Testing.ActivityTestHarness<TActivity,TArguments,TLog>
+TYPE class public ViciOne.ServiceBus.Testing.ActivityTestHarness<TActivity,TArguments,TLog> [sealed]
   CTOR public ViciOne.ServiceBus.Testing.ActivityTestHarness<TActivity,TArguments,TLog>(ViciOne.ServiceBus.Testing.BusTestHarness testHarness, ViciOne.ServiceBus.Courier.IActivityFactory<TActivity,TArguments,TLog> activityFactory, System.Action<ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments>> configureExecute, System.Action<ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator<TActivity,TLog>> configureCompensate)
-  EVENT System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> OnConfigureCompensateReceiveEndpoint { public-add; public-remove; }
-  EVENT System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> OnConfigureExecuteReceiveEndpoint { public-add; public-remove; }
+  EVENT System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> CompensateReceiveEndpointConfiguring { public-add; public-remove; }
+  EVENT System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> ExecuteReceiveEndpointConfiguring { public-add; public-remove; }
   PROPERTY System.String CompensateQueueName { public-get;  }
   PROPERTY System.String ExecuteQueueName { public-get;  }
   PROPERTY System.String Name { public-get;  }
@@ -14102,6 +13981,7 @@ TYPE class public ViciOne.ServiceBus.Testing.AsyncElementListExtensions [static]
 TYPE class public ViciOne.ServiceBus.Testing.AsyncTestHarness [abstract]
   CTOR protected ViciOne.ServiceBus.Testing.AsyncTestHarness()
   CTOR protected ViciOne.ServiceBus.Testing.AsyncTestHarness(System.TimeProvider timeProvider)
+  METHOD protected System.Threading.Tasks.TaskCompletionSource<T> CreateTask<T>(System.Threading.CancellationToken cancellationToken)
   METHOD public System.Threading.Tasks.TaskCompletionSource<T> GetTask<T>()
   METHOD public System.Void BeginTestScope()
   METHOD public ViciOne.ServiceBus.Testing.Implementations.TestConsumeMessageObserver<T> GetConsumeObserver<T>()
@@ -14121,16 +14001,16 @@ TYPE class public ViciOne.ServiceBus.Testing.AsyncTestHarness [abstract]
 TYPE class public ViciOne.ServiceBus.Testing.BusTestHarness [abstract,base=ViciOne.ServiceBus.Testing.AsyncTestHarness]
   CTOR protected ViciOne.ServiceBus.Testing.BusTestHarness()
   CTOR protected ViciOne.ServiceBus.Testing.BusTestHarness(System.TimeProvider timeProvider)
-  EVENT System.Action<ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator> OnBusConfigured { public-add; public-remove; }
-  EVENT System.Action<ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator> OnConfigureBus { public-add; public-remove; }
-  EVENT System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> OnConfigureReceiveEndpoint { public-add; public-remove; }
-  EVENT System.Action<ViciOne.ServiceBus.IBus> OnConnectObservers { public-add; public-remove; }
-  EVENT System.Action<ViciOne.ServiceBus.Testing.BusTestHarness> PreCreateBus { public-add; public-remove; }
-  METHOD protected abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.IBusControl> CreateBusAsync()
-  METHOD protected virtual System.Void BusConfigured(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator)
+  EVENT System.Action<ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator> BusConfigured { public-add; public-remove; }
+  EVENT System.Action<ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator> BusConfiguring { public-add; public-remove; }
+  EVENT System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> ReceiveEndpointConfiguring { public-add; public-remove; }
+  EVENT System.Action<ViciOne.ServiceBus.IBus> ObserversConnecting { public-add; public-remove; }
+  EVENT System.Action<ViciOne.ServiceBus.Testing.BusTestHarness> BusCreating { public-add; public-remove; }
+  METHOD protected abstract System.Threading.Tasks.Task<ViciOne.ServiceBus.IBusControl> CreateBusAsync(System.Threading.CancellationToken cancellationToken)
   METHOD protected virtual System.Void ConfigureBus(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator)
   METHOD protected virtual System.Void ConfigureReceiveEndpoint(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator)
   METHOD protected virtual System.Void ConnectObservers(ViciOne.ServiceBus.IBus bus)
+  METHOD protected virtual System.Void NotifyBusConfigured(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator)
   METHOD public System.Threading.Tasks.Task<ViciOne.ServiceBus.ConsumeContext<T>> HandledAsync<T>(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, System.Func<ViciOne.ServiceBus.ConsumeContext<T>,System.Boolean> filter, System.Threading.CancellationToken cancellationToken = null)
   METHOD public System.Threading.Tasks.Task<ViciOne.ServiceBus.ConsumeContext<T>> HandledAsync<T>(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, System.Int32 expectedCount, System.Threading.CancellationToken cancellationToken = null)
   METHOD public System.Threading.Tasks.Task<ViciOne.ServiceBus.ConsumeContext<T>> HandledAsync<T>(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator configurator, System.Threading.CancellationToken cancellationToken = null)
@@ -14174,9 +14054,9 @@ TYPE class public ViciOne.ServiceBus.Testing.ConsumerTestHarnessExtensions [stat
   METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<T> Consumer<T>(ViciOne.ServiceBus.Testing.BusTestHarness harness, System.String queueName = null)
   METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<T> Consumer<T>(ViciOne.ServiceBus.Testing.BusTestHarness harness, ViciOne.ServiceBus.Advanced.IConsumerFactory<T> consumerFactory, System.Action<ViciOne.ServiceBus.Configuration.IConsumerConfigurator<T>> configure, System.String queueName = null)
   METHOD public static ViciOne.ServiceBus.Testing.ConsumerTestHarness<T> Consumer<T>(ViciOne.ServiceBus.Testing.BusTestHarness harness, ViciOne.ServiceBus.Advanced.IConsumerFactory<T> consumerFactory, System.String queueName = null)
-TYPE class public ViciOne.ServiceBus.Testing.ExecuteActivityTestHarness<TActivity,TArguments>
+TYPE class public ViciOne.ServiceBus.Testing.ExecuteActivityTestHarness<TActivity,TArguments> [sealed]
   CTOR public ViciOne.ServiceBus.Testing.ExecuteActivityTestHarness<TActivity,TArguments>(ViciOne.ServiceBus.Testing.BusTestHarness testHarness, ViciOne.ServiceBus.Courier.IExecuteActivityFactory<TActivity,TArguments> activityFactory, System.Action<ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator<TActivity,TArguments>> configureExecute)
-  EVENT System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> OnConfigureExecuteReceiveEndpoint { public-add; public-remove; }
+  EVENT System.Action<ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator> ExecuteReceiveEndpointConfiguring { public-add; public-remove; }
   PROPERTY System.String ExecuteQueueName { public-get;  }
   PROPERTY System.String Name { public-get;  }
   PROPERTY System.Uri ExecuteAddress { public-get;  }
@@ -14213,7 +14093,7 @@ TYPE class public ViciOne.ServiceBus.Testing.FilterSet<T>
   METHOD public System.Boolean Any(T target)
   METHOD public System.Boolean None(T target)
   METHOD public System.Boolean NotAny(T target)
-TYPE class public ViciOne.ServiceBus.Testing.HandlerTestHarness<TMessage>
+TYPE class public ViciOne.ServiceBus.Testing.HandlerTestHarness<TMessage> [sealed]
   CTOR public ViciOne.ServiceBus.Testing.HandlerTestHarness<TMessage>(ViciOne.ServiceBus.Testing.BusTestHarness testHarness, ViciOne.ServiceBus.Advanced.MessageHandler<TMessage> handler)
   PROPERTY ViciOne.ServiceBus.Testing.IReceivedMessageList<TMessage> Consumed { public-get;  }
 TYPE class public ViciOne.ServiceBus.Testing.HandlerTestHarnessExtensions [static]
@@ -14569,15 +14449,13 @@ TYPE class public ViciOne.ServiceBus.Testing.InMemoryTestHarness [base=ViciOne.S
   CTOR public ViciOne.ServiceBus.Testing.InMemoryTestHarness(System.String virtualHost, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.IBusInstanceSpecification> specifications)
   CTOR public ViciOne.ServiceBus.Testing.InMemoryTestHarness(System.String virtualHost, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.IBusInstanceSpecification> specifications, System.TimeProvider timeProvider)
   CTOR public ViciOne.ServiceBus.Testing.InMemoryTestHarness(System.TimeProvider timeProvider, System.String virtualHost = null)
-  EVENT System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator> OnConfigureInMemoryBus { public-add; public-remove; }
-  EVENT System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator> OnInMemoryBusConfigured { public-add; public-remove; }
-  EVENT System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> OnConfigureInMemoryReceiveEndpoint { public-add; public-remove; }
-  METHOD protected System.Threading.Tasks.Task<ViciOne.ServiceBus.IBusControl> CreateBusAsync()
+  EVENT System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator> InMemoryBusConfigured { public-add; public-remove; }
+  EVENT System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator> InMemoryBusConfiguring { public-add; public-remove; }
+  EVENT System.Action<ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator> InMemoryReceiveEndpointConfiguring { public-add; public-remove; }
+  METHOD protected System.Threading.Tasks.Task<ViciOne.ServiceBus.IBusControl> CreateBusAsync(System.Threading.CancellationToken cancellationToken)
   METHOD protected virtual System.Void ConfigureInMemoryBus(ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator configurator)
   METHOD protected virtual System.Void ConfigureInMemoryReceiveEndpoint(ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator configurator)
-  METHOD protected virtual System.Void InMemoryBusConfigured(ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator configurator)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.IRequestClient<TRequest>> ConnectRequestClientAsync<TRequest>(System.Threading.CancellationToken cancellationToken = null)
-  METHOD public virtual System.Threading.Tasks.Task<ViciOne.ServiceBus.IRequestClient<TRequest>> ConnectRequestClientAsync<TRequest>(System.Uri destinationAddress, System.Threading.CancellationToken cancellationToken = null)
+  METHOD protected virtual System.Void NotifyInMemoryBusConfigured(ViciOne.ServiceBus.Providers.Transports.IInMemoryBusFactoryConfigurator configurator)
   PROPERTY System.String InputQueueName { public-get;  }
   PROPERTY System.Uri BaseAddress { public-get;  }
   PROPERTY System.Uri InputQueueAddress { public-get;  }

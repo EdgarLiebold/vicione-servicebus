@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.AzureServiceBus.Testing;
 
 var services = new ServiceCollection();
-IServiceCollection configured = services.ConfigureServiceBusTestOptions(options => options.CleanNamespace = false);
+IServiceCollection configured = services.AddAzureServiceBusTestHarness(options => options.CleanNamespaceOnStart = false);
 
 if (!ReferenceEquals(services, configured) || services.Count == 0)
     throw new InvalidOperationException("Azure Service Bus test options were not registered.");

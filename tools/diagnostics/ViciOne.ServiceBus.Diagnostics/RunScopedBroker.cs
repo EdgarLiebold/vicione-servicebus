@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Testing;
+using ViciOne.ServiceBus.RabbitMq.Testing;
 
 namespace ViciOne.ServiceBus.Diagnostics;
 /// <summary>
@@ -51,7 +51,7 @@ static class RunScopedBroker
         var managementPort = ManagementPort();
 
         using var client = new HttpClient();
-        var credentials = Encoding.ASCII.GetBytes($"{username}:{password}");
+        var credentials = Encoding.UTF8.GetBytes($"{username}:{password}");
         client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Basic", Convert.ToBase64String(credentials));
 

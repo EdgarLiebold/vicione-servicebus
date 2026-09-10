@@ -26,7 +26,7 @@ public sealed class MultiTestConsumerBehaviorTests
         var consumer = new MultiTestConsumer(timeout, timeProvider, harness.InactivityToken);
         ReceivedMessageList<FirstMessage> firstMessages = consumer.Consume<FirstMessage>();
         ReceivedMessageList<SecondMessage> secondMessages = consumer.Consume<SecondMessage>();
-        harness.OnConfigureInMemoryReceiveEndpoint += consumer.Configure;
+        harness.InMemoryReceiveEndpointConfiguring += consumer.Configure;
 
         await harness.StartAsync(cancellationToken);
         try
@@ -79,7 +79,7 @@ public sealed class MultiTestConsumerBehaviorTests
         };
         var consumer = new MultiTestConsumer(timeout, harness.InactivityToken);
         ReceivedMessageList<FaultMessage> faultMessages = consumer.Fault<FaultMessage>();
-        harness.OnConfigureInMemoryReceiveEndpoint += consumer.Configure;
+        harness.InMemoryReceiveEndpointConfiguring += consumer.Configure;
 
         await harness.StartAsync(cancellationToken);
         try

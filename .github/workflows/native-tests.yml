@@ -140,7 +140,7 @@ jobs:
           dotnet test --solution ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx
           -c Release --no-build --no-restore
           --results-directory artifacts/test-results/azure-servicebus-local-integration
-          --minimum-expected-tests 24
+          --minimum-expected-tests 25
           --max-parallel-test-modules 1
 
   rabbitmq-local-integration:
@@ -166,7 +166,7 @@ jobs:
           dotnet test --solution ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx
           -c Release --no-build --no-restore
           --results-directory artifacts/test-results/rabbitmq-local-integration
-          --minimum-expected-tests 27
+          --minimum-expected-tests 28
           --max-parallel-test-modules 1
 
   package-and-policy:

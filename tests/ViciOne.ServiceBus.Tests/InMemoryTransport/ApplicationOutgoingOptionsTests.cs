@@ -22,7 +22,7 @@ public sealed class ApplicationOutgoingOptionsTests
             TaskCreationOptions.RunContinuationsAsynchronously);
         var published = new TaskCompletionSource<ConsumeContext<PublishedMessage>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.Handler<SentMessage>(context =>
             {

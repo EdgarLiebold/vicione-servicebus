@@ -55,7 +55,7 @@ public sealed class RequestOutcomeTimeToLiveTests
         Uri faultAddress = new(harness.BaseAddress, "fault-outcome");
         Uri unrelatedAddress = new(harness.BaseAddress, "unrelated-send");
 
-        harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
+        harness.InMemoryReceiveEndpointConfiguring += configurator =>
             configurator.Handler<RequestMessage>(async context =>
             {
                 DateTimeOffset expirationTime = Assert.IsType<DateTimeOffset>(context.ExpirationTime);
@@ -90,7 +90,7 @@ public sealed class RequestOutcomeTimeToLiveTests
                     faultTimeToLive,
                     unrelatedTimeToLive));
             });
-        harness.OnConfigureInMemoryBus += configurator =>
+        harness.InMemoryBusConfiguring += configurator =>
         {
             configurator.ReceiveEndpoint("response-outcome", endpoint =>
                 endpoint.Handler<OutcomeMessage>(_ => Task.CompletedTask));

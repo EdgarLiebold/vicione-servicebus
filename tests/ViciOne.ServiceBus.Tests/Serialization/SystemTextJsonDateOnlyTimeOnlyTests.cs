@@ -45,7 +45,7 @@ public sealed class SystemTextJsonDateOnlyTimeOnlyTests
         var received = new TaskCompletionSource<ConsumeContext<TemporalTransportMessage>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("temporal-roundtrip", timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
             endpoint.Handler<TemporalTransportMessage>(context =>
             {
                 received.TrySetResult(context);
@@ -111,7 +111,7 @@ public sealed class SystemTextJsonDateOnlyTimeOnlyTests
         var faulted = new TaskCompletionSource<ConsumeContext<ReceiveFault>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("malformed-temporal-value", timeout);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        harness.InMemoryReceiveEndpointConfiguring += endpoint =>
         {
             endpoint.Handler<TemporalTransportMessage>(context =>
             {
